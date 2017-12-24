@@ -18,12 +18,13 @@ $links=createLinks($pdoBt,$gazettes,$version);
 $descr="page d'accueil";
 $page=basename(__file__);
 $action="";
-
-if((parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH) !='/'. VERSION .'btlecest/index.php'))
+if(!empty($_SERVER['HTTP_REFERER']))
 {
+	if((parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH) !='/'. VERSION .'btlecest/index.php'))
+	{
 	$action="retour sur la page d'accueil";
+	}
 }
-
 
 //personnalisation des sessions et récup de données utilisateur
 	if($_SESSION['type']=="mag")
