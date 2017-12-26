@@ -37,7 +37,7 @@ function addMsg($db,$id_service,$inc_file)
 		':id_mag'		=> strip_tags($_SESSION['id']),
 		':id_service'	=> $id_service,
 		':date_msg'		=>date('Y-m-d H:i:s'),
-		':etat'			=> "nouveau",
+		':etat'			=> "en attente de réponse",
 		':inc_file'		=>$inc_file,
 		':who'			=>strip_tags($_POST['name']),
 		':email'		=>strip_tags($_POST['email']),
