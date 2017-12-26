@@ -26,11 +26,6 @@
 			break;
 		}
 	}
-			echo "<pre>";
-			var_dump($allMsg);
-			echo '</pre>';
-
-
 	?>
 
 		<div class="col s12">
