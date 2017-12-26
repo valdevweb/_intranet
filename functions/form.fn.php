@@ -48,7 +48,7 @@ function addMsg($db,$id_service,$inc_file)
 	return $db->lastInsertId();
 }
 
-//voir pour traiter la date de la réponse
+//ajout gestion multimessage => requete sur table msg et table replies
 function showAllMsg($db){
 	$req=$db->prepare("SELECT * FROM msg WHERE id_mag= :id_mag ORDER BY date_msg DESC ");
 	$req->execute(array(
