@@ -48,14 +48,33 @@ function addMsg($db,$id_service,$inc_file)
 	return $db->lastInsertId();
 }
 
-//ajout gestion multimessage => requete sur table msg et table replies
-function showAllMsg($db){
-	$req=$db->prepare("SELECT * FROM msg l LEFT JOIN replies r ON l.id = r.id_msg WHERE id_mag= :id_mag ORDER BY date_msg DESC ");
+//liste tous les messages d'un magasin (page histo, en affichage que la date de la dernière réponse)
+function listAllMsg($pdoBt)
+{
+	$data=array();
+	$req=$pdoBt->prepare("SELECT id FROM msg WHERE id_mag= :id_mag");
 	$req->execute(array(
-		':id_mag'	=>$_SESSION['id']
+		':id_mag'	=>$_SESSION['id'],
+
 	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
+
+	if($idExist=$req->fetchAll(PDO::FETCH_COLUMN))
+		{
+			foreach ($idExist as $key => $value) {
+				$req=$pdoBt->prepare("SELECT table_msg.id AS msg_id, objet, msg, id_service, date_msg, table_msg.etat, table_replies.replied_by, max(table_replies.date_reply), table_replies.id AS reply_id  FROM msg table_msg LEFT JOIN replies table_replies ON table_msg.id = table_replies.id_msg WHERE table_replies.id_msg= :idMsg ORDER BY table_replies.id ASC");
+				$req->execute(array(
+					':idMsg'	=>$value
+
+				));
+				// $data=$req->fetch(PDO::FETCH_ASSOC)
+				array_push($data,$req->fetch(PDO::FETCH_ASSOC));
+
+			}
+			return $data;
+
+		}
+
+	}
 
 
 function showThisMsg($pdoBt, $idMag, $idMsg){

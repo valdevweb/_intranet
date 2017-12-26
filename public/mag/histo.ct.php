@@ -6,6 +6,32 @@
 		</div>
 	</div>
 	<div class="row">
+	<?php
+	$allMsg=listAllMsg($pdoBt);
+
+
+	function etat($etat,$repliedBy,$dateReply){
+		switch ($data['etat']) {
+			case 'nouveau':
+			$value="en attente de réponse";
+			break;
+			case 'clos':
+			$value="clôturé le " . $data['date_reply'] ;
+			break;
+			case 'en cours':
+			$value= $data['replied_by'] . "vous a répondu le  " . $data['date_reply'] ;
+			break;
+			default:
+			$value="";
+			break;
+		}
+	}
+			echo "<pre>";
+			var_dump($allMsg);
+			echo '</pre>';
+
+
+	?>
 
 		<div class="col s12">
 		<table class="striped s12 grey-text text-darken-2 z-depth-2">
@@ -19,7 +45,7 @@
 					<th class="center">Consulter</th>
 				</tr>
 			</thead>
-			<?php foreach($allMagMsg as $key => $value): ?>
+			<?php foreach($allMsg as $key => $value): ?>
 			<tr>
 				<td>
 					<!--  H:i:s -->
@@ -41,10 +67,21 @@
 					<?= $value['objet']?>
 				</td>
 				<td>
-					<?= ($value['date_reply'])? date('d-m-Y', strtotime($value['date_reply'])) : '' ?>
+					<?php
+					if($value['etat']=="en cours")
+					{
+						echo $value['replied_by'] ." a répondu le ". date('d-m-Y',strtotime($value['max(table_replies.date_reply)']));
+
+					}
+					else
+					{
+						echo $value['etat'];
+					}
+
+					?>
 
 				</td>
-				<td class="center"> <a class="btn-floating z orange" href="../mag/edit-msg.php?msg=<?= $value['id']?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
+				<td class="center"> <a class="btn-floating  orange" href="../mag/edit-msg.php?msg=<?= $value['msg_id']?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
 
 		    	</td>
 			</tr>
