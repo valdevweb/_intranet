@@ -1,21 +1,25 @@
 
 $(document).ready(function() {
-		var list = $("#list-msg .msg");
-		$(list).fadeOut("fast");
+	var list = $("#list-msg .msg");
+	$(list).fadeOut("fast");
 
-		value= $("select#services").attr("selected","selected" ).val();
-		 $("#list-msg").find("article[data-service=" + value + "]").each(function (i) {
-		 $(this).delay(200).slideDown("fast");
-		 });
-
-// jQuery("select#cboDays option[selected]").removeAttr("selected");
-// jQuery("select#cboDays option[value='Wednesday']").attr("selected", "selected");
+	value= $("select#services").attr("selected","selected" ).val();
+	$("#list-msg").find("article[data-service=" + value + "]").each(function (i) {
+		$(this).delay(200).slideDown("fast");
+	});
 
 	//on récupère la valeur de la list deroulante => son id
 	$('select#services').change(function()
 	{
 		var value = $(this).val()
-		filterList(value);
+		if(value=='tous')
+		{
+				$(list).fadeIn("fast");
+		}
+		else
+		{
+			filterList(value);
+		}
 	});
 
 	//News filter function
@@ -34,9 +38,9 @@ $(document).ready(function() {
 		// }
 		// else
 		// {
-		$("#list-msg").find("article[data-service=" + value + "]").each(function (i) {
-		$(this).delay(200).slideDown("fast");
-		});
+			$("#list-msg").find("article[data-service=" + value + "]").each(function (i) {
+				$(this).delay(200).slideDown("fast");
+			});
 		// }
 	}
 });
