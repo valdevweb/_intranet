@@ -8,6 +8,12 @@
 	<div class="row">
 	<?php
 	$allMsg=listAllMsg($pdoBt);
+	//tri le tableau en fonction des id réponse et date msg
+	$allMsg = array_msort($allMsg, array('reply_id'=>'SORT_DESC','date_msg'=>'SORT_DESC'));
+
+
+
+
 
 
 	function etat($etat,$repliedBy,$dateReply){
