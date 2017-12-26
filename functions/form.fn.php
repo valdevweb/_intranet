@@ -151,7 +151,7 @@ function showThisMsg($pdoBt, $idMag, $idMsg){
 
 
 function showReplies($pdoBt,$idMsg){
-	$req=$pdoBt->prepare("SELECT * FROM replies WHERE id_msg= :idMsg ");
+	$req=$pdoBt->prepare("SELECT * FROM replies WHERE id_msg= :idMsg ORDER BY date_reply DESC");
 	$req->execute(array(
 		':idMsg'	=>$idMsg
 	));
