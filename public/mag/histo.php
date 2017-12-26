@@ -8,43 +8,6 @@ if(!isset($_SESSION['id'])){
 //----------------------------------------------------------------
 require_once '../../functions/form.fn.php';
 
-// $allMagMsg=showAllMsg($pdoBt);
-
-
-// 	echo "<pre>";
-// 	// var_dump(listIdMsg($pdoBt));
-
-// 	echo '</pre>';
-
-// $allMsg=listAllMsg($pdoBt);
-
-// 	echo "<pre>";
-// 	var_dump($allMsg);
-// 	echo '</pre>';
-
-// die;
-
-// {
-//  	$result=allMsg($pdoBt,$value);
-// 	echo "<pre>";
-// 	var_dump($result);
-// 	echo '</pre>';
-
-// }
-
-
-	// echo "<pre>";
-	// var_dump($allMagMsg);
-	// echo '</pre>';
-
-// traitement des état des demandes
-// si nouveau  : en attente de réponse
-// si en cours => prendre la dernière réponse en date et afficher la date et le nom de l'utilisateur qui à répondu + lein pour consulter (même que consulter)
-
-
-
-
-
 
 
 //header et nav bar
