@@ -1,10 +1,9 @@
 <?php
-/**
- * initForm interroge table services pour recup id gt, descr et nom complet
- * @param  obj $db bdd
- * @param  string $gt $_get nom du gt
- * @return array    id du gt
- */
+//-------------------------------------------------------------------------------------
+//					function d'affichage utilisées sur la page contact mag
+//-------------------------------------------------------------------------------------
+
+
 function initForm($db){
 	$req=$db->prepare('SELECT * FROM services WHERE slug = :gt');
 	$req->execute(array(
@@ -13,12 +12,7 @@ function initForm($db){
 	return $row=$req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-/**
- * [getNames interroge db users pour recup nom prenom]
- * @param  obj $db    [description]
- * @param  int $id_gt [num gt]
- * @return [array]   [all]
- */
+
 function getNames($db,$idgt)
 {
 	$req=$db->prepare('SELECT* FROM btlec WHERE id_service= :id_gt ORDER BY resp DESC');
@@ -28,6 +22,10 @@ function getNames($db,$idgt)
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 
 }
+
+//-------------------------------------------------------------------------------------
+//					ajout de demande mag - form page contact
+//-------------------------------------------------------------------------------------
 
 function addMsg($db,$id_service,$inc_file)
 {
@@ -47,6 +45,11 @@ function addMsg($db,$id_service,$inc_file)
 	$req->fetch(PDO::FETCH_ASSOC);
 	return $db->lastInsertId();
 }
+
+//-------------------------------------------------------------------------------------
+//					page histo mag - ? msg et replies
+//-------------------------------------------------------------------------------------
+
 
 //liste tous les messages d'un magasin (page histo, en affichage que la date de la dernière réponse)
 function listAllMsg($pdoBt)
@@ -75,6 +78,57 @@ function listAllMsg($pdoBt)
 		}
 
 	}
+
+// tri un tableau multi type pdo => ut pour affichga histo dde mag
+function array_msort($array, $cols)
+{
+    $colarr = array();
+    foreach ($cols as $col => $order) {
+        $colarr[$col] = array();
+        foreach ($array as $k => $row) { $colarr[$col]['_'.$k] = strtolower($row[$col]); }
+    }
+    $eval = 'array_multisort(';
+    foreach ($cols as $col => $order) {
+        $eval .= '$colarr[\''.$col.'\'],'.$order.',';
+    }
+    $eval = substr($eval,0,-1).');';
+    eval($eval);
+    $ret = array();
+    foreach ($colarr as $col => $arr) {
+        foreach ($arr as $k => $v) {
+            $k = substr($k,1);
+            if (!isset($ret[$k])) $ret[$k] = $array[$k];
+            $ret[$k][$col] = $array[$k][$col];
+        }
+    }
+    return $ret;
+
+}
+//affichage nom du service en clair (histo mag)
+
+function service($pdoBt,$idService){
+$req=$pdoBt->prepare("SELECT * FROM services WHERE id = :id");
+	$req->execute(array(
+		':id'	=>$idService,
+	));
+
+	return $req->fetch(PDO::FETCH_ASSOC);
+
+}
+//affichage nom personne qui a répondu en clair (histo mag)
+function repliedByIntoName($pdoBt,$idUser)
+{
+	$req=$pdoBt->prepare("SELECT * FROM btlec JOIN lk_user ON lk_user.id_btlec=btlec.id WHERE lk_user.iduser = :iduser");
+	$req->execute(array(
+		'iduser' =>$idUser
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+//-------------------------------------------------------------------------------------
+//
+//-------------------------------------------------------------------------------------
+
 
 
 function showThisMsg($pdoBt, $idMag, $idMsg){
@@ -115,26 +169,7 @@ function back($pdoBt, $idMag, $idMsg){
 	return $req->fetch();
 }
 
-//utilisée dans histo mag pour récupérer non du service en clair
-//ailleurs ?
-function service($pdoBt,$idService){
-$req=$pdoBt->prepare("SELECT * FROM services WHERE id = :id");
-	$req->execute(array(
-		':id'	=>$idService,
-	));
 
-	return $req->fetch(PDO::FETCH_ASSOC);
-
-}
-//utilisée dans histo mag pour récupérer nom
-function repliedByIntoName($pdoBt,$idUser)
-{
-	$req=$pdoBt->prepare("SELECT * FROM btlec JOIN lk_user ON lk_user.id_btlec=btlec.id WHERE lk_user.iduser = :iduser");
-	$req->execute(array(
-		'iduser' =>$idUser
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
 
 
 
