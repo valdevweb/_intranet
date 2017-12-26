@@ -15,7 +15,7 @@
 					<th class='contact'>Date</th>
 					<th class='contact'>Service</th>
 					<th class='contact'>Objet</th>
-					<th class='contact'>Date de la réponse</th>
+					<th class='contact'>Etat de la demande</th>
 					<th class="center">Consulter</th>
 				</tr>
 			</thead>

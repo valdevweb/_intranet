@@ -29,9 +29,38 @@ if(!isset($_SESSION['id'])){
 
 
 
+// function thisDay($pdoStat, $day)
+// {
+// 	$req=$pdoStat->prepare("
+// 	SELECT DATE_FORMAT(date_heure, '%d-%m-%Y') as date_simple, MONTH(date_heure) as month, DAY(date_heure) as day, YEAR(date_heure) as YEAR, type_log, site, id_user
+// 	FROM stats_logs
+// 	WHERE
+// 	type_log= :type_log
+// 	AND site= :site AND
+// 	DATE_FORMAT(date_heure, '%d-%m-%Y')= :date_simple
+// 	ORDER BY date_heure, id_user");
+// 	$req->execute(array(
+// 		':type_log' =>'prod',
+// 		':site'		=>'portail BT',
+// 		':date_simple'		=> $day
+
+// 	));
+// 	return $req->fetchAll(PDO::FETCH_ASSOC);
+
+// }
+
+// $yesterday=new DateTime();
+// $yesterday->modify('- 3 days');
+// $yesterday=$yesterday->format('d-m-Y');
+// var_dump($yesterday);
+// var_dump(thisDay($pdoStat,$yesterday));
+
+
+
+
 function statProd($pdoStat, $day)
 {
-	$req=$pdoStat->prepare("SELECT * FROM stats_logs WHERE type_log= :type_log AND site= :site AND date_heure LIKE :day ORDER BY date_heure, id_user");
+	$req=$pdoStat->prepare("SELECT * FROM stats_logs WHERE type_log= :type_log AND site= :site AND date_heure LIKE :day ORDER BY id_user, date_heure");
 	$req->execute(array(
 		':type_log' =>'prod',
 		':site'		=>'portail BT',
