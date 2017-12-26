@@ -118,12 +118,17 @@ $req=$pdoBt->prepare("SELECT * FROM services WHERE id = :id");
 //affichage nom personne qui a répondu en clair (histo mag)
 function repliedByIntoName($pdoBt,$idUser)
 {
-	$req=$pdoBt->prepare("SELECT * FROM btlec JOIN lk_user ON lk_user.id_btlec=btlec.id WHERE lk_user.iduser = :iduser");
+	$req=$pdoBt->prepare("SELECT CONCAT( nom ,' ', prenom)AS fullname FROM btlec JOIN lk_user ON lk_user.id_btlec=btlec.id WHERE lk_user.iduser = :iduser");
 	$req->execute(array(
 		'iduser' =>$idUser
 	));
-	return $req->fetch(PDO::FETCH_ASSOC);
+
+	$fullName=$req->fetch();
+	$fullName=$fullName['fullname'];
+	return $fullName;
 }
+
+
 
 //-------------------------------------------------------------------------------------
 //
@@ -141,33 +146,36 @@ function showThisMsg($pdoBt, $idMag, $idMsg){
 	return $req->fetch();
 }
 
-function showThisReply($pdoBt, $idMag, $idMsg){
-	$req=$pdoBt->prepare("SELECT * FROM msg WHERE id_mag= :idMag AND id= :idMsg ");
+
+
+
+
+function showReplies($pdoBt,$idMsg){
+	$req=$pdoBt->prepare("SELECT * FROM replies WHERE id_msg= :idMsg ");
 	$req->execute(array(
-		':idMag'	=>$idMag,
 		':idMsg'	=>$idMsg
 	));
 
-	return $req->fetch();
+	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function whoReplied($pdoBt,$iduser){
-	$req=$pdoBt->prepare("SELECT nom, prenom FROM btlec WHERE id= :id");
-	$req->execute(array(
-		':id'	=>$iduser
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
+// function whoReplied($pdoBt,$iduser){
+// 	$req=$pdoBt->prepare("SELECT nom, prenom FROM btlec WHERE id= :id");
+// 	$req->execute(array(
+// 		':id'	=>$iduser
+// 	));
+// 	return $req->fetch(PDO::FETCH_ASSOC);
+// }
 
-function back($pdoBt, $idMag, $idMsg){
-	$req=$pdoBt->prepare("SELECT * FROM msg WHERE id_mag= :idMag AND id= :idMsg ");
-	$req->execute(array(
-		':idMag'	=>$idMag,
-		':idMsg'	=>$idMsg
-	));
+// function back($pdoBt, $idMag, $idMsg){
+// 	$req=$pdoBt->prepare("SELECT * FROM msg WHERE id_mag= :idMag AND id= :idMsg ");
+// 	$req->execute(array(
+// 		':idMag'	=>$idMag,
+// 		':idMsg'	=>$idMsg
+// 	));
 
-	return $req->fetch();
-}
+// 	return $req->fetch();
+// }
 
 
 
