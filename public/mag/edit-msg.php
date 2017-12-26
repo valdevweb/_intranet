@@ -10,9 +10,10 @@ include '../../functions/form.fn.php';
 	$idMsg=$_GET['msg'];
 	$idMag=$_SESSION['id'];
 	$msg=showThisMsg($pdoBt, $idMag, $idMsg);
-	$reply=showThisReply($pdoBt, $idMag, $idMsg);
-	$iduser=$reply['reply_by'];
-	$replyBy=whoReplied($pdoBt,$iduser);
+	$replies=showReplies($pdoBt, $idMsg);
+	 	// echo "<pre>";
+	 	// var_dump($replies);
+	 	// echo '</pre>';
 
 function isAttached($dbData)
 {
@@ -26,8 +27,7 @@ function isAttached($dbData)
 	return $href;
 }
 
-
-echo $msg['inc_file'];
+// echo $msg['inc_file'];
 
 ?>
 
@@ -66,27 +66,21 @@ echo $msg['inc_file'];
 		<div class="card horizontal">
 
 			<div class="card-stacked">
-		 		<?php ob_start();?>
+		 		<?php foreach($replies as $reply): ?>
+
 
 				<div class="card-action">
-					<p class="orange-text text-darken-2 boldtxt"><?= $replyBy["prenom"] .' '. $replyBy["nom"]?> vous a répondu :</p>
+					<p class="orange-text text-darken-2 boldtxt">Réponse du : <?= date('d-m-Y', strtotime($reply['date_reply']))?></p>
+					<p class="text-darken-2 boldtxt">Par : <?= repliedByIntoName($pdoBt,$reply['replied_by'])?></p>
+
 
 				</div>
 				<div class="card-content">
-					<p><?=$reply['reply']?></p>
-				</div>
-				<?php
-				$replyStack=ob_get_contents();
-			 	ob_end_clean();
-			 	if($reply['reply']){
-			 		echo $replyStack;
-			 	}
-			 	else
-			 	{
-				echo "<div class='card-content'><p>en attente de réponse</p></div>";
-			 	}
+					<p><?= $reply['reply'] ?></p>
 
-			 	?>
+				</div>
+				<?php endforeach ?>
+
 			</div>
 			<div class="card-image">
 				<img class="edit" src="../img/contact/reponse.png">
