@@ -28,6 +28,7 @@ function listServices($pdoBt)
 //			demandes mag
 //-----------------------------------
 
+//dashboard affichage des demandes non cloturées
 function ddesMag($pdoBt)
 {
 	$req=$pdoBt->prepare("SELECT * FROM msg WHERE etat <> :clos ORDER BY id_service");
@@ -36,6 +37,15 @@ function ddesMag($pdoBt)
 	 ));
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 
+}
+//dashboard : info rapides sur la der réponse bt et le nombre de réponse totale pour un msg
+function nbRep($pdoBt, $idMsg)
+{
+	$req=$pdoBt->prepare("SELECT count(t_replies.id_msg) AS nb_rep, t_replies.id_msg, max(t_replies.date_reply)  AS last_reply_date, t_replies.replied_by FROM replies t_replies WHERE t_replies.id_msg= :id_msg GROUP BY t_replies.id_msg");
+	$req->execute(array(
+	':id_msg' =>$idMsg
+	 ));
+	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
 function histoDdesMag($pdoBt)
@@ -47,8 +57,6 @@ function histoDdesMag($pdoBt)
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 
 }
-
-
 
 function getMag($pdoBt,$idMag)
 {

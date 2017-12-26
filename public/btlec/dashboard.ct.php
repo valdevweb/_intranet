@@ -1,3 +1,9 @@
+<?php
+// $idMsg = array_search(170, array_column($nbRep, 'id_msg'));
+// $thisMsgNbRep= $nbRep[$idMsg]['nb_rep'];
+// $lastRepDate= $nbRep[$idMsg]['last_reply_date'];
+// $by= $nbRep[$idMsg]['replied_by'];
+?>
 <div class="container">
 	<!-- titre -->
 	<h1 class="blue-text text-darken-2">Demandes magasin</h1>
@@ -9,6 +15,8 @@
 			<div class="col l4">
 				<!-- <p class="center">Choisir un service</p> -->
 				<select class="browser-default select-service"  name="services" id="services">
+						<option name='9999' value='tous' >toutes les demandes</option>
+
 					<?php foreach ($userService as $serviceu): ?>
 						<option name='<?= $serviceu['id']?>' selected='selected' value='<?= $serviceu['id']?>' ><?= $serviceu['full_name']?></option>
 					<?php endforeach ?>
@@ -60,6 +68,24 @@
 					</p>
 				</div>
 			</div>
+			<?php
+			//si on a des réponse bt
+			if($nbRep=nbRep($pdoBt, $value['id'])){
+				$nbRepmsg=' - '. $nbRep['nb_rep'] . ' réponse(s)';
+				$lastDateRep=nbRep['last_reply_date'];
+				$lastDateRep=date('d-m-Y', strtotime($lastDateRep));
+				$by=$nbRep['replied_by'];
+
+			}
+			else
+			{
+				$nbRepmsg='';
+				$lastDateRep="";
+				$by="";
+			}
+
+			?>
+
 			<!-- contenu du message -->
 			<div class="row white box-border">
 				<div class="col l12">
@@ -70,9 +96,27 @@
 						$serviceName= $services[$found_key]['full_name'];
 					?>
 					<p class="center">SERVICE <?=strtoupper($serviceName)?></p>
-					<p><span class="boldtxt">Demande du : </span><?= $date ?> au </p>
-					<p><span class="boldtxt">Objet : </span><?= $objet=$value['objet']; ?></p>
-					<p><span class="boldtxt">Message :<br> </span><?= $msg=$value['msg']; ?></p>
+					<div class="col l9">
+						<p><span class="boldtxt">Demande du : </span><?= $date ?> </p>
+					</div>
+					<div class="col l3">
+						<p><span class="boldtxt">Etat : </span> <?= $value['etat'] .' ' .$nbRepmsg ?> </p>
+						<p>
+					</div>
+					<div class="col l9">
+						<p><span class="boldtxt">Dernière réponse le : </span><?= $lastDateRep ?> </p>
+					</div>
+					<div class="col l3">
+						<p><span class="boldtxt">Par : </span><?=  repliedByIntoName($pdoBt,$by) ?> </p>
+						<p>
+					</div>
+
+					<div class="col l12">
+						<p><span class="boldtxt">Objet : </span><?= $objet=$value['objet']; ?></p>
+					</div>
+					<div class="col l12">
+						<p><span class="boldtxt">Message :<br> </span><?= $msg=$value['msg']; ?></p>
+					</div>
 					<div class="col l6 align-left"><?=isAttached($value['inc_file']) ?></div>
 					<div class="col l6 align-right"><a href="answer.php?msg=<?= $value['id']?>" class="waves-effect waves-light btn blue darken-2">Répondre</a></div>
 

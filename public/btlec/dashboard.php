@@ -6,6 +6,8 @@ if(!isset($_SESSION['id'])){
 }
 //----------------------------------
 require('../../functions/form.bt.fn.php');
+require('../../functions/form.fn.php');
+
 require "../../functions/stats.fn.php";
 $page=basename(__file__);
 $descr="consultation des demandes magasins";
@@ -52,12 +54,7 @@ function color($id,$services)
 
 }
 
-
-
-
-
-
-$_SESSION['id_service'];
+// $_SESSION['id_service'];
 //$serviceInArray=array_search($services, $_SESSION['id_service']);
 //echo $serviceInArray;
 
