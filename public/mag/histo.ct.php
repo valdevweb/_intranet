@@ -10,12 +10,6 @@
 	$allMsg=listAllMsg($pdoBt);
 	//tri le tableau en fonction des id réponse et date msg
 	$allMsg = array_msort($allMsg, array('reply_id'=>'SORT_DESC','date_msg'=>'SORT_DESC'));
-
-
-
-
-
-
 	function etat($etat,$repliedBy,$dateReply){
 		switch ($data['etat']) {
 			case 'nouveau':
@@ -71,8 +65,8 @@
 					<?php
 					if($value['etat']=="en cours")
 					{
-						$replyBy=repliedByIntoName($pdoBt,$value['replied_by']);
-						echo  $replyBy['nom'].' '.$replyBy['prenom'] ." a répondu le ". date('d-m-Y',strtotime($value['max(table_replies.date_reply)']));
+
+						echo  repliedByIntoName($pdoBt,$value['replied_by']) ." a répondu le ". date('d-m-Y',strtotime($value['max(table_replies.date_reply)']));
 
 					}
 					else
