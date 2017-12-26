@@ -61,7 +61,7 @@ function listAllMsg($pdoBt)
 	if($idExist=$req->fetchAll(PDO::FETCH_COLUMN))
 		{
 			foreach ($idExist as $key => $value) {
-				$req=$pdoBt->prepare("SELECT table_msg.id AS msg_id, objet, msg, id_service, date_msg, table_msg.etat, table_replies.replied_by, max(table_replies.date_reply), table_replies.id AS reply_id  FROM msg table_msg LEFT JOIN replies table_replies ON table_msg.id = table_replies.id_msg WHERE table_replies.id_msg= :idMsg ORDER BY table_replies.id ASC");
+				$req=$pdoBt->prepare("SELECT table_msg.id AS msg_id, objet, msg, id_service, date_msg, table_msg.etat, table_replies.replied_by, max(table_replies.date_reply), table_replies.id AS reply_id  FROM msg table_msg LEFT JOIN replies table_replies ON table_msg.id = table_replies.id_msg WHERE table_replies.id_msg= :idMsg");
 				$req->execute(array(
 					':idMsg'	=>$value
 
@@ -115,7 +115,8 @@ function back($pdoBt, $idMag, $idMsg){
 	return $req->fetch();
 }
 
-
+//utilisée dans histo mag pour récupérer non du service en clair
+//ailleurs ?
 function service($pdoBt,$idService){
 $req=$pdoBt->prepare("SELECT * FROM services WHERE id = :id");
 	$req->execute(array(
@@ -125,9 +126,17 @@ $req=$pdoBt->prepare("SELECT * FROM services WHERE id = :id");
 	return $req->fetch(PDO::FETCH_ASSOC);
 
 }
+//utilisée dans histo mag pour récupérer nom
+function repliedByIntoName($pdoBt,$idUser)
+{
+	$req=$pdoBt->prepare("SELECT * FROM btlec JOIN lk_user ON lk_user.id_btlec=btlec.id WHERE lk_user.iduser = :iduser");
+	$req->execute(array(
+		'iduser' =>$idUser
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
 
 
-//$msg=array();
 
 // upload le fichier si mime ok
 function checkUpload($upload, $location, $pdoBt)
