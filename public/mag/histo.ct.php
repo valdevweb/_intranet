@@ -65,7 +65,8 @@
 					<?php
 					if($value['etat']=="en cours")
 					{
-						echo $value['replied_by'] ." a répondu le ". date('d-m-Y',strtotime($value['max(table_replies.date_reply)']));
+						$replyBy=repliedByIntoName($pdoBt,$value['replied_by']);
+						echo  $replyBy['nom'].' '.$replyBy['prenom'] ." a répondu le ". date('d-m-Y',strtotime($value['max(table_replies.date_reply)']));
 
 					}
 					else
