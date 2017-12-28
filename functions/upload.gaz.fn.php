@@ -2,11 +2,12 @@
 
 // UPLOAD AVEC GESTION DES MIMES
 
-$msg=array();
+
 
 // upload le fichier si mime ok
 function checkUpload($upload, $location, $pdoBt)
 {
+	$msg=array();
 	$name= $upload['name'];
 	$tmp=$upload['tmp_name'];
 	$error=$upload['error'];
@@ -22,22 +23,17 @@ function checkUpload($upload, $location, $pdoBt)
 	// si le déplacement du fichier tmp vers le rep d'upload ok
 	if(move_uploaded_file($tmp, $location.$name))
 	{
-		if(insertIntoDb($pdoBt,$name)){
-			$msg=array('success' =>$name);
+		insertIntoDb($pdoBt,$name);
+		// reset form pour éviter multi renvoi :
+		unset($_FILE, $_POST);
 
-		}
-		else
-		{
-			$msg=array(	'err' =>'erreur pendant l\'enregistrement dans la base de donnee');
-			exit;
-		}
 		$msg=array('success' =>$name);
 	}
 	else
 	{
 		$msg=array(	'err' =>'erreur pendant l\'envoi');
 	}
-return $msg;
+	return $msg;
 }
 
 function mime($tmp, $encoding=true)
@@ -114,7 +110,7 @@ function insertIntoDb($pdoBt,$name)
 		VALUE(:file, :date, :category)');
 		$req->execute(array(
 		':file'		=> $name,
-		':date'			=> $date,
+		':date'			=> $_POST['date'],
 		':category'		=> 'gazette'
 	));
 }
