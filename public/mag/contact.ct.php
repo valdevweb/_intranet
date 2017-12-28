@@ -3,7 +3,6 @@
 // pour le bouton retour
 //$_SESSION['page_contact']=$_SERVER['REQUEST_URI'];
 
-
 ?>
 
 <div class="container">

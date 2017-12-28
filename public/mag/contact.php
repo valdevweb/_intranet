@@ -26,10 +26,8 @@ $serviceName=getNames($pdoBt, $idGt);
 $nbName=sizeof($serviceName);
 
 
-
-
 //----------------------------------------------------------------
-//		éviter mulitple soumission du form->header ap traitement
+//		éviter mulitple soumission du form->header ap traitement => plus utile
 //----------------------------------------------------------------
 $here = $_SERVER['PHP_SELF'] ;
 if(!empty($_SERVER['QUERY_STRING']))
