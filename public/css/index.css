@@ -31,7 +31,7 @@ div{
     -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, .3);
     box-shadow: 1px 1px 2px rgba(0, 0, 0, .3); */
 .shadow{
-      height:60px;
+      height:80px;
       width:auto;
       -moz-box-shadow: 2px 3px 4px rgba(0, 0, 0,0.3);
       -webkit-box-shadow: 2px 3px 4px rgba(0, 0, 0, .3);

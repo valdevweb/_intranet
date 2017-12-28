@@ -61,7 +61,7 @@ if(isset($_POST['connexion']))
 				<h3 class="center">BTLEC, c'est aussi des structures SAV :</h3>
 				<br>
 				<p class="center"><a href="http://scapsav.fr/"><img class="shadow" src="public/img/index/scapsav.png"></a></p>
-
+				<p>&nbsp;</p>
 			</div>
 			<!-- droite : accueil, photo, connection -->
 			<div class="fourty">
