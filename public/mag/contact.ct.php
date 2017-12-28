@@ -1,7 +1,7 @@
 <?php
 // personnalisation de la page en fonction du service ($_GET => nom court du service)
 // pour le bouton retour
-$_SESSION['page_contact']=$_SERVER['REQUEST_URI'];
+//$_SESSION['page_contact']=$_SERVER['REQUEST_URI'];
 
 
 ?>
