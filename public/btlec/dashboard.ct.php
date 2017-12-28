@@ -120,6 +120,7 @@
 					<div class="col l6 align-left"><?=isAttached($value['inc_file']) ?></div>
 					<div class="col l6 align-right"><a href="answer.php?msg=<?= $value['id']?>" class="waves-effect waves-light btn blue darken-2">Répondre</a></div>
 
+
 				</div>
 			</div>
 		</article> <!-- fin d'un message -->

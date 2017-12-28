@@ -50,7 +50,7 @@ function nbRep($pdoBt, $idMsg)
 
 function histoDdesMag($pdoBt)
 {
-	$req=$pdoBt->prepare("SELECT * FROM msg WHERE etat = :clos");
+	$req=$pdoBt->prepare("SELECT * FROM replies t_replies LEFT JOIN msg t_msg ON id_msg.t_replies=id.t_msg WHERE etat.t_msg = :clos");
 	$req->execute(array(
 	':clos' =>'clos'
 	 ));
@@ -91,20 +91,30 @@ function recordReply($pdoBt,$idMsg)
 	$date=new DateTime();
 	$date=$date->format('Y-m-d H:i:s');
 
-	$update=$pdoBt->prepare('UPDATE msg SET reply= :reply, etat= :etat, date_reply= :date_reply,reply_by=:reply_by  WHERE id= :id');
-	$update->execute(array(
+	$insert=$pdoBt->prepare('INSERT INTO replies (id_msg, reply, replied_by, date_reply) VALUE (:id_msg, :reply, :replied_by, :date_reply)');
+	$result=$insert->execute(array(
 		':reply'		=> $_POST['reply'],
 		':date_reply'	=> $date,
-		':etat'			=>'clos',
-		':id'			=>$idMsg,
-		':reply_by'		=>$_SESSION['id']
+		':id_msg'		=> $idMsg,
+		':replied_by'	=>$_SESSION['id']
 	));
-
-
+	return $result;
 }
 
+function majEtat($pdoBt,$idMsg,$etat)
+{
+	$update=$pdoBt->prepare('UPDATE msg SET etat= :etat  WHERE id= :id');
+	$result=$update->execute(array(
+		':etat'		=> $etat,
+		':id'		=>$idMsg
+	));
+	return $result;
+}
 
+//	$update=$pdoBt->prepare('UPDATE replies SET reply= :reply, date_reply= :date_reply, replied_by=:replied_by  WHERE id_msg= :id');
 
+		// ':etat'			=>'clos',
+//etat= :etat,
 
 
 function displayMsgMag($pdoBt,$idMsg){

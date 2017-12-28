@@ -10,6 +10,8 @@ unset($_SESSION['goto']);
 include '../view/_head.php';
 include '../view/_navbar.php';
 include '../../functions/form.bt.fn.php';
+//afichage de l'historique des réponses
+include '../../functions/form.fn.php';
 
 //------------------------------------------------------------
 //				affiche lien vers piec jointe si existe
@@ -60,6 +62,9 @@ function sendMail($to,$subject,$tplLocation,$objetdde,$link)
 $idMsg=$_GET['msg'];
 $oneMsg=showOneMsg($pdoBt,$idMsg);
 
+//contenu histo des reponses
+$replies=showReplies($pdoBt, $idMsg);
+
 
 //template html et données pour envoi mail
 $tpl="../mail/new_reply_from_bt.tpl.html";
@@ -75,8 +80,6 @@ $link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$i
 
 
 
-
-
 if(isset($_POST['post-reply']))
 {
 	if((empty($_POST['reply'])))
@@ -88,12 +91,18 @@ if(isset($_POST['post-reply']))
 	{
 
 		$err="";
-	 	extract($_POST);
+		extract($_POST);
 		// rec db
 		if(!recordReply($pdoBt,$idMsg)){
-			$err ="erreur à l'enregistrement de la réponse";
+			$err ="votre réponse n'a pas pu être enregistrée (err 01)";
+			die;
 		}
-
+		$etat="en cours";
+		if(!majEtat($pdoBt,$idMsg, $etat))
+		{
+			$err="votre réponse n'a pas pu être enregistrée (err 02)";
+			die;
+		}
 		//-----------------------------------------
 		//				envoi du mail
 		//-----------------------------------------
@@ -106,61 +115,104 @@ if(isset($_POST['post-reply']))
 		else
 		{
 			$err= "Echec d'envoi de l'email";
-
 		}
-
-
-
 	}
 }
+if (isset($_POST['close']))
+{
+	$etat="clos";
+	if(!majEtat($pdoBt,$idMsg, $etat)){
+		$err="impossible de clore le dossier";
+		die;
+	}
+
+
+}
+
+
 
 ?>
 <div class="container">
+	<!--la demande	 -->
 	<div class="row">
 		<div class="col l12">
-
-			<!-- $_SESSION['page_request'] -->
 			<p><a href="dashboard.php" class="orange-text text-darken-2"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
 		</div>
+	</div>
+	<h1 class="blue-text text-darken-2">Répondre / cloturer un dossier</h1>
+
+	<h5 class="light-blue-text text-darken-2">La demande :</h5>
+	<div class="row box-border">
 		<div class="col l12 ">
-			<div class="padding-all">
-				<div class="row">
-					<h4 class="light-blue-text text-darken-2">Demande :</h4>
 					<p><span class="boldtxt">Objet : </span><?=$oneMsg['objet'] ?></p>
 					<p><span class="boldtxt">Message : </span><?=$oneMsg['msg'] ?></p>
 					<p><span class="boldtxt"></span><?=isAttached($oneMsg['inc_file']) ?></p>
-
-				</div>
-			</div>
 		</div>
 	</div>
+	<p>&nbsp;</p>
+	<h5 class="light-blue-text text-darken-2">Historique des réponses :</h5>
+
+
+	<!-- histo des réponses	 -->
+
+	<?php foreach($replies as $reply): ?>
+	<div class="row box-border">
+		<div class="col l6">
+			<p class="orange-text text-darken-2 boldtxt">Réponse du : <?= date('d-m-Y', strtotime($reply['date_reply']))?></p>
+		</div>
+		<div class="col l6">
+			<p class="orange-text text-darken-2 boldtxt">Par : <?= repliedByIntoName($pdoBt,$reply['replied_by'])?></p>
+		</div>
+		<div class="col l12">
+			<p><?= $reply['reply'] ?></p>
+		</div>
+	</div>
+	<?php endforeach ?>
+	<h5 class="light-blue-text text-darken-2">Traitement du dossier :</h5>
+	<div class="down"></div>
 	<div class="row">
-	<div class="col l12 grey lighten-4">
-		<div class="padding-all">
-
-				<form action="answer.php?msg=<?=$idMsg ?>" method="post" enctype="multipart/form-data">
-					<!--MESSAGE-->
-					<div class="row">
-						<div class="input-field">
-							<label for="reply"></label>
-							<textarea class="materialize-textarea" placeholder="votre réponse" name="reply" id="reply" ></textarea>
-						</div>
-					</div>
-					<!--BOUTONS-->
+		<div class="col l12 grey lighten-2">
+			<div class="padding-all">
+				<form action="answer.php?msg=<?=$idMsg ?>" method="post">
 					<div class="row align-right">
-						<button class="btn" type="submit" name="post-reply">Répondre</button>
-
+						<button class="btn" type="submit" name="close">cloturer le dossier</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
 
-	<div class="row">
-		<?= isset($err)?$err:false; ?>
-	</div>
 
+<div class="row">
+	<div class="col l12 grey lighten-4">
+		<div class="padding-all">
+
+
+
+			<form action="answer.php?msg=<?=$idMsg ?>" method="post" enctype="multipart/form-data">
+				<!--MESSAGE-->
+				<div class="row">
+					<div class="input-field">
+						<label for="reply"></label>
+						<textarea class="materialize-textarea" placeholder="votre réponse" name="reply" id="reply" ></textarea>
+					</div>
+				</div>
+
+				<!--BOUTONS-->
+
+				<div class="row align-right">
+					<button class="btn" type="submit" name="post-reply">Répondre</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
+
+<div class="row">
+	<?= isset($err)?$err:false; ?>
+</div>
+
+</div>  <!--container
 
 
 <?php
@@ -170,8 +222,6 @@ if(isset($_POST['post-reply']))
 include('../view/_footer.php');
  ?>
 
-</body>
-</html>
 
 
 

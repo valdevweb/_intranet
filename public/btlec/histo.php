@@ -26,6 +26,13 @@ $services=listServices($pdoBt);
 //histoDdesMag
 $msg=histoDdesMag($pdoBt);
 
+
+	echo "<pre>";
+	var_dump($msg);
+	echo '</pre>';
+
+
+var_dump($msg);
 //ut ??????????????
 // $gt=$_GET['gt'];
 // $nbMsg=sizeof($msg);
