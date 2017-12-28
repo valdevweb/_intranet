@@ -60,7 +60,7 @@ if(!isset($_SESSION['id'])){
 
 function statProd($pdoStat, $day)
 {
-	$req=$pdoStat->prepare("SELECT * FROM stats_logs WHERE type_log= :type_log AND site= :site AND date_heure LIKE :day ORDER BY id_user, date_heure");
+	$req=$pdoStat->prepare("SELECT * FROM stats_logs WHERE type_log= :type_log AND site= :site AND date_heure LIKE :day ORDER BY date_heure DESC, id_user");
 	$req->execute(array(
 		':type_log' =>'prod',
 		':site'		=>'portail BT',
