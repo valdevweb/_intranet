@@ -12,7 +12,7 @@ $link="http://172.30.92.53/".$version."upload/gazette/";
 //soumission formulaire
 if (isset($_POST['upload']))
 {
-	if (!empty($_FILES['file']))
+	if (!empty($_FILES['file']) && !empty($_POST['date']))
 	{
 		extract($_POST);
 		gazetteExist($pdoBt);
@@ -20,6 +20,12 @@ if (isset($_POST['upload']))
 		$upload=$_FILES['file'];
 		$msg=checkUpload($upload, $uploadDir, $pdoBt);
 		//header('location:upload-gazette.php?msg');
+	}
+	else
+	{
+		unset($_FILES, $_POST);
+		header('location:upload-gazette.php?empty');
+		die;
 	}
 }
 //vérifie si déjà gazette à la date selectionnée => si oui erreur est stop
@@ -36,6 +42,7 @@ function gazetteExist($pdoBt)
 		echo "<pre>";
 		var_dump($data);
 		echo '</pre>';
+		unset($_FILES, $_POST);
 		header('location:upload-gazette.php?err');
 		die;
 	}
@@ -64,15 +71,20 @@ include('../view/_navbar.php');
 				<div class="col l2"></div>
 				<div class="col l4">
 					<div class="upload">
-						<label for="file">&nbsp;&nbsp;Sélectionnez le fichier gazette</label>
+						<label for="gazette">&nbsp;&nbsp;Sélectionnez le fichier gazette</label>
 					</div>
-					<input type="file" name="file" id="file" >
+					<input type="file" name="file" id="gazette" >
 				</div>
 				<div class="col l4 align-right">
 					<button class="btn waves-effect waves-light orange darken-3" type="submit" name="upload" >Envoyer</button>
 				</div>
 				<div class="col l2"></div>
 			</div>
+			<div class="row">
+				<div class="col l2"></div>
+				<div class="col l8"></div>
+				<div class="col l2"><p id="gaz-name"><?=isset($_FILES['name'])? $_FILES['name']: false?></div>
+
 
 
 
@@ -86,6 +98,10 @@ include('../view/_navbar.php');
 			if (isset($_GET['err']))
 			{
 				echo "<p>Une gazette a déja été envoyée aujourd'hui. Vous ne pouvez pas envoyer plusieurs gazettes par jour</p>";
+			}
+			if (isset($_GET['empty']))
+			{
+				echo "<p>Merci de sélectionner un fichier et une date</p>";
 			}
 			if(isset($msg['success']))
 			{

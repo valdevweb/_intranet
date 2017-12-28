@@ -1,10 +1,10 @@
 $(document).ready(function(){
-	// menu hamburger
-	//$(".button-collapse").sideNav();
+
+
+
 	// ouverture fenetre modal
 	$('.modal').modal();
-	//$(".dropdown-button").dropdown();
-	$('#cssmenu').prepend('<div id="menu-button">Menu</div>');
+		$('#cssmenu').prepend('<div id="menu-button">Menu</div>');
 	$('#cssmenu #menu-button').on('click', function(){
 		var menu = $(this).next('ul');
 		if (menu.hasClass('open')) {
@@ -14,6 +14,43 @@ $(document).ready(function(){
 			menu.addClass('open');
 		}
 	});
+
+	//nom fichier upload page upload-gazette
+	//$('#gazette').change(function(){
+	//
+	//
+	$("input[type='file']").change(function(){
+
+		//on récupère le nom du fichier (input type file)
+		var filename=$(this).val();
+		// on découpe : chrome ajout c:\fake au nom du fichier
+		var cleanfilename = filename.split( '\\' );
+		if(cleanfilename.length > 1)
+		{
+			// alert(cleanfilename.length);
+			var last = cleanfilename.length
+			// alert(cleanfilename[last -1]);
+			$('#gaz-name').text(cleanfilename[last -1]);
+		}
+		else
+		{
+			$('#gaz-name').text(filename);
+		}
+
+
+		// on n'affiche que la dernière partie du tableau
+
+		//$('#gaz-name').text(cleanfilename[cleanfilename.length]);
+		//alert($( this ).val());
+
+	});
+
+	$( "input[type='file']" ).change(function() {
+
+});
+
+
+
 	//calendrier
 	$('.datepicker').pickadate({
 		selectMonths: true, // Creates a dropdown to control month
@@ -23,6 +60,12 @@ $(document).ready(function(){
 		close: 'Ok',
 		closeOnSelect: false // Close upon selecting a date,
 	});
+
+
+
+
+
+
 
 });
 
