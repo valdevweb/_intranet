@@ -85,7 +85,7 @@ function login($dbUser){
 			}
 			else
 			{
-				$err= "problème de convertion du mot de passe";
+				$err= "mot de passe erroné -2";
 			}
 		} //fin traitement vieux mot de passe
 	}
