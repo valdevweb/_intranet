@@ -90,10 +90,11 @@ function recordReply($pdoBt,$idMsg)
 {
 	$date=new DateTime();
 	$date=$date->format('Y-m-d H:i:s');
-
+	$reply=strip_tags($_POST['reply']);
+	$reply=nl2br($reply);
 	$insert=$pdoBt->prepare('INSERT INTO replies (id_msg, reply, replied_by, date_reply) VALUE (:id_msg, :reply, :replied_by, :date_reply)');
 	$result=$insert->execute(array(
-		':reply'		=> $_POST['reply'],
+		':reply'		=> $reply,
 		':date_reply'	=> $date,
 		':id_msg'		=> $idMsg,
 		':replied_by'	=>$_SESSION['id']
