@@ -36,8 +36,9 @@
 					<th class='contact'>Date</th>
 					<th class='contact'>Service</th>
 					<th class='contact'>Objet</th>
-					<th class='contact'>Etat de la demande</th>
+					<th class='contact'>Date réponse</th>
 					<th class="center">Consulter</th>
+					<th class='contact'>Status</th>
 				</tr>
 			</thead>
 			<?php foreach($allMsg as $key => $value): ?>
@@ -47,15 +48,11 @@
 					<?= date('d-m-Y', strtotime($value['date_msg']))?>
 				</td>
 				<td>
-
 					<?php
-
 					$service=service($pdoBt,$value['id_service']);
 					$service=$service['full_name'];
-
-
 					?>
-				<?= $service ?>
+					<?= $service ?>
 
 				</td>
 				<td>
@@ -63,23 +60,26 @@
 				</td>
 				<td>
 					<?php
-					if($value['etat']=="en cours")
+					if($value['etat']!= "nouveau")
 					{
-
-						echo  repliedByIntoName($pdoBt,$value['replied_by']) ." a répondu le ". date('d-m-Y',strtotime($value['max(table_replies.date_reply)']));
-
+						date('d-m-Y',strtotime($value['max(table_replies.date_reply)']));
 					}
-					else
-					{
-						echo $value['etat'];
-					}
-
 					?>
 
 				</td>
-				<td class="center"> <a class="btn-floating  orange" href="../mag/edit-msg.php?msg=<?= $value['msg_id']?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
-
+				<td class="center">
+					<?php
+					if($value['etat']!= "en attente de répondu")
+					{
+						echo "<a class='btn-floating  orange' href='../mag/edit-msg.php?msg=". $value['msg_id']."'><i class='fa fa-eye' aria-hidden='true'></i></a>";
+					}
+					?>
 		    	</td>
+				<td>
+					<i class="fa fa-lock" aria-hidden="true"></i>
+					<i class="fa fa-fire" aria-hidden="true"></i>
+				</td>
+
 			</tr>
 			<?php endforeach ?>
 		</table>
