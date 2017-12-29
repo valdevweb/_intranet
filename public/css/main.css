@@ -67,12 +67,15 @@ h4{
   color: green;
 }
 
+/* icones communes */
 
-/* .warning-msg::before{
-   font-family: FontAwesome;
-  content: "\f06a" !important;
-  padding-right: 5px;
-} */
+.fa.fa-fire
+{
+  color:red ;
+}
+
+
+
 
 
 
@@ -210,9 +213,9 @@ nav .brand-logo{
 
 }
 
-.fa.fa-paperclip{
+/* .fa.fa-paperclip{
   color: ;
-}
+} */
 
 .fa.fa-user{
   padding-left: 30px;
@@ -370,7 +373,7 @@ input[type="file"] {
 }
 
 
-label[for="file"] {
+label[for="gazette"] {
     cursor: pointer;
     font-size: 1em;
     line-height: 40px;
@@ -379,7 +382,7 @@ label[for="file"] {
 }
 
 
-label[for="file"]:before {
+label[for="gazette"]:before {
     font-family: FontAwesome;
     content: "\f115";
     font-size: 1.5em;
@@ -391,7 +394,7 @@ label[for="file"]:before {
     border: 0px;
 }
 
-label[for="file"]:hover:before {
+label[for="gazette"]:hover:before {
   font-family: FontAwesome;
   content: "\f114";
   background: #e54e1e;
@@ -399,7 +402,7 @@ label[for="file"]:hover:before {
 }
 
 
-label[for="file"]:hover {
+label[for="gazette"]:hover {
  color: white !important;
  color: rgba(0, 0, 0, 0.84) !important;
 }

@@ -27,7 +27,7 @@
 					<th class='contact'>Objet</th>
 					<th class='contact'>Date réponse</th>
 					<th class="center">Consulter</th>
-					<th class='contact'>Status</th>
+					<th class='contact center'>Status</th>
 				</tr>
 			</thead>
 			<?php foreach($allMsg as $key => $value): ?>
@@ -64,7 +64,7 @@
 					}
 					?>
 		    	</td>
-				<td>
+				<td class="center">
 					<?php
 					if($value['etat']==="clos")
 					{
