@@ -75,10 +75,15 @@
 					{
 						echo "<i class='fa fa-lock' aria-hidden='true'></i>";
 					}
+					// au moins une rép btlec
 					elseif ($value['etat']==="en cours")
 					{
 					 echo "<i class='fa fa-fire' aria-hidden='true'></i>";
 
+					}
+					else
+					{
+						echo "en attente";
 					}
 					?>
 				</td>
