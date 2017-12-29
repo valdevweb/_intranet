@@ -11,9 +11,9 @@ include '../../functions/form.fn.php';
 	$idMag=$_SESSION['id'];
 	$msg=showThisMsg($pdoBt, $idMag, $idMsg);
 	$replies=showReplies($pdoBt, $idMsg);
-	 	// echo "<pre>";
-	 	// var_dump($replies);
-	 	// echo '</pre>';
+	// on supprime la var de session qui permet la redirection suite à l'ouverture du mail
+	unset($_SESSION['goto']);
+
 
 function isAttached($dbData)
 {
