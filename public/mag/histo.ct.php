@@ -10,22 +10,11 @@
 	$allMsg=listAllMsg($pdoBt);
 	//tri le tableau en fonction des id réponse et date msg
 	$allMsg = array_msort($allMsg, array('reply_id'=>'SORT_DESC','date_msg'=>'SORT_DESC'));
-	function etat($etat,$repliedBy,$dateReply){
-		switch ($data['etat']) {
-			case 'nouveau':
-			$value="en attente de réponse";
-			break;
-			case 'clos':
-			$value="clôturé le " . $data['date_reply'] ;
-			break;
-			case 'en cours':
-			$value= $data['replied_by'] . "vous a répondu le  " . $data['date_reply'] ;
-			break;
-			default:
-			$value="";
-			break;
-		}
-	}
+		// echo "<pre>";
+		// var_dump($allMsg);
+		// echo '</pre>';
+
+
 	?>
 
 		<div class="col s12">
@@ -60,24 +49,33 @@
 				</td>
 				<td>
 					<?php
-					if($value['etat']!= "nouveau")
+					if(!empty($value['max(table_replies.date_reply)']))
 					{
-						date('d-m-Y',strtotime($value['max(table_replies.date_reply)']));
+						echo date('d-m-Y',strtotime($value['max(table_replies.date_reply)']));
 					}
 					?>
 
 				</td>
 				<td class="center">
 					<?php
-					if($value['etat']!= "en attente de répondu")
+					if(!empty($value['max(table_replies.date_reply)']))
 					{
 						echo "<a class='btn-floating  orange' href='../mag/edit-msg.php?msg=". $value['msg_id']."'><i class='fa fa-eye' aria-hidden='true'></i></a>";
 					}
 					?>
 		    	</td>
 				<td>
-					<i class="fa fa-lock" aria-hidden="true"></i>
-					<i class="fa fa-fire" aria-hidden="true"></i>
+					<?php
+					if($value['etat']==="clos")
+					{
+						echo "<i class='fa fa-lock' aria-hidden='true'></i>";
+					}
+					elseif ($value['etat']==="en cours")
+					{
+					 echo "<i class='fa fa-fire' aria-hidden='true'></i>";
+
+					}
+					?>
 				</td>
 
 			</tr>
