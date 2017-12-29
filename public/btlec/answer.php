@@ -151,11 +151,18 @@ if (isset($_POST['close']))
 					<p><span class="boldtxt">Objet : </span><?=$oneMsg['objet'] ?></p>
 					<p><span class="boldtxt">Message : </span><?=$oneMsg['msg'] ?></p>
 					<p><span class="boldtxt"></span><?=isAttached($oneMsg['inc_file']) ?></p>
-		</div>
+				</div>
 	</div>
 	<p>&nbsp;</p>
 	<h5 class="light-blue-text text-darken-2">Historique des réponses :</h5>
 
+			<!-- exemple de if -->
+			<?php
+			if (!$replies)
+			{
+				echo "<div class='row box-border'><div class='col l12'><p>vous n'avez pas encore apporté de réponse au magasin</p></div></div>";
+			}
+			?>
 
 	<!-- histo des réponses	 -->
 
@@ -172,31 +179,18 @@ if (isset($_POST['close']))
 		</div>
 	</div>
 	<?php endforeach ?>
-	<h5 class="light-blue-text text-darken-2">Traitement du dossier :</h5>
-	<div class="down"></div>
+	<p>&nbsp;</p>
+
+	<h5 class="light-blue-text text-darken-2">Répondre au magasin :</h5>
+
 	<div class="row">
-		<div class="col l12 grey lighten-2">
-			<div class="padding-all">
-				<form action="answer.php?msg=<?=$idMsg ?>" method="post">
-					<div class="row align-right">
-						<button class="btn" type="submit" name="close">cloturer le dossier</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-
-<div class="row">
-	<div class="col l12 grey lighten-4">
-		<div class="padding-all">
-
-
-
+	<div class="col l12">
+		<!-- <div class="padding-all"> -->
 			<form action="answer.php?msg=<?=$idMsg ?>" method="post" enctype="multipart/form-data">
 				<!--MESSAGE-->
 				<div class="row">
-					<div class="input-field">
+					<div class="input-field white">
+						<i class="fa fa-pencil-square-o prefix" aria-hidden="true"></i>
 						<label for="reply"></label>
 						<textarea class="materialize-textarea" placeholder="votre réponse" name="reply" id="reply" ></textarea>
 					</div>
@@ -209,7 +203,7 @@ if (isset($_POST['close']))
 				</div>
 			</form>
 		</div>
-	</div>
+	<!-- </div> -->
 </div>
 
 <div class="row">
