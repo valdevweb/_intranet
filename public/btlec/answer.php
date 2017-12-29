@@ -62,6 +62,9 @@ function sendMail($to,$subject,$tplLocation,$objetdde,$link)
 $idMsg=$_GET['msg'];
 $oneMsg=showOneMsg($pdoBt,$idMsg);
 
+
+
+
 //contenu histo des reponses
 $replies=showReplies($pdoBt, $idMsg);
 
@@ -71,8 +74,9 @@ $tpl="../mail/new_reply_from_bt.tpl.html";
 $objet="PORTAIL BTLec - réponse à votre demande";
 mb_internal_encoding('UTF-8');
 $objet = mb_encode_mimeheader($objet);
-$objetdde=oneMsg['objet'];
+$objetdde=$oneMsg['objet'];
 $to = $oneMsg['email'];
+
 
 // listId récupéré qd insert données dans db
 
@@ -120,7 +124,7 @@ if(isset($_POST['post-reply']))
 }
 if (isset($_POST['close']))
 {
-	$etat="clos";
+	$etat="cloturé par BTlec";
 	if(!majEtat($pdoBt,$idMsg, $etat)){
 		$err="impossible de clore le dossier";
 		die;
