@@ -74,6 +74,50 @@ h4{
   color:red ;
 }
 
+.input-field{
+  padding: 20px;
+   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12),
+    0 3px 1px -2px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12),
+    0 3px 1px -2px rgba(0, 0, 0, 0.2);
+}
+
+/* MODIFICATION DES COULEURS DES FORMULAIRE */
+
+
+/* label color */
+   .input-field label {
+     /* color: #000; */
+   }
+   /* label focus color */
+   .input-field input[type=text]:focus + label {
+     color: #000;
+   }
+   /* label underline focus color */
+   .input-field input[type=text]:focus {
+     border-bottom: 1px solid #000;
+     box-shadow: 0 1px 0 0 #000;
+   }
+   /* valid color */
+   .input-field input[type=text].valid {
+     border-bottom: 1px solid #0d47a1;
+     box-shadow: 0 1px 0 0 #000;
+   }
+   /* invalid color */
+   .input-field input[type=text].invalid {
+     /* border-bottom: 1px solid #000; */
+     box-shadow: 0 1px 0 0 #000;
+   }
+   /* icon prefix focus color */
+   .input-field .prefix.active {
+     color: #000;
+   }
+
+
+
+
 
 
 
@@ -99,6 +143,16 @@ h4{
   padding-left: 10px;
 
 }
+
+.stat-t:after
+{
+  font-family: FontAwesome;
+  color: #afafaf;
+  content: "\f0dc";
+  padding-left: 10px;
+
+}
+
 .asc:after {
   font-family: FontAwesome;
   content: "\f0de";
