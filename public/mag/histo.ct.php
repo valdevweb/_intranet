@@ -27,7 +27,7 @@
 					<th class='contact'>Objet</th>
 					<th class='contact'>Date réponse</th>
 					<th class="center">Consulter</th>
-					<th class='contact center'>Status</th>
+					<th class='contact center'>Statut</th>
 				</tr>
 			</thead>
 			<?php foreach($allMsg as $key => $value): ?>
