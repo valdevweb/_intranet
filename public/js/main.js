@@ -30,11 +30,12 @@ $(document).ready(function(){
 			// alert(cleanfilename.length);
 			var last = cleanfilename.length
 			// alert(cleanfilename[last -1]);
-			$('#gaz-name').text(cleanfilename[last -1]);
+			$('#file-name').text(cleanfilename[last -1]);
+
 		}
 		else
 		{
-			$('#gaz-name').text(filename);
+			$('#file-name').text(filename);
 		}
 
 

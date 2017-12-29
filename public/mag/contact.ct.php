@@ -91,6 +91,9 @@
 					</div>
 
 				</div>
+				<div class="row">
+					<div class="col l2"><p id="file-name"><?=isset($_FILES['name'])? $_FILES['name']: false?></p></div>
+				</div>
 
 				<div class="row">
 					<div class="col l6">

@@ -83,7 +83,7 @@ include('../view/_navbar.php');
 			<div class="row">
 				<div class="col l2"></div>
 				<div class="col l8"></div>
-				<div class="col l2"><p id="gaz-name"><?=isset($_FILES['name'])? $_FILES['name']: false?></div>
+				<div class="col l2"><p id="file-name"><?=isset($_FILES['name'])? $_FILES['name']: false?></p></div>
 
 
 
