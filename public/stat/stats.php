@@ -1,61 +1,13 @@
 <?php
 require('../../config/autoload.php');
-echo $okko;
 
 if(!isset($_SESSION['id'])){
 	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
 }
 
-
-// function statProd($pdoStat,$day)
-// {
-// 	$req=$pdoStat->prepare("SELECT * FROM stats_logs WHERE type_log= :type_log AND site= :site AND date_heure LIKE :day ORDER BY date_heure, id_user");
-// 	$req->execute(array(
-// 		':type_log' =>'prod',
-// 		':site'		=>'portail BT',
-// 		':day'		=> $day.'%'
-
-// 	));
-// 	return $req->fetchAll(PDO::FETCH_ASSOC);
-
-// }
-
-// $result=statProd($pdoStat,'2017-12-23');
-// var_dump($result);
-// die;
-
-
-
-
-
-// function thisDay($pdoStat, $day)
-// {
-// 	$req=$pdoStat->prepare("
-// 	SELECT DATE_FORMAT(date_heure, '%d-%m-%Y') as date_simple, MONTH(date_heure) as month, DAY(date_heure) as day, YEAR(date_heure) as YEAR, type_log, site, id_user
-// 	FROM stats_logs
-// 	WHERE
-// 	type_log= :type_log
-// 	AND site= :site AND
-// 	DATE_FORMAT(date_heure, '%d-%m-%Y')= :date_simple
-// 	ORDER BY date_heure, id_user");
-// 	$req->execute(array(
-// 		':type_log' =>'prod',
-// 		':site'		=>'portail BT',
-// 		':date_simple'		=> $day
-
-// 	));
-// 	return $req->fetchAll(PDO::FETCH_ASSOC);
-
-// }
-
-// $yesterday=new DateTime();
-// $yesterday->modify('- 3 days');
-// $yesterday=$yesterday->format('d-m-Y');
-// var_dump($yesterday);
-// var_dump(thisDay($pdoStat,$yesterday));
-
-
+include('../view/_head.php');
+include('../view/_navbar.php');
 
 
 function statProd($pdoStat, $day)
@@ -71,15 +23,17 @@ function statProd($pdoStat, $day)
 
 }
 ?>
-<table>
+<div class="container">
+
+	<h1>connexions et pages visitées sur site de prod</h1>
+<table class="striped s12 grey-text text-darken-2 z-depth-2">
+
 	<tr>
-		<th>user</th>
-		<th>date_heure</th>
-		<th>page</th>
-		<th>action</th>
-		<th>description</th>
-
-
+		<th class="stat-t">user</th>
+		<th class="stat-t">date_heure</th>
+		<th class="stat-t">page</th>
+		<th class="stat-t">action</th>
+		<th class="stat-t">description</th>
 	</tr>
 
 
@@ -127,4 +81,13 @@ for ($i=1; $i <=$nbDays ; $i++)
 // 	$date=$date->format('d-m-Y');
 // 	echo $date;
 // }
-echo "</table>";
+echo "</table></div>";
+
+
+
+
+include('../view/_footer.php');
+ ?>
+
+</body>
+</html>
