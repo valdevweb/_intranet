@@ -184,7 +184,7 @@ if (isset($_POST['close']))
 	<h5 class="light-blue-text text-darken-2">Répondre au magasin :</h5>
 
 	<div class="row">
-	<div class="col l12">
+	<div class="col l12 m12">
 		<!-- <div class="padding-all"> -->
 			<form action="answer.php?msg=<?=$idMsg ?>" method="post" enctype="multipart/form-data">
 				<!--MESSAGE-->
@@ -195,11 +195,21 @@ if (isset($_POST['close']))
 						<textarea class="materialize-textarea" placeholder="votre réponse" name="reply" id="reply" ></textarea>
 					</div>
 				</div>
-
-				<!--BOUTONS-->
-
-				<div class="row align-right">
-					<button class="btn" type="submit" name="post-reply">Répondre</button>
+			<!--BOUTONS-->
+				<div class="row">
+					<div class='col l9'></div>
+					<div class='col l3'>
+						<p class="center">
+							<input type="checkbox" class="filled-in" id="clos" checked="checked" name="clos" />
+							<label for="clos">cloturer la demande</label>
+						</p>
+					</div>
+					<div class='col l9'></div>
+					<div class='col l3'>
+						<p class="center">
+						<button class="btn" type="submit" name="post-reply">Répondre</button>
+					</p>
+					</div>
 				</div>
 			</form>
 		</div>
