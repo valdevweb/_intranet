@@ -76,12 +76,11 @@ mb_internal_encoding('UTF-8');
 $objet = mb_encode_mimeheader($objet);
 $objetdde=$oneMsg['objet'];
 $to = $oneMsg['email'];
-
+$etat="";
 
 // listId récupéré qd insert données dans db
 
 $link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter votre réponse</a>";
-
 
 
 if(isset($_POST['post-reply']))
@@ -96,12 +95,24 @@ if(isset($_POST['post-reply']))
 
 		$err="";
 		extract($_POST);
+
+
 		// rec db
 		if(!recordReply($pdoBt,$idMsg)){
 			$err ="votre réponse n'a pas pu être enregistrée (err 01)";
 			die;
 		}
+		if(isset($_POST['clos']))
+		{
+		$etat="clos";
+		}
+		else
+		{
 		$etat="en cours";
+
+		}
+
+
 		if(!majEtat($pdoBt,$idMsg, $etat))
 		{
 			$err="votre réponse n'a pas pu être enregistrée (err 02)";
