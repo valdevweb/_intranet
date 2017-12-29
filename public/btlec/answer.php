@@ -118,6 +118,7 @@ if(isset($_POST['post-reply']))
 			$err="votre réponse n'a pas pu être enregistrée (err 02)";
 			die;
 		}
+
 		//-----------------------------------------
 		//				envoi du mail
 		//-----------------------------------------
@@ -197,7 +198,7 @@ if (isset($_POST['close']))
 	<div class="row">
 	<div class="col l12 m12">
 		<!-- <div class="padding-all"> -->
-			<form action="answer.php?msg=<?=$idMsg ?>" method="post" enctype="multipart/form-data">
+			<form action="answer.php?msg=<?=$idMsg ?>" method="post" enctype="multipart/form-data" id="answer">
 				<!--MESSAGE-->
 				<div class="row">
 					<div class="input-field white">

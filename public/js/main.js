@@ -46,10 +46,6 @@ $(document).ready(function(){
 
 	});
 
-	$( "input[type='file']" ).change(function() {
-
-});
-
 
 
 	//calendrier
@@ -62,11 +58,29 @@ $(document).ready(function(){
 		closeOnSelect: false // Close upon selecting a date,
 	});
 
+	$('#answer').submit(function()
+	{
+		var box=$("input[type='checkbox']#clos");
+		var boxState=box.prop("checked");
+		if(boxState)
+			{
+				boxState="Confirmez l'envoi de la réponse et la cloture du dossier ?";
+			//	return confirm(boxState);
+
+		}
+		else
+		{
+			boxState="Confirmez l'envoi de la réponse sans cloture du dossier ?";
+			//	return confirm(boxState);
+
+		}
+		// console.log(boxState);
+		return confirm(boxState);
+	});
 
 
 
-
-
+//PAS TOUCHER !!!!!!!
 
 });
 
