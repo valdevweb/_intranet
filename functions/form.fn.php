@@ -29,11 +29,13 @@ function getNames($db,$idgt)
 
 function addMsg($db,$id_service,$inc_file)
 {
+	$msg=strip_tags($_POST['msg']);
+	$msg=nl2br($msg);
 	$req=$db->prepare('INSERT INTO msg (objet, msg, id_mag, id_service, date_msg, etat,inc_file,who,email)
 		VALUE(:objet, :msg, :id_mag, :id_service, :date_msg, :etat, :inc_file, :who, :email)');
 	$req->execute(array(
 		':objet'		=> strip_tags($_POST['objet']),
-		':msg'			=> strip_tags($_POST['msg']),
+		':msg'			=> $msg,
 		':id_mag'		=> strip_tags($_SESSION['id']),
 		':id_service'	=> $id_service,
 		':date_msg'		=>date('Y-m-d H:i:s'),
