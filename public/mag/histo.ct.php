@@ -9,7 +9,11 @@
 	<?php
 	$allMsg=listAllMsg($pdoBt);
 	//tri le tableau en fonction des id réponse et date msg
-	$allMsg = array_msort($allMsg, array('reply_id'=>'SORT_DESC','date_msg'=>'SORT_DESC'));
+	if($allMsg)
+	{
+		$allMsg = array_msort($allMsg, array('reply_id'=>'SORT_DESC','date_msg'=>'SORT_DESC'));
+	}
+		//
 		// echo "<pre>";
 		// var_dump($allMsg);
 		// echo '</pre>';
@@ -30,6 +34,7 @@
 					<th class='contact center'>Statut</th>
 				</tr>
 			</thead>
+			<?php if($allMsg): ?>
 			<?php foreach($allMsg as $key => $value): ?>
 			<tr>
 				<td>
@@ -80,6 +85,7 @@
 
 			</tr>
 			<?php endforeach ?>
+			<?php endif; ?>
 		</table>
 		</div>
 	</div> <!-- fin row histo-->
