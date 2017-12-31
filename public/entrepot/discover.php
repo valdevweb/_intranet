@@ -13,9 +13,9 @@ include('../view/_navbar.php');
 require "../../functions/stats.fn.php";
 //------------------------------
 
-$descr="";
+$descr="page visite entrepot";
 $page=basename(__file__);
-$action="consultation page visite entrepot";
+$action="consultation";
 addRecord($pdoStat,$page,$action, $descr);
 
 ?>
