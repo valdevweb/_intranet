@@ -7,11 +7,28 @@ if(!isset($_SESSION['id'])){
 }
 //----------------------------------------------------------------
 require_once '../../functions/form.fn.php';
+require "../../functions/stats.fn.php";
+
+
+//recup service
+
+$gt=$_GET['gt'];
+
+
+//----------------------------------------------------------------
+//			stats
+//----------------------------------------------------------------
+
+$descr="page demande mag au service ".$gt ;
+$page=basename(__file__);
+$action="consultation";
+addRecord($pdoStat,$page,$action, $descr);
+
 
 //----------------------------------------------------------------
 //			affichage : infos du services + message non clos
 //----------------------------------------------------------------
-$gt=$_GET['gt'];
+
 $gtInfos=initForm($pdoBt);
 foreach($gtInfos as $data)
 {
@@ -110,20 +127,38 @@ if(!empty($_POST))
 		{
 
 			$file="";
-			//ajoute le msg dans db et
-			//recup l'id du msg posté : lien dans le mail : index.php?$lastId
+			//------------------------------
+			//			msg sans piece jointe
+			//			ajoute le msg dans db et
+			//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
+			//------------------------------
+
 			if($lastId=addMsg($pdoBt,$idGt, $file))
 			{
 				array_push($success, "Demande enregistrée avec succès");
 				//créa du lien pour le mail
 				$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour consulter le message</a>";
 				$linkMag="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour revoir votre demande</a>";
+				//------------------------------
+				//			ajout enreg dans stat
+				//------------------------------
+				$descr="demande mag au service ".$gt ;
+				$page=basename(__file__);
+				$action="envoi d'une demande";
+				addRecord($pdoStat,$page,$action, $descr);
 
 
 			}
 			else
 			{
 				array_push($err,"Echec : votre demande n'a pas pu être enregistrée");
+				//------------------------------
+				//			ajout enreg dans stat
+				//------------------------------
+				$descr="demande mag au service ".$gt ;
+				$page=basename(__file__);
+				$action="ERR envoi d'une demande";
+				addRecord($pdoStat,$page,$action, $descr);
 			}
 		}
 		else
@@ -135,13 +170,22 @@ if(!empty($_POST))
 			$uploadDir= '..\..\..\upload\mag\\';
 			$md5=checkUpload($upload, $uploadDir, $pdoBt);
 			//------------------------------
-			//			enreg db
+			//			msg avec piece jointe
+			//			ajoute le msg dans db et
+			//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
 			//------------------------------
 			if($lastId=addMsg($pdoBt,$idGt, $md5['success']))
 			{
 				//créa du lien pour le mail
 				$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour consulter le message</a>";
 				$linkMag="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour revoir votre demande</a>";
+				//------------------------------
+				//			ajout enreg dans stat
+				//------------------------------
+				$descr="demande mag au service ".$gt ;
+				$page=basename(__file__);
+				$action="envoi d'une demande";
+				addRecord($pdoStat,$page,$action, $descr);
 
 			}
 			else
