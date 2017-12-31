@@ -7,6 +7,11 @@ if(!isset($_SESSION['id'])){
 }
 //----------------------------------------------------------------
 require_once '../../functions/form.fn.php';
+require "../../functions/stats.fn.php";
+$descr="historique côté mag";
+$page=basename(__file__);
+$action="tableau général";
+addRecord($pdoStat,$page,$action, $descr);
 
 
 
