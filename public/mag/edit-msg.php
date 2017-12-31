@@ -7,6 +7,12 @@ if(!isset($_SESSION['id'])){
 include('../view/_head.php');
 include('../view/_navbar.php');
 include '../../functions/form.fn.php';
+include "../../functions/stats.fn.php";
+$descr="détail message côté magasin";
+$page=basename(__file__);
+$action="consultation";
+addRecord($pdoStat,$page,$action, $descr);
+
 	$idMsg=$_GET['msg'];
 	$idMag=$_SESSION['id'];
 	$msg=showThisMsg($pdoBt, $idMag, $idMsg);
