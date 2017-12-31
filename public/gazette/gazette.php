@@ -4,6 +4,18 @@ if(!isset($_SESSION['id'])){
   echo "pas de variable session";
   header('Location:'. ROOT_PATH.'/index.php');
 }
+//------------------------------
+//	ajout enreg dans stat
+//------------------------------
+require "../../functions/stats.fn.php";
+//------------------------------
+
+$descr="page historique et recherche des gazettes " ;
+$page=basename(__file__);
+$action="consultation";
+addRecord($pdoStat,$page,$action, $descr);
+
+
 include('../view/_head.php');
 include('../view/_navbar.php');
 
