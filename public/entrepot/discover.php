@@ -7,6 +7,17 @@ if(!isset($_SESSION['id'])){
 include('../view/_head.php');
 include('../view/_navbar.php');
 
+//------------------------------
+//			ajout enreg dans stat
+//------------------------------
+require "../../functions/stats.fn.php";
+//------------------------------
+
+$descr="";
+$page=basename(__file__);
+$action="consultation page visite entrepot";
+addRecord($pdoStat,$page,$action, $descr);
+
 ?>
 <div class="container">
 
