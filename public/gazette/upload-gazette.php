@@ -5,6 +5,7 @@ if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
 }
 require '../../functions/upload.gaz.fn.php';
+require "../../functions/stats.fn.php";
 
 //construction du lien pour visualiser la gazette uploadée
 $link="http://172.30.92.53/".$version."upload/gazette/";
@@ -19,7 +20,16 @@ if (isset($_POST['upload']))
 		$uploadDir= '..\..\..\upload\gazette\\';
 		$upload=$_FILES['file'];
 		$msg=checkUpload($upload, $uploadDir, $pdoBt);
-		//header('location:upload-gazette.php?msg');
+		//-------------------------------------<
+		//	ajout enreg dans stat
+		//--------------------------------------
+		$descr="fichier : " .$upload['name'] ;
+		$page=basename(__file__);
+		$action="upload gazette";
+		addRecord($pdoStat,$page,$action, $descr);
+		//------------------------------------->
+
+
 	}
 	else
 	{
@@ -28,7 +38,7 @@ if (isset($_POST['upload']))
 		die;
 	}
 }
-//vérifie si déjà gazette à la date selectionnée => si oui erreur est stop
+//vérifie si déjà gazette à la date selectionnée => si oui erreur et stop
 function gazetteExist($pdoBt)
 {
 	$req=$pdoBt->prepare("SELECT * FROM gazette WHERE date=:date AND category= :category");
@@ -46,7 +56,6 @@ function gazetteExist($pdoBt)
 		header('location:upload-gazette.php?err');
 		die;
 	}
-
 }
 
 include('../view/_head.php');
@@ -97,7 +106,7 @@ include('../view/_navbar.php');
 			<?php
 			if (isset($_GET['err']))
 			{
-				echo "<p>Une gazette a déja été envoyée aujourd'hui. Vous ne pouvez pas envoyer plusieurs gazettes par jour</p>";
+				echo "<p>Une gazette existe déjà pour cette date</p>";
 			}
 			if (isset($_GET['empty']))
 			{
