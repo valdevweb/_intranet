@@ -7,11 +7,25 @@ if(!isset($_SESSION['id'])){
 //on supprime la var qui mémorise le lien
 unset($_SESSION['goto']);
 
+
+include '../../functions/form.bt.fn.php';
+//affichage de l'historique des réponses
+include '../../functions/form.fn.php';
+require "../../functions/stats.fn.php";
+
+//------------------------------
+//	ajout enreg dans stat
+//------------------------------<
+
+$descr="detail d'une demande mag côté BT";
+$page=basename(__file__);
+$action="consultation";
+addRecord($pdoStat,$page,$action, $descr);
+
+//------------------------------>
+
 include '../view/_head.php';
 include '../view/_navbar.php';
-include '../../functions/form.bt.fn.php';
-//afichage de l'historique des réponses
-include '../../functions/form.fn.php';
 
 //------------------------------------------------------------
 //				affiche lien vers piec jointe si existe
@@ -96,20 +110,20 @@ if(isset($_POST['post-reply']))
 		$err="";
 		extract($_POST);
 
-
 		// rec db
 		if(!recordReply($pdoBt,$idMsg)){
 			$err ="votre réponse n'a pas pu être enregistrée (err 01)";
 			die;
 		}
+
+		//checkbox 'clos' =>  checked or not checked => majEtat
 		if(isset($_POST['clos']))
 		{
-		$etat="clos";
+			$etat="clos";
 		}
 		else
 		{
-		$etat="en cours";
-
+			$etat="en cours";
 		}
 
 
@@ -132,8 +146,27 @@ if(isset($_POST['post-reply']))
 		{
 			$err= "Echec d'envoi de l'email";
 		}
+		//------------------------------------------
+		//	ajout enreg ection dans stat
+		//-----------------------------------------<
+		if($err)
+		{
+			$descr="err : " . $err;
+		}
+		else
+		{
+			$descr="succès envoi réponse ";
+		}
+		$page=basename(__file__);
+		$action="envoi réponse BT => mag";
+		addRecord($pdoStat,$page,$action, $descr);
+
+		// fin stats ------------------------------>
+
 	}
 }
+
+//affichage
 if (isset($_POST['close']))
 {
 	$etat="cloturé par BTlec";
