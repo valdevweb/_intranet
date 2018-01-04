@@ -91,17 +91,13 @@ include('../view/_navbar.php');
 			</div>
 			<div class="row">
 				<div class="col l2"></div>
-				<div class="col l8"></div>
-				<div class="col l2"><p id="file-name"><?=isset($_FILES['name'])? $_FILES['name']: false?></p></div>
-
-
-
-
-
+				<div class="col l4"><p id="file-name"><?=isset($_FILES['name'])? $_FILES['name']: false?></p></div>
+				<div class="col l6"></div>
+			</div>
 		</form>
 	</div>
-	<div class="down"></div>
-	<div class="row">
+		<div class="down"></div>
+		<div class="row">
 		<div class="col l12 center">
 			<?php
 			if (isset($_GET['err']))
@@ -126,12 +122,14 @@ include('../view/_navbar.php');
 				var_dump($msg);
 
 			}
+			?>
 
 
-
-			echo "</div></div></div>";
-
+	</div>
+	</div>
+</div>
+	<?php
 			include('../view/_footer.php');
 
-			?>
+
 
