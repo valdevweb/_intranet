@@ -67,6 +67,33 @@ h4{
   color: green;
 }
 
+
+/* text plus petit - page histo mag, la légende */
+@media only screen and (min-width: 0) {
+  .smallTxt {
+    font-size: 10px;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .smallTxt {
+    font-size: 11px;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .smallTxt {
+    font-size: 12px;
+  }
+}
+
+/* petit padding à gauche */
+/* page histo mag */
+.pd-left{
+  padding-left: 10px;
+}
+
+
 /* icones communes */
 
 .fa.fa-fire

@@ -1,10 +1,25 @@
 <!--historique-->
 <div class="container">
 	<div class="row">
-		<div class="col s12">
+		<div class="col l12">
 			<h1 class="light-blue-text text-darken-2">Vos demandes</h1>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col l9"></div>
+		<div class="white col l3">
+			<p class="smallTxt center"><i>Signification des icônes </i></p>
+			<p class="smallTxt"><i class='fa fa-lock' aria-hidden='true'></i><span class="pd-left">dossier clos</span></p>
+			<p class="smallTxt"><i class='fa fa-fire' aria-hidden='true'></i><span class="pd-left">nouvelle réponse</p></span></p>
+		</div>
+	</div>
+
+
+
+
+
+<br>
+
 	<div class="row">
 	<?php
 	$allMsg=listAllMsg($pdoBt);
@@ -21,8 +36,8 @@
 
 	?>
 
-		<div class="col s12">
-		<table class="striped s12 grey-text text-darken-2 z-depth-2">
+		<div class="col s12 l12">
+		<table class="striped s12 l12 grey-text text-darken-2 z-depth-2">
 			<thead>
 				<tr>
 					<!-- ajouter historique des demandes sur tous les services (date / service / titre/ repondu le / btn détail) -->
@@ -63,10 +78,10 @@
 				</td>
 				<td class="center">
 					<?php
-					if(!empty($value['max(table_replies.date_reply)']))
-					{
+					// if(!empty($value['max(table_replies.date_reply)']))
+					// {
 						echo "<a class='btn-floating  orange' href='../mag/edit-msg.php?msg=". $value['msg_id']."'><i class='fa fa-eye' aria-hidden='true'></i></a>";
-					}
+					// }
 					?>
 		    	</td>
 				<td class="center">
