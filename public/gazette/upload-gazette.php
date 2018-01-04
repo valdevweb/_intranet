@@ -49,9 +49,9 @@ function gazetteExist($pdoBt)
 	// si on a des gazettes à la date spécifiée
 	if($data=$req->fetch())
 	{
-		echo "<pre>";
-		var_dump($data);
-		echo '</pre>';
+		// echo "<pre>";
+		// var_dump($data);
+		// echo '</pre>';
 		unset($_FILES, $_POST);
 		header('location:upload-gazette.php?err');
 		die;
