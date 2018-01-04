@@ -38,3 +38,8 @@ function createLinks($pdoBt,$gazettes,$version)
 }
 
 
+function histoGaz($pdoBt)
+{
+
+
+}
