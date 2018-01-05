@@ -36,7 +36,7 @@ function magInfo($pdoBt){
 }
 
 
-//interrogation sca3^pour mag
+//récup pano galec dans table user de la db web_users
 function getPanoGalec($pdoUser)
 {
 	$req=$pdoUser->prepare("SELECT galec FROM users WHERE id=:iduser");
