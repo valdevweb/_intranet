@@ -58,6 +58,17 @@ function gazetteExist($pdoBt)
 	}
 }
 
+//suppression de gazette
+// si clic sur lien supprimer, on envoi l'id en paramètre de $_GET['sup']
+
+if(isset($_GET['sup'])){
+	echo 'id a sup ' .$_GET['sup'];
+	deleteGaz($pdoBt,$_GET['sup']);
+	header('location:upload-gazette.php');
+
+}
+
+
 include('../view/_head.php');
 include('../view/_navbar.php');
 
@@ -96,8 +107,9 @@ include('../view/_navbar.php');
 			</div>
 		</form>
 	</div>
-		<div class="down"></div>
-		<div class="row">
+<!-- affichage message erreur, réussite -->
+	<div class="down"></div>
+	<div class="row">
 		<div class="col l12 center">
 			<?php
 			if (isset($_GET['err']))
@@ -123,11 +135,38 @@ include('../view/_navbar.php');
 
 			}
 			?>
+		</div>
+	</div><!-- END affichage message erreur, réussite -->
+
+	<h4 class="grey-text text-darken-2">les 10 dernières gazettes : </h1>
+	<table border="1" cellpadding="2px">
+		<thead><tr>
+			<th bgcolor="#CECECE">Date</th>
+			<th bgcolor="#CECECE">nom fichier</th>
+			<th bgcolor="#CECECE">Action</th>
+		</tr>
+	</thead>
+	<tbody>
+	<?php
+		$results= histoGazetteUpload($pdoBt);
+		foreach ($results as  $gazette) {
+	?>
+					<tr>
+						<td><?php echo date('d-m-Y', strtotime($gazette['date'])) ?></center></td>
+						<td><?php echo $gazette['file'] ?></center></td>
+						<td><a href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]).'?sup='. $gazette['id'] ?>">supprimer</a></center></td>
+					</tr>
+
+<?php
+	}
+
+?>
+</tbody>
+</table>
 
 
-	</div>
-	</div>
-</div>
+</div> <!--END container  -->
+
 	<?php
 			include('../view/_footer.php');
 

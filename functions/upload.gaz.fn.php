@@ -116,5 +116,15 @@ function insertIntoDb($pdoBt,$name)
 }
 
 
+//affichage de l'histo des gazettes si besoin supression sur page upload
+function histoGazetteUpload($pdoBt)
+{
+	$req=$pdoBt->prepare("SELECT date, id,file,category, week(date) as week, year(date) as year FROM gazette ORDER BY date DESC LIMIT 10 ");
+	$req->execute();
+return $req->fetchAll(PDO::FETCH_ASSOC);
+}
 
-
+function deleteGaz($pdoBt,$id){
+	$where = ['id' => $id];
+	$pdoBt->prepare("DELETE FROM gazette WHERE id=:id")->execute($where);
+}
