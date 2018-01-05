@@ -66,10 +66,10 @@ function login($dbUser){
 				$convertedPwd=pwdHash($_POST['pwd']);
 			// maj la db : sup old pwd et update pwd
 				$req=$dbUser->prepare('UPDATE users SET pwd=:convertedPwd, old_pwd=:old_pwd  WHERE login= :postLogin');
-				$req->execute(array(
+				$result=$req->execute(array(
 					':convertedPwd'		=> $convertedPwd,
 					':old_pwd'			=>"",
-					':postLogin'		=> $_POST['pwd']
+					':postLogin'		=> $_POST['login']
 
 				));
 				//initialisation session ut
@@ -77,7 +77,6 @@ function login($dbUser){
 				$_SESSION['user']=$_POST['login'];
 				$_SESSION['type']=$data['type'];
 				$_SESSION['goto']=$_POST['goto'];
-
 				//redirection sur home.php
 				header('Location:'. ROOT_PATH. '/public/home.php');
 
