@@ -9,14 +9,15 @@ function addRecord($pdoStat,$page,$action, $descr)
 	{
 		$typeLog="prod";
 	}
-
-	$req=$pdoStat->prepare('INSERT INTO stats_logs (type_log,id_user,site,page,action,description)
-		VALUE(:type_log,:id_user,:site,:page,:action,:description)');
+	$date=new DateTime();
+	$date=$date->format('Y-m-d H:i:s');
+	$req=$pdoStat->prepare('INSERT INTO stats_logs (type_log,id_user,site,date_heure,page,action,description)
+		VALUE(:type_log,:id_user,:site,:date_heure,:page,:action,:description)');
 	$req->execute(array(
 		':type_log'=>$typeLog,
 		':id_user'=>$_SESSION['user'],
 		':site'	=>'portail BT',
-
+		':date_heure'=>$date,
 		':page'		=>$page,
 		':action'	=>$action,
 		':description'=>$descr
@@ -31,6 +32,8 @@ function addRecord($pdoStat,$page,$action, $descr)
 function authStat($pdoStat,$page, $action, $err)
 {
 	global $version;
+	$date=new DateTime();
+	$date=$date->format('Y-m-d H:i:s');
 	if($version=="_"){
 		$typeLog="dev";
 	}
@@ -43,12 +46,13 @@ function authStat($pdoStat,$page, $action, $err)
 	{
 		$err="user authentifié";
 	}
-	$req=$pdoStat->prepare('INSERT INTO stats_logs (type_log,id_user,site,page,action,description)
-		VALUE(:type_log,:id_user,:site,:page,:action,:description)');
+	$req=$pdoStat->prepare('INSERT INTO stats_logs (type_log,id_user,site,date_heure,page,action,description)
+		VALUE(:type_log,:id_user,:site,:date_heure,:page,:action,:description)');
 	$req->execute(array(
 		':type_log'=>$typeLog,
 		':id_user'=>$_POST['login'],
 		':site'	=>'portail BT',
+		':date_heure'=>$date,
 		':page'		=>$page,
 		':action'	=>$action,
 		':description'=>$err
