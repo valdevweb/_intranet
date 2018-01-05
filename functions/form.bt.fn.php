@@ -58,21 +58,25 @@ function histoDdesMag($pdoBt)
 
 }
 
-function getMag($pdoBt,$idMag)
-{
-	$req=$pdoBt->prepare("SELECT * FROM lk_user WHERE iduser= :id");
-	$req->execute(array(
-		':id' => $idMag
-	));
-	if($galecExist=$req->fetch(PDO::FETCH_ASSOC))
-		{
-			$req=$pdoBt->prepare("SELECT * FROM sca3 WHERE galec= :galec");
-			$req->execute(array(
-				':galec' => $galecExist['galec']
-			));
 
+//récup pano galec dans table user de la db web_users
+function getPanoGalec($pdoUser,$idMag)
+{
+	$req=$pdoUser->prepare("SELECT galec FROM users WHERE id=:id");
+	$req->execute(array(
+		':id'=>$idMag
+	));
+	// on ne retourne qu'un résultat m'id est unique
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+function getMag($pdoBt,$panoGalec)
+{
+	$req=$pdoBt->prepare("SELECT * FROM sca3 WHERE galec= :galec");
+	$req->execute(array(
+		':galec' =>$panoGalec
+			));
 			return $req->fetch(PDO::FETCH_ASSOC);
-		}
 
 }
 

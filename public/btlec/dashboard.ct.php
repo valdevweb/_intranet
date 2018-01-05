@@ -45,25 +45,28 @@
 			<!-- entete -->
 
 			<div class="row <?= color($value['id_service'],$services)?> box-border" >
-				<?php $idMag=$value['id_mag'];?>
-				<?php $magInfo=getMag($pdoBt,$idMag); ?>
-				<div class="col l3">
+				<?php $idMag=$value['id_mag'];
+				$panoGalec=getPanoGalec($pdoUser,$idMag);
+				$magInfo=getMag($pdoBt,$panoGalec['galec']); ?>
+				<div class="col l4">
 					<p class="boldtxt">MAGASIN :
 						<?= $magInfo['mag']  ?>
 					</p>
 				</div>
-				<div class="col l3">
-					<p class="boldtxt">
-						<?= $magInfo['city'] . ' - ' .$magInfo['cp']  ?>
+
+				<div class="col l4">
+					<p class="boldtxt">Interlocuteur :
+						<?=$value['who'] ?>
+						 <?php 	 // $magInfo['city'] . ' - ' .$magInfo['cp']  ?>
 					</p>
 				</div>
-				<div class="col l3">
+				<div class="col l2">
 					<p class="boldtxt">Code BTLec :
 						<?= $magInfo['btlec']  ?>
 					</p>
 				</div>
-				<div class="col l3">
-					<p class="boldtxt">Panonceau galec :
+				<div class="col l2">
+					<p class="boldtxt">Code Galec :
 						<?= $magInfo['galec']  ?>
 					</p>
 				</div>
