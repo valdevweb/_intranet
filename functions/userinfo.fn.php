@@ -36,7 +36,17 @@ function magInfo($pdoBt){
 }
 
 
-//recupérer la fonction, les droits
+//interrogation sca3^pour mag
+function getPanoGalec($pdoUser)
+{
+	$req=$pdoUser->prepare("SELECT galec FROM users WHERE id=:iduser");
+	$req->execute(array(
+		':iduser'=>$_SESSION['id']
+	));
+	// on ne retourne qu'un résultat m'id est unique
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
 
 
 

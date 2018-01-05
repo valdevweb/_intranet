@@ -30,10 +30,12 @@ if(!empty($_SERVER['HTTP_REFERER']))
 	if($_SESSION['type']=="mag")
 	{
 		// lk_user => lien id webuser /idgalec => permet d'interroger le sca 3
-		$lkuserid=getUserId($pdoBt);
-		$_SESSION['id_galec']=$lkuserid['galec'];
+
+		$userPanoGalec=getPanoGalec($pdoUser);
+		var_dump($userPanoGalec);
+		$_SESSION['id_galec']=$userPanoGalec['galec'];
 		//recup info mag dans sca3
-		$scatrois=magInfo($pdoBt,$lkuserid['galec']);
+		$scatrois=magInfo($pdoBt,$userPanoGalec['galec']);
 		//personnalisation affichage => nom du mag
 		$typeTitle="Leclerc";
 		$_SESSION['nom']=$scatrois['mag'];
@@ -44,6 +46,10 @@ if(!empty($_SERVER['HTTP_REFERER']))
 		//si action est vide, le user vient de se connecté
 		$action = (empty($action)) ? "connexion mag" : $action;
 		addRecord($pdoStat,$page,$action, $descr);
+			echo "<pre>";
+			var_dump($_SESSION);
+			echo '</pre>';
+
 	}
 	elseif($_SESSION['type']=='btlec')
 	{
