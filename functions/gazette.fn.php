@@ -40,21 +40,19 @@ function createLinks($pdoBt,$gazettes,$version)
 
 function histoGaz($pdoBt,$week,$year)
 {
-$req=$pdoBt->prepare("SELECT date, id,file,category, week(date) as week, year(date) as year FROM gazette WHERE week(date)= :week AND year(date)=:year ORDER BY date");
-$req->bindValue(':week',$week, PDO::PARAM_INT);
-$req->bindValue(':year',$year, PDO::PARAM_INT);
-$req->execute();
-
-
+	$req=$pdoBt->prepare("SELECT date, id,file,category, week(date) as week, year(date) as year FROM gazette WHERE week(date)= :week AND year(date)=:year ORDER BY date");
+	$req->bindValue(':week',$week, PDO::PARAM_INT);
+	$req->bindValue(':year',$year, PDO::PARAM_INT);
+	$req->execute();
 return $req->fetchAll(PDO::FETCH_ASSOC);
-
-
 }
 
-// retourne le nombre de semaine d'une année passée en paramètre
+// retourne le nombre de semaine d'une année passée en paramètre => sert encore ??? page consultation gazette
 function getIsoWeeksInYear($year)
 {
 	$date = new DateTime;
 	$date->setISODate($year, 53);
 	return ($date->format("W") === "53" ? 53 : 52);
 }
+
+
