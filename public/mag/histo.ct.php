@@ -28,10 +28,7 @@
 	{
 		$allMsg = array_msort($allMsg, array('reply_id'=>'SORT_DESC','date_msg'=>'SORT_DESC'));
 	}
-		//
-		// echo "<pre>";
-		// var_dump($allMsg);
-		// echo '</pre>';
+
 
 
 	?>
@@ -65,7 +62,7 @@
 
 				</td>
 				<td>
-					<?= $value['objet']?>
+					<?= nl2br($value['objet'])?>
 				</td>
 				<td>
 					<?php

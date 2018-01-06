@@ -66,7 +66,11 @@ function listAllMsg($pdoBt)
 	if($idExist=$req->fetchAll(PDO::FETCH_COLUMN))
 		{
 			foreach ($idExist as $key => $value) {
-				$req=$pdoBt->prepare("SELECT table_msg.id AS msg_id, objet, msg, id_service, date_msg, table_msg.etat, table_replies.replied_by, max(table_replies.date_reply), table_replies.id AS reply_id  FROM msg table_msg LEFT JOIN replies table_replies ON table_msg.id = table_replies.id_msg WHERE table_replies.id_msg= :idMsg");
+
+				//recup id der réponse
+				// SELECT * FROM replies WHERE date_reply IN (SELECT max(date_reply) FROM replies GROUP BY id_msg)
+
+				$req=$pdoBt->prepare("SELECT table_msg.id AS msg_id, objet, msg, id_service, date_msg, table_msg.etat, table_replies.replied_by, table_replies.reply, max(table_replies.date_reply), table_replies.id AS reply_id  FROM msg table_msg LEFT JOIN replies table_replies ON table_msg.id = table_replies.id_msg WHERE table_replies.id_msg= :idMsg AND date_reply IN (SELECT max(date_reply) FROM replies GROUP BY id_msg)");
 				$req->execute(array(
 					':idMsg'	=>$value
 
