@@ -18,7 +18,7 @@
 //-----------------------------------
 function listServices($pdoBt)
 {
-	$req=$pdoBt->prepare("SELECT * FROM services ORDER BY full_name");
+	$req=$pdoBt->prepare("SELECT * FROM services WHERE slug <>'' ORDER BY full_name ");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
