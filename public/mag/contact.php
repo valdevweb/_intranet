@@ -46,11 +46,11 @@ $nbName=sizeof($serviceName);
 //----------------------------------------------------------------
 //		éviter mulitple soumission du form->header ap traitement => plus utile
 //----------------------------------------------------------------
-$here = $_SERVER['PHP_SELF'] ;
-if(!empty($_SERVER['QUERY_STRING']))
-{
-	$here .= '?' . $_SERVER['QUERY_STRING'] ;
-}
+// $here = $_SERVER['PHP_SELF'] ;
+// if(!empty($_SERVER['QUERY_STRING']))
+// {
+// 	$here .= '?' . $_SERVER['QUERY_STRING'] ;
+// }
 
 
 
@@ -112,20 +112,19 @@ if(!empty($_POST))
 	if(empty($objet) || empty($msg) || empty($name) || empty($email))
 	{
 		array_push($err, "merci de remplir tous les champs");
-		//format mail jo
-		if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+	}
+	elseif(!filter_var($email, FILTER_VALIDATE_EMAIL))
+	{
 				array_push($err, 'Indiquez un email valide');
-		}
-
 
 	}
 	else
 	{
 		//formulaire corectement rempli
-		//pas de piece jointe
+
 		if (empty($_FILES['file']['name']))
 		{
-
+			//pas de pièce jointe
 			$file="";
 			//------------------------------
 			//			msg sans piece jointe
@@ -169,6 +168,7 @@ if(!empty($_POST))
 			$upload=$_FILES['file'];
 			$uploadDir= '..\..\..\upload\mag\\';
 			$md5=checkUpload($upload, $uploadDir, $pdoBt);
+
 			//------------------------------
 			//			msg avec piece jointe
 			//			ajoute le msg dans db et
@@ -210,12 +210,9 @@ if(!empty($_POST))
 		else
 		{
 			array_push($err, "Echec d'envoi d'email");
-
-
-
 		}
-	}
-}
+	}	//-------------------------------------> formulaire non vide
+}		//-------------------------------------> soumission formulaire
 
 
 
