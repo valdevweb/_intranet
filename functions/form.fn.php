@@ -277,7 +277,7 @@ function allowed($mime)
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 		"application/vnd.ms-powerpoint" ,
 		"application/vnd.openxmlformats-officedocument.presentationml.presentation",
-	//	"application/pdf",
+		"application/pdf",
 		"image/png"
 	);
 return (in_array($mime,$whiteList)) ? TRUE : FALSE ;
