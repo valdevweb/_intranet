@@ -18,6 +18,8 @@ include ('../view/_navbar.php');
 <div class="container">
 
 	<h1 class="red-text" >En cours de construction</h1>
+
+<!--
 	<div class="row">
 		<div class="col l5">
 			<p class="red">Merci d'envoyer votre demande  à btlecest.portailweb.exploitation@btlec.fr</p>
@@ -42,6 +44,8 @@ include ('../view/_navbar.php');
     	<p><button class="w3-btn w3-blue-grey" name="help" >Envoyer</button></p>
     </div>
 </form>
+
+-->
 </div>
 
 <br><br>
