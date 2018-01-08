@@ -188,29 +188,26 @@ function showReplies($pdoBt,$idMsg){
 
 
 // upload le fichier si mime ok
-function checkUpload($upload, $location, $pdoBt)
+function checkUpload($location, $pdoBt)
 {
 	// $renamed = md5($filename. time());        #rename of the file
 // if (!@move_uploaded_file($_FILES[$uploadfile]['tmp_name'], $save_path.$renamed. $extension))
-	$name=$upload['name'];
-	$ext=end(explode('.',$name));
-	$md5= md5(time()).'.'.$ext;
-	$tmp=$upload['tmp_name'];
-	$error=$upload['error'];
-	$size=$upload['size'];
-	$type=$upload['type'];
-	//si type de fichier non autorisé
-	if (!mime($tmp))
-	{
-		$msg=array('err'=>  "il est interdit d'envoyer ce type de fichier");
-		return $msg;
-		exit;
-	}
+//
+
+	$filename=$_FILES['file']['name'];
+	$tmp=explode('.',$filename);
+	$ext=end($tmp);
+	$filename= md5(time()).'.'.$ext;
+	$tmp=$_FILES['file']['tmp_name'];
+	$error=$_FILES['file']['error'];
+	$size=$_FILES['file']['size'];
+	$type=$_FILES['file']['type'];
+
 	// si le déplacement du fichier tmp vers le rep d'upload ok
-	if(move_uploaded_file($tmp, $location.$md5))
+	if(move_uploaded_file($tmp, $location.$filename))
 	{
 
-		$msg=array('success' =>$md5);
+		$msg=array('filename' =>$filename);
 	}
 	else
 	{
@@ -219,25 +216,35 @@ function checkUpload($upload, $location, $pdoBt)
 return $msg;
 }
 
+function test()
+{
+	return $_FILES['file'];
+}
+
+
 function mime($tmp, $encoding=true)
 {
     //$mime=false;
 
-    if (function_exists('finfo_file')) {
+    if (function_exists('finfo_file'))
+    {
         $finfo = finfo_open(FILEINFO_MIME);
         $mime = finfo_file($finfo, $tmp);
         finfo_close($finfo);
     }
-    else if (substr(PHP_OS, 0, 3) == 'WIN') {
+    else if (substr(PHP_OS, 0, 3) == 'WIN')
+    {
         $mime = mime_content_type($tmp);
     }
-    else {
+    else
+    {
         $file = escapeshellarg($tmp);
         $cmd = "file -iL $tmp";
 
         exec($cmd, $output, $r);
 
-        if ($r == 0) {
+        if ($r == 0)
+        {
             $mime = substr($output[0], strpos($output[0], ': ')+2);
         }
     }
@@ -251,12 +258,11 @@ function mime($tmp, $encoding=true)
     	$mime= substr($mime, 0, strpos($mime, '; '));
     	//$mime=$mime;
     }
-
     else
     {
     	$mime=$mime;
     }
-
+//$mime récupéré, on interroge la fonction allowed et renvoi true ou false
    	if(!allowed($mime))
    	{
    		return false;
@@ -265,7 +271,7 @@ function mime($tmp, $encoding=true)
    	else
    	{
    		return true;
-   	   	}
+	}
 }
 
 function allowed($mime)

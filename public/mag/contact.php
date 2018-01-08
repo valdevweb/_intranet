@@ -145,6 +145,23 @@ if(!empty($_POST))
 				$page=basename(__file__);
 				$action="envoi d'une demande";
 				addRecord($pdoStat,$page,$action, $descr);
+									//-----------------------------------------
+					//				envoi des mails
+					//-----------------------------------------
+				if(sendMail($mailingList,$objBt,$tplForBtlec,$name,$magName, $link))
+				{
+					array_push($success,"Email envoyé avec succès");
+					$contentTwo="";
+					sendMail($email,$objMag,$tplForMag,$full_name,$contentTwo,$linkMag);
+			//on vide le formulaire et on redirige sur la page histo demande mag
+					unset($objet,$msg,$name,$email);
+					header('Location:'. ROOT_PATH. '/public/mag/histo.php');
+
+				}
+				else
+				{
+					array_push($err, "Echec d'envoi d'email");
+				}
 
 
 			}
@@ -167,50 +184,63 @@ if(!empty($_POST))
 			//------------------------------
 			$upload=$_FILES['file'];
 			$uploadDir= '..\..\..\upload\mag\\';
-			$md5=checkUpload($upload, $uploadDir, $pdoBt);
 
-			//------------------------------
-			//			msg avec piece jointe
-			//			ajoute le msg dans db et
-			//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
-			//------------------------------
-			if($lastId=addMsg($pdoBt,$idGt, $md5['success']))
+			$authorized=mime($upload['tmp_name'], $encoding=true);
+
+
+			if($authorized)
 			{
-				//créa du lien pour le mail
-				$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour consulter le message</a>";
-				$linkMag="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour revoir votre demande</a>";
+				$hashedFileName=checkUpload($uploadDir, $pdoBt);
 				//------------------------------
-				//			ajout enreg dans stat
+				//			msg avec piece jointe
+				//			ajoute le msg dans db et
+				//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
 				//------------------------------
-				$descr="demande mag au service ".$gt ;
-				$page=basename(__file__);
-				$action="envoi d'une demande";
-				addRecord($pdoStat,$page,$action, $descr);
+				if($lastId=addMsg($pdoBt,$idGt, $hashedFileName['filename']))
+				{
+					//créa du lien pour le mail
+					$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour consulter le message</a>";
+					$linkMag="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour revoir votre demande</a>";
+					//------------------------------
+					//			ajout enreg dans stat
+					//------------------------------
+					$descr="demande mag au service ".$gt ;
+					$page=basename(__file__);
+					$action="envoi d'une demande";
+					addRecord($pdoStat,$page,$action, $descr);
+					//-----------------------------------------
+					//				envoi des mails
+					//-----------------------------------------
+					if(sendMail($mailingList,$objBt,$tplForBtlec,$name,$magName, $link))
+					{
+						array_push($success,"Email envoyé avec succès");
+						$contentTwo="";
+						sendMail($email,$objMag,$tplForMag,$full_name,$contentTwo,$linkMag);
+			//on vide le formulaire et on redirige sur la page histo demande mag
+						unset($objet,$msg,$name,$email);
+						header('Location:'. ROOT_PATH. '/public/mag/histo.php');
 
+					}
+					else
+					{
+						array_push($err, "Echec d'envoi d'email");
+					}
+
+				}
+				else
+				{
+					array_push($err,"Echec : votre demande n'a pas pu être enregistrée");
+				}
 			}
 			else
 			{
-				array_push($err,"Echec : votre demande n'a pas pu être enregistrée");
+				array_push($err, "fichier interdit");
+
 			}
 
 		}
-//-----------------------------------------
-//				envoi des mails
-//-----------------------------------------
-		if(sendMail($mailingList,$objBt,$tplForBtlec,$name,$magName, $link))
-		{
-			array_push($success,"Email envoyé avec succès");
-			$contentTwo="";
-			sendMail($email,$objMag,$tplForMag,$full_name,$contentTwo,$linkMag);
-			//on vide le formulaire et on redirige sur la page histo demande mag
-			unset($objet,$msg,$name,$email);
-			header('Location:'. ROOT_PATH. '/public/mag/histo.php');
 
-		}
-		else
-		{
-			array_push($err, "Echec d'envoi d'email");
-		}
+
 	}	//-------------------------------------> formulaire non vide
 }		//-------------------------------------> soumission formulaire
 
