@@ -10,13 +10,14 @@ include('../view/_head.php');
 include('../view/_navbar.php');
 
 
-function statProd($pdoStat, $day)
+function statProd($pdoStat, $year,$month)
 {
-	$req=$pdoStat->prepare("SELECT * FROM stats_logs WHERE type_log= :type_log AND site= :site AND date_heure LIKE :day ORDER BY date_heure DESC, id_user");
+	$req=$pdoStat->prepare("SELECT id_log, type_log,id_user, site, year(date_heure)as year,page, month(date_heure) as month,date_heure,action, description FROM stats_logs WHERE type_log= :type_log AND site= :site AND year(date_heure)=:year AND month(date_heure)=:month ORDER BY date_heure DESC, id_user");
 	$req->execute(array(
 		':type_log' =>'prod',
 		':site'		=>'portail BT',
-		':day'		=> $day.'%'
+		':year'		=> $year,
+		':month'	=> $month
 
 	));
 	return $req->fetchAll(PDO::FETCH_ASSOC);
@@ -41,29 +42,13 @@ function statProd($pdoStat, $day)
 <?php
 // $data=statProd($pdoStat,$day);
 
-$month='12';
-$year="2017";
+$month=1;
+$year=2018;
 $nbDays=cal_days_in_month(CAL_GREGORIAN, $month,$year);
+var_dump($month);
 
-//numero de jour du mois en commençant par lundi =1
-//N	Représentation numérique ISO-8601 du jour de la semaine (ajouté en PHP 5.1.0)	1 (pour Lundi) à 7 (pour Dimanche)
-$NDate=(int) date("N", mktime(1,1,1, $month,1,$year));
-//echo $nbDays;
-//echo $NDate;
 
-for ($i=1; $i <=$nbDays ; $i++)
-{
-	// if ($i<10)
-	// {
-	// 	$day= $year.'-'.$month .'-0'. $i;
-	// }
-	// else
-	// {
-	// 	$day= $year.'-'.$month .'-'. $i;
-	// }
-		$day= $year.'-'.$month .'-'. $i;
-
-	if($result=statProd($pdoStat,$day))
+	if($result=statProd($pdoStat,$year,$month))
 	{
 		foreach ($result as $key => $value) {
 			echo "<tr><td>" .$value['id_user'] .' </td><td>' .$value['date_heure'].'</td><td>' .$value['page'] .' </td><td> ' .$value['action'] .'</td><td>' .$value['description'] .'</td></tr>' ;
@@ -74,7 +59,7 @@ for ($i=1; $i <=$nbDays ; $i++)
 		//echo "<br>pas de visite le $day <br>";
 	}
 
-}
+
 // foreach ($data as $key => $value) {
 
 // 	$date=new DateTime($value['date_heure']);
