@@ -110,6 +110,12 @@ function array_msort($array, $cols)
     return $ret;
 
 }
+
+
+
+
+
+
 //affichage nom du service en clair (histo mag)
 
 function service($pdoBt,$idService){
@@ -149,7 +155,7 @@ function showThisMsg($pdoBt, $idMag, $idMsg){
 		':idMsg'	=>$idMsg
 	));
 
-	return $req->fetch();
+	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
 
@@ -165,24 +171,36 @@ function showReplies($pdoBt,$idMsg){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// function whoReplied($pdoBt,$iduser){
-// 	$req=$pdoBt->prepare("SELECT nom, prenom FROM btlec WHERE id= :id");
-// 	$req->execute(array(
-// 		':id'	=>$iduser
-// 	));
-// 	return $req->fetch(PDO::FETCH_ASSOC);
-// }
 
-// function back($pdoBt, $idMag, $idMsg){
-// 	$req=$pdoBt->prepare("SELECT * FROM msg WHERE id_mag= :idMag AND id= :idMsg ");
-// 	$req->execute(array(
-// 		':idMag'	=>$idMag,
-// 		':idMsg'	=>$idMsg
-// 	));
 
-// 	return $req->fetch();
-// }
+function sendMailEditMsg($mailingList,$subject,$tplLocation,$contentOne,$contentTwo,$link)
+{
+	$tpl = file_get_contents($tplLocation);
+	$tpl=str_replace('{CONTENT1}',$contentOne,$tpl);
+	$tpl=str_replace('{CONTENT2}',$contentTwo,$tpl);
+	$tpl=str_replace('{LINK}',$link,$tpl);
 
+
+	$htmlContent=$tpl;
+// Set content-type header for sending HTML email
+	$headers = "MIME-Version: 1.0" . "\r\n";
+	$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+// Additional headers
+	$headers .= 'From: ne_pas_repondre@btlec.fr>' . "\r\n";
+	$headers .= 'Cc: ' . "\r\n";
+	$headers .= 'Bcc:' . "\r\n";
+
+	if(mail($mailingList,$subject,$htmlContent,$headers))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+}
 
 
 
