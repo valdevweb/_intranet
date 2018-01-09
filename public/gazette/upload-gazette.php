@@ -83,7 +83,7 @@ include('../view/_navbar.php');
 				<div class="col l2"></div>
 				<div class="col l4">
 					<label class="w3-text-grey" for="date">Selectionnez la date de la gazette à uploader</label>
-					<input type="date" class="w3-input w3-border" name="date" id="date" >
+					<input type="date" class="w3-input w3-border no-spin" name="date" id="date" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
 				</div>
 				<div class="col l6"></div>
 			</div>
