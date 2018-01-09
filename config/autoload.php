@@ -29,6 +29,7 @@ $okko= 'version : ' . ROOT_PATH  .', db  : '.$pdo_file;
 $md_css=ROOT_PATH ."/vendor/materialize/css/materialize.css";
 $awesome=ROOT_PATH . "/vendor/fontawesome/css/font-awesome.min.css";
 $tweakcss=ROOT_PATH ."/public/css/main.css";
+$timelinecss=ROOT_PATH ."/public/css/timeline.css";
 $w3c=ROOT_PATH ."/vendor/w3c/w3c.css";
 $nav=ROOT_PATH ."/public/css/nav.css";
 
