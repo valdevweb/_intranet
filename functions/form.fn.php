@@ -173,7 +173,19 @@ function showReplies($pdoBt,$idMsg){
 
 
 
-function sendMailEditMsg($mailingList,$subject,$tplLocation,$contentOne,$contentTwo,$link)
+
+
+/**
+ * fonction générique d'envoi de mail
+ * @param  $mailingList liste de diffu ou mail
+ * @param  $subject     objet du mail
+ * @param  $tplLocation emplacement du fichier template
+ * @param  $contentOne  contenu dynamique 1 du tplt
+ * @param  $contentTwo  contenu dynamique 2 du tplt
+ * @param  $link        contenu dynamique = lien vers page du site
+ * @return true or false
+ */
+function sendMail($mailingList,$subject,$tplLocation,$contentOne,$contentTwo,$link)
 {
 	$tpl = file_get_contents($tplLocation);
 	$tpl=str_replace('{CONTENT1}',$contentOne,$tpl);
@@ -201,8 +213,6 @@ function sendMailEditMsg($mailingList,$subject,$tplLocation,$contentOne,$content
 	}
 
 }
-
-
 
 
 // upload le fichier si mime ok
