@@ -25,10 +25,10 @@ $tplForBtlec="../mail/new_mag_msg.tpl.html";
 $contentOne=$msg['who'];
 $contentTwo=$_SESSION['id'];
 $replies=showReplies($pdoBt, $idMsg);
-// function sendMailEditMsg($mailingList,$subject,$tplLocation,$contentOne,$contentTwo,$link)
 
-	// on supprime la var de session qui permet la redirection suite à l'ouverture du mail
-	unset($_SESSION['goto']);
+
+// on supprime la var de session qui permet la redirection suite à l'ouverture du mail
+unset($_SESSION['goto']);
 
 
 function isAttached($dbData)
@@ -72,7 +72,7 @@ if(isset($_POST['post-reply']))
 		//				envoi du mail
 		//-----------------------------------------
 		$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter le message</a>";
-		if(sendMailEditMsg($to,$objet,$tplForBtlec,$contentOne,$contentTwo,$link))
+		if(sendMail($to,$objet,$tplForBtlec,$contentOne,$contentTwo,$link))
 		{
 			$success=true;
 
