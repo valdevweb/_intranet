@@ -28,7 +28,7 @@ addRecord($pdoStat,$page,$action, $descr);
 //			affichage : infos du services
 //----------------------------------------------------------------
 
-$gtInfos=initForm($pdoBt);
+$gtInfos=infoService($pdoBt);
 foreach($gtInfos as $data)
 {
 	$full_name= $data['full_name'];
@@ -89,8 +89,6 @@ $tplForBtlec="../mail/new_mag_msg.tpl.html";
 $tplForMag="../mail/ar_mag.tpl.html";
 $objBt="PORTAIL BTLec - nouvelle demande magasin";
 $objMag="PORTAIL BTLec - demande envoyée";
-//$objMag = utf8_decode($objMag);
-//$objMag = mb_encode_mimeheader($objMag,"UTF-8");
 mb_internal_encoding('UTF-8');
 $objMag = mb_encode_mimeheader($objMag);
 

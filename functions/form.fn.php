@@ -1,9 +1,19 @@
 <?php
 //-------------------------------------------------------------------------------------
-//					function d'affichage utilisées sur la page contact mag
+//					récup tous les champs d'un service
+//					pages : contact.php
 //-------------------------------------------------------------------------------------
+function infoService($db){
+	$req=$db->prepare('SELECT * FROM services WHERE slug = :gt');
+	$req->execute(array(
+		':gt' =>$_GET['gt']
+	));
+	return $row=$req->fetchAll(PDO::FETCH_ASSOC);
+}
 
 
+// doublon de infoServices à supprimer
+// on conserve en atterndant d'avoir faire la liste des fonctions et des pages dans lesquelles elles sont utilisées
 function initForm($db){
 	$req=$db->prepare('SELECT * FROM services WHERE slug = :gt');
 	$req->execute(array(
@@ -11,6 +21,7 @@ function initForm($db){
 	));
 	return $row=$req->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 
 function getNames($db,$idgt)
