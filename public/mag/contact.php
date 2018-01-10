@@ -10,8 +10,7 @@ require_once '../../functions/form.fn.php';
 require "../../functions/stats.fn.php";
 
 
-//recup service
-
+//recup slug service
 $gt=$_GET['gt'];
 
 
@@ -26,7 +25,7 @@ addRecord($pdoStat,$page,$action, $descr);
 
 
 //----------------------------------------------------------------
-//			affichage : infos du services + message non clos
+//			affichage : infos du services
 //----------------------------------------------------------------
 
 $gtInfos=initForm($pdoBt);
@@ -113,6 +112,7 @@ if(!empty($_POST))
 	{
 		array_push($err, "merci de remplir tous les champs");
 	}
+	//si adresse mail non conforme
 	elseif(!filter_var($email, FILTER_VALIDATE_EMAIL))
 	{
 				array_push($err, 'Indiquez un email valide');
@@ -121,7 +121,6 @@ if(!empty($_POST))
 	else
 	{
 		//formulaire corectement rempli
-
 		if (empty($_FILES['file']['name']))
 		{
 			//pas de pièce jointe
