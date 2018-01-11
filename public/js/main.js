@@ -20,31 +20,36 @@ $(document).ready(function(){
 	//
 	//
 	$("input[type='file']").change(function(){
-
-		//on récupère le nom du fichier (input type file)
-		var filename=$(this).val();
-		// on découpe : chrome ajout c:\fake au nom du fichier
-		var cleanfilename = filename.split( '\\' );
-		if(cleanfilename.length > 1)
+		//get the input and UL list
+		//on traite plusieurs formulaires d'upload de fichier avec des id différents
+		//upload contact
+		if (document.getElementById('file') != null)
 		{
-			// alert(cleanfilename.length);
-			var last = cleanfilename.length
-			// alert(cleanfilename[last -1]);
-			$('#file-name').text(cleanfilename[last -1]);
-
+			var input = document.getElementById('file');
 		}
-		else
+		//upload gazette
+		else if(document.getElementById('gazette') != null)
 		{
-			$('#file-name').text(filename);
+			var input = document.getElementById('gazette');
+
 		}
 
 
-		// on n'affiche que la dernière partie du tableau
+		var list = document.getElementById('file-name');
+		//empty list for now...
+		while (list.hasChildNodes()) {
+			list.removeChild(ul.firstChild);
+		}
 
-		//$('#gaz-name').text(cleanfilename[cleanfilename.length]);
-		//alert($( this ).val());
-
-	});
+			//for every file...
+			for (var x = 0; x < input.files.length; x++)
+			{
+				//add to list
+				var li = document.createElement('li');
+				li.innerHTML = 'Fichier '  + ':  ' + input.files[x].name;
+				list.append(li);
+			}
+		});
 
 
 
