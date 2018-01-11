@@ -11,6 +11,7 @@ unset($_SESSION['goto']);
 include '../../functions/form.bt.fn.php';
 //affichage de l'historique des réponses
 include '../../functions/form.fn.php';
+include '../../functions/mail.fn.php';
 require "../../functions/stats.fn.php";
 
 //------------------------------
@@ -30,54 +31,11 @@ include '../view/_navbar.php';
 //------------------------------------------------------------
 //				affiche lien vers piec jointe si existe
 //------------------------------------------------------------
-function isAttached($dbData)
-{
-	global $version;
-	$href="";
-	if(!empty($dbData))
-	{
-		$ico="<i class='fa fa-paperclip fa-lg' aria-hidden='true'></i>";
-		$href= "Pièce jointe : &nbsp; &nbsp; &nbsp; &nbsp; <a href='http://172.30.92.53/".$version ."upload/mag/" . $dbData . "'>" .$ico ."&nbsp; &nbsp; ouvrir</a>";
-	}
-	return $href;
-}
-//-----------------------------------------
-//				fn pour envoi mail
-//-----------------------------------------
-function sendMail($to,$subject,$tplLocation,$objetdde,$link)
-{
-	$tpl = file_get_contents($tplLocation);
-	$tpl=str_replace('{OBJETDDE}',$objetdde,$tpl);
-	$tpl=str_replace('{LINK}',$link,$tpl);
 
-
-	$htmlContent=$tpl;
-// Set content-type header for sending HTML email
-	$headers = "MIME-Version: 1.0" . "\r\n";
-	$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-
-// Additional headers
-	$headers .= 'From: ne_pas_repondre@btlec.fr>' . "\r\n";
-	$headers .= 'Cc: ' . "\r\n";
-	$headers .= 'Bcc:' . "\r\n";
-
-	if(mail($to,$subject,$htmlContent,$headers))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-
-}
 
 // pour affichage contenu msg
 $idMsg=$_GET['msg'];
 $oneMsg=showOneMsg($pdoBt,$idMsg);
-
-
-
 
 //contenu histo des reponses
 $replies=showReplies($pdoBt, $idMsg);
@@ -91,6 +49,7 @@ $objet = mb_encode_mimeheader($objet);
 $objetdde=$oneMsg['objet'];
 $to = $oneMsg['email'];
 $etat="";
+$vide="";
 
 // listId récupéré qd insert données dans db
 
@@ -136,7 +95,7 @@ if(isset($_POST['post-reply']))
 		//-----------------------------------------
 		//				envoi du mail
 		//-----------------------------------------
-		if(sendMail($to,$objet,$tpl,$objetdde,$link))
+		if(sendMail($to,$objet,$tpl,$objetdde,$vide,$link))
 		{
 			$success=true;
 			header('Location:'. ROOT_PATH. '/public/btlec/dashboard.php?success='.$success);
@@ -193,9 +152,9 @@ if (isset($_POST['close']))
 	<h5 class="light-blue-text text-darken-2">La demande :</h5>
 	<div class="row box-border">
 		<div class="col l12 ">
-					<p><span class="boldtxt">Objet : </span><?=$oneMsg['objet'] ?></p>
-					<p><span class="boldtxt">Message : </span><?=$oneMsg['msg'] ?></p>
-					<p><span class="boldtxt"></span><?=isAttached($oneMsg['inc_file']) ?></p>
+					<p><span class="labelFor">Objet : </span><?=$oneMsg['objet'] ?></p>
+					<p><span class="labelFor">Message : </span><br><?=$oneMsg['msg'] ?></p>
+					<p><span class="labelFor">Pièce(s) jointe(s)</span><?=isAttached($oneMsg['inc_file']) ?></p>
 				</div>
 	</div>
 	<p>&nbsp;</p>

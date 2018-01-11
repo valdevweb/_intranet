@@ -7,7 +7,7 @@ if(!isset($_SESSION['id'])){
 include('../view/_head.php');
 include('../view/_navbar.php');
 include '../../functions/form.fn.php';
-//ajout d'un commentaire magasin
+//ajout d'un commentaire magasin - affichage de la liste des fichiers joints
 include '../../functions/form.bt.fn.php';
 include "../../functions/stats.fn.php";
 $descr="détail message côté magasin";
@@ -29,26 +29,6 @@ $replies=showReplies($pdoBt, $idMsg);
 
 // on supprime la var de session qui permet la redirection suite à l'ouverture du mail
 unset($_SESSION['goto']);
-
-
-function isAttached($incFileStrg)
-{
-	global $version;
-	$href="";
-	if(!empty($incFileStrg))
-	{
-		// on transforme la chaine de carctère avec tous les liens (séparateur : ; ) en tableau
-		$incFileStrg=explode( '; ', $incFileStrg );
-		foreach ($incFileStrg as $dbData)
-		{
-		$ico="<i class='fa fa-paperclip fa-lg' aria-hidden='true'></i>";
-		$href.= "<a class='pj' href='http://172.30.92.53/".$version ."upload/mag/" . $dbData . "'>" .$ico ."&nbsp; &nbsp; ouvrir</a>";
-
-		}
-	}
-	return $href;
-}
-
 
 if(isset($_POST['post-reply']))
 {

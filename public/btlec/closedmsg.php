@@ -30,17 +30,7 @@ include '../view/_navbar.php';
 //------------------------------------------------------------
 //				affiche lien vers piec jointe si existe
 //------------------------------------------------------------
-function isAttached($dbData)
-{
-	global $version;
-	$href="";
-	if(!empty($dbData))
-	{
-		$ico="<i class='fa fa-paperclip fa-lg' aria-hidden='true'></i>";
-		$href= "Pièce jointe : &nbsp; &nbsp; &nbsp; &nbsp; <a href='http://172.30.92.53/".$version ."upload/mag/" . $dbData . "'>" .$ico ."&nbsp; &nbsp; ouvrir</a>";
-	}
-	return $href;
-}
+
 
 // pour affichage contenu msg
 $idMsg=$_GET['msg'];
@@ -60,9 +50,9 @@ $replies=showReplies($pdoBt, $idMsg);
 	<h5 class="light-blue-text text-darken-2">La demande :</h5>
 	<div class="row box-border">
 		<div class="col l12 ">
-					<p><span class="boldtxt">Objet : </span><?=$oneMsg['objet'] ?></p>
-					<p><span class="boldtxt">Message : </span><?=$oneMsg['msg'] ?></p>
-					<p><span class="boldtxt"></span><?=isAttached($oneMsg['inc_file']) ?></p>
+					<p><span class="labelFor">Objet : </span><?=$oneMsg['objet'] ?></p>
+					<p><span class="labelFor">Message : </span><?=$oneMsg['msg'] ?></p>
+					<p><span class="labelFor"></span><?=isAttached($oneMsg['inc_file']) ?></p>
 				</div>
 	</div>
 	<p>&nbsp;</p>

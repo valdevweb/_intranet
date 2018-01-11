@@ -31,7 +31,7 @@ function listServices($pdoBt)
 //dashboard affichage des demandes non cloturées
 function ddesMag($pdoBt)
 {
-	$req=$pdoBt->prepare("SELECT * FROM msg WHERE etat <> :clos ORDER BY id_service");
+	$req=$pdoBt->prepare("SELECT * FROM msg WHERE etat <> :clos ORDER BY id_service, date_msg DESC");
 	$req->execute(array(
 	':clos' =>'clos'
 	 ));
@@ -50,7 +50,7 @@ function nbRep($pdoBt, $idMsg)
 
 function histoDdesMag($pdoBt)
 {
-	$req=$pdoBt->prepare("SELECT * FROM replies LEFT JOIN msg ON replies.id_msg=msg.id WHERE etat= :clos");
+	$req=$pdoBt->prepare("SELECT * FROM replies LEFT JOIN msg ON replies.id_msg=msg.id WHERE etat= :clos ORDER BY date_reply DESC");
 	$req->execute(array(
 	':clos' =>'clos'
 	 ));
@@ -116,10 +116,7 @@ function majEtat($pdoBt,$idMsg,$etat)
 	return $result;
 }
 
-//	$update=$pdoBt->prepare('UPDATE replies SET reply= :reply, date_reply= :date_reply, replied_by=:replied_by  WHERE id_msg= :id');
 
-		// ':etat'			=>'clos',
-//etat= :etat,
 
 
 function displayMsgMag($pdoBt,$idMsg){
@@ -138,6 +135,37 @@ function infoMag($pdoMag,$idMag){
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
+
+
+//-----------------------------------
+//			fichiers joints - affichage :
+//					mag/edit-msg
+//					btlec/dashboard
+//					btlec/answer
+//					btlec/closedmsg
+//					btlec/histo
+//-----------------------------------
+
+
+function isAttached($incFileStrg)
+{
+	global $version;
+	$href="";
+	if(!empty($incFileStrg))
+	{
+		// on transforme la chaine de carctère avec tous les liens (séparateur : ; ) en tableau
+		$incFileStrg=explode( '; ', $incFileStrg );
+		foreach ($incFileStrg as $dbData)
+		{
+		$ico="<i class='fa fa-paperclip fa-lg' aria-hidden='true'></i>";
+		$href.= "<a class='pj' href='http://172.30.92.53/".$version ."upload/mag/" . $dbData . "'>" .$ico ."&nbsp; &nbsp; ouvrir</a>";
+
+		}
+	}
+	return $href;
+}
+
+
 
 
 

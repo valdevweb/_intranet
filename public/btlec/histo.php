@@ -56,34 +56,10 @@ function color($id,$services)
 
 }
 
-// $_SESSION['id_service'];
-//$serviceInArray=array_search($services, $_SESSION['id_service']);
-//echo $serviceInArray;
-
 
 
 //recup msg mag non clots
 $msg=histoDdesMag($pdoBt);
-
-//ut ??????????????
-// $gt=$_GET['gt'];
-// $nbMsg=sizeof($msg);
-
-// affichage fichier joint
-
-function isAttached($dbData)
-{
-	global $version;
-	$href="";
-	if(!empty($dbData))
-	{
-		$ico="<i class='fa fa-paperclip fa-lg' aria-hidden='true'></i>";
-		$href= "Pièce jointe : &nbsp; &nbsp; &nbsp; &nbsp; <a href='http://172.30.92.53/".$version ."upload/mag/" . $dbData . "'>" .$ico ."&nbsp; &nbsp; ouvrir</a>";
-	}
-	return $href;
-}
-
-
 
 
 include ('histo.ct.php');

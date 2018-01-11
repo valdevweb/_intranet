@@ -34,7 +34,8 @@
 
 	<div class="row">
 		<p class="success-msg">
-			<?= $_GET['success'] ? "reponse envoyée avec succès" : ""?>
+			<?php if(isset($_GET['success'])){ echo  "reponse envoyée avec succès"; }?>
+
 		</p>
 <!-- debut boucle pour affichage des resultats => messages envoyés au services -->
 	<br><br>
@@ -100,27 +101,27 @@
 					?>
 					<p class="center">SERVICE <?=strtoupper($serviceName)?></p>
 					<div class="col l9">
-						<p><span class="boldtxt">Demande du : </span><?= $date ?> </p>
+						<p><span class="labelFor">Demande du : </span><?= $date ?> </p>
 					</div>
 					<div class="col l3">
-						<p><span class="boldtxt">Etat : </span> <?= $value['etat'] .' ' .$nbRepmsg ?> </p>
+						<p><span class="labelForSmaller">Etat : </span> <?= $value['etat'] .' ' .$nbRepmsg ?> </p>
 						<p>
 					</div>
 					<div class="col l9">
-						<p><span class="boldtxt">Dernière réponse le : </span><?= $lastDateRep ?> </p>
+						<p><span class="labelFor">Dernière réponse le : </span><?= $lastDateRep ?> </p>
 					</div>
 					<div class="col l3">
-						<p><span class="boldtxt">Par : </span><?=  repliedByIntoName($pdoBt,$by) ?> </p>
+						<p><span class="labelForSmaller">Par : </span><?=  repliedByIntoName($pdoBt,$by) ?> </p>
 						<p>
 					</div>
 
 					<div class="col l12">
-						<p><span class="boldtxt">Objet : </span><?= $objet=$value['objet']; ?></p>
+						<p><span class="labelFor">Objet : </span><?= $objet=$value['objet']; ?></p>
 					</div>
 					<div class="col l12">
-						<p><span class="boldtxt">Message :<br> </span><?= $msg=$value['msg']; ?></p>
+						<p><span class="labelFor">Message : </span><br><?= $msg=$value['msg']; ?></p>
 					</div>
-					<div class="col l6 align-left"><?=isAttached($value['inc_file']) ?></div>
+					<div class="col l6 align-left"><span class="labelFor">Pièce jointe : </span><?=isAttached($value['inc_file']) ?></div>
 					<div class="col l6 align-right"><a href="answer.php?msg=<?= $value['id']?>" class="waves-effect waves-light btn blue darken-2">Consulter</a></div>
 
 
