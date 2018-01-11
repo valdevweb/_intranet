@@ -92,7 +92,7 @@
 
 				</div>
 				<div class="row">
-					<div class="col l6"><p id="file-name"><?=isset($_FILES['name'])? $_FILES['name']: false?></p></div>
+					<div class="col l12"><p id="file-name"><?= isset($_FILES['name'])? $_FILES['name']: false?></p></div>
 				</div>
 
 				<div class="row">
@@ -100,7 +100,7 @@
 						<div class="upload-ct">
 							<label for="file">&nbsp;&nbsp;Joindre un fichier</label>
 						</div>
-						<input type="file" name="file" id="file" >
+						<input type="file" multiple="multiple" name="file[]" id="file" >
 					</div>
 					<div class="col l6 align-right">
 						<!-- <div class="row align-right"> -->

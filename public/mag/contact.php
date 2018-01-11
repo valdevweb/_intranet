@@ -6,7 +6,9 @@ if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
 }
 //----------------------------------------------------------------
-require_once '../../functions/form.fn.php';
+require '../../functions/form.fn.php';
+require '../../functions/upload.fn.php';
+require '../../functions/mail.fn.php';
 require "../../functions/stats.fn.php";
 
 
@@ -77,9 +79,10 @@ if(!empty($_POST))
 
 	}
 	else
+	//formulaire corectement rempli
 	{
-		//formulaire corectement rempli
-		if (empty($_FILES['file']['name']))
+		// sans pièce jointe
+		if (empty($_FILES['file']['name'][0]))
 		{
 			//pas de pièce jointe
 			$file="";
@@ -88,7 +91,6 @@ if(!empty($_POST))
 			//			ajoute le msg dans db et
 			//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
 			//------------------------------
-
 			if($lastId=addMsg($pdoBt,$idGt, $file))
 			{
 				array_push($success, "Demande enregistrée avec succès");
@@ -135,25 +137,53 @@ if(!empty($_POST))
 			}
 		}
 		else
+		//avec pièce jointe
 		{
 			//------------------------------
 			//			upload du fichier
 			//------------------------------
 			$upload=$_FILES['file'];
+
 			$uploadDir= '..\..\..\upload\mag\\';
-
-			$authorized=mime($upload['tmp_name'], $encoding=true);
-
-
-			if($authorized)
+			$newFileArray=formatArray($upload);
+			echo "<pre>";
+			var_dump($newFileArray);
+			echo '</pre>';
+					//on initialise authorized à 0, si il reste à 0, tous les fichiers sont autorisés, sinon
+					//au moins un des fichiers n'est pas authorisé
+			$authorized=0;
+			foreach ($newFileArray as $fileDetails)
 			{
-				$hashedFileName=checkUpload($uploadDir, $pdoBt);
+
+				$authorizedFile=isAllowed($fileDetails['tmp_name'], $encoding=true);
+				var_dump($authorizedFile);
+				if($authorizedFile[0]=='interdit')
+				{
+					$authorized++;
+				}
+
+
+			}
+			echo "<pre>";
+			var_dump($authorized);
+			echo '</pre>';
+
+			//tous les fichiers sont autorisés
+			if($authorized==0)
+			{
+				$hashedFileName=checkUploadNew($uploadDir,$newFileArray, $pdoBt);
+					echo "<pre>";
+					var_dump($hashedFileName);
+					echo '</pre>';
+					// conversion en string
+					$hashedFileName= implode("; ", $hashedFileName);
+
 				//------------------------------
 				//			msg avec piece jointe
 				//			ajoute le msg dans db et
 				//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
 				//------------------------------
-				if($lastId=addMsg($pdoBt,$idGt, $hashedFileName['filename']))
+				if($lastId=addMsg($pdoBt,$idGt, $hashedFileName))
 				{
 					//créa du lien pour le mail
 					$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour consulter le message</a>";
