@@ -75,7 +75,7 @@ h4{
 }
 
 /* -----------------------------
-          déplacement des blocs suivant réponse mag ou btlec
+ couleur des blocs suivant réponse mag ou btlec
           page : edit-msg;
 
  */
@@ -92,6 +92,14 @@ background-color: #546E7A !important;
 
 }
 
+.pj
+{
+  padding: 0 10px 0 0 !important;
+}
+.pj:hover
+{
+  font-weight: bold;
+}
 
 /* text plus petit - page histo mag, la légende */
 @media only screen and (min-width: 0) {

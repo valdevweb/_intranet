@@ -31,14 +31,20 @@ $replies=showReplies($pdoBt, $idMsg);
 unset($_SESSION['goto']);
 
 
-function isAttached($dbData)
+function isAttached($incFileStrg)
 {
 	global $version;
 	$href="";
-	if(!empty($dbData))
+	if(!empty($incFileStrg))
 	{
+		// on transforme la chaine de carctère avec tous les liens (séparateur : ; ) en tableau
+		$incFileStrg=explode( '; ', $incFileStrg );
+		foreach ($incFileStrg as $dbData)
+		{
 		$ico="<i class='fa fa-paperclip fa-lg' aria-hidden='true'></i>";
-		$href= "Pièce jointe : &nbsp; &nbsp; &nbsp; &nbsp; <a href='http://172.30.92.53/".$version ."upload/mag/" . $dbData . "'>" .$ico ."&nbsp; &nbsp; ouvrir</a>";
+		$href.= "<a class='pj' href='http://172.30.92.53/".$version ."upload/mag/" . $dbData . "'>" .$ico ."&nbsp; &nbsp; ouvrir</a>";
+
+		}
 	}
 	return $href;
 }
@@ -127,12 +133,11 @@ if(isset($_POST['post-reply']))
 				<h5 class="orange-text text-darken-2 boldtxt center">Votre demande du <?= date('d-m-Y', strtotime($msg['date_msg']))?> </h5>
 				<p><span class="labelFor">Objet : </span><?=$msg['objet']?></p>
 				<p><span class="labelFor">Message : </span><?=$msg['msg']?></p>
-				<p><span class="labelFor">Pièce : </span><?=isAttached($msg['inc_file'])?></p>
+				<p><span class="labelFor">Pièce jointe : </span><?=isAttached($msg['inc_file'])?></p>
 		</div>
 	</div>
 	<div class="row">
-
-	<div class="col l6 m6 s6">
+		<div class="col l6 m6 s6">
 			<p><a href= "<?= ROOT_PATH?>/public/mag/histo.php" class="blue-text text-darken-4"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
 		</div>
 		<div class="col l6 m6 s6 align-right">
