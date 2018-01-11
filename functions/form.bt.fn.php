@@ -50,7 +50,7 @@ function nbRep($pdoBt, $idMsg)
 
 function histoDdesMag($pdoBt)
 {
-	$req=$pdoBt->prepare("SELECT * FROM replies t_replies LEFT JOIN msg t_msg ON id_msg.t_replies=id.t_msg WHERE etat.t_msg = :clos");
+	$req=$pdoBt->prepare("SELECT * FROM replies LEFT JOIN msg ON replies.id_msg=msg.id WHERE etat= :clos");
 	$req->execute(array(
 	':clos' =>'clos'
 	 ));
