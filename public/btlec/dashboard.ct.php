@@ -75,7 +75,7 @@
 			//si on a des réponse bt
 			if($nbRep=nbRep($pdoBt, $value['id'])){
 				$nbRepmsg=' - '. $nbRep['nb_rep'] . ' réponse(s)';
-				$lastDateRep=nbRep['last_reply_date'];
+				$lastDateRep=$nbRep['last_reply_date'];
 				$lastDateRep=date('d-m-Y', strtotime($lastDateRep));
 				$by=$nbRep['replied_by'];
 
