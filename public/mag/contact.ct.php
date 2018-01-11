@@ -92,7 +92,7 @@
 
 				</div>
 				<div class="row">
-					<div class="col l12"><p id="file-name"><?= isset($_FILES['name'])? $_FILES['name']: false?></p></div>
+					<div class="col l12"><ul id="file-name"></ul></div>
 				</div>
 
 				<div class="row">
@@ -109,7 +109,7 @@
 					</div>
 				</div>
 				<!-- zone affichage erreurs -->
-				<div class="row"><div class="col l6">
+				<div class="row"><div class="col l12">
 					<p class="warning-msg">
 						<?php
 						if(!empty($err)){

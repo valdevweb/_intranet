@@ -146,28 +146,23 @@ if(!empty($_POST))
 
 			$uploadDir= '..\..\..\upload\mag\\';
 			$newFileArray=formatArray($upload);
-			echo "<pre>";
-			var_dump($newFileArray);
-			echo '</pre>';
-					//on initialise authorized à 0, si il reste à 0, tous les fichiers sont autorisés, sinon
-					//au moins un des fichiers n'est pas authorisé
+			//on initialise authorized à 0, si il reste à 0, tous les fichiers sont autorisés, sinon
+			//au moins un des fichiers n'est pas authorisé
 			$authorized=0;
+			//on stocke les extensions de fichiers interdits pour afficher message d'erreur
+			$typeInterdit="";
 			foreach ($newFileArray as $fileDetails)
 			{
-
 				$authorizedFile=isAllowed($fileDetails['tmp_name'], $encoding=true);
-				var_dump($authorizedFile);
+				//tableau de fichier :
 				if($authorizedFile[0]=='interdit')
 				{
 					$authorized++;
+					$typeInterdit.=$authorizedFile[1];
 				}
 
 
 			}
-			echo "<pre>";
-			var_dump($authorized);
-			echo '</pre>';
-
 			//tous les fichiers sont autorisés
 			if($authorized==0)
 			{
@@ -221,7 +216,7 @@ if(!empty($_POST))
 			}
 			else
 			{
-				array_push($err, "fichier interdit");
+				array_push($err, "l'envoi de fichiers de type ". $typeInterdit ." est interdit");
 
 			}
 
