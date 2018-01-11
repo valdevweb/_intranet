@@ -124,13 +124,10 @@ function fileList($mime)
 		"image/png",
 		"application/vnd.ms-office"
 	);
-return (in_array($mime,$whiteList)) ? TRUE : FALSE ;
-
-
-
+	return (in_array($mime,$whiteList)) ? TRUE : FALSE ;
 }
 
-
+//non utilisé
 $mimeArray=array(
 '.aac'=>'audio/aac',
 '.abw'=>'application/x-abiword',
