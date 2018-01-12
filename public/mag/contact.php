@@ -167,11 +167,8 @@ if(!empty($_POST))
 			if($authorized==0)
 			{
 				$hashedFileName=checkUploadNew($uploadDir,$newFileArray, $pdoBt);
-					echo "<pre>";
-					var_dump($hashedFileName);
-					echo '</pre>';
-					// conversion en string
-					$hashedFileName= implode("; ", $hashedFileName);
+				// conversion en string
+				$hashedFileName= implode("; ", $hashedFileName);
 
 				//------------------------------
 				//			msg avec piece jointe
