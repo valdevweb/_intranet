@@ -81,7 +81,7 @@ if(!empty($_POST))
 	else
 	//formulaire corectement rempli
 	{
-		// sans pièce jointe
+		// sans pièce jointe ici
 		if (empty($_FILES['file']['name'][0]))
 		{
 			//pas de pièce jointe
