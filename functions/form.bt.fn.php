@@ -90,18 +90,19 @@ function showOneMsg($pdoBt,$idMsg)
 }
 
 
-function recordReply($pdoBt,$idMsg)
+function recordReply($pdoBt,$idMsg,$file)
 {
 	$date=new DateTime();
 	$date=$date->format('Y-m-d H:i:s');
 	$reply=strip_tags($_POST['reply']);
 	$reply=nl2br($reply);
-	$insert=$pdoBt->prepare('INSERT INTO replies (id_msg, reply, replied_by, date_reply) VALUE (:id_msg, :reply, :replied_by, :date_reply)');
+	$insert=$pdoBt->prepare('INSERT INTO replies (id_msg, reply, replied_by, date_reply,inc_file) VALUE (:id_msg, :reply, :replied_by, :date_reply, :inc_file)');
 	$result=$insert->execute(array(
 		':reply'		=> $reply,
 		':date_reply'	=> $date,
 		':id_msg'		=> $idMsg,
-		':replied_by'	=>$_SESSION['id']
+		':replied_by'	=>$_SESSION['id'],
+		':inc_file'		=> $file
 	));
 	return $result;
 }

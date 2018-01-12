@@ -8,10 +8,11 @@ if(!isset($_SESSION['id'])){
 unset($_SESSION['goto']);
 
 
-include '../../functions/form.bt.fn.php';
+require '../../functions/form.bt.fn.php';
+require '../../functions/upload.fn.php';
+require '../../functions/mail.fn.php';
 //affichage de l'historique des réponses
-include '../../functions/form.fn.php';
-include '../../functions/mail.fn.php';
+require '../../functions/form.fn.php';
 require "../../functions/stats.fn.php";
 
 //------------------------------
@@ -50,12 +51,14 @@ $objetdde=$oneMsg['objet'];
 $to = $oneMsg['email'];
 $etat="";
 $vide="";
+$err=array();
+$service=service($pdoBt,$oneMsg['id_service']);
+var_dump($service);
 
-// listId récupéré qd insert données dans db
+
+// id du message auquel bt répond donc $_GET['msg']
 
 $link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter votre réponse</a>";
-
-
 if(isset($_POST['post-reply']))
 {
 	if((empty($_POST['reply'])))
@@ -65,16 +68,102 @@ if(isset($_POST['post-reply']))
 
 	else
 	{
-
-		$err="";
 		extract($_POST);
+		//si pas de fichier joint
+		if (empty($_FILES['file']['name'][0]))
+		{
+			$noFile="";
+			if(!recordReply($pdoBt,$idMsg,$noFile))
+			{
+				array_push($err, "votre réponse n'a pas pu être enregistrée (err 01)");
+			}
+			else
+			{
+				//  si enregistrement en db ok
+				//-----------------------------------------
+				//				envoi du mail
+				//-----------------------------------------
+				if(sendMail($to,$objet,$tpl,$objetdde,$vide,$link))
+				{
+					$success=true;
+					header('Location:'. ROOT_PATH. '/public/btlec/dashboard.php?success='.$success);
 
-		// rec db
-		if(!recordReply($pdoBt,$idMsg)){
-			$err ="votre réponse n'a pas pu être enregistrée (err 01)";
-			die;
+				}
+				else
+				{
+					array_push($err, "Echec d'envoi de l'email");
+				}
+			}
 		}
+		else
+		// fichier joint
+		{
+			//------------------------------
+			//			upload du fichier
+			//------------------------------
+			$upload=$_FILES['file'];
+			$uploadDir= '..\..\..\upload\mag\\';
+			// on formate l'array pour qu'il soit plus "logique" : un sub array por fichier joint
+			$newFileArray=formatArray($upload);
+			//on initialise authorized à 0, si il reste à 0, tous les fichiers sont autorisés, sinon
+			//on incrémente et on bloque le message si on n'est pas égal à 0
+			$authorized=0;
+			//on stocke les extensions de fichiers interdits pour afficher message d'erreur
+			$typeInterdit="";
+			foreach ($newFileArray as $fileDetails)
+			{
+				$authorizedFile=isAllowed($fileDetails['tmp_name'], $encoding=true);
+				//tableau de fichier :
+				if($authorizedFile[0]=='interdit')
+				{
+					$authorized++;
+					$typeInterdit.=$authorizedFile[1];
+				}
+			}
+			//tous les fichiers sont autorisés
+			if($authorized==0)
+			{
+				$hashedFileName=checkUploadNew($uploadDir,$newFileArray, $pdoBt);
+					// echo "<pre>";
+					// var_dump($hashedFileName);
+					// echo '</pre>';
+					// conversion en string
+					$hashedFileName= implode("; ", $hashedFileName);
+				//------------------------------
+				//			msg avec piece jointe
+				//			ajoute le msg dans db et
+				//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
+				//------------------------------
 
+				if(!recordReply($pdoBt,$idMsg,$hashedFileName))
+				{
+					array_push($err, "votre réponse n'a pas pu être enregistrée (err 01)");
+
+				}
+				else
+				{
+					//-----------------------------------------
+					//				envoi du mail
+					//-----------------------------------------
+					if(sendMail($to,$objet,$tpl,$objetdde,$vide,$link))
+					{
+						$success=true;
+						header('Location:'. ROOT_PATH. '/public/btlec/dashboard.php?success='.$success);
+
+					}
+					else
+					{
+						array_push($err, "Echec d'envoi de l'email");
+					}
+				}
+			}
+			else
+			{
+				array_push($err, "l'envoi de fichiers de type ". $typeInterdit ." est interdit");
+
+			}
+		}		// traitement quand fichier
+		//commun si fichier ou non
 		//checkbox 'clos' =>  checked or not checked => majEtat
 		if(isset($_POST['clos']))
 		{
@@ -85,36 +174,24 @@ if(isset($_POST['post-reply']))
 			$etat="en cours";
 		}
 
-
 		if(!majEtat($pdoBt,$idMsg, $etat))
 		{
-			$err="votre réponse n'a pas pu être enregistrée (err 02)";
-			die;
+			array_push($err, "votre réponse n'a pas pu être enregistrée (err 02)");
 		}
 
-		//-----------------------------------------
-		//				envoi du mail
-		//-----------------------------------------
-		if(sendMail($to,$objet,$tpl,$objetdde,$vide,$link))
-		{
-			$success=true;
-			header('Location:'. ROOT_PATH. '/public/btlec/dashboard.php?success='.$success);
 
-		}
-		else
-		{
-			$err= "Echec d'envoi de l'email";
-		}
+
+
 		//------------------------------------------
 		//	ajout enreg ection dans stat
 		//-----------------------------------------<
-		if($err)
+		if(!empty($err))
 		{
-			$descr="err : " . $err;
+			$descr="succès envoi réponse ";
 		}
 		else
 		{
-			$descr="succès envoi réponse ";
+			$descr="erreur de traitement";
 		}
 		$page=basename(__file__);
 		$action="envoi réponse BT => mag";
@@ -123,7 +200,7 @@ if(isset($_POST['post-reply']))
 		// fin stats ------------------------------>
 
 	}
-}
+}		//fin soumission formulaire
 
 //affichage
 if (isset($_POST['close']))
@@ -133,8 +210,6 @@ if (isset($_POST['close']))
 		$err="impossible de clore le dossier";
 		die;
 	}
-
-
 }
 
 
@@ -147,9 +222,9 @@ if (isset($_POST['close']))
 			<p><a href="dashboard.php" class="orange-text text-darken-2"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
 		</div>
 	</div>
-	<h1 class="blue-text text-darken-2">Répondre / cloturer un dossier</h1>
-
-	<h5 class="light-blue-text text-darken-2">La demande :</h5>
+	<h1 class="blue-text text-darken-2">Service <?=$service['full_name']?></h1>
+	<!-- <h2 class="blue-text text-darken-2">Répondre / cloturer un dossier</h2> -->
+	<h5 class="light-blue-text text-darken-2">Demande :</h5>
 	<div class="row box-border">
 		<div class="col l12 ">
 					<p><span class="labelFor">Objet : </span><?=$oneMsg['objet'] ?></p>
@@ -158,7 +233,7 @@ if (isset($_POST['close']))
 				</div>
 	</div>
 	<p>&nbsp;</p>
-	<h5 class="light-blue-text text-darken-2">Historique des réponses :</h5>
+	<h5 class="light-blue-text text-darken-2">Réponses :</h5>
 
 			<!-- exemple de if -->
 			<?php
@@ -181,6 +256,11 @@ if (isset($_POST['close']))
 		<div class="col l12">
 			<p><?= $reply['reply'] ?></p>
 		</div>
+		<div class="col l12">
+					<p><span class="labelFor">Pièce(s) jointe(s)</span><?=isAttached($reply['inc_file']) ?></p>
+		</div>
+
+
 	</div>
 	<?php endforeach ?>
 	<p>&nbsp;</p>
@@ -196,19 +276,32 @@ if (isset($_POST['close']))
 					<div class="input-field white">
 						<i class="fa fa-pencil-square-o prefix" aria-hidden="true"></i>
 						<label for="reply"></label>
-						<textarea class="materialize-textarea" placeholder="votre réponse" name="reply" id="reply" ></textarea>
+						<textarea class="materialize-textarea" placeholder="votre réponse" name="reply" id="reply" ><?=isset($_POST['reply'])? $_POST['reply']: false?></textarea>
 					</div>
 				</div>
+
+
+
 			<!--BOUTONS-->
 				<div class="row">
-					<div class='col l9'></div>
+					<div class='col l9'>
+						<ul id="file-name"></ul>
+					</div>
 					<div class='col l3'>
 						<p class="center">
 							<input type="checkbox" class="filled-in" id="clos" checked="checked" name="clos" />
 							<label for="clos">cloturer la demande</label>
 						</p>
 					</div>
-					<div class='col l9'></div>
+					<div class='col l4'>
+						<div class="upload-ct">
+							<p >
+								<label for="file">&nbsp;&nbsp;Joindre un fichier</label>
+							</p>
+						</div>
+						<input type="file" multiple="multiple" name="file[]" id="file" >
+					</div>
+					<div class='col l5'></div>
 					<div class='col l3'>
 						<p class="center">
 						<button class="btn" type="submit" name="post-reply">Répondre</button>
@@ -219,9 +312,17 @@ if (isset($_POST['close']))
 		</div>
 	<!-- </div> -->
 </div>
+<!-- affichage des messages d'erreur -->
+	<div class='row' id='erreur'>
 
-<div class="row">
-	<?= isset($err)?$err:false; ?>
+	<?php
+	if(!empty($err)){
+
+		foreach ($err as $error) {
+			echo  $error ."</br>";
+		}
+	}
+	?>
 </div>
 
 </div>  <!--container
