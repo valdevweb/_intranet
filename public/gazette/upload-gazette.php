@@ -7,6 +7,16 @@ if(!isset($_SESSION['id'])){
 require '../../functions/upload.gaz.fn.php';
 require "../../functions/stats.fn.php";
 
+//----------------------------------------------
+// css dynamique
+//----------------------------------------------
+$page=(basename(__FILE__));
+$page=explode(".php",$page);
+$page=$page[0];
+$cssFile=ROOT_PATH ."/public/css/".$page.".css";
+
+
+
 //construction du lien pour visualiser la gazette uploadée
 $link="http://172.30.92.53/".$version."upload/gazette/";
 
