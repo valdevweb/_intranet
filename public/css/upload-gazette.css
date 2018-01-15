@@ -1,0 +1,61 @@
+
+
+/* input d'upload : masquer input et se servir du label */
+input[type="file"] {
+    display: none !important;
+}
+
+.upload {
+    border: 1px solid grey;
+    padding: 0px;
+    width: 300px;
+    background: white;
+    box-sizing: content-box;
+    height: 40px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12),
+    0 3px 1px -2px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12),
+    0 3px 1px -2px rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 2px 2px;
+}
+
+
+label[for="gazette"] {
+    cursor: pointer;
+    font-size: 1em;
+    line-height: 40px;
+    height: 37px;
+    color: rgba(0, 0, 0, 0.84);
+}
+
+
+label[for="gazette"]:before {
+    font-family: FontAwesome;
+    content: "\f115";
+    font-size: 1.5em;
+    color: white;
+    background: #ff5722;
+    padding: 10px;
+    height: 37px;
+    line-height: 40px;
+    border: 0px;
+}
+
+label[for="gazette"]:hover:before {
+  font-family: FontAwesome;
+  content: "\f114";
+  background: #e54e1e;
+  color: white;
+}
+
+
+label[for="gazette"]:hover {
+ color: white !important;
+ color: rgba(0, 0, 0, 0.84) !important;
+}
+
+.upload:hover {
+ background: rgba(0, 0, 0, 0.14);
+}
