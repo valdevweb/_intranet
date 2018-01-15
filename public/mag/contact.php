@@ -14,7 +14,12 @@ require "../../functions/stats.fn.php";
 
 //recup slug service
 $gt=$_GET['gt'];
-
+//css dynamique
+$page=(basename(__FILE__));
+$page=explode(".php",$page);
+$page=$page[0];
+$cssFile=ROOT_PATH ."/public/css/".$page.".css";
+// echo $cssFile;
 
 //----------------------------------------------------------------
 //			stats
@@ -56,6 +61,10 @@ $objMag = mb_encode_mimeheader($objMag);
 
 $magName=$_SESSION['nom'];
 
+
+//test valeur $_FILE, si renvoi true => au moins un fichier à uploader
+$isFileToUpload=isFileToUpload();
+
 //----------------------------------------------------------------
 //			traitement formulaire : ajout à db et upload si fichier
 //----------------------------------------------------------------
@@ -67,6 +76,9 @@ $success=array();
 if(!empty($_POST))
 {
 	extract($_POST);
+	//------------------------------------------------
+	//				tests prétraitement
+	//-----------------------------------------------
 	// en dehors du file aucun champ ne doit être vide
 	if(empty($objet) || empty($msg) || empty($name) || empty($email))
 	{
@@ -76,65 +88,14 @@ if(!empty($_POST))
 	elseif(!filter_var($email, FILTER_VALIDATE_EMAIL))
 	{
 				array_push($err, 'Indiquez un email valide');
-
 	}
+	//formulaire conforme
 	else
-	//formulaire corectement rempli
 	{
-		// sans pièce jointe ici
-		if (empty($_FILES['file']['name'][0]))
+		if (!$isFileToUpload)
 		{
 			//pas de pièce jointe
 			$file="";
-			//------------------------------
-			//			msg sans piece jointe
-			//			ajoute le msg dans db et
-			//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
-			//------------------------------
-			if($lastId=addMsg($pdoBt,$idGt, $file))
-			{
-				array_push($success, "Demande enregistrée avec succès");
-				//créa du lien pour le mail
-				$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour consulter le message</a>";
-				$linkMag="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour revoir votre demande</a>";
-				//------------------------------
-				//			ajout enreg dans stat
-				//------------------------------
-				$descr="demande mag au service ".$gt ;
-				$page=basename(__file__);
-				$action="envoi d'une demande";
-				addRecord($pdoStat,$page,$action, $descr);
-									//-----------------------------------------
-					//				envoi des mails
-					//-----------------------------------------
-				if(sendMail($mailingList,$objBt,$tplForBtlec,$name,$magName, $link))
-				{
-					array_push($success,"Email envoyé avec succès");
-					$contentTwo="";
-					sendMail($email,$objMag,$tplForMag,$full_name,$contentTwo,$linkMag);
-			//on vide le formulaire et on redirige sur la page histo demande mag
-					unset($objet,$msg,$name,$email);
-					header('Location:'. ROOT_PATH. '/public/mag/histo.php');
-
-				}
-				else
-				{
-					array_push($err, "Echec d'envoi d'email");
-				}
-
-
-			}
-			else
-			{
-				array_push($err,"Echec : votre demande n'a pas pu être enregistrée");
-				//------------------------------
-				//			ajout enreg dans stat
-				//------------------------------
-				$descr="demande mag au service ".$gt ;
-				$page=basename(__file__);
-				$action="ERR envoi d'une demande";
-				addRecord($pdoStat,$page,$action, $descr);
-			}
 		}
 		else
 		//avec pièce jointe
@@ -142,86 +103,82 @@ if(!empty($_POST))
 			//------------------------------
 			//			upload du fichier
 			//------------------------------
-			$upload=$_FILES['file'];
-
 			$uploadDir= '..\..\..\upload\mag\\';
-			$newFileArray=formatArray($upload);
+			//$newFileArray=formatArray($upload);
+
 			//on initialise authorized à 0, si il reste à 0, tous les fichiers sont autorisés, sinon
 			//au moins un des fichiers n'est pas authorisé
 			$authorized=0;
 			//on stocke les extensions de fichiers interdits pour afficher message d'erreur
 			$typeInterdit="";
-			foreach ($newFileArray as $fileDetails)
+			foreach ($_FILES as $fileDetails)
 			{
 				$authorizedFile=isAllowed($fileDetails['tmp_name'], $encoding=true);
-				//tableau de fichier :
+				//tableau de fichier interdits :
 				if($authorizedFile[0]=='interdit')
 				{
 					$authorized++;
 					$typeInterdit.=$authorizedFile[1];
 				}
 
-
 			}
+
 			//tous les fichiers sont autorisés
 			if($authorized==0)
 			{
-				$hashedFileName=checkUploadNew($uploadDir,$newFileArray, $pdoBt);
+				$hashedFileName=checkUploadNew($uploadDir, $pdoBt);
 				// conversion en string
-				$hashedFileName= implode("; ", $hashedFileName);
-
-				//------------------------------
-				//			msg avec piece jointe
-				//			ajoute le msg dans db et
-				//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
-				//------------------------------
-				if($lastId=addMsg($pdoBt,$idGt, $hashedFileName))
-				{
-					//créa du lien pour le mail
-					$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour consulter le message</a>";
-					$linkMag="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour revoir votre demande</a>";
-					//------------------------------
-					//			ajout enreg dans stat
-					//------------------------------
-					$descr="demande mag au service ".$gt ;
-					$page=basename(__file__);
-					$action="envoi d'une demande";
-					addRecord($pdoStat,$page,$action, $descr);
-					//-----------------------------------------
-					//				envoi des mails
-					//-----------------------------------------
-					if(sendMail($mailingList,$objBt,$tplForBtlec,$name,$magName, $link))
-					{
-						array_push($success,"Email envoyé avec succès");
-						$contentTwo="";
-						sendMail($email,$objMag,$tplForMag,$full_name,$contentTwo,$linkMag);
-			//on vide le formulaire et on redirige sur la page histo demande mag
-						unset($objet,$msg,$name,$email);
-						header('Location:'. ROOT_PATH. '/public/mag/histo.php');
-
-					}
-					else
-					{
-						array_push($err, "Echec d'envoi d'email");
-					}
-
-				}
-				else
-				{
-					array_push($err,"Echec : votre demande n'a pas pu être enregistrée");
-				}
+				$file= implode("; ", $hashedFileName);
 			}
 			else
 			{
 				array_push($err, "l'envoi de fichiers de type ". $typeInterdit ." est interdit");
 
 			}
-
 		}
+		//------------------------------
+		//			TRAITEMENT COMMUN
+		//			ajoute le msg dans db et
+		//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
+		//------------------------------
+		if($lastId=addMsg($pdoBt,$idGt, $file))
+		{
+			//créa du lien pour le mail
+			$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour consulter le message</a>";
+			$linkMag="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour revoir votre demande</a>";
+			//------------------------------
+			//			ajout enreg dans stat
+			//------------------------------
+			$descr="demande mag au service ".$gt ;
+			$page=basename(__file__);
+			$action="envoi d'une demande";
+			addRecord($pdoStat,$page,$action, $descr);
+			//-----------------------------------------
+			//				envoi des mails
+			//-----------------------------------------
+			if(sendMail($mailingList,$objBt,$tplForBtlec,$name,$magName, $link))
+			{
+				array_push($success,"Email envoyé avec succès");
+				$contentTwo="";
+				sendMail($email,$objMag,$tplForMag,$full_name,$contentTwo,$linkMag);
+				//on vide le formulaire et on redirige sur la page histo demande mag
+				unset($objet,$msg,$name,$email);
+				header('Location:'. ROOT_PATH. '/public/mag/histo.php');
 
+			}
+			else
+			{
+				array_push($err, "Echec d'envoi d'email");
+			}
+		}
+		else
+		//erreur insertion en db
+		{
+			array_push($err,"Echec : votre demande n'a pas pu être enregistrée");
+		}
+	}//-------------------------------------> formulaire non vide
+}	//-------------------------------------> soumission formulaire
 
-	}	//-------------------------------------> formulaire non vide
-}		//-------------------------------------> soumission formulaire
 
 
 

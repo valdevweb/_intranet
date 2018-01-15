@@ -51,11 +51,11 @@
 		</div>  <!-- fermeture col gauche -->
 
 		<!-- colonne droite -->
-		<div class="col m1 l2"></div>
+		<div class="col m2 l2"></div>
 		<div class="col s12 m6 l6 grey lighten-4 z-depth-2">
 			<div class="padding-all">
 			<div class="row">
-				<h3 class="light-blue-text text-darken-2">VOTRE DEMANDE</h3>
+				<h3 class="light-blue-text text-darken-2"><i class="fa fa-pencil" aria-hidden="true"></i>VOTRE DEMANDE</h3>
 			</div>
 
 			<form class='down' action="contact.php?gt=<?=$gt ?>" method="post" enctype="multipart/form-data">
@@ -84,46 +84,46 @@
 					</div>
 
 				</div>
-				<div class="row">
-					<div class="col l12"><ul id="file-name"></ul></div>
-				</div>
-
-				<div class="row">
-					<div class="col l6">
+				<div class="row" id="file-upload">
+					<fieldset>
+						<legend>ajouter des pièces jointes</legend>
+						<div class="col l6">
+							<p><input type="file" name="file_1" class='input-file'></p>
+							<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Envoyer d'autres fichiers</a></p>
+						<!-- avant remplacement par p input file et p a href
 						<div class="upload-ct">
 							<label for="file">&nbsp;&nbsp;Joindre un fichier</label>
 						</div>
-						<input type="file" multiple="multiple" name="file[]" id="file" >
+						<input type="file" multiple="multiple" name="file[]" id="file" > -->
 					</div>
-					<div class="col l6 align-right">
-						<!-- <div class="row align-right"> -->
-							<button class="btn" type="submit" name="post-msg">Envoyer</button>
-						<!-- </div> -->
-					</div>
+					</fieldset>
 				</div>
+				<div class="row">
+					<div class="col l12">
+						<!-- <div class="row align-right"> -->
+							<p class="align-right"><button class="btn" type="submit" name="post-msg">Envoyer</button></p>
+							<!-- </div> -->
+						</div>
+					</div>
+
 				<!-- zone affichage erreurs -->
-				<div class="row"><div class="col l12">
-					<p class="warning-msg">
 						<?php
 						if(!empty($err)){
+							echo "<div class='row'><div class='col l12'><p class='warning-msg'>";
 							foreach ($err as $error) {
-								echo  $error ."</br>";
+								echo  $error ."</p></div>";
 							}
 						}
 						?>
 					</p>
-					<p class="success-msg">
 						<?php
 						if(!empty($success)){
+							echo"<div class='row'><div class='col l12'><p class='success-msg'>";
 							foreach ($success as $s) {
-								echo  $s ."</br>";
+								echo  $s ."</p>";
 							}
 						}
 						?>
-					</p>
-			</div></div>
-
-
 			</form>
 		</div>
 	</div>

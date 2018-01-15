@@ -1,6 +1,35 @@
 <?php
 
-// formatage du tableau pour multi upload
+//vérfie si on a des fichiers à uploader
+// on peut avaoir mis un fichier dans le input file_2 et pas dans le file_1
+// donc on ne peut pas se contenter de empty($_FILES['file_1']['name'][0]) pour vérfier si fichier à uploader ou non
+function isFileToUpload()
+{
+	//si nbfile est à 0, on n'a pas de fichier, si on trouve un fichier, on incrémente
+	$nbFile=0;
+	// pour chaque input file, on vérfie si on a une valeur dans le name
+	foreach ($_FILES as $file)
+	{
+		if(!empty($file['name']))
+		{
+			$nbFile++;
+		}
+	}
+	if($nbFile!==0){
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+}
+
+
+
+
+
+// formatage du tableau pour multi upload => plus utilisé avec la solution du multi input
 function formatArray($file)
 {
     $file_ary = array();
@@ -18,13 +47,13 @@ function formatArray($file)
 }
 
 // upload le fichier si mime ok
-function checkUploadNew($location,$newFileArray, $pdoBt)
+function checkUploadNew($location, $pdoBt)
 {
 	// $renamed = md5($filename. time());        #rename of the file
 // if (!@move_uploaded_file($_FILES[$uploadfile]['tmp_name'], $save_path.$renamed. $extension))
 
 $filenameArray=array();
-foreach ($newFileArray as $key => $file)
+foreach ($_FILES as $key => $file)
 {
 
 
