@@ -47,18 +47,22 @@ $tpl="../mail/new_reply_from_bt.tpl.html";
 $objet="PORTAIL BTLec - réponse à votre demande";
 mb_internal_encoding('UTF-8');
 $objet = mb_encode_mimeheader($objet);
+
 $objetdde=$oneMsg['objet'];
 $to = $oneMsg['email'];
 $etat="";
 $vide="";
+$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter votre réponse</a>";
+	// if(sendMail($to,$objet,$tpl,$objetdde,$vide,$link))
+
+
 $err=array();
 $service=service($pdoBt,$oneMsg['id_service']);
-var_dump($service);
-
+//test valeur $_FILE, si renvoi true => au moins un fichier à uploader
+$isFileToUpload=isFileToUpload();
 
 // id du message auquel bt répond donc $_GET['msg']
 
-$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter votre réponse</a>";
 if(isset($_POST['post-reply']))
 {
 	if((empty($_POST['reply'])))
@@ -70,30 +74,13 @@ if(isset($_POST['post-reply']))
 	{
 		extract($_POST);
 		//si pas de fichier joint
-		if (empty($_FILES['file']['name'][0]))
+		if (!$isFileToUpload)
 		{
-			$noFile="";
-			if(!recordReply($pdoBt,$idMsg,$noFile))
-			{
-				array_push($err, "votre réponse n'a pas pu être enregistrée (err 01)");
-			}
-			else
-			{
-				//  si enregistrement en db ok
-				//-----------------------------------------
-				//				envoi du mail
-				//-----------------------------------------
-				if(sendMail($to,$objet,$tpl,$objetdde,$vide,$link))
-				{
-					$success=true;
-					header('Location:'. ROOT_PATH. '/public/btlec/dashboard.php?success='.$success);
+			//pas de pièce jointe
+			$file="";
 
-				}
-				else
-				{
-					array_push($err, "Echec d'envoi de l'email");
-				}
-			}
+			echo "pas de piec ejoiten";
+
 		}
 		else
 		// fichier joint
@@ -101,16 +88,15 @@ if(isset($_POST['post-reply']))
 			//------------------------------
 			//			upload du fichier
 			//------------------------------
-			$upload=$_FILES['file'];
 			$uploadDir= '..\..\..\upload\mag\\';
-			// on formate l'array pour qu'il soit plus "logique" : un sub array por fichier joint
-			$newFileArray=formatArray($upload);
+
+
 			//on initialise authorized à 0, si il reste à 0, tous les fichiers sont autorisés, sinon
 			//on incrémente et on bloque le message si on n'est pas égal à 0
 			$authorized=0;
 			//on stocke les extensions de fichiers interdits pour afficher message d'erreur
 			$typeInterdit="";
-			foreach ($newFileArray as $fileDetails)
+			foreach ($_FILES as $fileDetails)
 			{
 				$authorizedFile=isAllowed($fileDetails['tmp_name'], $encoding=true);
 				//tableau de fichier :
@@ -123,47 +109,48 @@ if(isset($_POST['post-reply']))
 			//tous les fichiers sont autorisés
 			if($authorized==0)
 			{
-				$hashedFileName=checkUploadNew($uploadDir,$newFileArray, $pdoBt);
-					// echo "<pre>";
-					// var_dump($hashedFileName);
-					// echo '</pre>';
-					// conversion en string
-					$hashedFileName= implode("; ", $hashedFileName);
+				$hashedFileName=checkUploadNew($uploadDir, $pdoBt);
+				// conversion en string
+				$file= implode("; ", $hashedFileName);
 				//------------------------------
 				//			msg avec piece jointe
 				//			ajoute le msg dans db et
 				//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
 				//------------------------------
-
-				if(!recordReply($pdoBt,$idMsg,$hashedFileName))
-				{
-					array_push($err, "votre réponse n'a pas pu être enregistrée (err 01)");
-
-				}
-				else
-				{
-					//-----------------------------------------
-					//				envoi du mail
-					//-----------------------------------------
-					if(sendMail($to,$objet,$tpl,$objetdde,$vide,$link))
-					{
-						$success=true;
-						header('Location:'. ROOT_PATH. '/public/btlec/dashboard.php?success='.$success);
-
-					}
-					else
-					{
-						array_push($err, "Echec d'envoi de l'email");
-					}
-				}
 			}
 			else
 			{
 				array_push($err, "l'envoi de fichiers de type ". $typeInterdit ." est interdit");
 
 			}
-		}		// traitement quand fichier
-		//commun si fichier ou non
+		}
+		//------------------------------
+		//			TRAITEMENT COMMUN
+		//			ajoute le msg dans db et
+		//			envoi mail au mag
+		//------------------------------
+		if(!recordReply($pdoBt,$idMsg,$file))
+		{
+			array_push($err, "votre réponse n'a pas pu être enregistrée (err 01)");
+
+		}
+		else
+		{
+					//-----------------------------------------
+					//				envoi du mail
+					//-----------------------------------------
+			if(sendMail($to,$objet,$tpl,$objetdde,$vide,$link))
+			{
+				$success=true;
+				header('Location:'. ROOT_PATH. '/public/btlec/dashboard.php?success='.$success);
+
+			}
+			else
+			{
+				array_push($err, "Echec d'envoi de l'email");
+			}
+		}
+
 		//checkbox 'clos' =>  checked or not checked => majEtat
 		if(isset($_POST['clos']))
 		{
@@ -280,8 +267,15 @@ if (isset($_POST['close']))
 					</div>
 				</div>
 
-
-
+				<div class="row" id="file-upload">
+					<fieldset>
+						<legend>ajouter des pièces jointes</legend>
+						<div class="col l12">
+							<p><input type="file" name="file_1" class='input-file'></p>
+							<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Envoyer d'autres fichiers</a></p>
+						</div>
+					</fieldset>
+				</div>
 			<!--BOUTONS-->
 				<div class="row">
 					<div class='col l9'>
@@ -293,6 +287,12 @@ if (isset($_POST['close']))
 							<label for="clos">cloturer la demande</label>
 						</p>
 					</div>
+				</div>
+
+
+
+
+<!--
 					<div class='col l4'>
 						<div class="upload-ct">
 							<p >
@@ -300,8 +300,9 @@ if (isset($_POST['close']))
 							</p>
 						</div>
 						<input type="file" multiple="multiple" name="file[]" id="file" >
-					</div>
-					<div class='col l5'></div>
+					</div> -->
+					<div class="row">
+					<div class='col l9'></div>
 					<div class='col l3'>
 						<p class="center">
 						<button class="btn" type="submit" name="post-reply">Répondre</button>
