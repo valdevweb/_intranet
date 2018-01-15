@@ -79,6 +79,10 @@ $replies=showReplies($pdoBt, $idMsg);
 		<div class="col l12">
 			<p><?= $reply['reply'] ?></p>
 		</div>
+		<div class="col l12">
+			<p><?= isAttached($reply['inc_file']) ?></p>
+		</div>
+
 	</div>
 	<?php endforeach ?>
 	<p>&nbsp;</p>
