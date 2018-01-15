@@ -90,12 +90,7 @@
 						<div class="col l6">
 							<p><input type="file" name="file_1" class='input-file'></p>
 							<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Envoyer d'autres fichiers</a></p>
-						<!-- avant remplacement par p input file et p a href
-						<div class="upload-ct">
-							<label for="file">&nbsp;&nbsp;Joindre un fichier</label>
 						</div>
-						<input type="file" multiple="multiple" name="file[]" id="file" > -->
-					</div>
 					</fieldset>
 				</div>
 				<div class="row">
