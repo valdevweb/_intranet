@@ -24,7 +24,7 @@
 						<li data-module="10"><a href="<?= $contact?>gt=comm ">communication</a></li>
 						<li data-module="11"><a href="<?= $contact?>gt=dir ">direction</a></li>
 						<li data-module="12"><a href="<?= $contact?>gt=dircom ">direction commerciale</a></li>
-						<li data-module="13"><a href="<?= $contact?>gt=informatique ">informatique</a></li>
+						<li data-module="13"><a href="<?= $contact?>gt=informatique ">exploitation informatique</a></li>
 						<li data-module="14"><a href="<?= $contact?>gt=logistique ">logistique</a></li>
 						<li data-module="17"><a href="<?= $contact?>gt=litige">litiges livraison</a></li>
 						<li data-module="15"><a href="<?= $contact?>gt=rh">social</a></li>
@@ -55,7 +55,7 @@
 						<li data-module="10"><a href="<?= $contact?>gt=comm ">communication</a></li>
 						<li data-module="11"><a href="<?= $contact?>gt=dir ">direction</a></li>
 						<li data-module="12"><a href="<?= $contact?>gt=dircom ">direction commerciale</a></li>
-						<li data-module="13"><a href="<?= $contact?>gt=informatique ">informatique</a></li>
+						<li data-module="13"><a href="<?= $contact?>gt=informatique ">exploitation informatique</a></li>
 						<li data-module="14"><a href="<?= $contact?>gt=logistique ">logistique</a></li>
 						<li data-module="17"><a href="<?= $contact?>gt=litige">litiges livraison</a></li>
 						<li data-module="15"><a href="<?= $contact?>gt=rh">social</a></li>

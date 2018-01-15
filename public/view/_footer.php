@@ -31,7 +31,6 @@
 
   </footer>
 <!--  Scripts-->
-<script src="<?=$jquery ?>"></script>
 <script src="<?= $md_js ?>"></script>
 <script src="<?= $main_js ?>"></script>
 <script src="<?= $dashboard_js ?>"></script>
