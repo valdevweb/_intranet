@@ -15,6 +15,18 @@ require '../../functions/mail.fn.php';
 require '../../functions/form.fn.php';
 require "../../functions/stats.fn.php";
 
+
+//----------------------------------------------
+// css dynamique
+//----------------------------------------------
+$page=(basename(__FILE__));
+$page=explode(".php",$page);
+$page=$page[0];
+$cssFile=ROOT_PATH ."/public/css/".$page.".css";
+
+
+
+
 //------------------------------
 //	ajout enreg dans stat
 //------------------------------<
@@ -288,19 +300,6 @@ if (isset($_POST['close']))
 						</p>
 					</div>
 				</div>
-
-
-
-
-<!--
-					<div class='col l4'>
-						<div class="upload-ct">
-							<p >
-								<label for="file">&nbsp;&nbsp;Joindre un fichier</label>
-							</p>
-						</div>
-						<input type="file" multiple="multiple" name="file[]" id="file" >
-					</div> -->
 					<div class="row">
 					<div class='col l9'></div>
 					<div class='col l3'>
@@ -310,8 +309,9 @@ if (isset($_POST['close']))
 					</div>
 				</div>
 			</form>
-		</div>
-	<!-- </div> -->
+<h5 class="light-blue-text text-darken-2">Réaffecter la demande :</h5>
+	<p>La demande ne concerne pas votre service ? <a href="chg.php?msg=<?=$idMsg?>">Cliquez ici pour réaffecter la demande</a></p>		</div>
+
 </div>
 <!-- affichage des messages d'erreur -->
 	<div class='row' id='erreur'>

@@ -23,6 +23,12 @@ function listServices($pdoBt)
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function listServicesNoTest($pdoBt)
+{
+	$req=$pdoBt->prepare("SELECT * FROM services WHERE slug <>'' AND slug<> 'test' ORDER BY full_name ");
+	$req->execute();
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
 
 //-----------------------------------
 //			demandes mag
@@ -117,6 +123,16 @@ function majEtat($pdoBt,$idMsg,$etat)
 	return $result;
 }
 
+
+function affectation($pdoBt,$idMsg,$service)
+{
+	$update=$pdoBt->prepare('UPDATE msg SET id_service= :service  WHERE id= :id');
+	$result=$update->execute(array(
+		':service'		=> $service,
+		':id'		=>$idMsg
+	));
+	return $result;
+}
 
 
 
