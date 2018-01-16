@@ -1,22 +1,44 @@
 <?php
+// ---------------------------------------------------
+// SESSION & AUTOLOAD
+//----------------------------------------------------
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
 	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
 }
-include('../view/_head.php');
-include('../view/_navbar.php');
-
-//------------------------------
-//			ajout enreg dans stat
-//------------------------------
+//----------------------------------------------------------------
+//			css dynamique
+//----------------------------------------------------------------
+$page=(basename(__FILE__));
+$page=explode(".php",$page);
+$page=$page[0];
+$cssFile=ROOT_PATH ."/public/css/".$page.".css";
+// <------------------------------------
+// STATS - add rec
+//--------------------------------------
 require "../../functions/stats.fn.php";
-//------------------------------
-
 $descr="page visite entrepot";
 $page=basename(__file__);
 $action="consultation";
 addRecord($pdoStat,$page,$action, $descr);
+//----------------------------------------------------
+// REQUIRED FUNCTIONS
+//----------------------------------------------------
+//require '../../functions/form.fn.php';
+//----------------------------------------------------
+// DATA LOGIC
+//----------------------------------------------------
+//----------------------------------------------------
+// VIEW - HEADER
+//----------------------------------------------------
+include('../view/_head.php');
+include('../view/_navbar.php');
+
+//----------------------------------------------------
+// VIEW - CONTENT
+//----------------------------------------------------
+//require 'contact.ct.php';
 
 ?>
 <div class="container">
@@ -68,7 +90,11 @@ addRecord($pdoStat,$page,$action, $descr);
 	</div>
 
 </div>
-			<?php
-			include('../view/_footer.php');
 
-			?>
+<?php
+//----------------------------------------------------
+// VIEW - FOOTER
+//----------------------------------------------------
+require '../view/_footer.php';
+
+?>
