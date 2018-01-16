@@ -95,7 +95,7 @@ if (isset($_POST['submit']))
 						<?php
 							foreach ($histo as $gazette)
 							{
-							echo "<li><a href='".$link.$gazette['file']."'>" .$gazette['file'] ."</a></li>";
+							echo "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .$gazette['file'] ."</a></li>";
 							}
 						?>
 					</ul>
@@ -130,8 +130,7 @@ if (isset($_POST['submit']))
 						<?php
 							foreach ($histo as $gazette)
 							{
-							echo "<li><a href='".$link.$gazette['file']."'>" .$gazette['file'] ."</a></li>";
-
+							echo "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .$gazette['file'] ."</a></li>";
 							}
 						?>
 					</ul>

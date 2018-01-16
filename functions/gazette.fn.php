@@ -31,12 +31,11 @@ function createLinks($pdoBt,$gazettes,$version)
 	 	$month=$months[$month];
 	 	$year=$g['year'];
 	 	$link="http://172.30.92.53/".$version."upload/gazette/" .$g['file'];
-	 	$html="<li><a href='".$link."' class='simple-link'>la gazette du ".$jour .' '. $month .' '.$year ."</a></li>";
+	 	$html="<li><a href='".$link."' class='simple-link stat-link' data-user-session='".$_SESSION['user']."'>la gazette du ".$jour .' '. $month .' '.$year ."</a></li>";
 	 	array_push($gazette,$html);
 	 }
 	 return $gazette;
 }
-
 
 function histoGaz($pdoBt,$week,$year)
 {

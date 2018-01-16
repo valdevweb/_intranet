@@ -15,42 +15,7 @@ $(document).ready(function(){
 		}
 	});
 
-	//nom fichier upload page upload-gazette
-	//$('#gazette').change(function(){
-	//
 
-	// à garder uniquement pour la gazette -upload fichier
-		$("input[type='file']").change(function(){
-		//get the input and UL list
-		//on traite plusieurs formulaires d'upload de fichier avec des id différents
-		//upload contact
-		if (document.getElementById('file') != null)
-		{
-			var input = document.getElementById('file');
-		}
-		//upload gazette
-		else if(document.getElementById('gazette') != null)
-		{
-			var input = document.getElementById('gazette');
-
-		}
-
-
-		var list = document.getElementById('file-name');
-		//empty list for now...
-		while (list.hasChildNodes()) {
-			list.removeChild(ul.firstChild);
-		}
-
-			//for every file...
-			for (var x = 0; x < input.files.length; x++)
-			{
-				//add to list
-				var li = document.createElement('li');
-				li.innerHTML = 'Fichier '  + ':  ' + input.files[x].name;
-				list.append(li);
-			}
-		});
 
 	//---------------------------------------------------------------------------------------------
 	//
@@ -59,7 +24,7 @@ $(document).ready(function(){
 	//--------------------------------------------------------------------------------------------
 
 	//---------------------------------------------------------------------------------------------
-	//		gestion ajout de fichier à uploader : nouveau bouton input file quand clique sur lien
+	//		MULTI UPLOAD : ajout de btn input file pour uploader d'autres fichiers
 	//--------------------------------------------------------------------------------------------
 
 	//selection du bouton pour ajouter des input type file
@@ -94,6 +59,73 @@ $(document).ready(function(){
 			// console.log(boxState);
 			return confirm(boxState);
 		});
+
+	//---------------------------------------------------------------------------------------------
+	//		upload unique ou dans un répertoire unique => liste des nom de fichiers
+	//		voir upload-gazette
+	//--------------------------------------------------------------------------------------------
+
+
+		$("input[type='file']").change(function(){
+			//get the input and UL list
+			//on traite plusieurs formulaires d'upload de fichier avec des id différents
+			//upload contact
+			if(document.getElementById('gazette') != null)
+			{
+				var input = document.getElementById('gazette');
+			}
+
+
+			var list = document.getElementById('file-name');
+			//on vide la liste au départ
+			while (list.hasChildNodes())
+			{
+				list.removeChild(ul.firstChild);
+			}
+				//for every file...
+				for (var x = 0; x < input.files.length; x++)
+				{
+					//add to list
+					var li = document.createElement('li');
+					li.innerHTML = 'Fichier '  + ':  ' + input.files[x].name;
+					list.append(li);
+				}
+			});
+
+
+	//---------------------------------------------------------------------------------------------
+	//
+	//						UPLOAD DE FICHIERS
+	//
+	//--------------------------------------------------------------------------------------------
+
+	//---------------------------------------------------------------------------------------------
+	//		stats clic liens externes
+	//--------------------------------------------------------------------------------------------
+		$('.stat-link').click(function(event)
+		{
+			var user=$(this).attr('data-user-session');
+			var link=this.href;
+			var from=document.location.href;
+			$.ajax({
+				type: 'POST',
+				url:'http://172.30.92.53/btlecest/functions/ajax.stats.php',
+				data:{
+					urlSend: link,
+					page:from,
+					action : 'lien externe',
+					user: user
+				},
+				success: function(response) {
+         		   document.getElementById("test").innerHTML = response;
+        		}
+			});
+		});
+
+
+
+
+
 
 //calendrier
 	// $('.datepicker').pickadate({

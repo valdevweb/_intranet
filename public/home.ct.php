@@ -37,10 +37,12 @@
 								<?php foreach ($links as $link): ?>
 									<?= $link ?>
 								<?php endforeach ?>
-								<!-- <li><a href="../upload/gazette/LA GAZETTE BTLEC 04.12.17.xls" class="simple-link">lundi 4 décembre 2017</a></li> -->
-								<!-- 	<li>mardi 5 décembre 2017</li> -->
 							</ul>
-
+							<P class="orange-text text-darken-2">LES OPPORTUNITES</p>
+							<hr>
+							<ul>
+								<a class='stat-link' data-user-session="<?=$_SESSION['user']?>" href="http://172.30.92.53/OPPORTUNITES/index.html" target="_blank">consulter</a>
+							</ul>
 						</div>
 					</div>
 
@@ -67,14 +69,27 @@
 					<div class="row">
 						<div class="col s12 m5 l5">
 							<div class="vm-card">
-								<a class="simple-link" href="http://172.30.101.66/rheaweb/auth">Docubase : </a>
+								<a class="simple-link stat-link" data-user-session="<?=$_SESSION['user']?>" href="http://172.30.101.66/rheaweb/auth">Docubase : </a>
 								<ul>
-									<li><a class="simple-link" href="http://172.30.101.66/rheaweb/auth">Retouvez les documents émis par BTlec : factures, bon livraison, etc</a></li>
+									<li><a class="simple-link stat-link" data-user-session="<?=$_SESSION['user']?>"  href="http://172.30.101.66/rheaweb/auth">Retouvez les documents émis par BTlec : factures, bon livraison, etc</a></li>
 								</ul>
 							</div>
 						</div>
 					</div>
 				</section>
 			</div>
+<p id="test"></P>
+
+<?php
+
+if(isset($_POST['urlSend']))
+{
+
+	echo $descr=$_POST['urlSend'];
+echo $action=$_POST['action'];
+echo $page=$_POST['page'];
+
+}
+?>
 </div>
 
