@@ -14,12 +14,13 @@ require "../../functions/stats.fn.php";
 
 //recup slug service
 $gt=$_GET['gt'];
-//css dynamique
+//----------------------------------------------------------------
+//			css dynamique
+//----------------------------------------------------------------
 $page=(basename(__FILE__));
 $page=explode(".php",$page);
 $page=$page[0];
 $cssFile=ROOT_PATH ."/public/css/".$page.".css";
-// echo $cssFile;
 
 //----------------------------------------------------------------
 //			stats

@@ -1,22 +1,21 @@
 <?php
+// ----------------------------------------------------------
+// 			pas d'autoload,
+// 			donc fonction de connexion à la db
+// 			et fonction d'enregistrement des stats reprises
+// ----------------------------------------------------------
 /* CONNEXION BASE STATS */
 function getStatsLink() {
 	$host='localhost';
 	$username='sql';
 	$pwd='User19092017+';
 	$database='stats';
-
 	try {
 		$pdo=new PDO("mysql:host=$host;dbname=$database", $username, $pwd);
-		// $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-
 	}
-
 	catch(Exception $e)
 	{
 		die('Erreur : '.$e->getMessage());
-		echo "dead";
 	}
 	return  $pdo;
 
@@ -40,7 +39,7 @@ function addRecord($pdoStat,$typeLog,$user, $page,$action, $descr)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-
+// récup les valeur transmises par ajax en POST
 $descr=$_POST['urlSend'];
 $action=$_POST['action'];
 $from=$_POST['page'];
