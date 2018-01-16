@@ -136,6 +136,10 @@ if(isset($_POST['connexion']))
 
 
 <!--  Scripts-->
+<!--[if IE]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+
 <script src="vendor/jquery/jquery-3.2.1.js"></script>
 <script src="vendor/materialize/js/materialize.js"></script>
 <script type="text/javascript">
