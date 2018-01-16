@@ -22,6 +22,8 @@
 						<li data-module="9"><a href="<?= $contact?>gt=pemgem ">achats PEM/GEM</a></li>
 						<li data-module="16"><a href="<?= $contact?>gt=compta ">comptabilité</a></li>
 						<li data-module="10"><a href="<?= $contact?>gt=comm ">communication</a></li>
+						<li data-module="10"><a href="<?= $contact?>gt=cm ">contre-marque</a></li>
+						<li data-module="10"><a href="<?= $contact?>gt=ctrl_gestion">contrôle de gestion</a></li>
 						<li data-module="11"><a href="<?= $contact?>gt=dir ">direction</a></li>
 						<li data-module="12"><a href="<?= $contact?>gt=dircom ">direction commerciale</a></li>
 						<li data-module="13"><a href="<?= $contact?>gt=informatique ">exploitation informatique</a></li>
@@ -53,6 +55,8 @@
 						<li data-module="9"><a href="<?= $contact?>gt=pemgem ">achats PEM/GEM</a></li>
 						<li data-module="16"><a href="<?= $contact?>gt=compta ">comptabilité</a></li>
 						<li data-module="10"><a href="<?= $contact?>gt=comm ">communication</a></li>
+						<li data-module="10"><a href="<?= $contact?>gt=cm ">contre-marque</a></li>
+						<li data-module="10"><a href="<?= $contact?>gt=ctrl_gestion">contrôle de gestion</a></li>
 						<li data-module="11"><a href="<?= $contact?>gt=dir ">direction</a></li>
 						<li data-module="12"><a href="<?= $contact?>gt=dircom ">direction commerciale</a></li>
 						<li data-module="13"><a href="<?= $contact?>gt=informatique ">exploitation informatique</a></li>
