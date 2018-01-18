@@ -61,27 +61,29 @@ $(document).ready(function(){
 		});
 
 	//---------------------------------------------------------------------------------------------
-	//		upload unique ou dans un répertoire unique => liste des nom de fichiers
-	//		voir upload-gazette
+	//		upload-gazette
+	//		récupère et affiche les noms des fichiers choisis via les 2 input file
+	//		champ input file limités à un fichier
 	//--------------------------------------------------------------------------------------------
 
 
-		$("input[type='file']").change(function(){
+		$("input[type='file']#gazette-upload").change(function(){
 			//get the input and UL list
 			//on traite plusieurs formulaires d'upload de fichier avec des id différents
-			//upload contact
-			if(document.getElementById('gazette') != null)
+			// id de l'input file
+			if(document.getElementById('gazette-upload') != null)
 			{
-				var input = document.getElementById('gazette');
+				var input = document.getElementById('gazette-upload');
+				// paragrphe ou on affiche la liste des fichiers uploadés
+				var list = document.getElementById('file-name-gazette');
 			}
-
-
-			var list = document.getElementById('file-name');
-			//on vide la liste au départ
-			while (list.hasChildNodes())
+			if(input !=null)
 			{
-				list.removeChild(ul.firstChild);
-			}
+				//on vide la liste au départ
+				while (list.hasChildNodes())
+				{
+					list.removeChild(ul.firstChild);
+				}
 				//for every file...
 				for (var x = 0; x < input.files.length; x++)
 				{
@@ -90,7 +92,53 @@ $(document).ready(function(){
 					li.innerHTML = 'Fichier '  + ':  ' + input.files[x].name;
 					list.append(li);
 				}
+			}
+
 			});
+
+
+
+		$("input[type='file']#appros-upload").change(function(){
+			//get the input and UL list
+			//on traite plusieurs formulaires d'upload de fichier avec des id différents
+			// id de l'input file
+
+			if(document.getElementById('appros-upload') != null)
+			{
+				var input = document.getElementById('appros-upload');
+				// paragrphe ou on affiche la liste des fichiers uploadés
+				var list = document.getElementById('file-name-appros');
+			}
+			if(input !=null)
+			{
+				//on vide la liste au départ
+				while (list.hasChildNodes())
+				{
+					list.removeChild(ul.firstChild);
+				}
+				//for every file...
+				for (var x = 0; x < input.files.length; x++)
+				{
+					//add to list
+					var li = document.createElement('li');
+					li.innerHTML = 'Fichier '  + ':  ' + input.files[x].name;
+					list.append(li);
+				}
+			}
+
+			});
+
+
+
+
+
+
+// $('input[type="file"]').change(function(e){
+//             var fileName = e.target.files[0].name;
+//             alert('The file "' + fileName +  '" has been selected.');
+//         });
+
+
 
 
 	//---------------------------------------------------------------------------------------------

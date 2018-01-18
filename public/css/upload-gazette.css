@@ -1,6 +1,78 @@
+/**********************************************
+*           titres
+*
+************************************************/
+h4 {
+
+    color: #757575;
+}
+h1{
+    color: #1565c0 !important;
+}
+
+.fa.fa-hand-o-right {
+    padding-right: 20px;
+}
 
 
-/* input d'upload : masquer input et se servir du label */
+/*****************************************
+*           nav
+*
+******************************************/
+.mini-nav{
+    /* background-color: #1e88e5 !important; */
+    width: 100%;
+    padding: 20px;
+    line-height: 1;
+    color: #1e88e5;
+      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 2px 2px;
+
+}
+
+.mini-nav >p a:hover
+{
+    /* font-weight: bold !important; */
+    letter-spacing: 0.05em;
+    padding-left: 5px;
+    color: #757575;
+
+}
+
+.mini-nav >p i:hover
+{
+    /* font-weight: bold !important; */
+}
+
+
+
+/**********************************************
+*           table
+*
+************************************************/
+
+
+.delete{
+
+    text-align: center;
+}
+
+.delete >a{
+    color:#757575;
+}
+
+.delete >a:hover{
+    color: #d50000;
+    font-weight: bold;
+}
+
+
+
+/**********************************************
+*           BOUTON UPLOAD
+*
+************************************************/
 input[type="file"] {
     display: none !important;
 }
@@ -12,12 +84,8 @@ input[type="file"] {
     background: white;
     box-sizing: content-box;
     height: 40px;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-    0 1px 5px 0 rgba(0, 0, 0, 0.12),
-    0 3px 1px -2px rgba(0, 0, 0, 0.2);
-    -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-    0 1px 5px 0 rgba(0, 0, 0, 0.12),
-    0 3px 1px -2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
     border-radius: 0 0 2px 2px;
 }
 
@@ -36,7 +104,7 @@ label[for="gazette"]:before {
     content: "\f115";
     font-size: 1.5em;
     color: white;
-    background: #ff5722;
+    background: #ef6c00;
     padding: 10px;
     height: 37px;
     line-height: 40px;
@@ -46,7 +114,7 @@ label[for="gazette"]:before {
 label[for="gazette"]:hover:before {
   font-family: FontAwesome;
   content: "\f114";
-  background: #e54e1e;
+  background: #ef6c00;
   color: white;
 }
 
@@ -58,4 +126,45 @@ label[for="gazette"]:hover {
 
 .upload:hover {
  background: rgba(0, 0, 0, 0.14);
+}
+
+/**********************************************
+*           tableau 10 des gazettes
+*
+************************************************/
+
+td, th {
+  padding: 8px 5px !important;
+/*   display: table-cell;
+  text-align: left;
+  vertical-align: middle;*/
+  border-radius: 0px !important;
+}
+
+table.bordered > tbody > tr:nth-child(odd) {
+  border-bottom: 1 px grey !important;
+}
+
+th{
+    background-color: #1e88e5 !important;
+
+}
+form{
+    background-color: #fff;
+    padding: 20px;
+        /* box-shadow: 0 1px 1px 2px rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2); */
+    -webkit-box-shadow: 0 2px 2px 1px rgba(0, 0, 0, 0.14), 0 1px 2px 1px rgba(0, 0, 0, 0.12), 0 1px 1px -2px rgba(0, 0, 0, 0.2);
+    border: 1px grey solid;
+}
+
+/**********************************************
+*          misc
+*
+************************************************/
+hr {
+
+    width: 40% !important;
+    border-bottom: 1px solid grey !important;
+    /* box-shadow: 0px 10px 10px -10px #333 !important; */
+    margin : 80px auto 60px auto !important;
 }
