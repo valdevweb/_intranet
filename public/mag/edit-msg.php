@@ -5,34 +5,18 @@ if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
 }
 
-//----------------------------------------------------------------
-//	css dynamique
-//----------------------------------------------------------------
-$page=(basename(__FILE__));
-$page=explode(".php",$page);
-$page=$page[0];
-$cssFile=ROOT_PATH ."/public/css/".$page.".css";
-
-//----------------------------------------------------
-// REQUIRED FUNCTIONS
-//----------------------------------------------------
 require '../../functions/form.fn.php';
 //ajout d'un commentaire magasin - affichage de la liste des fichiers joints
 require '../../functions/form.bt.fn.php';
 require '../../functions/upload.fn.php';
 require '../../functions/mail.fn.php';
-// <------------------------------------
-// STATS - add rec
-//--------------------------------------
+
 require "../../functions/stats.fn.php";
 $descr="détail message côté magasin";
 $page=basename(__file__);
 $action="consultation";
 addRecord($pdoStat,$page,$action, $descr);
 
-//----------------------------------------------------
-// DATA LOGIC
-//----------------------------------------------------
 $idMsg=$_GET['msg'];
 $idMag=$_SESSION['id'];
 $msg=showThisMsg($pdoBt, $idMag, $idMsg);
@@ -146,9 +130,6 @@ if(isset($_POST['post-reply']))
 
 	}
 }
-//----------------------------------------------------
-// VIEW - HEADER
-//----------------------------------------------------
 include('../view/_head.php');
 include('../view/_navbar.php');
 ?>
@@ -157,7 +138,6 @@ include('../view/_navbar.php');
 <div class="container">
 	<!-- mini nav -->
 
-
 	<!-- titre  -->
 	<div class="row">
 		<div class="col s12">
@@ -165,48 +145,20 @@ include('../view/_navbar.php');
 		</div>
 
 	</div>
-	<div class="row">
-		<!-- nav -->
-		 <div class="col l2 m2 s2">
-		 	<p>Service</p>
-		 </div>
-		  <div class="col l10 m10 s10">
 
-		 </div>
-	</div>
+
+
+	<!--historique-->
+	<!--dde d'origine-->
 
 	<div class="row">
-		<div class="main-msg">
-				<div class="myrow">
-					<h4 class="center">DEMANDE N°<?= $msg['id']?> DU <?= date('d-m-Y', strtotime($msg['date_msg']))?> </h4>
-				</div>
-				<div class="myrow">
-					<div class="box-header">
-						<p>Objet : </p>
-					</div>
-					<div class="main-content">
-						<p><?=$msg['objet']?></p>
-					</div>
-				</div>
-				<div class="myrow">
-					<div class="box-header">
-						<p>Message : </p>
-					</div>
-					<div class="main-content">
-						<p><?=$msg['msg']?></p>
-					</div>
-				</div>
-				<div class="myrow">
-					<div class="box-header">
-						<p>Pièce jointe : </p>
-					</div>
-					<div class="main-content">
-						<p>&nbsp;<?=isAttached($msg['inc_file'])?></p>
-					</div>
-				</div>
-			</div>
+		<div class="card-panel">
+				<h5 class="orange-text text-darken-2 boldtxt center">Votre demande du <?= date('d-m-Y', strtotime($msg['date_msg']))?> </h5>
+				<p><span class="labelFor">Objet : </span><?=$msg['objet']?></p>
+				<p><span class="labelFor">Message : </span><?=$msg['msg']?></p>
+				<p><span class="labelFor">Pièce jointe : </span><?=isAttached($msg['inc_file'])?></p>
 		</div>
-
+	</div>
 	<div class="row">
 		<div class="col l6 m6 s6">
 			<p><a href= "<?= ROOT_PATH?>/public/mag/histo.php" class="blue-text text-darken-4"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
@@ -219,60 +171,34 @@ include('../view/_navbar.php');
 	<!-- reponses -->
 	<?php foreach($replies as $reply): ?>
 	<?php
-	//si correspondance replied_by dans table bt => reponse bt sion réponse mag
-	$name=repliedByIntoName($pdoBt,$reply['replied_by']);
-	if(is_null($name))
+	//nom de la personne qui a répondu si bt
+	$by=repliedByIntoName($pdoBt,$reply['replied_by']);
+	//mise en forme différente suivant réponse BT ou mag
+	// on sait que c'est réponse mag si $by est vide car
+	// la fonction va rechercher le nom de la personne
+	// qui a répondu dans la table BT
+	if(is_null($by))
 	{
 		// $color="blue-text";
-		$name= $_SESSION['nom'];
-		$badge="magasin";
-		$dialBox='dial-mag';
+		$by="Magasin ". $_SESSION['nom'];
+		$by="<p><span class='labelFor'>Par :</span> " .$by ."</p>";
+		$side='moveToRight';
+
 	}
 	else
 	{
-		$badge="BTLEC";
-		$dialBox='dial-bt';
+		$color="orange-text";
+		$by="<p><span class='labelFor'>Par :</span> BTLEC - " .$by ."</p>";
+		$side='moveToLeft';
+
 	}
 	?>
 	<div class="row">
-		<div class="dial <?= $dialBox ?>">
-			<div class="myrow">
-				<div class="box-header">
-					<p>Date du message :</p>
-				</div>
-				<div class="box-content">
-					 <p><?= date('d-m-Y', strtotime($reply['date_reply']))?></p>
-				</div>
-			</div>
-			<div class="myrow">
-				<div class="box-header">
-					<p>Par :</p>
-				</div>
-				<div class="box-content">
-					<p>
-					<?= $name ?>
-					<span class="badge blue darken-3" ><?= $badge?></span>
-					</p>
-
-				</div>
-			</div>
-			<div class="myrow">
-				<div class="box-header">
-					<p>Message :</p>
-				</div>
-				<div class="box-content">
-					<p><?= $reply['reply'] ?></p>
-				</div>
-			</div>
-			<div class="myrow">
-				<div class="box-header">
-					<p>Pièces jointes : </p>
-				</div>
-				<div class="box-content">
-					<p>&nbsp;	<?= isAttached($reply['inc_file'])?>
-					</p>
-				</div>
-			</div>
+		<div class="card-panel <?= $side ?>">
+			<p><span class="labelFor">Date du message :</span> <?= date('d-m-Y', strtotime($reply['date_reply']))?></p>
+			<?= $by ?>
+			<p><span class="labelFor">Message :</span><?= $reply['reply'] ?></p>
+			<p><span class="labelFor">Pièces jointes : <?= isAttached($reply['inc_file'])?></span>
 
 		</div>
 	</div>
