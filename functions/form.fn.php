@@ -143,7 +143,7 @@ $req=$pdoBt->prepare("SELECT * FROM services WHERE id = :id");
 //affichage nom personne qui a répondu en clair (histo mag)
 function repliedByIntoName($pdoBt,$idUser)
 {
-	$req=$pdoBt->prepare("SELECT CONCAT( nom ,' ', prenom)AS fullname FROM btlec JOIN lk_user ON lk_user.id_btlec=btlec.id WHERE lk_user.iduser = :iduser");
+	$req=$pdoBt->prepare("SELECT CONCAT( prenom ,' ', nom)AS fullname FROM btlec JOIN lk_user ON lk_user.id_btlec=btlec.id WHERE lk_user.iduser = :iduser");
 	$req->execute(array(
 		'iduser' =>$idUser
 	));

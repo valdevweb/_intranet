@@ -41,7 +41,7 @@
 							<P class="orange-text text-darken-2">LES OPPORTUNITES</p>
 							<hr>
 							<ul>
-								<a class='stat-link' data-user-session="<?=$_SESSION['user']?>" href="http://172.30.92.53/OPPORTUNITES/index.html" target="_blank">consulter</a>
+								<li><a class='stat-link' data-user-session="<?=$_SESSION['user']?>" href="http://172.30.92.53/OPPORTUNITES/index.html" target="_blank">consulter</a></li>
 							</ul>
 						</div>
 					</div>
