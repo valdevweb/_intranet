@@ -21,6 +21,18 @@ addRecord($pdoStat,$page,$action, $descr);
 //----------------------------------------
 
 
+//----------------------------------------------
+// css dynamique
+//----------------------------------------------
+$page=(basename(__FILE__));
+$page=explode(".php",$page);
+$page=$page[0];
+$cssFile=ROOT_PATH ."/public/css/".$page.".css";
+
+
+
+
+
 include('../view/_head.php');
 include('../view/_navbar.php');
 
@@ -37,6 +49,7 @@ if (!empty($_GET['type'])) {
 //recherche gazette
 if (isset($_POST['submit']))
 {
+	$linkSearch="";
 	if ( !preg_match ( "/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/" , $_POST['date'] ) )
 	{
 		$linkSearch="merci de saisir une date valide";
@@ -47,28 +60,60 @@ if (isset($_POST['submit']))
 	$req->execute(array(
 		':date'		=>$date
 	));
-	if($result=$req->fetch())
+	if($result=$req->fetchAll(PDO::FETCH_ASSOC))
 	{
-		$file=$result['file'];
+		foreach ($result as $value)
+		{
 
-		$linkSearch= "<a href='http://172.30.92.53/".$version ."upload/gazette/" . $file . "'>" .$file ."</a>";
+			$file=$value['file'];
+			$linkSearch.="<p><a href='http://172.30.92.53/".$version ."upload/gazette/" . $file . "'>" .$file ."</a></p>";
+		}
+		// $file=$result['file'];
+
+		// $linkSearch= "<a href='http://172.30.92.53/".$version ."upload/gazette/" . $file . "'>" .$file ."</a>";
 	}
 		else
 		{
 			echo "pas de resultat";
 		}
+		unset( $_POST);
 
 }
 
 
 ?>
 <div class="container">
+	<div class="myrow">
+		<img class="w3-grayscale gazette" src="../img/gazette/newspaper.jpg">
+	</div>
 	<div class="row">
-		<h1 class="light-blue-text text-darken-2">La Gazette</h1>
+		<div class="col l3 m3"></div>
+		<div class="col l2 m2 s4 mini-nav">
+			<p><a href="#h2018"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette hedbo</a></p>
+			<p><a href="#h2018"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2018</a></p>
+			<p><a href="#h2017"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2017</a></p>
+
+
+		</div>
+		<div class="col l2 m2 s4 mini-nav">
+			<p><a href="#a2018"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette appro</a></p>
+			<p><a href="#a2018"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2018</a></p>
+
+		</div>
+			<div class="col l2 m2 s4 mini-nav">
+			<p><a href="#search"><i class="fa fa-search" aria-hidden="true"></i>Rechercher</a></p>
+
+
+		</div>
+		<div class="col l3 m3"></div>
+
 	</div>
 
+		<h1 class="light-blue-text text-darken-2">La Gazette</h1>
+
+
 	<div class="row">
-		<h4 class="light-blue-text text-darken-2">Listing des gazettes de 2018</h4>
+		<h4 class="light-blue-text text-darken-2" id="h2018">Listing des gazettes de 2018</h4>
 	</div>
 	<div class="row">
 		<ul class="collapsible" data-collapsible="accordion">
@@ -79,10 +124,10 @@ if (isset($_POST['submit']))
 			$nbWeek=new DateTime();
 			$nbWeek=$nbWeek->format('W');
 			$nbWeek=(int)$nbWeek-1;
-
+			$category="gazette";
 				for ($week=$nbWeek; $week >=0 ; $week--)
 				{
-					$histo=histoGaz($pdoBt,$week,$year);
+					$histo=histoGaz($pdoBt,$week,$year,$category);
 					$link="http://172.30.92.53/".$version."upload/gazette/";
 
 		?>
@@ -108,7 +153,7 @@ if (isset($_POST['submit']))
  	</div> <!--row accordeon 2018 -->
 
 	<div class="row">
-		<h4 class="light-blue-text text-darken-2">Listing des gazettes de 2017</h4>
+		<h4 class="light-blue-text text-darken-2" id="h2017">Listing des gazettes de 2017</h4>
 	</div>
 
 	<div class="row">
@@ -117,9 +162,10 @@ if (isset($_POST['submit']))
 		//l'hiisto des gazettes en 2017 commence à la semaine 48
 			$year=2017;
 			$nbWeek2017=getIsoWeeksInYear(2017);
+			$category="gazette";
 				for ($week=52; $week >=48 ; $week--)
 				{
-					$histo=histoGaz($pdoBt,$week,$year);
+					$histo=histoGaz($pdoBt,$week,$year, $category);
 					$link="http://172.30.92.53/".$version."upload/gazette/";
 				?>
 			<!--un bloc semaine-->
@@ -141,12 +187,64 @@ if (isset($_POST['submit']))
 				}
 				?>
 			</ul>
- </div> <!--row accordeon 2017 -->
+ </div>
+ <!--row accordeon 2017 -->
+
+<!--
+*
+*		gazette appros
+*
+ -->
+
+<div class="row">
+		<h4 class="light-blue-text text-darken-2" id="a2018">Listing des gazettes appros de 2018</h4>
+	</div>
+	<div class="row">
+		<ul class="collapsible" data-collapsible="accordion">
+		<?php
+		//semaine à partir de laquelle on va afficher l'historique des gazettes
+		//l'année 2018 commence semaine 0 donc on retire 1 à la semaine actuelle
+			$year=2018;
+			$nbWeek=new DateTime();
+			$nbWeek=$nbWeek->format('W');
+			$nbWeek=(int)$nbWeek-1;
+			$category="gazette appros";
+
+				for ($week=$nbWeek; $week >=0 ; $week--)
+				{
+					$histo=histoGaz($pdoBt,$week,$year, $category);
+					$link="http://172.30.92.53/".$version."upload/gazette/";
+
+		?>
+			<!--un bloc semaine-->
+			<li>
+				<!-- on rajoute 1 au numéro de semaine pour l'affichage -->
+				<div class="collapsible-header"><i class="fa fa-newspaper-o" aria-hidden="true"></i>Semaine <?=$week+1 ?><span class="new badge blue" data-badge-caption="gazette(s)"><?=count($histo)?></span></div>
+				<div class="collapsible-body">
+					<ul class="browser-default">
+						<?php
+							foreach ($histo as $gazette)
+							{
+							echo "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .$gazette['file'] ."</a></li>";
+							}
+						?>
+					</ul>
+				</div>
+			</li>
+		<?php
+		}//fin du for qui parcours les semaines
+		?>
+		</ul>
+ 	</div> <!--row accordeon 2018 -->
+
+
+
+
 
 
 <!-- formulaire de recherche -->
 	<div class="row">
-		<h4 class="light-blue-text text-darken-2">Chercher une gazette par date</h4>
+		<h4 class="light-blue-text text-darken-2" id="search">Chercher une gazette par date</h4>
 		<form method="post" action="gazette.php#result" class="w3-container">
 			<div class="col l2"></div>
 			<div class="col l4">
@@ -167,7 +265,7 @@ if (isset($_POST['submit']))
 		</form>
 	</div>
 	<div class="row" id="result">
-		<?php if(isset($linkSearch)){echo "<p> Votre lien : ". $linkSearch ."</p>";} ?>
+		<?php if(isset($linkSearch)){echo "<p>Resultat(s) : </p>". $linkSearch ;} ?>
 	</div>
 <!-- END formulaire de recherche -->
 </div><!-- END container -->

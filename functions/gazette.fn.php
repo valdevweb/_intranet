@@ -37,11 +37,13 @@ function createLinks($pdoBt,$gazettes,$version)
 	 return $gazette;
 }
 
-function histoGaz($pdoBt,$week,$year)
+function histoGaz($pdoBt,$week,$year,$category)
 {
-	$req=$pdoBt->prepare("SELECT date, id,file,category, week(date) as week, year(date) as year FROM gazette WHERE week(date)= :week AND year(date)=:year ORDER BY date");
+	$req=$pdoBt->prepare("SELECT date, id,file,category, week(date) as week, year(date) as year FROM gazette WHERE week(date)= :week AND year(date)=:year AND category=:category ORDER BY date");
 	$req->bindValue(':week',$week, PDO::PARAM_INT);
 	$req->bindValue(':year',$year, PDO::PARAM_INT);
+	$req->bindValue(':category',$category, PDO::PARAM_INT);
+
 	$req->execute();
 return $req->fetchAll(PDO::FETCH_ASSOC);
 }
