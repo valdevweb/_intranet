@@ -117,23 +117,6 @@ h4{
   padding-left: 20px;
 }
 
-/* -----------------------------
- couleur des blocs suivant réponse mag ou btlec
-          page : edit-msg;
-
- */
-
-.moveToRight
-{
-background-color: #0288d1 !important;
-
-}
-
-.moveToLeft
-{
-background-color: #546E7A !important;
-
-}
 
 .pj
 {
