@@ -1,0 +1,12 @@
+hr {
+	margin :  15px 0 !important;
+    /* width: 40% !important; */
+    border-bottom: 1px solid #f57c00 !important;
+    width:  90% !important;
+    /* box-shadow: 0px 10px 10px -10px #333 !important; */
+    /* margin : 80px auto 60px auto !important; */
+}
+
+.links{
+	margin-bottom: 40px !important;
+}

@@ -26,66 +26,66 @@
 
 		<div class="down"></div>
 		<section>
-			<h4 class="grey-text text-darken-2">Vos actualités</h4>
+			<!-- titre des colonnes principales -->
 			<div class="row">
-
+				<div class="col s12 m5 l5">
+					<h4 class="grey-text text-darken-2">Vos actualités : </h4>
+				</div>
+				<div class="col l2"></div>
+				<div class="col s12 m5 l5">
+					<h4 class="grey-text text-darken-2">Liens utiles :</h4>
+				</div>
+			</div>
+			<!-- cards avec les liens -->
+			<div class="row">
 				<div class="col s12 m5 l5">
 					<div class="vm-card">
-						<P class="orange-text text-darken-2">LES GAZETTES DE LA SEMAINE :</p>
+						<p class="orange-text text-darken-2">LES GAZETTES DE LA SEMAINE :</p>
+						<hr>
+						<ul class='links'>
+							<?php foreach ($links as $link): ?>
+								<?= $link ?>
+							<?php endforeach ?>
+						</ul>
+						<p class="orange-text text-darken-2">LES GAZETTES APPROS :</p>
+						<hr>
+						<ul class='links'>
+							<?php foreach ($linksAppros as $linkAppros): ?>
+								<?= $linkAppros ?>
+							<?php endforeach ?>
+						</ul>
+						<P class="orange-text text-darken-2">LES OPPORTUNITES</p>
 							<hr>
-							<ul>
-								<?php foreach ($links as $link): ?>
-									<?= $link ?>
-								<?php endforeach ?>
-							</ul>
-							<P class="orange-text text-darken-2">LES GAZETTES APPROS :</p>
-							<hr>
-							<ul>
-								<?php foreach ($linksAppros as $linkAppros): ?>
-									<?= $linkAppros ?>
-								<?php endforeach ?>
-							</ul>
-							<P class="orange-text text-darken-2">LES OPPORTUNITES</p>
-							<hr>
-							<ul>
+							<ul class='links'>
 								<li><a class='stat-link' data-user-session="<?=$_SESSION['user']?>" href="http://172.30.92.53/OPPORTUNITES/index.html" target="_blank">consulter</a></li>
 							</ul>
-						</div>
 					</div>
-
-					<div class="col l2"></div>
-					<div class="col s12 m5 l5">
-						<div class="vm-card">
+				</div>
+				<div class="col l2"></div>
+				<div class="col s12 m5 l5">
+					<div class="vm-card">
+						<p class="orange-text text-darken-2">DOCUBASE :</p>
+						<hr>
+						<ul class='links'>
+							<li><a class="simple-link stat-link" data-user-session="<?=$_SESSION['user']?>"  href="http://172.30.101.66/rheaweb/auth">Retouvez ici les documents émis par BTlec : factures, bon livraison, etc</a></li>
+						</ul>
+					</div>
+						<!-- <div class="vm-card">
 							<P class="orange-text text-darken-2">VOS DEMANDES :</p>
 								<hr>
-								<ul>
+								<ul class='links'>
 									<li>En cours de construction !
 										<br>Bientôt ici le récapitulatif de vos demandes.
 									</li>
 									<li></li>
 								</ul>
 							</div>
-						</div>
-					</div>
-				</section>
-
-
-				<div class="down"></div>
-				<section>
-					<h4 class="grey-text text-darken-2">Liens utiles</h4>
-					<div class="row">
-						<div class="col s12 m5 l5">
-							<div class="vm-card">
-								<a class="simple-link stat-link" data-user-session="<?=$_SESSION['user']?>" href="http://172.30.101.66/rheaweb/auth">Docubase : </a>
-								<ul>
-									<li><a class="simple-link stat-link" data-user-session="<?=$_SESSION['user']?>"  href="http://172.30.101.66/rheaweb/auth">Retouvez les documents émis par BTlec : factures, bon livraison, etc</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</section>
+ -->
+				</div>
 			</div>
-<p id="test"></P>
+		</div>
+	</section>
+
 
 <?php
 
