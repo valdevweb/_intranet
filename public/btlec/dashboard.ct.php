@@ -47,6 +47,7 @@
 
 			<div class="row <?= color($value['id_service'],$services)?> box-border" >
 				<?php $idMag=$value['id_mag'];
+
 				$panoGalec=getPanoGalec($pdoUser,$idMag);
 				$magInfo=getMag($pdoBt,$panoGalec['galec']); ?>
 				<div class="col l4">
@@ -73,8 +74,14 @@
 				</div>
 			</div>
 			<?php
+			//formatage des données pour affichage
+				$date=new DateTime($value['date_msg']);
+				$dateMsg=$date->format('d-m-Y');
+			    $found_key = array_search($value['id_service'], array_column($services, 'id'));
+				$serviceName= $services[$found_key]['full_name'];
 			//si on a des réponse bt
-			if($nbRep=nbRep($pdoBt, $value['id'])){
+			if($nbRep=nbRep($pdoBt, $value['id']))
+			{
 				$nbRepmsg=' - '. $nbRep['nb_rep'] . ' réponse(s)';
 				$lastDateRep=$nbRep['last_reply_date'];
 				$lastDateRep=date('d-m-Y', strtotime($lastDateRep));
@@ -84,8 +91,10 @@
 			else
 			{
 				$nbRepmsg='';
-				$lastDateRep="";
 				$by="";
+				// ajout avertissement si message plus vieux de 5 jours et sans réponse
+				$lastDateRep=warning($date);
+
 			}
 
 			?>
@@ -93,15 +102,9 @@
 			<!-- contenu du message -->
 			<div class="row white box-border">
 				<div class="col l12">
-					<?php
-						$date=new DateTime($value['date_msg']);
-						$date=$date->format('d-m-Y');
-						$found_key = array_search($value['id_service'], array_column($services, 'id'));
-						$serviceName= $services[$found_key]['full_name'];
-					?>
 					<p class="center">SERVICE <?=strtoupper($serviceName)?></p>
 					<div class="col l9">
-						<p><span class="labelFor">Demande du : </span><?= $date ?> </p>
+						<p><span class="labelFor">Demande du : </span><?= $dateMsg ?> </p>
 					</div>
 					<div class="col l3">
 						<p><span class="labelForSmaller">Etat : </span> <?= $value['etat'] .' ' .$nbRepmsg ?> </p>
