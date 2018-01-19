@@ -89,8 +89,11 @@ input[type="file"] {
     border-radius: 0 0 2px 2px;
 }
 
+.upload:hover {
+ background: rgba(0, 0, 0, 0.14);
+}
 
-label[for="gazette"] {
+label[for="gazette-upload"] {
     cursor: pointer;
     font-size: 1em;
     line-height: 40px;
@@ -99,7 +102,7 @@ label[for="gazette"] {
 }
 
 
-label[for="gazette"]:before {
+label[for="gazette-upload"]:before {
     font-family: FontAwesome;
     content: "\f115";
     font-size: 1.5em;
@@ -111,7 +114,7 @@ label[for="gazette"]:before {
     border: 0px;
 }
 
-label[for="gazette"]:hover:before {
+label[for="gazette-upload"]:hover:before {
   font-family: FontAwesome;
   content: "\f114";
   background: #ef6c00;
@@ -119,14 +122,46 @@ label[for="gazette"]:hover:before {
 }
 
 
-label[for="gazette"]:hover {
+label[for="gazette-upload"]:hover {
+ color: white !important;
+ color: rgba(0, 0, 0, 0.84) !important;
+}
+/* ---------------- */
+
+label[for="appros-upload"] {
+    cursor: pointer;
+    font-size: 1em;
+    line-height: 40px;
+    height: 37px;
+    color: rgba(0, 0, 0, 0.84);
+}
+
+
+label[for="appros-upload"]:before {
+    font-family: FontAwesome;
+    content: "\f115";
+    font-size: 1.5em;
+    color: white;
+    background: #ef6c00;
+    padding: 10px;
+    height: 37px;
+    line-height: 40px;
+    border: 0px;
+}
+
+label[for="appros-upload"]:hover:before {
+  font-family: FontAwesome;
+  content: "\f114";
+  background: #ef6c00;
+  color: white;
+}
+
+
+label[for="appros-upload"]:hover {
  color: white !important;
  color: rgba(0, 0, 0, 0.84) !important;
 }
 
-.upload:hover {
- background: rgba(0, 0, 0, 0.14);
-}
 
 /**********************************************
 *           tableau 10 des gazettes
