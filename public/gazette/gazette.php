@@ -217,6 +217,7 @@ if (isset($_POST['submit']))
 
 		?>
 			<!--un bloc semaine-->
+
 			<li>
 				<!-- on rajoute 1 au numéro de semaine pour l'affichage -->
 				<div class="collapsible-header"><i class="fa fa-newspaper-o" aria-hidden="true"></i>Semaine <?=$week+1 ?><span class="new badge blue" data-badge-caption="gazette(s)"><?=count($histo)?></span></div>
