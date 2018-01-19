@@ -9,8 +9,9 @@ function showThisWeek($pdoBt)
 	$end=new DateTime('Friday this week');
 	$end=$end->format('Y-m-d');
 	//SELECT file, month(date) as month, day(date) as day, date FROM `gazette`
-	$req=$pdoBt->prepare("SELECT file, month(date) as month, day(date) as day, year(date) as year, date FROM gazette WHERE date BETWEEN :start AND :end ORDER BY date");
+	$req=$pdoBt->prepare("SELECT file, month(date) as month, day(date) as day, year(date) as year, date, category FROM gazette WHERE category=:gazette AND date BETWEEN :start AND :end ORDER BY date");
 	$req->execute(array(
+		':gazette'  =>'gazette',
 		':start' 	=> $start,
 		':end'		=> $end
 	));
@@ -36,6 +37,39 @@ function createLinks($pdoBt,$gazettes,$version)
 	 }
 	 return $gazette;
 }
+
+function showLastGazettesAppros($pdoBt)
+{
+	$req=$pdoBt->prepare("SELECT file, month(date) as month, day(date) as day, year(date) as year, date, category FROM gazette WHERE category=:gazette ORDER BY date ASC LIMIT 2");
+	$req->execute(array(
+		':gazette'  =>'gazette appros'
+
+	));
+
+	$data=$req->fetchAll(PDO::FETCH_ASSOC);
+	return $data;
+}
+
+function createLinksAppros($pdoBt,$gazettes,$version)
+{
+	$months= array('','janvier', 'février', 'mars', 'avril', 'mai', 'juin','juillet', 'août', 'septembre', 'octobre','novembre','décembre');
+	$gazette=array();
+	foreach ($gazettes as $g) {
+	 	$jour=$g['day'];
+	 	$month=$g['month'];
+	 	$month=$months[$month];
+	 	$year=$g['year'];
+	 	$link="http://172.30.92.53/".$version."upload/gazette/" .$g['file'];
+	 	$html="<li><a href='".$link."' class='simple-link stat-link' data-user-session='".$_SESSION['user']."'>la gazette du appros ".$jour .' '. $month .' '.$year ."</a></li>";
+	 	array_push($gazette,$html);
+	 }
+	 return $gazette;
+}
+
+
+
+
+
 
 function histoGaz($pdoBt,$week,$year,$category)
 {

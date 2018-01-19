@@ -38,6 +38,13 @@
 									<?= $link ?>
 								<?php endforeach ?>
 							</ul>
+							<P class="orange-text text-darken-2">LES GAZETTES APPROS :</p>
+							<hr>
+							<ul>
+								<?php foreach ($linksAppros as $linkAppros): ?>
+									<?= $linkAppros ?>
+								<?php endforeach ?>
+							</ul>
 							<P class="orange-text text-darken-2">LES OPPORTUNITES</p>
 							<hr>
 							<ul>

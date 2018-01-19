@@ -14,6 +14,11 @@ require "../functions/stats.fn.php";
 //recup gazette de la semaine en cours
 $gazettes=showThisWeek($pdoBt);
 $links=createLinks($pdoBt,$gazettes,$version);
+
+// les 2 dernière gazettes opportunités
+$gazetteAppros=showLastGazettesAppros($pdoBt);
+$linksAppros=createLinksAppros($pdoBt,$gazetteAppros,$version);
+
 //stats
 $descr="page d'accueil";
 $page=basename(__file__);
