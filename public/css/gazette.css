@@ -28,27 +28,40 @@ a:hover{
 	padding-right: 5px;
 }
 
+/* a.uptonav
+{
+	color: #0288d1;
+	text-align: right !important;
+} */
+
+.uptonav{
+	text-align: right;
+	color: #0288d1;
+	font-size: 13px;
+}
+/* ------------------------------- */
 @media only screen and (max-width: 992px){
-.myrow >img{
-	height: 250px !important;
-	width: 100% !important;
-	filter:blur(1px);
+	.myrow >img{
+		height: 250px !important;
+		width: 100% !important;
+		filter:blur(1px);
+	}
 }
-}
+
 
 @media only screen and (max-width: 1024px)
 {
-.mini-nav{
-	font-size: 13px;
-	padding: 0 !important;
-}
+	.mini-nav{
+		font-size: 13px;
+		padding: 0 !important;
+	}
 
-.mini-nav> p{
+	.mini-nav> p{
 
-}
+	}
 
-.fa.fa-search, .fa.fa-newspaper-o{
-	padding-right: 5px;
-}
+	.fa.fa-search, .fa.fa-newspaper-o{
+		padding-right: 5px;
+	}
 
 }
