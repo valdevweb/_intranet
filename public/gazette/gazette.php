@@ -87,7 +87,7 @@ if (isset($_POST['submit']))
 		<img class="w3-grayscale gazette" src="../img/gazette/newspaper.jpg">
 	</div>
 	<div class="row">
-		<div class="col l3 m3"></div>
+		<div class="col l2 m2"></div>
 		<div class="col l2 m2 s4 mini-nav" id="up">
 			<p><a href="#h2018"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette hedbo</a></p>
 			<p><a href="#h2018"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2018</a></p>
@@ -97,15 +97,15 @@ if (isset($_POST['submit']))
 		</div>
 		<div class="col l2 m2 s4 mini-nav">
 			<p><a href="#a2018"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette appro</a></p>
-			<!-- <p><a href="#a2018"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2018</a></p> -->
+		</div>
+		<div class="col l2 m2 s4 mini-nav">
+			<p><a href="#opp"><i class="fa fa-newspaper-o" aria-hidden="true"></i>les opportunités</a></p>
 
 		</div>
-			<div class="col l2 m2 s4 mini-nav">
+		<div class="col l2 m2 s4 mini-nav">
 			<p><a href="#search"><i class="fa fa-search" aria-hidden="true"></i>Rechercher</a></p>
-
-
 		</div>
-		<div class="col l3 m3"></div>
+		<div class="col l2 m2"></div>
 
 	</div>
 
@@ -189,9 +189,15 @@ if (isset($_POST['submit']))
 				}
 				?>
 			</ul>
- 	<p class="uptonav"><a href="#up" class="uptonav">retour au menu</a></p>
- </div>
-
+ 		<p class="uptonav"><a href="#up" class="uptonav">retour au menu</a></p>
+ 	</div>
+ 	<div class="row">
+		<h4 class="light-blue-text text-darken-2" id="opp">Les opportunités</h4>
+	</div>
+	<div class="row">
+	<ul class="browser-default"><li><a class='stat-link' data-user-session="<?=$_SESSION['user']?>" href="http://172.30.92.53/OPPORTUNITES/index.html" target="_blank">les opportunités du jour</a></li></ul>
+	<p class="uptonav"><a href="#up" class="uptonav">retour au menu</a></p>
+	</div>
  <!--row accordeon 2017 -->
 
 <!--

@@ -67,7 +67,7 @@
 						<p class="orange-text text-darken-2">DOCUBASE :</p>
 						<hr>
 						<ul class='links'>
-							<li><a class="simple-link stat-link" data-user-session="<?=$_SESSION['user']?>"  href="http://172.30.101.66/rheaweb/auth">Retouvez ici les documents émis par BTlec : factures, bon livraison, etc</a></li>
+							<li>Retouvez les documents émis par BTlec : <a class="simple-link stat-link" data-user-session="<?=$_SESSION['user']?>"  href="http://172.30.101.66/rheaweb/auth">factures, bon livraison, etc</a></li>
 						</ul>
 					</div>
 						<!-- <div class="vm-card">

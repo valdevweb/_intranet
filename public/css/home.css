@@ -10,3 +10,12 @@ hr {
 .links{
 	margin-bottom: 40px !important;
 }
+a.stat-link{
+	text-decoration: underline;
+}
+a.stat-link:hover{
+	font-weight: bold;
+	color:#f57c00;
+	text-decoration: none;
+
+}
