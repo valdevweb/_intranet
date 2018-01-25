@@ -11,11 +11,17 @@ hr {
 	margin-bottom: 40px !important;
 }
 a.stat-link{
-	text-decoration: underline;
+	letter-spacing: -1px;
+	font-style: italic;
+
 }
 a.stat-link:hover{
 	font-weight: bold;
 	color:#f57c00;
 	text-decoration: none;
 
+}
+
+.fa.fa-angle-double-right{
+	padding-right: 10px;
 }
