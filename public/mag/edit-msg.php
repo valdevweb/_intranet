@@ -11,6 +11,7 @@ require '../../functions/form.bt.fn.php';
 require '../../functions/upload.fn.php';
 require '../../functions/mail.fn.php';
 
+
 require "../../functions/stats.fn.php";
 $descr="détail message côté magasin";
 $page=basename(__file__);
@@ -164,8 +165,13 @@ include('../view/_navbar.php');
 			<p><a href= "<?= ROOT_PATH?>/public/mag/histo.php" class="blue-text text-darken-4"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
 		</div>
 		<div class="col l6 m6 s6 align-right">
-			<p><a href= "#mag-msg" class="blue-text text-darken-4">Ajouter un message &nbsp; &nbsp;<i class="fa fa-chevron-circle-down fa-2x" aria-hidden="true"></i></a></p>
 
+			<?php
+			if($msg['etat']!='clos')
+			{
+				echo '<p><a href= "#mag-msg" class="blue-text text-darken-4">Ajouter un message &nbsp; &nbsp;<i class="fa fa-chevron-circle-down fa-2x" aria-hidden="true"></i></a></p>';
+			}
+			?>
 		</div>
 	</div>
 	<!-- reponses -->
@@ -203,13 +209,16 @@ include('../view/_navbar.php');
 		</div>
 	</div>
 	<?php endforeach ?>
-
-
+	<?php
+		ob_start();
+	?>
+	<br><br>
 	<div class="row">
-		<h5 class="light-blue-text text-darken-2 center">Ajouter un message :</h5>
+		<h5 class="blue-text text-darken-4">Ajouter un message :</h5>
 	</div>
 	<div class="row">
 		<div class="col l12 m12 s12">
+			<div class="card-panel">
 			<form action="edit-msg.php?msg=<?=$idMsg ?>" method="post" enctype="multipart/form-data" id="mag-msg">
 			<!--MESSAGE-->
 				<div class="row">
@@ -229,7 +238,7 @@ include('../view/_navbar.php');
 					</fieldset>
 				</div>
 				<div class="row align-right">
-					<div class="input-field white">
+					<div class="input-field">
 							<button class="btn" type="submit" name="post-reply">Ajouter</button>
 					</div>
 				</div>
@@ -244,12 +253,24 @@ include('../view/_navbar.php');
 						?>
 					</p>
 			</form>
+			</div>
 		</div>
-
-			<!-- </div> -->
 	</div>
+<?php
+	// si le message n'est pas clos, on affiche le formualire pour ajouter une réponse
+	$newResponseForm=ob_get_clean();
+	if($msg['etat']!='clos')
+	{
+		echo $newResponseForm;
+	}
 
-	</div>
+
+
+
+?>
+
+
+</div>
 
 
 
