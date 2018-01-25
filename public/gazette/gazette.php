@@ -82,13 +82,13 @@ if (isset($_POST['submit']))
 
 
 ?>
-<div class="container">
+<div class="container"  id="up">
 	<div class="myrow">
 		<img class="w3-grayscale gazette" src="../img/gazette/newspaper.jpg">
 	</div>
 	<div class="row">
 		<div class="col l2 m2"></div>
-		<div class="col l2 m2 s4 mini-nav" id="up">
+		<div class="col l2 m2 s4 mini-nav">
 			<p><a href="#h2018"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette hedbo</a></p>
 			<p><a href="#h2018"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2018</a></p>
 			<p><a href="#h2017"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2017</a></p>
@@ -99,7 +99,7 @@ if (isset($_POST['submit']))
 			<p><a href="#a2018"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette appro</a></p>
 		</div>
 		<div class="col l2 m2 s4 mini-nav">
-			<p><a href="#opp"><i class="fa fa-newspaper-o" aria-hidden="true"></i>les opportunités</a></p>
+			<p><a href="#opp"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette alerte promo</a></p>
 
 		</div>
 		<div class="col l2 m2 s4 mini-nav">
@@ -109,11 +109,11 @@ if (isset($_POST['submit']))
 
 	</div>
 
-		<h1 class="light-blue-text text-darken-2">La Gazette</h1>
+		<h1 class="light-blue-text text-darken-2">les Gazettes</h1>
 
 
 	<div class="row">
-		<h4 class="light-blue-text text-darken-2" id="h2018">Listing des gazettes de 2018</h4>
+		<h4 class="light-blue-text text-darken-2" id="h2018">Listing des gazettes hebdo de 2018</h4>
 	</div>
 	<div class="row">
 		<ul class="collapsible" data-collapsible="accordion">
@@ -155,7 +155,7 @@ if (isset($_POST['submit']))
  	</div> <!--row accordeon 2018 -->
 
 	<div class="row">
-		<h4 class="light-blue-text text-darken-2" id="h2017">Listing des gazettes de 2017</h4>
+		<h4 class="light-blue-text text-darken-2" id="h2017">Listing des gazettes hebdo de 2017</h4>
 	</div>
 
 	<div class="row">
@@ -192,7 +192,7 @@ if (isset($_POST['submit']))
  		<p class="uptonav"><a href="#up" class="uptonav">retour au menu</a></p>
  	</div>
  	<div class="row">
-		<h4 class="light-blue-text text-darken-2" id="opp">Les opportunités</h4>
+		<h4 class="light-blue-text text-darken-2" id="opp">Les alertes promo</h4>
 	</div>
 	<div class="row">
 	<ul class="browser-default"><li><a class='stat-link' data-user-session="<?=$_SESSION['user']?>" href="http://172.30.92.53/OPPORTUNITES/index.html" target="_blank">les opportunités du jour</a></li></ul>

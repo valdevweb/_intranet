@@ -54,10 +54,10 @@
 								<?= $linkAppros ?>
 							<?php endforeach ?>
 						</ul>
-						<P class="orange-text text-darken-2">LES OPPORTUNITES</p>
+						<P class="orange-text text-darken-2">LES ALERTES PROMOS</p>
 							<hr>
 							<ul class='links'>
-								<li><a class='stat-link' data-user-session="<?=$_SESSION['user']?>" href="http://172.30.92.53/OPPORTUNITES/index.html" target="_blank"><i class="fa fa-angle-double-right" aria-hidden="true"></i>voir les opportunités</a></li>
+								<li><a class='stat-link' data-user-session="<?=$_SESSION['user']?>" href="http://172.30.92.53/OPPORTUNITES/index.html" target="_blank"><i class="fa fa-angle-double-right" aria-hidden="true"></i>voir les alertes promos</a></li>
 							</ul>
 					</div>
 				</div>
