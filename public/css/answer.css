@@ -1,3 +1,34 @@
 .container a:link {color: #ef6c00 !important;}
 /* .container a:visited {color: gray !important;} */
 .container a:hover {font-weight: bold !important;}
+
+
+
+.reply{
+  border: solid 1px #e0e0e0 ;
+  margin-bottom: 0 !important;
+  background-color: #fff;
+  padding: 20px !important;
+}
+.mag{
+	background-color: #1976D2;
+	margin-bottom: 0px !important;
+}
+.bt{
+	background-color: #424242;
+	margin-bottom: 0px !important;
+}
+
+.frm
+{
+	background-color: #fff;
+  	padding: 40px !important;
+
+}
+
+.fa.fa-paperclip,
+.fa.fa-pencil-square-o{
+	padding-right: 10px;
+	line-height: inherit;
+	vertical-align: middle;
+}

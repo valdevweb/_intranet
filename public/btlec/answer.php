@@ -49,7 +49,9 @@ include '../view/_navbar.php';
 // pour affichage contenu msg
 $idMsg=$_GET['msg'];
 $oneMsg=showOneMsg($pdoBt,$idMsg);
-
+//nom du magasin
+$panoGalec=getPanoGalec($pdoUser,$oneMsg['id_mag']);
+$magInfo=getMag($pdoBt,$panoGalec['galec']);
 //contenu histo des reponses
 $replies=showReplies($pdoBt, $idMsg);
 
@@ -91,7 +93,7 @@ if(isset($_POST['post-reply']))
 			//pas de pièce jointe
 			$file="";
 
-			echo "pas de piec ejoiten";
+			echo "pas de piece jointe";
 
 		}
 		else
@@ -215,78 +217,102 @@ if (isset($_POST['close']))
 
 ?>
 <div class="container">
-	<!--la demande	 -->
+	<!--nav -->
 	<div class="row">
 		<div class="col l12">
 			<p><a href="dashboard.php" class="orange-text text-darken-2"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
 		</div>
 	</div>
+
+
 	<h1 class="blue-text text-darken-2">Service <?=$service['full_name']?></h1>
-	<!-- <h2 class="blue-text text-darken-2">Répondre / cloturer un dossier</h2> -->
-	<h5 class="light-blue-text text-darken-2">Demande :</h5>
-	<div class="row box-border">
-		<div class="col l12 ">
-					<p><span class="labelFor">Objet : </span><?=$oneMsg['objet'] ?></p>
-					<p><span class="labelFor">Message : </span><br><?=$oneMsg['msg'] ?></p>
-					<p><span class="labelFor">Pièce(s) jointe(s)</span><?=isAttached($oneMsg['inc_file']) ?></p>
-				</div>
+
+	<!--demande du magasin -->
+	<div class="row mag">
+		<div class="col l12">
+			<h5 class="white-text">Demande du magasin <?= $magInfo['mag'] .' - ' .$magInfo['galec']  ?></h5>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col l12 reply">
+			<p><span class="labelFor">Objet : </span><?=$oneMsg['objet'] ?></p>
+			<p><span class="labelFor">Message : </span><br><?=$oneMsg['msg'] ?></p>
+
+		<?php
+			if(isAttached($oneMsg['inc_file']))
+			{
+				echo '<p><span class="labelFor">Pièce(s) jointe(s)</span>'.isAttached($oneMsg['inc_file']) .'</p>';
+			}
+
+		?>
+		</div>
 	</div>
 	<p>&nbsp;</p>
-	<h5 class="light-blue-text text-darken-2">Réponses :</h5>
-
-			<!-- exemple de if -->
-			<?php
-			if (!$replies)
-			{
-				echo "<div class='row box-border'><div class='col l12'><p>vous n'avez pas encore apporté de réponse au magasin</p></div></div>";
-			}
-			?>
-
-	<!-- histo des réponses	 -->
-
 	<?php foreach($replies as $reply): ?>
-	<div class="row box-border">
-		<div class="col l6">
-			<p class="orange-text text-darken-2 boldtxt">Réponse du : <?= date('d-m-Y', strtotime($reply['date_reply']))?></p>
+	<?php
+	//reponse mag ou bt
+		if($who=repliedByIntoName($pdoBt,$reply['replied_by']))
+		{
+
+			$magOrBt='mag';
+		}
+		else
+		{
+			$who=$oneMsg['who'];
+			$magOrBt='bt';
+		}
+		$when = ' le '. date('d-m-Y à H:i', strtotime($reply['date_reply']));
+
+	?>
+	<!-- affichage des échanges -->
+	<div class="row <?=$magOrBt?>">
+		<div class="col l12">
+			<h5 class="white-text">Réponse de <?= $who .' '.$when ?></h5>
 		</div>
-		<div class="col l6">
-			<p class="orange-text text-darken-2 boldtxt">Par : <?= repliedByIntoName($pdoBt,$reply['replied_by'])?></p>
-		</div>
+	</div>
+	<div class="row reply">
 		<div class="col l12">
 			<p><?= $reply['reply'] ?></p>
 		</div>
-		<div class="col l12">
-					<p><span class="labelFor">Pièce(s) jointe(s)</span><?=isAttached($reply['inc_file']) ?></p>
-		</div>
-
-
+		<?php
+		// pièces jointes
+		if(isAttached($reply['inc_file']))
+		{
+			echo '<div class="col l12">';
+			echo '<p><span class="labelFor">Pièce(s) jointe(s)</span>'.isAttached($reply['inc_file']) .'</p>';
+			echo '</div>';
+		}
+		?>
 	</div>
+	<br>
 	<?php endforeach ?>
-	<p>&nbsp;</p>
-
-	<h5 class="light-blue-text text-darken-2">Répondre au magasin :</h5>
+	<br><br>
+	<!-- formulaire de réponse BT -->
+	<h5 class="light-blue-text text-darken-2">Envoyer une réponse :</h5>
 
 	<div class="row">
-	<div class="col l12 m12">
+	<div class="col l12 m12 frm">
+
 		<!-- <div class="padding-all"> -->
 			<form action="answer.php?msg=<?=$idMsg ?>" method="post" enctype="multipart/form-data" id="answer">
 				<!--MESSAGE-->
-				<div class="row">
-					<div class="input-field white">
-						<i class="fa fa-pencil-square-o prefix" aria-hidden="true"></i>
-						<label for="reply"></label>
-						<textarea class="materialize-textarea" placeholder="votre réponse" name="reply" id="reply" ><?=isset($_POST['reply'])? $_POST['reply']: false?></textarea>
-					</div>
-				</div>
 
-				<div class="row" id="file-upload">
-					<fieldset>
-						<legend>ajouter des pièces jointes</legend>
+					<div class="input-field white">
+						<p><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i> Message :</p>
+
+						<label for="reply"></label>
+						<textarea class="materialize-textarea" name="reply" id="reply" ><?=isset($_POST['reply'])? $_POST['reply']: false?></textarea>
+					</div>
+				<br><br>
+
+				<div id="file-upload">
+
+					<p><i class="fa fa-paperclip fa-lg" aria-hidden="true"></i>Ajouter des pièces jointes : </legend>
 						<div class="col l12">
 							<p><input type="file" name="file_1" class='input-file'></p>
 							<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Envoyer d'autres fichiers</a></p>
 						</div>
-					</fieldset>
+
 				</div>
 			<!--BOUTONS-->
 				<div class="row">
