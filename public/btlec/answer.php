@@ -220,36 +220,37 @@ if (isset($_POST['close']))
 	<!--nav -->
 	<div class="row">
 		<div class="col l12">
-			<p><a href="dashboard.php" class="orange-text text-darken-2"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
+			<p><a href="dashboard.php" onClick="javascript:document.location.reload(true)" class="orange-text text-darken-2"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
 		</div>
 	</div>
 
 
-	<h1 class="blue-text text-darken-2">Service <?=$service['full_name']?></h1>
+	<h1 class="blue-text text-darken-4">Service <?=$service['full_name']?></h1>
+	<br><br>
 
-	<!--demande du magasin -->
 	<div class="row mag">
-		<div class="col l12">
-			<h5 class="white-text">Demande du magasin <?= $magInfo['mag'] .' - ' .$magInfo['galec']  ?></h5>
-		</div>
-	</div>
-	<div class="row">
 		<div class="col l12 reply">
-			<p><span class="labelFor">Objet : </span><?=$oneMsg['objet'] ?></p>
-			<p><span class="labelFor">Message : </span><br><?=$oneMsg['msg'] ?></p>
+			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>La demande du magasin :</h4>
+			<hr>
+			<br><br><br>
+			<div class="inside-mag">
+				<h5>Magasin : <?= $magInfo['mag'] .' - ' .$magInfo['galec']  ?></h5>
+				<p><span class="labelFor">Objet : </span><?=$oneMsg['objet'] ?></p>
+				<p><span class="labelFor">Message : </span><br><?=$oneMsg['msg'] ?></p>
 
-		<?php
-			if(isAttached($oneMsg['inc_file']))
-			{
-				echo '<p><span class="labelFor">Pièce(s) jointe(s)</span>'.isAttached($oneMsg['inc_file']) .'</p>';
-			}
+				<?php
+				if(isAttached($oneMsg['inc_file']))
+				{
+					echo '<p><span class="labelFor">Pièce(s) jointe(s)</span>'.isAttached($oneMsg['inc_file']) .'</p>';
+				}
 
-		?>
+				?>
+			</div>
 		</div>
 	</div>
 	<p>&nbsp;</p>
 	<?php foreach($replies as $reply): ?>
-	<?php
+		<?php
 	//reponse mag ou bt
 		if($who=repliedByIntoName($pdoBt,$reply['replied_by']))
 		{
@@ -263,94 +264,112 @@ if (isset($_POST['close']))
 		}
 		$when = ' le '. date('d-m-Y à H:i', strtotime($reply['date_reply']));
 
-	?>
-	<!-- affichage des échanges -->
-	<div class="row <?=$magOrBt?>">
-		<div class="col l12">
-			<h5 class="white-text">Réponse de <?= $who .' '.$when ?></h5>
-		</div>
-	</div>
-	<div class="row reply">
-		<div class="col l12">
-			<p><?= $reply['reply'] ?></p>
-		</div>
-		<?php
-		// pièces jointes
-		if(isAttached($reply['inc_file']))
-		{
-			echo '<div class="col l12">';
-			echo '<p><span class="labelFor">Pièce(s) jointe(s)</span>'.isAttached($reply['inc_file']) .'</p>';
-			echo '</div>';
-		}
 		?>
-	</div>
-	<br>
+		<!-- affichage des échanges -->
+		<div class="row <?=$magOrBt?>">
+			<div class="col l12">
+				<h5 class="white-text">Réponse de <?= $who .' '.$when ?></h5>
+			</div>
+		</div>
+		<div class="row reply">
+			<div class="col l12">
+				<p><?= $reply['reply'] ?></p>
+			</div>
+			<?php
+		// pièces jointes
+			if(isAttached($reply['inc_file']))
+			{
+				echo '<div class="col l12">';
+				echo '<p><span class="labelFor">Pièce(s) jointe(s)</span>'.isAttached($reply['inc_file']) .'</p>';
+				echo '</div>';
+			}
+			?>
+		</div>
+		<br>
 	<?php endforeach ?>
 	<br><br>
 	<!-- formulaire de réponse BT -->
-	<h5 class="light-blue-text text-darken-2">Envoyer une réponse :</h5>
+	<div class="row mag">
+		<div class="col l12 reply">
+			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Envoyer une réponse :</h4>
+			<hr>
+			<br><br>
+<!-- 	<div class="row">
+	<div class="col l12 m12 frm"> -->
 
-	<div class="row">
-	<div class="col l12 m12 frm">
-
-		<!-- <div class="padding-all"> -->
+		<div class="inside-mag">
 			<form action="answer.php?msg=<?=$idMsg ?>" method="post" enctype="multipart/form-data" id="answer">
 				<!--MESSAGE-->
 
-					<div class="input-field white">
-						<p><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i> Message :</p>
+				<div class="input-field white">
+					<p><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i> Message :</p>
 
-						<label for="reply"></label>
-						<textarea class="materialize-textarea" name="reply" id="reply" ><?=isset($_POST['reply'])? $_POST['reply']: false?></textarea>
-					</div>
+					<label for="reply"></label>
+					<textarea class="browser-default" name="reply" id="reply" ><?=isset($_POST['reply'])? $_POST['reply']: false?></textarea>
+				</div>
 				<br><br>
 
 				<div id="file-upload">
 
-					<p><i class="fa fa-paperclip fa-lg" aria-hidden="true"></i>Ajouter des pièces jointes : </legend>
+					<p>Joindre un document à votre réponse: </legend>
 						<div class="col l12">
 							<p><input type="file" name="file_1" class='input-file'></p>
-							<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Envoyer d'autres fichiers</a></p>
+							<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Ajouter d'autres fichiers</a></p>
 						</div>
 
-				</div>
-			<!--BOUTONS-->
-				<div class="row">
-					<div class='col l9'>
-						<ul id="file-name"></ul>
 					</div>
-					<div class='col l3'>
-						<p class="center">
-							<input type="checkbox" class="filled-in" id="clos" checked="checked" name="clos" />
-							<label for="clos">cloturer la demande</label>
-						</p>
-					</div>
-				</div>
+					<!--BOUTONS-->
 					<div class="row">
-					<div class='col l9'></div>
-					<div class='col l3'>
-						<p class="center">
-						<button class="btn" type="submit" name="post-reply">Répondre</button>
-					</p>
-					</div>
-				</div>
-			</form>
-<h5 class="light-blue-text text-darken-2">Réaffecter la demande :</h5>
-	<p>La demande ne concerne pas votre service ? <a href="chg.php?msg=<?=$idMsg?>">Cliquez ici pour réaffecter la demande</a></p>		</div>
+						<div class='col l9'>
+							<ul id="file-name"></ul>
+						</div>
 
-</div>
-<!-- affichage des messages d'erreur -->
+					</div>
+					<div class="row">
+						<div class='col l6'></div>
+
+						<div class='col l3'>
+							<p class="center">
+								<input type="checkbox" class="filled-in" id="clos" checked="checked" name="clos" />
+								<label for="clos">cloturer la demande</label>
+							</p>
+						</div>
+
+						<div class='col l3'>
+							<p class="center">
+								<button class="btn" type="submit" name="post-reply">Répondre</button>
+							</p>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<br><br>
+	<div class="row mag">
+		<div class="col l12 reply">
+			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Réaffecter la demande :</h4>
+			<hr>
+			<br><br>
+		<p>La demande ne concerne pas votre service ? <a href="chg.php?msg=<?=$idMsg?>">Cliquez ici pour réaffecter la demande</a></p>
+
+		</div>
+	</div>
+
+
+
+	<!-- affichage des messages d'erreur -->
 	<div class='row' id='erreur'>
 
-	<?php
-	if(!empty($err)){
+		<?php
+		if(!empty($err)){
 
-		foreach ($err as $error) {
-			echo  $error ."</br>";
+			foreach ($err as $error) {
+				echo  $error ."</br>";
+			}
 		}
-	}
-	?>
-</div>
+		?>
+	</div>
 
 </div>  <!--container
 

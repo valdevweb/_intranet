@@ -10,7 +10,7 @@ body {
   min-height: 100vh !important;
   flex-direction: column !important;
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e0e0e0+2,eaeaea+16,ffffff+40 */
-  background: rgb(224,224,224); /* Old browsers */
+  background: #f1f1f1;
   font-family: verdana, Roboto, 'sans-serif';
 
 }
@@ -303,10 +303,7 @@ border-bottom: solid 1px #9e9e9e;
   padding-left: 20px;
 }
 
-.box-border{
-  border: solid 1px #e0e0e0 ;
-  margin-bottom: 0 !important;
-}
+
 .align-right{
   text-align: right;
 }
