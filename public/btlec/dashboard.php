@@ -62,6 +62,7 @@ function warning($dateMsg)
 
 include('../view/_head.php');
 include('../view/_navbar.php');
+
 //----------------------------------------------------
 // VIEW - CONTENT
 //----------------------------------------------------

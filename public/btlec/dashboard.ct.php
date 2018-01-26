@@ -4,6 +4,7 @@
 // $lastRepDate= $nbRep[$idMsg]['last_reply_date'];
 // $by= $nbRep[$idMsg]['replied_by'];
 ?>
+
 <div class="container">
 	<!-- titre -->
 	<h1 class="blue-text text-darken-2">Demandes magasin</h1>

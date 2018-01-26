@@ -65,22 +65,22 @@
 				<div class="row">
 					<div class="input-field">
 						<label for="objet"></label>
-						<input class="validate" placeholder="Objet" name="objet" id="objet" type="text"  value="<?=isset($objet)? $objet: false?>">
+						<input class="validate" placeholder="Objet" name="objet" id="objet" type="text"  required="require" value="<?=isset($objet)? $objet: false?>">
 					</div>
 				</div>
 				<!--MESSAGE-->
 				<div class="row">
 					<div class="input-field">
 						<label for="msg"></label>
-						<textarea class="materialize-textarea" placeholder="Message" name="msg" id="msg" ><?=isset($msg)? $msg: false?></textarea>
+						<textarea class="materialize-textarea" placeholder="Message" name="msg" required="require" id="msg" ><?=isset($msg)? $msg: false?></textarea>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col l6">
-						<input class="validate" placeholder="Votre nom" name="name" id="name" title="seules les lettres sont autorisées" type="text" pattern="[a-zA-Z ]+" value="<?=isset($name)? $name: false?>" >
+						<input class="validate" placeholder="Votre nom" name="name" id="name" title="seules les lettres sont autorisées" type="text" required="require" pattern="[a-zA-Z ]+" value="<?=isset($name)? $name: false?>" >
 					</div>
 					<div class="col l6">
-						<input class="validate" placeholder="email" name="email" id="email" type="email" value="<?=isset($email)? $email: false?>" >
+						<input class="validate" placeholder="email" name="email" id="email" type="email" required="require" value="<?=isset($email)? $email: false?>" >
 					</div>
 
 				</div>
