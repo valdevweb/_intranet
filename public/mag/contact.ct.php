@@ -55,7 +55,7 @@
 		<div class="col s12 m6 l6 grey lighten-4 z-depth-2">
 			<div class="padding-all">
 			<div class="row">
-				<h3 class="light-blue-text text-darken-2"><i class="fa fa-pencil" aria-hidden="true"></i>VOTRE DEMANDE</h3>
+				<h3 class="blue-text text-darken-2"><i class="fa fa-pencil" aria-hidden="true"></i>VOTRE DEMANDE</h3>
 			</div>
 
 			<form class='down' action="contact.php?gt=<?=$gt ?>" method="post" enctype="multipart/form-data">
@@ -77,7 +77,7 @@
 				</div>
 				<div class="row">
 					<div class="col l6">
-						<input class="validate" placeholder="Votre nom" name="name" id="name" type="text" value="<?=isset($name)? $name: false?>" >
+						<input class="validate" placeholder="Votre nom" name="name" id="name" title="seules les lettres sont autorisées" type="text" pattern="[a-zA-Z ]+" value="<?=isset($name)? $name: false?>" >
 					</div>
 					<div class="col l6">
 						<input class="validate" placeholder="email" name="email" id="email" type="email" value="<?=isset($email)? $email: false?>" >
