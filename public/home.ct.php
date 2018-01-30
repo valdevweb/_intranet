@@ -50,9 +50,7 @@
 						<p class="orange-text text-darken-2">LES GAZETTES APPROS :</p>
 						<hr>
 						<ul class='links'>
-							<?php foreach ($linksAppros as $linkAppros): ?>
-								<?= $linkAppros ?>
-							<?php endforeach ?>
+							<?= isset($approHtml)? $approHtml: ''?>
 						</ul>
 						<P class="orange-text text-darken-2">LES ALERTES PROMOS</p>
 							<hr>

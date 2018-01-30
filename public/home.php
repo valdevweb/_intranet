@@ -24,8 +24,22 @@ require "../functions/stats.fn.php";
 $gazettes=showThisWeek($pdoBt);
 $links=createLinks($pdoBt,$gazettes,$version);
 
+
+
+
+
 // les 2 dernière gazettes opportunités
 $gazetteAppros=showLastGazettesAppros($pdoBt);
+$link="http://172.30.92.53/".$version."upload/gazette/";
+$approHtml="";
+if($gazetteAppros){
+	foreach ($gazetteAppros as $gazette)
+	{
+		$approHtml .= "<li><i class='fa fa-angle-double-right'></i><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .mb_strtolower($gazette['file'],'UTF-8') ."</a></li>";
+	}
+}
+
+// $gazetteAppros=showLastGazettesAppros($pdoBt);
 $linksAppros=createLinksAppros($pdoBt,$gazetteAppros,$version);
 
 //stats
