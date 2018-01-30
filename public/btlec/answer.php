@@ -311,7 +311,7 @@ if (isset($_POST['close']))
 
 				<div id="file-upload">
 
-					<p>Joindre un document à votre réponse: </legend>
+					<p>Joindre un document à votre réponse: </p>
 						<div class="col l12">
 							<p><input type="file" name="file_1" class='input-file'></p>
 							<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Ajouter d'autres fichiers</a></p>

@@ -34,4 +34,21 @@ if(!function_exists('not_empty'))
 
 }
 
+//multifile links
+function createMultiLink($incFileStrg,$location,$separator)
+{
+	global $version;
+	$href="";
+	if(!empty($incFileStrg))
+	{
+		// on transforme la chaine de carctère avec tous les liens (séparateur : ; ) en tableau
+		$incFileStrg=explode( '; ', $incFileStrg );
+		foreach ($incFileStrg as $filename)
+		{
 
+		$href.= "<a class='pj' href='" .$location . $filename . "'>" .$filename ."</a>" .$separator;
+
+		}
+	}
+	return $href;
+}

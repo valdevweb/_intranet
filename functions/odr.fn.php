@@ -15,3 +15,31 @@ function insertOdr($pdoBt,$file)
 	));
 	return $result;
 }
+
+// recup odr en cours de validités
+function showCurrentOdr($pdoBt)
+{
+
+	$today= new DateTime();
+	$today=$today->format('Y-m-d');
+	$req=$pdoBt->prepare("SELECT * FROM odr WHERE startdate<= :today AND enddate>= :today");
+	$req->execute(array(
+		':today' =>$today
+	));
+
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// recup odr en cours de validités
+function showNextOdr($pdoBt)
+{
+
+	$today= new DateTime();
+	$today=$today->format('Y-m-d');
+	$req=$pdoBt->prepare("SELECT * FROM odr WHERE startdate>= :today");
+	$req->execute(array(
+		':today' =>$today
+	));
+
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}

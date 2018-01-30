@@ -8,6 +8,9 @@
 	<link rel="stylesheet" href="<?= $tweakcss ?>">
     <link rel="stylesheet" href="<?= $nav ?>">
 	<link rel="stylesheet" href="<?=isset($cssFile)? $cssFile: ''?>">
+	<!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
+	<link rel="stylesheet" href="<?= $bootstrap?>">
+
 	<link rel="stylesheet" href="<?= $md_css?>">
 	<link rel="stylesheet" href="<?=$awesome ?>">
     <link rel="stylesheet" href="<?= $w3c ?>">

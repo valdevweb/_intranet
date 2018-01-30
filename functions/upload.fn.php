@@ -49,38 +49,57 @@ function formatArray($file)
 // upload le fichier si mime ok
 function checkUploadNew($location, $pdoBt)
 {
-	// $renamed = md5($filename. time());        #rename of the file
-// if (!@move_uploaded_file($_FILES[$uploadfile]['tmp_name'], $save_path.$renamed. $extension))
-
-$filenameArray=array();
-foreach ($_FILES as $key => $file)
-{
+	$filenameArray=array();
+	foreach ($_FILES as $key => $file)
+	{
 
 
-	$filename=$file['name'];
-	$tmp=explode('.',$filename);
-	$ext=end($tmp);
-	$filename= md5(time()).'.'.$ext;
-	$tmp=$file['tmp_name'];
-	$error=$file['error'];
-	$size=$file['size'];
-	$type=$file['type'];
+		$filename=$file['name'];
+		$tmp=explode('.',$filename);
+		$ext=end($tmp);
+		$filename= md5(time()).'.'.$ext;
+		$tmp=$file['tmp_name'];
+		$error=$file['error'];
+		$size=$file['size'];
+		$type=$file['type'];
 
 	// si le déplacement du fichier tmp vers le rep d'upload ok
-	if(move_uploaded_file($tmp, $location.$filename))
-	{
-		array_push($filenameArray,$filename);
-		// $msg=array('filename' =>$filename);
-	}
+		if(move_uploaded_file($tmp, $location.$filename))
+		{
+			array_push($filenameArray,$filename);
+	// $msg=array('filename' =>$filename);
+		}
 	// else
 	// {
 	// 	$msg=array(	'err' =>'erreur pendant l\'envoi');
 	// }
-}
-return $filenameArray;
+	}
+	return $filenameArray;
 }
 
+// upload le fichier si mime ok
+function checkUploadSameFilename($location)
+{
+	$filenameArray=array();
+	foreach ($_FILES as $key => $file)
+	{
 
+
+		$filename=$file['name'];
+		$tmp=explode('.',$filename);
+		$ext=end($tmp);
+		$tmp=$file['tmp_name'];
+		$error=$file['error'];
+		$size=$file['size'];
+		$type=$file['type'];
+	// si le déplacement du fichier tmp vers le rep d'upload ok
+		if(move_uploaded_file($tmp, $location.$filename))
+		{
+			array_push($filenameArray,$filename);
+		}
+	}
+	return $filenameArray;
+}
 
 // renvoi un array : 0=ok ou interdit 1=type de fichier
 function isAllowed($tmp, $encoding=true)

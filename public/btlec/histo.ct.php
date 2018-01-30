@@ -88,7 +88,7 @@
 						$found_key = array_search($value['id_service'], array_column($services, 'id'));
 						$serviceName= $services[$found_key]['full_name'];
 					?>
-					<p class="center">SERVICE <?=strtoupper($serviceName)?></p>
+					<p class="center">SERVICE <?=mb_strtoupper($serviceName,'UTF-8');?></p>
 					<div class="col l9">
 						<p><span class="boldtxt">Demande du : </span><?= $date ?> </p>
 					</div>
