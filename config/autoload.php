@@ -5,19 +5,24 @@ $path=dirname(__FILE__);
 if (preg_match('/_btlecest/', $path))
 {
 	define("ROOT_PATH","/_btlecest");
+	define("SITE_ADDRESS", "http://172.30.92.53/_btlecest");
 	$pdo_file='_pdo_connect.php';
 	$version='_';
 	define("VERSION",'_');
 	define("PORTAIL","Portail BTlec - dev" );
+	define("UPLOAD_DIR","http://172.30.92.53/_upload" );
 
 }
 else
 {
 	define("ROOT_PATH","/btlecest");
+	define("SITE_ADDRESS", "http://172.30.92.53/btlecest");
 	$pdo_file='pdo_connect.php';
 	$version='';
 	define("PORTAIL","Portail BTlec" );
 	define("VERSION",'');
+	define("UPLOAD_DIR","http://172.30.92.53/upload" );
+
 
 }
 
@@ -27,6 +32,8 @@ $okko= 'version : ' . ROOT_PATH  .', db  : '.$pdo_file;
 
 // css files
 $md_css=ROOT_PATH ."/vendor/materialize/css/materialize.css";
+$bootstrap=ROOT_PATH ."/vendor/bootstrap/css/bootstrap.css";
+
 $awesome=ROOT_PATH . "/vendor/fontawesome/css/font-awesome.min.css";
 $tweakcss=ROOT_PATH ."/public/css/main.css";
 $timelinecss=ROOT_PATH ."/public/css/timeline.css";
