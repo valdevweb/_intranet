@@ -170,7 +170,8 @@ function fileList($mime)
 		"application/vnd.openxmlformats-officedocument.presentationml.presentation",
 		"application/pdf",
 		"image/png",
-		"application/vnd.ms-office"
+		"application/vnd.ms-office",
+		"application/msword"
 	);
 	return (in_array($mime,$whiteList)) ? TRUE : FALSE ;
 }
