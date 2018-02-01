@@ -16,6 +16,31 @@ function insertOdr($pdoBt,$file)
 	return $result;
 }
 
+function updateOdr($pdoBt,$file,$odrId)
+{
+
+	$req=$pdoBt->prepare('UPDATE odr SET operation=:operation, gt=:gt, brand=:brand, startdate=:startdate, enddate=:enddate, files=:file WHERE id= :id');
+	$result=$req->execute(array(
+		':operation'=>$_POST['operation'],
+		':gt'=>$_POST['gt'],
+		':brand'=>$_POST['brand'],
+		':startdate'=>$_POST['startdate'],
+		':enddate'=>$_POST['enddate'],
+		':file'=>$file,
+		 ':id'=>$odrId
+
+
+	));
+
+	return $result;
+}
+
+
+
+
+
+
+
 // recup odr en cours de validités
 function showCurrentOdr($pdoBt)
 {
@@ -64,12 +89,41 @@ function showOneYearOdr($pdoBt)
 }
 
 function extractLink($string){
-	 $html="";
+	$html="";
 	$links=explode(';',$string);
-
 	foreach ($links as $link)
 	{
 		$html.="<a href='".UPLOAD_DIR."/odr/".$link."'>".$link ."</a><br>";
 	}
 	return $html;
+}
+
+
+function showThisOdr($pdoBt)
+{
+
+	$today= new DateTime();
+	$today->modify('-1 year');
+	$today=$today->format('Y-m-d');
+	$req=$pdoBt->prepare("SELECT * FROM odr WHERE id= :odr");
+	$req->execute(array(
+		':odr' =>$_GET['odr']
+	));
+
+	return $req->fetch(PDO::FETCH_ASSOC);
+
+}
+
+
+function checkboxFiles($string){
+
+	$html="";
+	$links=explode(';',$string);
+	foreach ($links as $link)
+	{
+		$html.="<input type='checkbox' name='uploaded' value='".$link."'><label>".$link ."</label><br>";
+	}
+	return $html;
+
+
 }
