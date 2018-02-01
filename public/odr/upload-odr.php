@@ -88,9 +88,12 @@ if(isset($_POST['submit'])){
 
 		}
     }
-
-
 }
+
+
+
+
+
 
 //construction du lien pour visualiser les fichiers odr
 // $link="http://172.30.92.53/".$version."upload/odr/";
@@ -102,11 +105,22 @@ if(isset($_POST['submit'])){
 //http://www.webslesson.info/2017/05/live-table-data-edit-delete-using-tabledit-plugin-in-php.html
 //http://phppot.com/php/php-crud-with-search-and-pagination-using-jquery-ajax/				avec id
 
+// données pour le tableau éditable d'odr
+$oneYear=showOneYearOdr($pdoBt);
+
+
+
+
 include('../view/_head-mig.php');
 include('../view/_navbar.php');
 ob_start();
 include ('../view/_errors.php');
 $errorsDisplay=ob_get_clean();
+
+
+
+
+
 // ------------------------------------------------------------------------------
 include 'upload-odr.ct.php';
 //--------------------------------------------------------------------------------

@@ -94,6 +94,7 @@
 	</div>
 	<div class='row'>
 		<div class="col">
+			<p><em>listing des ODR par date de début décroissante</em></p>
 			<table width="100%" class="table table-bordered table-hover" id="_addFiveTable">
 				<thead>
 					<tr>
@@ -102,21 +103,23 @@
 						<th>GT</th>
 						<th>date de début</th>
 						<th>date de fin</th>
-						<th>Validité</th>
-						<th>fichiers joints</th>
+						<th>Fichiers joints</th>
+						<th>Modifier</th>
 					</tr>
 				</thead>
 				<tbody>
+					<?php foreach ($oneYear as $one): ?>
 					<tr>
-						<td contenteditable="true">Editable</td>
-						<td contenteditable="true">&nbsp;</td>
-						<td contenteditable="true">&nbsp;</td>
-						<td contenteditable="true">&nbsp;</td>
-						<td contenteditable="true">&nbsp;</td>
-						<td contenteditable="false">&nbsp;</td>
-						<td contenteditable="false">&nbsp;</td>
+						<td><?=$one['operation']?></td>
+						<td><?=$one['brand']?></td>
+						<td><?=$one['gt']?></td>
+						<td><?=$one['startdate']?></td>
+						<td><?=$one['enddate']?></td>
+						<td><?=	extractLink($one['files'])?></td>
+						<td><a href="odr-modify.php?odr=<?=$one['id']?>">modifier</a></td>
 
 					</tr>
+					<?php endforeach;?>
 				</tbody>
 			</table>
 		</div>

@@ -43,3 +43,33 @@ function showNextOdr($pdoBt)
 
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
+
+
+//affichage de toutes les odr depuis un an
+//attention francisation de la date
+//SELECT DATE_FORMAT(date, '%d/%m/%Y %Hh%imin%ss') AS date FROM table //renvoie DD/MM/YYYY HHhMMSS49s ( 11/03/2010 15h47min49)
+function showOneYearOdr($pdoBt)
+{
+
+	$today= new DateTime();
+	$today->modify('-1 year');
+	$today=$today->format('Y-m-d');
+	$req=$pdoBt->prepare("SELECT id, operation, gt, brand, DATE_FORMAT(startdate, '%d-%m-%Y') as startdate, DATE_FORMAT(enddate, '%d-%m-%Y') as enddate, files FROM odr WHERE startdate>= :today ORDER BY startdate DESC");
+	$req->execute(array(
+		':today' =>$today
+	));
+
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+
+}
+
+function extractLink($string){
+	 $html="";
+	$links=explode(';',$string);
+
+	foreach ($links as $link)
+	{
+		$html.="<a href='".UPLOAD_DIR."/odr/".$link."'>".$link ."</a><br>";
+	}
+	return $html;
+}
