@@ -4,17 +4,22 @@ require '../../functions/Csv.php';
 
 
 
-$req=$pdoBt->prepare("SELECT id, objet,msg,date_msg,who,email FROM msg  ORDER BY id_service, date_msg DESC");
+$req=$pdoBt->prepare("SELECT id, id_galec,nom_mag,nom,prenom,fonction,date, entrepot,repas FROM salon  ORDER BY id_galec");
 $req->execute();
 $data=$req->fetchAll(PDO::FETCH_OBJ);
 foreach ($data as $value) {
 	//echo "\n" .'"'.$value->id .'";"' .$value->objet .'";"' .$value->date_msg .'";"' .$value->who .'";"' .$value->email.'";"';
 	$datas[]=array(
 		'id'=>$value->id,
-		'objet'	=>$value->objet,
-		'msg' =>$value->msg,
-		'nom'	=>$value->who,
-		'email'=>$value->email
+		'id_galec'	=>$value->id_galec,
+		'nom_mag' =>$value->nom_mag,
+		'nom'	=>$value->nom,
+		'prenom'=>$value->prenom,
+		'fonction'=>$value->fonction,
+		'date'=>$value->date,
+		'entrepot'=>$value->entrepot,
+		'repas'=>$value->repas
+
 
 	);
 }

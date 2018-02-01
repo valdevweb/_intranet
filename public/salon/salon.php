@@ -9,13 +9,25 @@ header('Location:'. ROOT_PATH.'/index.php');
 //----------------------------------------------------
 // REQUIRED FUNCTIONS
 //----------------------------------------------------
-//require '../../functions/form.fn.php';
+require '../../functions/salon.fn.php';
 // require 'export.php';
 
 //----------------------------------------------------
 // DATA LOGIC
 //----------------------------------------------------
+$inscriptions=displayInscr($pdoBt);
+$listing="";
+if($inscriptions){
+	foreach ($inscriptions as $inscription)
+	{
+		// echo $inscription['id_galec'];
+		$listing.='<tr><td>'.$inscription['id_galec'].'</td><td>'.$inscription['nom_mag'].'</td><td>'.$inscription['nom'].'</td><td>'.$inscription['prenom'] .'</td><td>'.$inscription['fonction'].'</td><td>'.$inscription['date'].'</td><td>'.$inscription['entrepot'].'</td><td>'.$inscription['repas'].'</td></tr>';
+	}
+}
 
+	// echo "<pre>";
+	// var_dump($inscriptions);
+	// echo '</pre>';
 
 //-----------------------------------------------------
 //	css dynamique

@@ -140,7 +140,14 @@ require '../view/_navbar.php';
 						<td><span class="add"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></span><span class="remove"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></span></td>
 					</tr>
 				</table>
-					<p><label>Merci d'indiquer votre adresse mail</label><br><input class="browser-default" type="email" required="require" name="email" placeholder="votre email"></p>
+					<!-- <p><label>Merci d'indiquer votre adresse mail</label><br><input class="browser-default" type="email" required="require" name="email" placeholder="votre email"></p> -->
+					<?php
+					if($_SESSION['type']<>'mag')
+					{
+						echo "<p class='red-text'>L'inscription est réservée aux magasins, vous ne pourrez pas utiliser le formulaire si votre compte utilisateur n'est pas rattaché à un magasin</p>";
+					}
+					?>
+
 					<p class="align-right"><button class="btn" type="submit" name="inscription">S'inscrire</button></p>
 
 			</form>
@@ -259,7 +266,7 @@ require '../view/_navbar.php';
 			var form_data = $(this).serialize();
 			if(error == '')
 			{
-				console.log(error);
+				// console.log(error);
 				$.ajax({
 					url:"insert.php",
 					method:"POST",
