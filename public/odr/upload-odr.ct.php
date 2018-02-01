@@ -15,13 +15,13 @@
 					<div class="col-sm12 col-md-12">
 
 						<label for="operation">Nom de l'opération</label>
-						<input type="text" class="browser-default form-control" id="operation"  placeholder="Saisir le nom de l'opération" name="operation"><?=isset($_POST['operation'])? $_POST['operation']: false?>
+						<input type="text" class="browser-default form-control" id="operation"  placeholder="Saisir le nom de l'opération" name="operation" value="<?=isset($_POST['operation'])? $_POST['operation']: false?>">
 					</div>
 				</div>
 				<div class="form-row">
 					<div class="col-sm12 col-md-6">
 						<label for="brand">Marque</label>
-						<input type="text" class="browser-default form-control" id="brand"  placeholder="Marque" name="brand"><?=isset($_POST['brand'])? $_POST['brand']: false?>
+						<input type="text" class="browser-default form-control" id="brand"  placeholder="Marque" name="brand" value="<?=isset($_POST['brand'])? $_POST['brand']: false?>">
 					</div>
 
 					<div class="col-sm12 col-md-6">
