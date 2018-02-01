@@ -77,7 +77,7 @@
 			<?php
 			//formatage des données pour affichage
 				$date=new DateTime($value['date_msg']);
-				$dateMsg=$date->format('d-m-Y à  h:i:s');
+				$dateMsg=$date->format('d-m-Y à  H:i');
 			    $found_key = array_search($value['id_service'], array_column($services, 'id'));
 				$serviceName= $services[$found_key]['full_name'];
 			//si on a des réponse bt
@@ -85,7 +85,7 @@
 			{
 				$nbRepmsg=' - '. $nbRep['nb_rep'] . ' réponse(s)';
 				$lastDateRep=$nbRep['last_reply_date'];
-				$lastDateRep=date('d-m-Y', strtotime($lastDateRep));
+				$lastDateRep=date('d-m-Y à H:i', strtotime($lastDateRep));
 				$by=$nbRep['replied_by'];
 
 			}
