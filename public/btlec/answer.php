@@ -118,6 +118,7 @@ if(isset($_POST['post-reply']))
 				{
 					$authorized++;
 					$typeInterdit.=$authorizedFile[1];
+
 				}
 			}
 			//tous les fichiers sont autorisés
@@ -134,7 +135,7 @@ if(isset($_POST['post-reply']))
 			}
 			else
 			{
-				array_push($err, "l'envoi de fichiers de type ". $typeInterdit ." est interdit");
+				array_push($err, "l'envoi de fichiers de type ". $typeInterdit ." est interdit, la réponse n'a pas pu être envoyée");
 
 			}
 		}
@@ -143,50 +144,56 @@ if(isset($_POST['post-reply']))
 		//			ajoute le msg dans db et
 		//			envoi mail au mag
 		//------------------------------
-		if(!recordReply($pdoBt,$idMsg,$file))
+		if(count($err)>0)
 		{
-			array_push($err, "votre réponse n'a pas pu être enregistrée (err 01)");
 
 		}
 		else
 		{
-					//-----------------------------------------
-					//				envoi du mail
-					//-----------------------------------------
-			if(sendMail($to,$objet,$tpl,$objetdde,$vide,$link))
+			if(!recordReply($pdoBt,$idMsg,$file))
 			{
-				$success=true;
-				header('Location:'. ROOT_PATH. '/public/btlec/dashboard.php?success='.$success);
+				array_push($err, "votre réponse n'a pas pu être enregistrée (err 01)");
 
 			}
 			else
 			{
-				array_push($err, "Echec d'envoi de l'email");
+						//-----------------------------------------
+						//				envoi du mail
+						//-----------------------------------------
+				if(sendMail($to,$objet,$tpl,$objetdde,$vide,$link))
+				{
+					$success=true;
+					header('Location:'. ROOT_PATH. '/public/btlec/dashboard.php?success='.$success);
+
+				}
+				else
+				{
+					array_push($err, "Echec d'envoi de l'email");
+				}
 			}
-		}
 
-		//checkbox 'clos' =>  checked or not checked => majEtat
-		if(isset($_POST['clos']))
-		{
-			$etat="clos";
-		}
-		else
-		{
-			$etat="en cours";
-		}
+			//checkbox 'clos' =>  checked or not checked => majEtat
+			if(isset($_POST['clos']))
+			{
+				$etat="clos";
+			}
+			else
+			{
+				$etat="en cours";
+			}
 
-		if(!majEtat($pdoBt,$idMsg, $etat))
-		{
-			array_push($err, "votre réponse n'a pas pu être enregistrée (err 02)");
+			if(!majEtat($pdoBt,$idMsg, $etat))
+			{
+				array_push($err, "votre réponse n'a pas pu être enregistrée (err 02)");
+			}
+
 		}
-
-
 
 
 		//------------------------------------------
 		//	ajout enreg ection dans stat
 		//-----------------------------------------<
-		if(!empty($err))
+		if(count($err)>0)
 		{
 			$descr="succès envoi réponse ";
 		}
@@ -227,6 +234,18 @@ if (isset($_POST['close']))
 
 	<h1 class="blue-text text-darken-4">Service <?=$service['full_name']?></h1>
 	<br><br>
+	<div class='row' id='erreur'>
+		<p class="red">
+			<?php
+			if(!empty($err)){
+
+				foreach ($err as $error) {
+					echo  $error ."</br>";
+				}
+			}
+			?>
+		</p>
+	</div>
 
 	<div class="row mag">
 		<div class="col l12 reply">
@@ -236,6 +255,7 @@ if (isset($_POST['close']))
 			<div class="inside-mag">
 				<h5>Magasin : <?= $magInfo['mag'] .' - ' .$magInfo['galec']  ?></h5>
 				<p><span class="labelFor">Objet : </span><?=$oneMsg['objet'] ?></p>
+				<p><span class="labelFor">Date : </span><?= date('d-m-Y à H:i', strtotime($oneMsg['date_msg'])); ?></p>
 				<p><span class="labelFor">Message : </span><br><?=$oneMsg['msg'] ?></p>
 
 				<?php
@@ -359,17 +379,7 @@ if (isset($_POST['close']))
 
 
 	<!-- affichage des messages d'erreur -->
-	<div class='row' id='erreur'>
 
-		<?php
-		if(!empty($err)){
-
-			foreach ($err as $error) {
-				echo  $error ."</br>";
-			}
-		}
-		?>
-	</div>
 
 </div>  <!--container
 
