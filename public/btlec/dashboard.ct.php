@@ -77,7 +77,7 @@
 			<?php
 			//formatage des données pour affichage
 				$date=new DateTime($value['date_msg']);
-				$dateMsg=$date->format('d-m-Y');
+				$dateMsg=$date->format('d-m-Y à  h:i:s');
 			    $found_key = array_search($value['id_service'], array_column($services, 'id'));
 				$serviceName= $services[$found_key]['full_name'];
 			//si on a des réponse bt
