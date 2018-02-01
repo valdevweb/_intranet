@@ -34,7 +34,7 @@
 <script src="<?= $md_js ?>"></script>
 <script src="<?= $main_js ?>"></script>
 <script src="<?= $dashboard_js ?>"></script>
-<script src="<?= $sorttable_js?>"></script>
+
 
 </body>
 </html>

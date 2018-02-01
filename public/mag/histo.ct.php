@@ -107,3 +107,4 @@
 		</div>
 	</div> <!-- fin row histo-->
 	</div>
+<script src="../js/sorttable.js"></script>
