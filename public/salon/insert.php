@@ -9,8 +9,8 @@ if(isset($_POST["nom"]))
  {
   // global $pdoBt;
   $query = "INSERT INTO salon
-  (id_galec, nom_mag,nom,prenom,fonction,date,entrepot,repas)
-  VALUES (:id_galec, :nom_mag, :nom, :prenom, :fonction, :date,:entrepot,:repas)
+  (id_galec, nom_mag,nom,prenom,fonction,date,entrepot,scapsav, repas)
+  VALUES (:id_galec, :nom_mag, :nom, :prenom, :fonction, :date,:entrepot,:scapsav,:repas)
   ";
   $statement = $pdoBt->prepare($query);
   $statement->execute(
@@ -21,7 +21,8 @@ if(isset($_POST["nom"]))
       ':prenom'=>strip_tags($_POST['prenom'][$count]),
       ':fonction'=>strip_tags($_POST['fonction'][$count]),
       ':date'=>strip_tags($_POST['date-salon'][$count]),
-      ':entrepot'=>strip_tags($_POST['visite'][$count]),
+      ':entrepot'=>strip_tags($_POST['entrepot'][$count]),
+      ':scapsav'=>strip_tags($_POST['sav'][$count]),
       ':repas'=>strip_tags($_POST['repas'][$count])
    )
   );

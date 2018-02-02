@@ -128,6 +128,7 @@ require '../view/_navbar.php';
 						<th>Date</th>
 						<th>Repas</th>
 						<th>Visite de l'entrepot</th>
+						<th>Visite de la scapsav</th>
 						<th>ajouter/supprimer<br> des lignes</th>
 					</tr>
 					<tr>
@@ -136,7 +137,8 @@ require '../view/_navbar.php';
 						<td><input type="text" name="fonction[]" placeholder="fonction" class="fonction"></td>
 						<td><select class="browser-default date-salon" name="date-salon[]" ><option value="" disabled selected>date</option><option value="01/03/2018">01/03/2018</option><option value="02/03/2018">02/03/2018</option></select></td>
 						<td><select class="browser-default repas" name="repas[]" ><option value="" disabled selected>repas</option><option value="oui">Oui</option><option value="non">Non</option></select></td>
-						<td><select class="browser-default visite" name="visite[]"><option value="oui" disabled selected>visite</option><option value="oui">Oui</option><option value="non">Non</option></select></td>
+						<td><select class="browser-default entrepot" name="entrepot[]"><option value="oui" disabled selected>entrepot</option><option value="oui">Oui</option><option value="non">Non</option></select></td>
+						<td><select class="browser-default sav" name="sav[]"><option value="oui" disabled selected>scapsav</option><option value="oui">Oui</option><option value="non">Non</option></select></td>
 						<td><span class="add"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></span><span class="remove"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></span></td>
 					</tr>
 				</table>
@@ -184,7 +186,8 @@ require '../view/_navbar.php';
 			html += '<td><input type="text" name="fonction[]" placeholder="fonction" class="fonction"></td>';
 			html += '<td><select class="browser-default date-salon" name="date-salon[]" ><option value="" disabled selected>date</option><option value="01/03/2018">01/03/2018</option><option value="02/03/2018">02/03/2018</option></select></td>';
 			html += '<td><select class="browser-default repas" name="repas[]" ><option value="" disabled selected>repas</option><option value="oui">Oui</option><option value="non">Non</option></select></td>';
-			html += '<td><select class="browser-default visite" name="visite[]"><option value="oui" disabled selected>visite</option><option value="oui">Oui</option><option value="non">Non</option></select></td>';
+			html += '<td><select class="browser-default entrepot" name="entrepot[]"><option value="oui" disabled selected>entrepot</option><option value="oui">Oui</option><option value="non">Non</option></select></td>';
+			html += '<td><select class="browser-default sav" name="sav[]"><option value="oui" disabled selected>scapsav</option><option value="oui">Oui</option><option value="non">Non</option></select></td>';
 			html += '<td><span class="add"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></span><span class="remove"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></span></td>';
 			html += '</tr>';
 
@@ -254,15 +257,23 @@ require '../view/_navbar.php';
 
 			});
 
-			$('.visite').each(function(){
-				var visite = $(this).val();
-				if(!visite)
+			$('.entrepot').each(function(){
+				var entrepot = $(this).val();
+				if(!entrepot)
 				{
 					error += "<p>Merci de préciser si les personnes souhaitent visiter l'entrepôt</p>";
 					return false;
 				}
 			});
 
+			$('.sav').each(function(){
+				var sav = $(this).val();
+				if(!sav)
+				{
+					error += "<p>Merci de préciser si les personnes souhaitent visiter la scapsav</p>";
+					return false;
+				}
+			});
 			var form_data = $(this).serialize();
 			if(error == '')
 			{
