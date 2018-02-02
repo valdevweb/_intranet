@@ -57,10 +57,8 @@ if(!empty($_SERVER['HTTP_REFERER']))
 //personnalisation des sessions et récup de données utilisateur
 	if($_SESSION['type']=="mag")
 	{
-		// lk_user => lien id webuser /idgalec => permet d'interroger le sca 3
-
+		//id user=> galec
 		$userPanoGalec=getPanoGalec($pdoUser);
-
 		$_SESSION['id_galec']=$userPanoGalec['galec'];
 		//recup info mag dans sca3
 		$scatrois=magInfo($pdoBt,$userPanoGalec['galec']);
@@ -76,10 +74,11 @@ if(!empty($_SERVER['HTTP_REFERER']))
 	}
 	elseif($_SESSION['type']=='btlec')
 	{
-		// lk_user => lien id webuser /id_btlec => permet d'interroger table btlec (user)
-		$lkuserid=getUserId($pdoBt);
+		//id user => id_bt
+		$userIdBt=getUserId($pdoUser);
 		//id_btlec de la table btlec
-		$_SESSION['id_btlec']=$lkuserid['id_btlec'];
+		$_SESSION['id_btlec']=$userIdBt['id_bt'];
+
 		//recup info user dans table btlec
 		$btInfo=btInfo($pdoBt);
 		//personnalisation affichage => nom du mag

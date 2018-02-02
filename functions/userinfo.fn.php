@@ -1,11 +1,11 @@
 <?php
 
 // INDEX.PHP
-// interroagation de la table qui fait le lien entre webuser et btlec ou sca3 : lkuser
-function getUserId($pdoBt)
+//id user correspondat à quel id_bt
+function getUserId($pdoUser)
 {
 // bt ou mag
-	$req=$pdoBt->prepare("SELECT * FROM lk_user WHERE iduser= :iduser");
+	$req=$pdoUser->prepare("SELECT id_bt FROM users WHERE id= :iduser");
 	$req->execute(array(
 		':iduser'	=>$_SESSION['id']
 	));
