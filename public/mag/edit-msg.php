@@ -23,7 +23,7 @@ $idMag=$_SESSION['id'];
 $msg=showThisMsg($pdoBt, $idMag, $idMsg);
 $infoService=service($pdoBt,$msg['id_service']);
 $to=$infoService['mailing'];
-$objet="PORTAIL BTLec - nouveau message sur la demande du magasin " .$_SESSION['nom'];
+$objet="PORTAIL BTLec - ajout d'un commentaire sur la demande du magasin " .$_SESSION['nom'];
 $tplForBtlec="../mail/new_mag_msg.tpl.html";
 
 $contentOne=$msg['who'];
