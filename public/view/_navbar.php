@@ -103,7 +103,7 @@
 				 {
 				 	echo $magtest;
 				 }
-				 elseif($_SESSION['type']=="mag" || $_SESSION['type']=="scapsav" ||$_SESSION['type']=="")
+				 elseif($_SESSION['type']=="mag" || $_SESSION['type']=="scapsav" || $_SESSION['type']=="centrale" || $_SESSION['type']=="")
 				 {
 				 	echo $mag;
 				 }

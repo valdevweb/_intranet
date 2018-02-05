@@ -55,7 +55,7 @@ if(!empty($_SERVER['HTTP_REFERER']))
 }
 
 //personnalisation des sessions et récup de données utilisateur
-	if($_SESSION['type']=="mag")
+	if($_SESSION['type']=="mag" || $_SESSION['type']=="centrale")
 	{
 		//id user=> galec
 		$userPanoGalec=getPanoGalec($pdoUser);
@@ -63,7 +63,14 @@ if(!empty($_SERVER['HTTP_REFERER']))
 		//recup info mag dans sca3
 		$scatrois=magInfo($pdoBt,$userPanoGalec['galec']);
 		//personnalisation affichage => nom du mag
-		$typeTitle="Leclerc";
+		if($_SESSION['type']=='mag')
+		{
+			$typeTitle="Leclerc";
+		}
+		else
+		{
+			$typeTitle="Centrale";
+		}
 		$_SESSION['nom']=$scatrois['mag'];
 		//---------------------------
 		//stats
