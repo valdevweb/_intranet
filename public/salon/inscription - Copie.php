@@ -25,25 +25,6 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 // addRecord($pdoStat,$page,$action, $descr);
 //------------------------------------->
 //----------------------------------------------------
-// DATAS
-//----------------------------------------------------
-
-// récup les inscriptions du magasin
-function listing($pdoBt)
-{
-	$req=$pdoBt->prepare("SELECT * FROM salon WHERE id_galec= :id_galec");
-	$req->execute(array(
-		'id_galec'=>$_SESSION['id_galec']
-	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-
-}
-$inscr=listing($pdoBt);
-
-
-
-
-//----------------------------------------------------
 // VIEW - HEADER
 //----------------------------------------------------
 require '../view/_head.php';
@@ -138,10 +119,6 @@ require '../view/_navbar.php';
 			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true" id="inscription-lk"></i>FORMULAIRE D'INSCRIPTION </h4>
 			<hr>
 			<br><br>
-			<?php if($inscr): ?>
-			<p> Vous pouvez modifier la liste des participants directement dans le formulaire. N'oubliez pas de cliquer sur le bouton envoyer pour nous la faire parvenir.</p>
-			<?php endif; ?>
-			<p></p>
 			<form method="post" id="insert_form" >
 				<table class="bordered" id="item_table">
 					<tr>
@@ -154,42 +131,6 @@ require '../view/_navbar.php';
 						<th>Visite de la scapsav</th>
 						<th>ajouter/supprimer<br> des lignes</th>
 					</tr>
-
-				<?php if($inscr): ?>
-				<!-- si le mag a déja renvoyé des inscriptions -->
-					<?php foreach($inscr as $detInscr): ?>
-						<tr>
-						<td><input type="text" name="nom[]" placeholder="nom" class="nom" value="<?=$detInscr['nom']?>"></td>
-						<td><input type="text" name="prenom[]" placeholder="prenom" class="prenom" value="<?=$detInscr['prenom']?>" ></td>
-						<td><input type="text" name="fonction[]" placeholder="fonction" class="fonction" value="<?=$detInscr['fonction']?>"></td>
-						<td><select class="browser-default date-salon" name="date-salon[]" >
-								<option value="01/03/2018" <?=$detInscr['date']=='01/03/2018' ? ' selected="selected" ' : ''?> >01/03/2018</option>
-								<option value="02/03/2018" <?=$detInscr['date']=='02/03/2018' ? ' selected="selected" ' : ''?> >02/03/2018</option>
-							</select>
-						</td>
-						<td>
-							<select class="browser-default repas" name="repas[]" >
-								<option value="oui" <?=$detInscr['repas']=='oui' ? ' selected="selected" ' : ''?> >Oui</option>
-								<option value="non" <?=$detInscr['repas']=='non' ? ' selected="selected" ' : ''?> >Non</option>
-							</select>
-						</td>
-						<td>
-							<select class="browser-default entrepot" name="entrepot[]">
-								<option value="oui" <?=$detInscr['entrepot']=='oui' ? ' selected="selected" ' : ''?> >Oui</option>
-								<option value="non" <?=$detInscr['entrepot']=='non' ? ' selected="selected" ' : ''?> >Non</option>
-							</select></td>
-						<td>
-							<select class="browser-default sav" name="sav[]">
-								<option value="oui" disabled selected>scapsav</option>
-								<option value="oui" <?=$detInscr['scapsav']=='oui' ? ' selected="selected" ' : ''?> >Oui</option>
-								<option value="non" <?=$detInscr['scapsav']=='non' ? ' selected="selected" ' : ''?> >Non</option>
-							</select>
-						</td>
-						<td><span class="add"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></span><span class="remove"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></span></td>
-					</tr>
-
-					<?php endforeach ?>
-				<?php else: ?>
 					<tr>
 						<td><input type="text" name="nom[]" placeholder="nom" class="nom"></td>
 						<td><input type="text" name="prenom[]" placeholder="prenom" class="prenom"></td>
@@ -200,9 +141,6 @@ require '../view/_navbar.php';
 						<td><select class="browser-default sav" name="sav[]"><option value="oui" disabled selected>scapsav</option><option value="oui">Oui</option><option value="non">Non</option></select></td>
 						<td><span class="add"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></span><span class="remove"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></span></td>
 					</tr>
-				<?php endif; ?>
-
-
 				</table>
 					<!-- <p><label>Merci d'indiquer votre adresse mail</label><br><input class="browser-default" type="email" required="require" name="email" placeholder="votre email"></p> -->
 					<?php
@@ -212,7 +150,7 @@ require '../view/_navbar.php';
 					}
 					?>
 
-					<p class="align-right"><button class="btn" type="submit" name="inscription">Envoyer</button></p>
+					<p class="align-right"><button class="btn" type="submit" name="inscription">S'inscrire</button></p>
 
 			</form>
 			<span id="error"></span>

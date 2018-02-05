@@ -4,6 +4,10 @@
 if(isset($_POST["nom"]))
 {
 
+  $del=$pdoBt->prepare("DELETE FROM salon WHERE id_galec=:id_galec");
+  $del->execute(array(
+    ':id_galec'=>$_SESSION['id_galec']
+  ));
  // $order_id = uniqid();
  for($count = 0; $count < count($_POST["nom"]); $count++)
  {
