@@ -20,7 +20,7 @@ include ('../view/_head.php');
 include ('../view/_navbar.php');
 // echo "session " . $_SESSION['id'];
 //contenu
-include('histo.ct.php');
+include('histo-mag.ct.php');
 
 
 // footer avec les scripts et fin de html

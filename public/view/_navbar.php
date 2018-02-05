@@ -13,7 +13,7 @@
 
 		 		ob_start();
 			?>
-			<li><a href="<?= ROOT_PATH?>/public/mag/histo.php"><span>Vos demandes</span></a></li>
+			<li><a href="<?= ROOT_PATH?>/public/mag/histo-mag.php"><span>Vos demandes</span></a></li>
 			<li class='active has-sub'><a href='#'><span>Contacter nos services</span></a>
 				 <ul>
 						<!-- sous menu niv 1 -->
@@ -46,7 +46,7 @@
 
 			 	ob_start();
 			 ?>
-			<li><a href="<?= ROOT_PATH?>/public/mag/histo.php"><span>Vos demandes</span></a></li>
+			<li><a href="<?= ROOT_PATH?>/public/mag/histo-mag.php"><span>Vos demandes</span></a></li>
 			<li class='active has-sub'><a href="#"><span>Contacter nos services</span></a>
 				 <ul>
 						<!-- sous menu niv 1 -->

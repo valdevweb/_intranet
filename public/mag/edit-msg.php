@@ -162,7 +162,7 @@ include('../view/_navbar.php');
 	</div>
 	<div class="row">
 		<div class="col l6 m6 s6">
-			<p><a href= "<?= ROOT_PATH?>/public/mag/histo.php" class="blue-text text-darken-4"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
+			<p><a href= "<?= ROOT_PATH?>/public/mag/histo-mag.php" class="blue-text text-darken-4"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
 		</div>
 		<div class="col l6 m6 s6 align-right">
 
