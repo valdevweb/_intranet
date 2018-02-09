@@ -207,7 +207,7 @@ if (isset($_POST['submit']))
  -->
 
 <div class="row">
-		<h4 class="light-blue-text text-darken-2" id="a2018">Les dernières gazettes appros de 2018 :</h4>
+		<h4 class="light-blue-text text-darken-2" id="a2018">Les gazettes appros :</h4>
 	</div>
 	<div class="row">
 		<ul class="browser-default">
@@ -216,7 +216,7 @@ if (isset($_POST['submit']))
 			$link="http://172.30.92.53/".$version."upload/gazette/";
 			foreach ($histo as $gazette)
 			{
-				echo "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .$gazette['file'] ."</a></li>";
+				echo "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .$gazette['file'] ."</a> du " .$gazette['deb']. " au ".$gazette['fin'] ."</li>";
 			}
 		?>
 		</ul>

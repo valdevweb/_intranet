@@ -40,7 +40,7 @@ if($gazetteAppros){
 }
 
 // $gazetteAppros=showLastGazettesAppros($pdoBt);
-$linksAppros=createLinksAppros($pdoBt,$gazetteAppros,$version);
+//$linksAppros=createLinksAppros($pdoBt,$gazetteAppros,$version);
 
 //stats
 $descr="page d'accueil";
