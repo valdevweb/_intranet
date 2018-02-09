@@ -149,8 +149,14 @@ padding:  30px 0 30px 0;
 }
 
 
+.margin-up{
+  margin-top: 60px;
 
+}
 
+.w3-panel{
+  padding : 20px !important;
+}
 
 .margin-up-and-down{
   margin-top: 60px;

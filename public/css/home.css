@@ -25,3 +25,9 @@ a.stat-link:hover{
 .fa.fa-angle-double-right{
 	padding-right: 10px;
 }
+
+
+.w3-panel{
+  padding : 20px !important;
+  text-align: center;
+}

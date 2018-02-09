@@ -1,11 +1,20 @@
 <div class="container">
+	<div class="row">
+		<div class="w3-content" style="max-width:1000px">
+			<p class="w3-panel w3-red" ><i class="fa fa-warning fa-4x" ></i><br><br>Les arrêtés préfectoraux tombant plus vite que la neige, nous subissons depuis quelques jours un nombre croissant d'interdiction de circulation notamment sur la Région Parisienne étendue depuis ce matin à l'Oise, l' Aisne et la Marne sur les grands axes.<br>
+				Nous mettons tout en oeuvre avec nos partenaires transports afin de trouver des solutions pour vous livrer.<br><br>Néanmoins, un certain nombre de destination ne peuvent être expédiées mais vos commandes sont malgré tout prise en compte et traitées afin de pouvoir vous les livrer dès que la situation va se débloquer.<br>
+			Les transporteurs sont en charge de vous avertir individuellement lorsqu'ils ne peuvent pas effectuer la livraison.</p>
+		</div>
+	</div>
 	<header>
 		<h1 class="header center grey-text text-darken-2"><?= $typeTitle .' '.$_SESSION['nom'] ?></h1>
 	</header>
+
+
 	<section>
 		<h4 class="grey-text text-darken-2"><i>Quelques mots sur votre centrale d'achats Bazar Technique Leclerc:</i></h4>
 		<div class="row">
-			<div class="w3-content" style="max-width:800px">
+			<div class="w3-content" style="max-width:1000px">
 				<div class="mySlides w3-container w3-deep-orange">
 					<div class="slider-height">
 						<h2><b>Quelques chiffres</b></h2>
@@ -20,6 +29,8 @@
 				</div>
 
 			</div>
+
+		</div>
 		</section>
 
 
