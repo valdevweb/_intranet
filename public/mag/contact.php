@@ -164,7 +164,8 @@ if(!empty($_POST))
 				sendMail($email,$objMag,$tplForMag,$full_name,$contentTwo,$linkMag);
 				//on vide le formulaire et on redirige sur la page histo demande mag
 				unset($objet,$msg,$name,$email);
-				header('Location:'. ROOT_PATH. '/public/mag/histo.php');
+				header('Location:'. ROOT_PATH. '/public/mag/histo-mag.php');
+
 
 			}
 			else

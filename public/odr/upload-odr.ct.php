@@ -1,4 +1,6 @@
 <div class="container">
+	<?=isset($_GET['success']) ? " <p><div class='alert alert-success'>Modification enregistrée</div></p>" : false ?>
+
 	<h1 class="blue-text text-darken-4">ODR - BRII - TICKETS</h1>
 	<br><br>
 	<!-- formulaire d'uplaod -->

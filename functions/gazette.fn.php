@@ -40,7 +40,7 @@ function createLinks($pdoBt,$gazettes,$version)
 
 function showLastGazettesAppros($pdoBt)
 {
-	$req=$pdoBt->prepare("SELECT file, month(date) as month, day(date) as day, year(date) as year, date, category FROM gazette WHERE category=:gazette ORDER BY date ASC LIMIT 2");
+	$req=$pdoBt->prepare("SELECT file, month(date) as month, day(date) as day, year(date) as year, date, category FROM gazette WHERE category=:gazette ORDER BY date DESC LIMIT 3");
 	$req->execute(array(
 		':gazette'  =>'gazette appros'
 
