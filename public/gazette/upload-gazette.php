@@ -181,7 +181,7 @@ include('../view/_navbar.php');
 			if(isset($msgApp['success']))
 			{
 
-				echo "<div class='card-panel teal lighten-2'><p class='white-text'><a href='".$link.$msgApp['success'] ."'>voir la gazette appro uploadée</a></p></div";
+				echo "<div class='card-panel teal lighten-2'><p class='white-text'><a href='".$link.$msgApp['success'] ."'>voir la gazette appro uploadée</a></p></div>";
 			}
 			elseif (isset($msg['err']))
 			{
