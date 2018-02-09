@@ -31,7 +31,9 @@ if (isset($_POST['submit-gazette']))
 		gazetteExist($pdoBt,$category,$dateGazette);
 		$uploadDir= '..\..\..\upload\gazette\\';
 		$upload=$_FILES['gazette-upload'];
-		$msgGaz=checkUpload($upload, $uploadDir, $category, $dateGazette, $pdoBt);
+		//pas de date de fin pour la gazette normale donc on met la même date que la date d'upload
+		$dateNa=$dateGazette;
+		$msgGaz=checkUpload($upload, $uploadDir, $category, $dateGazette, $dateNa, $pdoBt);
 		//-------------------------------------<
 		//	ajout enreg dans stat
 		//--------------------------------------
@@ -52,14 +54,14 @@ if (isset($_POST['submit-gazette']))
 
 if (isset($_POST['submit-appros']))
 {
-	if (!empty($_FILES['appros-upload']) && !empty($_POST['dateAppros']))
+	if (!empty($_FILES['appros-upload']) && !empty($_POST['dateApprosDeb']) && !empty($_POST['dateApprosFin']))
 	{
 		$category="gazette appros";
 		extract($_POST);
-		gazetteExist($pdoBt,$category,$dateAppros);
+		// gazetteExist($pdoBt,$category,$dateApprosDeb);
 		$uploadDir= '..\..\..\upload\gazette\\';
 		$upload=$_FILES['appros-upload'];
-		$msgApp=checkUpload($upload, $uploadDir,  $category,$dateAppros, $pdoBt);
+		$msgApp=checkUpload($upload, $uploadDir, $category,$dateApprosDeb,$dateApprosFin, $pdoBt);
 		//-------------------------------------<
 		//	ajout enreg dans stat
 		//--------------------------------------
@@ -89,14 +91,7 @@ function gazetteExist($pdoBt,$category,$date)
 	if($data=$req->fetch())
 	{
 		unset($_FILES, $_POST);
-		if ($category=="gazette")
-		{
-			header('location:upload-gazette.php?errgaz');
-		}
-		else
-		{
-			header('location:upload-gazette.php?errapp');
-		}
+		header('location:upload-gazette.php?errgaz');
 		die;
 	}
 }
@@ -108,9 +103,14 @@ function gazetteExist($pdoBt,$category,$date)
 if(isset($_GET['sup'])){
 	echo 'id a sup ' .$_GET['sup'];
 	deleteGaz($pdoBt,$_GET['sup']);
-	header('location:upload-gazette.php');
-
+	header('location:upload-gazette.php#gazetteTable');
 }
+if(isset($_GET['supAppro'])){
+	echo 'id a sup ' .$_GET['supAppro'];
+	deleteGaz($pdoBt,$_GET['supAppro']);
+	header('location:upload-gazette.php#approsTable');
+}
+
 
 
 include('../view/_head.php');
@@ -121,21 +121,83 @@ include('../view/_navbar.php');
 
 
 <div class="container">
+	<h1 class="light-blue-text text-darken-2">Envoi des gazettes</h1>
+	<div class="row">
+		<div class="col l4"></div>
 
-<h1 class="light-blue-text text-darken-2">Envoi des gazettes</h1>
-    <div class="row">
-      <div class="col l4"></div>
+		<div class="col l3">
+			<div class="mini-nav">
+				<p>Télécharger : </p>
+				<p><a href="#gazette-frm" ><i class="fa fa-hand-o-right" aria-hidden="true"></i>la gazette hebdomadaire</a></p>
+				<p><a href="#gazette-appro-frm" ><i class="fa fa-hand-o-right" aria-hidden="true"></i>la gazette appros</a></p>
+			</div>
+		</div>
+	</div>
 
-      <div class="col l3">
-      	<div class="mini-nav">
-      		<p>Télécharger : </p>
-       	 <p><a href="#gazette-frm" ><i class="fa fa-hand-o-right" aria-hidden="true"></i>la gazette hebdomadaire</a></p>
-        	<p><a href="#gazette-appro-frm" ><i class="fa fa-hand-o-right" aria-hidden="true"></i>la gazette appros</a></p>
-        </div>
-      </div>
-    </div>
+	<hr>
 
-<hr>
+	<!-- affichage message erreur, réussite gazette normal -->
+	<div class="down"></div>
+	<div class="row">
+		<div class="col l12 center">
+			<?php
+			if (isset($_GET['errgaz']))
+			{
+				echo "<div class='card-panel red'><p class='white-text'>Une gazette existe déjà pour cette date</p></div>";
+			}
+			if (isset($_GET['empty-gazette']))
+			{
+				echo "<div class='card-panel red'><p class='white-text'>Merci de sélectionner un fichier et une date</p></div>";
+			}
+			if(isset($msgGaz['success']))
+			{
+
+				echo "<div class='card-panel teal lighten-2'><p class='white-text'><a href='".$link.$msgGaz['success'] ."'>voir la gazette uploadée</a></p></div>";
+			}
+			elseif (isset($msg['err']))
+			{
+				echo "<div class='card-panel red'><p class='white-text'>".$msg['err']."</p></div>";
+			}
+			elseif (isset($msg))
+			{
+				var_dump($msg);
+
+			}
+
+			?>
+		</div>
+	</div><!-- END affichage message erreur, réussite -->
+	<div class="row">
+		<div class="col l12 center" id="approMsg">
+			<?php
+			if (isset($_GET['errapp']))
+			{
+				echo "<div class='card-panel red'><p class='white-text'>Une gazette appro existe déjà pour cette date</p></div>";
+			}
+			if (isset($_GET['empty-appros']))
+			{
+				echo "<div class='card-panel red'><p class='white-text'>Merci de sélectionner un fichier et une date</p></div>";
+			}
+			if(isset($msgApp['success']))
+			{
+
+				echo "<div class='card-panel teal lighten-2'><p class='white-text'><a href='".$link.$msgApp['success'] ."'>voir la gazette appro uploadée</a></p></div";
+			}
+			elseif (isset($msg['err']))
+			{
+				echo "<p>".$msg['err']."</p>";
+			}
+			elseif (isset($msg))
+			{
+				var_dump($msg);
+
+			}
+			?>
+		</div>
+		</div>
+
+	<!-- END affichage message erreur, réussite -->
+
 
 
 
@@ -170,39 +232,9 @@ include('../view/_navbar.php');
 			</div>
 		</form>
 	</div>
-<!-- affichage message erreur, réussite -->
-	<div class="down"></div>
-	<div class="row">
-		<div class="col l12 center">
-			<?php
-			if (isset($_GET['errgaz']))
-			{
-				echo "<p>Une gazette existe déjà pour cette date</p>";
-			}
-			if (isset($_GET['empty-gazette']))
-			{
-				echo "<p>Merci de sélectionner un fichier et une date</p>";
-			}
-			if(isset($msgGaz['success']))
-			{
-
-				echo "<p><a href='".$link.$msgGaz['success'] ."'>voir la gazette uploadée</a></p>";
-			}
-			elseif (isset($msg['err']))
-			{
-				echo "<p>".$msg['err']."</p>";
-			}
-			elseif (isset($msg))
-			{
-				var_dump($msg);
-
-			}
-			?>
-		</div>
-	</div><!-- END affichage message erreur, réussite -->
 
 	<h4><i class="fa fa-hand-o-right" aria-hidden="true"></i>les 10 dernières gazettes : </h4>
-	<table class="bordered" cellpadding="2px">
+	<table class="bordered" cellpadding="2px" id="gazetteTable">
 		<thead><tr>
 			<th>Date</th>
 			<th>nom fichier</th>
@@ -226,19 +258,27 @@ include('../view/_navbar.php');
 
 		?>
 	</tbody>
-</table>
+	</table>
 
-<hr>
+	<hr>
 
-<h4 id="gazette-appro-frm"><i class="fa fa-hand-o-right" aria-hidden="true"></i>La gazette appros</h4>
+	<h4 id="gazette-appro-frm"><i class="fa fa-hand-o-right" aria-hidden="true"></i>La gazette appros</h4>
 
 	<div class="row">
 		<form method="post" action="upload-gazette.php" enctype="multipart/form-data" >
 			<div class="row">
 				<div class="col l2"></div>
 				<div class="col l4">
-					<label class="w3-text-grey" for="dateAppros">Selectionnez la date de la gazette à uploader</label>
-					<input type="date" class="w3-input w3-border no-spin" name="dateAppros" id="dateAppros" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+					<label class="w3-text-grey" for="dateApprosDeb">Selectionnez la date de début de l'opération</label>
+					<input type="date" class="w3-input w3-border no-spin" name="dateApprosDeb" id="dateApprosDeb" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+				</div>
+				<div class="col l6"></div>
+			</div>
+			<div class="row">
+				<div class="col l2"></div>
+				<div class="col l4">
+					<label class="w3-text-grey" for="dateApprosFin">Selectionnez la date de fin de l'opération</label>
+					<input type="date" class="w3-input w3-border no-spin" name="dateApprosFin" id="dateApprosFin" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
 				</div>
 				<div class="col l6"></div>
 			</div>
@@ -262,40 +302,14 @@ include('../view/_navbar.php');
 			</div>
 		</form>
 	</div>
-<div class="down"></div>
-	<div class="row">
-		<div class="col l12 center">
-			<?php
-			if (isset($_GET['errapp']))
-			{
-				echo "<p>Une gazette appro existe déjà pour cette date</p>";
-			}
-			if (isset($_GET['empty-appros']))
-			{
-				echo "<p>Merci de sélectionner un fichier et une date</p>";
-			}
-			if(isset($msgApp['success']))
-			{
+	<div class="down"></div>
 
-				echo "<p><a href='".$link.$msgApp['success'] ."'>voir la gazette uploadée</a></p>";
-			}
-			elseif (isset($msg['err']))
-			{
-				echo "<p>".$msg['err']."</p>";
-			}
-			elseif (isset($msg))
-			{
-				var_dump($msg);
 
-			}
-			?>
-		</div>
-	</div><!-- END affichage message erreur, réussite -->
-
-<h4><i class="fa fa-hand-o-right" aria-hidden="true"></i>les 10 dernières gazettes appros: </h4>
-	<table class="bordered" cellpadding="2px">
+	<h4><i class="fa fa-hand-o-right" aria-hidden="true"></i>les 10 dernières gazettes appros: </h4>
+	<table class="bordered" cellpadding="2px" id="approsTable">
 		<thead><tr>
-			<th>Date</th>
+			<th>Date de début</th>
+			<th>Date de fin</th>
 			<th>nom fichier</th>
 			<th class="center">Action</th>
 		</tr>
@@ -308,8 +322,9 @@ include('../view/_navbar.php');
 			?>
 			<tr>
 				<td><?php echo date('d-m-Y', strtotime($gazette['date'])) ?></center></td>
+				<td><?php echo date('d-m-Y', strtotime($gazette['date_fin'])) ?></center></td>
 				<td><?php echo $gazette['file'] ?></center></td>
-				<td class="delete"><a href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]).'?sup='. $gazette['id'] ?>" class="delete" title="supprimer"><i class="fa fa-trash fa-lg"  aria-hidden="true"></i></a></td>
+				<td class="delete"><a href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]).'?supAppro='. $gazette['id'] ?>" class="delete" title="supprimer"><i class="fa fa-trash fa-lg"  aria-hidden="true"></i></a></td>
 			</tr>
 
 			<?php
@@ -317,7 +332,7 @@ include('../view/_navbar.php');
 
 		?>
 	</tbody>
-</table>
+	</table>
 
 
 </div> <!--END container  -->

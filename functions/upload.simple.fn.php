@@ -1,5 +1,5 @@
 <?php
-function checkUpload($upload, $location,$category,$date, $pdoBt)
+function checkUpload($upload, $location,$category,$dateDeb,$dateFin, $pdoBt)
 {
 	$msg=array();
 	$name=$upload['name'];
@@ -17,7 +17,7 @@ function checkUpload($upload, $location,$category,$date, $pdoBt)
 	// si le déplacement du fichier tmp vers le rep d'upload ok
 	if(move_uploaded_file($tmp, $location.$name))
 	{
-		insertIntoDb($pdoBt,$name, $category, $date);
+		insertIntoDb($pdoBt,$name, $category, $dateDeb, $dateFin);
 		// reset form pour éviter multi renvoi :
 		unset($_FILE, $_POST);
 
@@ -29,6 +29,7 @@ function checkUpload($upload, $location,$category,$date, $pdoBt)
 	}
 	return $msg;
 }
+
 
 function mime($tmp, $encoding=true)
 {
@@ -98,13 +99,14 @@ return (in_array($mime,$whiteList)) ? TRUE : FALSE ;
 }
 
 //ajout dans table gazette
-function insertIntoDb($pdoBt,$name, $category, $date)
+function insertIntoDb($pdoBt,$name, $category, $dateDeb, $dateFin)
 {
-		$req=$pdoBt->prepare('INSERT INTO gazette (file, date, category)
-		VALUE(:file, :date, :category)');
+		$req=$pdoBt->prepare('INSERT INTO gazette (file, date, date_fin, category)
+		VALUE(:file, :date,:dateFin, :category)');
 		$req->execute(array(
-		':file'		=> $name,
-		':date'			=> $date,
+		':file'			=> $name,
+		':date'			=> $dateDeb,
+		':dateFin'		=> $dateFin,
 		':category'		=> $category
 	));
 }
@@ -113,7 +115,7 @@ function insertIntoDb($pdoBt,$name, $category, $date)
 //affichage de l'histo des gazettes si besoin supression sur page upload
 function histoGazetteUpload($pdoBt,$category)
 {
-	$req=$pdoBt->prepare("SELECT date, id,file,category, week(date) as week, year(date) as year FROM gazette WHERE category= :category ORDER BY date DESC LIMIT 10 ");
+	$req=$pdoBt->prepare("SELECT date, date_fin, id,file,category, week(date) as week, year(date) as year FROM gazette WHERE category= :category ORDER BY date DESC LIMIT 10 ");
 	$req->execute(array(
 		':category' =>$category
 	));
