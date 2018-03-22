@@ -9,6 +9,7 @@ require('functions/login.fn.php');
 $err='';
 if(!empty( $_SERVER['QUERY_STRING']))
 	{
+		//on met le goto dans champ cahcé du formulaire et la fonction de login recupère la valeur $_POST['goto'] pour la mettre dans session
 		$gotoMsg=$_SERVER['QUERY_STRING'];
 
 	}
@@ -77,10 +78,10 @@ if(isset($_POST['connexion']))
 					<p class="margin-up">
 						<button id="log" class="btn waves-effect waves-default white grey-text text-darken-3 darken-3 modal-trigger" data-target="modal1">Se connecter</button>
 					</p>
-
-					<p class="w3-panel w3-red" ><i class="fa fa-warning fa-4x" ></i><br>Les arrêtés préfectoraux tombant plus vite que la neige, nous subissons depuis quelques jours un nombre croissant d'interdiction de circulation notamment sur la Région Parisienne étendue depuis ce matin à l'Oise, l' Aisne et la Marne sur les grands axes.<br>
+<!-- Demande de retrait information transport par David le 14/02/2018 -->
+<!-- 					<p class="w3-panel w3-red" ><i class="fa fa-warning fa-4x" ></i><br>Les arrêtés préfectoraux tombant plus vite que la neige, nous subissons depuis quelques jours un nombre croissant d'interdiction de circulation notamment sur la Région Parisienne étendue depuis ce matin à l'Oise, l' Aisne et la Marne sur les grands axes.<br>
 					Nous mettons tout en oeuvre avec nos partenaires transports afin de trouver des solutions pour vous livrer.<br>Néanmoins, un certain nombre de destination ne peuvent être expédiées mais vos commandes sont malgré tout prise en compte et traitées afin de pouvoir vous les livrer dès que la situation va se débloquer.<br>
-					Les transporteurs sont en charge de vous avertir individuellement lorsqu'ils ne peuvent pas effectuer la livraison.</p>
+					Les transporteurs sont en charge de vous avertir individuellement lorsqu'ils ne peuvent pas effectuer la livraison.</p> -->
 
 
 			</div>
