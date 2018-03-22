@@ -66,7 +66,9 @@ $objetdde=$oneMsg['objet'];
 $to = $oneMsg['email'];
 $etat="";
 $vide="";
-$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter votre réponse</a>";
+$link="Cliquez <a href='".SITE_ADDRESS."/index.php?mag/edit-msg.php?msg=".$idMsg."'>ici pour revoir votre demande</a>";
+
+// $link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter votre réponse</a>";
 	// if(sendMail($to,$objet,$tpl,$objetdde,$vide,$link))
 
 
@@ -255,6 +257,7 @@ if (isset($_POST['close']))
 			<div class="inside-mag">
 				<h5>Magasin : <?= $magInfo['mag'] .' - ' .$magInfo['galec']  ?></h5>
 				<p><span class="labelFor">Objet : </span><?=$oneMsg['objet'] ?></p>
+				<p><span class="labelFor">Interlocuteur : </span><?=$oneMsg['who'] ?></p>
 				<p><span class="labelFor">Date : </span><?= date('d-m-Y à H:i', strtotime($oneMsg['date_msg'])); ?></p>
 				<p><span class="labelFor">Message : </span><br><?=$oneMsg['msg'] ?></p>
 

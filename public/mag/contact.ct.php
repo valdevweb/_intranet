@@ -129,6 +129,16 @@
 <div class="down"></div>
 <div class="down"></div>
 
+  <script type="text/javascript">
+        $(document).ready(function (){
+        $('form').submit(function()
+        {
+            $(":submit").text("Merci de patienter...")
+            $("#submit").attr('disabled', true);
 
+        });
+
+    });
+    </script>
 
 

@@ -72,6 +72,7 @@ if(!empty($_SERVER['HTTP_REFERER']))
 			$typeTitle="Centrale";
 		}
 		$_SESSION['nom']=$scatrois['mag'];
+		$_SESSION['centrale']=$scatrois['centrale'];
 		//---------------------------
 		//stats
 		//---------------------------
@@ -96,7 +97,7 @@ if(!empty($_SERVER['HTTP_REFERER']))
 		//si resp => affiché en 1er dans pages contact
 		$resp=$btInfo['resp'];
 		$typeTitle="";
-		$_SESSION ['nom'] = $prenom .' ' .$nom;
+		$_SESSION['nom'] = $prenom .' ' .$nom;
 		$_SESSION['id_service']=$btInfo['id_service'];
 
 		//---------------------------
@@ -109,7 +110,7 @@ if(!empty($_SERVER['HTTP_REFERER']))
 	elseif ($_SESSION['type']=='scapsav')
 	{
 		$typeTitle="";
-		$_SESSION ['nom'] = "";
+		$_SESSION['nom'] = "";
 		//---------------------------
 		//stats
 		//---------------------------
@@ -121,7 +122,7 @@ if(!empty($_SERVER['HTTP_REFERER']))
 	{
 		// si ni de type mag, ni de type bt, ni scapsav
 		$typeTitle="";
-		$_SESSION ['nom'] = "";
+		$_SESSION['nom'] = "";
 		//---------------------------
 		//stats
 		//---------------------------
@@ -132,16 +133,26 @@ if(!empty($_SERVER['HTTP_REFERER']))
 // redirection si besoin
 	if(!empty($_SESSION['goto']))
 	{
-		if($_SESSION['type']=="btlec")
+		//si on a une query string, on la découpe et on vérif si la 1er partie est numerique ou pas
+		//si 1ere partie numérique, c'est un vieux lien donc on redirige sur page edit-msg(mag) ou page answer(btlec)
+		//sinon on recupère toute la query string
+		$goto=$_SESSION['goto'];
+		$redir=explode("&",$goto);
+		if(is_numeric($redir[0]))
 		{
-			header('Location:'. ROOT_PATH. '/public/btlec/answer.php?msg='.$_SESSION['goto']);
+			if($_SESSION['type']=="btlec")
+			{
+				header('Location:'. ROOT_PATH. '/public/btlec/answer.php?msg='.$_SESSION['goto']);
+			}
+			else
+			{
+				header('Location:'. ROOT_PATH. '/public/mag/edit-msg.php?msg='.$_SESSION['goto']);
+			}
+		}else
+		{
+				header('Location:' .ROOT_PATH. '/public/' .$goto);
 		}
 
-			// mag, scapsav ou vide
-		else
-		{
-			header('Location:'. ROOT_PATH. '/public/mag/edit-msg.php?msg='.$_SESSION['goto']);
-		}
 
 	}
 

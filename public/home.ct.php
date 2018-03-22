@@ -1,14 +1,63 @@
 <div class="container">
-	<div class="row">
-		<div class="w3-content" style="max-width:1000px">
-			<p class="w3-panel w3-red" ><i class="fa fa-warning fa-4x" ></i><br><br>Les arrêtés préfectoraux tombant plus vite que la neige, nous subissons depuis quelques jours un nombre croissant d'interdiction de circulation notamment sur la Région Parisienne étendue depuis ce matin à l'Oise, l' Aisne et la Marne sur les grands axes.<br>
-				Nous mettons tout en oeuvre avec nos partenaires transports afin de trouver des solutions pour vous livrer.<br><br>Néanmoins, un certain nombre de destination ne peuvent être expédiées mais vos commandes sont malgré tout prise en compte et traitées afin de pouvoir vous les livrer dès que la situation va se débloquer.<br>
-			Les transporteurs sont en charge de vous avertir individuellement lorsqu'ils ne peuvent pas effectuer la livraison.</p>
-		</div>
-	</div>
 	<header>
 		<h1 class="header center grey-text text-darken-2"><?= $typeTitle .' '.$_SESSION['nom'] ?></h1>
 	</header>
+	<br><br>
+	<div class="row">
+		<div class="col s2 m2 l2"></div>
+		<div class="col s8 m8 l8 white"><br>
+			<div class="col s2 m2 l2">
+					<img src="img/icons/info.jpg"><br><br>
+			</div>
+			<div class="col s10 m10 l10">
+					<p class="blue-text text-darken-2 bigger">les mails concernant les modifications de jours de commandes et/ou de livraisons liés au lundi 2 avril (lundi de Pâques férié), ont été envoyés sur les listes de diffusion RBT, le 15 mars. Pour plus d'info, merci de consulter vos messageries</p>
+			</div>
+
+		</div>
+		<div class="col s2 m2 l2"></div>
+
+	</div>
+	<div class="row">
+		<div class="col s2 m2 l2"></div>
+		<div class="col s8 m8 l8 white"><br>
+			<div class="col s2 m2 l2">
+					<img src="img/icons/warning.png"><br><br>
+			</div>
+			<div class="col s10 m10 l10">
+					<p class="red-text text-darken-2 bigger"><strong>Attention : </strong><br>Lundi 2 avril, jour férié<br> Pas de commandes 24/48h disponibles
+
+					</p>
+			</div>
+
+		</div>
+		<div class="col s2 m2 l2"></div>
+
+	</div>
+	<br><br>
+
+	<?php
+			ob_start();
+	 ?>
+	<div class="w3-panel w3-light-grey"><h2 class="orange-text text-darken-2"><strong>Lancement de la livraison magasin en 24/48H</strong></h2>
+		<img id="info" src="img/icons/new-orange.png">
+		<p id="inside-info">Afin de vous apporter un service toujours plus performant et plus optimum, <strong>BTLEC lance la livraison magasin en 24H/48H à compter du lundi 5 mars</strong>.
+		<br> A partir d'un nouveau planning de commande qui a été créé pour chaque magasin, vous avez la possibilité de passer commande sur le BT le jour même pour être livré majoritairement le lendemain. <br>Cette nouvelle livraison rapide a pour but de ne pas rater d'éventuelles ventes clients sur un produit que vous n'avez pas en stock magasin mais qui est disponible sur la Centrale. Mais elle a également pour but de vous éviter de stocker de façon trop importante des gammes de produits chers et à dépréciation rapide.</p>
+		<p id="more"><a href="infos/twentyfour.php">les infos en détail</a></p>
+	</div>
+	<?php
+	 	$noSocara=ob_get_contents();
+		ob_end_clean();
+		if(!isset($_SESSION['centrale']))
+			{
+				echo $noSocara;
+			}
+			else{
+				if($_SESSION['centrale'] !="SOCARA")
+				{
+					echo $noSocara;
+				}
+		}
+	?>
 
 
 	<section>
@@ -66,7 +115,7 @@
 						<P class="orange-text text-darken-2">LES ALERTES PROMOS</p>
 							<hr>
 							<ul class='links'>
-								<li><a class='stat-link' data-user-session="<?=$_SESSION['user']?>" href="http://172.30.92.53/OPPORTUNITES/index.html" target="_blank"><i class="fa fa-angle-double-right" aria-hidden="true"></i>voir les alertes promos</a></li>
+								<li><a class='stat-link' data-user-session="<?= $_SESSION['user']?>" href="http://172.30.92.53/OPPORTUNITES/index.html" target="_blank"><i class="fa fa-angle-double-right" aria-hidden="true"></i>voir les alertes promos</a></li>
 							</ul>
 					</div>
 				</div>
@@ -76,7 +125,7 @@
 						<p class="orange-text text-darken-2">DOCUBASE :</p>
 						<hr>
 						<ul class='links'>
-							<li>Retouvez les documents émis par BTlec : <a class="simple-link stat-link" data-user-session="<?=$_SESSION['user']?>"  href="http://172.30.101.66/rheaweb/auth">factures, bon livraison, etc</a></li>
+							<li>Retouvez les documents émis par BTlec : <a class="simple-link stat-link" data-user-session="<?= $_SESSION['user']?>"  href="http://172.30.101.66/rheaweb/auth">factures, bon livraison, etc</a></li>
 						</ul>
 					</div>
 						<!-- <div class="vm-card">

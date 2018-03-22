@@ -99,7 +99,9 @@ if(isset($_POST['post-reply']))
 		//-----------------------------------------
 		//				envoi du mail
 		//-----------------------------------------
-			$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter le message</a>";
+			//créa du lien pour le mail  BT
+			$link="Cliquez <a href='" .SITE_ADDRESS."/index.php?btlec/answer.php?msg=".$idMsg."'>ici pour consulter le message</a>";
+			// $link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter le message</a>";
 			if(sendMail($to,$objet,$tplForBtlec,$contentOne,$contentTwo,$link))
 			{
 				$success=true;

@@ -144,9 +144,10 @@ if(!empty($_POST))
 		//------------------------------
 		if($lastId=addMsg($pdoBt,$idGt, $file))
 		{
-			//créa du lien pour le mail
-			$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour consulter le message</a>";
-			$linkMag="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$lastId."'>ici pour revoir votre demande</a>";
+			//créa du lien pour le mail  BT
+			$link="Cliquez <a href='" .SITE_ADDRESS."/index.php?btlec/answer.php?msg=".$lastId."'>ici pour consulter le message</a>";
+			// $link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?http://172.30.92.53/". VERSION ."btlecest/answer.php?msg=".$lastId."'>ici pour consulter le message</a>";
+			$linkMag="Cliquez <a href='".SITE_ADDRESS."/index.php?mag/edit-msg.php?msg=".$lastId."'>ici pour revoir votre demande</a>";
 			//------------------------------
 			//			ajout enreg dans stat
 			//------------------------------

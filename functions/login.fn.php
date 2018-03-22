@@ -35,6 +35,10 @@ function login($dbUser){
 	{
 		//login trouvé on récupère l'id :
 		$id=$data['id'];
+		//on vérfie si on a un type, si pas de type, on met "na"
+		// if(!isset($data['type'])){
+		// 	$data['type']="na";
+		// }
 
 		// on vérifie si on a tj un vieux mot de passe
 		if (empty($data['old_pwd']))
