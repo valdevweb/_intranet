@@ -24,8 +24,12 @@
 				<th>nom</th>
 				<th>prenom</th>
 				<th>fonction</th>
-				<th>date</th>
+				<th>12/06/2018</th>
 				<th>visite entrepot</th>
+				<th>visite scapsav</th>
+				<th>13/06/2018</th>
+				<th>visite entrepot</th>
+				<th>visite scapsav</th>
 				<th>repas</th>
 			</tr>
 		<?=$listing?>
