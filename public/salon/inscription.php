@@ -31,12 +31,14 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 // récup les inscriptions du magasin
 function listing($pdoBt)
 {
-	$req=$pdoBt->prepare("SELECT * FROM salon WHERE id_galec= :id_galec");
-	$req->execute(array(
-		'id_galec'=>$_SESSION['id_galec']
-	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-
+	if(isset($_SESSION['id_galec']))
+	{
+		$req=$pdoBt->prepare("SELECT * FROM salon WHERE id_galec= :id_galec");
+		$req->execute(array(
+			'id_galec'=>$_SESSION['id_galec']
+		));
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
 }
 $inscr=listing($pdoBt);
 
