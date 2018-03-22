@@ -37,5 +37,20 @@ if(isset($_POST["nom"]))
   echo 'ok';
  }
 
+ /*
+require('fpdf181/fpdf.php');
+
+$pdf = new FPDF();
+$pdf->AddPage();
+$pdf->SetFont('Arial','B',16);
+$pdf->Cell(40,10,$_SESSION['nom']);
+$pdf->Text(8,38,'N° de facture : ');
+$pdf->Text(8,43,'Date : ');
+$pdf->Text(8,48,'Mode de règlement : ');
+// Insère un logo en haut à gauche à 300 dpi
+$pdf->Image('logo.png',10,10,-300);
+$tosend=$pdf->Output('F','D:\www\_intranet\upload\inscr.pdf');
+*/
+
 }
 ?>
