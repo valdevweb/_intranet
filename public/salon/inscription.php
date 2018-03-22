@@ -7,6 +7,7 @@ if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
 }
 
+// require 'pdfgenmail.php';
 //-----------------------------------------------------
 //	css dynamique
 //-----------------------------------------------------
@@ -14,6 +15,8 @@ $page=(basename(__FILE__));
 $page=explode(".php",$page);
 $page=$page[0];
 $cssFile=ROOT_PATH ."/public/css/".$page.".css";
+
+// require('fpdf181/fpdf.php');
 
 // <---------------------------------------------------
 // STATS - add rec
@@ -28,12 +31,14 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 // DATAS
 //----------------------------------------------------
 
+// https://phppot.com/php/php-mysql-inline-editing-using-jquery-ajax/
+
 // récup les inscriptions du magasin
 function listing($pdoBt)
 {
 	if(isset($_SESSION['id_galec']))
 	{
-		$req=$pdoBt->prepare("SELECT * FROM salon WHERE id_galec= :id_galec");
+		$req=$pdoBt->prepare("SELECT * FROM salon JOIN qrcode ON salon.id=qrcode.id WHERE id_galec= :id_galec");
 		$req->execute(array(
 			'id_galec'=>$_SESSION['id_galec']
 		));
@@ -43,7 +48,173 @@ function listing($pdoBt)
 $inscr=listing($pdoBt);
 
 
+function addParticipant($pdoBt)
+{
+	if(isset($_POST['jour1'])){
+		$date1="12/06/2018";
+		$entrepot1=$_POST['entrepot1'];
+		$scapsav1=$_POST['scapsav1'];
+		$repas1='--';
+	}
+	else{
+		$date1="";
+		$entrepot1="";
+		$scapsav1="";
+		$repas1="";
+	}
 
+	if(isset($_POST['jour2'])){
+		$date2="13/06/2018";
+		$entrepot2=$_POST['entrepot2'];
+		$scapsav2=$_POST['scapsav2'];
+		$repas2=$_POST['repas2'];
+	}
+	else{
+		$date2="";
+		$entrepot2="";
+		$scapsav2="";
+		$repas2="";
+	}
+	$insert=$pdoBt->prepare("INSERT INTO salon (id_galec, nom_mag,nom,prenom,fonction,date1,entrepot1,scapsav1, repas1, date2,entrepot2,scapsav2, repas2) VALUES (:id_galec, :nom_mag, :nom, :prenom, :fonction, :date1, :entrepot1, :scapsav1, :repas1,:date2, :entrepot2, :scapsav2, :repas2)");
+	$insert->execute(array(
+	  ':id_galec'=>$_SESSION['id_galec'],
+      ':nom_mag' => $_SESSION['nom'],
+      ':nom' => strip_tags($_POST['nom']),
+      ':prenom'=>strip_tags($_POST['prenom']),
+      ':fonction'=>strip_tags($_POST['fonction']),
+      ':date1'=>$date1,
+      ':entrepot1'=>$entrepot1,
+      ':scapsav1'=>$scapsav1,
+      ':repas1'=>'--',
+      ':date2'=>$date2,
+      ':entrepot2'=>$entrepot2,
+      ':scapsav2'=>$scapsav2,
+      ':repas2'=>$repas2
+	));
+
+}
+
+
+
+
+if(isset($_POST['inscrire'])){
+	addParticipant($pdoBt);
+	header("Location:inscription2.php#inscription-lk");
+}
+
+if(isset($_POST['send']))
+{
+require('fpdf181/fpdf.php');
+require '../../functions/mail.fn.php';
+
+	class PDF extends FPDF
+	{
+// Tableau coloré
+		function FancyTable($header, $inscr)
+		{
+			$this->Image('bt300.jpg',5,5);
+			$this->Ln(50);
+			$this->SetFont('Arial','',24);
+			$this->Cell(180,0,'INSCRIPTIONS SALON BTLEC 2018');
+			$this->SetFont('Arial','',14);
+			$this->Ln(40);
+			$this->Cell(8,0,'Bonjour,');
+			$this->Ln(10);
+			$this->Cell(8,0,utf8_decode('Vous trouverez ci dessous le récapitulatif des inscrits pour votre magasin pour le'));
+			$this->Ln(10);
+			$this->Cell(8,0,'salon BTLec EST du 12 au 13 juin 2018');
+			$this->Ln(10);
+			$this->Ln(20);
+			$this->SetFillColor(255,0,0);
+			$this->SetTextColor(255);
+			$this->SetDrawColor(128,0,0);
+			$this->SetLineWidth(.3);
+			$this->SetFont('','B');
+    // En-tête
+			$w = array(30, 30, 30, 30, 30, 30);
+    // parcours les colonnes
+			for($i=0;$i<count($header);$i++)
+				$this->Cell($w[$i],7,$header[$i],1,0,'C',true);
+			$this->Ln();
+    // Restauration des couleurs et de la police
+			$this->SetFillColor(224,235,255);
+			$this->SetTextColor(0);
+			$this->SetFont('Arial');
+    // Données
+			$fill = false;
+
+			foreach($inscr as $res)
+			{
+				if($res['date1']!=""){
+					$this->Cell($w[0],6,utf8_decode($res['nom']),'LR',0,'L',$fill);
+					$this->Cell($w[1],6,utf8_decode($res['prenom']),'LR',0,'L',$fill);
+					$this->Cell($w[2],6,$res['date1'],'LR',0,'R',$fill);
+					$this->Cell($w[3],6,"--",'LR',0,'R',$fill);
+					$this->Cell($w[4],6,$res['entrepot1'],'LR',0,'R',$fill);
+					$this->Cell($w[5],6,$res['scapsav1'],'LR',0,'R',$fill);
+					$this->Ln();
+					$fill = !$fill;
+				}
+				if($res['date2']!=""){
+					$this->Cell($w[0],6,utf8_decode($res['nom']),'LR',0,'L',$fill);
+					$this->Cell($w[1],6,utf8_decode($res['prenom']),'LR',0,'L',$fill);
+					$this->Cell($w[2],6,$res['date2'],'LR',0,'R',$fill);
+					$this->Cell($w[3],6,$res['repas2'],'LR',0,'R',$fill);
+					$this->Cell($w[4],6,$res['entrepot2'],'LR',0,'R',$fill);
+					$this->Cell($w[5],6,$res['scapsav2'],'LR',0,'R',$fill);
+					$this->Ln();
+					$fill = !$fill;
+				}
+			}
+    // Trait de terminaison
+			$this->Cell(array_sum($w),0,'','T');
+		}
+
+		function genQrCode($file,$nom,$prenom){
+		// $this->Cell(8,0,utf8_decode('Vous trouverez ci dessous le récapitulatif des inscrits pour votre magasin pour le'));
+			$this->SetFont('Arial','',14);
+			$this->Cell(180,40,"Invitation de M. ou Mme " . utf8_decode($nom) ." " .utf8_decode($prenom) );
+			$this->Ln(50);
+			$this->Image($file,80,50);
+			$this->Ln(50);
+
+		}
+	}
+
+
+
+	$pdf = new PDF();
+	$header = array('Nom', 'Prenom', 'Date', 'repas', 'Entrepot', 'Scapsav');
+
+	$pdf->SetFont('Arial','',14);
+	$pdf->AddPage();
+
+	$pdf->FancyTable($header,$inscr);
+	foreach ($inscr as $img) {
+		$pdf->AddPage();
+    	$fileName=$img['id_galec'];
+		$file=SITE_ADDRESS."/public/img/qrcode/" .$img['qrcode'] . ".jpg";
+		$pdf->genQrCode($file, $img['nom'],$img['prenom']);
+	}
+	// génération du pdf
+	$pdf->Output("F","D:\www\_intranet\upload\\" .$fileName.".pdf");
+
+	//GENERATION DU MAIL AVEC PDF
+	$subject="Portail BTLec Est - vos invitations au salon BTlec 2018";
+	$to=$_POST['email'];
+	$from="ne_pas_repondre@btlec.fr";
+	$message="Bonjour,<br>Vous trouverez ci joint vos invitations au salon.";
+	// $fileatt="D:\www\_intranet\upload\\".$_SESSION['id_galec'] . ".pdf";
+	$file=$fileName .".pdf";
+	$path="D:\www\_intranet\upload\\";
+	// require '../../functions/mail.fn.php';
+
+	// sendMailSalon($destinataire,$objet,$emplate,$name,$magName, $link);
+	$sentMail=mail_attachment($file,$path,$to,$from,"Portail BTLEC EST",$from,$subject, $message);
+	 //header("Location:inscription2.php#inscription-lk");
+
+
+}
 
 //----------------------------------------------------
 // VIEW - HEADER
@@ -59,8 +230,20 @@ require '../view/_navbar.php';
 	<!-- main title -->
 	<div class="row bgwhite">
 		<div class="int-padding">
-			<h1 class="blue-text text-darken-4">SALON TECHNIQUE BTLEC Est 2018<br><span class="sub-h1"><i class="fa fa-calendar" aria-hidden="true"></i> du dd/mm/yyyy au dd/mm/yyyy</span></h1>
+			<h1 class="blue-text text-darken-4">SALON TECHNIQUE BTLEC Est 2018<br><span class="sub-h1"><i class="fa fa-calendar" aria-hidden="true"></i> du 12/06/2018 au 13/06/2018</span></h1>
 			<br>
+			<!-- MESSAGE SUCCES - ERREUR ENVOI DE MAIL -->
+			<p>
+				<?php
+				if(isset($_SESSION['notification']['message']))
+				{
+					echo "<p class='green-text'>" . $_SESSION['notification']['message']."</p>";
+					$_SESSION['notification']=[];
+				}
+
+				?>
+
+				</p>
 			<div class="mini-nav center">
 				<br>
 				<ul>
@@ -102,8 +285,7 @@ require '../view/_navbar.php';
 			<h4 class="blue-text text-darken-4" id="salon-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i>LE SALON BTLEC 2018 </h4>
 			<hr>
 			<br><br>
-
-			<p>Le salon BTlec 2018 se déroulera sur 2 jours, le <strong>xxxxxxx</strong> et le <strong>xxxxxxxx</strong>. Nous vous proposons cette année, de profiter de votre venue au salon pour visiter notre entrepôt.</p>
+			<p>Le salon BTlec 2018 se déroulera sur 2 jours, le <strong>12 juin 2018</strong> et le <strong>13 juin</strong>. Nous vous proposons cette année, de profiter de votre venue au salon pour visiter notre entrepôt et la SCAPSAV.</p>
 			<p>Enfin d'organiser au mieux le déroulement du salon, nous vous prions de bien vouloir remplir le <a href="#inscription-lk" class="blue-link">formulaire d'inscription</a>.  Sous le formulaire d'inscription, vous trouverez les informations sur les <a href="#modalite-lk" class="blue-link">modalités d'accueil et d'accès</a> à BTlec Est</p>
 			<p>Un badge vous sera remis à votre entrée du salon.</p>
 
@@ -114,16 +296,16 @@ require '../view/_navbar.php';
 	<!-- modalités -->
 	<div class="row bggrey">
 		<div class="int-padding">
-			<h4 class="blue-text text-darken-4" id="modalite-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i>MODALITES D'ACCEUIL ET ACCES</h4>
+			<h4 class="blue-text text-darken-4" id="modalite-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i>MODALITES D'ACCUEIL ET ACCES</h4>
 			<hr>
 			<br><br>
 			<ul class="browser-default">
-				<li>restauration : un petit déjeuner vous sera servi sur le salon et un buffet traiteur vous accueillera le xxxxxx</li>
+				<li>restauration : un petit déjeuner vous sera servi sur le salon et un buffet traiteur vous accueillera le 13 juin</li>
 				<li>Sociétés de taxi :
 					<ul class="browser-default">
-						<li><strong>taxi city</strong> - 06 64 90 93 43</li>
+						<li><strong><a href="http://www.taxi-city-reims.com" target="_blank">taxi city</a></strong> - 06 64 90 93 43</li>
 						<li><strong>taxis du vignoble</strong> - 06 06 60 60 20</li>
-						<li><strong>AID Taxis</strong> - 06 16 17 68 70 ou 03 26 85 80 73</li>
+						<li><strong><a href="http://www.aid-taxi.com" target="_blank">AID Taxis</a></strong> - 06 16 17 68 70 ou 03 26 85 80 73</li>
 					</ul>
 				</li>
 				<li>venir à BTlec : <a href="../mag/google-map.php" class="blue-link">coordonnées gps, carte</a></li>
@@ -137,89 +319,127 @@ require '../view/_navbar.php';
 	<!-- form inscription -->
 	<div class="row bgwhite">
 		<div class="int-padding">
-			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true" id="inscription-lk"></i>FORMULAIRE D'INSCRIPTION </h4>
+			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true" id="inscription-lk"></i>INSCRIPTIONS</h4>
 			<hr>
 			<br><br>
-			<?php if($inscr): ?>
-			<p> Vous pouvez modifier la liste des participants directement dans le formulaire. N'oubliez pas de cliquer sur le bouton envoyer pour nous la faire parvenir.</p>
-			<?php endif; ?>
+			<!-- INSCRIPTION JOUR 1 -->
+			<h5 class="blue-text text-darken-4">Liste des inscrits : </h5>
 			<p></p>
-			<form method="post" id="insert_form" >
-				<table class="bordered" id="item_table">
+			<table class="striped responsive-table" id="item_table">
 					<tr>
 						<th>Nom</th>
-						<th>Prenom</th>
-						<th>Fonction</th>
+						<th>Prénom</th>
 						<th>Date</th>
 						<th>Repas</th>
-						<th>Visite de l'entrepot</th>
-						<th>Visite de la scapsav</th>
-						<th>ajouter/supprimer<br> des lignes</th>
+						<th>Visite <br>entrepot</th>
+						<th>Visite <br>Scapsav</th>
+						<th>Supprimer</th>
 					</tr>
-
 				<?php if($inscr): ?>
 				<!-- si le mag a déja renvoyé des inscriptions -->
 					<?php foreach($inscr as $detInscr): ?>
-						<tr>
-						<td><input type="text" name="nom[]" placeholder="nom" class="nom" value="<?=$detInscr['nom']?>"></td>
-						<td><input type="text" name="prenom[]" placeholder="prenom" class="prenom" value="<?=$detInscr['prenom']?>" ></td>
-						<td><input type="text" name="fonction[]" placeholder="fonction" class="fonction" value="<?=$detInscr['fonction']?>"></td>
-						<td><select class="browser-default date-salon" name="date-salon[]" >
-								<option value="01/03/2018" <?=$detInscr['date']=='01/03/2018' ? ' selected="selected" ' : ''?> >01/03/2018</option>
-								<option value="02/03/2018" <?=$detInscr['date']=='02/03/2018' ? ' selected="selected" ' : ''?> >02/03/2018</option>
-							</select>
-						</td>
-						<td>
-							<select class="browser-default repas" name="repas[]" >
-								<option value="oui" <?=$detInscr['repas']=='oui' ? ' selected="selected" ' : ''?> >Oui</option>
-								<option value="non" <?=$detInscr['repas']=='non' ? ' selected="selected" ' : ''?> >Non</option>
-							</select>
-						</td>
-						<td>
-							<select class="browser-default entrepot" name="entrepot[]">
-								<option value="oui" <?=$detInscr['entrepot']=='oui' ? ' selected="selected" ' : ''?> >Oui</option>
-								<option value="non" <?=$detInscr['entrepot']=='non' ? ' selected="selected" ' : ''?> >Non</option>
-							</select></td>
-						<td>
-							<select class="browser-default sav" name="sav[]">
-								<option value="oui" disabled selected>scapsav</option>
-								<option value="oui" <?=$detInscr['scapsav']=='oui' ? ' selected="selected" ' : ''?> >Oui</option>
-								<option value="non" <?=$detInscr['scapsav']=='non' ? ' selected="selected" ' : ''?> >Non</option>
-							</select>
-						</td>
-						<td><span class="add"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></span><span class="remove"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></span></td>
-					</tr>
+						<!-- inscrit les 2 jour -->
+						<?php if($detInscr['date1']!="" && $detInscr['date2'] != ""): ?>
+							<tr>
+								<td><?= $detInscr['nom']?></td>
+								<td><?= $detInscr['prenom']?></td>
+								<td><?= $detInscr['date1']?><br><?= $detInscr['date2']?></td>
+								<td>--<br><?= $detInscr['repas2']?></td>
+								<td><?= $detInscr['entrepot1']?><br><?= $detInscr['entrepot2']?></td>
+								<td><?= $detInscr['scapsav1']?><br><?= $detInscr['scapsav2']?></td>
+								<td><a href="delete.php?id=<?= $detInscr['id']?>"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a></td>
+							</tr>
+							<!-- inscrit uniquement jour 1 -->
+						<?php elseif($detInscr['date1']!=""): ?>
+							<tr>
+								<td><?= $detInscr['nom']?></td>
+								<td><?= $detInscr['prenom']?></td>
+								<td><?= $detInscr['date1']?></td>
+								<td>--</td>
+								<td><?= $detInscr['entrepot1']?></td>
+								<td><?= $detInscr['scapsav1']?></td>
+								<td><a href="delete.php?id=<?= $detInscr['id']?>"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a></td>
+							</tr>
+							<!-- inscrit uniquement jour 2 -->
+						<?php else: ?>
+							<tr>
+								<td><?= $detInscr['nom']?></td>
+								<td><?= $detInscr['prenom']?></td>
+								<td><?= $detInscr['date2']?></td>
+								<td><?= $detInscr['repas2']?></td>
+								<td><?= $detInscr['entrepot2']?></td>
+								<td><?= $detInscr['scapsav2']?></td>
+								<td><a href="delete.php?id=<?= $detInscr['id']?>"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a></td>
+							</tr>
 
+							<?php endif; ?>
 					<?php endforeach ?>
-				<?php else: ?>
-					<tr>
-						<td><input type="text" name="nom[]" placeholder="nom" class="nom"></td>
-						<td><input type="text" name="prenom[]" placeholder="prenom" class="prenom"></td>
-						<td><input type="text" name="fonction[]" placeholder="fonction" class="fonction"></td>
-						<td><select class="browser-default date-salon" name="date-salon[]" ><option value="" disabled selected>date</option><option value="01/03/2018">01/03/2018</option><option value="02/03/2018">02/03/2018</option></select></td>
-						<td><select class="browser-default repas" name="repas[]" ><option value="" disabled selected>repas</option><option value="oui">Oui</option><option value="non">Non</option></select></td>
-						<td><select class="browser-default entrepot" name="entrepot[]"><option value="oui" disabled selected>entrepot</option><option value="oui">Oui</option><option value="non">Non</option></select></td>
-						<td><select class="browser-default sav" name="sav[]"><option value="oui" disabled selected>scapsav</option><option value="oui">Oui</option><option value="non">Non</option></select></td>
-						<td><span class="add"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></span><span class="remove"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></span></td>
-					</tr>
-				<?php endif; ?>
 
+					<?php else: ?>
+						<!-- si pas d'inscrit du tout -->
+						<tr>
+							<td colspan="7">Aucun participant</td>
+						</tr>
+					<?php endif; ?>
 
-				</table>
-					<!-- <p><label>Merci d'indiquer votre adresse mail</label><br><input class="browser-default" type="email" required="require" name="email" placeholder="votre email"></p> -->
+			</table>
+				<br><br>
 					<?php
 					if($_SESSION['type']<>'mag')
 					{
 						echo "<p class='red-text'>L'inscription est réservée aux magasins, vous ne pourrez pas utiliser le formulaire si votre compte utilisateur n'est pas rattaché à un magasin</p>";
 					}
 					?>
+				<p class="align-right"><button class="btn modal-trigger" data-target="modal">Ajouter un participant</button></p>
+				<!-- MODAL FORM  MAG-->
+				<div class="modal" id="modal">
+					<div class="modal-content">
+						<form method="post" id="add" action="<?=$_SERVER['PHP_SELF']?>">
+							<p>PARTICIPANT :</p>
+							<p>
+								<input type="text" name="nom" placeholder="nom" class="nom" required>
+								<input type="text" name="prenom" placeholder="prenom" class="prenom" required></p>
+								<select name="fonction" class="browser-default fonction" required>
+									<option value="ADHERENT">ADHERENT</option>
+									<option value="CHEF DE DEPARTEMENT">CHEF DE DEPARTEMENT</option>
+									<option value="CHEF DE RAYON">CHEF DE RAYON</option>
+									<option value="CHEF EC">CHEF EC</option>
+									<option value="DIRECTEUR">DIRECTEUR</option>
+									<option value="DIRECTEUR ADJOINT">DIRECTEUR ADJOINT</option>
+									<option value="RESPONSABLE NON ALIMENTAIRE">RESPONSABLE NON ALIMENTAIRE</option>
+									<option value="SAV">SAV</option>
+									<option value="VENDEUR">VENDEUR</option>
+								</select>
 
-					<p class="align-right"><button class="btn" type="submit" name="inscription">Envoyer</button></p>
+							<p>Quel(s) jour(s) souhaitez vous venir au salon ? </p>
+							<div id="zone1"><p><input type="checkbox" name="jour1" value="oui" id="jour1" class="filled-in"><label for="jour1">Mardi 12 juin 2018</label></p>
+							<p id="day1"></p></div>
+							<div id="zone2"><p><input type="checkbox" name="jour2" value="oui" id="jour2" class="filled-in"><label for="jour2">Mercredi 13 juin 2018</label></p>
+							<p id="day2"></p></div>
+							<p class="align-right"><button class="btn" type="submit" name="inscrire">Inscrire</button></p>
+						</form>
+					</div>
+				</div>
 
-			</form>
-			<span id="error"></span>
-			<br><br><br>
-			<p class="right-align"><a href="#up" class="blue-link">retour</a></p>
+				<br><br>
+				<h5 class="blue-text text-darken-4">Mes invitations</h5>
+				<ul class="browser-default line-height">
+					<li>
+						<a href="<?= SITE_ADDRESS?>/public/salon/pdfgen.php" target="_blank">Voir / enregistrer mes invitations</a>
+					</li>
+					<li>Recevoir mes invitations par mail
+					</li>
+				</ul>
+				<form method="post" id="sendmail" action="<?=$_SERVER['PHP_SELF']?>">
+				<p>
+					<label>Votre adresse mail : </label><br><input class="browser-default" type="email" required="require" name="email">
+					<button class="btn" type="submit" name="send">Envoyer</button>
+				</p>
+				</form>
+
+
+				<p class="right-align"><a href="#up" class="blue-link">retour</a></p>
+
 
 		</div>
 	</div>
@@ -227,144 +447,93 @@ require '../view/_navbar.php';
 
 </div>   <!--fin container -->
 
+	<script>
+		$(document).ready(function(){
+			$('.modal').modal();
+
+			$(":checkbox#jour1").change(function(){
+				var dayone="";
+				// dayone +="<p>Prendrez vous votre repas à BTlec ?</p>";
+				// dayone +="<p><input type='radio' name='repas1' value='oui' id='jour1oui' class='fill-in'><label for='jour1oui'>oui</label> &nbsp; &nbsp; &nbsp;";
+				// dayone+="<input type='radio' name='repas1' value='non'  id='jour1non' class='fill-in'><label for='jour1non'>non</label><br><span id='missingjour1' class='red-text'></span></p>";
+				dayone +="<p>Souhaitez-vous visiter la SCAPSAV ?</p>";
+				dayone +="<p><input type='radio' name='scapsav1' value='oui' id='scapsav1oui' class='fill-in'><label for='scapsav1oui'>oui</label>&nbsp; &nbsp; &nbsp;";
+				dayone +="<input type='radio' name='scapsav1' value='non' id='scapsav1non' class='fill-in'><label for='scapsav1non'>non</label><br><span id='missingscapsav1' class='red-text'></span></p>";
+				dayone +="<p>Souhaitez-vous visiter l'entrepôt ?</p>";
+				dayone +="<p><input type='radio' name='entrepot1' value='oui' id='entrepot1oui' class='fill-in'><label for='entrepot1oui'>oui</label>&nbsp; &nbsp; &nbsp;";
+				dayone +="<input type='radio' name='entrepot1' value='non' id='entrepot1non' class='fill-in'><label for='entrepot1non'>non</label><br><span id='missingentrepot1' class='red-text'></span></p>";
 
 
+				// si case jour coché, on ajoute les options
+				// si décoche, on les supprime
+				if($('input:checkbox[name=jour1]').is(':checked'))
+				{
+					$('#day1').append(dayone);
+				}
+				else
+				{
+					$('#day1').empty();
+				}
+
+			});
+
+			$(":checkbox#jour2").change(function(){
+				var daytwo="";
+				daytwo +="<p>Prendrez vous votre repas à BTlec ?</p>";
+				daytwo +="<p><input type='radio' name='repas2' value='oui' id='jour2oui' class='fill-in'><label for='jour2oui'>oui</label>&nbsp; &nbsp; &nbsp;";
+				daytwo+="<input type='radio' name='repas2' value='non'  id='jour2non' class='fill-in'><label for='jour2non'>non</label><br><span id='missingjour2' class='red-text'></span></p>";
+				daytwo +="<p>Souhaitez-vous visiter la SCAPSAV ?</p>";
+				daytwo +="<p><input type='radio' name='scapsav2' value='oui' id='scapsav2oui' class='fill-in'><label for='scapsav2oui'>oui</label>&nbsp; &nbsp; &nbsp;";
+				daytwo +="<input type='radio' name='scapsav2' value='non' id='scapsav2non' class='fill-in'><label for='scapsav2non'>non</label><br><span id='missingscapsav2' class='red-text'></span></p>";
+				daytwo +="<p>Souhaitez-vous visiter l'entrepôt ? </p>";
+				daytwo +="<p><input type='radio' name='entrepot2' value='oui' id='entrepot2oui' class='fill-in'><label for='entrepot2oui'>oui</label>&nbsp; &nbsp; &nbsp;";
+				daytwo +="<input type='radio' name='entrepot2' value='non' id='entrepot2non' class='fill-in'><label for='entrepot2non'>non</label><br><span id='missingentrepot2' class='red-text'></span></p>";
+				if($('input:checkbox[name=jour2]').is(':checked'))
+				{
+					$('#day2').append(daytwo);
+				}
+				else
+				{
+					$('#day2').empty();
+				}
+
+			});
+			$("form#add").submit(function(event){
+				// validation
+				// jour1
+				// if($('#jour1oui').prop('checked')==false && $('#jour1non').prop('checked')==false){
+				// 	$('#missingjour1').text("Veuillez selectionner une option");
+				// 		event.preventDefault();
+				// }
+				if($('#scapsav1oui').prop('checked')==false && $('#scapsav1non').prop('checked')==false){
+					$('#missingscapsav1').text("Veuillez selectionner une option");
+						event.preventDefault();
+				}
+				if($('#entrepot1oui').prop('checked')==false && $('#entrepot1non').prop('checked')==false){
+					$('#missingentrepot1').text("Veuillez selectionner une option");
+						event.preventDefault();
+				}
+				//jour2
+				if($('#jour2oui').prop('checked')==false && $('#jour2non').prop('checked')==false){
+					$('#missingjour2').text("Veuillez selectionner une option");
+						event.preventDefault();
+				}
+				if($('#scapsav2oui').prop('checked')==false && $('#scapsav2non').prop('checked')==false){
+					$('#missingscapsav2').text("Veuillez selectionner une option");
+						event.preventDefault();
+				}
+				if($('#entrepot2oui').prop('checked')==false && $('#entrepot2non').prop('checked')==false){
+					$('#missingentrepot2').text("Veuillez selectionner une option");
+						event.preventDefault();
+				}
 
 
+			})
 
-
-
-
-
-
-
-<!-- </div> -->
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> -->
-<script>
-	$(document).ready(function(){
-		$(document).on('click', '.add', function(){
-			var html = '';
-			html += '<tr>';
-			html += '<td><input type="text" name="nom[]" placeholder="nom" class="nom"></td>';
-			html += '<td><input type="text" name="prenom[]" placeholder="prenom" class="prenom"></td>';
-			html += '<td><input type="text" name="fonction[]" placeholder="fonction" class="fonction"></td>';
-			html += '<td><select class="browser-default date-salon" name="date-salon[]" ><option value="" disabled selected>date</option><option value="01/03/2018">01/03/2018</option><option value="02/03/2018">02/03/2018</option></select></td>';
-			html += '<td><select class="browser-default repas" name="repas[]" ><option value="" disabled selected>repas</option><option value="oui">Oui</option><option value="non">Non</option></select></td>';
-			html += '<td><select class="browser-default entrepot" name="entrepot[]"><option value="oui" disabled selected>entrepot</option><option value="oui">Oui</option><option value="non">Non</option></select></td>';
-			html += '<td><select class="browser-default sav" name="sav[]"><option value="oui" disabled selected>scapsav</option><option value="oui">Oui</option><option value="non">Non</option></select></td>';
-			html += '<td><span class="add"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></span><span class="remove"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></span></td>';
-			html += '</tr>';
-
-
-
-			$('#item_table').append(html);
 		});
-
-		$(document).on('click', '.remove', function(){
-			$(this).closest('tr').remove();
-		});
+	</script>
 
 
-		$('#insert_form').on('submit', function(event){
-
-			event.preventDefault();
-			var error = '';
-
-			$('.nom').each(function(){
-				var count = 1;
-				if($(this).val() == '')
-				{
-					error += "<p>Merci de saisir un nom, ligne "+count+" </p>";
-					return false;
-				}
-				count = count + 1;
-			});
-
-			$('.prenom').each(function(){
-				var count = 1;
-				if($(this).val() == '')
-				{
-					error += "<p>Merci de saisir un prenom, ligne "+count+" </p>";
-					return false;
-				}
-				count = count + 1;
-			});
-
-			$('.fonction').each(function(){
-				var count = 1;
-				if($(this).val() == '')
-				{
-					error += "<p>Merci de saisir une fonction, ligne "+count+" </p>";
-					return false;
-				}
-				count = count + 1;
-			});
-
-			$('.date-salon').each(function(){
-
-				var datesalon = $(this).val();
-				if(!datesalon)
-				{
-					error += "<p>Merci de préciser une date pour chaque participant</p>";
-					return false;
-				}
-
-			});
-
-			$('.repas').each(function(){
-				var repas = $(this).val();
-				if(!repas)
-				{
-					error += "<p>Merci de préciser si les personnes comptent participer au repas</p>";
-					return false;
-				}
-
-			});
-
-			$('.entrepot').each(function(){
-				var entrepot = $(this).val();
-				if(!entrepot)
-				{
-					error += "<p>Merci de préciser si les personnes souhaitent visiter l'entrepôt</p>";
-					return false;
-				}
-			});
-
-			$('.sav').each(function(){
-				var sav = $(this).val();
-				if(!sav)
-				{
-					error += "<p>Merci de préciser si les personnes souhaitent visiter la scapsav</p>";
-					return false;
-				}
-			});
-			var form_data = $(this).serialize();
-			if(error == '')
-			{
-				// console.log(error);
-				$.ajax({
-					url:"insert.php",
-					method:"POST",
-					data:form_data,
-					success:function(data)
-					{
-						if(data == 'ok')
-						{
-							console.log("data ok");
-							$('#item_table').find("tr:gt(0)").remove();
-							$('#error').html('<div class="alert alert-success">Inscription réussie - vous allez recevoir un mail de confirmation</div>');
-						}
-					}
-				});
-			}
-			else
-			{
-				$('#error').html('<div class="alert alert-danger">'+error+'</div>');
-			}
-		});
-
-	});
-</script>
 <?php
 //----------------------------------------------------
 // VIEW - FOOTER

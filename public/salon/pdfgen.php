@@ -116,7 +116,8 @@ class PDF extends FPDF
 
 	function genQrCode($file,$nom,$prenom){
 		$this->SetFont('Arial','',14);
-		$this->Cell(180,40,"Invitation de M. ou Mme " . $nom ." " .$prenom );
+		$this->Cell(180,40,"Invitation de M. ou Mme " . utf8_decode($nom) ." " .utf8_decode($prenom) );
+		// $this->Cell(180,40,"Invitation de M. ou Mme " . $nom ." " .$prenom );
 		$this->Ln(50);
 		$this->Image($file,80,50);
 		$this->Ln(50);
