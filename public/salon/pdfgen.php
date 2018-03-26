@@ -75,7 +75,7 @@ class PDF extends FPDF
 		$this->SetLineWidth(.3);
 		$this->SetFont('','B');
     // En-tête
-		$w = array(30, 30, 30, 30, 30, 30);
+		$w = array(40, 40, 30, 20, 25, 25);
     // parcours les colonnes
 		for($i=0;$i<count($header);$i++)
 			$this->Cell($w[$i],7,$header[$i],1,0,'C',true);
@@ -90,8 +90,8 @@ class PDF extends FPDF
 		foreach($inscr as $res)
 		{
 			if($res['date1']!=""){
-				$this->Cell($w[0],6,utf8_decode($res['nom']),'LR',0,'L',$fill);
-				$this->Cell($w[1],6,utf8_decode($res['prenom']),'LR',0,'L',$fill);
+				$this->Cell($w[0],6,ucfirst(strtolower(utf8_decode($res['nom']))),'LR',0,'L',$fill);
+				$this->Cell($w[1],6,ucfirst(strtolower(utf8_decode($res['prenom']))),'LR',0,'L',$fill);
 				$this->Cell($w[2],6,$res['date1'],'LR',0,'R',$fill);
 				$this->Cell($w[3],6,$res['repas1'],'LR',0,'R',$fill);
 				$this->Cell($w[4],6,$res['entrepot1'],'LR',0,'R',$fill);
@@ -100,8 +100,8 @@ class PDF extends FPDF
 				$fill = !$fill;
 			}
 			if($res['date2']!=""){
-				$this->Cell($w[0],6,utf8_decode($res['nom']),'LR',0,'L',$fill);
-				$this->Cell($w[1],6,utf8_decode($res['prenom']),'LR',0,'L',$fill);
+				$this->Cell($w[0],6,ucfirst(strtolower(utf8_decode($res['nom']))),'LR',0,'L',$fill);
+				$this->Cell($w[1],6,ucfirst(strtolower(utf8_decode($res['prenom']))),'LR',0,'L',$fill);
 				$this->Cell($w[2],6,$res['date2'],'LR',0,'R',$fill);
 				$this->Cell($w[3],6,$res['repas2'],'LR',0,'R',$fill);
 				$this->Cell($w[4],6,$res['entrepot2'],'LR',0,'R',$fill);

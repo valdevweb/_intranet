@@ -110,65 +110,70 @@ require '../../functions/mail.fn.php';
 	class PDF extends FPDF
 	{
 // Tableau coloré
-		function FancyTable($header, $inscr)
-		{
-			$this->Image('bt300.jpg',5,5);
-			$this->Ln(50);
-			$this->SetFont('Arial','',24);
-			$this->Cell(180,0,'INSCRIPTIONS SALON BTLEC 2018');
-			$this->SetFont('Arial','',14);
-			$this->Ln(40);
-			$this->Cell(8,0,'Bonjour,');
-			$this->Ln(10);
-			$this->Cell(8,0,utf8_decode('Vous trouverez ci dessous le récapitulatif des inscrits pour votre magasin pour le'));
-			$this->Ln(10);
-			$this->Cell(8,0,'salon BTLec EST du 12 au 13 juin 2018');
-			$this->Ln(10);
-			$this->Ln(20);
-			$this->SetFillColor(255,0,0);
-			$this->SetTextColor(255);
-			$this->SetDrawColor(128,0,0);
-			$this->SetLineWidth(.3);
-			$this->SetFont('','B');
-    // En-tête
-			$w = array(30, 30, 30, 30, 30, 30);
-    // parcours les colonnes
-			for($i=0;$i<count($header);$i++)
-				$this->Cell($w[$i],7,$header[$i],1,0,'C',true);
-			$this->Ln();
-    // Restauration des couleurs et de la police
-			$this->SetFillColor(224,235,255);
-			$this->SetTextColor(0);
-			$this->SetFont('Arial');
-    // Données
-			$fill = false;
+function FancyTable($header, $inscr)
+	{
+		$this->Image('bt300.jpg',5,5);
+		$this->Ln(50);
+	   // Couleurs, épaisseur du trait et police grasse
+		$this->SetFont('Arial','',24);
+		$this->Cell(180,0,'INSCRIPTIONS SALON BTLEC 2018');
+		$this->SetFont('Arial','',14);
+		$this->Ln(40);
+		$this->Cell(8,0,'Bonjour,');
+		$this->Ln(10);
+		$this->Cell(8,0,utf8_decode('Vous trouverez ci dessous le récapitulatif des inscrits pour votre magasin pour le'));
+		$this->Ln(10);
+		$this->Cell(8,0,'salon BTLec EST du 12 au 13 juin 2018');
+		$this->Ln(10);
+    // $this->Cell(8,0,'Liste des inscrits');
 
-			foreach($inscr as $res)
-			{
-				if($res['date1']!=""){
-					$this->Cell($w[0],6,utf8_decode($res['nom']),'LR',0,'L',$fill);
-					$this->Cell($w[1],6,utf8_decode($res['prenom']),'LR',0,'L',$fill);
-					$this->Cell($w[2],6,$res['date1'],'LR',0,'R',$fill);
-					$this->Cell($w[3],6,"--",'LR',0,'R',$fill);
-					$this->Cell($w[4],6,$res['entrepot1'],'LR',0,'R',$fill);
-					$this->Cell($w[5],6,$res['scapsav1'],'LR',0,'R',$fill);
-					$this->Ln();
-					$fill = !$fill;
-				}
-				if($res['date2']!=""){
-					$this->Cell($w[0],6,utf8_decode($res['nom']),'LR',0,'L',$fill);
-					$this->Cell($w[1],6,utf8_decode($res['prenom']),'LR',0,'L',$fill);
-					$this->Cell($w[2],6,$res['date2'],'LR',0,'R',$fill);
-					$this->Cell($w[3],6,$res['repas2'],'LR',0,'R',$fill);
-					$this->Cell($w[4],6,$res['entrepot2'],'LR',0,'R',$fill);
-					$this->Cell($w[5],6,$res['scapsav2'],'LR',0,'R',$fill);
-					$this->Ln();
-					$fill = !$fill;
-				}
+		$this->Ln(20);
+    // $this->Text(8,0,);
+
+		$this->SetFillColor(255,0,0);
+		$this->SetTextColor(255);
+		$this->SetDrawColor(128,0,0);
+		$this->SetLineWidth(.3);
+		$this->SetFont('','B');
+    // En-tête
+		$w = array(40, 40, 30, 20, 25, 25);
+    // parcours les colonnes
+		for($i=0;$i<count($header);$i++)
+			$this->Cell($w[$i],7,$header[$i],1,0,'C',true);
+		$this->Ln();
+    // Restauration des couleurs et de la police
+		$this->SetFillColor(224,235,255);
+		$this->SetTextColor(0);
+		$this->SetFont('Arial');
+    // Données
+		$fill = false;
+
+		foreach($inscr as $res)
+		{
+			if($res['date1']!=""){
+				$this->Cell($w[0],6,ucfirst(strtolower(utf8_decode($res['nom']))),'LR',0,'L',$fill);
+				$this->Cell($w[1],6,ucfirst(strtolower(utf8_decode($res['prenom']))),'LR',0,'L',$fill);
+				$this->Cell($w[2],6,$res['date1'],'LR',0,'R',$fill);
+				$this->Cell($w[3],6,$res['repas1'],'LR',0,'R',$fill);
+				$this->Cell($w[4],6,$res['entrepot1'],'LR',0,'R',$fill);
+				$this->Cell($w[5],6,$res['scapsav1'],'LR',0,'R',$fill);
+				$this->Ln();
+				$fill = !$fill;
 			}
-    // Trait de terminaison
-			$this->Cell(array_sum($w),0,'','T');
+			if($res['date2']!=""){
+				$this->Cell($w[0],6,ucfirst(strtolower(utf8_decode($res['nom']))),'LR',0,'L',$fill);
+				$this->Cell($w[1],6,ucfirst(strtolower(utf8_decode($res['prenom']))),'LR',0,'L',$fill);
+				$this->Cell($w[2],6,$res['date2'],'LR',0,'R',$fill);
+				$this->Cell($w[3],6,$res['repas2'],'LR',0,'R',$fill);
+				$this->Cell($w[4],6,$res['entrepot2'],'LR',0,'R',$fill);
+				$this->Cell($w[5],6,$res['scapsav2'],'LR',0,'R',$fill);
+				$this->Ln();
+				$fill = !$fill;
+			}
 		}
+    // Trait de terminaison
+		$this->Cell(array_sum($w),0,'','T');
+	}
 
 		function genQrCode($file,$nom,$prenom){
 		// $this->Cell(8,0,utf8_decode('Vous trouverez ci dessous le récapitulatif des inscrits pour votre magasin pour le'));
