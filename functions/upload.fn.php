@@ -26,9 +26,6 @@ function isFileToUpload()
 }
 
 
-
-
-
 // formatage du tableau pour multi upload => plus utilisé avec la solution du multi input
 function formatArray($file)
 {
@@ -67,18 +64,14 @@ function checkUploadNew($location, $pdoBt)
 		if(move_uploaded_file($tmp, $location.$filename))
 		{
 			array_push($filenameArray,$filename);
-	// $msg=array('filename' =>$filename);
 		}
-	// else
-	// {
-	// 	$msg=array(	'err' =>'erreur pendant l\'envoi');
-	// }
 	}
 	return $filenameArray;
 }
 
+
 // upload le fichier si mime ok
-function checkUploadSameFilename($location)
+function uploadFileNoHash($location)
 {
 	$filenameArray=array();
 	foreach ($_FILES as $key => $file)
@@ -92,6 +85,7 @@ function checkUploadSameFilename($location)
 		$error=$file['error'];
 		$size=$file['size'];
 		$type=$file['type'];
+
 	// si le déplacement du fichier tmp vers le rep d'upload ok
 		if(move_uploaded_file($tmp, $location.$filename))
 		{
@@ -100,6 +94,34 @@ function checkUploadSameFilename($location)
 	}
 	return $filenameArray;
 }
+
+
+
+
+
+//upload le fichier si mime ok
+// function checkUploadSameFilename($location)
+// {
+// 	$filenameArray=array();
+// 	foreach ($_FILES as $key => $file)
+// 	{
+
+
+// 		$filename=$file['name'];
+// 		$tmp=explode('.',$filename);
+// 		$ext=end($tmp);
+// 		$tmp=$file['tmp_name'];
+// 		$error=$file['error'];
+// 		$size=$file['size'];
+// 		$type=$file['type'];
+// 	// si le déplacement du fichier tmp vers le rep d'upload ok
+// 		if(move_uploaded_file($tmp, $location.$filename))
+// 		{
+// 			array_push($filenameArray,$filename);
+// 		}
+// 	}
+// 	return $filenameArray;
+// }
 
 // renvoi un array : 0=ok ou interdit 1=type de fichier
 function isAllowed($tmp, $encoding=true)

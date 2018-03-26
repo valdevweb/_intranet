@@ -1,4 +1,6 @@
 <?php
+
+//upload gazette avec insertion info dans db
 function checkUpload($upload, $location,$category,$dateDeb,$dateFin, $pdoBt)
 {
 	$msg=array();
