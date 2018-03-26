@@ -7,7 +7,7 @@ class CSV
 	static function export($datas,$filename)
 	{
 		header('Content-type: text/csv;');
-		header('Content-Disposition: attachment;filename="'.$filename.'.xls"');
+		header('Content-Disposition: attachment;filename="'.$filename.'.csv"');
 		$i=0;
 		foreach ($datas as $v)
 		{
