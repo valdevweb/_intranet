@@ -54,3 +54,15 @@ h1{
   padding: 20px !important;
 
 }
+a.blue-link{
+  color: #1976D2 !important;
+  font-weight: bold;
+}
+
+a:hover.blue-link{
+    color: #1976D2 !important;
+    font-weight: bold;
+    letter-spacing: 0.2px;
+    text-decoration: underline;
+
+}

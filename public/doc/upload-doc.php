@@ -83,14 +83,14 @@ if(isset($_POST['sendOdr'])){
     	}
     	if(insertDoc($pdoBt,"listing des ODR", $file))
 		{
-			$success[]="l'odr a bien été enregistrée " .$file;
+			$success[]="l'odr a bien été enregistrée. Nom du fichier :  " .$file;
 			unset($_POST);
 			unset($_FILES);
 			// unset($success);
 		}
 		else
 		{
-			$errors[]="l'odr n'a pas pu être ajoutée" .$file;
+			$errors[]="l'odr n'a pas pu être ajoutée. Nom du fichier : " .$file;
 			unset($errors);
 		}
     }
@@ -98,7 +98,61 @@ if(isset($_POST['sendOdr'])){
 	include ('../view/_errors.php');
 	$errorsDisplayOdr=ob_get_clean();
 }
+//Tickets et BRII
+//------------------------------------------------------
+//			ENVOI assortiment
+//------------------------------------------------------
 
+if(isset($_POST['sendTel'])){
+	//initialise le tableau d'erreur
+
+	//verif si tout les champ sont remplis
+	if(not_empty(['date']))
+	{
+		//vérifie si fichier à uploader
+		$isFileToUpload=isFileToUpload();
+		if (!$isFileToUpload)
+		{
+			$errors[]="aucun fichier joint";
+		}
+		else
+		{
+				$uploadDir= '..\..\..\upload\documents\\';
+				$hashedFileName= uploadFileNoHash($uploadDir);
+				$file=implode("; ", $hashedFileName);
+		 }
+	}
+	else
+	{
+		$errors[]="merci de remplir tous les champs";
+	}
+	//on n'enregistre dans la base de donnée que si on a détecté aucune erreur
+	if(count($errors)==0)
+    {
+    	if(deleteDoc($pdoBt,"Tickets et BRII"))
+    	{
+    	}
+    	else
+    	{
+			$errors[]="erreur de suppression du fichier précédant";
+    	}
+    	if(insertDoc($pdoBt,"Tickets et BRII", $file))
+		{
+			$success[]="les Tickets et BRII ont bien été enregistrés. Nom du fichier :  " .$file;
+			unset($_POST);
+			unset($_FILES);
+			// unset($success);
+		}
+		else
+		{
+			$errors[]="les Tickets et BRII n'ont pas pu être ajoutés. Nom du fichier : " .$file;
+			unset($errors);
+		}
+    }
+    ob_start();
+	include ('../view/_errors.php');
+	$errorsDisplayTel=ob_get_clean();
+}
 //------------------------------------------------------
 //			ENVOI assortiment
 //------------------------------------------------------
@@ -138,14 +192,14 @@ if(isset($_POST['sendAssort'])){
     	}
     	if(insertDoc($pdoBt,"assortiment", $file))
 		{
-			$success[]="l'assortiment a bien été enregistré " .$file;
+			$success[]="l'assortiment a bien été enregistré. Nom du fichier :  " .$file;
 			unset($_POST);
 			unset($_FILES);
 			// unset($success);
 		}
 		else
 		{
-			$errors[]="l'assortiment n'a pas pu être ajouté" .$file;
+			$errors[]="l'assortiment n'a pas pu être ajouté. Nom du fichier : " .$file;
 			unset($errors);
 		}
     }
@@ -193,14 +247,14 @@ if(isset($_POST['sendPanier'])){
     	}
     	if(insertDoc($pdoBt,"panier promo", $file))
 		{
-			$success[]="le panier promo a bien été enregistré " .$file;
+			$success[]="le panier promo a bien été enregistré. Nom du fichier :  " .$file;
 			unset($_POST);
 			unset($_FILES);
 			// unset($success);
 		}
 		else
 		{
-			$errors[]="le panier promo n'a pas pu être ajouté" .$file;
+			$errors[]="le panier promo n'a pas pu être ajouté. Nom du fichier : " .$file;
 			unset($errors);
 		}
     }
@@ -210,7 +264,63 @@ if(isset($_POST['sendPanier'])){
 }
 
 //------------------------------------------------------
-//			ENVOI panier
+//			ENVOI MDD
+//------------------------------------------------------
+
+if(isset($_POST['sendMdd'])){
+	//initialise le tableau d'erreur
+
+	//verif si tout les champ sont remplis
+	if(not_empty(['date']))
+	{
+		//vérifie si fichier à uploader
+		$isFileToUpload=isFileToUpload();
+		if (!$isFileToUpload)
+		{
+			$errors[]="aucun fichier joint";
+		}
+		else
+		{
+				$uploadDir= '..\..\..\upload\documents\\';
+				$hashedFileName= uploadFileNoHash($uploadDir);
+				$file=implode("; ", $hashedFileName);
+		 }
+	}
+	else
+	{
+		$errors[]="merci de remplir tous les champs";
+	}
+	//on n'enregistre dans la base de donnée que si on a détecté aucune erreur
+	if(count($errors)==0)
+    {
+    	if(deleteDoc($pdoBt,"point stock MDD"))
+    	{
+    	}
+    	else
+    	{
+			$errors[]="erreur de suppression du fichier précédant";
+    	}
+    	if(insertDoc($pdoBt,"point stock MDD", $file))
+		{
+			$success[]="le point stock MDD a bien été enregistré. Nom du fichier : " .$file;
+			unset($_POST);
+			unset($_FILES);
+			// unset($success);
+		}
+		else
+		{
+			$errors[]="le point stock MDD n'a pas pu être ajouté. Nom du fichier : " .$file;
+			unset($errors);
+		}
+    }
+    ob_start();
+	include ('../view/_errors.php');
+	$errorsDisplayMdd=ob_get_clean();
+}
+
+
+//------------------------------------------------------
+//			ENVOI GFK
 //------------------------------------------------------
 
 if(isset($_POST['sendGfk'])){
@@ -248,14 +358,14 @@ if(isset($_POST['sendGfk'])){
     	}
     	if(insertDoc($pdoBt,"resultats GFK", $file))
 		{
-			$success[]="les resultats GFK ont bien été enregistrés " .$file;
+			$success[]="les resultats GFK ont bien été enregistrés. Nom du fichier :  " .$file;
 			unset($_POST);
 			unset($_FILES);
 			// unset($success);
 		}
 		else
 		{
-			$errors[]="les resultats n'ont pas pu être ajoutés" .$file;
+			$errors[]="les resultats n'ont pas pu être ajoutés. Nom du fichier : " .$file;
 			unset($errors);
 		}
     }
