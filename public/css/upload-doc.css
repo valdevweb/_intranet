@@ -1,0 +1,56 @@
+h4 + hr {
+  width: 50% !important;
+  display: block !important;
+  height: 1px !important;
+  border: 0 !important;
+  border-top: 1px solid #0D47A1 !important;
+  margin: 0.6em 0 0 0 !important;
+  padding: 0 !important;
+}
+
+
+
+
+h4{
+
+	font-family: "Khand", sans-serif !important;
+	margin-bottom: 0px !important;
+	padding-bottom: 20px !important;
+
+}
+
+
+h1{
+	font-family: "Khand", sans-serif !important;
+
+}
+
+
+.fa.fa-hand-o-right {
+  padding-right: 20px;
+}
+
+
+.white-box-no-bd{
+  margin: 0 !important;
+  background-color: #fff;
+  padding: 20px !important;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  max-width: 100%;
+
+}
+
+
+.box-bd{
+  border: solid 1px #ccc ;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-box-shadow: 2px 3px 4px rgba(0, 0, 0,0.3);
+  -webkit-box-shadow: 2px 3px 4px rgba(0, 0, 0, .3);
+  box-shadow: 2px 3px 4px rgba(0, 0, 0, .3);
+  padding: 20px !important;
+
+}
