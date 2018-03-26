@@ -137,6 +137,34 @@ if(isset($_POST['connexion']))
 	</div>
 </div>
 
+<div class="modal" id="modal-new">
+	<div class="modal-content">
+		<div class="row">
+			<div class="col s2 m2 l2">
+			<img src="/_btlecest/public/img/icons/new-orange-sm.png">
+			</div>
+			<div class="col s10 m10 l10">
+				<br>
+						<h4 class="orange-text text-darken-3 center">Nouveau sur votre portail !</h4>
+					</div>
+		</div>
+		<!-- <p><a class="send-mail-to" href="#"> Réinitialiser votre mot de passe</a></p> -->
+		 <p>Ajout d'une rubrique "documents" où vous trouverez : </p>
+		 <ul  class="browser-default">
+		 	<li>le listing des BRII/ODR/ticket,</li>
+		 	<li>le panier promo,</li>
+		 	<li>l'assortiment</li>
+		 	<li>les résultats GFK</li>
+		 </ul>
+	</div>
+	<div class="modal-footer">
+		<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
+	</div>
+</div>
+
+
+
+
 <!--  Scripts-->
 
 
@@ -147,7 +175,13 @@ if(isset($_POST['connexion']))
 		// menu hamburger
 		$(".button-collapse").sideNav();
 		// ouverture fenetre modal
-		$('.modal').modal();
+		// $('.modal').show();
+
+		$('#modal1').modal();
+		$('#modal1').modal('open');
+		$('#modal-new').modal();
+		$('#modal-new').modal('open');
+
 		$(".dropdown-button").dropdown();
 		//infos bulles (navbar)
 		 $('.tooltipped').tooltip({delay: 50});
