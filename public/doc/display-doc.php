@@ -32,6 +32,9 @@ $odr=getDocument($pdoBt,"listing des ODR");
 $assortiment=getDocument($pdoBt,"assortiment");
 $panier=getDocument($pdoBt,"panier promo");
 $gfk=getDocument($pdoBt,"resultats GFK");
+$tel=getDocument($pdoBt,"Tickets et BRII");
+$mdd=getDocument($pdoBt,"point stock MDD");
+
 $month=$months[$gfk["month"]];
 
 
