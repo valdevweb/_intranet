@@ -132,6 +132,20 @@
 			echo ($_SESSION['type']=="btlec") ? $bt : '' ;
 		 ?>
 			</li>
+			<li  class='active has-sub'><a href="<?= ROOT_PATH. '/public/doc/display-doc.php'?>" >documents</a>
+				<?php ob_start(); ?>
+				<ul>
+					<li><a href="<?= ROOT_PATH. '/public/doc/upload-doc.php'?>">Ajouter des documents</a>
+					</li>
+				</ul>
+				<?php
+					$btdoc=ob_get_contents();
+					ob_end_clean();
+					echo ($_SESSION['type']=="btlec") ? $btdoc : '' ;
+
+				 ?>
+			</li>
+
 
 			<li><a href="http://172.30.92.53/scapsav/intranet/magasin.php" class="tooltipped" data-position="bottom" data-tooltip="aller sur le site scapsav">Site Scapsav</a></li>
 			<!-- <li><a href="http://site.scapsav.fr/sitescapsavdev/intranet/magasin.php" class="tooltipped" data-position="bottom" data-tooltip="aller sur le site scapsav">Site Scapsav</a></li> -->
