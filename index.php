@@ -131,6 +131,8 @@ if(isset($_POST['connexion']))
 		</form>
 		<!-- <p><a class="send-mail-to" href="#"> Réinitialiser votre mot de passe</a></p> -->
 		 <p><a class="send-mail-to" href="help.php">Contacter le service technique</a></p>
+		 <p><a class="send-mail-to" href="pwd.php">Je n'ai pas mes identifiants</a></p>
+
 	</div>
 	<div class="modal-footer">
 		<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
