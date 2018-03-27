@@ -13,6 +13,11 @@ $page=explode(".php",$page);
 $page=$page[0];
 $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 
+//------------------------------------------------------
+//			VIEW
+//------------------------------------------------------
+include('../view/_head-mig.php');
+include('../view/_navbar.php');
 
 
 
@@ -21,6 +26,8 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 //------------------------------------------------------
 require '../../functions/upload.fn.php';
 require '../../functions/global.fn.php';
+// require '../../functions/group.fn.php';
+
 // require '../../functions/odr.fn.php';
 function insertDoc($pdoBt,$type,$file)
 {
@@ -374,14 +381,35 @@ if(isset($_POST['sendGfk'])){
 	$errorsDisplayGfk=ob_get_clean();
 }
 
-
-
-
 //------------------------------------------------------
-//			VIEW
+//			GESTION DES DROITS
 //------------------------------------------------------
-include('../view/_head-mig.php');
-include('../view/_navbar.php');
+
+	// echo "<pre>";
+	// var_dump($_SESSION);
+	// echo '</pre>';
+
+ $idUser=$_SESSION['id'];
+// $idUser=1039;
+if (isUserInGroup($pdoBt,$idUser,"communication"))
+{
+	$comm=true;
+}
+else
+{
+	$comm=false;
+}
+
+if (isUserInGroup($pdoBt,$idUser,"admin"))
+{
+	$admin=true;
+}
+else
+{
+	$admin=false;
+}
+
+
 
 
 

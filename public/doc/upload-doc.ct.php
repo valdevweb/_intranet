@@ -1,11 +1,12 @@
 <div class="container" id="top">
 	<h1 class="blue-text text-darken-4">Upload des documents</h1>
 	<br><br>
-	<!-- ****************************************** -->
-	<!-- 			SECTION ODR 		 			-->
-	<!-- ****************************************** -->
 	<div class="row">
+		<!-- ****************************************** -->
+		<!-- 			SECTION ODR 		 			-->
+		<!-- ****************************************** -->
 		<!-- colonne gauche -->
+		<?php ob_start() ?>
 		<div class="col-sm-12 col-md-10">
 			<h4 class="blue-text text-darken-4" id="odr-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Upload d'ODR :</h4>
 			<hr>
@@ -38,9 +39,17 @@
 				</form>
 			</div>
 				<p class="right-align"><a href="#cssmenu" class="blue-link">retour</a></p>
-
 			<!-- ODR FORM END -->
 		</div> <!-- fin col de gauche!-->
+		<?php
+		$odrSection=ob_get_contents();
+		ob_end_clean();
+		if($comm || $admin)
+		{
+			echo $odrSection;
+		}
+		 ?>
+
 		<!-- ****************************************** -->
 		<!-- 			SIDE NAV	 		 			-->
 		<!-- ****************************************** -->
@@ -48,33 +57,53 @@
 			<h3 class="mb-4">Sections : </h3>
 
 			<ul class="nav flex-column nav-pills">
+
 				<li class="nav-item">
 					<a class="nav-link active" href="#odr-title">ODR</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="#tel-title">Tickets /BRII</a>
 				</li>
+				<?php ob_start() ?>
 				<li class="nav-item">
 					<a class="nav-link" href="#assortiment-title">Assortiment</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="#panier-title">Panier promo</a>
 				</li>
+				<?php
+				$adminOnlyUn=ob_get_contents();
+				ob_end_clean();
+				if($admin)
+				{
+					echo $adminOnlyUn;
+				}
+				 ?>
 				<li class="nav-item">
 					<a class="nav-link" href="#mdd-title">MDD</a>
 				</li>
+				<?php ob_start() ?>
 				<li class="nav-item">
 					<a class="nav-link" href="#gfk-title">GFK</a>
 				</li>
+				<?php
+				$adminOnlyDeux=ob_get_contents();
+				ob_end_clean();
+				if($admin)
+				{
+					echo $adminOnlyDeux;
+				}
+				 ?>
 			</ul>
 		</div><!--fin side nav-->
-	</div> 	<!--fin 1st row-->
+	 </div><!-- 	fin 1st row -->
 	<br><br>
 	<!-- ****************************************** -->
 	<!-- 			SECTION TEL / BRII 			-->
 	<!-- ****************************************** -->
+	<?php ob_start() ?>
 	<div class="row">
-		<div class="col-sm-12 col-md-10">
+				<div class="col-sm-12 col-md-10">
 			<h4 class="blue-text text-darken-4" id="tel-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Upload des tickets / BRII :</h4>
 			<hr>
 			<br><br>
@@ -110,12 +139,22 @@
 			<!-- <p class="right-align"><a href="#up" class="blue-link">retour</a></p> -->
 
 		</div>
-		<div class="col-sm-12 col-md-2">
-		</div>
+
+		<!-- <div class="col-sm-12 col-md-2"> -->
+		<!-- </div> -->
 	</div>
+	<?php
+		$telSection=ob_get_contents();
+		ob_end_clean();
+		if($comm || $admin)
+		{
+			echo $telSection;
+		}
+    ?>
 	<!-- ****************************************** -->
 	<!-- 			SECTION ASSORTIMENT 			-->
 	<!-- ****************************************** -->
+	<?php ob_start() ?>
 	<div class="row">
 		<div class="col-sm-12 col-md-10">
 			<h4 class="blue-text text-darken-4" id="assortiment-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Upload de l'assortiment :</h4>
@@ -150,15 +189,24 @@
 			</div>
 			<!-- ASSORTIMENT FORM END -->
 			<p class="right-align"><a href="#cssmenu" class="blue-link">retour</a></p>
+		</div>
 
-		</div>
-		<div class="col-sm-12 col-md-2">
-		</div>
+		<!-- <div class="col-sm-12 col-md-2"> -->
 	</div>
+	<?php
+		$assortimentSection=ob_get_contents();
+		ob_end_clean();
+		if( $admin)
+		{
+			echo $assortimentSection;
+		}
+	?>
+	<!-- </div> -->
 	<!-- ****************************************** -->
 	<!-- 			SECTION PANIER PROMO 			-->
 	<!-- ****************************************** -->
-	<div class="row">
+	<?php ob_start(); ?>
+		<div class="row">
 		<div class="col-sm-12 col-md-10">
 			<h4 class="blue-text text-darken-4" id="panier-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Upload du panier Promo :</h4>
 			<hr>
@@ -194,9 +242,18 @@
 			<!-- PANIER PROMO FORM END -->
 		</div>
 	</div>
+	<?php
+		$panierSection=ob_get_contents();
+		ob_end_clean();
+		if( $admin)
+		{
+			echo $panierSection;
+		}
+	?>
 	<!-- ****************************************** -->
 	<!-- 			SECTION mdd 			-->
 	<!-- ****************************************** -->
+	<?php ob_start() ?>
 	<div class="row">
 		<div class="col-sm-12 col-md-10">
 			<h4 class="blue-text text-darken-4" id="mdd-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Upload des MDD :</h4>
@@ -234,9 +291,18 @@
 			<!-- PANIER PROMO FORM END -->
 		</div>
 	</div>
+	<?php
+		$mddSection=ob_get_contents();
+		ob_end_clean();
+		if($comm || $admin)
+		{
+			echo $mddSection;
+		}
+	?>
 	<!-- ****************************************** -->
 	<!-- 			SECTION GFK			 			-->
 	<!-- ****************************************** -->
+	<?php ob_start(); ?>
 	<div class="row">
 		<div class="col-sm-12 col-md-10">
 			<h4 class="blue-text text-darken-4" id="gfk-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Upload GFK :</h4>
@@ -270,10 +336,16 @@
 				</form>
 			</div>
 			<p class="right-align"><a href="#cssmenu" class="blue-link">retour</a></p>
-
-
 			<!-- GFK FORM END -->
 		</div>
+	<?php
+		$gfkSection=ob_get_contents();
+		ob_end_clean();
+		if($admin)
+		{
+			echo $gfkSection;
+		}
+	 ?>
 	</div>
 <!--*********************************  -->
 </div> <!--fin container -->
