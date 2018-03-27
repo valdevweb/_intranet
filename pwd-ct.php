@@ -24,7 +24,7 @@
 				<br>
 				<br>
 				<p>Les identifiants seront envoyés par mail aux contacts de la liste de diffusion responsables bazar technique de votre magasin</p>
-				<form method="post" action="<?=$_SERVER['PHP_SELF']?>">
+				<form method="post" action="pwd.php">
 					<div class="form-group">
 						<label for="centrale">Votre centrale</label>
 						<select class="form-control" id="centrale" name="centrale" required>
@@ -51,14 +51,39 @@
 						</select>
 						<br><br>
 						<p>
-							<button type="submit" class="btn btn-primary" name="submit">Envoyer</button>
+							<button type="submit" class="btn btn-primary" name="submit" id="submit">Envoyer</button>
 						</p>
 					</div>
 				</form>
 			</div>
 			<div class="col-md">
 			</div>
-		</div>
+			</div>
+				<?php
+				$startDiv="<div class='row'><div class='col-md'></div><div class='col-md-8'>";
+				$endDiv="</div><div class='col-md'></div></div>";
+				if(isset($errors)&& count($errors)!=0){
+					echo $startDiv;
+					echo '<div class="alert alert-danger text-center">';
+					foreach ($errors as $error) {
+						echo $error .'<br>';
+					}
+
+					echo '</div>';
+					echo $endDiv;
+				}
+
+				if(isset($success)&& count($success)!=0)
+				{
+					echo $startDiv;
+					echo '<div class="alert alert-success text-center">';
+					foreach ($success as $s) {
+						echo $s .'<br>';
+					}
+					echo '</div>';
+					echo $endDiv;
+
+				}?>
 
 
 
@@ -87,6 +112,14 @@
 					$('#mag').html('<option value="">Sélectionnez votre magasin</option>');
 				}
 			});
+
+			// $('form').submit(function()
+   //     		{
+   //          $(":submit").text("Merci de patienter...")
+   //          $("#submit").attr('disabled', true);
+
+   //     		});
+
 
 		});
 	</script>
