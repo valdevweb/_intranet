@@ -1,4 +1,27 @@
+<?php
 
+//determine si un user (id de la table web user appartient à un grou^pe
+function isUserInGroup($pdoBt,$idWebuser,$groupName)
+{
+	$req=$pdoBt->prepare("SELECT * FROM groups WHERE id_webuser= :idWebuser AND group_name= :groupName");
+	$req->execute(array(
+	":idWebuser" =>$idWebuser,
+	":groupName" =>$groupName
+	));
+	return $req->rowCount();
+}
+
+// affichage ou non de la page de téléchargement des documents
+$idUser=$_SESSION['id'];
+if (isUserInGroup($pdoBt,$idUser,"communication") || isUserInGroup($pdoBt,$idUser,"admin"))
+{
+	$uploadDocument=true;
+}
+else
+{
+	$uploadDocument=false;
+}
+?>
 <div id='cssmenu'>
 	<ul>
 			<!-- #0d47a1 blue darken-4 -->
@@ -141,7 +164,7 @@
 				<?php
 					$btdoc=ob_get_contents();
 					ob_end_clean();
-					echo ($_SESSION['type']=="btlec") ? $btdoc : '' ;
+					echo ($uploadDocument) ? $btdoc : '' ;
 
 				 ?>
 			</li>
