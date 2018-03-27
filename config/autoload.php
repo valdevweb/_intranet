@@ -60,7 +60,7 @@ $img=ROOT_PATH."/public/img/";
 
 //_______________________________________________________
 //pages
-//
+// ???
 $contact=ROOT_PATH."/public/mag/contact.php?";
 $dashboard=ROOT_PATH."/public/btlec/dashboard.php?";
 $map=ROOT_PATH."/public/mag/google-map.php";
