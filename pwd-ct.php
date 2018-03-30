@@ -1,3 +1,32 @@
+<?php
+if(isset($_GET['success']))
+{
+	if($_GET['success']==1)
+	{
+		$success[]="votre demande à bien été prise en compte, les codes ont été envoyés aux personnes qui figurent dans la liste RBT de votre magasin";
+	}
+	else
+	{
+		$success[]="Une demande a été automatiquement envoyée au service informatique pour que votre mot de passe soit communiqué aux personnes qui figurent dans la liste RBT de votre magasin";
+	}
+}
+
+if(isset($_GET['error']))
+{
+	if($_GET['error']==1)
+	{
+		$errors[]="erreur d'envoi du mail";
+	}
+	else
+	{
+		$errors[]="erreur - merci de signaler le problème à btlecest.portailweb.informatique@btlec.fr";
+
+	}
+
+}
+
+
+?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -17,8 +46,7 @@
 	<div class="container">
 		<br><br>
 		<div class="row">
-			<div class="col-md ">
-			</div>
+			<div class="col-md "></div>
 			<div class="col-md-8 bg-light border">
 				<h1 class="text-center">Demande d'identifiants</h1>
 				<br>
@@ -29,6 +57,7 @@
 						<label for="centrale">Votre centrale</label>
 						<select class="form-control" id="centrale" name="centrale" required>
 							<option value="">Sélectionnez votre centrale</option>
+							<option value="BTLEC">BTLEC</option>
 							<option value="LECASUD">LECASUD</option>
 							<option value="PORTUGAL">PORTUGAL</option>
 							<option value="SCACENTRE">SCACENTRE</option>
@@ -55,34 +84,33 @@
 					</div>
 				</form>
 			</div>
-			<div class="col-md">
-			</div>
-			</div>
-				<?php
-				$startDiv="<div class='row'><div class='col-md'></div><div class='col-md-8'>";
-				$endDiv="</div><div class='col-md'></div></div>";
-				if(isset($errors)&& count($errors)!=0){
-					echo $startDiv;
-					echo '<div class="alert alert-danger text-center">';
-					foreach ($errors as $error) {
-						echo $error .'<br>';
-					}
+			<div class="col-md"></div>
+		</div>
+		<?php
+		$startDiv="<div class='row'><div class='col-md'></div><div class='col-md-8'>";
+		$endDiv="</div><div class='col-md'></div></div>";
+		if(isset($errors)&& count($errors)!=0){
+			echo $startDiv;
+			echo '<div class="alert alert-danger text-center">';
+			foreach ($errors as $error) {
+				echo $error .'<br>';
+			}
 
-					echo '</div>';
-					echo $endDiv;
-				}
+			echo '</div>';
+			echo $endDiv;
+		}
 
-				if(isset($success)&& count($success)!=0)
-				{
-					echo $startDiv;
-					echo '<div class="alert alert-success text-center">';
-					foreach ($success as $s) {
-						echo $s .'<br>';
-					}
-					echo '</div>';
-					echo $endDiv;
+		if(isset($success) && count($success)!=0)
+		{
+			echo $startDiv;
+			echo '<div class="alert alert-success text-center">';
+			foreach ($success as $s) {
+				echo $s .'<br>';
+			}
+			echo '</div>';
+			echo $endDiv;
 
-				}?>
+		}?>
 
 
 
@@ -101,8 +129,6 @@
 						url:'ajaxMag.php',
 						data:'centrale='+centrale,
 						success:function(html){
-							// $('#mag').html('<option value="">Sélectionnez votre magasin</option>');
-
 							$('#mag').append(html);
 						}
 					});
@@ -121,7 +147,7 @@
    //     		});
 
 
-		});
-	</script>
+});
+</script>
 </body>
 </html>

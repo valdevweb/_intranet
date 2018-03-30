@@ -35,10 +35,12 @@ function addMsg($pdoBt,$id,$rbt,$mag)
 }
 
 
-$errors=[];
-$success=[];
+
 
 if(isset($_POST['submit'])){
+	// $errors=[];
+	// $success=[];
+	$redir="";
 	extract($_POST);
 	if(isset($centrale) && isset($mag))
 	{
@@ -55,8 +57,9 @@ if(isset($_POST['submit'])){
 					":galec"	=>$sca['galec']
 				));
 				$codeBt=$sca['btlec'];
-		 // $rbt=$codeBt."-RBT";
-				$rbt="valerie.montusclat@btlec.fr";
+				//faire test sur 4920
+		 		$rbt=$codeBt."-RBT@btlec.fr";
+				// $rbt="valerie.montusclat@btlec.fr";
 				$webuser=$req->fetch(PDO::FETCH_ASSOC);
 				// ----------------------------------------
 				// si le mot de passe en clair existe déjà
@@ -70,19 +73,24 @@ if(isset($_POST['submit'])){
 					$subject="PORTAIL BTLEC Est - Vos identifiants de connexion";
 					if(sendMail($rbt,$subject,$tplIdent,$webuser['login'],$webuser['nohash_pwd'], $link))
 					{
-						$success[]="mail envoyé avec succès";
+						$redir="pwd.php?success=1";
+						header('Location:'.$redir);
+
 					}
 					else
 					{
-						$errors[]="erreur d'envoi du mail";
+						//err mail
+						$redir="pwd.php?error=1";
+						header('Location:'.$redir);
+
 					}
 				}
 				else
 				{
 					$id=$webuser['id'];
 					$idMsg=addMsg($pdoBt,$id,$rbt,$mag);
-					echo "id du message sur le portail " . $idMsg;
-					$mailtoInfo="valerie.montusclat@btlec.fr";
+					$mailtoInfo="btlecest.portailweb.informatique@btlec.fr";
+					// $mailtoInfo="valerie.montusclat@btlec.fr";
 					$subject="PORTAIL BTLEC Est - demande d'identifiants - magasin " . $mag;
 					$tplIdent='public/mail/demande_identifiants.tpl.html';
 					$content="";
@@ -90,11 +98,16 @@ if(isset($_POST['submit'])){
 
 					if(sendMail($mailtoInfo,$subject,$tplIdent,$mag,$content, $link))
 					{
-						$success[]="demande envoyée avec succès";
+						// $success[]="Une demande a été automatiquement envoyée au service informatique pour que votre mot de passe soit communiqué à la (aux) personne(s) qui figure(nt) dans la liste RBT du magasin";
+						$redir="pwd.php?success=2";
+						header('Location:'.$redir);
+
 					}
 					else
 					{
-						$errors[]="erreur d'envoi du mail";
+						//err mail
+						$redir="pwd.php?error=1";
+						header('Location:'.$redir);
 					}
 
 				}
@@ -103,7 +116,8 @@ if(isset($_POST['submit'])){
 			}
 			else
 			{
-				$errors[]="erreur - magasin non trouvé";
+				$redir="pwd.php?error=2";
+				header('Location:'.$redir);
 			}
 
 			// include ('public/view/_errors.php');
