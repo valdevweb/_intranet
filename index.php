@@ -18,10 +18,14 @@ if(isset($_POST['connexion']))
 	{
 
 		extract($_POST);
-		$err=login($pdoUser);
+		$err=login($pdoUser, $pdoBt);
 		$action="user authentification";
 		$page=basename(__file__);
-		authStat($pdoStat,$page,$action, $err);
+		authStat($pdoStat,$page,$action, $err[0]);
+		if($err[0]=="user authentifié")
+		{
+			header('Location:'. ROOT_PATH. '/public/home.php');
+		}
 	}
 
 
@@ -72,9 +76,14 @@ if(isset($_POST['connexion']))
 					<h3>Bazar Technique E.Leclerc </h3>
 
 					<p><img class="img-max" id="boxshadow" src="public/img/index/bt-front-office-optimized.jpg"></p>
-					<?php if(!empty($err)): ?>
-						<p class="w3-red"><?= $err ?></p>
-					<?php endif; ?>
+					<?php
+					if(!empty($err)){
+						foreach ($err as $errStrg)
+						{
+							echo "<p class='w3-red'>" . $errStrg ."</p>";
+						}
+					}
+					?>
 					<p class="margin-up">
 						<button id="log" class="btn waves-effect waves-default white grey-text text-darken-3 darken-3 modal-trigger" data-target="modal1">Se connecter</button>
 					</p>
@@ -130,8 +139,8 @@ if(isset($_POST['connexion']))
 			</div>
 		</form>
 		<!-- <p><a class="send-mail-to" href="#"> Réinitialiser votre mot de passe</a></p> -->
-		 <p><a class="send-mail-to" href="help.php">Contacter le service technique</a></p>
-		 <p><a class="send-mail-to" href="pwd.php">Je n'ai pas mes identifiants</a></p>
+		 <p><a class="send-mail-to" href="pwd.php">Demander mes identifiants</a><br>
+		 <a class="send-mail-to" href="help.php">Contacter le service technique</a></p>
 
 	</div>
 	<div class="modal-footer">
@@ -151,11 +160,12 @@ if(isset($_POST['connexion']))
 					</div>
 		</div>
 		<!-- <p><a class="send-mail-to" href="#"> Réinitialiser votre mot de passe</a></p> -->
+		 <p>Mise à disposition d'une PLV pour la livraison 24/48h : <a href="public/infos/plv-livraison-24-48h.pdf" class="blue-link">télécharger</a></p>
 		 <p>Ajout d'une rubrique "documents" où vous trouverez : </p>
-		 <ul  class="browser-default">
-		 	<li>le listing des BRII/ODR/ticket,</li>
-		 	<li>le panier promo,</li>
-		 	<li>l'assortiment</li>
+	 	 <ul class="browser-default">
+		 	<li>les listing des ODR,</li>
+		 	<li>les tickets et BRII</li>
+		 	<li>le point stock MDD</li>
 		 	<li>les résultats GFK</li>
 		 </ul>
 	</div>
@@ -176,9 +186,7 @@ if(isset($_POST['connexion']))
 	$(document).ready(function(){
 		// menu hamburger
 		$(".button-collapse").sideNav();
-		// ouverture fenetre modal
-		// $('.modal').show();
-
+		// ouverture fenetre modal en auto
 		$('#modal1').modal();
 		$('#modal1').modal('open');
 		$('#modal-new').modal();
