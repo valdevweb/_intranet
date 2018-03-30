@@ -24,13 +24,6 @@ require "../functions/stats.fn.php";
 $gazettes=showThisWeek($pdoBt);
 $links=createLinks($pdoBt,$gazettes,$version);
 
-	echo "<pre>";
-	var_dump($_SESSION);
-	echo '</pre>';
-
-
-
-
 // les 2 dernière gazettes opportunités
 $gazetteAppros=showLastGazettesAppros($pdoBt);
 $link="http://172.30.92.53/".$version."upload/gazette/";
@@ -41,9 +34,6 @@ if($gazetteAppros){
 		$approHtml .= "<li><i class='fa fa-angle-double-right'></i><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .mb_strtolower($gazette['file'],'UTF-8') ."</a></li>";
 	}
 }
-
-// $gazetteAppros=showLastGazettesAppros($pdoBt);
-//$linksAppros=createLinksAppros($pdoBt,$gazetteAppros,$version);
 
 //stats
 $descr="page d'accueil";
@@ -60,12 +50,7 @@ if(!empty($_SERVER['HTTP_REFERER']))
 //personnalisation des sessions et récup de données utilisateur
 	if($_SESSION['type']=="mag" || $_SESSION['type']=="centrale")
 	{
-		//id user=> galec
-		$userPanoGalec=getPanoGalec($pdoUser);
-		$_SESSION['id_galec']=$userPanoGalec['galec'];
-		//recup info mag dans sca3
-		$scatrois=magInfo($pdoBt,$userPanoGalec['galec']);
-		//personnalisation affichage => nom du mag
+
 		if($_SESSION['type']=='mag')
 		{
 			$typeTitle="Leclerc";
@@ -74,10 +59,6 @@ if(!empty($_SERVER['HTTP_REFERER']))
 		{
 			$typeTitle="Centrale";
 		}
-		$_SESSION['nom']=$scatrois['mag'];
-		$_SESSION['centrale']=$scatrois['centrale'];
-		$_SESSION['city']=$scatrois['city'];
-
 		//---------------------------
 		//stats
 		//---------------------------
@@ -87,24 +68,7 @@ if(!empty($_SERVER['HTTP_REFERER']))
 	}
 	elseif($_SESSION['type']=='btlec')
 	{
-		//id user => id_bt
-		$userIdBt=getUserId($pdoUser);
-		//id_btlec de la table btlec
-		$_SESSION['id_btlec']=$userIdBt['id_bt'];
-
-		//recup info user dans table btlec
-		$btInfo=btInfo($pdoBt);
-		//personnalisation affichage => nom du mag
-		$nom=$btInfo['nom'];
-		$prenom=$btInfo['prenom'];
-		//$idService=$btInfo['id_service'];
-
-		//si resp => affiché en 1er dans pages contact
-		$resp=$btInfo['resp'];
 		$typeTitle="";
-		$_SESSION['nom'] = $prenom .' ' .$nom;
-		$_SESSION['id_service']=$btInfo['id_service'];
-
 		//---------------------------
 		//stats
 		//---------------------------
@@ -115,7 +79,6 @@ if(!empty($_SERVER['HTTP_REFERER']))
 	elseif ($_SESSION['type']=='scapsav')
 	{
 		$typeTitle="";
-		$_SESSION['nom'] = "";
 		//---------------------------
 		//stats
 		//---------------------------
@@ -127,7 +90,6 @@ if(!empty($_SERVER['HTTP_REFERER']))
 	{
 		// si ni de type mag, ni de type bt, ni scapsav
 		$typeTitle="";
-		$_SESSION['nom'] = "";
 		//---------------------------
 		//stats
 		//---------------------------
