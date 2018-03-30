@@ -40,9 +40,8 @@ $oneMsg=showOneMsg($pdoBt,$idMsg);
 $link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter le message</a>";
 
 $tplt="../mail/new_mag_msg.tpl.html";
-$objet="PORTAIL BTLec - demande magasin réaffectée à votre service";
 mb_internal_encoding('UTF-8');
-$objet = mb_encode_mimeheader($objet);
+
 $name=$oneMsg['who'];
 
 //récup pano galec puis nom du mag
@@ -78,8 +77,9 @@ if(isset($_POST['affect']))
 
 			$serviceInfo=service($pdoBt,$newService);
 			$mailingList=$serviceInfo['mailing'];
-			// sendMail($mailingList,$objet,$tplt,$name,$mag,$link);
-
+			$objet="PORTAIL BTLec - demande magasin réaffectée au service " . $serviceInfo['full_name'];
+			$objet = mb_encode_mimeheader($objet);
+			sendMail($mailingList,$objet,$tplt,$name,$magName,$link);
 
 			$msg ="demande réaffectée au service " . $serviceInfo['full_name'];
 			//------------------------------
