@@ -58,6 +58,9 @@ if(isset($_POST['submit'])){
 		 // $rbt=$codeBt."-RBT";
 				$rbt="valerie.montusclat@btlec.fr";
 				$webuser=$req->fetch(PDO::FETCH_ASSOC);
+				// ----------------------------------------
+				// si le mot de passe en clair existe déjà
+				// ---------------------------------------
 				if($webuser['nohash_pwd'] !="")
 				{
 		 	// echo "envoi email avec mdp " . $result['nohash_pwd'];

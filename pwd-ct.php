@@ -29,17 +29,16 @@
 						<label for="centrale">Votre centrale</label>
 						<select class="form-control" id="centrale" name="centrale" required>
 							<option value="">Sélectionnez votre centrale</option>
-							<option value="SCAPARTOIS">SCAPARTOIS</option>
-							<option value="SCAPNOR">SCAPNOR</option>
-							<option value="SCADIF">SCADIF</option>
-							<option value="SCAPEST">SCAPEST</option>
-							<option value="SCAPALSACE">SCAPALSACE</option>
-							<option value="SCACENTRE">SCACENTRE</option>
-							<option value="SOCARA">SOCARA</option>
-							<option value="SOCAMIL">SOCAMIL</option>
 							<option value="LECASUD">LECASUD</option>
-							<option value="Espagne">Espagne</option>
 							<option value="PORTUGAL">PORTUGAL</option>
+							<option value="SCACENTRE">SCACENTRE</option>
+							<option value="SCAPALSACE">SCAPALSACE</option>
+							<option value="SCAPARTOIS">SCAPARTOIS</option>
+							<option value="SCAPEST">SCAPEST</option>
+							<option value="SCADIF">SCADIF</option>
+							<option value="SCAPNOR">SCAPNOR</option>
+							<option value="SOCAMIL">SOCAMIL</option>
+							<option value="SOCARA">SOCARA</option>
 							<option value="SLOVENIE">SLOVENIE</option>
 						</select>
 					</div>
@@ -94,6 +93,7 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('#centrale').on('change',function(){
+				$('#mag').html('<option value="">Sélectionnez votre magasin</option>');
 				var centrale = $(this).val();
 				if(centrale){
 					$.ajax({
