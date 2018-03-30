@@ -24,6 +24,9 @@ require "../functions/stats.fn.php";
 $gazettes=showThisWeek($pdoBt);
 $links=createLinks($pdoBt,$gazettes,$version);
 
+	echo "<pre>";
+	var_dump($_SESSION);
+	echo '</pre>';
 
 
 
@@ -73,6 +76,8 @@ if(!empty($_SERVER['HTTP_REFERER']))
 		}
 		$_SESSION['nom']=$scatrois['mag'];
 		$_SESSION['centrale']=$scatrois['centrale'];
+		$_SESSION['city']=$scatrois['city'];
+
 		//---------------------------
 		//stats
 		//---------------------------
