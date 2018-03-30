@@ -107,3 +107,10 @@ input[type="checkbox"]
 line-height: inherit !important;
 vertical-align: bottom;
 }
+
+
+label {
+    font-size: 1rem !important;
+    color: #000 !important;
+
+}
