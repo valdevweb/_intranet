@@ -21,62 +21,8 @@ if($inscriptions){
 	foreach ($inscriptions as $inscription)
 	{
 		//formatage des données
-		if($inscription['entrepot1']!="")
-		{
-			$entrepot1='oui';
-		}
-		else
-		{
-			$entrepot1='non';
-		}
-		if($inscription['entrepot2']!="")
-		{
-			$entrepot2='oui';
-		}
-		else
-		{
-			$entrepot2='non';
-		}
-		if($inscription['scapsav1']!="")
-		{
-			$scapsav1='oui';
-		}
-		else
-		{
-			$scapsav1='non';
-		}
-		if($inscription['scapsav2'] !="")
-		{
-			$scapsav2='oui';
-		}
-		else
-		{
-			$scapsav2='non';
-		}
-		if($inscription['repas2'] !="")
-		{
-			$repas2='oui';
-		}
-		else
-		{
-			$repas2='non';
-		}
-		if($inscription['date1'] !="")
-		{
-			$date1='oui';
-		}
-		else
-		{
-			$date1='non';
-		}
-		if($inscription['date2'] !="")
-		{
-			$date2='oui';
-		}
-		else
-		{
-			$date2='non';
-		}
+
+
 		// echo $inscription['id_galec'];
 		$listing.='<tr><td>'.
 		$inscription['id_galec']
@@ -89,19 +35,13 @@ if($inscriptions){
 		.'</td><td>'.
 		$inscription['fonction']
 		.'</td><td>'.
-		$date1
+		$inscription['date1']
 		.'</td><td>'.
-		$entrepot1
-		.'</td><td>'
-		.$scapsav1
+		$inscription['date2']
 		.'</td><td>'.
-		$date2
+		$inscription['visite']
 		.'</td><td>'.
-		$entrepot2
-		.'</td><td>'.
-		$scapsav2
-		.'</td><td>'.
-		$repas2
+		$inscription['repas2']
 		.'</td></tr>';
 	}
 }

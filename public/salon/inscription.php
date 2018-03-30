@@ -51,31 +51,40 @@ $inscr=listing($pdoBt);
 function addParticipant($pdoBt)
 {
 	if(isset($_POST['jour1'])){
-		$date1="12/06/2018";
-		$entrepot1=$_POST['entrepot1'];
-		$scapsav1=$_POST['scapsav1'];
-		$repas1='--';
+		$date1="oui";
+
 	}
 	else{
-		$date1="";
-		$entrepot1="";
-		$scapsav1="";
-		$repas1="";
+		$date1="non";
 	}
 
 	if(isset($_POST['jour2'])){
-		$date2="13/06/2018";
-		$entrepot2=$_POST['entrepot2'];
-		$scapsav2=$_POST['scapsav2'];
-		$repas2=$_POST['repas2'];
+		$date2="oui";
 	}
 	else{
-		$date2="";
-		$entrepot2="";
-		$scapsav2="";
-		$repas2="";
+		$date2="non";
 	}
-	$insert=$pdoBt->prepare("INSERT INTO salon (id_galec, nom_mag,nom,prenom,fonction,date1,entrepot1,scapsav1, repas1, date2,entrepot2,scapsav2, repas2) VALUES (:id_galec, :nom_mag, :nom, :prenom, :fonction, :date1, :entrepot1, :scapsav1, :repas1,:date2, :entrepot2, :scapsav2, :repas2)");
+	if(isset($_POST['repas2'])){
+		$repas="oui";
+	}
+	else{
+		$repas="non";
+	}
+
+
+
+	if(isset($_POST['visite']))
+	{
+		$visite=$_POST['visite'];
+	}
+	else
+	{
+		$visite="non";
+	}
+
+
+
+	$insert=$pdoBt->prepare("INSERT INTO salon (id_galec, nom_mag,nom,prenom,fonction,date1,date2,visite,repas2) VALUES (:id_galec, :nom_mag, :nom, :prenom, :fonction, :date1, :date2,:visite, :repas2)");
 	$insert->execute(array(
 	  ':id_galec'=>$_SESSION['id_galec'],
       ':nom_mag' => $_SESSION['nom'],
@@ -83,13 +92,9 @@ function addParticipant($pdoBt)
       ':prenom'=>strip_tags($_POST['prenom']),
       ':fonction'=>strip_tags($_POST['fonction']),
       ':date1'=>$date1,
-      ':entrepot1'=>$entrepot1,
-      ':scapsav1'=>$scapsav1,
-      ':repas1'=>'--',
       ':date2'=>$date2,
-      ':entrepot2'=>$entrepot2,
-      ':scapsav2'=>$scapsav2,
-      ':repas2'=>$repas2
+      ':visite'=>$visite,
+      ':repas2'=>$repas
 	));
 
 }
@@ -99,7 +104,7 @@ function addParticipant($pdoBt)
 
 if(isset($_POST['inscrire'])){
 	addParticipant($pdoBt);
-	header("Location:inscription2.php#inscription-lk");
+	header("Location:inscription.php#inscription-lk");
 }
 
 if(isset($_POST['send']))
@@ -117,7 +122,7 @@ function FancyTable($header, $inscr)
 	   // Couleurs, épaisseur du trait et police grasse
 		$this->SetFont('Arial','',24);
 		$this->Cell(180,0,'INSCRIPTIONS SALON BTLEC 2018');
-		$this->SetFont('Arial','',14);
+		$this->SetFont('Arial','',12);
 		$this->Ln(40);
 		$this->Cell(8,0,'Bonjour,');
 		$this->Ln(10);
@@ -136,7 +141,8 @@ function FancyTable($header, $inscr)
 		$this->SetLineWidth(.3);
 		$this->SetFont('','B');
     // En-tête
-		$w = array(40, 40, 30, 20, 25, 25);
+		$w = array(40, 40, 25, 25, 25, 25);
+
     // parcours les colonnes
 		for($i=0;$i<count($header);$i++)
 			$this->Cell($w[$i],7,$header[$i],1,0,'C',true);
@@ -150,26 +156,16 @@ function FancyTable($header, $inscr)
 
 		foreach($inscr as $res)
 		{
-			if($res['date1']!=""){
 				$this->Cell($w[0],6,ucfirst(strtolower(utf8_decode($res['nom']))),'LR',0,'L',$fill);
 				$this->Cell($w[1],6,ucfirst(strtolower(utf8_decode($res['prenom']))),'LR',0,'L',$fill);
 				$this->Cell($w[2],6,$res['date1'],'LR',0,'R',$fill);
-				$this->Cell($w[3],6,$res['repas1'],'LR',0,'R',$fill);
-				$this->Cell($w[4],6,$res['entrepot1'],'LR',0,'R',$fill);
-				$this->Cell($w[5],6,$res['scapsav1'],'LR',0,'R',$fill);
-				$this->Ln();
-				$fill = !$fill;
-			}
-			if($res['date2']!=""){
-				$this->Cell($w[0],6,ucfirst(strtolower(utf8_decode($res['nom']))),'LR',0,'L',$fill);
-				$this->Cell($w[1],6,ucfirst(strtolower(utf8_decode($res['prenom']))),'LR',0,'L',$fill);
 				$this->Cell($w[2],6,$res['date2'],'LR',0,'R',$fill);
-				$this->Cell($w[3],6,$res['repas2'],'LR',0,'R',$fill);
-				$this->Cell($w[4],6,$res['entrepot2'],'LR',0,'R',$fill);
-				$this->Cell($w[5],6,$res['scapsav2'],'LR',0,'R',$fill);
+				$this->Cell($w[3],6,$res['visite'],'LR',0,'R',$fill);
+				$this->Cell($w[4],6,$res['repas2'],'LR',0,'R',$fill);
+				// $this->Cell($w[5],6,$res['scapsav1'],'LR',0,'R',$fill);
 				$this->Ln();
 				$fill = !$fill;
-			}
+
 		}
     // Trait de terminaison
 		$this->Cell(array_sum($w),0,'','T');
@@ -189,7 +185,7 @@ function FancyTable($header, $inscr)
 
 
 	$pdf = new PDF();
-	$header = array('Nom', 'Prenom', 'Date', 'repas', 'Entrepot', 'Scapsav');
+	$header = array('Nom', 'Prenom', '12/06/2018', '13/06/2018', 'Visite', 'Repas');
 
 	$pdf->SetFont('Arial','',14);
 	$pdf->AddPage();
@@ -334,50 +330,28 @@ require '../view/_navbar.php';
 					<tr>
 						<th>Nom</th>
 						<th>Prénom</th>
-						<th>Date</th>
+						<th>12/06/2018</th>
+						<th>13/06/2018</th>
+						<th>Visite <br>entrepot / scapsav</th>
 						<th>Repas</th>
-						<th>Visite <br>entrepot</th>
-						<th>Visite <br>Scapsav</th>
 						<th>Supprimer</th>
 					</tr>
 				<?php if($inscr): ?>
 				<!-- si le mag a déja renvoyé des inscriptions -->
 					<?php foreach($inscr as $detInscr): ?>
 						<!-- inscrit les 2 jour -->
-						<?php if($detInscr['date1']!="" && $detInscr['date2'] != ""): ?>
-							<tr>
-								<td><?= $detInscr['nom']?></td>
-								<td><?= $detInscr['prenom']?></td>
-								<td><?= $detInscr['date1']?><br><?= $detInscr['date2']?></td>
-								<td>--<br><?= $detInscr['repas2']?></td>
-								<td><?= $detInscr['entrepot1']?><br><?= $detInscr['entrepot2']?></td>
-								<td><?= $detInscr['scapsav1']?><br><?= $detInscr['scapsav2']?></td>
-								<td><a href="delete.php?id=<?= $detInscr['id']?>"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a></td>
-							</tr>
-							<!-- inscrit uniquement jour 1 -->
-						<?php elseif($detInscr['date1']!=""): ?>
+
 							<tr>
 								<td><?= $detInscr['nom']?></td>
 								<td><?= $detInscr['prenom']?></td>
 								<td><?= $detInscr['date1']?></td>
-								<td>--</td>
-								<td><?= $detInscr['entrepot1']?></td>
-								<td><?= $detInscr['scapsav1']?></td>
-								<td><a href="delete.php?id=<?= $detInscr['id']?>"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a></td>
-							</tr>
-							<!-- inscrit uniquement jour 2 -->
-						<?php else: ?>
-							<tr>
-								<td><?= $detInscr['nom']?></td>
-								<td><?= $detInscr['prenom']?></td>
 								<td><?= $detInscr['date2']?></td>
+								<td><?= $detInscr['visite']?></td>
 								<td><?= $detInscr['repas2']?></td>
-								<td><?= $detInscr['entrepot2']?></td>
-								<td><?= $detInscr['scapsav2']?></td>
 								<td><a href="delete.php?id=<?= $detInscr['id']?>"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a></td>
 							</tr>
+							<!-- inscrit uniquement jour 1 -->
 
-							<?php endif; ?>
 					<?php endforeach ?>
 
 					<?php else: ?>
@@ -417,10 +391,20 @@ require '../view/_navbar.php';
 								</select>
 
 							<p>Quel(s) jour(s) souhaitez vous venir au salon ? </p>
-							<div id="zone1"><p><input type="checkbox" name="jour1" value="oui" id="jour1" class="filled-in"><label for="jour1">Mardi 12 juin 2018</label></p>
-							<p id="day1"></p></div>
-							<div id="zone2"><p><input type="checkbox" name="jour2" value="oui" id="jour2" class="filled-in"><label for="jour2">Mercredi 13 juin 2018</label></p>
-							<p id="day2"></p></div>
+							<div class="zone1">
+								<p><input type="checkbox" name="jour1" value="oui" id="jour1" class="filled-in"><label for="jour1">Mardi 12 juin 2018</label></p>
+								<!-- ajout choix si jour 1 sélectionné -->
+								<p id="day1"></p>
+							</div>
+							<div id="zone2">
+								<p><input type="checkbox" name="jour2" value="oui" id="jour2" class="filled-in"><label for="jour2">Mercredi 13 juin 2018</label></p>
+								<p id="day2"></p>
+							</div>
+							<p>Si vous souhaitez visiter l'entrepot et la scapsav merci de sélectionner un jour disponible</p>
+							<div class="zone1">
+								<p id="date-visite1"></p>
+								<p id="date-visite2"></p>
+							</div>
 							<p class="align-right"><button class="btn" type="submit" name="inscrire">Inscrire</button></p>
 						</form>
 					</div>
@@ -457,52 +441,59 @@ require '../view/_navbar.php';
 			$('.modal').modal();
 
 			$(":checkbox#jour1").change(function(){
-				var dayone="";
-				// dayone +="<p>Prendrez vous votre repas à BTlec ?</p>";
-				// dayone +="<p><input type='radio' name='repas1' value='oui' id='jour1oui' class='fill-in'><label for='jour1oui'>oui</label> &nbsp; &nbsp; &nbsp;";
-				// dayone+="<input type='radio' name='repas1' value='non'  id='jour1non' class='fill-in'><label for='jour1non'>non</label><br><span id='missingjour1' class='red-text'></span></p>";
-				dayone +="<p>Souhaitez-vous visiter la SCAPSAV ?</p>";
-				dayone +="<p><input type='radio' name='scapsav1' value='oui' id='scapsav1oui' class='fill-in'><label for='scapsav1oui'>oui</label>&nbsp; &nbsp; &nbsp;";
-				dayone +="<input type='radio' name='scapsav1' value='non' id='scapsav1non' class='fill-in'><label for='scapsav1non'>non</label><br><span id='missingscapsav1' class='red-text'></span></p>";
-				dayone +="<p>Souhaitez-vous visiter l'entrepôt ?</p>";
-				dayone +="<p><input type='radio' name='entrepot1' value='oui' id='entrepot1oui' class='fill-in'><label for='entrepot1oui'>oui</label>&nbsp; &nbsp; &nbsp;";
-				dayone +="<input type='radio' name='entrepot1' value='non' id='entrepot1non' class='fill-in'><label for='entrepot1non'>non</label><br><span id='missingentrepot1' class='red-text'></span></p>";
-
-
-				// si case jour coché, on ajoute les options
-				// si décoche, on les supprime
+				var visiteDayOne="";
+				visiteDayOne +="<p><input type='radio' name='visite' value='12/06/2018' id='visite1' class='fill-in'><label for='visite1'>12/06/2018</label>&nbsp; &nbsp; &nbsp;";
 				if($('input:checkbox[name=jour1]').is(':checked'))
 				{
-					$('#day1').append(dayone);
+					// $('#day2').append(daytwo);
+					$('#date-visite1').append(visiteDayOne);
 				}
 				else
 				{
-					$('#day1').empty();
-				}
+					$('#date-visite1').empty();
 
-			});
+				}
+				});
 
 			$(":checkbox#jour2").change(function(){
 				var daytwo="";
 				daytwo +="<p>Prendrez vous votre repas à BTlec ?</p>";
 				daytwo +="<p><input type='radio' name='repas2' value='oui' id='jour2oui' class='fill-in'><label for='jour2oui'>oui</label>&nbsp; &nbsp; &nbsp;";
 				daytwo+="<input type='radio' name='repas2' value='non'  id='jour2non' class='fill-in'><label for='jour2non'>non</label><br><span id='missingjour2' class='red-text'></span></p>";
-				daytwo +="<p>Souhaitez-vous visiter la SCAPSAV ?</p>";
-				daytwo +="<p><input type='radio' name='scapsav2' value='oui' id='scapsav2oui' class='fill-in'><label for='scapsav2oui'>oui</label>&nbsp; &nbsp; &nbsp;";
-				daytwo +="<input type='radio' name='scapsav2' value='non' id='scapsav2non' class='fill-in'><label for='scapsav2non'>non</label><br><span id='missingscapsav2' class='red-text'></span></p>";
-				daytwo +="<p>Souhaitez-vous visiter l'entrepôt ? </p>";
-				daytwo +="<p><input type='radio' name='entrepot2' value='oui' id='entrepot2oui' class='fill-in'><label for='entrepot2oui'>oui</label>&nbsp; &nbsp; &nbsp;";
-				daytwo +="<input type='radio' name='entrepot2' value='non' id='entrepot2non' class='fill-in'><label for='entrepot2non'>non</label><br><span id='missingentrepot2' class='red-text'></span></p>";
+				var visiteDayTwo="";
+				visiteDayTwo +="<p><input type='radio' name='visite' value='13/06/2018' id='visite2' class='fill-in'><label for='visite2'>13/06/2018</label>&nbsp; &nbsp; &nbsp;";
+
+
 				if($('input:checkbox[name=jour2]').is(':checked'))
 				{
 					$('#day2').append(daytwo);
+					$('#date-visite2').append(visiteDayTwo);
 				}
 				else
 				{
 					$('#day2').empty();
+					$('#date-visite2').empty();
+
 				}
 
 			});
+
+			$(":checkbox#visite").change(function(){
+
+
+				if($('input:checkbox[name=visite]').is(':checked'))
+				{
+					// $('#date-visite').append(visiteDayOne);
+				}
+				else
+				{
+					// $('#date-visite').empty();
+				}
+
+			});
+
+
+
 			$("form#add").submit(function(event){
 				// validation
 				// jour1
@@ -510,14 +501,7 @@ require '../view/_navbar.php';
 				// 	$('#missingjour1').text("Veuillez selectionner une option");
 				// 		event.preventDefault();
 				// }
-				if($('#scapsav1oui').prop('checked')==false && $('#scapsav1non').prop('checked')==false){
-					$('#missingscapsav1').text("Veuillez selectionner une option");
-						event.preventDefault();
-				}
-				if($('#entrepot1oui').prop('checked')==false && $('#entrepot1non').prop('checked')==false){
-					$('#missingentrepot1').text("Veuillez selectionner une option");
-						event.preventDefault();
-				}
+
 				//jour2
 				if($('#jour2oui').prop('checked')==false && $('#jour2non').prop('checked')==false){
 					$('#missingjour2').text("Veuillez selectionner une option");
