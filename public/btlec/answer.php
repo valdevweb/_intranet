@@ -55,7 +55,6 @@ $magInfo=getMag($pdoBt,$panoGalec['galec']);
 //contenu histo des reponses
 $replies=showReplies($pdoBt, $idMsg);
 
-
 //template html et données pour envoi mail
 $tpl="../mail/new_reply_from_bt.tpl.html";
 $objet="PORTAIL BTLec - réponse à votre demande";
@@ -77,6 +76,15 @@ $service=service($pdoBt,$oneMsg['id_service']);
 //test valeur $_FILE, si renvoi true => au moins un fichier à uploader
 $isFileToUpload=isFileToUpload();
 
+function recPwd($pdoUser, $idWebuser)
+{
+	$req=$pdoUser->prepare("UPDATE users SET nohash_pwd= :pwd WHERE id= :id");
+	$req->execute(array(
+		":pwd"	=>$_POST['mdp'],
+		":id"	=>$idWebuser
+	));
+}
+
 // id du message auquel bt répond donc $_GET['msg']
 
 if(isset($_POST['post-reply']))
@@ -94,19 +102,27 @@ if(isset($_POST['post-reply']))
 		{
 			//pas de pièce jointe
 			$file="";
+			// ajout mdp dans webuser
+			if(isset($mdp))
+			{
+				recPwd($pdoUser, $oneMsg['id_mag']);
+			}
 
-			echo "pas de piece jointe";
 
 		}
 		else
 		// fichier joint
 		{
+			// ajout mdp dans webuser
+			if(isset($mdp))
+			{
+				recPwd($pdoUser, $oneMsg['id_mag']);
+			}
+
 			//------------------------------
 			//			upload du fichier
 			//------------------------------
 			$uploadDir= '..\..\..\upload\mag\\';
-
-
 			//on initialise authorized à 0, si il reste à 0, tous les fichiers sont autorisés, sinon
 			//on incrémente et on bloque le message si on n'est pas égal à 0
 			$authorized=0;
@@ -330,27 +346,44 @@ if (isset($_POST['close']))
 					<label for="reply"></label>
 					<textarea class="browser-default" name="reply" id="reply" ><?=isset($_POST['reply'])? $_POST['reply']: false?></textarea>
 				</div>
+				<?php
+				ob_start();
+				?>
+				<br>
+				<div class="row">
+					<div class='col l12'>
+						<label for="mdp">Mot de passe du magasin :</label><br><br>
+						<input class="browser-default" name="mdp" type="text" id="mdp">
+					</div>
+				</div>
+				<?php
+				// ajout champ mdp quand demande d'identifiants
+				$identif=ob_get_contents();
+				ob_end_clean();
+				if($oneMsg['objet']=="demande d'identifiants")
+				{
+						echo $identif;
+				}
+				?>
 				<br><br>
-
 				<div id="file-upload">
-
 					<p>Joindre un document à votre réponse: </p>
 						<div class="col l12">
 							<p><input type="file" name="file_1" class='input-file'></p>
 							<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Ajouter d'autres fichiers</a></p>
 						</div>
-
+				</div>
+				<!--BOUTONS-->
+				<div class="row">
+					<div class='col l9'>
+						<ul id="file-name"></ul>
 					</div>
-					<!--BOUTONS-->
-					<div class="row">
-						<div class='col l9'>
-							<ul id="file-name"></ul>
-						</div>
+				</div>
 
-					</div>
+
+
 					<div class="row">
 						<div class='col l6'></div>
-
 						<div class='col l3'>
 							<p class="center">
 								<input type="checkbox" class="filled-in" id="clos" checked="checked" name="clos" />
