@@ -9,6 +9,7 @@ if(isset($errors)&& count($errors)!=0){
 
     echo '</div>';
 }
+
 if(isset($success)&& count($success)!=0){
 
     echo '<div class="alert alert-success">';
