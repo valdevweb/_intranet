@@ -165,7 +165,7 @@ $(document).ready(function(){
 					user: user
 				},
 				success: function(response) {
-         		   document.getElementById("test").innerHTML = response;
+         		   // document.getElementById("test").innerHTML = response;
         		}
 			});
 		});
