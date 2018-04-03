@@ -142,8 +142,8 @@ function login($dbUser, $pdoBt)
 		//  tout est ok, on redirige
 		//----------------------------------------------------
 		$success[]="user authentifié";
-		 return $success;
-		header('Location:'. ROOT_PATH. '/public/home.php');
+		return $success;
+
 
 
 	}
