@@ -31,6 +31,13 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 // DATAS
 //----------------------------------------------------
 
+
+	echo "<pre>";
+	var_dump($_SESSION);
+	echo '</pre>';
+
+
+
 // https://phppot.com/php/php-mysql-inline-editing-using-jquery-ajax/
 
 // récup les inscriptions du magasin
@@ -84,10 +91,12 @@ function addParticipant($pdoBt)
 
 
 
-	$insert=$pdoBt->prepare("INSERT INTO salon (id_galec, nom_mag,nom,prenom,fonction,date1,date2,visite,repas2) VALUES (:id_galec, :nom_mag, :nom, :prenom, :fonction, :date1, :date2,:visite, :repas2)");
+	$insert=$pdoBt->prepare("INSERT INTO salon (id_galec,nom_mag,centrale,ville,nom,prenom,fonction,date1,date2,visite,repas2) VALUES (:id_galec, :nom_mag, :centrale, :ville, :nom, :prenom, :fonction, :date1, :date2,:visite, :repas2)");
 	$insert->execute(array(
 	  ':id_galec'=>$_SESSION['id_galec'],
       ':nom_mag' => $_SESSION['nom'],
+      ':centrale'=>$_SESSION['centrale'],
+      ':ville'=>$_SESSION['city'],
       ':nom' => strip_tags($_POST['nom']),
       ':prenom'=>strip_tags($_POST['prenom']),
       ':fonction'=>strip_tags($_POST['fonction']),

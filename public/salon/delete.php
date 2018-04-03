@@ -13,5 +13,5 @@ $req->execute(array(
 	':id'=> $id
 ));
 
-header("Location:inscription2.php#inscription-lk");
+header("Location:inscription.php#inscription-lk");
 
