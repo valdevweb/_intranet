@@ -3,7 +3,7 @@
 		<h1 class="header center grey-text text-darken-2"><?= $typeTitle .' '.$_SESSION['nom'] ?></h1>
 	</header>
 	<br><br>
-	<div class="row">
+	<!-- <div class="row">
 		<div class="col s2 m2 l2"></div>
 		<div class="col s8 m8 l8 white"><br>
 			<div class="col s2 m2 l2">
@@ -16,8 +16,8 @@
 		</div>
 		<div class="col s2 m2 l2"></div>
 
-	</div>
-	<div class="row">
+	</div> -->
+	<!-- <div class="row">
 		<div class="col s2 m2 l2"></div>
 		<div class="col s8 m8 l8 white"><br>
 			<div class="col s2 m2 l2">
@@ -33,7 +33,7 @@
 		<div class="col s2 m2 l2"></div>
 
 	</div>
-	<br><br>
+	<br><br> -->
 
 	<?php
 			ob_start();
