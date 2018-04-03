@@ -31,13 +31,6 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 // DATAS
 //----------------------------------------------------
 
-
-	echo "<pre>";
-	var_dump($_SESSION);
-	echo '</pre>';
-
-
-
 // https://phppot.com/php/php-mysql-inline-editing-using-jquery-ajax/
 
 // récup les inscriptions du magasin
