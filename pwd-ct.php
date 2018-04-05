@@ -46,7 +46,7 @@ if(isset($_GET['error']))
 	<div class="container">
 		<br><br>
 		<div class="row">
-			<div class="col-md "></div>
+			<div class="col-md"></div>
 			<div class="col-md-8 bg-light border">
 				<h1 class="text-center">Demande d'identifiants</h1>
 				<br>
@@ -84,6 +84,12 @@ if(isset($_GET['error']))
 					</div>
 				</form>
 			</div>
+			<div class="col-md"></div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md"></div>
+			<div class="col-md"><p class="text-center"><a href="index.php">Retour</a></p></div>
 			<div class="col-md"></div>
 		</div>
 		<?php
