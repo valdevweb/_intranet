@@ -38,31 +38,8 @@ function sendMail($mailingList,$subject,$tplLocation,$contentOne,$contentTwo,$li
 
 }
 
-// function sendMailSalon($mailingList,$subject,$tplLocation,$contentOne,$contentTwo,$link)
-// {
-// 	$tpl = file_get_contents($tplLocation);
 
 
-// 	$htmlContent=$tpl;
-// // Set content-type header for sending HTML email
-// 	$headers = "MIME-Version: 1.0" . "\r\n";
-// 	$headers .= "Content-Type: multipart/mixed;charset=UTF-8" . "\r\n";
-
-// // Additional headers
-// 	$headers .= 'From: ne_pas_repondre@btlec.fr>' . "\r\n";
-// 	$headers .= 'Cc: ' . "\r\n";
-// 	$headers .= 'Bcc:' . "\r\n";
-
-// 	if(mail($mailingList,$subject,$htmlContent,$headers))
-// 	{
-// 		return true;
-// 	}
-// 	else
-// 	{
-// 		return false;
-// 	}
-
-// }
 
 //mail avec piece jointe (utilisé par le salon)
 function mail_attachment($filename, $path, $mailto, $from_mail, $from_name, $replyto, $subject, $message) {
