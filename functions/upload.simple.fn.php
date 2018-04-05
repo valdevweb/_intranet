@@ -103,13 +103,14 @@ return (in_array($mime,$whiteList)) ? TRUE : FALSE ;
 //ajout dans table gazette
 function insertIntoDb($pdoBt,$name, $category, $dateDeb, $dateFin)
 {
-		$req=$pdoBt->prepare('INSERT INTO gazette (file, date, date_fin, category)
-		VALUE(:file, :date,:dateFin, :category)');
+		$req=$pdoBt->prepare('INSERT INTO gazette (file, date, date_fin, category,date_modif)
+		VALUE(:file, :date,:dateFin, :category, :date_modif)');
 		$req->execute(array(
 		':file'			=> $name,
 		':date'			=> $dateDeb,
 		':dateFin'		=> $dateFin,
-		':category'		=> $category
+		':category'		=> $category,
+		':date_modif'	=>date('Y-m-d H:i:s')
 	));
 }
 
