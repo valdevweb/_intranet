@@ -143,30 +143,34 @@ else
 			<li><a href="<?= ROOT_PATH. '/public/entrepot/discover.php'?>" class="tooltipped" data-position="bottom" data-tooltip="Visitez l'entrepôt"><span>Entrepôt</span></a></li>
 
 			<li  class='active has-sub'><a href="<?= ROOT_PATH. '/public/gazette/gazette.php'?>" >Les gazettes</a>
-		 <?php ob_start(); ?>
+		 		<?php ob_start(); ?>
 
 				<ul>
-					<!-- <li><a href=" ROOT_PATH. '/public/gazette/gazette.php'?>"></a></li> -->
 					<li><a href="<?= ROOT_PATH. '/public/gazette/upload-gazette.php'?>">Ajouter une gazette</a></li>
 				</ul>
-		<?php
-			$bt=ob_get_contents();
-			ob_end_clean();
-			echo ($_SESSION['type']=="btlec") ? $bt : '' ;
-		 ?>
+				<?php
+					$bt=ob_get_contents();
+					ob_end_clean();
+					echo ($_SESSION['type']=="btlec") ? $bt : '' ;
+				 ?>
 			</li>
 			<li  class='active has-sub'><a href="<?= ROOT_PATH. '/public/doc/display-doc.php'?>" >documents</a>
-				<?php ob_start(); ?>
 				<ul>
-					<li><a href="<?= ROOT_PATH. '/public/doc/upload-doc.php'?>">Ajouter des documents</a>
-					</li>
-				</ul>
+					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#odr-title'?>">ODR</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#tel-title'?>">TEL/BRII</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#mdd-title'?>">MDD</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#gfk-title'?>">GFK</a></li>
+
+				<?php ob_start(); ?>
+					<li><a href="<?= ROOT_PATH. '/public/doc/upload-doc.php'?>">Ajouter des documents</a></li>
+
 				<?php
 					$btdoc=ob_get_contents();
 					ob_end_clean();
 					echo ($uploadDocument) ? $btdoc : '' ;
 
-				 ?>
+				?>
+				 </ul>
 			</li>
 
 
