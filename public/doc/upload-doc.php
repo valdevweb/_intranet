@@ -29,26 +29,54 @@ require '../../functions/global.fn.php';
 // require '../../functions/group.fn.php';
 
 // require '../../functions/odr.fn.php';
-function insertDoc($pdoBt,$type,$file)
+
+$docCode=array(
+	3	=>"panier promo",
+	4	=>"assortiment",
+	5 	=>"resultats GFK",
+	6	=>"listing ODR",
+	7	=>"Tickets et BRII",
+	8	=>"point stock MDD"
+);
+
+echo $docCode[3];
+function insertDoc($pdoBt,$type,$file, $code)
 {
 	// $reply=strip_tags($_POST['reply']);
-	$insert=$pdoBt->prepare('INSERT INTO documents (type,date,file) VALUE (:type,:date,:file)');
+	$insert=$pdoBt->prepare('INSERT INTO documents (type,date,file,code,date_modif) VALUE (:type,:date,:file,:code,:date_modif)');
 	$result=$insert->execute(array(
 		':type'=>$type,
 		':date'=>$_POST['date'],
-		':file'=>$file
+		':file'=>$file,
+		':code'=>$code,
+		':date_modif'	=>date('Y-m-d H:i:s')
+
 	));
 	return $result;
 }
 
-function deleteDoc($pdoBt,$type)
+function deleteDoc($pdoBt,$code)
 {
-	$delete=$pdoBt->prepare('DELETE FROM documents WHERE type= :type');
+	$delete=$pdoBt->prepare('DELETE FROM documents WHERE code= :code');
 	$result=$delete->execute(array(
-		':type' =>$type
+		':code' =>$code
 	));
 	return $result;
 }
+
+function addToMajHebdo($pdoBt,$type,$path,$file,$code)
+{
+	$insert=$pdoBt->prepare('INSERT INTO doc_maj_hebdo (type,path,file,maj,code) VALUE (:type,:path,:file,:maj,:code)');
+	$insert->execute(array(
+		":type"		=>$type,
+		":path"		=>$path,
+		":file"		=>$file,
+		":maj"		=>date('Y-m-d H:i:s'),
+		":code"		=>$code
+	));
+
+}
+
 
 $errors=[];
 $success=[];
@@ -81,14 +109,14 @@ if(isset($_POST['sendOdr'])){
 	//on n'enregistre dans la base de donnée que si on a détecté aucune erreur
 	if(count($errors)==0)
     {
-    	if(deleteDoc($pdoBt,"listing des ODR"))
+    	if(deleteDoc($pdoBt,6))
     	{
     	}
     	else
     	{
 			$errors[]="erreur de suppression du fichier précédant";
     	}
-    	if(insertDoc($pdoBt,"listing des ODR", $file))
+    	if(insertDoc($pdoBt,"listing des ODR", $file,6))
 		{
 			$success[]="l'odr a bien été enregistrée. Nom du fichier :  " .$file;
 			unset($_POST);
@@ -107,7 +135,7 @@ if(isset($_POST['sendOdr'])){
 }
 //Tickets et BRII
 //------------------------------------------------------
-//			ENVOI assortiment
+//			ENVOI tickets
 //------------------------------------------------------
 
 if(isset($_POST['sendTel'])){
@@ -136,15 +164,17 @@ if(isset($_POST['sendTel'])){
 	//on n'enregistre dans la base de donnée que si on a détecté aucune erreur
 	if(count($errors)==0)
     {
-    	if(deleteDoc($pdoBt,"Tickets et BRII"))
+    	if(deleteDoc($pdoBt,7))
     	{
     	}
     	else
     	{
 			$errors[]="erreur de suppression du fichier précédant";
     	}
-    	if(insertDoc($pdoBt,"Tickets et BRII", $file))
+    	if(insertDoc($pdoBt,$docCode[7], $file, 7))
 		{
+
+			// addToMajHebdo($pdoBt,$type,$path,$file,$code);
 			$success[]="les Tickets et BRII ont bien été enregistrés. Nom du fichier :  " .$file;
 			unset($_POST);
 			unset($_FILES);
@@ -190,14 +220,14 @@ if(isset($_POST['sendAssort'])){
 	//on n'enregistre dans la base de donnée que si on a détecté aucune erreur
 	if(count($errors)==0)
     {
-    	if(deleteDoc($pdoBt,"assortiment"))
+    	if(deleteDoc($pdoBt,4))
     	{
     	}
     	else
     	{
 			$errors[]="erreur de suppression du fichier précédant";
     	}
-    	if(insertDoc($pdoBt,"assortiment", $file))
+    	if(insertDoc($pdoBt,"assortiment", $file, 4))
 		{
 			$success[]="l'assortiment a bien été enregistré. Nom du fichier :  " .$file;
 			unset($_POST);
@@ -245,14 +275,14 @@ if(isset($_POST['sendPanier'])){
 	//on n'enregistre dans la base de donnée que si on a détecté aucune erreur
 	if(count($errors)==0)
     {
-    	if(deleteDoc($pdoBt,"panier promo"))
+    	if(deleteDoc($pdoBt,3))
     	{
     	}
     	else
     	{
 			$errors[]="erreur de suppression du fichier précédant";
     	}
-    	if(insertDoc($pdoBt,"panier promo", $file))
+    	if(insertDoc($pdoBt,"panier promo", $file,3))
 		{
 			$success[]="le panier promo a bien été enregistré. Nom du fichier :  " .$file;
 			unset($_POST);
@@ -300,14 +330,14 @@ if(isset($_POST['sendMdd'])){
 	//on n'enregistre dans la base de donnée que si on a détecté aucune erreur
 	if(count($errors)==0)
     {
-    	if(deleteDoc($pdoBt,"point stock MDD"))
+    	if(deleteDoc($pdoBt,8))
     	{
     	}
     	else
     	{
 			$errors[]="erreur de suppression du fichier précédant";
     	}
-    	if(insertDoc($pdoBt,"point stock MDD", $file))
+    	if(insertDoc($pdoBt,"point stock MDD", $file, 8))
 		{
 			$success[]="le point stock MDD a bien été enregistré. Nom du fichier : " .$file;
 			unset($_POST);
@@ -356,14 +386,14 @@ if(isset($_POST['sendGfk'])){
 	//on n'enregistre dans la base de donnée que si on a détecté aucune erreur
 	if(count($errors)==0)
     {
-    	if(deleteDoc($pdoBt,"resultats GFK"))
+    	if(deleteDoc($pdoBt,5))
     	{
     	}
     	else
     	{
 			$errors[]="erreur de suppression du fichier précédant";
     	}
-    	if(insertDoc($pdoBt,"resultats GFK", $file))
+    	if(insertDoc($pdoBt,"resultats GFK", $file,5))
 		{
 			$success[]="les resultats GFK ont bien été enregistrés. Nom du fichier :  " .$file;
 			unset($_POST);
