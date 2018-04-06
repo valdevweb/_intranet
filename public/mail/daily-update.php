@@ -1,8 +1,17 @@
 <?php
 //------------------------------------------------------
+//			INFOS
+//------------------------------------------------------
+/*
+Page lancée par tâche planifiée à 18h du lundi au vendredi
+pas d'autoload car :
+- include impossible (doc root point sur le c)
+- pas de démarrage de session
+
+ */
+//------------------------------------------------------
 //			CONNEXION A LA DB
 //------------------------------------------------------
-
 $path=dirname(__FILE__);
 if (preg_match('/_btlecest/', $path))
 {
@@ -28,12 +37,11 @@ catch(Exception $e)
 //------------------------------------------------------
 //			fn mail
 //------------------------------------------------------
-
 function mailUpdateDoc($mailingList,$subject,$fileList)
 {
 
-    $content="Bonjour, <br><br>";
-    $content.="Les documents ci-dessous ont été mis à jour sur <a href='http://172.30.92.53/btlecest'>votre portail</a> : <br>";
+    $content="Bonjour, <br><br><br>";
+    $content.="Aujourd'hui, sur <a href='http://172.30.92.53/btlecest'>votre portail</a>, vous trouverez : <br>";
     $content .="<ul>";
     foreach ($fileList as $file) {
         $content .= "<li>";
@@ -41,15 +49,13 @@ function mailUpdateDoc($mailingList,$subject,$fileList)
         $content .= "</li>";
     }
     $content .="</ul>";
-    $content .="<br><br><br>";
+    $content .="<br><br>";
     $content .="Cordialement,<br>";
-    $content .= "BTLec EST";
+    $content .= "BTLec EST - Portail";
     $htmlContent=$content;
-// Set content-type header for sending HTML email
+
     $headers = "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-
-// Additional headers
     $headers .= 'From: ne_pas_repondre@btlec.fr>' . "\r\n";
     $headers .= 'Cc: ' . "\r\n";
     $headers .= 'Bcc:' . "\r\n";
@@ -64,14 +70,6 @@ function mailUpdateDoc($mailingList,$subject,$fileList)
     }
 
 }
-
-
-
-
-
-
-
-
 
 //------------------------------------------------------
 //			INITIALISATION
@@ -90,7 +88,7 @@ if (file_exists($opp))
 	$majOpp=new DateTime($opp);
 	if($majOpp > $deadLine)
 	{
-		$fileList[]="la gazette alerte promo";
+		$fileList[]="de nouvelles alertes promos";
 	}
 
 }
@@ -121,7 +119,7 @@ foreach ($files as $dbFile)
 		$docDate=new DateTime($dbFile['date_modif']);
 		if($docDate > $deadLine)
 		{
-			$fileList[]=$dbFile['category'];
+			$fileList[]="la " . $dbFile['category'];
 		}
 	}
 }
@@ -129,15 +127,8 @@ if(count($fileList)!=0)
 {
 	$mailingList="valerie.montusclat@btlec.fr";
 	mb_internal_encoding('UTF-8');
-	$subject="Portail BTLec Est - mise à jour hebdo";
+	$subject="Portail BTLec Est - vos infos du jour";
 	$subject = mb_encode_mimeheader($subject);
 
 	mailUpdateDoc($mailingList,$subject,$fileList);
 }
-
-
-
-
-// si la der date de modif du fichier est sup à hier 18h
-
-
