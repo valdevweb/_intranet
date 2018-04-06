@@ -59,3 +59,25 @@ function authStat($pdoStat,$page, $action, $err)
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
+
+
+//----------------------------------------------------------
+//					page pwd.php
+// on n'a pas de var de session donc on récupère
+//-----------------------------------------------------------
+function pwdStat($pdoStat,$login,$page, $action, $descr, $version)
+{
+
+	$req=$pdoStat->prepare('INSERT INTO stats_logs (type_log,id_user,site,date_heure,page,action,description)
+		VALUE(:type_log,:id_user,:site,:date_heure,:page,:action,:description)');
+	$req->execute(array(
+		':type_log'		=>	$version,
+		':id_user'		=>$login,
+		':site'			=>'portail BT',
+		':date_heure'	=>date('Y-m-d H:i:s'),
+		':page'			=>$page,
+		':action'		=>$action,
+		':description'	=>$descr
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
