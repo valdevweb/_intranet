@@ -1,19 +1,38 @@
 <?php
+//----------------------------------------------------
+// CONNEXION  DB
+//----------------------------------------------------
 $path=dirname(__FILE__);
 if (preg_match('/_btlecest/', $path))
 {
 	require "config/_pdo_connect.php";
 	define("SITE_ADDRESS", "http://172.30.92.53/_btlecest");
+	$version="dev";
 
 }
 else {
 	require "config/pdo_connect.php";
 	define("SITE_ADDRESS", "http://172.30.92.53/btlecest");
-
+	$version="prod";
 }
-include "pwd-ct.php";
-require 'functions/mail.fn.php';
 
+//----------------------------------------------------
+// INCLUDES
+//----------------------------------------------------
+require 'functions/mail.fn.php';
+require 'functions/stats.fn.php';
+
+include "pwd-ct.php";
+
+//----------------------------------------------------
+// STATS
+//----------------------------------------------------
+$page=basename(__file__);
+$action="demande d'identifiants de connexion";
+
+//----------------------------------------------------
+// DATA
+//----------------------------------------------------
 function addMsg($pdoBt,$id,$rbt,$mag)
 {
 	$inc_file="";
@@ -35,32 +54,29 @@ function addMsg($pdoBt,$id,$rbt,$mag)
 }
 
 
-
-
 if(isset($_POST['submit'])){
-	// $errors=[];
-	// $success=[];
 	$redir="";
 	extract($_POST);
 	if(isset($centrale) && isset($mag))
 	{
-
-	//form complet
+	//form complet : on récupère le pano galec du mag grace au nom du mag dans la table sca3 =>
 		$req=$pdoBt->prepare("SELECT * FROM sca3 WHERE mag= :mag");
 		$req->execute(array(
 			":mag" =>$mag
 		));
+		//si pano galec trouvé, le recherche dans table users
 		if($sca=$req->fetch(PDO::FETCH_ASSOC))
 			{
 				$req=$pdoUser->prepare("SELECT * FROM users WHERE galec= :galec");
 				$req->execute(array(
 					":galec"	=>$sca['galec']
 				));
-				$codeBt=$sca['btlec'];
-				//faire test sur 4920
-		 		$rbt=$codeBt."-RBT@btlec.fr";
-				// $rbt="valerie.montusclat@btlec.fr";
 				$webuser=$req->fetch(PDO::FETCH_ASSOC);
+				//ld rbt du mag
+				$codeBt=$sca['btlec'];
+				$rbt=$codeBt."-RBT@btlec.fr";
+				// $rbt="valerie.montusclat@btlec.fr";
+
 				// ----------------------------------------
 				// si le mot de passe en clair existe déjà
 				// ---------------------------------------
@@ -68,12 +84,13 @@ if(isset($_POST['submit'])){
 				{
 		 	// echo "envoi email avec mdp " . $result['nohash_pwd'];
 					$link="";
-		 	// $to="valerie.montusclat@btlec.fr";
 					$tplIdent='public/mail/envoi_identifiant.tpl.html';
 					$subject="PORTAIL BTLEC Est - Vos identifiants de connexion";
 					if(sendMail($rbt,$subject,$tplIdent,$webuser['login'],$webuser['nohash_pwd'], $link))
 					{
 						$redir="pwd.php?success=1";
+						$descr="envoi identifiants par mail";
+						pwdStat($pdoStat,$webuser['login'],$page, $action, $descr, $version);
 						header('Location:'.$redir);
 
 					}
@@ -90,7 +107,7 @@ if(isset($_POST['submit'])){
 					$id=$webuser['id'];
 					$idMsg=addMsg($pdoBt,$id,$rbt,$mag);
 					$mailtoInfo="btlecest.portailweb.informatique@btlec.fr";
-					// $mailtoInfo="valerie.montusclat@btlec.fr";
+				 	// $mailtoInfo="valerie.montusclat@btlec.fr";
 					$subject="PORTAIL BTLEC Est - demande d'identifiants - magasin " . $mag;
 					$tplIdent='public/mail/demande_identifiants.tpl.html';
 					$content="";
@@ -98,7 +115,8 @@ if(isset($_POST['submit'])){
 
 					if(sendMail($mailtoInfo,$subject,$tplIdent,$mag,$content, $link))
 					{
-						// $success[]="Une demande a été automatiquement envoyée au service informatique pour que votre mot de passe soit communiqué à la (aux) personne(s) qui figure(nt) dans la liste RBT du magasin";
+						$descr="création d'une demande identifiants sur le portail";
+						pwdStat($pdoStat,$webuser['login'],$page, $action, $descr, $version);
 						$redir="pwd.php?success=2";
 						header('Location:'.$redir);
 
@@ -120,7 +138,7 @@ if(isset($_POST['submit'])){
 				header('Location:'.$redir);
 			}
 
-			// include ('public/view/_errors.php');
+
 
 
 
