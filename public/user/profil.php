@@ -15,8 +15,13 @@ $page=(basename(__FILE__));
 $page=explode(".php",$page);
 $page=$page[0];
 $cssFile=ROOT_PATH ."/public/css/".$page.".css";
+//----------------------------------------------------
+// INFOS PAGE
+//----------------------------------------------------
+// pour un mag, la page affiche l'adresse et le nom du mag
+// si cdm trouvé, les coordonnés du cdm
+// pour un utilisateur non mag, pas d'affichage
 
-// require('fpdf181/fpdf.php');
 
 // <---------------------------------------------------
 // STATS - add rec
@@ -27,10 +32,11 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 // $action="envoi d'une demande";
 // addRecord($pdoStat,$page,$action, $descr);
 //------------------------------------->
+
+
 //----------------------------------------------------
 // DATAS
 //----------------------------------------------------
-
 if(isset($_SESSION['id_galec']))
 {
 	$req=$pdoBt->prepare("SELECT * FROM sca3 WHERE galec= :galec");
@@ -81,6 +87,7 @@ include('../view/_navbar.php');
 	<p><?= $city?> </p>
 	<br><br>
 	<?php
+	//----------------------->
 	ob_start();
  	?>
 	<div class="card">
@@ -91,8 +98,6 @@ include('../view/_navbar.php');
 			</div>
 			<div class="col-md-7">
 				<div class="card-body">
-					<!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> -->
-					<!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
 					<h5 class="card-title"> <?= $cdm['cdm'] ?></h5>
 					<p class="card-text"><i class="fa fa-phone fa-2x"></i><?=$infoCdm['mobile']?></p>
 					<p class="card-text"><i class="fa fa-envelope fa-2x"></i><?=$infoCdm['email']?></p>
@@ -104,7 +109,7 @@ include('../view/_navbar.php');
 	<?php
 	$cdmContent=ob_get_contents();
 	ob_end_clean();
-
+	//----------------------->
 
 	// si on a trouvé un chargé de mission, on affiche ses infos
 	if($cdm !="")
