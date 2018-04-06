@@ -1,0 +1,12 @@
+.fa.fa-phone, .fa.fa-envelope
+{
+    color:#cccccc;
+    padding-right: 20px;
+}
+#qrcode{
+	padding-left: 20px;
+}
+
+.card-title{
+	color:#fd7e14 ;
+}
