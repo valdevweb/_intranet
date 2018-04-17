@@ -162,9 +162,9 @@ input[type=text]{
     color: #000 !important;
 }
 
-input[type=email]{
+#sendpdf input[type=email]{
     background-color: #fafafa !important;
-    /* width: 100%; */
+    width: 30%;
     padding: 5px;
     border: 1px solid #9e9e9e !important    ;
     border-radius: 2px;
@@ -172,14 +172,25 @@ input[type=email]{
     color: #000 !important;
 }
 
-
+#more input[type=email]{
+    background-color: #fafafa !important;
+    width: 40%;
+    padding: 5px;
+    border: 1px solid #9e9e9e !important    ;
+    border-radius: 2px;
+    height: 2rem;
+    color: #000 !important;
+}
 
 input{
     color:  #000 !important;
 }
-
-
-
+.font-weight-light
+{
+  font-weight: 300!important;
+  /* font-style: italic; */
+  font-size: .9em;
+}
 ::-webkit-input-placeholder {
     padding-left: 5px;
 }
@@ -223,7 +234,21 @@ a:hover.blue-link{
 
 }
 
+a.contact-link{
+  color: #1976D2 !important;
+  /* font-weight: bold; */
+}
 
+a:hover.contact-link{
+    color: #1976D2 !important;
+    /* font-weight: bold; */
+    letter-spacing: 0.2px;
+    text-decoration: underline;
+}
+
+.fa.fa-envelope-o{
+    padding-right: 10px;
+}
 
 /* h3{
   border-bottom: 2px solid #1565C0;
@@ -342,6 +367,20 @@ select{
 .line-height{
   line-height: 30px;
 }
+.line-height a{
+  color: #1565c0 !important;
+}
+.line-height a:hover{
+  font-weight: bold;
+}
+
+textarea{
+  height:  200px !important ;
+}
+
+
+
+
 @media only screen and (max-width: 1460px){
 
   select,input{
@@ -351,12 +390,7 @@ select{
 
 }
 
-.line-height a{
-  color: #1565c0 !important;
-}
-.line-height a:hover{
-  font-weight: bold;
-}
+
 @media only screen and (max-width: 1024px){
   html,body {
     font-size: 12px !important;

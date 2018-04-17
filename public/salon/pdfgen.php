@@ -5,14 +5,14 @@ require('fpdf181/fpdf.php');
 //require('image_alpha.php');
 require('../../config/autoload.php');
 
-$pdf = new FPDF();
-$pdf->AddPage();
-$pdf->SetFont('Arial','B',16);
-$pdf->Cell(40,10,$_SESSION['nom']);
-$pdf->Text(8,38,'N° de facture : ');
-$pdf->Text(8,43,'Date : ');
-$pdf->Text(8,48,'Mode de règlement : ');
-$tosend=$pdf->Output('F','D:\www\_intranet\upload\inscr.pdf');
+// $pdf = new FPDF();
+// $pdf->AddPage();
+// $pdf->SetFont('Arial','B',16);
+// $pdf->Cell(40,10,$_SESSION['nom']);
+// $pdf->Text(8,38,'N° de facture : ');
+// $pdf->Text(8,43,'Date : ');
+// $pdf->Text(8,48,'Mode de règlement : ');
+// $tosend=$pdf->Output('F','D:\www\_intranet\upload\inscr.pdf');
 
 function listing($pdoBt)
 {
@@ -51,18 +51,25 @@ class PDF extends FPDF
 // Tableau coloré
 	function FancyTable($header, $inscr)
 	{
-		$this->Image('bt300.jpg',5,5);
+		// $this->Ln(14);
+		$this->Image('bt300.jpg',10,15);
 		$this->Ln(50);
 	   // Couleurs, épaisseur du trait et police grasse
 		$this->SetFont('Arial','',24);
-		$this->Cell(180,0,'INSCRIPTIONS SALON BTLEC 2018');
+		$this->Cell(180,10,'      INSCRIPTIONS - SALON BTLEC 2018');
 		$this->SetFont('Arial','',12);
-		$this->Ln(40);
+		$this->Ln(30);
 		$this->Cell(8,0,'Bonjour,');
-		$this->Ln(10);
-		$this->Cell(8,0,utf8_decode('Vous trouverez ci dessous le récapitulatif des inscrits pour votre magasin pour le'));
-		$this->Ln(10);
-		$this->Cell(8,0,'salon BTLec EST du 12 au 13 juin 2018');
+		$this->Ln(14);
+		$this->Cell(8,0,utf8_decode('Vous trouverez ci dessous le récapitulatif des inscrits pour votre magasin pour le salon'));
+		$this->Ln(6);
+		$this->Cell(8,0,'BTLec EST du 12 au 13 juin 2018');
+		$this->Ln(14);
+		$this->Cell(8,0,utf8_decode('Nous vous rappelons que les visites de l\'entrepot et de la scapsav se dérouleront :'));
+		$this->Ln(6);
+		$this->Cell(8,0,'   - le mardi : entre 14h00 et 17h30');
+		$this->Ln(6);
+		$this->Cell(8,0,'   - le mercredi : entre 09h00 et 16h00');
 		$this->Ln(10);
     // $this->Cell(8,0,'Liste des inscrits');
 
@@ -116,13 +123,30 @@ class PDF extends FPDF
 		$this->Cell(array_sum($w),0,'','T');
 	}
 
-	function genQrCode($file,$nom,$prenom){
-		$this->SetFont('Arial','',14);
-		$this->Cell(180,40,"Invitation de M. ou Mme " . utf8_decode($nom) ." " .utf8_decode($prenom) );
+	function genQrCode($file,$nom,$prenom,$mag,$datePres,$pano)
+	{
+		$this->Image('bt300.jpg',10,15);
+		$this->Ln(50);
+		$this->SetFont('Arial','',24);
+		$this->Cell(180,0,'INVITATION AU SALON BTLEC 2018');
+		$this->SetFont('Arial','',12);
+
+		$this->Ln(24);
+		// $this->SetFont('Arial','',14);
+		$this->Cell(8,0,"      Leclerc " . $mag ." - " .$pano);
+		$this->Ln(6);
+		$this->Cell(8,0,"      Participant : " .utf8_decode($prenom) ." ". utf8_decode($nom));
+		$this->Ln(6);
+		$this->Cell(8,0,"      ". $datePres);
+		$this->Ln(30);
+		// $this->Ln(20);
+		$this->Cell(8,0,utf8_decode('Merci de vous munir impérativement de ce document lors de votre venue. Il sera à présenter à '));
+		$this->Ln(6);
+		$this->Cell(8,0,utf8_decode('l\'accueil du salon.'));
 		// $this->Cell(180,40,"Invitation de M. ou Mme " . $nom ." " .$prenom );
-		$this->Ln(50);
-		$this->Image($file,80,50);
-		$this->Ln(50);
+		$this->Ln(40);
+		$this->Image($file,80,160);
+
 
 	}
 
@@ -143,12 +167,30 @@ $pdf->SetFont('Arial','',14);
 $pdf->AddPage();
 
 $pdf->FancyTable($header,$inscr);
-foreach ($qrcode as $img) {
+foreach ($qrcode as $img)
+{
 	$pdf->AddPage();
-    // $pdf->Cell(8,0,$img['nom']);
-    // $pdf->Ln(50);
+    //
+    //date de présence sur le salon
+
+	if($img['date1']=="oui" && $img['date2']=="oui")
+	{
+		$datePres="Dates : Mardi 12 juin et mercredi 13 juin";
+	}
+	else
+	{
+		if($img['date1']=="oui")
+		{
+			$datePres="Date : Mardi 12 juin";
+		}
+		elseif ($img['date2']=="oui") {
+			$datePres="Date : Mercredi 13 juin";
+		}
+	}
+
+
 	$file=SITE_ADDRESS."/public/img/qrcode/" .$img['qrcode'] . ".jpg";
-	$pdf->genQrCode($file, $img['nom'],$img['prenom']);
+	$pdf->genQrCode($file, $img['nom'],$img['prenom'],$img['nom_mag'],$datePres,$img['id_galec']);
 }
 
 

@@ -7,6 +7,9 @@ if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
 }
 
+require '../../functions/mail.fn.php';
+
+
 // require 'pdfgenmail.php';
 //-----------------------------------------------------
 //	css dynamique
@@ -102,84 +105,107 @@ function addParticipant($pdoBt)
 }
 
 
-
+// si formulaire d'ajout de participant validé
 
 if(isset($_POST['inscrire'])){
 	addParticipant($pdoBt);
 	header("Location:inscription.php#inscription-lk");
 }
 
+//si demande envoi pdf faite
 if(isset($_POST['send']))
 {
-require('fpdf181/fpdf.php');
-require '../../functions/mail.fn.php';
+	require('fpdf181/fpdf.php');
 
 	class PDF extends FPDF
 	{
 // Tableau coloré
-function FancyTable($header, $inscr)
-	{
-		$this->Image('bt300.jpg',5,5);
-		$this->Ln(50);
-	   // Couleurs, épaisseur du trait et police grasse
-		$this->SetFont('Arial','',24);
-		$this->Cell(180,0,'INSCRIPTIONS SALON BTLEC 2018');
-		$this->SetFont('Arial','',12);
-		$this->Ln(40);
-		$this->Cell(8,0,'Bonjour,');
-		$this->Ln(10);
-		$this->Cell(8,0,utf8_decode('Vous trouverez ci dessous le récapitulatif des inscrits pour votre magasin pour le'));
-		$this->Ln(10);
-		$this->Cell(8,0,'salon BTLec EST du 12 au 13 juin 2018');
-		$this->Ln(10);
-    // $this->Cell(8,0,'Liste des inscrits');
+	function FancyTable($header, $inscr)
+		{
+			$this->Image('bt300.jpg',10,15);
+			$this->Ln(50);
+		   // Couleurs, épaisseur du trait et police grasse
+			$this->SetFont('Arial','',24);
+			$this->Cell(180,10,'      INSCRIPTIONS - SALON BTLEC 2018');
+			$this->SetFont('Arial','',12);
+			$this->Ln(30);
+			$this->Cell(8,0,'Bonjour,');
+			$this->Ln(14);
+			$this->Cell(8,0,utf8_decode('Vous trouverez ci dessous le récapitulatif des inscrits pour votre magasin pour le salon'));
+			$this->Ln(6);
+			$this->Cell(8,0,'BTLec EST du 12 au 13 juin 2018');
+			$this->Ln(14);
+			$this->Cell(8,0,utf8_decode('Nous vous rappelons que les visites de l\'entrepot et de la scapsav se dérouleront :'));
+			$this->Ln(6);
+			$this->Cell(8,0,'   - le mardi : entre 14h00 et 17h30');
+			$this->Ln(6);
+			$this->Cell(8,0,'   - le mercredi : entre 09h00 et 16h00');
+			$this->Ln(10);
+	    // $this->Cell(8,0,'Liste des inscrits');
 
-		$this->Ln(20);
+			$this->Ln(20);
     // $this->Text(8,0,);
 
-		$this->SetFillColor(255,0,0);
-		$this->SetTextColor(255);
-		$this->SetDrawColor(128,0,0);
-		$this->SetLineWidth(.3);
-		$this->SetFont('','B');
-    // En-tête
-		$w = array(40, 40, 25, 25, 25, 25);
 
-    // parcours les colonnes
-		for($i=0;$i<count($header);$i++)
-			$this->Cell($w[$i],7,$header[$i],1,0,'C',true);
-		$this->Ln();
-    // Restauration des couleurs et de la police
-		$this->SetFillColor(224,235,255);
-		$this->SetTextColor(0);
-		$this->SetFont('Arial');
-    // Données
-		$fill = false;
+			$this->SetFillColor(255,0,0);
+			$this->SetTextColor(255);
+			$this->SetDrawColor(128,0,0);
+			$this->SetLineWidth(.3);
+			$this->SetFont('','B');
+	    // En-tête
+			$w = array(40, 40, 25, 25, 25, 25);
 
-		foreach($inscr as $res)
-		{
+	    // parcours les colonnes
+			for($i=0;$i<count($header);$i++)
+				$this->Cell($w[$i],7,$header[$i],1,0,'C',true);
+			$this->Ln();
+	    // Restauration des couleurs et de la police
+			$this->SetFillColor(224,235,255);
+			$this->SetTextColor(0);
+			$this->SetFont('Arial');
+	    // Données
+			$fill = false;
+
+			foreach($inscr as $res)
+			{
 				$this->Cell($w[0],6,ucfirst(strtolower(utf8_decode($res['nom']))),'LR',0,'L',$fill);
 				$this->Cell($w[1],6,ucfirst(strtolower(utf8_decode($res['prenom']))),'LR',0,'L',$fill);
 				$this->Cell($w[2],6,$res['date1'],'LR',0,'R',$fill);
 				$this->Cell($w[2],6,$res['date2'],'LR',0,'R',$fill);
 				$this->Cell($w[3],6,$res['visite'],'LR',0,'R',$fill);
 				$this->Cell($w[4],6,$res['repas2'],'LR',0,'R',$fill);
-				// $this->Cell($w[5],6,$res['scapsav1'],'LR',0,'R',$fill);
+					// $this->Cell($w[5],6,$res['scapsav1'],'LR',0,'R',$fill);
 				$this->Ln();
 				$fill = !$fill;
 
+			}
+	    // Trait de terminaison
+			$this->Cell(array_sum($w),0,'','T');
 		}
-    // Trait de terminaison
-		$this->Cell(array_sum($w),0,'','T');
-	}
 
-		function genQrCode($file,$nom,$prenom){
-		// $this->Cell(8,0,utf8_decode('Vous trouverez ci dessous le récapitulatif des inscrits pour votre magasin pour le'));
-			$this->SetFont('Arial','',14);
-			$this->Cell(180,40,"Invitation de M. ou Mme " . utf8_decode($nom) ." " .utf8_decode($prenom) );
+		function genQrCode($file,$nom,$prenom,$mag,$datePres,$pano)
+		{
+			$this->Image('bt300.jpg',10,15);
 			$this->Ln(50);
-			$this->Image($file,80,50);
-			$this->Ln(50);
+			$this->SetFont('Arial','',24);
+			$this->Cell(180,0,'INVITATION AU SALON BTLEC 2018');
+			$this->SetFont('Arial','',12);
+
+			$this->Ln(24);
+			// $this->SetFont('Arial','',14);
+			$this->Cell(8,0,"      Leclerc " . $mag ." - " .$pano);
+			$this->Ln(6);
+			$this->Cell(8,0,"      Participant : " .utf8_decode($prenom) ." ". utf8_decode($nom));
+			$this->Ln(6);
+			$this->Cell(8,0,"      ". $datePres);
+			$this->Ln(30);
+			// $this->Ln(20);
+			$this->Cell(8,0,utf8_decode('Merci de vous munir impérativement de ce document lors de votre venue. Il sera à présenter à '));
+			$this->Ln(6);
+			$this->Cell(8,0,utf8_decode('l\'accueil du salon.'));
+			// $this->Cell(180,40,"Invitation de M. ou Mme " . $nom ." " .$prenom );
+			$this->Ln(40);
+			$this->Image($file,80,160);
 
 		}
 	}
@@ -193,11 +219,29 @@ function FancyTable($header, $inscr)
 	$pdf->AddPage();
 
 	$pdf->FancyTable($header,$inscr);
-	foreach ($inscr as $img) {
+	foreach ($inscr as $img)
+	{
 		$pdf->AddPage();
     	$fileName=$img['id_galec'];
+    	if($img['date1']=="oui" && $img['date2']=="oui")
+    	{
+    		$datePres="Dates : Mardi 12 juin et mercredi 13 juin";
+    	}
+    	else
+    	{
+    		if($img['date1']=="oui")
+    		{
+    			$datePres="Date : Mardi 12 juin";
+    		}
+    		elseif ($img['date2']=="oui") {
+    			$datePres="Date : Mercredi 13 juin";
+    		}
+    	}
+
+
 		$file=SITE_ADDRESS."/public/img/qrcode/" .$img['qrcode'] . ".jpg";
-		$pdf->genQrCode($file, $img['nom'],$img['prenom']);
+		$pdf->genQrCode($file, $img['nom'],$img['prenom'],$img['nom_mag'],$datePres,$img['id_galec']);
+
 	}
 	// génération du pdf
 	$pdf->Output("F","D:\www\_intranet\upload\\" .$fileName.".pdf");
@@ -215,8 +259,60 @@ function FancyTable($header, $inscr)
 	// sendMailSalon($destinataire,$objet,$emplate,$name,$magName, $link);
 	$sentMail=mail_attachment($file,$path,$to,$from,"Portail BTLEC EST",$from,$subject, $message);
 	 //header("Location:inscription2.php#inscription-lk");
+}
 
 
+// si demande de rensiegnement
+$errors=[];
+$success=[];
+
+if(isset($_POST['more-info']))
+{
+	if(isset($_POST['msg'])){
+
+		// $formMsg=htmlspecialchars(nl2br($_POST['msg']));
+		$formMsg=htmlspecialchars(stripslashes($_POST['msg']));
+		// echo $msg;
+	}
+	else
+	{
+			$errors[]="Merci de saisir votre demande";
+
+	}
+	if(filter_var($_POST['email'],FILTER_VALIDATE_EMAIL))
+	{
+		$formMail=$_POST['email'];
+	}
+	else
+	{
+			$errors[]="Merci d'indiquer votre adresse mail";
+	}
+	//si pas d'erreur
+	if(count($errors)==0)
+    {
+    	//envoi mail
+    	//$to="valerie.montusclat@btlec.fr";
+		$to="salonbtlecest@btlec.fr";
+    	$subject="Portail BTLec - Salon, demande de renseignement - " .$_SESSION['nom'];
+    	$infosMag="demande du magasin : " . $_SESSION['nom'] ." - " .$_SESSION['id_galec'] ."<br><br>";
+    	$formMsg= $infosMag .$formMsg;
+		if (sendMailContact($to,$subject,$formMail, $formMsg))
+		{
+			$success[]="Votre demande de renseignements a bien été envoyée";
+			// $errors[]="Erreur à l'envoi du mail";
+
+		}
+		else
+		{
+			$errors[]="Erreur à l'envoi du mail";
+
+		}
+
+    }
+    else
+    {
+
+    }
 }
 
 //----------------------------------------------------
@@ -228,6 +324,15 @@ require '../view/_navbar.php';
 // VIEW - CONTENT
 //----------------------------------------------------
 // require 'rec-inscription.php';
+//
+	// echo "<pre>";
+	// var_dump($errors);
+	// echo '</pre>';
+	// 	echo "<pre>";
+	// 	var_dump($_SESSION);
+	// 	echo '</pre>';
+
+
 ?>
 <div class="container" id="up">
 	<!-- main title -->
@@ -238,12 +343,32 @@ require '../view/_navbar.php';
 			<!-- MESSAGE SUCCES - ERREUR ENVOI DE MAIL -->
 			<p>
 				<?php
-				if(isset($_SESSION['notification']['message']))
+				if(isset($_SESSION['notification']['success']))
 				{
-					echo "<p class='green-text'>" . $_SESSION['notification']['message']."</p>";
+					echo "<p class='green-text'>" . $_SESSION['notification']['success']."</p>";
+					$_SESSION['notification']=[];
+				}
+				elseif(isset($_SESSION['notification']['error']))
+				{
+					echo "<p class='red-text'>" . $_SESSION['notification']['error']."</p>";
 					$_SESSION['notification']=[];
 				}
 
+				if(isset($errors))
+				{
+						foreach ($errors as $error) {
+							echo "<p class='red-text'>" . $error."</p>";
+
+						}
+				}
+
+				if(isset($success))
+				{
+						foreach ($success as $msuccess) {
+							echo "<p class='green-text'>" . $msuccess."</p>";
+
+						}
+				}
 				?>
 
 				</p>
@@ -251,8 +376,8 @@ require '../view/_navbar.php';
 				<br>
 				<ul>
 					<li><a href="#salon-lk">Salon 2018</a></li>
-					<li><a href="#inscription-lk">Inscriptions</a></li>
 					<li><a href="#modalite-lk">Modalités</a></li>
+					<li><a href="#inscription-lk">Inscriptions</a></li>
 				</ul>
 				<br>
 				<p><i class="fa fa-ravelry" aria-hidden="true"></i><i class="fa fa-ravelry" aria-hidden="true"></i><i class="fa fa-ravelry" aria-hidden="true"></i></p>
@@ -288,11 +413,16 @@ require '../view/_navbar.php';
 			<h4 class="blue-text text-darken-4" id="salon-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i>LE SALON BTLEC 2018 </h4>
 			<hr>
 			<br><br>
-			<p>Le salon BTlec 2018 se déroulera sur 2 jours, le <strong>12 juin 2018</strong> et le <strong>13 juin</strong>. Nous vous proposons cette année, de profiter de votre venue au salon pour visiter notre entrepôt et la SCAPSAV.</p>
-			<p>Enfin d'organiser au mieux le déroulement du salon, nous vous prions de bien vouloir remplir le <a href="#inscription-lk" class="blue-link">formulaire d'inscription</a>.  Sous le formulaire d'inscription, vous trouverez les informations sur les <a href="#modalite-lk" class="blue-link">modalités d'accueil et d'accès</a> à BTlec Est</p>
-			<p>Un badge vous sera remis à votre entrée du salon.</p>
-
-			<br><br><br>
+			<p>Le salon BTlec 2018 se déroulera sur 2 jours, le <strong>12 juin</strong> et le <strong>13 juin</strong>. Nous vous proposons cette année, de profiter de votre venue au salon pour visiter notre entrepôt et la SCAPSAV.</p>
+			<p>
+			Plages horaires des visites :
+			<ul class="browser-default">
+				<li>Le mardi : entre 14h00 et 17h30</li>
+				<li>Le mercredi entre 09h00 et 16h00</li>
+			</ul>
+			</p>
+			<p>Afin d'organiser au mieux le déroulement du salon, nous vous prions de bien vouloir remplir le <a href="#inscription-lk" class="blue-link">formulaire d'inscription</a>.  Sous le formulaire d'inscription, vous trouverez les informations sur les <a href="#modalite-lk" class="blue-link">modalités d'accueil et d'accès</a> à BTlec Est</p>
+			<p>Un badge vous sera remis à votre entrée sur le salon.</p>
 			<p class="right-align"><a href="#up" class="blue-link">retour</a></p>
 		</div>
 	</div>
@@ -312,8 +442,11 @@ require '../view/_navbar.php';
 					</ul>
 				</li>
 				<li>venir à BTlec : <a href="../mag/google-map.php" class="blue-link">coordonnées gps, carte</a></li>
+				<li>demande de renseignements complémentaires : <a href="#modal2" class="contact-link modal-trigger">nous contacter</a></li>
 			</ul>
-			<br><br>
+			<!-- <br> -->
+			<!-- <p><i class="fa fa-envelope-o" aria-hidden="true"></i>Nous contacter  pour tout renseignement complémentaire</a></p> -->
+
 			<p class="right-align"><a href="#up" class="blue-link">retour</a></p>
 		</div>
 	</div>
@@ -382,17 +515,21 @@ require '../view/_navbar.php';
 								<input type="text" name="prenom" placeholder="prenom" class="prenom" required></p>
 								<select name="fonction" class="browser-default fonction" required>
 									<option value="ADHERENT">ADHERENT</option>
+									<option value="ADHERENTE">ADHERENTE</option>
 									<option value="CHEF DE DEPARTEMENT">CHEF DE DEPARTEMENT</option>
 									<option value="CHEF DE RAYON">CHEF DE RAYON</option>
 									<option value="CHEF EC">CHEF EC</option>
 									<option value="DIRECTEUR">DIRECTEUR</option>
+									<option value="DIRECTRICE">DIRECTRICE</option>
 									<option value="DIRECTEUR ADJOINT">DIRECTEUR ADJOINT</option>
+									<option value="DIRECTRICE ADJOINTE">DIRECTRICE ADJOINTE</option>
 									<option value="RESPONSABLE NON ALIMENTAIRE">RESPONSABLE NON ALIMENTAIRE</option>
 									<option value="SAV">SAV</option>
 									<option value="VENDEUR">VENDEUR</option>
+									<option value="VENDEUSE">VENDEUSE</option>
 								</select>
-
-							<p>Quel(s) jour(s) souhaitez vous venir au salon ? </p>
+							<br>
+							<p><strong>Quel(s) jour(s) souhaitez vous venir au salon ? </strong></p>
 							<div class="zone1">
 								<p><input type="checkbox" name="jour1" value="oui" id="jour1" class="filled-in"><label for="jour1">Mardi 12 juin 2018</label></p>
 								<!-- ajout choix si jour 1 sélectionné -->
@@ -402,8 +539,11 @@ require '../view/_navbar.php';
 								<p><input type="checkbox" name="jour2" value="oui" id="jour2" class="filled-in"><label for="jour2">Mercredi 13 juin 2018</label></p>
 								<p id="day2"></p>
 							</div>
-							<p>Si vous souhaitez visiter l'entrepot et la scapsav merci de sélectionner un jour disponible</p>
-							<div class="zone1">
+							<br>
+							<p><strong>Si vous souhaitez visiter l'entrepot et la scapsav, merci de sélectionner un jour disponible</strong></p>
+							<p class="font-weight-light">Durée de la visite, environ 20 minutes. Les horaires vous seront communiqués à votre arrivée sur le salon</p>
+							<!-- <div class="zone1"> -->
+							<div id="visite">
 								<p id="date-visite1"></p>
 								<p id="date-visite2"></p>
 							</div>
@@ -422,8 +562,9 @@ require '../view/_navbar.php';
 					</li>
 				</ul>
 				<form method="post" id="sendmail" action="<?=$_SERVER['PHP_SELF']?>">
-				<p>
-					<label>Votre adresse mail : </label><br><input class="browser-default" type="email" required="require" name="email">
+				<p id="sendpdf">
+					<label>Votre adresse mail : </label><br>
+					<input class="browser-default" type="email" required="require" name="email">
 					<button class="btn" type="submit" name="send">Envoyer</button>
 				</p>
 				</form>
@@ -434,6 +575,27 @@ require '../view/_navbar.php';
 
 		</div>
 	</div>
+	<!-- fin zone inscription -->
+
+	<!-- modal de contacr -->
+	<div class="modal" id="modal2">
+		<div class="modal-content">
+			<h3>Demande de renseignements</h3>
+			<br>
+			<form method="post" action="<?=$_SERVER['PHP_SELF']?>">
+				<p>Votre message : </p>
+				<textarea name="msg" required="require"></textarea>
+				<p>Votre adresse mail :</p>
+				<p id="more">
+				<input type="email" name="email" required="require" >
+			</p>
+				<button class="btn" type="submit" name="more-info">Envoyer</button>
+			</form>
+		</div>
+	</div>
+
+
+
 
 
 </div>   <!--fin container -->
@@ -441,18 +603,22 @@ require '../view/_navbar.php';
 	<script>
 		$(document).ready(function(){
 			$('.modal').modal();
-
+			// $('#modal1').modal();
 			$(":checkbox#jour1").change(function(){
 				var visiteDayOne="";
 				visiteDayOne +="<p><input type='radio' name='visite' value='12/06/2018' id='visite1' class='fill-in'><label for='visite1'>12/06/2018</label>&nbsp; &nbsp; &nbsp;";
 				if($('input:checkbox[name=jour1]').is(':checked'))
 				{
 					// $('#day2').append(daytwo);
+					$('#visite').addClass('zone1');
 					$('#date-visite1').append(visiteDayOne);
 				}
 				else
 				{
 					$('#date-visite1').empty();
+					if($('#date-visite2').is(':empty')){
+						$('#visite').removeClass('zone1');
+					}
 
 				}
 				});
@@ -468,6 +634,7 @@ require '../view/_navbar.php';
 
 				if($('input:checkbox[name=jour2]').is(':checked'))
 				{
+					$('#visite').addClass('zone1');
 					$('#day2').append(daytwo);
 					$('#date-visite2').append(visiteDayTwo);
 				}
@@ -475,6 +642,9 @@ require '../view/_navbar.php';
 				{
 					$('#day2').empty();
 					$('#date-visite2').empty();
+					if($('#date-visite1').is(':empty')){
+						$('#visite').removeClass('zone1');
+					}
 
 				}
 
