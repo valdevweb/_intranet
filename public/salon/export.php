@@ -14,6 +14,7 @@ foreach ($data as $value) {
 	$datas[]=array(
 		'id'=>$value->id,
 		'id_galec'	=>$value->id_galec,
+		'code_bt'	=>$value->code_bt,
 		'nom_mag' =>$value->nom_mag,
 		'centrale'=>$value->centrale,
 		'ville'=>$value->ville,
