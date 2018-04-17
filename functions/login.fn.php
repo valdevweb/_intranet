@@ -114,6 +114,7 @@ function login($dbUser, $pdoBt)
 			$_SESSION['nom']=$scatrois['mag'];
 			$_SESSION['centrale']=$scatrois['centrale'];
 			$_SESSION['city']=$scatrois['city'];
+			$_SESSION['code_bt']=$scatrois['btlec'];
 
 		}
 		elseif($_SESSION['type']=='btlec')
