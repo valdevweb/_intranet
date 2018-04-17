@@ -152,7 +152,7 @@ if(isset($_POST['connexion']))
 	<div class="modal-content">
 		<div class="row">
 			<div class="col s2 m2 l2">
-			<img src="/_btlecest/public/img/icons/new-orange-sm.png">
+			<img src="public/img/icons/new-orange-sm.png">
 			</div>
 			<div class="col s10 m10 l10">
 				<br>
@@ -189,8 +189,8 @@ if(isset($_POST['connexion']))
 		// ouverture fenetre modal en auto
 		$('#modal1').modal();
 		$('#modal1').modal('open');
-		$('#modal-new').modal();
-		$('#modal-new').modal('open');
+		// $('#modal-new').modal();
+		// $('#modal-new').modal('open');
 
 		$(".dropdown-button").dropdown();
 		//infos bulles (navbar)
