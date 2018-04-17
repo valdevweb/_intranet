@@ -69,12 +69,34 @@ function mail_attachment($filename, $path, $mailto, $from_mail, $from_name, $rep
     error_reporting(E_ALL);
     if (mail($mailto, $subject, $nmessage, $header)) {
         // $result= "Mail envoyé avec succés à " . $mailto ."<br/>";
-        $_SESSION['notification']['message']="Mail envoyé avec succés à " . $mailto ."<br/>";
+        $_SESSION['notification']['success']="Mail envoyé avec succés à " . $mailto ."<br/>";
     } else {
-        $result= "Erreur lors de l'envoi du mail à  " .$mailto ."<br/>";
-        $_SESSION['notification']['message']="Erreur lors de l'envoi du mail à  " .$mailto ."<br/>";
+        // $result= "Erreur lors de l'envoi du mail à  " .$mailto ."<br/>";
+        $_SESSION['notification']['error']="Erreur lors de l'envoi du mail à  " .$mailto ."<br/>";
 
     }
     // return $result;
+
+}
+
+function sendMailContact($to,$subject,$formMail, $formMsg)
+{
+// Set content-type header for sending HTML email
+    $headers = "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+// Additional headers
+    $headers .= 'From: '. $formMail . "\r\n";
+    $headers .= 'Cc: ' . "\r\n";
+    $headers .= 'Bcc:' . "\r\n";
+    $formMsg=nl2br($formMsg);
+    if(mail($to,$subject,$formMsg,$headers))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 
 }
