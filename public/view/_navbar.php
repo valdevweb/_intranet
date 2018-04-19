@@ -13,13 +13,21 @@ function isUserInGroup($pdoBt,$idWebuser,$groupName)
 
 // affichage ou non de la page de téléchargement des documents
 $idUser=$_SESSION['id'];
-if (isUserInGroup($pdoBt,$idUser,"communication") || isUserInGroup($pdoBt,$idUser,"admin"))
+if (isUserInGroup($pdoBt,$idUser,"communication"))
 {
 	$uploadDocument=true;
+	$exploit=false;
+
+}
+elseif(isUserInGroup($pdoBt,$idUser,"admin"))
+{
+	$uploadDocument=true;
+	$exploit=true;
 }
 else
 {
 	$uploadDocument=false;
+	$exploit=false;
 }
 ?>
 <div id='cssmenu'>
@@ -160,6 +168,26 @@ else
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#tel-title'?>">TEL/BRII</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#mdd-title'?>">MDD</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#gfk-title'?>">GFK</a></li>
+					<?php
+						ob_start();
+	 				?>
+					<li><a href="<?= ROOT_PATH .'/public/infos/twentyfour.php#plv'?>">PLV 48h</a></li>
+					<?php
+					$exceptSocara=ob_get_contents();
+					ob_end_clean();
+					if(!isset($_SESSION['centrale']))
+					{
+						echo $exceptSocara;
+					}
+					else{
+						if($_SESSION['centrale'] !="SOCARA")
+						{
+							echo $exceptSocara;
+						}
+					}
+					?>
+
+
 
 				<?php ob_start(); ?>
 					<li><a href="<?= ROOT_PATH. '/public/doc/upload-doc.php'?>">Ajouter des documents</a></li>
@@ -172,7 +200,15 @@ else
 				?>
 				 </ul>
 			</li>
+			<!-- ajout menu exploitation salon -->
+			<?php ob_start(); ?>
+			<li><a href="<?= ROOT_PATH. '/public/salon/salon.php'?>" class="tooltipped" data-position="bottom" data-tooltip="salon inscriptions"><span>Salon</span></a></li>
+			<?php
+				$exploitNav=ob_get_contents();
+				ob_end_clean();
+				echo ($exploit) ? $exploitNav : '' ;
 
+			?>
 
 			<li><a href="http://172.30.92.53/scapsav/intranet/magasin.php" class="tooltipped" data-position="bottom" data-tooltip="aller sur le site scapsav">Site Scapsav</a></li>
 			<!-- <li><a href="http://site.scapsav.fr/sitescapsavdev/intranet/magasin.php" class="tooltipped" data-position="bottom" data-tooltip="aller sur le site scapsav">Site Scapsav</a></li> -->
