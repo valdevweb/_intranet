@@ -148,7 +148,7 @@ if(isset($_POST['connexion']))
 	</div>
 </div>
 
-<div class="modal" id="modal-new">
+<!-- <div class="modal" id="modal-new">
 	<div class="modal-content">
 		<div class="row">
 			<div class="col s2 m2 l2">
@@ -159,7 +159,7 @@ if(isset($_POST['connexion']))
 						<h4 class="orange-text text-darken-3 center">Nouveau sur votre portail !</h4>
 					</div>
 		</div>
-		<!-- <p><a class="send-mail-to" href="#"> Réinitialiser votre mot de passe</a></p> -->
+
 		 <p>Mise à disposition d'une PLV pour la livraison 24/48h : <a href="public/infos/plv-livraison-24-48h.pdf" class="blue-link">télécharger</a></p>
 		 <p>Ajout d'une rubrique "documents" où vous trouverez : </p>
 	 	 <ul class="browser-default">
@@ -172,8 +172,25 @@ if(isset($_POST['connexion']))
 	<div class="modal-footer">
 		<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
 	</div>
+</div> -->
+<div class="modal" id="modal-new">
+	<div class="modal-content">
+		<div class="row">
+			<div class="col s2 m2 l2">
+			<img src="public/img/icons/new-orange-sm.png">
+			</div>
+			<div class="col s10 m10 l10">
+				<br>
+						<h4 class="orange-text text-darken-3 center">Salon BTLEC EST 2018</h4>
+					</div>
+		</div>
+		<!-- <p><a class="send-mail-to" href="#"> Réinitialiser votre mot de passe</a></p> -->
+		 <p>Retrouvez toutes les informations concernant l'édition 2018	du SALON BTlec Est, ainsi que le formulaire d'inscription</p>
+	<div class="modal-footer">
+		<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
+	</div>
 </div>
-
+</div>
 
 
 
@@ -189,8 +206,8 @@ if(isset($_POST['connexion']))
 		// ouverture fenetre modal en auto
 		$('#modal1').modal();
 		$('#modal1').modal('open');
-		// $('#modal-new').modal();
-		// $('#modal-new').modal('open');
+		$('#modal-new').modal();
+		$('#modal-new').modal('open');
 
 		$(".dropdown-button").dropdown();
 		//infos bulles (navbar)
