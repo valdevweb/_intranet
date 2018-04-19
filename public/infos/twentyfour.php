@@ -62,7 +62,7 @@ include ('../view/_navbar.php');
 			</div>
 		</div>
 		<div class="row bggrey">
-			<div class="int-padding">
+			<div class="int-padding" id="plv">
 				<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>PLV service de livraison 24/48h</h4>
 				<ul class='browser-default'>
 					<li>PLV à placer dans les rayons concernés par la livraison 24/48h. Cliquez sur l'image pour la télécharger</li>
