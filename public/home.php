@@ -24,6 +24,9 @@ require "../functions/stats.fn.php";
 $gazettes=showThisWeek($pdoBt);
 $links=createLinks($pdoBt,$gazettes,$version);
 
+
+
+
 // les 2 dernière gazettes opportunités
 $gazetteAppros=showLastGazettesAppros($pdoBt);
 $link="http://172.30.92.53/".$version."upload/gazette/";
@@ -34,6 +37,17 @@ if($gazetteAppros){
 		$approHtml .= "<li><i class='fa fa-angle-double-right'></i><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .mb_strtolower($gazette['file'],'UTF-8') ."</a></li>";
 	}
 }
+$gazetteSpe=showThisWeekSpe($pdoBt);
+$speHtml="";
+
+if($gazetteSpe){
+	foreach ($gazetteSpe as $gSpe)
+	{
+		$speHtml .= "<li><i class='fa fa-angle-double-right'></i><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gSpe['file']."'>" .mb_strtolower($gSpe['title'],'UTF-8') ."</a></li>";
+	}
+}
+
+
 
 //stats
 $descr="page d'accueil";
