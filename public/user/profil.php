@@ -39,6 +39,7 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 //----------------------------------------------------
 if(isset($_SESSION['id_galec']))
 {
+	// chargé de mission
 	$req=$pdoBt->prepare("SELECT * FROM sca3 WHERE galec= :galec");
 	$req->execute(array(
 		':galec'	=>$_SESSION['id_galec']
@@ -67,7 +68,20 @@ if(isset($_SESSION['id_galec']))
 	));
 	$infoCdm=$reqInfo->fetch(PDO::FETCH_ASSOC);
 
+	//demandes
+	// $reqDde=$pdoBt->prepare("SELECT count(id) as nbDde FROM msg WHERE id_mag= :id");
+	// $reqDde->execute(array(
+	// 	":id"	=>$_SESSION['id']
+	// ));
+	// $nbDde=$reqDde->fetch(PDO::FETCH_ASSOC);
+	// $nbDde['nbDde'];
+	// $reqDdeClos=$pdoBt->prepare("SELECT count(id) as ddeClos FROM msg WHERE id_mag= :id AND etat='clos'");
+	// $reqDdeClos->execute(array(
+	// 	":id"	=>$_SESSION['id']
+	// ));
+	// $nbDdeClos=$reqDdeClos->fetch(PDO::FETCH_ASSOC);
 
+	// $nbDdeClos['ddeClos'];
 }
 
 
