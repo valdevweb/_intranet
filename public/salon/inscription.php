@@ -9,9 +9,6 @@ if(!isset($_SESSION['id'])){
 
 require '../../functions/mail.fn.php';
 
-	echo "<pre>";
-	var_dump($_SESSION);
-	echo '</pre>';
 
 // require 'pdfgenmail.php';
 //-----------------------------------------------------
@@ -27,12 +24,12 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 // <---------------------------------------------------
 // STATS - add rec
 //-----------------------------------------------------
-// require "../../functions/stats.fn.php";
-// $descr="demande mag au service ".$gt ;
-// $page=basename(__file__);
-// $action="envoi d'une demande";
-// addRecord($pdoStat,$page,$action, $descr);
-//------------------------------------->
+require "../../functions/stats.fn.php";
+$descr="page inscription salon";
+$page=basename(__file__);
+$action="consultation";
+addRecord($pdoStat,$page,$action, $descr);
+// ------------------------------------->
 //----------------------------------------------------
 // DATAS
 //----------------------------------------------------
@@ -114,6 +111,10 @@ function addParticipant($pdoBt)
 
 if(isset($_POST['inscrire'])){
 	addParticipant($pdoBt);
+	$descr="page inscription salon";
+	$page=basename(__file__);
+	$action="ajout participant";
+	addRecord($pdoStat,$page,$action, $descr);
 	header("Location:inscription.php#inscription-lk");
 }
 
@@ -134,7 +135,7 @@ if(isset($_POST['send']))
 			$this->Cell(180,10,'      INSCRIPTIONS - SALON BTLEC 2018');
 			$this->Ln(12);
 			$this->SetFont('Arial','',16);
-			$this->Cell(180,10,'                  Leclerc '. $_SESSION['nom'] .' - '.$_SESSION['code_bt'].' - '.$_SESSION['id_galec'] );
+			$this->Cell(180,10,'                  Leclerc '. $_SESSION['nom'] .' '.$_SESSION['code_bt'].' - '.$_SESSION['id_galec'] );
 			$this->SetFont('Arial','',12);
 			$this->Ln(30);
 			$this->Cell(8,0,'Bonjour,');
@@ -201,7 +202,7 @@ if(isset($_POST['send']))
 
 			$this->Ln(24);
 			// $this->SetFont('Arial','',14);
-			$this->Cell(8,0,"      Leclerc " . $mag ." - " .$pano);
+			$this->Cell(8,0,"      Leclerc " . $mag ."  " . $_SESSION['code_bt']. " - " .$pano);
 			$this->Ln(6);
 			$this->Cell(8,0,"      Participant : " .utf8_decode($prenom) ." ". utf8_decode($nom));
 			$this->Ln(6);
