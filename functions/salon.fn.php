@@ -31,18 +31,18 @@ function dayTwoFn($pdoBt){
 	$req=$pdoBt->prepare("SELECT date2 FROM salon WHERE date2='oui'");
 	$req->execute();
 	return $req->rowCount();
-
 }
 
+
 function visiteOneFn($pdoBt){
-	$req=$pdoBt->prepare("SELECT vsite FROM salon WHERE visite='12/06/2018'");
+	$req=$pdoBt->prepare("SELECT visite FROM salon WHERE visite='12/06/2018'");
 	$req->execute();
 	return $req->rowCount();
 }
 
 
 function visiteTwoFn($pdoBt){
-	$req=$pdoBt->prepare("SELECT vsite FROM salon WHERE visite='13/06/2018'");
+	$req=$pdoBt->prepare("SELECT visite FROM salon WHERE visite='13/06/2018'");
 	$req->execute();
 	return $req->rowCount();
 }
