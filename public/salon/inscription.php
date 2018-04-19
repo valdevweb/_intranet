@@ -9,6 +9,9 @@ if(!isset($_SESSION['id'])){
 
 require '../../functions/mail.fn.php';
 
+	echo "<pre>";
+	var_dump($_SESSION);
+	echo '</pre>';
 
 // require 'pdfgenmail.php';
 //-----------------------------------------------------
@@ -87,7 +90,7 @@ function addParticipant($pdoBt)
 
 
 
-	$insert=$pdoBt->prepare("INSERT INTO salon (id_galec,code_bt,nom_mag,centrale,ville,nom,prenom,fonction,date1,date2,visite,repas2) VALUES (:id_galec, :code_bt, :nom_mag, :centrale, :ville, :nom, :prenom, :fonction, :date1, :date2,:visite, :repas2)");
+	$insert=$pdoBt->prepare("INSERT INTO salon (id_galec,code_bt,nom_mag,centrale,ville,nom,prenom,fonction,date1,date2,visite,repas2,date_inscr) VALUES (:id_galec, :code_bt, :nom_mag, :centrale, :ville, :nom, :prenom, :fonction, :date1, :date2,:visite, :repas2, :date_inscr)");
 	$insert->execute(array(
 	  ':id_galec'=>$_SESSION['id_galec'],
 	  ':code_bt'=>$_SESSION['code_bt'],
@@ -100,7 +103,8 @@ function addParticipant($pdoBt)
       ':date1'=>$date1,
       ':date2'=>$date2,
       ':visite'=>$visite,
-      ':repas2'=>$repas
+      ':repas2'=>$repas,
+      ':date_inscr'=>date('Y-m-d')
 	));
 
 }
@@ -259,9 +263,9 @@ if(isset($_POST['send']))
 	$file=$fileName .".pdf";
 	$path="D:\www\_intranet\upload\\";
 	// require '../../functions/mail.fn.php';
-
+	$copieCache = 'Bcc: luc.muller@btlec.fr, stephane.wendling@btlec.fr' . "\r\n";
 	// sendMailSalon($destinataire,$objet,$emplate,$name,$magName, $link);
-	$sentMail=mail_attachment($file,$path,$to,$from,"Portail BTLEC EST",$from,$subject, $message);
+	$sentMail=mail_attachment($file,$path,$to,$from,"Portail BTLEC EST",$from,$subject, $message, $copieCache);
 	 //header("Location:inscription2.php#inscription-lk");
 }
 
