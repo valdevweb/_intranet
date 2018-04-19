@@ -20,6 +20,28 @@ function showThisWeek($pdoBt)
 	return $data;
 }
 
+function showThisWeekSpe($pdoBt)
+{
+	//debut et fin de la semaine en cours
+	$start=new DateTime('Monday this week');
+	$start=$start->format('Y-m-d');
+	$end=new DateTime('Friday this week');
+	$end=$end->format('Y-m-d');
+	//SELECT file, month(date) as month, day(date) as day, date FROM `gazette`
+	$req=$pdoBt->prepare("SELECT file, month(date) as month, day(date) as day, year(date) as year, date, category, title FROM gazette WHERE category=:gazette AND date BETWEEN :start AND :end ORDER BY date");
+	$req->execute(array(
+		':gazette'  =>'spéciale gazette',
+		':start' 	=> $start,
+		':end'		=> $end
+	));
+
+	$data=$req->fetchAll(PDO::FETCH_ASSOC);
+	return $data;
+}
+
+
+
+
 
 
 function createLinks($pdoBt,$gazettes,$version)
