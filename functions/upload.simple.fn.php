@@ -1,7 +1,7 @@
 <?php
 
 //upload gazette avec insertion info dans db
-function checkUpload($upload, $location,$category,$dateDeb,$dateFin, $pdoBt)
+function checkUpload($upload, $location,$category, $code, $dateDeb,$dateFin, $title, $pdoBt)
 {
 	$msg=array();
 	$name=$upload['name'];
@@ -19,7 +19,7 @@ function checkUpload($upload, $location,$category,$dateDeb,$dateFin, $pdoBt)
 	// si le déplacement du fichier tmp vers le rep d'upload ok
 	if(move_uploaded_file($tmp, $location.$name))
 	{
-		insertIntoDb($pdoBt,$name, $category, $dateDeb, $dateFin);
+		insertIntoDb($pdoBt,$name, $category, $code, $dateDeb, $dateFin,$title);
 		// reset form pour éviter multi renvoi :
 		unset($_FILE, $_POST);
 
@@ -101,15 +101,19 @@ return (in_array($mime,$whiteList)) ? TRUE : FALSE ;
 }
 
 //ajout dans table gazette
-function insertIntoDb($pdoBt,$name, $category, $dateDeb, $dateFin)
+function insertIntoDb($pdoBt,$name, $category, $code, $dateDeb, $dateFin,$title)
 {
-		$req=$pdoBt->prepare('INSERT INTO gazette (file, date, date_fin, category,date_modif)
-		VALUE(:file, :date,:dateFin, :category, :date_modif)');
+		// insertIntoDb($pdoBt,$name, $category, $code, $dateDeb, $dateFin);
+
+		$req=$pdoBt->prepare('INSERT INTO gazette (file, date, date_fin, category, code, title, date_modif)
+		VALUE(:file, :date,:dateFin, :category, :code, :title, :date_modif)');
 		$req->execute(array(
 		':file'			=> $name,
 		':date'			=> $dateDeb,
 		':dateFin'		=> $dateFin,
 		':category'		=> $category,
+		':code'			=> $code,
+		':title'		=> $title,
 		':date_modif'	=>date('Y-m-d H:i:s')
 	));
 }

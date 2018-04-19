@@ -104,7 +104,9 @@ label[for="gazette-upload"] {
     color: rgba(0, 0, 0, 0.84);
 }
 
+/* --------------------------- */
 
+/* gazette */
 label[for="gazette-upload"]:before {
     font-family: FontAwesome;
     content: "\f115";
@@ -129,7 +131,46 @@ label[for="gazette-upload"]:hover {
  color: white !important;
  color: rgba(0, 0, 0, 0.84) !important;
 }
+
 /* ---------------- */
+/* gazette spé */
+label[for="gazette-spe-upload"] {
+    cursor: pointer;
+    font-size: 1em;
+    line-height: 40px;
+    height: 37px;
+    color: rgba(0, 0, 0, 0.84);
+}
+
+
+label[for="gazette-spe-upload"]:before {
+    font-family: FontAwesome;
+    content: "\f115";
+    font-size: 1.5em;
+    color: white;
+    background: #ef6c00;
+    padding: 10px;
+    height: 37px;
+    line-height: 40px;
+    border: 0px;
+}
+
+label[for="gazette-spe-upload"]:hover:before {
+  font-family: FontAwesome;
+  content: "\f114";
+  background: #ef6c00;
+  color: white;
+}
+
+
+label[for="gazette-spe-upload"]:hover {
+ color: white !important;
+ color: rgba(0, 0, 0, 0.84) !important;
+}
+/* ---------------- */
+/* gazette appros */
+
+
 
 label[for="appros-upload"] {
     cursor: pointer;
