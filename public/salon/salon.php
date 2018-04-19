@@ -15,7 +15,15 @@ require '../../functions/salon.fn.php';
 //----------------------------------------------------
 // DATA LOGIC
 //----------------------------------------------------
+//
+$nbMag=nbMagSalon($pdoBt);
 $inscriptions=displayInscr($pdoBt);
+$nbRepas=nbRepasFn($pdoBt);
+$dayOne=dayOneFn($pdoBt);
+$dayTwo=dayTwoFn($pdoBt);
+$visiteOne=visiteOneFn($pdoBt);
+$visiteTwo= visiteTwoFn($pdoBt);
+$nbInscription=count($inscriptions);
 $listing="";
 if($inscriptions){
 	foreach ($inscriptions as $inscription)
@@ -42,6 +50,8 @@ if($inscriptions){
 		$inscription['visite']
 		.'</td><td>'.
 		$inscription['repas2']
+		.'</td><td>'.
+		$inscription['dateInscr']
 		.'</td></tr>';
 	}
 }
