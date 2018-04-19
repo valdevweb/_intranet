@@ -3,6 +3,13 @@
 		<h1 class="header center grey-text text-darken-2"><?= $typeTitle .' '.$_SESSION['nom'] ?></h1>
 	</header>
 	<br><br>
+	<div class="w3-panel-norm w3-light-grey"><h2 class="orange-text text-darken-2 center"><strong>SALON BTLEC EST 2018</strong></h2>
+
+		<p class="center">Inscrivez-vous dès aujourd'hui au salon BTLEC EST 2018 !	</p>
+		<p class="imgcenter"><a href="salon/inscription.php"><img  src="img/icons/ici.png"></a></p>
+
+	</div>
+<br>
 	 <div class="row">
 		<!-- <div class="col s2 m2 l2"></div> -->
 		<div class="col s12 m12 l12 white"><br>
@@ -10,7 +17,7 @@
 					<img src="img/icons/info.jpg"><br><br>
 			</div>
 			<div class="col s10 m10 l10">
-				<p class="blue-text text-darken-2 bigger">Au vu des nombreux jours fériés sur le mois de Mai et des interdictions préfectorales de circulation des poids lourds, <strong>nous ne serons pas dans la capacité de livrer certains magasins de leur commande hebdomadaire sur les semaines 18 et 19.</strong><br>
+				<p class="blue-text text-darken-2">Au vu des nombreux jours fériés sur le mois de Mai et des interdictions préfectorales de circulation des poids lourds, <strong>nous ne serons pas dans la capacité de livrer certains magasins de leur commande hebdomadaire sur les semaines 18 et 19.</strong><br>
 				Nous ferons le nécessaire en amont pour les produits en catalogue pour que vous les ayez à temps.<br>
 				En revanche pour vos commandes permanentes hebdomadaires, attention de bien prévoir vos réassorts sur la semaines 17 en tenant compte de la semaine 18 et 19 sans livraison.<br>
 				<strong>Votre planning de commande hebdomadaire va être modifié en conséquence et vous recevrez le mail de modification habituel</strong> suite aux changements de date de livraison.<br>
@@ -21,6 +28,7 @@
 		<!-- <div class="col s2 m2 l2"></div> -->
 	</div>
 	<br>
+
 	<!-- <div class="row">
 		<div class="col s2 m2 l2"></div>
 		<div class="col s8 m8 l8 white"><br>
