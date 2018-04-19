@@ -42,7 +42,8 @@ function sendMail($mailingList,$subject,$tplLocation,$contentOne,$contentTwo,$li
 
 
 //mail avec piece jointe (utilisé par le salon)
-function mail_attachment($filename, $path, $mailto, $from_mail, $from_name, $replyto, $subject, $message) {
+// ATTENTION copie cachée
+function mail_attachment($filename, $path, $mailto, $from_mail, $from_name, $replyto, $subject, $message,$copieCache) {
     $file = $path.$filename;
     $file_size = filesize($file);
     $handle = fopen($file, "r");
@@ -53,6 +54,7 @@ function mail_attachment($filename, $path, $mailto, $from_mail, $from_name, $rep
     $name = basename($file);
     $header = "From: ".$from_name." <".$from_mail.">\r\n";
     $header .= "Reply-To: ".$replyto."\r\n";
+    $header .= $copieCache;
     $header .= "MIME-Version: 1.0\r\n";
     $header .= "Content-Type: multipart/mixed; boundary=\"".$uid."\"\r\n\r\n";
     $nmessage = "--".$uid."\r\n";
