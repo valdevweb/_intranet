@@ -95,7 +95,30 @@ function uploadFileNoHash($location)
 	return $filenameArray;
 }
 
+function uploadFileAddDate($location)
+{
+	$filenameArray=array();
+	foreach ($_FILES as $key => $file)
+	{
 
+
+		$filename=$file['name'];
+		$tmp=explode('.',$filename);
+		$ext=end($tmp);
+		$tmp=$file['tmp_name'];
+		$filenameDate=date("Y-m-d")." " .$filename;
+		$error=$file['error'];
+		$size=$file['size'];
+		$type=$file['type'];
+
+	// si le déplacement du fichier tmp vers le rep d'upload ok
+		if(move_uploaded_file($tmp, $location.$filenameDate))
+		{
+			array_push($filenameArray,$filenameDate);
+		}
+	}
+	return $filenameArray;
+}
 
 
 
