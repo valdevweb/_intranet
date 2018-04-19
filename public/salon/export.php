@@ -5,7 +5,7 @@ require '../../functions/Csv.php';
 
 
 // $req=$pdoBt->prepare("SELECT id, id_galec,nom_mag,nom,prenom,fonction,date, entrepot,scapsav, repas FROM salon  ORDER BY id_galec");
-$req=$pdoBt->prepare("SELECT id, id_galec,nom_mag,centrale,ville,nom,prenom,fonction,date1, date2,visite,repas2 FROM salon  ORDER BY id_galec");
+$req=$pdoBt->prepare("SELECT id, id_galec,code_bt, nom_mag,centrale,ville,nom,prenom,fonction,date1, date2,visite,repas2 FROM salon  ORDER BY id_galec");
 
 $req->execute();
 $data=$req->fetchAll(PDO::FETCH_OBJ);

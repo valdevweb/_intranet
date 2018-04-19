@@ -57,6 +57,9 @@ class PDF extends FPDF
 	   // Couleurs, épaisseur du trait et police grasse
 		$this->SetFont('Arial','',24);
 		$this->Cell(180,10,'      INSCRIPTIONS - SALON BTLEC 2018');
+		$this->Ln(12);
+		$this->SetFont('Arial','',16);
+		$this->Cell(180,10,'                  Leclerc '. $_SESSION['nom'] .' - '.$_SESSION['code_bt'].' - '.$_SESSION['id_galec'] );
 		$this->SetFont('Arial','',12);
 		$this->Ln(30);
 		$this->Cell(8,0,'Bonjour,');
@@ -65,7 +68,7 @@ class PDF extends FPDF
 		$this->Ln(6);
 		$this->Cell(8,0,'BTLec EST du 12 au 13 juin 2018');
 		$this->Ln(14);
-		$this->Cell(8,0,utf8_decode('Nous vous rappelons que les visites de l\'entrepot et de la scapsav se dérouleront :'));
+		$this->Cell(8,0,utf8_decode('Nous vous rappelons que les visites de l\'entrepôt et de la SCAPSAV 51 se dérouleront :'));
 		$this->Ln(6);
 		$this->Cell(8,0,'   - le mardi : entre 14h00 et 17h30');
 		$this->Ln(6);
@@ -106,18 +109,6 @@ class PDF extends FPDF
 				// $this->Cell($w[5],6,$res['scapsav1'],'LR',0,'R',$fill);
 				$this->Ln();
 				$fill = !$fill;
-			//}
-			// //if($res['date2']!=""){
-			// 	$this->Cell($w[0],6,ucfirst(strtolower(utf8_decode($res['nom']))),'LR',0,'L',$fill);
-			// 	$this->Cell($w[1],6,ucfirst(strtolower(utf8_decode($res['prenom']))),'LR',0,'L',$fill);
-			// 	$this->Cell($w[2],6,$res['date2'],'LR',0,'R',$fill);
-			// 	$this->Cell($w[3],6,$res['repas2'],'LR',0,'R',$fill);
-			// 	$this->Cell($w[4],6,$res['entrepot2'],'LR',0,'R',$fill);
-			// 	$this->Cell($w[5],6,$res['scapsav2'],'LR',0,'R',$fill);
-			// 	$this->Ln();
-			// 	$fill = !$fill;
-			//}
-
 		}
     // Trait de terminaison
 		$this->Cell(array_sum($w),0,'','T');
@@ -142,7 +133,7 @@ class PDF extends FPDF
 		// $this->Ln(20);
 		$this->Cell(8,0,utf8_decode('Merci de vous munir impérativement de ce document lors de votre venue. Il sera à présenter à '));
 		$this->Ln(6);
-		$this->Cell(8,0,utf8_decode('l\'accueil du salon.'));
+		$this->Cell(8,0,utf8_decode('l\'accueil du salon afin d\'obtenir votre badge.'));
 		// $this->Cell(180,40,"Invitation de M. ou Mme " . $nom ." " .$prenom );
 		$this->Ln(40);
 		$this->Image($file,80,160);

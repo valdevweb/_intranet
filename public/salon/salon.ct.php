@@ -2,7 +2,7 @@
 	<!-- main title -->
 	<div class="row bgwhite">
 		<div class="int-padding">
-			<h1 class="blue-text text-darken-4">Inscriptions au salon Btlec</h1>
+			<h1 class="blue-text text-darken-4">Liste des inscrits au salon BTLEC Est 2018</h1>
 			<br>
 
 			<h4 class="blue-text text-darken-4" id="salon-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Export</h4>

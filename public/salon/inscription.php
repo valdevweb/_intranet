@@ -87,9 +87,10 @@ function addParticipant($pdoBt)
 
 
 
-	$insert=$pdoBt->prepare("INSERT INTO salon (id_galec,nom_mag,centrale,ville,nom,prenom,fonction,date1,date2,visite,repas2) VALUES (:id_galec, :nom_mag, :centrale, :ville, :nom, :prenom, :fonction, :date1, :date2,:visite, :repas2)");
+	$insert=$pdoBt->prepare("INSERT INTO salon (id_galec,code_bt,nom_mag,centrale,ville,nom,prenom,fonction,date1,date2,visite,repas2) VALUES (:id_galec, :code_bt, :nom_mag, :centrale, :ville, :nom, :prenom, :fonction, :date1, :date2,:visite, :repas2)");
 	$insert->execute(array(
 	  ':id_galec'=>$_SESSION['id_galec'],
+	  ':code_bt'=>$_SESSION['code_bt'],
       ':nom_mag' => $_SESSION['nom'],
       ':centrale'=>$_SESSION['centrale'],
       ':ville'=>$_SESSION['city'],
@@ -127,6 +128,9 @@ if(isset($_POST['send']))
 		   // Couleurs, épaisseur du trait et police grasse
 			$this->SetFont('Arial','',24);
 			$this->Cell(180,10,'      INSCRIPTIONS - SALON BTLEC 2018');
+			$this->Ln(12);
+			$this->SetFont('Arial','',16);
+			$this->Cell(180,10,'                  Leclerc '. $_SESSION['nom'] .' - '.$_SESSION['code_bt'].' - '.$_SESSION['id_galec'] );
 			$this->SetFont('Arial','',12);
 			$this->Ln(30);
 			$this->Cell(8,0,'Bonjour,');
@@ -135,7 +139,7 @@ if(isset($_POST['send']))
 			$this->Ln(6);
 			$this->Cell(8,0,'BTLec EST du 12 au 13 juin 2018');
 			$this->Ln(14);
-			$this->Cell(8,0,utf8_decode('Nous vous rappelons que les visites de l\'entrepot et de la scapsav se dérouleront :'));
+			$this->Cell(8,0,utf8_decode('Nous vous rappelons que les visites de l\'entrepôt et de la SCAPSAV 51 se dérouleront :'));
 			$this->Ln(6);
 			$this->Cell(8,0,'   - le mardi : entre 14h00 et 17h30');
 			$this->Ln(6);
@@ -202,7 +206,7 @@ if(isset($_POST['send']))
 			// $this->Ln(20);
 			$this->Cell(8,0,utf8_decode('Merci de vous munir impérativement de ce document lors de votre venue. Il sera à présenter à '));
 			$this->Ln(6);
-			$this->Cell(8,0,utf8_decode('l\'accueil du salon.'));
+			$this->Cell(8,0,utf8_decode('l\'accueil du salon afin d\'obtenir votre badge.'));
 			// $this->Cell(180,40,"Invitation de M. ou Mme " . $nom ." " .$prenom );
 			$this->Ln(40);
 			$this->Image($file,80,160);
@@ -250,7 +254,7 @@ if(isset($_POST['send']))
 	$subject="Portail BTLec Est - vos invitations au salon BTlec 2018";
 	$to=$_POST['email'];
 	$from="ne_pas_repondre@btlec.fr";
-	$message="Bonjour,<br>Vous trouverez ci joint vos invitations au salon.";
+	$message=utf8_decode("Bonjour,<br>Vous trouverez ci joint vos invitations au salon BTLEC Est 2018 qui se déroulera les 12 et 13 juin.");
 	// $fileatt="D:\www\_intranet\upload\\".$_SESSION['id_galec'] . ".pdf";
 	$file=$fileName .".pdf";
 	$path="D:\www\_intranet\upload\\";
@@ -328,9 +332,9 @@ require '../view/_navbar.php';
 	// echo "<pre>";
 	// var_dump($errors);
 	// echo '</pre>';
-	// 	echo "<pre>";
-	// 	var_dump($_SESSION);
-	// 	echo '</pre>';
+		// echo "<pre>";
+		// var_dump($_SESSION);
+		// echo '</pre>';
 
 
 ?>
@@ -413,7 +417,7 @@ require '../view/_navbar.php';
 			<h4 class="blue-text text-darken-4" id="salon-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i>LE SALON BTLEC 2018 </h4>
 			<hr>
 			<br><br>
-			<p>Le salon BTlec 2018 se déroulera sur 2 jours, le <strong>12 juin</strong> et le <strong>13 juin</strong>. Nous vous proposons cette année, de profiter de votre venue au salon pour visiter notre entrepôt et la SCAPSAV.</p>
+			<p>Le salon BTlec 2018 se déroulera sur 2 jours, le <strong>12 juin</strong> et le <strong>13 juin</strong>. Nous vous proposons cette année, de profiter de votre venue au salon pour visiter notre entrepôt et le nouveau site de la SCAPSAV 51.</p>
 			<p>
 			Plages horaires des visites :
 			<ul class="browser-default">
@@ -467,7 +471,7 @@ require '../view/_navbar.php';
 						<th>Prénom</th>
 						<th>12/06/2018</th>
 						<th>13/06/2018</th>
-						<th>Visite <br>entrepot / scapsav</th>
+						<th>Visite entrepôt <br>SCAPSAV51</th>
 						<th>Repas</th>
 						<th>Supprimer</th>
 					</tr>
@@ -518,7 +522,7 @@ require '../view/_navbar.php';
 									<option value="ADHERENTE">ADHERENTE</option>
 									<option value="CHEF DE DEPARTEMENT">CHEF DE DEPARTEMENT</option>
 									<option value="CHEF DE RAYON">CHEF DE RAYON</option>
-									<option value="CHEF EC">CHEF EC</option>
+									<option value="CHEF ESPACE CULTUREL">CHEF ESPACE CULTUREL</option>
 									<option value="DIRECTEUR">DIRECTEUR</option>
 									<option value="DIRECTRICE">DIRECTRICE</option>
 									<option value="DIRECTEUR ADJOINT">DIRECTEUR ADJOINT</option>
@@ -540,7 +544,7 @@ require '../view/_navbar.php';
 								<p id="day2"></p>
 							</div>
 							<br>
-							<p><strong>Si vous souhaitez visiter l'entrepot et la scapsav, merci de sélectionner un jour disponible</strong></p>
+							<p><strong>Si vous souhaitez visiter l'entrepot et la SCAPSAV51, merci de sélectionner un jour disponible</strong></p>
 							<p class="font-weight-light">Durée de la visite, environ 20 minutes. Les horaires vous seront communiqués à votre arrivée sur le salon</p>
 							<!-- <div class="zone1"> -->
 							<div id="visite">
@@ -554,9 +558,10 @@ require '../view/_navbar.php';
 
 				<br><br>
 				<h5 class="blue-text text-darken-4">Mes invitations</h5>
+				<p>Merci de vous <strong>munir impérativement de ce document lors de votre venue</strong>. Il sera à présenter à l'accueil du salon afin d'obtenir votre badge.</p>
 				<ul class="browser-default line-height">
 					<li>
-						<a href="<?= SITE_ADDRESS?>/public/salon/pdfgen.php" target="_blank">Voir / enregistrer mes invitations</a>
+						<a href="<?= SITE_ADDRESS?>/public/salon/pdfgen.php" target="_blank">Visualiser / enregistrer le récapitulatif de mes invitations</a>
 					</li>
 					<li>Recevoir mes invitations par mail
 					</li>
