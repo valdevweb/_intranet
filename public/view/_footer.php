@@ -1,6 +1,6 @@
 <!-- footer -->
 <div class="row center white">
-   <img class="logoBt" src="<?=$img ?>navbar/logo-bt-mini.jpg">
+   <img class="logoBt" src="<?=ROOT_PATH ?>/public/img/navbar/logo-bt-mini.jpg">
 </div>
   <footer class="page-footer light-blue darken-4">
     <div class="container">
@@ -9,7 +9,7 @@
           <h5 class="white-text">BTLEC EST</h5>
           <p>2 rue des Moissons - Parc d'activité Witry Caurel</p>
             <p>51420 Witry les Reims</p>
- <p class="logo-footer"> <img src="<?= $img ?>footer/eleclercblue.jpg"></p>
+            <p class="logo-footer"> <img src="<?= ROOT_PATH ?>/public/img/footer/eleclercblue.jpg"></p>
 
         </div>
         <div class="col l4 s12">
