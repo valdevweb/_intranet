@@ -49,15 +49,9 @@ if(isset($_POST['connexion']))
 	<title>Connexion - portail Btlec Est</title>
 </head>
 <body>
-	<div id="main"><header class="w3-container center">
-					<img class="resize" src="public/img/index/bttransfull.png">
-
-
-				<!-- <h1>BTLEC Est</h1> -->
-
-	<!-- 		<div id="w3-col l4"><img class="logo-index" src="public/img/index/bt300.jpg"></div> -->
-
-
+	<div id="main">
+		<header class="w3-container center">
+			<img class="resize" src="public/img/index/bttransfull.png">
 		</header>
 			<!-- carte centrales -->
 			<div class="line">
@@ -173,30 +167,39 @@ if(isset($_POST['connexion']))
 		<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
 	</div>
 </div> -->
+
 <div class="modal" id="modal-new">
 	<div class="modal-content">
 		<div class="row">
 			<div class="col s2 m2 l2">
-			<img src="public/img/icons/new-orange-sm.png">
+				<img src="public/img/icons/new-orange-sm.png">
 			</div>
 			<div class="col s10 m10 l10">
 				<br>
-						<h4 class="orange-text text-darken-3 center">Salon BTLEC EST 2018</h4>
-					</div>
+				<h4 class="orange-text text-darken-3 center">Salon BTLEC EST 2018</h4>
+			</div>
 		</div>
-		<!-- <p><a class="send-mail-to" href="#"> Réinitialiser votre mot de passe</a></p> -->
-		 <p>Retrouvez toutes les informations concernant l'édition 2018	du SALON BTlec Est, ainsi que le formulaire d'inscription</p>
-	<div class="modal-footer">
-		<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
+		<p>Retrouvez toutes les informations concernant l'édition 2018	du SALON BTlec Est, ainsi que le formulaire d'inscription</p>
+		<!-- <div class="modal-footer">
+			<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
+		</div> -->
+		<!--  Planning de commande-->
+		<div class="row">
+			<div class="col s2 m2 l2">
+				<img src="public/img/icons/new-blue-sm.png">
+			</div>
+			<div class="col s10 m10 l10">
+				<br>
+				<h4 class="blue-text text-darken-3 center">Commandes hebdo</h4>
+			</div>
+		</div>
+		<p>Attention modification des plannings de commandes suite aux jours fériés. Plus d'infos sur la page d'accueil du site</p>
+		<div class="modal-footer">
+			<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
+		</div>
 	</div>
 </div>
-</div>
-
-
-
 <!--  Scripts-->
-
-
 <script src="vendor/jquery/jquery-3.2.1.js"></script>
 <script src="vendor/materialize/js/materialize.js"></script>
 <script type="text/javascript">
