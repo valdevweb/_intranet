@@ -131,5 +131,9 @@ return $req->fetchAll(PDO::FETCH_ASSOC);
 
 function deleteGaz($pdoBt,$id){
 	$where = ['id' => $id];
+	$req=$pdoBt->prepare("SELECT file FROM gazette WHERE id=:id");
+	$req->execute($where);
+	$name=$req->fetch(PDO::FETCH_ASSOC);
 	$pdoBt->prepare("DELETE FROM gazette WHERE id=:id")->execute($where);
+	return $name;
 }

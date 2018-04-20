@@ -8,6 +8,52 @@ require '../../functions/upload.simple.fn.php';
 require "../../functions/stats.fn.php";
 
 //----------------------------------------------
+// INFOS PAGE
+//----------------------------------------------
+/*
+
+PAGE D'UPLOAD GAZETTE, GAZETTE SPE, GAZETTE APPRO
+
+1- gazette quotidienne
+On vérifie qu'il n'y a bien qu'une gazette par jour.
+Le formulaire permet de spécifier la date de la gazette et un tableau d'histo
+des gazettes permet de supprimer une gazette si besoin
+
+2- gazette spe
+Nb d'upload illimité
+Le nom de la gazette sera celui saisi dans le champ title
+On affiche sur la home les gazettes spé de la semaine, en prenant le title pour intitulé
+
+3- gazette appros
+nb upload illimité
+le nom de la gazette sera le nom du ficjoer
+On affiche sur la home les gazettes appro de la semaine
+
+TRAITEMENT
+1- fonction vérif gazette existe déjà
+
+2- soumission formulaire => 3 différents
+	résultat de la fonction d'upload - checkupload => revnoi un tableau $msg :
+	$msg['err']
+	ou
+	$msg['success'] (nom fichier)
+
+3- script suppression gazette => lien ?sup=id
+
+PAGE :
+
+MINI NAV
+ZONE DE MESSAGE SUCCES /ERREUR :
+$_GET
+ou
+$msg[]
+
+ */
+
+
+
+
+//----------------------------------------------
 // css dynamique
 //----------------------------------------------
 $page=(basename(__FILE__));
@@ -20,104 +66,11 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 //construction du lien pour visualiser la gazette uploadée
 $link="http://172.30.92.53/".$version."upload/gazette/";
 
-//soumission formulaire gazette
-if (isset($_POST['submit-gazette']))
-{
 
-	if (!empty($_FILES['gazette-upload']) && !empty($_POST['dateGazette']))
-	{
-		$category="gazette";
-		$code=1;
-		extract($_POST);
-		gazetteExist($pdoBt,$category,$dateGazette);
-		$uploadDir= '..\..\..\upload\gazette\\';
-		$upload=$_FILES['gazette-upload'];
-		//pas de date de fin pour la gazette normale donc on met la même date que la date d'upload
-		$dateNa=$dateGazette;
-		$noTitle="gazette";
-		$msgGaz=checkUpload($upload, $uploadDir, $category, $code, $dateGazette, $dateNa, $noTitle, $pdoBt);
-		//-------------------------------------<
-		//	ajout enreg dans stat
-		//--------------------------------------
-		$descr="fichier : " .$upload['name'] ;
-		$page=basename(__file__);
-		$action="upload gazette";
-		addRecord($pdoStat,$page,$action, $descr);
-		//------------------------------------->
-	}
-	else
-	{
-		unset($_FILES, $_POST);
-		header('location:upload-gazette.php?empty-gazette');
-		die;
-	}
-}
-
-
-//soumission formulaire gazette
-if (isset($_POST['submit-gazette-spe']))
-{
-
-	if (!empty($_FILES['gazette-spe-upload']) && !empty($_POST['dateGazetteSpe']) && !empty($_POST['title']))
-	{
-		$category="spéciale gazette";
-		$code=8;
-		extract($_POST);
-		// gazetteExist($pdoBt,$category,$dateGazette);
-		$uploadDir= '..\..\..\upload\gazette\\';
-		$upload=$_FILES['gazette-spe-upload'];
-		//pas de date de fin pour la gazette normale donc on met la même date que la date d'upload
-		$dateNa=$dateGazetteSpe;
-		$msgGaz=checkUpload($upload, $uploadDir, $category, $code, $dateGazetteSpe, $dateNa, $title, $pdoBt);
-		//-------------------------------------<
-		//	ajout enreg dans stat
-		//--------------------------------------
-		$descr="fichier : " .$upload['name'] ;
-		$page=basename(__file__);
-		$action="upload gazette speciale";
-		addRecord($pdoStat,$page,$action, $descr);
-		//------------------------------------->
-	}
-	else
-	{
-		unset($_FILES, $_POST);
-		header('location:upload-gazette.php?empty-gazette');
-		die;
-	}
-}
-
-
-
-if (isset($_POST['submit-appros']))
-{
-	if (!empty($_FILES['appros-upload']) && !empty($_POST['dateApprosDeb']) && !empty($_POST['dateApprosFin']))
-	{
-		$category="gazette appros";
-		$code=2;
-		$noTitle="gazette appros";
-		extract($_POST);
-		// gazetteExist($pdoBt,$category,$dateApprosDeb);
-		$uploadDir= '..\..\..\upload\gazette\\';
-		$upload=$_FILES['appros-upload'];
-		$msgApp=checkUpload($upload, $uploadDir, $category,$code, $dateApprosDeb,$dateApprosFin, $noTitle, $pdoBt);
-		//-------------------------------------<
-		//	ajout enreg dans stat
-		//--------------------------------------
-		$descr="fichier : " .$upload['name'] ;
-		$page=basename(__file__);
-		$action="upload gazette appros";
-		addRecord($pdoStat,$page,$action, $descr);
-		//------------------------------------->
-	}
-	else
-	{
-		unset($_FILES, $_POST);
-		header('location:upload-gazette.php?empty-appros');
-		die;
-	}
-}
-
+// ----------------------------------------------------------
 //vérifie si déjà gazette à la date selectionnée => si oui erreur et stop
+// ----------------------------------------------------------
+
 function gazetteExist($pdoBt,$category,$date)
 {
 	$req=$pdoBt->prepare("SELECT * FROM gazette WHERE date=:date AND category= :category");
@@ -135,25 +88,118 @@ function gazetteExist($pdoBt,$category,$date)
 }
 
 
+
+// ----------------------------------------------------------
+//soumission formulaire gazette quotidiennne
+//-----------------------------------------------------------
+if (isset($_POST['submit-gazette']))
+{
+
+	if (!empty($_FILES['gazette-upload']) && !empty($_POST['dateGazette']))
+	{
+		$category="gazette";
+		$code=1;
+		extract($_POST);
+		gazetteExist($pdoBt,$category,$dateGazette);
+		$uploadDir= '..\..\..\upload\gazette\\';
+		$upload=$_FILES['gazette-upload'];
+		//pas de date de fin pour la gazette normale donc on met la même date que la date d'upload
+		$dateNa=$dateGazette;
+		$noTitle="gazette";
+		$msgUpload=checkUpload($upload, $uploadDir, $category, $code, $dateGazette, $dateNa, $noTitle, $pdoBt);
+		//-------------------------------------<
+		//	ajout enreg dans stat
+		//--------------------------------------
+		$descr="fichier : " .$upload['name'] ;
+		$page=basename(__file__);
+		$action="upload gazette";
+		addRecord($pdoStat,$page,$action, $descr);
+		//------------------------------------->
+	}
+	else
+	{
+		unset($_FILES, $_POST);
+		header('location:upload-gazette.php?empty');
+		die;
+	}
+}
+
+
+// ----------------------------------------------------------
+//soumission formulaire gazette SPE
+//-----------------------------------------------------------
+if (isset($_POST['submit-gazette-spe']))
+{
+
+	if (!empty($_FILES['gazette-spe-upload']) && !empty($_POST['dateGazetteSpe']) && !empty($_POST['title']))
+	{
+		$category="spéciale gazette";
+		$code=8;
+		extract($_POST);
+		// gazetteExist($pdoBt,$category,$dateGazette);
+		$uploadDir= '..\..\..\upload\gazette\\';
+		$upload=$_FILES['gazette-spe-upload'];
+		//pas de date de fin pour la gazette normale donc on met la même date que la date d'upload
+		$dateNa=$dateGazetteSpe;
+		$msgUpload=checkUpload($upload, $uploadDir, $category, $code, $dateGazetteSpe, $dateNa, $title, $pdoBt);
+		//-------------------------------------<
+		//	ajout enreg dans stat
+		//--------------------------------------
+		$descr="fichier : " .$upload['name'] ;
+		$page=basename(__file__);
+		$action="upload gazette speciale";
+		addRecord($pdoStat,$page,$action, $descr);
+		//------------------------------------->
+	}
+	else
+	{
+		unset($_FILES, $_POST);
+		header('location:upload-gazette.php?empty');
+		die;
+	}
+}
+
+
+
+if (isset($_POST['submit-appros']))
+{
+	if (!empty($_FILES['appros-upload']) && !empty($_POST['dateApprosDeb']) && !empty($_POST['dateApprosFin']))
+	{
+		$category="gazette appros";
+		$code=2;
+		$noTitle="gazette appros";
+		extract($_POST);
+		// gazetteExist($pdoBt,$category,$dateApprosDeb);
+		$uploadDir= '..\..\..\upload\gazette\\';
+		$upload=$_FILES['appros-upload'];
+		$msgUpload=checkUpload($upload, $uploadDir, $category,$code, $dateApprosDeb,$dateApprosFin, $noTitle, $pdoBt);
+		//-------------------------------------<
+		//	ajout enreg dans stat
+		//--------------------------------------
+		$descr="fichier : " .$upload['name'] ;
+		$page=basename(__file__);
+		$action="upload gazette appros";
+		addRecord($pdoStat,$page,$action, $descr);
+		//------------------------------------->
+	}
+	else
+	{
+		unset($_FILES, $_POST);
+		header('location:upload-gazette.php?empty');
+		die;
+	}
+}
+
+
+
+
 //suppression de gazette
 // si clic sur lien supprimer, on envoi l'id en paramètre de $_GET['sup']
-
 if(isset($_GET['sup'])){
-	echo 'id a sup ' .$_GET['sup'];
-	deleteGaz($pdoBt,$_GET['sup']);
-	header('location:upload-gazette.php#gazetteTable');
-}
-if(isset($_GET['supSpe'])){
-	echo 'id a sup ' .$_GET['supSpe'];
-	deleteGaz($pdoBt,$_GET['supSpe']);
-	header('location:upload-gazette.php#gazetteSpeTable');
-}
-
-
-if(isset($_GET['supAppro'])){
-	echo 'id a sup ' .$_GET['supAppro'];
-	deleteGaz($pdoBt,$_GET['supAppro']);
-	header('location:upload-gazette.php#approsTable');
+	// echo 'id a sup ' .$_GET['sup'];
+	$suppressed=deleteGaz($pdoBt,$_GET['sup']);
+	$suppressed=$suppressed['file'];
+	header('location:upload-gazette.php?supOk='.$suppressed);
 }
 
 
@@ -174,7 +220,7 @@ include('../view/_navbar.php');
 			<div class="mini-nav">
 				<p>Télécharger : </p>
 				<p><a href="#gazette-frm" ><i class="fa fa-hand-o-right" aria-hidden="true"></i>la gazette du jour</a></p>
-				<p><a href="#gazette-spe-frm" ><i class="fa fa-hand-o-right" aria-hidden="true"></i>Spéciale Gazette</a></p>
+				<p><a href="#gazette-spe-frm" ><i class="fa fa-hand-o-right" aria-hidden="true"></i>la spéciale gazette</a></p>
 				<p><a href="#gazette-appro-frm" ><i class="fa fa-hand-o-right" aria-hidden="true"></i>la gazette appros</a></p>
 			</div>
 		</div>
@@ -192,65 +238,29 @@ include('../view/_navbar.php');
 			{
 				echo "<div class='card-panel red'><p class='white-text'>Une gazette existe déjà pour cette date</p></div>";
 			}
-			if (isset($_GET['empty-gazette']))
+			if (isset($_GET['empty']))
 			{
 				echo "<div class='card-panel red'><p class='white-text'>Merci de sélectionner un fichier et une date</p></div>";
 			}
-			if(isset($msgGaz['success']))
+			if (isset($_GET['supOk']))
 			{
-
-				echo "<div class='card-panel teal lighten-2'><p class='white-text'><a href='".$link.$msgGaz['success'] ."'>voir la gazette uploadée</a></p></div>";
-			}
-			elseif (isset($msg['err']))
-			{
-				echo "<div class='card-panel red'><p class='white-text'>".$msg['err']."</p></div>";
-			}
-			elseif (isset($msg))
-			{
-				var_dump($msg);
+				echo "<div class='card-panel teal lighten-2'><p class='white-text'>" .$_GET['supOk'] . " correctement supprimée</p></div>";
 
 			}
+			if(isset($msgUpload['success']))
+			{
+
+				echo "<div class='card-panel teal lighten-2'><p class='white-text'><a href='".$link.$msgUpload['success'] ."'>voir la gazette uploadée</a></p></div>";
+			}
+			elseif (isset($msgUpload['err']))
+			{
+				echo "<div class='card-panel red'><p class='white-text'>".$msgUpload['err']."</p></div>";
+			}
+
 
 			?>
 		</div>
 	</div><!-- END affichage message erreur, réussite -->
-
-
-
-
-
-	<div class="row">
-		<div class="col l12 center" id="approMsg">
-			<?php
-			if (isset($_GET['errapp']))
-			{
-				echo "<div class='card-panel red'><p class='white-text'>Une gazette appro existe déjà pour cette date</p></div>";
-			}
-			if (isset($_GET['empty-appros']))
-			{
-				echo "<div class='card-panel red'><p class='white-text'>Merci de sélectionner un fichier et une date</p></div>";
-			}
-			if(isset($msgApp['success']))
-			{
-
-				echo "<div class='card-panel teal lighten-2'><p class='white-text'><a href='".$link.$msgApp['success'] ."'>voir la gazette appro uploadée</a></p></div>";
-			}
-			elseif (isset($msg['err']))
-			{
-				echo "<p>".$msg['err']."</p>";
-			}
-			elseif (isset($msg))
-			{
-				var_dump($msg);
-
-			}
-			?>
-		</div>
-		</div>
-
-	<!-- END affichage message erreur, réussite -->
-
-
 
 	<!-- GAZETTE DU JOUR DEBUT -->
 	<!-- GAZETTE DU JOUR FORM -->
@@ -317,14 +327,14 @@ include('../view/_navbar.php');
 
 	<!-- GAZETTE SPE DEBUT -->
 	<!-- GAZETTE SPE FORM -->
-	<h4 id="gazette-spe-frm"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Gazette spéciale</h4>
+	<h4 id="gazette-spe-frm"><i class="fa fa-hand-o-right" aria-hidden="true"></i>La spéciale gazette</h4>
 	<div class="row">
 		<form method="post" action="upload-gazette.php" enctype="multipart/form-data" >
 			<div class="row">
 				<div class="col l2"></div>
 				<div class="col l4">
 					<label class="w3-text-grey" for="title">Titre de la spéciale gazette</label>
-					<input type="text" class="w3-input w3-border no-spin" name="title" id="title" required>
+					<input type="text" placeholder="texte du lien sur la page d'accueil" class="w3-input w3-border no-spin" name="title" id="title" required>
 				</div>
 				<div class="col l6"></div>
 			</div>
@@ -340,7 +350,7 @@ include('../view/_navbar.php');
 				<div class="col l2"></div>
 				<div class="col l4">
 					<div class="upload">
-						<label for="gazette-spe-upload">&nbsp;&nbsp;Sélectionnez le fichier spéciale gazette</label>
+						<label for="gazette-spe-upload">&nbsp;&nbsp;Sélectionnez le fichier </label>
 					</div>
 					<input type="file" name="gazette-spe-upload" id="gazette-spe-upload" >
 				</div>
@@ -375,7 +385,7 @@ include('../view/_navbar.php');
 			<tr>
 				<td><?php echo date('d-m-Y', strtotime($gazetteSpe['date'])) ?></center></td>
 				<td><?php echo $gazetteSpe['file'] ?></center></td>
-				<td class="delete"><a href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]).'?supSpe='. $gazetteSpe['id'] ?>" class="delete" title="supprimer"><i class="fa fa-trash fa-lg"  aria-hidden="true"></i></a></td>
+				<td class="delete"><a href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]).'?sup='. $gazetteSpe['id'] ?>" class="delete" title="supprimer"><i class="fa fa-trash fa-lg"  aria-hidden="true"></i></a></td>
 			</tr>
 
 			<?php
@@ -453,7 +463,7 @@ include('../view/_navbar.php');
 				<td><?php echo date('d-m-Y', strtotime($gazette['date'])) ?></center></td>
 				<td><?php echo date('d-m-Y', strtotime($gazette['date_fin'])) ?></center></td>
 				<td><?php echo $gazette['file'] ?></center></td>
-				<td class="delete"><a href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]).'?supAppro='. $gazette['id'] ?>" class="delete" title="supprimer"><i class="fa fa-trash fa-lg"  aria-hidden="true"></i></a></td>
+				<td class="delete"><a href="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]).'?sup='. $gazette['id'] ?>" class="delete" title="supprimer"><i class="fa fa-trash fa-lg"  aria-hidden="true"></i></a></td>
 			</tr>
 
 			<?php
