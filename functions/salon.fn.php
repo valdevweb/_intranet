@@ -1,7 +1,8 @@
 <?php
 
 function displayInscr($pdoBt){
-	$req=$pdoBt->prepare("SELECT id_galec,code_bt,nom_mag,centrale,ville,nom,prenom,fonction,date1,date2,repas2,visite,DATE_FORMAT(date_inscr,'%d/%m/%Y') AS dateInscr  FROM salon  ORDER BY id_galec");
+	//order by id car date et non datetime
+	$req=$pdoBt->prepare("SELECT id_galec,code_bt,nom_mag,centrale,ville,nom,prenom,fonction,date1,date2,repas2,visite,DATE_FORMAT(date_inscr,'%d/%m/%Y') AS dateInscr  FROM salon  ORDER BY id DESC");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 
