@@ -106,7 +106,7 @@ function login($dbUser, $pdoBt)
 	}
 	if (count($errors) == 0)
 	{
-		if($_SESSION['type']=="mag" || $_SESSION['type']=="centrale")
+		if($_SESSION['type']=="mag" || $_SESSION['type']=="centrale" || $_SESSION['type']=='scapsav')
 		{
 			$_SESSION['id_galec']=$data['galec'];
 		//recup info mag dans sca3
@@ -128,11 +128,11 @@ function login($dbUser, $pdoBt)
 			$_SESSION['id_service']=$btInfo['id_service'];
 
 		}
-		elseif ($_SESSION['type']=='scapsav')
-		{
-			$_SESSION['nom'] = "";
+		// elseif ($_SESSION['type']=='scapsav')
+		// {
+		// 	$_SESSION['nom'] = "";
 
-		}
+		// }
 		else
 		{
 		// si ni de type mag, ni de type bt, ni scapsav
