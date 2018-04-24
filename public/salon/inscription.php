@@ -267,6 +267,17 @@ if(isset($_POST['send']))
 	$copieCache = 'Bcc: luc.muller@btlec.fr, stephane.wendling@btlec.fr' . "\r\n";
 	// sendMailSalon($destinataire,$objet,$emplate,$name,$magName, $link);
 	$sentMail=mail_attachment($file,$path,$to,$from,"Portail BTLEC EST",$from,$subject, $message, $copieCache);
+	//maj base de donnée avec adresse mail saisie
+	function addEMail($pdoBt)
+	{
+		$req=$pdoBt->prepare("UPDATE salon SET email= :email WHERE id_galec= :galec");
+		$req->execute(array(
+			':email'=>$_POST['email'],
+			':galec'=>$_SESSION['id_galec']
+		));
+
+	}
+	addEMail($pdoBt);
 	 //header("Location:inscription2.php#inscription-lk");
 }
 
@@ -508,7 +519,7 @@ require '../view/_navbar.php';
 			</table>
 				<br><br>
 					<?php
-					if($_SESSION['type']<>'mag')
+					if($_SESSION['type']<>'mag' && $_SESSION['type']<>'scapsav')
 					{
 						echo "<p class='red-text'>L'inscription est réservée aux magasins, vous ne pourrez pas utiliser le formulaire si votre compte utilisateur n'est pas rattaché à un magasin</p>";
 					}
