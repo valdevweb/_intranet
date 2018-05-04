@@ -11,14 +11,14 @@
 			<h4 class="blue-text text-darken-4" id="odr-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>listing des ODR :</h4>
 			<!-- <hr> -->
 			<!-- <br> -->
-			<p>- <a href="<?= $path .$odr['file']?>" target="_blank">Listing ODR mise à jour du <?= $odr['datefull']?></a> </p>
+			<p>- <a href="<?= $path .$odr['file']."?".date("Y-m-d H:i:s")?>" target="_blank">Listing ODR mise à jour du <?= $odr['datefull']?></a> </p>
 			<!-- ****************************************** -->
 			<!-- 			SECTION TEL/BRII 			-->
 			<!-- ****************************************** -->
 			<h4 class="blue-text text-darken-4" id="tel-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Les tickets et BRII :</h4>
 			<!-- <hr> -->
 			<!-- <br> -->
-			<p>- <a href="<?= $path .$tel['file']?>" target="_blank">Tickets et BRII du <?= $tel['datefull']?></a> </p>
+			<p>- <a href="<?= $path .$tel['file']."?".date("Y-m-d H:i:s")?>" target="_blank">Tickets et BRII du <?= $tel['datefull']?></a> </p>
 			<!-- ****************************************** -->
 			<!-- 			SECTION ASSORTIMENT 			-->
 			<!-- ****************************************** -->
@@ -31,7 +31,7 @@
 			<h4 class="blue-text text-darken-4" id="mdd-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Le point stock MDD (Elsay, Eco+, Hoé, etc ):</h4>
 			<!-- <hr> -->
 			<!-- <br> -->
-			<p>- <a href="<?= $path .$mdd['file']?>" target="_blank">Point stock MDD du <?= $mdd['datefull']?></a> </p>
+			<p>- <a href="<?= $path .$mdd['file']."?".date("Y-m-d H:i:s")?>" target="_blank">Point stock MDD du <?= $mdd['datefull']?></a> </p>
 
 			<!-- ****************************************** -->
 			<!-- 			SECTION GFK			 			-->
@@ -40,7 +40,7 @@
 			<h4 class="blue-text text-darken-4" id="gfk-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>les résultats GFK :</h4>
 			<!-- <hr> -->
 			<!-- <br> -->
-			<p>- <a href="<?= $path .$gfk['file']?>" target="_blank">Résultats GFK de <?= $month ." ".$gfk['year'] ?></a> </p>
+			<p>- <a href="<?= $path .$gfk['file']."?".date("Y-m-d H:i:s") ?>" target="_blank">Résultats GFK de <?= $month ." ".$gfk['year'] ?></a> </p>
 
 		</div> <!-- fin col de gauche!-->
 
