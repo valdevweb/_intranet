@@ -54,7 +54,7 @@ function checkUploadNew($location, $pdoBt)
 		$filename=$file['name'];
 		$tmp=explode('.',$filename);
 		$ext=end($tmp);
-		$filename= md5(time()).'.'.$ext;
+		$filename= md5(time()).$key.'.'.$ext;
 		$tmp=$file['tmp_name'];
 		$error=$file['error'];
 		$size=$file['size'];
