@@ -23,6 +23,11 @@ $dayOne=dayOneFn($pdoBt);
 $dayTwo=dayTwoFn($pdoBt);
 $visiteOne=visiteOneFn($pdoBt);
 $visiteTwo= visiteTwoFn($pdoBt);
+$nbInscrJour=nbInscrJourFn($pdoBt);
+// $nbInscrJour=nbInscrJourFn($pdoBt);
+
+
+
 $nbInscription=count($inscriptions);
 $listing="";
 if($inscriptions){
@@ -35,9 +40,11 @@ if($inscriptions){
 		$listing.='<tr><td>'.
 		$inscription['id_galec']
 		.'</td><td>'.
+    $inscription['centrale']
+    .'</td><td>'.
 		$inscription['nom_mag']
-		.'</td><td>'
-		.$inscription['nom']
+		.'</td><td>'.
+    $inscription['nom']
 		.'</td><td>'.
 		$inscription['prenom']
 		.'</td><td>'.
@@ -92,8 +99,52 @@ require 'salon.ct.php';
 //----------------------------------------------------
 
 
+?>
 
+ <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+  <script>
+    var myData=[<?php
+      foreach ($nbInscrJour as $result) {
+        echo   $result['per_day'] . ',';
+      }
+      ?>];
+    var myLabels=[<?php
+      foreach ($nbInscrJour as $result) {
+        echo '"'. $result['dateInscr'] .'",';
+      }
+      ?>];
+      var test=[30,10,20];
 
+      window.onload=function(){
+        zingchart.render({
+          id:"chartDiv",
+          width:600,
+          height:400,
+          data:{
+            "type":"bar",
+            "title":{
+              "text":"Nombre d'inscriptions par jour"
+            },
+            "plot": {
+			    "value-box": {
+    	  			"text": "%v"
+    			}
+  			},
+            "scale-x":{
+              "labels":myLabels
+            },
+            "series":[
+            {
+              "values":myData
+            }
+            ]
+          }
+        });
+      };
+
+    </script>
+
+<?php
 
 //----------------------------------------------------
 // VIEW - FOOTER

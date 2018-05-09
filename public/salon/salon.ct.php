@@ -8,10 +8,8 @@
 	</div>
 	<div class="row bgwhite">
 		<div class="int-padding">
-			<h4 class="blue-text text-darken-4" id="salon-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Récaputilatif</h4>
+			<h4 class="blue-text text-darken-4" id="salon-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Récapitulatif</h4>
 			<hr>
-
-
 			<ul>
 				<li>Nombre de participants : <?=$nbInscription?></li>
 				<li>Nombre de magasin inscrits : <?= $nbMag ?></li>
@@ -21,7 +19,9 @@
 				<li>Nombre de visite le 12/06/2018 : <?=$visiteOne ?></li>
 				<li>Nombre de visite le 13/06/2018 : <?= $visiteTwo?></li>
 			</ul>
-
+			<div id="graph">
+			  <div id="chartDiv"></div>
+			</div>
 		</div>
 	</div>
 
@@ -45,6 +45,7 @@
 			<table class="striped">
 				<tr>
 					<th>panonceau</th>
+					<th>centrale</th>
 					<th>magasin</th>
 					<th>nom</th>
 					<th>prenom</th>

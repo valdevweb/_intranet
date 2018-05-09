@@ -67,3 +67,16 @@ a:hover.blue-link{
     text-decoration: underline;
 
 }
+
+
+
+div#chartDiv-license-text {
+    display: none;
+}
+
+#chartDiv
+{
+  margin: auto;
+  text-align: center;
+  width: 600px;
+}
