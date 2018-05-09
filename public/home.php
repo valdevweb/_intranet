@@ -24,8 +24,11 @@ require "../functions/stats.fn.php";
 $gazettes=showThisWeek($pdoBt);
 $links=createLinks($pdoBt,$gazettes,$version);
 
+// 	echo "<pre>";
+// 	var_dump($_SESSION);
+// 	echo '</pre>';
 
-
+// echo $_SESSION['nom'];
 
 // les 2 dernière gazettes opportunités
 $gazetteAppros=showLastGazettesAppros($pdoBt);
@@ -68,10 +71,12 @@ if(!empty($_SERVER['HTTP_REFERER']))
 		if($_SESSION['type']=='mag')
 		{
 			$typeTitle="Leclerc";
+			$nom=$_SESSION['nom'];
 		}
 		else
 		{
 			$typeTitle="Centrale";
+			$nom=$_SESSION['nom'];
 		}
 		//---------------------------
 		//stats
@@ -83,6 +88,7 @@ if(!empty($_SERVER['HTTP_REFERER']))
 	elseif($_SESSION['type']=='btlec')
 	{
 		$typeTitle="";
+		$nom=$_SESSION['nom_bt'];
 		//---------------------------
 		//stats
 		//---------------------------

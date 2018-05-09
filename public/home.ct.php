@@ -1,6 +1,6 @@
 <div class="container">
 	<header>
-		<h1 class="header center grey-text text-darken-2"><?= $typeTitle .' '.$_SESSION['nom'] ?></h1>
+		<h1 class="header center grey-text text-darken-2"><?= $typeTitle .' '.$nom ?></h1>
 	</header>
 	<br><br>
 	<div class="w3-panel-norm w3-light-grey"><h2 class="orange-text text-darken-2 center"><strong>SALON BTLEC EST 2018</strong></h2>
