@@ -106,7 +106,25 @@ function login($dbUser, $pdoBt)
 	}
 	if (count($errors) == 0)
 	{
-		if($_SESSION['type']=="mag" || $_SESSION['type']=="centrale" || $_SESSION['type']=='scapsav')
+
+		// cas spécifique pour salon pour luc puissse saisir invitation
+		if($_SESSION['user']=="MULLER" || $_SESSION['user']=="user")
+		{
+			// recup info mag auquel le user bt est rattaché
+			$_SESSION['id_galec']=$data['galec'];
+			$scatrois=magInfo($pdoBt,$data['galec']);
+			$_SESSION['nom']=$scatrois['mag'];
+			$_SESSION['city']=$scatrois['city'];
+			$_SESSION['code_bt']=$scatrois['btlec'];
+			$_SESSION['id_btlec']=$data['id_bt'];
+			$btInfo=btInfo($pdoBt);
+			$nom=$btInfo['nom'];
+			$prenom=$btInfo['prenom'];
+			$_SESSION['nom_bt'] = $prenom .' ' .$nom;
+			$_SESSION['id_service']=$btInfo['id_service'];
+			$_SESSION['spe']="yes";
+		}
+		elseif($_SESSION['type']=="mag" || $_SESSION['type']=="centrale" || $_SESSION['type']=='scapsav')
 		{
 			$_SESSION['id_galec']=$data['galec'];
 		//recup info mag dans sca3
@@ -115,6 +133,7 @@ function login($dbUser, $pdoBt)
 			$_SESSION['centrale']=$scatrois['centrale'];
 			$_SESSION['city']=$scatrois['city'];
 			$_SESSION['code_bt']=$scatrois['btlec'];
+			$_SESSION['id_btlec']=$data['id_bt'];
 
 		}
 		elseif($_SESSION['type']=='btlec')
@@ -125,9 +144,12 @@ function login($dbUser, $pdoBt)
 			$nom=$btInfo['nom'];
 			$prenom=$btInfo['prenom'];
 			$_SESSION['nom'] = $prenom .' ' .$nom;
+			// test
+			$_SESSION['nom_bt'] = $prenom .' ' .$nom;
 			$_SESSION['id_service']=$btInfo['id_service'];
 
 		}
+
 		// elseif ($_SESSION['type']=='scapsav')
 		// {
 		// 	$_SESSION['nom'] = "";
@@ -137,6 +159,8 @@ function login($dbUser, $pdoBt)
 		{
 		// si ni de type mag, ni de type bt, ni scapsav
 			$_SESSION['nom'] = "";
+			$_SESSION['nom_bt'] = "";
+
 
 		}
 		//----------------------------------------------------
