@@ -24,12 +24,6 @@ require "../functions/stats.fn.php";
 $gazettes=showThisWeek($pdoBt);
 $links=createLinks($pdoBt,$gazettes,$version);
 
-// 	echo "<pre>";
-// 	var_dump($_SESSION);
-// 	echo '</pre>';
-
-// echo $_SESSION['nom'];
-
 // les 2 dernière gazettes opportunités
 $gazetteAppros=showLastGazettesAppros($pdoBt);
 $link="http://172.30.92.53/".$version."upload/gazette/";
