@@ -10,6 +10,7 @@ if(!isset($_SESSION['id'])){
 require '../../functions/mail.fn.php';
 
 
+
 // require 'pdfgenmail.php';
 //-----------------------------------------------------
 //	css dynamique
@@ -519,9 +520,16 @@ require '../view/_navbar.php';
 			</table>
 				<br><br>
 					<?php
+
 					if($_SESSION['type']<>'mag' && $_SESSION['type']<>'scapsav')
 					{
-						echo "<p class='red-text'>L'inscription est réservée aux magasins, vous ne pourrez pas utiliser le formulaire si votre compte utilisateur n'est pas rattaché à un magasin</p>";
+						if($_SESSION['user']=="MULLER" || $_SESSION['user']=="user")
+						{
+						}
+						else
+						{
+							echo "<p class='red-text'>L'inscription est réservée aux magasins, vous ne pourrez pas utiliser le formulaire si votre compte utilisateur n'est pas rattaché à un magasin</p>";
+					}
 					}
 					?>
 				<p class="align-right"><button class="btn modal-trigger" data-target="modal">Ajouter un participant</button></p>
@@ -543,6 +551,7 @@ require '../view/_navbar.php';
 									<option value="DIRECTRICE">DIRECTRICE</option>
 									<option value="DIRECTEUR ADJOINT">DIRECTEUR ADJOINT</option>
 									<option value="DIRECTRICE ADJOINTE">DIRECTRICE ADJOINTE</option>
+									<option value="INVITE">INVITE</option>
 									<option value="RESPONSABLE NON ALIMENTAIRE">RESPONSABLE NON ALIMENTAIRE</option>
 									<option value="SAV">SAV</option>
 									<option value="VENDEUR">VENDEUR</option>
