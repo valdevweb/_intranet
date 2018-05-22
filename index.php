@@ -170,6 +170,21 @@ if(isset($_POST['connexion']))
 
 <div class="modal" id="modal-new">
 	<div class="modal-content">
+				<div class="row">
+			<div class="col s2 m2 l2">
+				<img src="public/img/icons/new-orange-sm.png">
+				<!-- <img src="public/img/icons/new-blue-sm.png"> -->
+			</div>
+			<div class="col s10 m10 l10">
+				<br>
+				<h4 class="orange-text text-darken-3 center">Plan de comm 2019</h4>
+			</div>
+		</div>
+		<p>Le plan de communication BTlec 2019 est disponible dans la rubrique document. Vous trouverez aussi le kit affi che pour le SB fête des mères</p>
+		<p class="center-text"><center><img src="public/img/screenshot/navnew.png"></center></p>
+		<br>
+
+
 		<div class="row">
 			<div class="col s2 m2 l2">
 				<img src="public/img/icons/new-orange-sm.png">
@@ -184,16 +199,7 @@ if(isset($_POST['connexion']))
 			<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
 		</div> -->
 		<!--  Planning de commande-->
-		<div class="row">
-			<div class="col s2 m2 l2">
-				<img src="public/img/icons/new-blue-sm.png">
-			</div>
-			<div class="col s10 m10 l10">
-				<br>
-				<h4 class="blue-text text-darken-3 center">Commandes hebdo</h4>
-			</div>
-		</div>
-		<p>Attention modification des plannings de commandes suite aux jours fériés. Plus d'infos sur la page d'accueil du site</p>
+
 		<div class="modal-footer">
 			<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
 		</div>
@@ -203,6 +209,22 @@ if(isset($_POST['connexion']))
 <script src="vendor/jquery/jquery-3.2.1.js"></script>
 <script src="vendor/materialize/js/materialize.js"></script>
 <script type="text/javascript">
+
+	// DETECTION IE 9
+	 function msieversion() {
+	 	var ua = window.navigator.userAgent;
+	 	var msie = ua.indexOf("MSIE ");
+		 if (msie > -1 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) // Si c'est Internet Explorer, affiche le numéro de version
+		 	// (parseInt(ua.substring(msie + 5, ua.indexOf(".", msie))));
+		 	if(parseInt(ua.substring(msie + 5, ua.indexOf(".", msie)))=="9"){
+		 		alert ("Votre navigateur est trop ancien.\n Merci d'utiliser Chrome ou Firefox")
+		 	}
+		 else
+		 	// alert("C'est un autre navigateur");
+		 return false;
+		}
+		msieversion();
+
 	$(document).ready(function(){
 		// menu hamburger
 		$(".button-collapse").sideNav();
@@ -215,6 +237,7 @@ if(isset($_POST['connexion']))
 		$(".dropdown-button").dropdown();
 		//infos bulles (navbar)
 		 $('.tooltipped').tooltip({delay: 50});
+
 	});
 </script>
 
