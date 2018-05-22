@@ -1,0 +1,22 @@
+h4{
+
+	font-family: "Khand", sans-serif !important;
+	margin-bottom: 0px !important;
+	padding-bottom: 20px !important;
+
+}
+
+
+h1{
+	font-family: "Khand", sans-serif !important;
+}
+
+
+.fa.fa-hand-o-right {
+  padding-right: 20px;
+}
+
+a.blue-link:hover{
+	font-weight: bold;
+	color: #1e88e5;
+}
