@@ -168,6 +168,8 @@ else
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#tel-title'?>">TEL/BRII</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#mdd-title'?>">MDD</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#gfk-title'?>">GFK</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/doc/extralec.php'?>">Application Extralec</a></li>
+
 					<?php
 						ob_start();
 	 				?>
@@ -202,7 +204,11 @@ else
 			</li>
 			<!-- ajout menu exploitation salon -->
 			<?php ob_start(); ?>
-			<li><a href="<?= ROOT_PATH. '/public/salon/salon.php'?>" class="tooltipped" data-position="bottom" data-tooltip="salon inscriptions"><span>Salon</span></a></li>
+			<li  class='active has-sub'><a href="<?= ROOT_PATH. '/public/exploit/connexion.php'?>" class="tooltipped" data-position="bottom" data-tooltip="stats"><span>Exploit</span></a>
+				<ul><li><a href="<?= ROOT_PATH. '/public/salon/salon.php'?>" class="tooltipped" data-position="bottom" data-tooltip="salon inscriptions"><span>Salon</span></a></li>
+					<li><a href="<?= ROOT_PATH. '/public/exploit/connexion.php'?>" class="tooltipped" data-position="bottom" data-tooltip="stats"><span>Suivi magasins</span></a></li>
+				</ul>
+			</li>
 			<?php
 				$exploitNav=ob_get_contents();
 				ob_end_clean();
