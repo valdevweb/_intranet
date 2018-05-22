@@ -169,6 +169,10 @@ else
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#mdd-title'?>">MDD</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#gfk-title'?>">GFK</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/extralec.php'?>">Application Extralec</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/doc/plancom2019.php'?>">Plan de Comm 2019</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/doc/kitaffiche.php'?>">Kits affiche OP BTLec</a></li>
+
+
 
 					<?php
 						ob_start();
