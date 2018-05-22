@@ -10,8 +10,8 @@
 
 	</div>
 <br>
-	 <div class="row">
-		<!-- <div class="col s2 m2 l2"></div> -->
+	 <!-- <div class="row">
+
 		<div class="col s12 m12 l12 white"><br>
 			<div class="col s2 m2 l2">
 					<img src="img/icons/info.jpg"><br><br>
@@ -25,8 +25,8 @@
 			</div>
 
 		</div>
-		<!-- <div class="col s2 m2 l2"></div> -->
-	</div>
+
+	</div> -->
 	<br>
 
 	<!-- <div class="row">
