@@ -59,7 +59,7 @@ class PDF extends FPDF
 		$this->Cell(180,10,'      INSCRIPTIONS - SALON BTLEC 2018');
 		$this->Ln(12);
 		$this->SetFont('Arial','',16);
-		$this->Cell(180,10,'                  Leclerc '. $_SESSION['nom'] .' - '.$_SESSION['code_bt'].' - '.$_SESSION['id_galec'] );
+		$this->Cell(180,10,'                  Leclerc '. $_SESSION['nom'] .' '.$_SESSION['code_bt'].' - '.$_SESSION['id_galec'] );
 		$this->SetFont('Arial','',12);
 		$this->Ln(30);
 		$this->Cell(8,0,'Bonjour,');
@@ -124,7 +124,7 @@ class PDF extends FPDF
 
 		$this->Ln(24);
 		// $this->SetFont('Arial','',14);
-		$this->Cell(8,0,"      Leclerc " . $mag ." - " .$pano);
+		$this->Cell(8,0,"      Leclerc " . $mag ."  " . $_SESSION['code_bt']. " - " .$pano);
 		$this->Ln(6);
 		$this->Cell(8,0,"      Participant : " .utf8_decode($prenom) ." ". utf8_decode($nom));
 		$this->Ln(6);
