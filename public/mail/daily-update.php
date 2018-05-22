@@ -125,7 +125,7 @@ foreach ($files as $dbFile)
 }
 if(count($fileList)!=0)
 {
-	$mailingList="valerie.montusclat@btlec.fr";
+	$mailingList="btlecest.portailweb.gazettes@btlec.fr";
 	mb_internal_encoding('UTF-8');
 	$subject="Portail BTLec Est - vos infos du jour";
 	$subject = mb_encode_mimeheader($subject);
