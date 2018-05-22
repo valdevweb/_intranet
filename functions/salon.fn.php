@@ -47,10 +47,13 @@ function visiteTwoFn($pdoBt){
 	$req->execute();
 	return $req->rowCount();
 }
-		// <li>Nombre d'inscrits : </li>
-		// 		<li>Nombre de magasin inscrits : </li>
-		// 		<li>Nombre de repas : </li>
-		// 		<li>Nombre d'inscrits le 12/06/2018 : </li>
-		// 		<li>Nombre d'inscrits le 13/06/2018 : </li>
-		// 		<li>Nombre de visite le 12/06/2018 : </li>
-		// 		<li>Nombre de visite le 13/06/2018 : </li>
+
+
+function nbInscrJourFn($pdoBt){
+  	$req=$pdoBt->prepare("SELECT  DATE_FORMAT(date_inscr, '%d/%m/%y') as dateInscr,count(DISTINCT `nom_mag`) as per_day FROM `salon` GROUP BY `date_inscr`");
+  	$req->execute();
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+
+}
+
+
