@@ -55,7 +55,9 @@ $nbName=sizeof($serviceName);
 // un mail au mag pour lui confirmer que sa demande a été envoyé
 $tplForBtlec="../mail/new_mag_msg.tpl.html";
 $tplForMag="../mail/ar_mag.tpl.html";
-$objBt="PORTAIL BTLec - nouvelle demande : " .$_SESSION['nom'] ." pour le service " . $full_name;
+mb_internal_encoding('UTF-8');
+$full_name_obj = mb_encode_mimeheader($full_name);
+$objBt="PORTAIL BTLec - nouvelle demande : " .$_SESSION['nom'] ." pour le service " . $full_name_obj;
 $objMag="PORTAIL BTLec - demande envoyée";
 mb_internal_encoding('UTF-8');
 $objMag = mb_encode_mimeheader($objMag);
