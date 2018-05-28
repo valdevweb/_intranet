@@ -58,7 +58,7 @@ function mailUpdateDoc($mailingList,$subject,$fileList)
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
     $headers .= 'From: ne_pas_repondre@btlec.fr>' . "\r\n";
     $headers .= 'Cc: ' . "\r\n";
-    $headers .= 'Bcc:' . "\r\n";
+    $headers .= 'Bcc: valerie.montusclat@btlec.fr' . "\r\n";
 
     if(mail($mailingList,$subject,$htmlContent,$headers))
     {
@@ -125,14 +125,26 @@ foreach ($files as $dbFile)
 	if($dbFile['date_modif'] !="")
 	{
 		$docDate=new DateTime($dbFile['date_modif']);
+		$flag=0;
 		if($docDate > $deadLine)
 		{
-			$fileList[]="la " . $dbFile['category'];
+			$flag++;
 		}
 	}
 }
+// si on a au moins une gazete, on ajoute la gazette à la liste mais on ne l'ajoute qu'une fois
+if($flag >=1)
+	{
+			$fileList[]="la " . $dbFile['category'];
+	}
+
+//------------------------------------------------------
+//			si list fichiers non vide => envoi mail
+//------------------------------------------------------
+
 if(count($fileList)!=0)
 {
+	// $mailingList="valerie.montusclat@btlec.fr";
 	$mailingList="btlecest.portailweb.gazettes@btlec.fr";
 	mb_internal_encoding('UTF-8');
 	$subject="Portail BTLec Est - vos infos du jour";
