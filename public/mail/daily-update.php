@@ -103,7 +103,15 @@ foreach ($files as $dbFile) {
 	$docDate=new DateTime($dbFile['date_modif']);
 	if($docDate > $deadLine)
 	{
+		//si résultat GFK
+		if($dbFile['code']==5)
+		{
+			$fileList[]="les nouveaux " . $dbFile['type'];
+		}
+		else
+		{
 		$fileList[]=$dbFile['type'];
+		}
 	}
 }
 //------------------------------------------------------
