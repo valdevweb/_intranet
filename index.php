@@ -69,7 +69,7 @@ if(isset($_POST['connexion']))
 					<h2>BTLec Est - Centrale d'Achat</h2>
 					<h3>Bazar Technique E.Leclerc </h3>
 
-					<p><img class="img-max" id="boxshadow" src="public/img/index/bt-front-office-optimized.jpg"></p>
+					<p><img class="img-max" id="boxshadow" src="public/img/index/front-bt-800.jpg"></p>
 					<?php
 					if(!empty($err)){
 						foreach ($err as $errStrg)
