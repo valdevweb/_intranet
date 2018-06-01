@@ -138,22 +138,13 @@ if(isset($_GET['error']))
 							$('#mag').append(html);
 						}
 					});
-				}else{
-
-					// $('#centrale').html('<option value="">Sélectionnez votre centrale</option>');
+				}
+				else
+				{
 					$('#mag').html('<option value="">Sélectionnez votre magasin</option>');
 				}
 			});
-
-			// $('form').submit(function()
-   //     		{
-   //          $(":submit").text("Merci de patienter...")
-   //          $("#submit").attr('disabled', true);
-
-   //     		});
-
-
-});
+		});
 </script>
 </body>
 </html>
