@@ -26,8 +26,10 @@ include('../view/_navbar.php');
 //------------------------------------------------------
 require '../../functions/upload.fn.php';
 require '../../functions/global.fn.php';
+// require '../../functions/group.fn.php';
 
-// nom et code des types de doc uploadés
+// require '../../functions/odr.fn.php';
+
 $docCode=array(
 	3	=>"panier promo",
 	4	=>"assortiment",
@@ -37,7 +39,7 @@ $docCode=array(
 	8	=>"point stock MDD"
 );
 
-// ajoute les infos du fichier dans la table document
+echo $docCode[3];
 function insertDoc($pdoBt,$type,$file, $code)
 {
 	// $reply=strip_tags($_POST['reply']);
@@ -53,7 +55,6 @@ function insertDoc($pdoBt,$type,$file, $code)
 	return $result;
 }
 
-//supprime les infos du fichier dans la table document
 function deleteDoc($pdoBt,$code)
 {
 	$delete=$pdoBt->prepare('DELETE FROM documents WHERE code= :code');
@@ -63,33 +64,18 @@ function deleteDoc($pdoBt,$code)
 	return $result;
 }
 
-
-//nom du fichier actuellement en base de donnée
-
-function previousDoc($pdoBt,$code)
+function addToMajHebdo($pdoBt,$type,$path,$file,$code)
 {
-	$read=$pdoBt->prepare('SELECT * FROM documents WHERE code= :code');
-	$read->execute(array(
-		':code' =>$code
+	$insert=$pdoBt->prepare('INSERT INTO doc_maj_hebdo (type,path,file,maj,code) VALUE (:type,:path,:file,:maj,:code)');
+	$insert->execute(array(
+		":type"		=>$type,
+		":path"		=>$path,
+		":file"		=>$file,
+		":maj"		=>date('Y-m-d H:i:s'),
+		":code"		=>$code
 	));
-	return $read->fetch(PDO::FETCH_ASSOC);
+
 }
-
-//non utilisée
-// function addToMajHebdo($pdoBt,$type,$path,$file,$code)
-// {
-// 	$insert=$pdoBt->prepare('INSERT INTO doc_maj_hebdo (type,path,file,maj,code) VALUE (:type,:path,:file,:maj,:code)');
-// 	$insert->execute(array(
-// 		":type"		=>$type,
-// 		":path"		=>$path,
-// 		":file"		=>$file,
-// 		":maj"		=>date('Y-m-d H:i:s'),
-// 		":code"		=>$code
-// 	));
-
-// }
-
-
 
 
 $errors=[];
@@ -98,10 +84,12 @@ $success=[];
 //			ENVOI ODR
 //------------------------------------------------------
 if(isset($_POST['sendOdr'])){
+	//initialise le tableau d'erreur
+
 	//verif si tout les champ sont remplis
 	if(not_empty(['date']))
 	{
-		//vérifie si fichier à uploader : $file['name'] non vide
+		//vérifie si fichier à uploader
 		$isFileToUpload=isFileToUpload();
 		if (!$isFileToUpload)
 		{
@@ -110,37 +98,24 @@ if(isset($_POST['sendOdr'])){
 		else
 		{
 				$uploadDir= '..\..\..\upload\documents\\';
-				// 1- récup nom du fichier à shooter
-    			$toDelete=previousDoc($pdoBt,6);
-    			$fileToDelete=$uploadDir.$toDelete['file'];
-				// upload du fichier en le renommant (ajout date devant nom de fichier)
-				$newFileName= uploadFileAddDate($uploadDir);
-				$file=implode("; ", $newFileName);
-
+				$hashedFileName= uploadFileNoHash($uploadDir);
+				$file=implode("; ", $hashedFileName);
 		 }
 	}
 	else
 	{
 		$errors[]="merci de remplir tous les champs";
 	}
-	//on met à jour que si formulaire complet
+	//on n'enregistre dans la base de donnée que si on a détecté aucune erreur
 	if(count($errors)==0)
     {
-    	//suppression de la db
     	if(deleteDoc($pdoBt,6))
     	{
-    		// suppression du fichier du répertoire d'upload
-    		if(file_exists($fileToDelete))
-    		if(unlink($uploadDir. $toDelete['file']))
-    		{
-    			echo "fichier " . $toDelete['file'] ." supprimé";
-    		}
     	}
     	else
     	{
 			$errors[]="erreur de suppression du fichier précédant";
     	}
-    	//ajout nv fichier dans db
     	if(insertDoc($pdoBt,"listing des ODR", $file,6))
 		{
 			$success[]="l'odr a bien été enregistrée. Nom du fichier :  " .$file;
@@ -178,8 +153,7 @@ if(isset($_POST['sendTel'])){
 		else
 		{
 				$uploadDir= '..\..\..\upload\documents\\';
-				$hashedFileName= uploadFileAddDate($uploadDir);
-				// $hashedFileName= uploadFileNoHash($uploadDir);
+				$hashedFileName= uploadFileNoHash($uploadDir);
 				$file=implode("; ", $hashedFileName);
 		 }
 	}
@@ -235,8 +209,7 @@ if(isset($_POST['sendAssort'])){
 		else
 		{
 				$uploadDir= '..\..\..\upload\documents\\';
-				$hashedFileName= uploadFileAddDate($uploadDir);
-				// $hashedFileName= uploadFileNoHash($uploadDir);
+				$hashedFileName= uploadFileNoHash($uploadDir);
 				$file=implode("; ", $hashedFileName);
 		 }
 	}
@@ -291,8 +264,7 @@ if(isset($_POST['sendPanier'])){
 		else
 		{
 				$uploadDir= '..\..\..\upload\documents\\';
-				$hashedFileName= uploadFileAddDate($uploadDir);
-				// $hashedFileName= uploadFileNoHash($uploadDir);
+				$hashedFileName= uploadFileNoHash($uploadDir);
 				$file=implode("; ", $hashedFileName);
 		 }
 	}
@@ -347,9 +319,7 @@ if(isset($_POST['sendMdd'])){
 		else
 		{
 				$uploadDir= '..\..\..\upload\documents\\';
-				$hashedFileName= uploadFileAddDate($uploadDir);
-
-				// $hashedFileName= uploadFileNoHash($uploadDir);
+				$hashedFileName= uploadFileNoHash($uploadDir);
 				$file=implode("; ", $hashedFileName);
 		 }
 	}
@@ -405,8 +375,7 @@ if(isset($_POST['sendGfk'])){
 		else
 		{
 				$uploadDir= '..\..\..\upload\documents\\';
-				$hashedFileName= uploadFileAddDate($uploadDir);
-				// $hashedFileName= uploadFileNoHash($uploadDir);
+				$hashedFileName= uploadFileNoHash($uploadDir);
 				$file=implode("; ", $hashedFileName);
 		 }
 	}
