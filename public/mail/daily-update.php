@@ -1,3 +1,10 @@
+<style type="text/css">
+	h1{
+		color:  blue;
+	}
+</style>
+
+
 <?php
 //------------------------------------------------------
 //			INFOS
@@ -34,24 +41,43 @@ catch(Exception $e)
 	die('Erreur : '.$e->getMessage());
 }
 
+
+//------------------------------------------------------
+//			date
+//------------------------------------------------------
+$jours=array("Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi");
+$months=array("","janvier", "février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre");
+
+$today= $jours[date('w')] .' '. date('d'). ' ' . $months[date('n')] . ' '. date('Y') ;
+
+
 //------------------------------------------------------
 //			fn mail
 //------------------------------------------------------
-function mailUpdateDoc($mailingList,$subject,$fileList)
+function mailUpdateDoc($mailingList,$subject,$fileList, $today)
 {
-
-    $content="Bonjour, <br><br><br>";
-    $content.="Aujourd'hui, sur <a href='http://172.30.92.53/btlecest'>votre portail</a>, vous trouverez : <br>";
-    $content .="<ul>";
+	$content="<html><body style='font-family: helvetica, arial, sans-serif; width :900px;'>";
+	$content.="<table cellspacing='0' cellpadding='0'><tr><td style='width:20px;background-color:#90caf9;'></td><td style='width:20px;background-color:#90caf9;'></td><td style='width:800px; background-color:#90caf9;'>";
+	$content.="<br><p style='font-style:italic; text-align:right'>".$today . "</p><br>";
+	$content.="</td><td style='width:20px;background-color:#90caf9;'></td></tr><tr><td style='background-color:#e3f2fd;'></td><td colspan='2' style='background-color:#e3f2fd;'>";
+	$content.="<br><h2 style='font-weight:normal'>Bonjour,</h2><br>";
+    $content.="<p>Aujourd'hui, sur <a href='http://172.30.92.53/btlecest' target='_blank'>votre portail</a>, vous trouverez : </p><br>";
+	$content.="</td><td style='width:20px;background-color:#e3f2fd;'></td></tr><tr><td style='background-color:#e3f2fd;'></td><td style='background-color:#e3f2fd;'></td><td style='background-color:#90caf9;'>";
+	$content.="<div style = 'padding : 10px;'>";
+    $content .="<ul style='list-style-type:circle'> ";
     foreach ($fileList as $file) {
         $content .= "<li>";
         $content .=$file;
         $content .= "</li>";
     }
     $content .="</ul>";
-    $content .="<br><br>";
-    $content .="Cordialement,<br>";
-    $content .= "BTLec EST - Portail";
+    $content .="</div><br><br>";
+    $content .="</td><td style='width:20px;background-color:#e3f2fd;'></td></tr><tr><td style='background-color:#e3f2fd;'></td><td colspan='2' style='background-color:#e3f2fd;'>";
+    $content .="<br><p>Cordialement,</p>";
+    $content .="<p><img src='http://172.30.92.53/_btlecest/public/mail/logo.png' width='180px' height='60px'></p>";
+    $content .= "<p style='color: #f57c00'>BTLec EST - Portail</p><br>";
+    $content .="</td><td style='background-color:#e3f2fd;'></td></tr></table>";
+	$content .="</body></html>";
     $htmlContent=$content;
 
     $headers = "MIME-Version: 1.0" . "\r\n";
@@ -108,6 +134,11 @@ foreach ($files as $dbFile) {
 		{
 			$fileList[]="les nouveaux " . $dbFile['type'];
 		}
+		// si ponier promo ou assortiment, on envoie pas l'info
+		elseif($dbFile['code']==4 ||$dbFile['code']==3)
+		{
+
+		}
 		else
 		{
 		$fileList[]=$dbFile['type'];
@@ -144,11 +175,11 @@ if($flag >=1)
 
 if(count($fileList)!=0)
 {
-	// $mailingList="valerie.montusclat@btlec.fr";
-	$mailingList="btlecest.portailweb.gazettes@btlec.fr";
+	$mailingList="valerie.montusclat@btlec.fr";
+	// $mailingList="btlecest.portailweb.gazettes@btlec.fr";
 	mb_internal_encoding('UTF-8');
 	$subject="Portail BTLec Est - vos infos du jour";
 	$subject = mb_encode_mimeheader($subject);
 
-	mailUpdateDoc($mailingList,$subject,$fileList);
+	mailUpdateDoc($mailingList,$subject,$fileList, $today);
 }
