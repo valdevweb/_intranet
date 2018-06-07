@@ -44,8 +44,8 @@ function addMsg($db,$id_service,$inc_file)
 {
 	$msg=strip_tags($_POST['msg']);
 	$msg=nl2br($msg);
-	$req=$db->prepare('INSERT INTO msg (objet, msg, id_mag, id_service, date_msg, etat,inc_file,who,email)
-		VALUE(:objet, :msg, :id_mag, :id_service, :date_msg, :etat, :inc_file, :who, :email)');
+	$req=$db->prepare('INSERT INTO msg (objet, msg, id_mag, id_service, date_msg, etat,inc_file,who,email, id_galec,code_bt,centrale)
+		VALUE(:objet, :msg, :id_mag, :id_service, :date_msg, :etat, :inc_file, :who, :email, :id_galec, :code_bt, :centrale)');
 	$req->execute(array(
 		':objet'		=> strip_tags($_POST['objet']),
 		':msg'			=> $msg,
@@ -56,6 +56,9 @@ function addMsg($db,$id_service,$inc_file)
 		':inc_file'		=>$inc_file,
 		':who'			=>strip_tags($_POST['name']),
 		':email'		=>strip_tags($_POST['email']),
+		':id_galec'		=>$_SESSION['id_galec'],
+		':code_bt'		=>$_SESSION['code_bt'],
+		':centrale'		=>$_SESSION['centrale']
 	));
 	$req->fetch(PDO::FETCH_ASSOC);
 	return $db->lastInsertId();
