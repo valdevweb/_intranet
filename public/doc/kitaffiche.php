@@ -17,15 +17,20 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 require '../view/_head.php';
 require '../view/_navbar.php';
 
+// recupération du dernier kit affiche
+
+$req=$pdoBt->query("SELECT * FROM documents WHERE code=9");
+$kitData=$req->fetch(PDO::FETCH_ASSOC);
+
 
 
 ?>
 
 <div class="container">
-<h1 class="blue-text text-darken-4">Kit Affiche</h1>
+<h1 class="blue-text text-darken-4">Kit Affiches</h1>
 <br>
-	<h4 class="blue-text text-darken-4" id="odr-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>SB fête des mères du 15 au 26 mai 2018</h4>
-	<a  class= "blue-link" href="KIT AFFICHES SB FETE DES MÈRES.xls">télécharger le kit affiche</a>
+	<h4 class="blue-text text-darken-4" ><i class="fa fa-hand-o-right" aria-hidden="true"></i><?= $kitData['name'] ?></h4>
+	<a  class= "blue-link" href="<?=$kitData['file']?>">télécharger le kit affiches</a>
 </div>
 
 <?php
