@@ -25,10 +25,26 @@ $visiteOne=visiteOneFn($pdoBt);
 $visiteTwo= visiteTwoFn($pdoBt);
 $nbInscrJour=nbInscrJourFn($pdoBt);
 // $nbInscrJour=nbInscrJourFn($pdoBt);
-
-
-
+$centralesDecompte=nbVenusParCentrale($pdoBt);
+$nbVenusReels=nbVenus($pdoBt);
+$noScan=nbManuel($pdoBt);
 $nbInscription=count($inscriptions);
+$deltaInscritReel= $nbVenusReels * 100 / $nbInscription;
+$deltaScan=$noScan *100 /$nbVenusReels;
+$heuresMardi=arriveesMardi($pdoBt);
+unset($heuresMardi[0]);
+$heuresMercredi=arriveesMercredi($pdoBt);
+//on retire les heures vides
+unset($heuresMercredi[0]);
+//on retire les scan auto de la veille
+unset($heuresMercredi[1]);
+
+  // echo "<pre>";
+  // var_dump($heuresMercredi);
+  // echo '</pre>';
+
+
+
 $listing="";
 if($inscriptions){
 	foreach ($inscriptions as $inscription)
@@ -93,7 +109,6 @@ require '../view/_navbar.php';
 require 'salon.ct.php';
 
 
-
 //----------------------------------------------------
 // VIEW - CONTENT
 //----------------------------------------------------
@@ -113,7 +128,39 @@ require 'salon.ct.php';
         echo '"'. $result['dateInscr'] .'",';
       }
       ?>];
-      var test=[30,10,20];
+    // donnees graph découpage par centrales des participants
+    var nbVenus=[<?php
+      foreach ($centralesDecompte as $result) {
+        echo   $result['nb'] . ',';
+      }
+      ?>];
+    var centrales=[<?php
+      foreach ($centralesDecompte as $result) {
+        echo '"'.strtolower($result['centrale']) .'",';
+      }
+      ?>];
+      //graph heures scan
+      var nbScanMa=[<?php
+      foreach ($heuresMardi as $result) {
+        echo   $result['nb'] . ',';
+      }
+      ?>];
+    var heuresMardi=[<?php
+      foreach ($heuresMardi as $result) {
+        echo '"'.$result['hour'] .'",';
+      }
+      ?>];
+      var nbScanMe=[<?php
+      foreach ($heuresMercredi as $result) {
+        echo   $result['nb'] . ',';
+      }
+      ?>];
+    var heuresMercredi=[<?php
+      foreach ($heuresMercredi as $result) {
+        echo '"'.$result['hour'] .'",';
+      }
+      ?>];
+
 
       window.onload=function(){
         zingchart.render({
@@ -140,7 +187,99 @@ require 'salon.ct.php';
             ]
           }
         });
+        zingchart.render({
+          id:"venuesCentrales",
+          width:1000,
+          height:400,
+          data:{
+            "type":"bar",
+            "title":{
+              "text":"Nombre participants par centrales"
+            },
+            "plot": {
+          "value-box": {
+              "text": "%v"
+          }
+        },
+            "scale-x":{
+                  "item":{
+                    "font-size":10
+                  },
+                  "labels":centrales,
+                },
+            "series":[
+            {
+              "values":nbVenus
+            }
+            ]
+          }
+        });
+         zingchart.render({
+          id:"heuresMardi",
+          width:800,
+          height:400,
+          data:{
+            "type":"bar",
+            "title":{
+              "text":"Heures d'arrivée mardi"
+            },
+           "plot": {
+                      "styles":["#ff6666","#ff6666","#ff6666","#ff6666","#ff6666"],
+                      "value-box": {
+                        "text": "%v"
+                      }
+                    },
+            "scale-x":{
+                  "item":{
+                    "font-size":10
+                  },
+                  "labels":heuresMardi,
+                },
+            "series":[
+            {
+              "values":nbScanMa
+            }
+            ]
+          }
+        });
+         zingchart.render({
+          id:"heuresMercredi",
+          width:800,
+          height:400,
+          data:{
+            "type":"bar",
+            "title":{
+              "text":"Heures d'arrivée mercredi"
+            },
+            // "#cc99ff"
+             "plot": {
+                      "styles":["#cc99ff","#cc99ff","#cc99ff","#cc99ff","#cc99ff"],
+                      "value-box": {
+                        "text": "%v"
+                      }
+                    },
+            "scale-x":{
+                  "item":{
+                    "font-size":10
+                  },
+                  "labels":heuresMercredi,
+                },
+            "series":[
+            {
+              "values":nbScanMe
+            }
+            ]
+          }
+        });
+
       };
+
+
+      // var test=[30,10,20];
+
+
+
+
 
     </script>
 

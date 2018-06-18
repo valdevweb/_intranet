@@ -57,3 +57,35 @@ function nbInscrJourFn($pdoBt){
 }
 
 
+function nbVenusParCentrale($pdoBt){
+  	$req=$pdoBt->query("SELECT centrale, count(id) as nb FROM `salon` WHERE heure_mardi <>'' OR heure_mercredi<>'' GROUP BY `centrale` ");
+  	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function nbVenus($pdoBt){
+  	$req=$pdoBt->query("SELECT * FROM `salon` WHERE heure_mardi <>'' OR heure_mercredi<>''");
+	return $req->rowCount();
+  	// return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function nbManuel($pdoBt){
+  	$req=$pdoBt->query("SELECT * FROM `salon` WHERE manuel=1");
+	return $req->rowCount();
+  	// return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+
+
+function arriveesMardi($pdoBt){
+  	$req=$pdoBt->query("SELECT count(id) as nb, substr(`heure_mardi`,12,2) as hour, heure_mardi FROM `salon` GROUP by substr(`heure_mardi`,12,2)");
+	// return $req->rowCount();
+  	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+function arriveesMercredi($pdoBt){
+  	$req=$pdoBt->query("SELECT count(id) as nb, substr(`heure_mercredi`,12,2) as hour, heure_mercredi FROM `salon` GROUP by substr(`heure_mercredi`,12,2)");
+	// return $req->rowCount();
+  	return $req->fetchAll(PDO::FETCH_ASSOC);
+}

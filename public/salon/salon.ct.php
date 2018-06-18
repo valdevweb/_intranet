@@ -2,10 +2,28 @@
 	<!-- main title -->
 	<div class="row bgwhite">
 		<div class="int-padding">
-			<h1 class="blue-text text-darken-4">Liste des inscrits au salon BTLEC Est 2018</h1>
+			<h1 class="blue-text text-darken-4">Salon BTLEC Est 2018</h1>
 			<br>
 		</div>
 	</div>
+	<div class="row bgwhite">
+		<div class="int-padding">
+			<h4 class="blue-text text-darken-4" id="salon-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Bilan salon</h4>
+			<hr>
+			<ul>
+				<li>Nombre de participants effectifs sur <?=$nbInscription?> prévus: <strong><?=$nbVenusReels?></strong> ( <?=round($deltaInscritReel) ?> %)</li>
+				<li>Participants sans qrcodes : <strong><?= $noScan ?></strong> ( <?=round($deltaScan) ?> %)</li>
+			</ul>
+			<div id="graph">
+				<div id="heuresMardi"></div>
+				<div id="heuresMercredi"></div>
+
+			  <div id="venuesCentrales"></div>
+			</div>
+		</div>
+	</div>
+
+
 	<div class="row bgwhite">
 		<div class="int-padding">
 			<h4 class="blue-text text-darken-4" id="salon-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Récapitulatif</h4>
