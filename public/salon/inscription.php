@@ -68,7 +68,8 @@ function addParticipant($pdoBt)
 	else{
 		$date2="non";
 	}
-	if(isset($_POST['repas2'])){
+	if($_POST['repas2']=="oui")
+	{
 		$repas="oui";
 	}
 	else{
