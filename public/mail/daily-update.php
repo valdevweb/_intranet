@@ -134,10 +134,13 @@ foreach ($files as $dbFile) {
 		{
 			$fileList[]="les nouveaux " . $dbFile['type'];
 		}
-		// si ponier promo ou assortiment, on envoie pas l'info
-		elseif($dbFile['code']==4 ||$dbFile['code']==3)
+		elseif($dbFile['code']==9)
 		{
-
+			$fileList[]="le " . $dbFile['type'] ." ". $dbFile['name'];
+		}
+		elseif($dbFile['code']==10)
+		{
+			$fileList[]="la " . $dbFile['name'];
 		}
 		else
 		{
