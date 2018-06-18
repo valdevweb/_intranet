@@ -166,11 +166,14 @@ else
 				<ul>
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#odr-title'?>">ODR</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#tel-title'?>">TEL/BRII</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#panier-title'?>">Panier Promo</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#assortiment-title'?>">Assortiment</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#mdd-title'?>">MDD</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#gfk-title'?>">GFK</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/extralec.php'?>">Application Extralec</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/plancom2019.php'?>">Plan de Comm OP BTLec 2019</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/kitaffiche.php'?>">Kit affiches OP BTLec</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/doc/convention.php'?>">Convention 2018</a></li>
 
 
 
