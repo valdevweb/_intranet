@@ -22,9 +22,23 @@
 			<!-- ****************************************** -->
 			<!-- 			SECTION ASSORTIMENT 			-->
 			<!-- ****************************************** -->
+			<?php
+				ob_start()
+			?>
+			<h4 class="blue-text text-darken-4" id="assortiment-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>L'assortiment :</h4>
+			<p>- <a href="<?= $path .$assortiment['file']."?".date("Y-m-d H:i:s")?>" target="_blank">l'assortiment du <?= $assortiment['datefull']?></a> </p>
+			<?php
+				$assortimentDisplay=ob_get_contents();
+				ob_end_clean();
+				 if(isset($assortiment['file'])){
+				 	echo $assortimentDisplay;
+				 }
+			 ?>
 			<!-- ****************************************** -->
 			<!-- 			SECTION PANIER PROMO 			-->
 			<!-- ****************************************** -->
+			<h4 class="blue-text text-darken-4" id="panier-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Le panier promo :</h4>
+			<p>- <a href="<?= $path .$panier['file']."?".date("Y-m-d H:i:s")?>" target="_blank">le panier promo du <?= $panier['datefull']?></a> </p>
 			<!-- ****************************************** -->
 			<!-- 			SECTION MDD 			-->
 			<!-- ****************************************** -->
@@ -57,13 +71,23 @@
 				<li class="nav-item">
 					<a class="nav-link" href="#tel-title">Tickets / BRII</a>
 				</li>
-				<!-- PANIER PROMO ET ASSORTIMENT -->
-				<!-- <li class="nav-item">
+				<!--  ASSORTIMENT -->
+			<?php
+				ob_start()
+			?>
+				<li class="nav-item">
 					<a class="nav-link" href="#assortiment-title">Assortiment</a>
 				</li>
+			<?php
+				$assortimentTitle=ob_get_contents();
+				ob_end_clean();
+				if(isset($assortiment['file'])){
+				 	echo $assortimentTitle;
+				}
+			 ?>
 				<li class="nav-item">
 					<a class="nav-link" href="#panier-title">Panier promo</a>
-				</li> -->
+				</li>
 				<!-- END EN ATTENTE -->
 				<li class="nav-item">
 					<a class="nav-link" href="#mdd-title">Point stock MDD</a>
