@@ -3,13 +3,13 @@
 		<h1 class="header center grey-text text-darken-2"><?= $typeTitle .' '.$nom ?></h1>
 	</header>
 	<br><br>
-	<div class="w3-panel-norm w3-light-grey"><h2 class="orange-text text-darken-2 center"><strong>SALON BTLEC EST 2018</strong></h2>
+	<!-- <div class="w3-panel-norm w3-light-grey"><h2 class="orange-text text-darken-2 center"><strong>SALON BTLEC EST 2018</strong></h2>
 
 		<p class="center">Inscrivez-vous dès aujourd'hui au salon BTLEC EST 2018 !	</p>
 		<p class="imgcenter"><a href="salon/inscription.php"><img  src="img/icons/ici.png"></a></p>
 
-	</div>
-<br>
+	</div> -->
+
 	 <!-- <div class="row">
 
 		<div class="col s12 m12 l12 white"><br>
@@ -27,7 +27,7 @@
 		</div>
 
 	</div> -->
-	<br>
+
 
 	<!-- <div class="row">
 		<div class="col s2 m2 l2"></div>
@@ -70,7 +70,7 @@
 				}
 		}
 	?>
-
+<br>
 
 	<section>
 		<h4 class="grey-text text-darken-2"><i>Quelques mots sur votre centrale d'achats Bazar Technique Leclerc:</i></h4>
