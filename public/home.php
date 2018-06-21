@@ -31,7 +31,20 @@ $approHtml="";
 if($gazetteAppros){
 	foreach ($gazetteAppros as $gazette)
 	{
-		$approHtml .= "<li><i class='fa fa-angle-double-right'></i><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .mb_strtolower($gazette['file'],'UTF-8') ."</a></li>";
+		//modif du 20/06
+		if(!empty($gazette['title']))
+		{
+			$detail=" : <br>";
+			$detail.=str_replace("<br />"," - ",$gazette['title']);
+		}
+		else
+		{
+			$detail="";
+		}
+		$filename=$gazette['file'];
+		$filename=explode(".",$filename);
+		$approFilename=$filename[0];
+		$approHtml .= "<li><i class='fa fa-angle-double-right'></i><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .$approFilename . $detail."</a></li>";
 	}
 }
 $gazetteSpe=showThisWeekSpe($pdoBt);

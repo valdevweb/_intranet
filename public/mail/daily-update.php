@@ -122,55 +122,80 @@ if (file_exists($opp))
 //------------------------------------------------------
 //			DOCUMENTS
 //------------------------------------------------------
+//on récupère tous les documents de la base
+//on compare la date du jour avec la date de modif (=date d'upload)
 $req=$pdoBt->prepare("SELECT * FROM documents");
 $req->execute();
 $files=$req->fetchAll(PDO::FETCH_ASSOC);
-foreach ($files as $dbFile) {
-	$docDate=new DateTime($dbFile['date_modif']);
-	if($docDate > $deadLine)
-	{
-		//si résultat GFK
-		if($dbFile['code']==5)
+if($files>=1)
+{
+	foreach ($files as $dbFile) {
+		$docDate=new DateTime($dbFile['date_modif']);
+		if($docDate > $deadLine)
 		{
-			$fileList[]="les nouveaux " . $dbFile['type'];
-		}
-		elseif($dbFile['code']==9)
-		{
-			$fileList[]="le " . $dbFile['type'] ." ". $dbFile['name'];
-		}
-		elseif($dbFile['code']==10)
-		{
-			$fileList[]="la " . $dbFile['name'];
-		}
-		else
-		{
-		$fileList[]=$dbFile['type'];
+			//si résultat GFK
+			if($dbFile['code']==5)
+			{
+				$fileList[]="les nouveaux " . $dbFile['type'];
+			}
+			elseif($dbFile['code']==9)
+			{
+				$fileList[]="le " . $dbFile['type'] ." ". $dbFile['name'];
+			}
+			elseif($dbFile['code']==10)
+			{
+				$fileList[]="la " . $dbFile['type'];
+			}
+			elseif($dbFile['code']==7)
+			{
+				$fileList[]="les " . $dbFile['type'];
+			}
+			elseif($dbFile['code']==6 ||$dbFile['code']==3 || $dbFile['code']==11)
+			{
+				$fileList[]="le " . $dbFile['type'];
+			}
+			elseif($dbFile['code']==4)
+			{
+				$fileList[]="l'" . $dbFile['type'];
+			}
+			else
+			{
+			$fileList[]=$dbFile['type'];
+			}
 		}
 	}
 }
 //------------------------------------------------------
 //			GAZETTES
 //------------------------------------------------------
-$req=$pdoBt->prepare("SELECT * FROM gazette");
-$req->execute();
+// pour la gazette normal et la gazette speciale, on prend le champ date
+// gazette quotidienne => date = date sélectionnée par la personne donc normalement date du jour (si on a modifié une ancienne gazette, on ne veut pas l'afficher)
+// gazette spéciale => date de dépot ( pas de champ date pour la modifier dans le formulaire)
+$req=$pdoBt->prepare("SELECT * FROM gazette WHERE date= :today AND (code = 1 OR code = 8)");
+$req->execute(array(
+	':today'	=> date('Y-m-d')
+));
 $files=$req->fetchAll(PDO::FETCH_ASSOC);
-foreach ($files as $dbFile)
+if($files>=1)
 {
-	if($dbFile['date_modif'] !="")
+	foreach ($files as $g)
 	{
-		$docDate=new DateTime($dbFile['date_modif']);
-		$flag=0;
-		if($docDate > $deadLine)
-		{
-			$flag++;
-		}
+		$fileList[]="la " . $g['category'];
 	}
 }
-// si on a au moins une gazete, on ajoute la gazette à la liste mais on ne l'ajoute qu'une fois
-if($flag >=1)
-	{
-			$fileList[]="la " . $dbFile['category'];
-	}
+
+// pour la gazette appro, c'est la date de modif qu'il faut prendre en compte (date de dépot)
+$req=$pdoBt->prepare("SELECT * FROM gazette WHERE code = 2 AND DATE_FORMAT(date_modif, '%Y-%m-%d')= :today");
+$req->execute(array(
+	':today'	=> date('Y-m-d')
+));
+$files=$req->fetch(PDO::FETCH_ASSOC);
+if($files>=1)
+{
+	$filename=explode('.',$files['file']);
+	$filename=$filename[0];
+	$fileList[]="la " . $files['category'] . " - " .$filename;
+}
 
 //------------------------------------------------------
 //			si list fichiers non vide => envoi mail

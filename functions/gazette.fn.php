@@ -28,7 +28,7 @@ function showThisWeekSpe($pdoBt)
 	$end=new DateTime('Friday this week');
 	$end=$end->format('Y-m-d');
 	//SELECT file, month(date) as month, day(date) as day, date FROM `gazette`
-	$req=$pdoBt->prepare("SELECT file, month(date) as month, day(date) as day, year(date) as year, date, category, title FROM gazette WHERE category=:gazette AND date BETWEEN :start AND :end ORDER BY date");
+	$req=$pdoBt->prepare("SELECT file, month(date) as month, day(date) as day, year(date) as year, date, category, title FROM gazette WHERE category=:gazette AND date BETWEEN :start AND :end ORDER BY date DESC,date_modif DESC");
 	$req->execute(array(
 		':gazette'  =>'spéciale gazette',
 		':start' 	=> $start,
@@ -40,7 +40,12 @@ function showThisWeekSpe($pdoBt)
 }
 
 
+function showAllSpe($pdoBt)
+{
+	$req=$pdoBt->query("SELECT * FROM gazette WHERE code = 8 ORDER BY ID DESC" );
+	return $req->fetchAll(PDO::FETCH_ASSOC);
 
+}
 
 
 
@@ -66,7 +71,7 @@ function showLastGazettesAppros($pdoBt)
 {
 	$today=new DateTime();
 	$today=$today->format('Y-m-d');
-	$req=$pdoBt->prepare("SELECT file, DATE_FORMAT(date,'%d/%m/%Y') AS deb, DATE_FORMAT(date_fin,'%d/%m/%Y') AS fin, date_fin, category FROM gazette WHERE category=:gazette AND  date_fin>= :today ORDER BY date DESC ");
+	$req=$pdoBt->prepare("SELECT file, DATE_FORMAT(date,'%d/%m/%Y') AS deb, DATE_FORMAT(date_fin,'%d/%m/%Y') AS fin, date_fin, category, title FROM gazette WHERE category=:gazette AND  date_fin>= :today ORDER BY date DESC ");
 	$req->execute(array(
 		':today'	=> $today,
 		':gazette'  =>'gazette appros'

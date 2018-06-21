@@ -199,7 +199,7 @@ else
 
 
 				<?php ob_start(); ?>
-					<li><a href="<?= ROOT_PATH. '/public/doc/upload-doc.php'?>">Ajouter des documents</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/doc/upload-main.php'?>">Ajouter des documents</a></li>
 
 				<?php
 					$btdoc=ob_get_contents();

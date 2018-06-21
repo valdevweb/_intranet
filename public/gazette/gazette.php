@@ -87,9 +87,9 @@ if (isset($_POST['submit']))
 		<img class="w3-grayscale gazette" src="../img/gazette/newspaper.jpg">
 	</div>
 	<div class="row">
-		<div class="col l2 m2"></div>
+		<div class="col l1 m1"></div>
 		<div class="col l2 m2 s4 mini-nav">
-			<p><a href="#h2018"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette hedbo</a></p>
+			<p><a href="#h2018"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette</a></p>
 			<p><a href="#h2018"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2018</a></p>
 			<p><a href="#h2017"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2017</a></p>
 
@@ -102,10 +102,15 @@ if (isset($_POST['submit']))
 			<p><a href="#opp"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette alerte promo</a></p>
 
 		</div>
+		<div class="col l2 m2 mini-nav">
+			<p><a href="#spe"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette spéciale</a></p>
+
+		</div>
+
 		<div class="col l2 m2 s4 mini-nav">
 			<p><a href="#search"><i class="fa fa-search" aria-hidden="true"></i>Rechercher</a></p>
 		</div>
-		<div class="col l2 m2"></div>
+		<div class="col l1 m1"></div>
 
 	</div>
 
@@ -113,7 +118,7 @@ if (isset($_POST['submit']))
 
 
 	<div class="row">
-		<h4 class="light-blue-text text-darken-2" id="h2018">Listing des gazettes hebdo de 2018</h4>
+		<h4 class="light-blue-text text-darken-2" id="h2018">Listing des gazettes de 2018</h4>
 	</div>
 	<div class="row">
 		<ul class="collapsible" data-collapsible="accordion">
@@ -216,14 +221,42 @@ if (isset($_POST['submit']))
 			$link="http://172.30.92.53/".$version."upload/gazette/";
 			foreach ($histo as $gazette)
 			{
-				echo "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .$gazette['file'] ."</a> du " .$gazette['deb']. " au ".$gazette['fin'] ."</li>";
+					//modif du 20/06
+				if(!empty($gazette['title']))
+				{
+					$detail=" : <ul class='browser-default'><li>";
+					$detail.=str_replace("<br />","</li><li>",$gazette['title']);
+					$detail.= "</li></ul>";
+				}
+				else
+				{
+					$detail="";
+				}
+				$filename=$gazette['file'];
+				$filename=explode(".",$filename);
+				$approFilename=$filename[0];
+				echo "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'><strong>" .$approFilename ."</strong> operations du " .$gazette['deb']. " au ".$gazette['fin'] .$detail ."</a> </li>";
 			}
 		?>
 		</ul>
  	<p class="uptonav"><a href="#up" class="uptonav">retour au menu</a></p>
 
  	</div>
+	<div class="row">
+		<h4 class="light-blue-text text-darken-2" id="spe">Les gazettes spéciales</h4>
+	</div>
 
+	<div class="row">
+		<ul class="browser-default">
+			<?php
+			$gSpe=showAllSpe($pdoBt);
+			foreach ($gSpe as $spe)
+			{
+				echo "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$spe['file']."'>" .$spe['title'] ."</a> </li>";
+			}
+			?>
+		</ul>
+	</div>
 
 
 
