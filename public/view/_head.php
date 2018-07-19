@@ -7,7 +7,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<link rel="stylesheet" href="<?= $tweakcss ?>">
     <link rel="stylesheet" href="<?= $nav ?>">
-	<link rel="stylesheet" href="<?=isset($cssFile)? $cssFile: ''?>">
+    <?php
+    if(isset($cssFile)){
+    	echo '<link rel="stylesheet" href="' .$cssFile .'">';
+    }
+
+	?>
+
 	<link rel="stylesheet" href="<?= $md_css?>">
 	<link rel="stylesheet" href="<?=$awesome ?>">
     <link rel="stylesheet" href="<?= $w3c ?>">
