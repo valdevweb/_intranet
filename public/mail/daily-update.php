@@ -103,6 +103,9 @@ function mailUpdateDoc($mailingList,$subject,$fileList, $today)
 //liste des fichiers mis à jour depuis hier 18h
 $fileList=array();
 $deadLine=new DateTime('yesterday 18:00:00');
+	// echo "<pre>";
+	// var_dump($deadLine);
+	// echo '</pre>';
 
 //------------------------------------------------------
 //			OPPORTUNITES
