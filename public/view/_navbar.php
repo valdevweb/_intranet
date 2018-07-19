@@ -17,17 +17,32 @@ if (isUserInGroup($pdoBt,$idUser,"communication"))
 {
 	$uploadDocument=true;
 	$exploit=false;
+	$conseil=false;
 
 }
 elseif(isUserInGroup($pdoBt,$idUser,"admin"))
 {
 	$uploadDocument=true;
 	$exploit=true;
+	$conseil=true;
+}
+elseif(isUserInGroup($pdoBt,$idUser,"admin_conseil"))
+{
+	$uploadDocument=false;
+	$exploit=false;
+	$conseil=true;
+}
+elseif(isUserInGroup($pdoBt,$idUser,"conseil"))
+{
+	$uploadDocument=false;
+	$exploit=false;
+	$conseil=true;
 }
 else
 {
 	$uploadDocument=false;
 	$exploit=false;
+	$conseil=false;
 }
 ?>
 <div id='cssmenu'>
@@ -134,7 +149,7 @@ else
 				 {
 				 	echo $magtest;
 				 }
-				 elseif($_SESSION['type']=="mag" || $_SESSION['type']=="scapsav" || $_SESSION['type']=="centrale" || $_SESSION['type']=="")
+				 elseif($_SESSION['type']=="mag" || $_SESSION['type']=="scapsav" || $_SESSION['type']=="centrale" || $_SESSION['type']=="" || $_SESSION['type']=="adh")
 				 {
 				 	echo $mag;
 				 }
@@ -150,18 +165,7 @@ else
 			<!-- section sans sous menu -->
 			<li><a href="<?= ROOT_PATH. '/public/entrepot/discover.php'?>" class="tooltipped" data-position="bottom" data-tooltip="Visitez l'entrepôt"><span>Entrepôt</span></a></li>
 
-			<li  class='active has-sub'><a href="<?= ROOT_PATH. '/public/gazette/gazette.php'?>" >Les gazettes</a>
-		 		<?php ob_start(); ?>
-
-				<ul>
-					<li><a href="<?= ROOT_PATH. '/public/gazette/upload-gazette.php'?>">Ajouter une gazette</a></li>
-				</ul>
-				<?php
-					$bt=ob_get_contents();
-					ob_end_clean();
-					echo ($_SESSION['type']=="btlec") ? $bt : '' ;
-				 ?>
-			</li>
+			<li><a href="<?= ROOT_PATH. '/public/gazette/gazette.php'?>" >Les gazettes</a></li>
 			<li  class='active has-sub'><a href="<?= ROOT_PATH. '/public/doc/display-doc.php'?>" >documents</a>
 				<ul>
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#odr-title'?>">ODR</a></li>
@@ -220,6 +224,15 @@ else
 				$exploitNav=ob_get_contents();
 				ob_end_clean();
 				echo ($exploit) ? $exploitNav : '' ;
+
+			?>
+			<!-- menu conseil -->
+			<?php ob_start(); ?>
+			<li><a href="http://172.30.92.53/<?= $version. 'conseil/home.php'?>" class="tooltipped" data-position="bottom" data-tooltip="Conseil d'administration"><span>Conseil</span></a></li>
+			<?php
+				$conseilNav=ob_get_contents();
+				ob_end_clean();
+				echo ($conseil) ? $conseilNav : '' ;
 
 			?>
 

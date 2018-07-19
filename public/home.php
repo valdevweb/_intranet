@@ -117,6 +117,7 @@ if(!empty($_SERVER['HTTP_REFERER']))
 	{
 		// si ni de type mag, ni de type bt, ni scapsav
 		$typeTitle="";
+		$nom="";
 		//---------------------------
 		//stats
 		//---------------------------

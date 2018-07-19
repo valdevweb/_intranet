@@ -63,7 +63,10 @@ function login($dbUser, $pdoBt)
 					$_SESSION['id']=$data['id'];
 					$_SESSION['user']=$_POST['login'];
 					$_SESSION['type']=$data['type'];
-					$_SESSION['goto']=$_POST['goto'];
+					if(isset($_POST['goto']))
+					{
+						$_SESSION['goto']=$_POST['goto'];
+					}
 				//header('Location:'. ROOT_PATH. '/public/home.php');
 				}
 				else
@@ -124,7 +127,7 @@ function login($dbUser, $pdoBt)
 			$_SESSION['id_service']=$btInfo['id_service'];
 			$_SESSION['spe']="yes";
 		}
-		elseif($_SESSION['type']=="mag" || $_SESSION['type']=="centrale" || $_SESSION['type']=='scapsav')
+		elseif($_SESSION['type']=="mag" || $_SESSION['type']=="centrale" || $_SESSION['type']=='scapsav' || $_SESSION['type']=='adh')
 		{
 			$_SESSION['id_galec']=$data['galec'];
 		//recup info mag dans sca3
@@ -135,7 +138,18 @@ function login($dbUser, $pdoBt)
 			$_SESSION['code_bt']=$scatrois['btlec'];
 			$_SESSION['id_btlec']=$data['id_bt'];
 
+
 		}
+		// elseif($_SESSION['type']=="adh")
+		// {
+		// 	$_SESSION['id_galec']=$data['galec'];
+		// 	$scatrois=magInfo($pdoBt);
+		// 	$_SESSION['centrale']=$scatrois['centrale'];
+		// 	$_SESSION['city']=$scatrois['city'];
+		// 	$_SESSION['code_bt']=$scatrois['btlec'];
+		// 	$_SESSION['test']=magInfo($pdoBt);
+
+		// }
 		elseif($_SESSION['type']=='btlec')
 		{
 			$_SESSION['id_btlec']=$data['id_bt'];
