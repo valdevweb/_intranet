@@ -176,16 +176,15 @@ if(isset($_POST['connexion']))
 	 	<div class="row">
 			<div class="col s2 m2 l2">
 				<img src="public/img/icons/new-orange-sm.png">
-			 <!-- <img src="public/img/icons/new-blue-sm.png"> -->
 			</div>
 			<div class="col s10 m10 l10">
 				<br>
-				<h4 class="orange-text text-darken-3 center">Convention BTLec 2018</h4>
+				<h4 class="orange-text text-darken-3 center">Modification du Réservable Téléviseur</h4>
 			</div>
 		</div>
-		<p>La présentation de la convention 2018 est disponible dans la section documents</p>
+		<p>A compter des catalogues du 4 septembre, les téléviseurs en réservable sont à partir des tailles supérieures ou égales à 46"</p>
 		<!-- <p class="center-text"><center><img src="public/img/screenshot/navnew.png"></center></p> -->
-		<br>
+		<!-- <br> -->
 
 <!--
 		<div class="row">
@@ -200,9 +199,9 @@ if(isset($_POST['connexion']))
 		<p>Retrouvez toutes les informations concernant l'édition 2018	du SALON BTlec Est, ainsi que le formulaire d'inscription</p>
 		<div class="modal-footer">
 			<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
-		</div>
+		</div> -->
 
- -->
+
 		<div class="modal-footer">
 			<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
 		</div>
