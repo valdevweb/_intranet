@@ -67,9 +67,10 @@ if(isset($_POST['submit'])){
 		//si pano galec trouvé, le recherche dans table users
 		if($sca=$req->fetch(PDO::FETCH_ASSOC))
 			{
-				$req=$pdoUser->prepare("SELECT * FROM users WHERE galec= :galec");
+				$req=$pdoUser->prepare("SELECT * FROM users WHERE galec= :galec AND type= :mag");
 				$req->execute(array(
-					":galec"	=>$sca['galec']
+					":galec"	=>$sca['galec'],
+					":mag"		=>"mag"
 				));
 				$webuser=$req->fetch(PDO::FETCH_ASSOC);
 				//ld rbt du mag
