@@ -11,7 +11,7 @@
 
 	<!-- select -->
 	<div class="row">
-		<form class="browser-default" action="request.ct.php" >
+		<form class="browser-default" method="post" >
 			<div class="col l4"></div>
 			<div class="col l4">
 				<!-- <p class="center">Choisir un service</p> -->
