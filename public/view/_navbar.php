@@ -132,6 +132,7 @@ else
 				 <ul>
 					 <li><a href="<?= ROOT_PATH?>/public/btlec/dashboard.php">En attente</a></li>
 					 <li> <a href="<?= ROOT_PATH?>/public/btlec/histo.php">Clôturées</a></li>
+					 <li> <a href="<?= ROOT_PATH?>/public/btlec/search.php">Histo par magasin</a></li>
 
 				 </ul>
 			 </li>
