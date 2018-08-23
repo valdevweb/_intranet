@@ -82,9 +82,7 @@ if(isset($_POST['connexion']))
 						<button id="log" class="btn waves-effect waves-default white grey-text text-darken-3 darken-3 modal-trigger" data-target="modal1">Se connecter</button>
 					</p>
 <!-- Demande de retrait information transport par David le 14/02/2018 -->
-<!-- 					<p class="w3-panel w3-red" ><i class="fa fa-warning fa-4x" ></i><br>Les arrêtés préfectoraux tombant plus vite que la neige, nous subissons depuis quelques jours un nombre croissant d'interdiction de circulation notamment sur la Région Parisienne étendue depuis ce matin à l'Oise, l' Aisne et la Marne sur les grands axes.<br>
-					Nous mettons tout en oeuvre avec nos partenaires transports afin de trouver des solutions pour vous livrer.<br>Néanmoins, un certain nombre de destination ne peuvent être expédiées mais vos commandes sont malgré tout prise en compte et traitées afin de pouvoir vous les livrer dès que la situation va se débloquer.<br>
-					Les transporteurs sont en charge de vous avertir individuellement lorsqu'ils ne peuvent pas effectuer la livraison.</p> -->
+<!-- 					<p class="w3-panel w3-red" ><i class="fa fa-warning fa-4x" ></i><br>la période étant propice aux vacances, merci de communiquer à vos équipes réception et accueil de l'arrivée de vos commandes 48 h afin que celles-ci ne soient pas refusée</p> -->
 
 
 			</div>
@@ -173,7 +171,18 @@ if(isset($_POST['connexion']))
 <!-- 13/06/2018 : suppression modal nouveauté -->
 <div class="modal" id="modal-new">
 	<div class="modal-content">
-	 	<div class="row">
+		<div class="row">
+			<div class="col s2 m2 l2">
+				<img src="public/img/icons/new-blue-sm.png">
+			</div>
+			<div class="col s10 m10 l10">
+				<br>
+				<h4 class="blue-text text-darken-3 center">Commmandes 48h</h4>
+			</div>
+		</div>
+		<p>La période étant propice aux vacances, merci de communiquer à vos équipes réception et accueil de l'arrivée de vos commandes 48 h afin que celles-ci ne soient pas refusée</p>
+
+		<div class="row">
 			<div class="col s2 m2 l2">
 				<img src="public/img/icons/new-orange-sm.png">
 			</div>
@@ -185,23 +194,6 @@ if(isset($_POST['connexion']))
 		<p>A compter des catalogues du 4 septembre, les téléviseurs en réservable sont à partir des tailles supérieures ou égales à 46"</p>
 		<!-- <p class="center-text"><center><img src="public/img/screenshot/navnew.png"></center></p> -->
 		<!-- <br> -->
-
-<!--
-		<div class="row">
-			<div class="col s2 m2 l2">
-				<img src="public/img/icons/new-orange-sm.png">
-			</div>
-			<div class="col s10 m10 l10">
-				<br>
-				<h4 class="orange-text text-darken-3 center">Salon BTLEC EST 2018</h4>
-			</div>
-		</div>
-		<p>Retrouvez toutes les informations concernant l'édition 2018	du SALON BTlec Est, ainsi que le formulaire d'inscription</p>
-		<div class="modal-footer">
-			<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
-		</div> -->
-
-
 		<div class="modal-footer">
 			<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
 		</div>
