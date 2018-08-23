@@ -420,7 +420,7 @@ if(isset($_POST['sendGfk'])){
 	// echo '</pre>';
 
  $idUser=$_SESSION['id'];
-// $idUser=1039;
+
 if (isUserInGroup($pdoBt,$idUser,"communication"))
 {
 	$comm=true;
