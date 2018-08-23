@@ -35,7 +35,18 @@
 
 	<div class="row">
 		<p class="success-msg">
-			<?php if(isset($_GET['success'])){ echo  "reponse envoyée avec succès"; }?>
+			<?php
+			if(isset($_GET['success']))
+			{
+				if($_GET['success']==1)
+				{
+					echo  "reponse envoyée avec succès";
+				}
+				elseif ($_GET['success']==2)
+				{
+					echo "demande clôturée avec succès";
+				}
+			}?>
 
 		</p>
 <!-- debut boucle pour affichage des resultats => messages envoyés au services -->
