@@ -47,9 +47,7 @@ else
 ?>
 <div id='cssmenu'>
 	<ul>
-			<!-- #0d47a1 blue darken-4 -->
-			<!-- <a href="" class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Accueil"><i class="fa fa-home fa-2x" aria-hidden="true"></i></a> -->
-			<li><a class="less-padding"  href='<?= ROOT_PATH ?>/public/home.php' data-tooltip="Accueil"><span><i class="fa fa-home fa-2x" aria-hidden="true"></i></span></a></li>
+		<li><a class="less-padding"  href='<?= ROOT_PATH ?>/public/home.php' data-tooltip="Accueil"><span><i class="fa fa-home fa-2x" aria-hidden="true"></i></span></a></li>
 			<!-- sous menu 1 -->
 			<?php
 
@@ -57,7 +55,7 @@ else
 				//							menu pour les magasins
 				//-----------------------------------------------------------------------------------------------------------------
 
-		 		ob_start();
+			ob_start();
 			?>
 			<li><a href="<?= ROOT_PATH?>/public/mag/histo-mag.php"><span>Vos demandes</span></a></li>
 			<li class='active has-sub'><a href='#'><span>Contacter nos services</span></a>
@@ -80,7 +78,7 @@ else
 				 </ul>
 			 </li>
 			 <?php
-			 	$mag=ob_get_contents();
+			 	$magNav=ob_get_contents();
 			 	ob_end_clean();
 				//-----------------------------------------------------------------------------------------------------------------
 			 	//						fin menu pour les magasin
@@ -152,7 +150,7 @@ else
 				 }
 				 elseif($_SESSION['type']=="mag" || $_SESSION['type']=="scapsav" || $_SESSION['type']=="centrale" || $_SESSION['type']=="" || $_SESSION['type']=="adh")
 				 {
-				 	echo $mag;
+				 	echo $magNav;
 				 }
 				 elseif ($_SESSION['type']=="btlec")
 				 {
@@ -164,7 +162,7 @@ else
 				 }
 			?>
 			<!-- section sans sous menu -->
-			<li><a href="<?= ROOT_PATH. '/public/entrepot/discover.php'?>" class="tooltipped" data-position="bottom" data-tooltip="Visitez l'entrepôt"><span>Entrepôt</span></a></li>
+			<li><a href="<?= ROOT_PATH. '/public/entrepot/discover.php'?>"><span>Entrepôt</span></a></li>
 
 			<li><a href="<?= ROOT_PATH. '/public/gazette/gazette.php'?>" >Les gazettes</a></li>
 			<li  class='active has-sub'><a href="<?= ROOT_PATH. '/public/doc/display-doc.php'?>" >documents</a>
@@ -179,71 +177,47 @@ else
 					<li><a href="<?= ROOT_PATH. '/public/doc/plancom2019.php'?>">Plan de Comm OP BTLec 2019</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/kitaffiche.php'?>">Kit affiches OP BTLec</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/convention.php'?>">Convention 2018</a></li>
-
-
-
 					<?php
-						ob_start();
-	 				?>
-					<li><a href="<?= ROOT_PATH .'/public/infos/twentyfour.php#plv'?>">PLV 48h</a></li>
-					<?php
-					$exceptSocara=ob_get_contents();
-					ob_end_clean();
+					$exceptSocara="<li><a href='".ROOT_PATH ."/public/infos/twentyfour.php#plv'>PLV 48h</a></li>";
 					if(!isset($_SESSION['centrale']))
 					{
 						echo $exceptSocara;
 					}
-					else{
+					else
+					{
 						if($_SESSION['centrale'] !="SOCARA")
 						{
 							echo $exceptSocara;
 						}
 					}
 					?>
-
-
-
-				<?php ob_start(); ?>
-					<li><a href="<?= ROOT_PATH. '/public/doc/upload-main.php'?>">Ajouter des documents</a></li>
-
 				<?php
-					$btdoc=ob_get_contents();
-					ob_end_clean();
-					echo ($uploadDocument) ? $btdoc : '' ;
-
+					$btdoc="<li><a href='".ROOT_PATH."/public/doc/upload-main.php'>Ajouter des documents</a></li>";
+					if($uploadDocument){
+						echo $btdoc;
+					}
 				?>
 				 </ul>
 			</li>
-			<!-- ajout menu exploitation salon -->
-			<?php ob_start(); ?>
-			<li  class='active has-sub'><a href="<?= ROOT_PATH. '/public/exploit/connexion.php'?>" class="tooltipped" data-position="bottom" data-tooltip="stats"><span>Exploit</span></a>
-				<ul><li><a href="<?= ROOT_PATH. '/public/salon/salon.php'?>" class="tooltipped" data-position="bottom" data-tooltip="salon inscriptions"><span>Salon</span></a></li>
-					<li><a href="<?= ROOT_PATH. '/public/exploit/connexion.php'?>" class="tooltipped" data-position="bottom" data-tooltip="stats"><span>Suivi magasins</span></a></li>
-				</ul>
-			</li>
 			<?php
-				$exploitNav=ob_get_contents();
-				ob_end_clean();
-				echo ($exploit) ? $exploitNav : '' ;
-
+			//ajout menu exploitation salon
+			$exploitNav="<li class='active has-sub'><a href='".ROOT_PATH. "/public/exploit/connexion.php' ><span>Exploit</span></a>";
+			$exploitNav.="<ul><li><a href='".ROOT_PATH."/public/salon/salon.php'><span>Salon</span></a></li>";
+			$exploitNav.="<li><a href='".ROOT_PATH."/public/exploit/connexion.php'><span>Suivi magasins</span></a></li></ul></li>";
+			if($exploit)
+			{
+			echo $exploitNav;
+			}
+			//menu conseil
+			if($conseil)
+			{
+			$conseilNav="<li><a href='http://172.30.92.53/".$version."conseil/home.php' class='tooltipped' data-position='bottom' data-tooltip='Conseil'><span>Conseil</span></a></li>";
+			echo $conseilNav;
+			}
 			?>
-			<!-- menu conseil -->
-			<?php ob_start(); ?>
-			<li><a href="http://172.30.92.53/<?= $version. 'conseil/home.php'?>" class="tooltipped" data-position="bottom" data-tooltip="Conseil d'administration"><span>Conseil</span></a></li>
-			<?php
-				$conseilNav=ob_get_contents();
-				ob_end_clean();
-				echo ($conseil) ? $conseilNav : '' ;
-
-			?>
-
 			<li><a href="http://172.30.92.53/scapsav/intranet/magasin.php" class="tooltipped" data-position="bottom" data-tooltip="aller sur le site scapsav">Site Scapsav</a></li>
-			<!-- <li><a href="http://site.scapsav.fr/sitescapsavdev/intranet/magasin.php" class="tooltipped" data-position="bottom" data-tooltip="aller sur le site scapsav">Site Scapsav</a></li> -->
-
-			<!-- profile -->
-			<li><a href='<?= ROOT_PATH?>/public/user/profil.php' class="tooltipped" data-position="bottom" data-tooltip="Votre compte"><span><i class="fa fa-user"></i></span></a></li>
-			<li><a href="<?= ROOT_PATH ?>/public/logoff.php" class="tooltipped" data-position="bottom" data-tooltip="se déconnecter"><i class="fa fa-power-off"></i></a></li>
+			<li><a href="<?= ROOT_PATH ?>/public/logoff.php" class="tooltipped" data-position="bottom" data-tooltip="se déconnecter"><span><i class="fa fa-power-off"></i></span></a></li>
+			<li><a href="<?= ROOT_PATH ?>/public/user/profil.php" class="tooltipped" data-position="bottom" data-tooltip="Votre compte"><span><i class="fa fa-user"></i></span></a></li>
 	 </ul>
-
 </div>
 
