@@ -29,6 +29,7 @@ $msg=ddesMag($pdoBt);
 $services=listServices($pdoBt);
 //				recherche du service du user connecté dans l'array services
 $found_key = array_search($_SESSION['id_service'], array_column($services, 'id'));
+
 //				découpe le tableau à partir de la valeur recherchée jusqu'à la fin du tableau
 $userService =array_slice($services,$found_key,1);
 $one=array_slice($services,$found_key+1);
