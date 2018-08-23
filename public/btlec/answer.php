@@ -180,8 +180,8 @@ if(isset($_POST['post-reply']))
 						//-----------------------------------------
 				if(sendMail($to,$objet,$tpl,$objetdde,$vide,$link))
 				{
-					$success=true;
-					header('Location:'. ROOT_PATH. '/public/btlec/dashboard.php?success='.$success);
+					$mail=true;
+					header('Location:'. ROOT_PATH.'/public/btlec/dashboard.php?success='.$mail);
 
 				}
 				else
@@ -229,15 +229,36 @@ if(isset($_POST['post-reply']))
 }		//fin soumission formulaire
 
 //affichage
-if (isset($_POST['close']))
-{
-	$etat="cloturé par BTlec";
-	if(!majEtat($pdoBt,$idMsg, $etat)){
+//suppression le 22/08/2018 - inutile
+// if (isset($_POST['close']))
+// {
+// 	$etat="cloturé par BTlec";
+// 	if(!majEtat($pdoBt,$idMsg, $etat)){
+// 		$err="impossible de clore le dossier";
+// 		die;
+// 	}
+// }
+
+// ajout du 22/08/2018 : btn pour cloturer les tickets sans envoyer de réponse ni de mail
+// accès seulement au groupe admin
+if(isset($_POST['closing'])){
+	if(isset($_POST['close-no-msg']))
+	{
+		$etat="clos";
+	if(!majEtat($pdoBt,$idMsg, $etat))
+	{
 		$err="impossible de clore le dossier";
 		die;
-	}
-}
+		}
+		else
+		{
 
+			header('Location:'. ROOT_PATH.'/public/btlec/dashboard.php?success=2');
+
+		}
+	}
+
+}
 
 
 ?>
@@ -402,6 +423,42 @@ if (isset($_POST['close']))
 		</div>
 	</div>
 	<br><br>
+	<?php
+	ob_start();
+	 ?>
+	<div class="row mag">
+		<div class="col l12 reply">
+			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Clôturer la demande sans envoyer de réponse :</h4>
+			<hr>
+			<br><br>
+			<form action="answer.php?msg=<?=$idMsg ?>" method="post" >
+				<div class="row">
+						<div class='col l9'>
+							<p>
+								<input type="checkbox" class="filled-in"  checked="checked" name="close-no-msg" />
+								<label for="close-no-msg">cloturer la demande</label>
+							</p>
+						</div>
+						<div class='col l3'>
+							<p class="center">
+								<button class="btn" type="submit" name="closing">Cloturer</button>
+							</p>
+						</div>
+					</div>
+			</form>
+		</div>
+	</div>
+	<br><br>
+	<?php
+	$formCloture=ob_get_contents();
+	ob_end_clean();
+	$idUser=$_SESSION['id'];
+	if(isUserInGroup($pdoBt,$idUser,"admin"))
+	{
+		echo $formCloture;
+	}
+
+ 	?>
 	<div class="row mag">
 		<div class="col l12 reply">
 			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Réaffecter la demande :</h4>
@@ -421,11 +478,8 @@ if (isset($_POST['close']))
 
 
 <?php
-
-
-
 include('../view/_footer.php');
- ?>
+?>
 
 
 
