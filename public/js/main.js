@@ -33,7 +33,7 @@ $(document).ready(function(){
 		var current_count=$('input[type="file"]').length;
 		var next_count=current_count+1;
 		$('#p-add-more').prepend('<p><input type="file" name="file_' +next_count +' "></p>');
-		$('input[type="file"]').val('hello');
+		$('input[type="file"]').val();
 	});
 
 	//---------------------------------------------------------------------------------------------
