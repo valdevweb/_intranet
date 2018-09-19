@@ -171,7 +171,7 @@ if(isset($_POST['connexion']))
 <!-- 13/06/2018 : suppression modal nouveauté -->
 <div class="modal" id="modal-new">
 	<div class="modal-content">
-		<div class="row">
+		<!-- <div class="row">
 			<div class="col s2 m2 l2">
 				<img src="public/img/icons/new-blue-sm.png">
 			</div>
@@ -180,7 +180,7 @@ if(isset($_POST['connexion']))
 				<h4 class="blue-text text-darken-3 center">Commmandes 48h</h4>
 			</div>
 		</div>
-		<p>La période étant propice aux vacances, merci de communiquer à vos équipes réception et accueil de l'arrivée de vos commandes 48 h afin que celles-ci ne soient pas refusée</p>
+		<p>La période étant propice aux vacances, merci de communiquer à vos équipes réception et accueil de l'arrivée de vos commandes 48 h afin que celles-ci ne soient pas refusée</p> -->
 
 		<div class="row">
 			<div class="col s2 m2 l2">
