@@ -2,7 +2,9 @@
 color:  red;
 }
 
-
+#hidden-field{
+	display: none !important;
+}
 
 .bggrey{
     background-color: #ddd;
@@ -21,18 +23,26 @@ tr, td, th{
 	/* color: red !important; */
 }
 
-td:nth-child(n+2){
-	width:  20px !important;
+#tableconnexion td:nth-child(n+4){
+	width:  24px !important;
 	border-left: 1px #ccc solid;
 	border-right: 1px #ccc solid;
 	text-align: center !important;
 
 }
 
-td:nth-child(1){
-	width:  200px !important;
-	/* border-left: 1px #ccc solid; */
-	/* border-right: 1px #ccc solid; */
+#tableconnexion td:nth-child(1){
+	width:  150px !important;
+
+}
+
+#tableservice td:nth-child(1){
+	width:  90px !important;
+}
+
+
+#tableservice td:nth-child(n+1){
+	width:  8% !important;
 }
 /* .nopadding td{
 	padding-top: 0 !important;
