@@ -71,7 +71,7 @@ function showLastGazettesAppros($pdoBt)
 {
 	$today=new DateTime();
 	$today=$today->format('Y-m-d');
-	$req=$pdoBt->prepare("SELECT file, DATE_FORMAT(date,'%d/%m/%Y') AS deb, DATE_FORMAT(date_fin,'%d/%m/%Y') AS fin, date_fin, category, title FROM gazette WHERE category=:gazette AND  date_fin>= :today ORDER BY date DESC ");
+	$req=$pdoBt->prepare("SELECT file, DATE_FORMAT(date,'%d/%m/%Y') AS deb, DATE_FORMAT(date_fin,'%d/%m/%Y') AS fin, date_fin, category, title FROM gazette WHERE category=:gazette AND  date_fin>= :today ORDER BY date DESC,file DESC");
 	$req->execute(array(
 		':today'	=> $today,
 		':gazette'  =>'gazette appros'
