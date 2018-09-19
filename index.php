@@ -24,10 +24,10 @@ if(isset($_POST['connexion']))
 		authStat($pdoStat,$page,$action, $err[0]);
 		if($err[0]=="user authentifié")
 		{
-			header('Location:'. ROOT_PATH. '/public/home.php');
+			 header('Location:'. ROOT_PATH. '/public/home.php');
 		}
-	}
 
+	}
 
 
 ?>
@@ -224,6 +224,7 @@ if(isset($_POST['connexion']))
 		// menu hamburger
 		$(".button-collapse").sideNav();
 		// ouverture fenetre modal en auto
+
 		$('#modal1').modal();
 		$('#modal1').modal('open');
 		$('#modal-new').modal();
