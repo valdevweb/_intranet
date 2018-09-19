@@ -137,8 +137,6 @@ function login($dbUser, $pdoBt)
 			$_SESSION['city']=$scatrois['city'];
 			$_SESSION['code_bt']=$scatrois['btlec'];
 			$_SESSION['id_btlec']=$data['id_bt'];
-
-
 		}
 		// elseif($_SESSION['type']=="adh")
 		// {
