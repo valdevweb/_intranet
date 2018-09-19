@@ -144,43 +144,49 @@ if(!empty($_POST))
 		//			ajoute le msg dans db et
 		//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
 		//------------------------------
-		if($lastId=addMsg($pdoBt,$idGt, $file))
-		{
-			//créa du lien pour le mail  BT
-			$link="Cliquez <a href='" .SITE_ADDRESS."/index.php?btlec/answer.php?msg=".$lastId."'>ici pour consulter le message</a>";
-			// $link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?http://172.30.92.53/". VERSION ."btlecest/answer.php?msg=".$lastId."'>ici pour consulter le message</a>";
-			$linkMag="Cliquez <a href='".SITE_ADDRESS."/index.php?mag/edit-msg.php?msg=".$lastId."'>ici pour revoir votre demande</a>";
-			//------------------------------
-			//			ajout enreg dans stat
-			//------------------------------
-			$descr="demande mag au service ".$gt ;
-			$page=basename(__file__);
-			$action="envoi d'une demande";
-			addRecord($pdoStat,$page,$action, $descr);
-			//-----------------------------------------
-			//				envoi des mails
-			//-----------------------------------------
-			if(sendMail($mailingList,$objBt,$tplForBtlec,$name,$magName, $link))
+
+		if(isset($err) && count($err)==0){
+			if($lastId=addMsg($pdoBt,$idGt, $file))
 			{
-				array_push($success,"Email envoyé avec succès");
-				$contentTwo="";
-				sendMail($email,$objMag,$tplForMag,$full_name,$contentTwo,$linkMag);
-				//on vide le formulaire et on redirige sur la page histo demande mag
-				unset($objet,$msg,$name,$email);
-				header('Location:'. ROOT_PATH. '/public/mag/histo-mag.php');
+				//créa du lien pour le mail  BT
+				$link="Cliquez <a href='" .SITE_ADDRESS."/index.php?btlec/answer.php?msg=".$lastId."'>ici pour consulter le message</a>";
+				// $link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?http://172.30.92.53/". VERSION ."btlecest/answer.php?msg=".$lastId."'>ici pour consulter le message</a>";
+				$linkMag="Cliquez <a href='".SITE_ADDRESS."/index.php?mag/edit-msg.php?msg=".$lastId."'>ici pour revoir votre demande</a>";
+				//------------------------------
+				//			ajout enreg dans stat
+				//------------------------------
+				$descr="demande mag au service ".$gt ;
+				$page=basename(__file__);
+				$action="envoi d'une demande";
+				addRecord($pdoStat,$page,$action, $descr);
+				//-----------------------------------------
+				//				envoi des mails
+				//-----------------------------------------
+				if(sendMail($mailingList,$objBt,$tplForBtlec,$name,$magName, $link))
+				{
+					array_push($success,"Email envoyé avec succès");
+					$contentTwo="";
+					sendMail($email,$objMag,$tplForMag,$full_name,$contentTwo,$linkMag);
+					//on vide le formulaire et on redirige sur la page histo demande mag
+					unset($objet,$msg,$name,$email);
+					header('Location:'. ROOT_PATH. '/public/mag/histo-mag.php');
 
 
+
+				}
+				else
+				{
+					array_push($err, "Echec d'envoi d'email");
+				}
 			}
 			else
+			//erreur insertion en db
 			{
-				array_push($err, "Echec d'envoi d'email");
+				array_push($err,"Echec : votre demande n'a pas pu être enregistrée");
 			}
-		}
-		else
-		//erreur insertion en db
-		{
-			array_push($err,"Echec : votre demande n'a pas pu être enregistrée");
-		}
+
+
+		}//-------------------------------------> formulaire non vide si err vide
 	}//-------------------------------------> formulaire non vide
 }	//-------------------------------------> soumission formulaire
 
