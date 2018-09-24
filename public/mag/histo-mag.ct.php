@@ -6,11 +6,15 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col l9"></div>
-		<div class="white col l3">
+		<div class="col-9"></div>
+	<!-- <div class="shadow-sm p-3 mb-5 bg-white rounded"> -->
+
+		<div class="col-3">
+		<div class="shadow-sm bg-white rounded border p-2">
 			<p class="smallTxt center"><i>Signification des icônes </i></p>
 			<p class="smallTxt"><i class='fa fa-lock' aria-hidden='true'></i><span class="pd-left">dossier clos</span></p>
 			<p class="smallTxt"><i class='fa fa-fire' aria-hidden='true'></i><span class="pd-left">nouvelle réponse</p></span></p>
+		</div>
 		</div>
 	</div>
 
@@ -33,7 +37,8 @@
 
 	?>
 
-		<div class="col s12 l12">
+		<div class="col-12">
+			<p class="alert alert-primary mb-5"><i class="fa fa-exclamation-triangle fa-lg  pr-4" aria-hidden="true"></i>Vous pouvez désormais rouvrir une demande en cliquant sur le cadenas <i class='fa fa-lock px-1' aria-hidden='true' ></i> de la colonne statut</p>
 		<table class="striped s12 l12 grey-text text-darken-2 z-depth-2">
 			<thead>
 				<tr>
@@ -44,6 +49,7 @@
 					<th class='contact'>Date réponse</th>
 					<th class="center">Consulter</th>
 					<th class='contact center'>Statut</th>
+
 				</tr>
 			</thead>
 			<?php if($allMsg): ?>
@@ -85,7 +91,11 @@
 					<?php
 					if($value['etat']==="clos")
 					{
-						echo "<i class='fa fa-lock' aria-hidden='true'></i>";
+						echo "<a href='unlock.php?id_msg=".$value['msg_id']."' class='unlock' id='".nl2br($value['objet'])."'></a>";
+
+						// echo "<i class='fa fa-lock' aria-hidden='true'></i>";
+					// <i class="fa fa-unlock" aria-hidden="true"></i>
+
 					}
 					// au moins une rép btlec
 					elseif ($value['etat']==="en cours")
@@ -108,3 +118,7 @@
 	</div> <!-- fin row histo-->
 	</div>
 <script src="../js/sorttable.js"></script>
+
+
+
+
