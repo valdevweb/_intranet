@@ -1,5 +1,31 @@
 <?php
-function addRecord($pdoStat,$page,$action, $descr)
+// function addRecord($pdoStat,$page,$action, $descr)
+// {
+// 	global $version;
+// 	if($version=="_"){
+// 		$typeLog="dev";
+// 	}
+// 	else
+// 	{
+// 		$typeLog="prod";
+// 	}
+// 	$date=new DateTime();
+// 	$date=$date->format('Y-m-d H:i:s');
+// 	$req=$pdoStat->prepare('INSERT INTO stats_logs (type_log,id_user,site,date_heure,page,action,description)
+// 		VALUE(:type_log,:id_user,:site,:date_heure,:page,:action,:description)');
+// 	$req->execute(array(
+// 		':type_log'=>$typeLog,
+// 		':id_user'=>$_SESSION['user'],
+// 		':site'	=>'portail BT',
+// 		':date_heure'=>$date,
+// 		':page'		=>$page,
+// 		':action'	=>$action,
+// 		':description'=>$descr
+// 	));
+// 	return $req->fetch(PDO::FETCH_ASSOC);
+// }
+
+function addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
 {
 	global $version;
 	if($version=="_"){
@@ -9,21 +35,33 @@ function addRecord($pdoStat,$page,$action, $descr)
 	{
 		$typeLog="prod";
 	}
-	$date=new DateTime();
-	$date=$date->format('Y-m-d H:i:s');
-	$req=$pdoStat->prepare('INSERT INTO stats_logs (type_log,id_user,site,date_heure,page,action,description)
-		VALUE(:type_log,:id_user,:site,:date_heure,:page,:action,:description)');
+	if(is_null($detail)){
+		$detail="";
+	}
+	if(is_null($code)){
+		$detail="";
+	}
+
+	$req=$pdoStat->prepare('INSERT INTO stats_logs (type_log,id_user,site,date_heure,page,action,description, detail, code)
+		VALUE(:type_log,:id_user,:site,:date_heure,:page,:action,:description, :detail, :code)');
 	$req->execute(array(
 		':type_log'=>$typeLog,
 		':id_user'=>$_SESSION['user'],
 		':site'	=>'portail BT',
-		':date_heure'=>$date,
+		':date_heure'=>date('Y-m-d H:i:s'),
 		':page'		=>$page,
 		':action'	=>$action,
-		':description'=>$descr
+		':description'=>$descr,
+		':detail'=>$detail,
+		':code'=>$code
+
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
+
+
+
+
 
 //----------------------------------------------------------
 //					page index.php
