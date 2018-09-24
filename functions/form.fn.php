@@ -180,7 +180,7 @@ function showThisMsg($pdoBt, $idMag, $idMsg){
 
 
 function showReplies($pdoBt,$idMsg){
-	$req=$pdoBt->prepare("SELECT * FROM replies WHERE id_msg= :idMsg ORDER BY date_reply DESC");
+	$req=$pdoBt->prepare("SELECT * FROM replies WHERE id_msg= :idMsg ORDER BY date_reply ASC");
 	$req->execute(array(
 		':idMsg'	=>$idMsg
 	));
