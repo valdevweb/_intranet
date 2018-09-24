@@ -18,6 +18,16 @@ $page=basename(__file__);
 $action="consultation";
 addRecord($pdoStat,$page,$action, $descr);
 
+//----------------------------------------------------------------
+//			css dynamique
+//----------------------------------------------------------------
+// $page=basename(__file__);
+$pageCss=explode(".php",$page);
+$pageCss=$pageCss[0];
+$cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
+
+
+
 $idMsg=$_GET['msg'];
 $idMag=$_SESSION['id'];
 $msg=showThisMsg($pdoBt, $idMag, $idMsg);
@@ -33,6 +43,28 @@ $replies=showReplies($pdoBt, $idMsg);
 //si fichier à uploader
 $isFileToUpload=isFileToUpload();
 		//	if(sendMail($to,$objet,$tplForBtlec,$contentOne,$contentTwo,$link))
+
+function formatPJ($incFileStrg)
+{
+	global $version;
+	$href="";
+	if(!empty($incFileStrg))
+	{
+		// on transforme la chaine de carctère avec tous les liens (séparateur : ; ) en tableau
+		$incFileStrg=explode( '; ', $incFileStrg );
+		foreach ($incFileStrg as $dbData)
+		{
+		$ico="<i class='fa fa-paperclip fa-lg pl-5 pr-3 hvr-pop' aria-hidden='true'  ></i>";
+		$href.= "<a class='pj' href='http://172.30.92.53/".$version ."upload/mag/" . $dbData . "'>" .$ico ."ouvrir</a>";
+		}
+		$href="<p>".$href."</p>";
+
+	}
+
+	return $href;
+}
+
+
 
 
 // on supprime la var de session qui permet la redirection suite à l'ouverture du mail
@@ -133,47 +165,54 @@ if(isset($_POST['post-reply']))
 
 	}
 }
-include('../view/_head.php');
+if($msg['etat']!='clos')
+	{
+		$btnAnswer='<a href= "#mag-msg" ><i class="fa fa-pencil-square-o prefix fa-lg pr-2" aria-hidden="true"></i>Répondre</a>';
+		$btnReopen="";
+	}
+	else
+	{
+		$btnAnswer="";
+		$btnReopen='<a href="unlock.php?id_msg='.$_GET['msg']. '"><i class="fa fa-unlock-alt prefix fa-lg pr-3" aria-hidden="true"></i> Rouvrir</a>';
+	}
+
+include('../view/_head-mig.php');
 include('../view/_navbar.php');
 ?>
+<!-- <div class="container-fluid"> -->
+	  <div class="floating-menu-vm">
+	  	<h3>Actions</h3>
+		<a href= "histo-mag.php"><i class="fa fa-chevron-circle-left fa-lg pr-3" aria-hidden="true"></i>Retour</a>
+		<?= $btnAnswer ?>
+		<?= $btnReopen ?>
 
-
+  <!-- </div> -->
+</div>
 <div class="container">
-	<!-- mini nav -->
-
 	<!-- titre  -->
 	<div class="row">
-		<div class="col s12">
-			<h1 class="blue-text text-darken-2 center">Suivi de votre demande</h1>
-		</div>
+		<div class="col-12">
 
-	</div>
-
-
-
-	<!--historique-->
-	<!--dde d'origine-->
-
-	<div class="row">
-		<div class="card-panel">
-				<h5 class="orange-text text-darken-2 boldtxt center">Votre demande du <?= date('d-m-Y', strtotime($msg['date_msg']))?> </h5>
-				<p><span class="labelFor">Objet : </span><?=$msg['objet']?></p>
-				<p><span class="labelFor">Message : </span><?=$msg['msg']?></p>
-				<p><span class="labelFor">Pièce jointe : </span><?=isAttached($msg['inc_file'])?></p>
+			<h1 class="blue-text text-darken-4 no-margin">Votre demande : <br><span class='sub-h1'>n° <?= $_GET['msg']?> - <?=$msg['objet']?> </span></h1>
 		</div>
 	</div>
+	<!-- message 1  -->
 	<div class="row">
-		<div class="col l6 m6 s6">
-			<p><a href= "<?= ROOT_PATH?>/public/mag/histo-mag.php" class="blue-text text-darken-4"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
-		</div>
-		<div class="col l6 m6 s6 align-right">
-
-			<?php
-			if($msg['etat']!='clos')
-			{
-				echo '<p><a href= "#mag-msg" class="blue-text text-darken-4">Ajouter un message &nbsp; &nbsp;<i class="fa fa-chevron-circle-down fa-2x" aria-hidden="true"></i></a></p>';
-			}
-			?>
+		<div class="col-12">
+			<div class="card-panel mag mb-5">
+				<p class="text-right date"><?= date('d-m-Y', strtotime($msg['date_msg']))?></p>
+				<p><?=$msg['msg']?></p>
+				<?php
+				if(!empty($msg['inc_file']))
+				{
+					echo "<p><span class='labelFor'>Pièce jointe : </span></p>";
+					echo "<p>".formatPJ($msg['inc_file'])."</p>";
+				}
+				?>
+			</div>
+			<div class="center-text">
+				<hr class="line">
+			</div>
 		</div>
 	</div>
 	<!-- reponses -->
@@ -187,27 +226,37 @@ include('../view/_navbar.php');
 	// qui a répondu dans la table BT
 	if(is_null($by))
 	{
-		// $color="blue-text";
-		$by="Magasin ". $_SESSION['nom'];
-		$by="<p><span class='labelFor'>Par :</span> " .$by ."</p>";
-		$side='moveToRight';
+		$by="";
+		$side='mag';;
+		$logo="../img/logos/leclerc-rond-50.jpg";
 
 	}
 	else
 	{
 		$color="orange-text";
-		$by="<p><span class='labelFor'>Par :</span> BTLEC - " .$by ."</p>";
-		$side='moveToLeft';
+		$by="<p class='nom'>" .$by ."</p>";
+		$side='bt';
+		$logo="../img/logos/bt-rond-50.jpg";
+
 
 	}
 	?>
+	<?= $by ?>
 	<div class="row">
+		<div class="col-12">
 		<div class="card-panel <?= $side ?>">
-			<p><span class="labelFor">Date du message :</span> <?= date('d-m-Y', strtotime($reply['date_reply']))?></p>
-			<?= $by ?>
-			<p><span class="labelFor">Message :</span><?= $reply['reply'] ?></p>
-			<p><span class="labelFor">Pièces jointes : <?= isAttached($reply['inc_file'])?></span>
+			<img class="w3-circle" src="<?=$logo ?>">
 
+			<p class="text-right date"><?= date('d-m-Y', strtotime($reply['date_reply']))?></p>
+			<p><?= $reply['reply'] ?></p>
+				<?php
+				if(!empty($reply['inc_file']))
+				{
+					echo "<p><span class='labelFor'>Pièce(s) jointe(s) :</p>";
+					echo  "<p>".formatPJ($reply['inc_file'])."</p>";
+				}
+				 ?>
+</div>
 		</div>
 	</div>
 	<?php endforeach ?>
@@ -215,35 +264,27 @@ include('../view/_navbar.php');
 		ob_start();
 	?>
 	<br><br>
+
+
+
+
 	<div class="row">
-		<h5 class="blue-text text-darken-4">Ajouter un message :</h5>
-	</div>
-	<div class="row">
-		<div class="col l12 m12 s12">
-			<div class="card-panel">
-			<form action="edit-msg.php?msg=<?=$idMsg ?>" method="post" enctype="multipart/form-data" id="mag-msg">
-			<!--MESSAGE-->
-				<div class="row">
-					<div class="input-field white">
-						<i class="fa fa-pencil-square-o prefix" aria-hidden="true"></i>
+		<div class="col">
+			<div class="bg-white border px-5 py-3">
+				<h4 class="blue-text text-darken-4"><i class="fa fa-pencil-square-o prefix pl-1 pr-3 fa-lg" aria-hidden="true"></i><strong>Ajouter un message :</strong></h4>
+				<form action="edit-msg.php?msg=<?=$idMsg ?>" method="post" enctype="multipart/form-data" id="mag-msg">
+					<div class="form-group">
 						<label for="reply"></label>
-						<textarea class="materialize-textarea" placeholder="Votre message" name="reply" id="reply" ></textarea>
+						<textarea class="form-control" placeholder="Votre message" name="reply" id="reply" ></textarea>
 					</div>
-				</div>
-				<div class="row" id="file-upload">
-					<fieldset>
-						<legend>ajouter des pièces jointes</legend>
-						<div class="col l6">
-							<p><input type="file" name="file_1" class='input-file'></p>
-							<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Envoyer d'autres fichiers</a></p>
-						</div>
-					</fieldset>
-				</div>
-				<div class="row align-right">
-					<div class="input-field">
-							<button class="btn" type="submit" name="post-reply">Ajouter</button>
+					<div class="pt-5 pb-2" id="file-upload">
+						<p class="blue-text text-darken-4 pb-2"><i class="fa fa-download pr-3 fa-lg" aria-hidden="true"></i>Envoyer des pièces jointes</p>
+						<p><input type="file" name="file_1"  class='form-control-file' ></p>
+							<p class="pr-1 pt-2 blue-text text-darken-4" id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Ajouter un fichier supplémentaire</a></p>
 					</div>
-				</div>
+					<div class="input-field text-right">
+						<button class="btn" type="submit" name="post-reply">Envoyer</button>
+					</div>
 			<!-- zone affichage erreurs -->
 						<?php
 						if(!empty($err)){
@@ -259,7 +300,7 @@ include('../view/_navbar.php');
 		</div>
 	</div>
 <?php
-	// si le message n'est pas clos, on affiche le formualire pour ajouter une réponse
+	// si le message n'est pas clos, on affiche le formulaire pour ajouter une réponse
 	$newResponseForm=ob_get_clean();
 	if($msg['etat']!='clos')
 	{
