@@ -7,6 +7,7 @@ if(!isset($_SESSION['id'])){
 }
 require '../../functions/upload.fn.php';
 require '../../functions/mail.fn.php';
+// require '../../functions/form.fn.php';
 
 //----------------------------------------------------------------
 require "../../functions/stats.fn.php";
@@ -15,7 +16,6 @@ $page=basename(__file__);
 $action="consultation";
 $code=101;
 addRecord($pdoStat,$page,$action, $descr,$code);
-
 
 //----------------------------------------------------------------
 //			css dynamique
@@ -34,7 +34,7 @@ include ('../view/_navbar.php');
 //----------------------------------------------------------------
 function reopen($pdoBt,$file)
 {
-	$req=$pdoBt->prepare("INSERT INTO replies(id_msg, reply,replied_by, date_reply,inc_file,type_demandeur,reopened,reopened_on) VALUES (:id_msg, :reply, :replied_by,:date_reply,:inc_file,:_demandeur,:reopened,:reopened_on)");
+	$req=$pdoBt->prepare("INSERT INTO replies(id_msg, reply,replied_by, date_reply, inc_file,type_demandeur,reopened,reopened_on) VALUES (:id_msg, :reply, :replied_by,:date_reply,:inc_file,:type_demandeur,:reopened,:reopened_on)");
 	$req->execute(array(
 		':id_msg'	=>$_GET['id_msg'],
 		':reply'	=>$_POST['reply'],
@@ -46,7 +46,6 @@ function reopen($pdoBt,$file)
 		':reopened_on'=>date('Y-m-d H:i:s')
 	));
  	return $pdoBt->lastInsertId();
-
 }
 
 
@@ -71,6 +70,60 @@ function getMsgAndServiceDetails($pdoBt)
 }
 
 
+function formatPJ($incFileStrg)
+{
+	global $version;
+	$href="";
+	if(!empty($incFileStrg))
+	{
+		// on transforme la chaine de carctère avec tous les liens (séparateur : ; ) en tableau
+		$incFileStrg=explode( '; ', $incFileStrg );
+		foreach ($incFileStrg as $dbData)
+		{
+		$ico="<i class='fa fa-paperclip fa-lg pl-5 pr-3 hvr-pop' aria-hidden='true'  ></i>";
+		$href.= "<a class='pj' href='http://172.30.92.53/".$version ."upload/mag/" . $dbData . "'>" .$ico ."ouvrir</a>";
+		}
+		$href="<p>".$href."</p>";
+
+	}
+
+	return $href;
+}
+
+function showThisMsg($pdoBt){
+	$req=$pdoBt->prepare("SELECT * FROM msg WHERE id_mag= :idMag AND id= :idMsg ");
+	$req->execute(array(
+		':idMag'	=>$_SESSION['id'],
+		':idMsg'	=>$_GET['id_msg']
+	));
+
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+$msg=showThisMsg($pdoBt);
+
+//affichage nom personne qui a répondu en clair (histo mag)
+function repliedByIntoName($pdoBt,$idUser)
+{
+	// $req=$pdoBt->prepare("SELECT CONCAT( prenom ,' ', nom)AS fullname FROM btlec JOIN lk_user ON lk_user.id_btlec=btlec.id WHERE lk_user.iduser = :iduser");
+	$req=$pdoBt->prepare("SELECT CONCAT( prenom ,' ', nom)AS fullname FROM btlec WHERE id_webuser = :iduser");
+	$req->execute(array(
+		'iduser' =>$idUser
+	));
+
+	$fullName=$req->fetch();
+	$fullName=$fullName['fullname'];
+	return $fullName;
+}
+
+function showReplies($pdoBt){
+	$req=$pdoBt->prepare("SELECT * FROM replies WHERE id_msg= :idMsg ORDER BY date_reply ASC");
+	$req->execute(array(
+		':idMsg'	=>$_GET['id_msg']
+	));
+
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+$replies=showReplies($pdoBt);
 
 // include ('../view/_errors.php')
 
