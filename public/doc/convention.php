@@ -19,7 +19,7 @@ require '../view/_navbar.php';
 
 // recupération du dernier kit affiche
 
-$req=$pdoBt->query("SELECT * FROM documents WHERE code=10");
+$req=$pdoBt->query("SELECT * FROM documents WHERE id_doc_type=10");
 $kitData=$req->fetch(PDO::FETCH_ASSOC);
 
 

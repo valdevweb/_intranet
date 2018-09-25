@@ -1,3 +1,6 @@
 textarea {
-    height: 6rem !important;
-    }
+	height: 6rem !important;
+}
+.box-bd{
+	background-color: #fff;
+}

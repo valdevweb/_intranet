@@ -1,10 +1,10 @@
-<div class="container">
+<div class="container box-bd px-5 pb-5 shadow">
 	<h1 class="blue-text text-darken-4">Upload des documents</h1>
 	<br><br>
 	<!-- formulaire -->
 	<div class="row">
 		<div class="col">
-			<div class="box-bd">
+			<div class="">
 				<form method="post" action="<?= $_SERVER['PHP_SELF']?>"  enctype="multipart/form-data" >
 					<div class="form-row">
 						<div class="col">
@@ -13,7 +13,7 @@
 							<select class="form-control" name="type" id="type">
 								<option value="">type de fichier</option>
 								<?php foreach($types as $type):  ?>
-								<option value="<?= $type['code']?>"><?= $type['name']?></option>
+								<option value="<?= $type['id']?>"><?= $type['name']?></option>
 							<?php endforeach ?>
 
 							</select>
@@ -116,18 +116,19 @@
 
 			//affichage du formulaire suivant le type de document sélectionné
 			//cas général = dateunique
-			//8 = gazette spéciale - 9 = kit affiche
-			var code =$(this).val();
-			if (code==9 || code ==8)
+			//8 = mdd - 9 = kit affiche
+			var id_doc_type =$(this).val();
+			console.log(id_doc_type);
+			if (id_doc_type==9 || id_doc_type ==8)
 			{
 				$('#specific-fields').html(libelle);
 			}
 			//2 = gazette appro
-			else if(code==2)
+			else if(id_doc_type==2)
 			{
 				$('#specific-fields').html(dateDebut + dateFin + descriptif);
 			}
-			else if(code==6 || code==7 || code==11)
+			else if(id_doc_type==6 || id_doc_type==7 || id_doc_type==11)
 			{
 				$('#specific-fields').html();
 
@@ -139,12 +140,14 @@
 			//si gazette, on affiche la liste des dernières gazette
 			//on réinitialise la liste sinon elles s'ajoutent
 			$('#listing').html("");
-			if(code==1 || code== 2 || code == 8)
+			if(id_doc_type==1 || id_doc_type== 2 || id_doc_type == 8)
+
+			// if(code==1 || code== 2 || code == 8)
 			{
 				$.ajax({
 					type: 'POST',
 					url:'gazette.ajax.php',
-					data:'code='+code,
+					data:'id_doc_type='+id_doc_type,
 					success:function(html){
 						$('#listing').append(html);
 					}

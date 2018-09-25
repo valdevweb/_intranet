@@ -1,12 +1,10 @@
 <?php
 require('../../config/autoload.php');
 
-if(!empty($_POST['code']))
+if(!empty($_POST['id_doc_type']))
 {
 	$dir="http://172.30.92.53/".$version."upload/gazette/";
-
 	// entete tableau
-
 	echo"<table class='table table-striped'>";
 	echo"<thead><tr>";
 	echo "<th scope='col'>date (début)</th>";
@@ -15,10 +13,10 @@ if(!empty($_POST['code']))
 	echo "<th scope='col'>descriptif</th>";
 	echo "<th scope='col'>supprimer</th></tr></thead><tbody>";
 
-
-	$req=$pdoBt->prepare("SELECT id,file, DATE_FORMAT(date,'%d-%m-%Y') as deb, DATE_FORMAT(date_fin,'%d-%m-%Y') as fin,title  FROM gazette WHERE code= :code ORDER BY id DESC LIMIT 10");
+	// récupère les 10 dernière gazette du type de document sélectionné par le select de la page upload-main
+	$req=$pdoBt->prepare("SELECT id,file, DATE_FORMAT(date,'%d-%m-%Y') as deb, DATE_FORMAT(date_fin,'%d-%m-%Y') as fin,title  FROM gazette WHERE id_doc_type= :id_doc_type ORDER BY id DESC LIMIT 10");
 	$req->execute(array(
-		':code'	=>$_POST['code']
+		':id_doc_type'	=>$_POST['id_doc_type']
 	));
 
 	$result=$req->fetchAll(PDO::FETCH_ASSOC);

@@ -52,22 +52,22 @@ if(isset($_GET['sup'])){
 // liste des type de documents pour profil admin => droit admin et comm
 function getAllTypeNames($pdoBt)
 {
-	$req=$pdoBt->query("SELECT * FROM doc_type WHERE code !=10 ORDER BY name");
+	$req=$pdoBt->query("SELECT * FROM doc_type WHERE category ='communication' ORDER BY name");
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 //liste des types de documents pour comm
 function getNonAdminTypeNames($pdoBt)
 {
-	$req=$pdoBt->query("SELECT * FROM doc_type WHERE droits ='comm' AND code !=10 ORDER BY name");
+	$req=$pdoBt->query("SELECT * FROM doc_type WHERE droits ='comm' AND category ='communication' ORDER BY name");
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
 //converti code en libellé
 function getTypeName($pdoBt)
 {
-	$req=$pdoBt->prepare("SELECT name FROM doc_type WHERE code= :code");
+	$req=$pdoBt->prepare("SELECT name FROM doc_type WHERE id= :id");
 	$req->execute(array(
-		":code"	=>$_POST['type']
+		":id"	=>$_POST['type']
 	));
 	return $req->fetch();
 
@@ -77,14 +77,16 @@ function getTypeName($pdoBt)
 function insertIntoDbDoc($pdoBt,$type,$file,$descr, $docDate)
 {
 	// $reply=strip_tags($_POST['reply']);
-	$insert=$pdoBt->prepare('INSERT INTO documents (type,date,file,code,date_modif, name) VALUE (:type,:date,:file,:code,:date_modif, :name)');
+	$insert=$pdoBt->prepare('INSERT INTO documents (type,date,file,code,date_modif, name, id_doc_type) VALUE (:type,:date,:file,:code,:date_modif, :name, :id_doc_type)');
 	$result=$insert->execute(array(
 		':type'=>$type,
 		':date'=>$docDate,
 		':file'=>$file,
-		':code'=>$_POST['type'],
+		':code'=>"0",
 		':date_modif'	=>date('Y-m-d H:i:s'),
 		':name'=>$descr,
+		':id_doc_type'=>$_POST['type'],
+
 	));
 	// print_r($insert->errorInfo());
 	// print_r($result);
@@ -100,26 +102,30 @@ function insertIntoDbGazette($pdoBt,$file,$dateDeb,$dateFin, $category,$title)
 	{
 
 	}
-	$insert=$pdoBt->prepare('INSERT INTO gazette (file,date,date_fin,category,code,title,date_modif) VALUE (:file,:date,:date_fin,:category,:code,:title,:date_modif)');
+	$insert=$pdoBt->prepare('INSERT INTO gazette (file,date,date_fin,category,code,title,date_modif, id_doc_type) VALUE (:file,:date,:date_fin,:category,:code,:title,:date_modif, :id_doc_type)');
 	$result=$insert->execute(array(
 		':file'=>$file,
 		':date'=>$dateDeb,
 		':date_fin' => $dateFin,
 		':category' =>$category,
-		':code'=>$_POST['type'],
+		':code'=>"0",
 		':title'=>$title,
 		':date_modif'	=>date('Y-m-d H:i:s'),
+		':id_doc_type'=>$_POST['type'],
+
 
 	));
 	// print_r($insert->errorInfo());
 	return $result;
 }
 
-function deleteDoc($pdoBt,$code)
+
+// on supprime la ligne dans la db qui contient le doc actuel  puisqu'on ne garde par d'historique pour les documents
+function deleteDoc($pdoBt)
 {
-	$delete=$pdoBt->prepare('DELETE FROM documents WHERE code= :code');
+	$delete=$pdoBt->prepare('DELETE FROM documents WHERE id_doc_type= :id_doc_type');
 	$result=$delete->execute(array(
-		':code' =>$code
+		':id_doc_type' =>$_POST['type']
 	));
 	return $result;
 }
@@ -149,7 +155,9 @@ if(isset($_POST['send']) )
 	// libelle suivant le type selectionné dans liste déroulante
 	$category=getTypeName($pdoBt);
 	// echo $category['name'];
-	//traitement différent suivant type de fichier
+	//traitement différent suivant type de fichier => insertion dans db différente
+	//si champ du formulaire inexistant, on met la varaible à "" sion on lui affecte la valeur du post
+	//catégorie document communication hors gazette
 	if($type==3 || $type==4 || $type==5 || $type==6 || $type==7 || $type==11 || $type==9)
 	{
 		if($_FILES['file']['error']===0)
@@ -170,7 +178,7 @@ if(isset($_POST['send']) )
 		}
 		if(count($errors)==0)
 		{
-			// si type 8  on récupère le libelle
+			// si type 11  on récupère le libelle
 			if(isset($_POST['libelle']))
 			{
 				$title=$_POST['libelle'];
@@ -189,7 +197,7 @@ if(isset($_POST['send']) )
 				$docDate=date('Y-m-d');
 			}
 
-			if(deleteDoc($pdoBt,$type))
+			if(deleteDoc($pdoBt))
 			{
 			}
 			else
