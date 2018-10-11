@@ -32,8 +32,10 @@ $services=listServicesNoTest($pdoBt);
 $idMsg=$_GET['msg'];
 $oneMsg=showOneMsg($pdoBt,$idMsg);
 
-
-
+//compte des ligne pour afficher les checkbox en colonnes
+$nbServices=count($services);
+$nbServicesLine=round($nbServices /4);
+$lig=0;
 
 
 // info msg
@@ -53,18 +55,19 @@ $magName=$magSca3['mag'];
 
 
 
-include '../view/_head.php';
+include '../view/_head-mig-bis.php';
 include '../view/_navbar.php';
 
 
 
-
+$success=[];
+$errors=[];
 
 if(isset($_POST['affect']))
 {
 	if(!isset($_POST['service']))
 	{
-		$msg="veuillez sélectionner un service";
+		$errors[]="veuillez sélectionner un service";
 
 	}
 	else
@@ -79,9 +82,10 @@ if(isset($_POST['affect']))
 			$mailingList=$serviceInfo['mailing'];
 			$objet="PORTAIL BTLec - demande magasin réaffectée au service " . $serviceInfo['full_name'];
 			$objet = mb_encode_mimeheader($objet);
-			sendMail($mailingList,$objet,$tplt,$name,$magName,$link);
+			// sendMail($mailingList,$objet,$tplt,$name,$magName,$link);
 
-			$msg ="demande réaffectée au service " . $serviceInfo['full_name'];
+			// $msg ="demande réaffectée au service " . $serviceInfo['full_name'];
+			$success[] ="demande réaffectée au service " . $serviceInfo['full_name'];
 			//------------------------------
 			//	ajout enreg dans stat
 			//------------------------------<
@@ -93,7 +97,7 @@ if(isset($_POST['affect']))
 		}
 		else
 		{
-			$msg="erreur de traitement";
+			$errors[]="erreur de traitement";
 		}
 	}
 }
@@ -102,31 +106,63 @@ if(isset($_POST['affect']))
 
 ?>
 <div class="container">
-	<h1 class="blue-text text-darken-2">Réaffectation d'une demande</h1>
-	 <p> Demande n °: <?= $oneMsg['id'] .' '.$oneMsg['objet']?></p>
+	<div class="row shadow-sm bg-white rounded border p-2">
+		<div class="col">
+
+			<h1>Réaffectation d'une demande</h1>
+
+
+			<h4 id="modalite-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i> Demande n °: <?= $oneMsg['id'] .' '.$oneMsg['objet']?></h4>
+			<hr>
+			<br><br>
 			<form action="chg.php?msg=<?=$idMsg ?>" method="post" id="chg">
-					<p>
+				<div class="row">
+					<div class="col-3">
 						<?php
 						foreach ($services as $key => $service)
+						{
+							if($lig < $nbServicesLine)
+							{
 
+								echo '<div class="form-group form-check">';
+								echo "<input type='checkbox' class='form-check-input' id='".$service['id']."' name='service[]' value= '".$service['id']."' />";
+								echo "<label class='form-check-label' for='".$service['id']."'>".$service['full_name']."</label>";
+								echo "</div>";
+								$lig++;
+							}
+							else
+							{
+								$lig=0;
+								echo '</div><div class="col-3">';
+								echo '<div class="form-group form-check">';
+								echo "<input type='checkbox' class='form-check-input' id='".$service['id']."' name='service[]' value= '".$service['id']."' />";
+								echo "<label class='form-check-label' for='".$service['id']."'>".$service['full_name']."</label>";
+								echo "</div>";
+								$lig++;
 
- 							{
-								echo "<input type='checkbox' class='filled-in' id='".$service['id']."' name='service[]' value= '".$service['id']."' />";
-								echo "<label for='".$service['id']."'>".$service['full_name']."</label>";
+							}
 
- 							}
- 						?>
-
-					<p class="center">
-						<button class="btn" type="submit" name="affect">Affecter</button>
-					</p>
+						}
+						?>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<p class="text-right">
+							<button class="btn btn-primary" type="submit" name="affect">Affecter</button>
+						</p>
+					</div>
+				</div>
 
 			</form>
-		<p><?= isset($msg)? $msg : '' ?>
-		<div class="col l12">
-			<p><a href="dashboard.php" class="orange-text text-darken-2"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
+			<?php include('../view/_errors.php') ?>
+
+
+			<p class="back"><a href="dashboard.php"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
+
 		</div>
 	</div>
+</div>
 
 </div>  <!--container
 
@@ -135,7 +171,7 @@ if(isset($_POST['affect']))
 
 
 
-include('../view/_footer.php');
+include('../view/_footer-mig-bis.php');
  ?>
 
 
