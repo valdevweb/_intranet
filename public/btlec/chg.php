@@ -82,7 +82,7 @@ if(isset($_POST['affect']))
 			$mailingList=$serviceInfo['mailing'];
 			$objet="PORTAIL BTLec - demande magasin réaffectée au service " . $serviceInfo['full_name'];
 			$objet = mb_encode_mimeheader($objet);
-			// sendMail($mailingList,$objet,$tplt,$name,$magName,$link);
+			sendMail($mailingList,$objet,$tplt,$name,$magName,$link);
 
 			// $msg ="demande réaffectée au service " . $serviceInfo['full_name'];
 			$success[] ="demande réaffectée au service " . $serviceInfo['full_name'];
