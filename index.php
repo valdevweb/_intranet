@@ -1,40 +1,73 @@
 <?php
 
 require('config/autoload.php');
-//$okko= 'version : ' . ROOT_PATH  .', db  : '.$pdo_file;
+$okko= 'version : ' . ROOT_PATH  .', db  : '.$pdo_file;
 require 'functions/stats.fn.php';
 
 // on connecte l'utilisateur et recup $_SESSION['id']=$id (id web_user) et $_SESSION['user']=$_POST['login'];
 require('functions/login.fn.php');
 $err='';
 if(!empty( $_SERVER['QUERY_STRING']))
-	{
+{
 		//on met le goto dans champ cahcé du formulaire et la fonction de login recupère la valeur $_POST['goto'] pour la mettre dans session
-		$gotoMsg=$_SERVER['QUERY_STRING'];
+	$gotoMsg=$_SERVER['QUERY_STRING'];
 
-	}
-
+}
+// stats
 if(isset($_POST['connexion']))
+{
+
+	extract($_POST);
+	$err=login($pdoUser, $pdoBt, $pdoSav);
+	$action="user authentification";
+	$page=basename(__file__);
+	authStat($pdoStat,$page,$action, $err[0]);
+	if($err[0]=="user authentifié")
 	{
-
-		extract($_POST);
-		$err=login($pdoUser, $pdoBt);
-		$action="user authentification";
-		$page=basename(__file__);
-		authStat($pdoStat,$page,$action, $err[0]);
-		if($err[0]=="user authentifié")
-		{
-			 header('Location:'. ROOT_PATH. '/public/home.php');
-		}
-
+		header('Location:'. ROOT_PATH. '/public/home.php');
 	}
+}
+/*---------------------------------------------------------------------*/
+/* 						reversements     							*/
+/*---------------------------------------------------------------------*/
 
 
+function rev($pdoBt)
+{
+	$today=date('Y-m-d H:i:s');
+	$todayMoinsSept=date_sub(date_create($today), date_interval_create_from_date_string('7 days'));
+	$todayMoinsSept=date_format($todayMoinsSept,'Y-m-d H:i:s');
+
+	$req=$pdoBt->prepare("SELECT divers, date_rev,doc_type.name, id_type, DATE_FORMAT(date_rev,'%d/%m/%Y') as date_display FROM reversements LEFT JOIN doc_type ON reversements.id_type = doc_type.id WHERE date_rev >= :todayMoinsSept AND date_rev <= :today ");
+	$req->execute(array(
+		':todayMoinsSept' =>$todayMoinsSept,
+		':today'	=>$today
+	));
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+$revRes=rev($pdoBt);
+$nbRev=count($revRes);
+
+if(!empty($revRes))
+{
+	$infoRev='<div class="row infos"><div class="col-1"></div>';
+	$infoRev.='<i class="pin"></i><div class="col px-5 inside-infos"><p class="center-text pt-2"><i class="fa fa-bell fa-lg" aria-hidden="true"></i></p><h4 class="orange-text text-darken-3 text-center">Reversements disponibles sur docubase</h4><ul class="browser-default text-left">';
+	foreach ($revRes as $key => $thisRev)
+	{
+		if($thisRev['id_type']==18)
+		{
+			$infoRev.='<li> ' .$thisRev['divers'] . ' du ' .$thisRev['date_display'] .'</li>';
+
+		}
+		else
+		{
+			$infoRev.='<li> ' .$thisRev['name'] . ' du ' .$thisRev['date_display'] .'</li>';
+		}
+	}
+	$infoRev.='</ul>';
+	$infoRev.='</div><div class="col-1"></div></div>';
+}
 ?>
-
-
-
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -43,197 +76,115 @@ if(isset($_POST['connexion']))
 	<link rel="stylesheet" href="public/css/index.css">
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" href="vendor/materialize/css/materialize.css">
 	<link rel="stylesheet" href="vendor/fontawesome/css/font-awesome.min.css">
 	<link rel="stylesheet" href="vendor/w3c/w3c.css">
+
 	<title>Connexion - portail Btlec Est</title>
 </head>
 <body>
-	<div id="main">
-		<header class="w3-container center">
-			<img class="resize" src="public/img/index/bttransfull.png">
-		</header>
+	<div class="container-fluid text-center">
+
+		<div class="row">
 			<!-- carte centrales -->
-			<div class="line">
-			<div class="sixty">
-				<p class="france center"><img class="img-france" src="public/img/index/france-new.png"></p>
+			<div class="col-sm-12 col-lg-6">
+				<p class="text-center mt-5"><img id="img-france" src="public/img/index/france-new.png"></p>
 				<h3 class="center">BTLEC, c'est aussi des structures SAV :</h3>
 				<br>
 				<p class="center"><a href="http://scapsav.fr/"><img class="shadow" src="public/img/index/scapsav.png"></a></p>
 				<p>&nbsp;</p>
 			</div>
-			<!-- droite : accueil, photo, connection -->
-			<div class="fourty">
-				<!-- ici -->
-
-					<h2>BTLec Est - Centrale d'Achat</h2>
-					<h3>Bazar Technique E.Leclerc </h3>
-
-					<p><img class="img-max" id="boxshadow" src="public/img/index/front-bt-800.jpg"></p>
-					<?php
-					if(!empty($err)){
-						foreach ($err as $errStrg)
-						{
-							echo "<p class='w3-red'>" . $errStrg ."</p>";
-						}
+			<!-- photo bt -->
+			<div class="col-sm-12 col-lg-6">
+				<h1>BTLec Est - Centrale d'Achat</h1>
+				<h3 class="my-4 pb-3">Bazar Technique E.Leclerc </h3>
+				<p><img id="photo-bt" class="boxshadow" src="public/img/index/front-bt-800.jpg"></p>
+				<?php
+				if(!empty($err)){
+					foreach ($err as $errStrg)
+					{
+						echo "<p class='w3-red'>" . $errStrg ."</p>";
 					}
-					?>
-					<p class="margin-up">
-						<button id="log" class="btn waves-effect waves-default white grey-text text-darken-3 darken-3 modal-trigger" data-target="modal1">Se connecter</button>
-					</p>
-<!-- Demande de retrait information transport par David le 14/02/2018 -->
-<!-- 					<p class="w3-panel w3-red" ><i class="fa fa-warning fa-4x" ></i><br>la période étant propice aux vacances, merci de communiquer à vos équipes réception et accueil de l'arrivée de vos commandes 48 h afin que celles-ci ne soient pas refusée</p> -->
-
-
-			</div>
-
-		</div>
-<!-- ############################################################################################################################### -->
-<!-- 							version mobile : la carte passe en dessous de la partie accueil/connexion 							-->
-<!-- ############################################################################################################################### -->
-
-			<div class="mobile">
-				<p><img class="img-max" src="public/img/index/france-gris.png"></p>
-
-			</div>
-
-<div class="index-footer">
-	<img class="logo-index-galec" src="public/img/index/leclerc-200.png">
-
- </div>
-
-
-
-
-	</div><!--main-->
-
-<!-- MODAL FORM  MAG-->
-<div class="modal" id="modal1">
-	<div class="modal-content">
-		<h4>Connexion</h4>
-		<form action="<?php echo $_SERVER['PHP_SELF'];?>"  method="post">
-			<div class="modal-form-row">
-				<div class="input-field">
-					<input id="login" name="login" placeholder="identifiant" type="text" class="validate" autofocus >
-					<label for="login"></label>
-				</div>
-			</div>
-			<div class="modal-form-row">
-				<div class="input-field">
-					<input id="pwd" name="pwd" placeholder="mot de passe" type="password">
-					<label for="pwd"></label>
-				</div>
-			</div>
-			<input type='hidden' name='goto' value='<?php if(!empty($gotoMsg)){echo $gotoMsg;} ?>'>
-			<div class=".modal-form-row">
-				<button class="btn waves-effect waves-light light-blue darken-3" type="submit" name="connexion">Connexion
-				</button>
-			</div>
-		</form>
-		<!-- <p><a class="send-mail-to" href="#"> Réinitialiser votre mot de passe</a></p> -->
-		 <p><a class="send-mail-to" href="pwd.php">Demander mes identifiants</a></p>
-		 <!-- <p><a class="send-mail-to" href="help.php">Contacter le service technique</a></p> -->
-
-	</div>
-	<div class="modal-footer">
-		<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
-	</div>
-</div>
-
-<!-- <div class="modal" id="modal-new">
-	<div class="modal-content">
-		<div class="row">
-			<div class="col s2 m2 l2">
-			<img src="public/img/icons/new-orange-sm.png">
-			</div>
-			<div class="col s10 m10 l10">
-				<br>
-						<h4 class="orange-text text-darken-3 center">Nouveau sur votre portail !</h4>
+				}
+				?>
+				<!-- flashs info -->
+				<div class="row infos mt-5">
+					<!-- <div class="col"></div> -->
+					<div class="col">
+						<hr>
+						<!-- <p class="text-white "><i class="fa fa-exclamation pr-2" aria-hidden="true"></i> FLASH INFOS</p> -->
 					</div>
-		</div>
+					<!-- <div class="col"></div> -->
+				</div>
+				<div class="row infos">
+					<div class="col-1"></div>
+					<i class="pin"></i>
+					<div class="col px-5 inside-infos">
+						<p class="center-text pt-2"><i class="fa fa-bell fa-lg" aria-hidden="true"></i></p>
+						<h4 class="orange-text text-darken-3 text-center">Date des reversements</h4>
+						<p class="text-center">(à l'attention des services comptabilité)</p>
+						<p class="text-left">Vous pouvez retrouver les dates des virements avec le type de reversement dans le menu : documents/Compta/reversements</p>
+					</div>
+					<div class="col-1"></div>
+				</div>
+				<!-- fin d'info1 -->
+				<!-- flash info auto si reversement -->
+				<?php echo isset($infoRev) ? $infoRev:"";?>
 
-		 <p>Mise à disposition d'une PLV pour la livraison 24/48h : <a href="public/infos/plv-livraison-24-48h.pdf" class="blue-link">télécharger</a></p>
-		 <p>Ajout d'une rubrique "documents" où vous trouverez : </p>
-	 	 <ul class="browser-default">
-		 	<li>les listing des ODR,</li>
-		 	<li>les tickets et BRII</li>
-		 	<li>le point stock MDD</li>
-		 	<li>les résultats GFK</li>
-		 </ul>
+
+			</div>
+		</div>
+	<!-- 	<div class="row no-gutters bg-white logo-line">
+			<div class="col no-gutters">
+				<img id="logo-bt" src="public/img/index/bttransfull.png">
+			</div>
+		</div> -->
 	</div>
-	<div class="modal-footer">
-		<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
+	<!-- ############################################################################################################################### -->
+	<!--  												./container 																			 -->
+	<!-- ############################################################################################################################### -->
+
+	<!-- ############################################################################################################################### -->
+	<!--  												MODAL CONNEXION FORM 																			 -->
+	<!-- ############################################################################################################################### -->
+
+	<div class="modal" id="connexion">
+		<div class="modal-content">
+			<form action="<?php echo $_SERVER['PHP_SELF'];?>"  method="post">
+				<div class="modal-form-row">
+					<div class="input-field">
+						<input id="login" name="login" placeholder="identifiant" type="text" class="validate" autofocus >
+						<label for="login"></label>
+					</div>
+				</div>
+				<div class="modal-form-row">
+					<div class="input-field">
+						<input id="pwd" name="pwd" placeholder="mot de passe" type="password">
+						<label for="pwd"></label>
+					</div>
+				</div>
+				<input type='hidden' name='goto' value='<?php if(!empty($gotoMsg)){echo $gotoMsg;} ?>'>
+				<div class="modal-form-row text-center">
+					<button class="btn waves-effect waves-light light-blue darken-3" type="submit" name="connexion">Connexion
+					</button>
+				</div>
+			</form>
+			<p><a class="send-mail-to" href="pwd.php">Demander mes identifiants</a></p>
+		</div>
+	<!-- 	<div class="modal-footer">
+			<p class=text-center><a href="#!" class="modal-action modal-close">fermer</a></p>
+		</div> -->
 	</div>
-</div> -->
-
-
-
-<!-- 13/06/2018 : suppression modal nouveauté -->
-<div class="modal" id="modal-new">
-	<div class="modal-content">
-		<!-- <div class="row">
-			<div class="col s2 m2 l2">
-				<img src="public/img/icons/new-blue-sm.png">
-			</div>
-			<div class="col s10 m10 l10">
-				<br>
-				<h4 class="blue-text text-darken-3 center">Commmandes 48h</h4>
-			</div>
-		</div>
-		<p>La période étant propice aux vacances, merci de communiquer à vos équipes réception et accueil de l'arrivée de vos commandes 48 h afin que celles-ci ne soient pas refusée</p> -->
-
-		<div class="row">
-			<div class="col s2 m2 l2">
-				<img src="public/img/icons/new-orange-sm.png">
-			</div>
-			<div class="col s10 m10 l10">
-				<br>
-				<h4 class="orange-text text-darken-3 center">Modification du Réservable Téléviseur</h4>
-			</div>
-		</div>
-		<p>A compter des catalogues du 4 septembre, les téléviseurs en réservable sont à partir des tailles supérieures ou égales à 46"</p>
-		<!-- <p class="center-text"><center><img src="public/img/screenshot/navnew.png"></center></p> -->
-		<!-- <br> -->
-		<div class="modal-footer">
-			<a href="#!" class="btn-flat modal-action modal-close waves-effect waves-default">fermer</a>
-		</div>
-	</div>
-</div>
-<!-- fin suppression modal nouveauté -->
-<!--  Scripts-->
-<script src="vendor/jquery/jquery-3.2.1.js"></script>
-<script src="vendor/materialize/js/materialize.js"></script>
-<script type="text/javascript">
-
-	// DETECTION IE 9
-	 function msieversion() {
-	 	var ua = window.navigator.userAgent;
-	 	var msie = ua.indexOf("MSIE ");
-		 if (msie > -1 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) // Si c'est Internet Explorer, affiche le numéro de version
-		 	// (parseInt(ua.substring(msie + 5, ua.indexOf(".", msie))));
-		 	if(parseInt(ua.substring(msie + 5, ua.indexOf(".", msie)))=="9"){
-		 		alert ("Votre navigateur est trop ancien.\n Merci d'utiliser Chrome ou Firefox")
-		 	}
-		 else
-		 	// alert("C'est un autre navigateur");
-		 return false;
-		}
-		msieversion();
-
-	$(document).ready(function(){
-		// menu hamburger
-		$(".button-collapse").sideNav();
-		// ouverture fenetre modal en auto
-
-		$('#modal1').modal();
-		$('#modal1').modal('open');
-		$('#modal-new').modal();
-		$('#modal-new').modal('open');
-
-		$(".dropdown-button").dropdown();
-		//infos bulles (navbar)
-		 $('.tooltipped').tooltip({delay: 50});
-
+	<!--  Scripts-->
+	<script src="vendor/jquery/jquery-3.2.1.js"></script>
+	<script src="vendor/materialize/js/materialize.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function()
+		{
+		// ouverture fenetre modal en auto : dernier modal s'ouvre en 1er
+		$('#connexion').modal();
+		$('#connexion').modal('open');
 	});
 </script>
 
