@@ -1,89 +1,27 @@
 <?php
-/*
-*
-*			connection aux db
-*			base mag => user
-*			base bt =>user
-*
-*/
 
-/*CONNEXION BASE MAG*/
-function getWebUserLink() {
-	    $host='localhost';
-		$username='sql';
-		$pwd='User19092017+';
-		$database='web_users';
 
+
+function connectToDb($dbname) {
+	$host='localhost';
+	$username='sql';
+	$pwd='User19092017+';
 	try {
-		$pdo=new PDO("mysql:host=$host;dbname=$database", $username, $pwd);
-		// $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+		$pdo=new PDO("mysql:host=$host;dbname=$dbname", $username, $pwd);
 
 	}
-
-		 	catch(Exception $e)
-	     	{
-	         	die('Erreur : '.$e->getMessage());
-	      	}
- 	return  $pdo;
-
-}
-// var_dump(getWebUserLink());
-
-
-/* CONNEXION BASE BTLEC */
-function getBTLink() {
-	    $host='localhost';
-		$username='sql';
-		$pwd='User19092017+';
-		$database='_btlec';
-
-	try {
-		$pdo=new PDO("mysql:host=$host;dbname=$database", $username, $pwd);
-		// $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+	catch(Exception $e)
+	{
+		die('Erreur : '.$e->getMessage());
 	}
-
-		 	catch(Exception $e)
-	     	{
-	         	die('Erreur : '.$e->getMessage());
-	         	echo "dead";
-	      	}
- 	return  $pdo;
-
+	return  $pdo;
 }
 
-/* CONNEXION BASE STATS */
-function getStatsLink() {
-	    $host='localhost';
-		$username='sql';
-		$pwd='User19092017+';
-		$database='stats';
+// no dev
+$pdoUser=connectToDb('web_users');
+$pdoStat= connectToDb('stats');
+// dev
+$pdoBt=connectToDb('_btlec');
+$pdoSav=connectToDb('_sav');
 
-	try {
-		$pdo=new PDO("mysql:host=$host;dbname=$database", $username, $pwd);
-		// $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-
-	}
-
-		 	catch(Exception $e)
-	     	{
-	         	die('Erreur : '.$e->getMessage());
-	         	echo "dead";
-	      	}
- 	return  $pdo;
-
-}
-
-
-
-$pdoStat= getStatsLink();
-$pdoUser=getWebUserLink();
-$pdoBt=getBTLink();
-
-
-
-// $db=getBTLink();
-// var_dump($db);
 
