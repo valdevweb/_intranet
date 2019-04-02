@@ -1,0 +1,75 @@
+.big-button {
+  border-radius: 20%;
+  width: 80vh;
+  height: 80vh;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 4vh;
+  color: orangered;
+  box-shadow: 0 5px 5px rgba(50, 50, 93, 0.2), 0 5px 5px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 350ms;
+  transition: transform 350ms;
+  cursor: pointer;
+}
+.big-button:hover {
+  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.5), 0 5px 15px rgba(0, 0, 0, 0.5);
+  transform: translateY(-5px);
+}
+.big-button:active {
+  box-shadow: 0 5px 5px rgba(50, 50, 93, 0.2), 0 5px 5px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+.big-button .big-button-title {
+  font-size: 10vh;
+  text-align: center;
+  transition: transform 350ms;
+  user-select: none;
+}
+.big-button:hover .big-button-title {
+  transform: translateY(-10px);
+}
+.big-button .big-button-icon {
+  color: orangered;
+  font-size: 15vh;
+}
+
+
+
+.btn-large{
+  border-radius: 10px;
+  height: 80px;
+  font-weight: 700;
+   box-shadow: 0 5px 5px rgba(50, 50, 93, 0.2), 0 5px 5px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 350ms;
+  transition: transform 350ms;
+  cursor: pointer;
+  line-height: 80px;
+  vertical-align: middle;
+  padding-left: 20px;
+  font-size: 1.2rem;
+}
+
+
+
+.btn-large:hover {
+  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.5), 0 5px 15px rgba(0, 0, 0, 0.5);
+  transform: translateY(-5px);
+}
+.btn-large:active {
+  box-shadow: 0 5px 5px rgba(50, 50, 93, 0.2), 0 5px 5px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+}
+.btn-large a{
+  color: white !important;
+}
+.btn-large a:hover{
+  color: white !important;
+  text-decoration: none !important;
+}
+
+.to-footer{
+  height: 200px;
+}
