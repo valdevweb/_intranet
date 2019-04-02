@@ -1,0 +1,299 @@
+/* -------------------------------------
+          containers
+ --------------------------------------*/
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #1976d2 !important;
+}
+.container-fluid{
+  padding : 0 !important;
+}
+.bg-white{
+  background-color: #fff;
+}
+
+/* -------------------------------------
+          titres
+ --------------------------------------*/
+h1{
+  padding:  30px 0 30px 0;
+  font-weight: bold;
+  padding-bottom: 10px;
+  font-size: 3em;
+  color:  #fff !important;
+}
+h3{
+  font-weight: bold;
+}
+
+/* -------------------------------------
+          ZOne de messages flash
+ --------------------------------------*/
+
+.infos{
+  position: relative;
+}
+.inside-infos{
+
+  -moz-box-shadow: 6px 5px 4px rgba(0, 0, 0,0.5);
+  -webkit-box-shadow: 6px 5px 4px rgba(0, 0, 0, .5);
+  box-shadow: 6px 5px 4px rgba(0, 0, 0, .5);
+  background-color: #fff;
+  border: 2px solid transparent;
+  -moz-border-image: -moz-linear-gradient(top, red 0%, white 100%);
+  -webkit-border-image: -webkit-linear-gradient(top, red 0%, white 100%);
+  border-image: linear-gradient(to bottom, red 0%, white 100%);
+  border-image-slice: 1;
+  animation : animate 10s linear infinite;
+}
+
+.animate{
+  margin: 10px;
+  /* animation: fadeInFadeOut 2s linear infinite; */
+  width: 100%;
+
+
+}
+
+.pin {
+  background-color: #aaa;
+  display: block;
+  height: 32px;
+  width: 2px;
+  position: absolute;
+  left: 15%;
+  top: -16px;
+  z-index: 1;
+}
+.pin:after {
+  background-color: #A31;
+  background-image: radial-gradient(25% 25%, circle, hsla(0,0%,100%,.3), hsla(0,0%,0%,.3));
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px hsla(0,0%,0%,.1),
+              inset 3px 3px 3px hsla(0,0%,100%,.2),
+              inset -3px -3px 3px hsla(0,0%,0%,.2),
+              23px 20px 3px hsla(0,0%,0%,.15);
+  content: '';
+  height: 12px;
+  left: -5px;
+  position: absolute;
+  top: -10px;
+  width: 12px;
+}
+
+.blinking{
+  /* animation: blink 1s linear infinite; */
+}
+
+@keyframes animate{
+0% {
+  transform:scaleX(0.5);
+  transform-origin: left;
+  }
+  50%
+  {
+    transform:scaleX(1);
+  transform-origin: left;
+  }
+  50.1%
+  {
+    transform:scaleX(1);
+  transform-origin: right;
+
+  }
+
+  100%
+  {
+    transform:scaleX(0.5);
+  transform-origin: right;
+
+  }
+
+}
+
+@keyframes blink{
+0%{opacity: 0;}
+50%{opacity: .5;}
+100%{opacity: 1;}
+}
+
+/* -------------------------------------
+          images
+ --------------------------------------*/
+#logo-bt{
+  height:60px;
+  width:auto;
+}
+#img-france{
+  max-width: 95%;
+  width: 70%;
+  height: auto;
+  display: block !important;
+  margin: auto;
+}
+#photo-bt{
+  max-width: 80%;
+  height: auto;
+  display: block !important;
+  margin:  auto;
+}
+.boxshadow {
+    -moz-box-shadow: 6px 5px 4px rgba(0, 0, 0,0.5);
+    -webkit-box-shadow: 6px 5px 4px rgba(0, 0, 0, .5);
+    box-shadow: 6px 5px 4px rgba(0, 0, 0, .5);
+    padding: 10px;
+    background: white;
+}
+
+/* Make the image fit the box */
+.boxshadow img {
+    width: 500px;
+    height: auto;
+    display: block;
+    border: 1px solid #8a4419;
+    border-style: inset;
+}
+
+.logo-line{
+  height: 65px;
+  line-height: 65px;
+  vertical-align: middle;
+  margin-bottom: 0 !important;
+}
+
+/* -------------------------------------
+          textes
+ --------------------------------------*/
+/* liens pour les nouveautés par exemple */
+a.blue-link{
+  color: #1976D2 !important;
+  font-weight: bold;
+}
+
+a:hover.blue-link{
+    color: #1976D2 !important;
+    font-weight: bold;
+    letter-spacing: 0.2px;
+    text-decoration: underline;
+
+}
+
+
+
+/* -------------------------------------
+          modal
+ --------------------------------------*/
+a.send-mail-to:link {color:#062b72    !important; font-size:0.8em;}
+a.send-mail-to:visited {color:#0000ff !important; font-size:0.8em;}
+a.send-mail-to:hover {color:#ff5722   !important; font-size:0.8em;}
+input[type="text"].msg::-webkit-input-placeholder {
+  color: rgba(0,0,0,0.84);
+}
+input[type="text"].msg::-moz-placeholder {
+  color: rgba(0,0,0,0.84);
+}
+input[type="text"].msg:-ms-input-placeholder {
+  color: rgba(0,0,0,0.84);
+}
+input[type="text"].msg::placeholder {
+  color: rgba(0,0,0,0.84);
+}
+
+/* redimentionnement de la fenetre modal, normalement 55%*/
+ .modal{
+  width:30% !important;
+  max-height: 40% !important;
+
+}
+
+/* -------------------------------------
+          media query
+ --------------------------------------*/
+@media all and (max-width : 1280px){
+  .logo-bt{
+    max-width: : 80%;
+  }
+}
+
+@media all and (max-width : 960px){
+  .logo-bt{
+    width: 200px;
+    max-width: : 200px;
+  }
+}
+
+
+
+
+
+@media only screen and (max-width: 1024px) {
+
+ .modal{
+
+    width:60% !important;
+  }
+}
+
+
+@media only screen and (max-width: 992px) {
+
+
+ .modal{
+
+    width:60% !important;
+  }
+
+}
+
+
+@media only screen and (max-width: 600px) {
+   .modal{
+      width:100% !important;
+      min-width: 400px;
+  }
+}
+
+
+/* Portrait and Landscape */
+@media screen
+  and (device-width: 320px)
+  and (device-height: 640px)
+  and (-webkit-device-pixel-ratio: 2) {
+     .modal{
+      width:100% !important;
+      min-width: 400px;
+  }
+
+}
+
+/* Portrait */
+@media screen
+  and (device-width: 320px)
+  and (device-height: 640px)
+  and (-webkit-device-pixel-ratio: 2)
+  and (orientation: portrait) {
+     .modal{
+      width:100% !important;
+      min-width: 400px;
+  }
+
+}
+
+/* Landscape */
+@media screen
+  and (device-width: 320px)
+  and (device-height: 640px)
+  and (-webkit-device-pixel-ratio: 2)
+  and (orientation: landscape) {
+     .modal{
+      width:100% !important;
+      min-width: 400px;
+  }
+
+}
+
+
+
+
+
