@@ -1,0 +1,222 @@
+@font-face {
+  font-family: 'Khand';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../vendor/fonts/khand-v6-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local('Khand Regular'), local('Khand-Regular'),
+  url('../../vendor/fonts/khand-v6-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../../vendor/fonts/khand-v6-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+  url('../../vendor/fonts/khand-v6-latin-regular.woff') format('woff'), /* Modern Browsers */
+  url('../../vendor/fonts/khand-v6-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('../../vendor/fonts/khand-v6-latin-regular.svg#Khand') format('svg'); /* Legacy iOS */
+}
+
+/* -------------------------------- */
+/*              footer               */
+/* -------------------------------- */
+
+body {
+  margin-bottom: 60px;
+}
+
+
+
+
+/* -------------------------------- */
+/*              fond               */
+/* -------------------------------- */
+.bg-grey{
+    background-color: #ddd;
+}
+
+/* note : bg-white est dans bootstrap */
+/* il y a shadow-sm et autre extension et rounded et border avec plusieurs styles */
+
+/* -------------------------------- */
+/*              titre               */
+/* -------------------------------- */
+h4 + hr {
+  width: 50% !important;
+  display: block !important;
+  height: 1px !important;
+  border: 0 !important;
+  border-top: 1px solid #0D47A1 !important;
+  margin: 0.6em 0 0 0 !important;
+  padding: 0 !important;
+}
+
+h4{
+    font-family: "Khand", sans-serif !important;
+    margin: 0px !important;
+    padding-bottom: 20px !important;
+}
+
+h1{
+    font-family: "Khand", sans-serif !important;
+}
+
+.sub-h1{
+    font-size: 20px;
+}
+
+.fa.fa-hand-o-right {
+  padding-right: 20px;
+}
+
+
+/* -------------------------------- */
+/*              couleurs               */
+/* -------------------------------- */
+
+/* titres */
+.blue-text.text-darken-4 {
+    color: #0D47A1 !important;
+}
+
+.white-container{
+  background-color: #fff;
+}
+
+/* -------------------------------- */
+/*              calendrier          */
+/* -------------------------------- */
+
+
+time.icon
+{
+  font-size: 0.8em; /* change icon size */
+  display: block;
+  position: relative;
+  width: 7em;
+  height: 7em;
+  background-color: #fff;
+  margin: 2em auto;
+  border-radius: 0.6em;
+  box-shadow: 0 1px 0 #bdbdbd, 0 2px 0 #fff, 0 3px 0 #bdbdbd, 0 4px 0 #fff, 0 5px 0 #bdbdbd, 0 0 0 1px #bdbdbd;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: rotate(0deg) skewY(0deg);
+  /* -webkit-transform-origin: 50% 10%; */
+  /* transform-origin: 50% 10%; */
+}
+
+time.icon *
+{
+  display: block;
+  width: 100%;
+  font-size: 1em;
+  font-weight: bold;
+  font-style: normal;
+  text-align: center;
+}
+
+time.icon strong
+{
+  position: absolute;
+  top: 0;
+  padding: 0.4em 0;
+  color: #fff;
+  background-color: #fd9f1b;
+  border-bottom: 1px dashed #f37302;
+  box-shadow: 0 2px 0 #fd9f1b;
+}
+
+time.icon em
+{
+  position: absolute;
+  bottom: 0.3em;
+  color: #fd9f1b;
+}
+
+time.icon span
+{
+  width: 100%;
+  font-size: 2.8em;
+  letter-spacing: -0.05em;
+  padding-top: 0.8em;
+  color: #2f2f2f;
+}
+
+time.icon:hover, time.icon:focus
+{
+  -webkit-animation: swing 0.6s ease-out;
+  animation: swing 0.6s ease-out;
+}
+
+
+
+
+ img{
+   width:  auto;
+  height: 30px;
+  /* vertical-align: -2px !important; */
+}
+
+
+
+.month
+{
+  font-size: 1.6rem;
+  margin: 0px auto;
+}
+
+.janvier, .février,.mars,.avril,.mai,.juin,.juillet,.août, .septembre,.octobre, .novembre,.décembre{
+  font-weight: bold;
+}
+
+.janvier{
+  color: #0069B3;
+}
+.février{
+  color: #02B0E5;
+}
+.mars{
+  color: #91C03E;
+}
+.avril{
+  color: #2BF15C;
+}
+.mai{
+  color: #2F9C4A;
+}
+.juin, .juillet{
+  color: #FFC936;
+}
+.août{
+  color: #FDA130;
+}
+.septembre{
+  color: #7C2619;
+}
+.octobre, .novembre{
+  color: #95622D;
+}
+.décembre{
+  color: #18255B;
+}
+
+hr{
+  border-top: 1px solid #ccc !important;
+}
+
+.info-mag{
+  padding:  4px;
+    color: #004085 !important;
+    line-height: 30px;
+    font-size: 1.1rem;
+  /*   background-color: #cce5ff !important;
+    border-color: #b8daff !important; */
+  /*   border-radius: 5px;
+    width: 70%;
+    margin:  auto;
+    line-height: 40px; */
+}
+
+.fa.fa-lightbulb-o{
+  line-height: 30px;
+  vertical-align: middle;
+}
+
+#docubase{
+ text-decoration :  underline;
+}

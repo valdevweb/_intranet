@@ -1,0 +1,18 @@
+textarea
+{
+	height:  200px !important;
+}
+
+
+.btn-kaki{
+	margin-bottom: 15px;
+}
+
+	tr, td{
+  padding : 0 0.5rem !important;
+}
+
+.row{
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}

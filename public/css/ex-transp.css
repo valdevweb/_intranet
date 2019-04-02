@@ -1,0 +1,10 @@
+	tr, td{
+  padding : 0 0.5rem !important;
+}
+
+.hide{
+	display: none;
+}
+.show{
+	display: block;
+}

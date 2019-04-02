@@ -1,0 +1,37 @@
+	tr, td{
+  padding : 0 0.5rem !important;
+}
+
+hr {
+  background: -webkit-linear-gradient(left, white, #0D47A1, white) !important;
+  background: -o-linear-gradient(left, white, #0D47A1, white) !important;
+  background: linear-gradient(to right, white, #0D47A1, white) !important;
+
+/*  background: -webkit-linear-gradient(left,  #0D47A1, white) !important;
+  background: -o-linear-gradient(left,  #0D47A1, white) !important;
+  background: linear-gradient(to right,  #0D47A1, white) !important; */
+  height: 2px !important;
+}
+
+.submenu{
+  height: 40px !important;
+  line-height: 40px !important;
+border-right:  1px #fff solid;
+}
+.subbtn {
+  color: white !important;
+	text-decoration: none !important
+
+  transition: background 0.5s;
+}
+
+.subbtn:hover {
+	text-decoration: none !important
+
+
+}
+.submenu:hover{
+background: #f8b966;
+	transform: scale(0.8, 0.8);
+/* transform: scale(1.2, 1.2); */
+}

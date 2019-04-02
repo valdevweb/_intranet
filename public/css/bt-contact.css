@@ -1,0 +1,19 @@
+textarea{
+	height:  200px !important;
+}
+
+
+
+	tr, td{
+  padding : 0 0.5rem !important;
+}
+
+.table-bordered table, .table-bordered td, .table-bordered th{
+	border: 1px solid #818182 !important
+}
+
+
+
+th:first-child, td:first-child{
+width:  100px !important;
+}

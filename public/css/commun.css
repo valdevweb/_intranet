@@ -1,0 +1,589 @@
+body
+{
+  background: #e1e1e1 !important;
+  font-family: verdana, Roboto, 'sans-serif';
+}
+
+
+.container
+{
+	background: #fff;
+	/* suppression espace avec navbar */
+}
+/* réinit : pb de marge auto qui dépassent du container; */
+.container>.row
+{
+     margin-right: 0px !important;
+    margin-left: 0px !important;
+}
+
+
+/* ------------------------------------------------------------
+
+                        TEXTS
+
+--------------------------------------------------------------- */
+.khand{
+    font-family: "Khand", sans-serif;
+}
+
+.mali{
+  font-family:Mali, sans-serif;
+}
+
+.pacifico{
+  font-family:Pacifico, sans-serif;
+}
+
+.lato{
+  font-family:Lato, sans-serif;
+}
+
+.marck-script{
+  font-family:'Marck Script', sans-serif;
+}
+.roboto{
+  font-family:Roboto, sans-serif;
+}
+.marvel{
+  font-family:Marvel, sans-serif;
+}
+
+.time-ft{
+font-family: Cambria, "Hoefler Text", Utopia, "Liberation Serif", "Nimbus Roman No9 L Regular", Times, "Times New Roman", serif;
+}
+.georgia{
+/* A modern Georgia-based serif */
+font-family: Constantia, "Lucida Bright", Lucidabright, "Lucida Serif", Lucida, "DejaVu Serif," "Bitstream Vera Serif", "Liberation Serif", Georgia, serif;
+}
+
+.garamond
+{
+/*A more traditional Garamond-based serif */
+  font-family: "Palatino Linotype", Palatino, Palladio, "URW Palladio L", "Book Antiqua", Baskerville, "Bookman Old Style", "Bitstream Charter", "Nimbus Roman No9 L", Garamond, "Apple Garamond", "ITC Garamond Narrow", "New Century Schoolbook", "Century Schoolbook", "Century Schoolbook L", Georgia, serif;
+}
+/*The Helvetica/Arial-based sans serif */
+.helvetica{
+font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.verdana{
+/*The Verdana-based sans serif */
+font-family: Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
+}
+
+/*The Trebuchet-based sans serif */
+.sans-ft{
+font-family: "Segoe UI", Candara, "Bitstream Vera Sans", "DejaVu Sans", "Bitstream Vera Sans", "Trebuchet MS", Verdana, "Verdana Ref", sans-serif;
+}
+.impact{
+/*The heavier "Impact" sans serif */
+font-family: Impact, Haettenschweiler, "Franklin Gothic Bold", Charcoal, "Helvetica Inserat", "Bitstream Vera Sans Bold", "Arial Black", sans-serif;
+}
+
+.mono-ft{
+/*The monospace */
+font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+}
+/* text modifier */
+.heavy{
+font-weight: 600;
+}
+
+.heavier{
+font-weight: 800;
+}
+
+.light{
+font-weight: 200;
+}
+
+/* -------------------------------- */
+/*        text-color               */
+/* -------------------------------- */
+.text-main-blue{
+	color: #0D47A1 !important;
+}
+.text-blue
+{
+  color: #007bff;
+}
+.text-light-blue{
+  color:  #EBF2FA;
+}
+
+
+.text-dark-grey{
+  color:#343a40;
+}
+
+.text-red{
+color:#c1292e;
+}
+
+.text-orange{
+color:#f57c00;
+}
+
+
+.text-reddish{
+  color: #a63446;
+}
+
+.text-blue-flashy{
+  color: #007bff;
+}
+
+.text-yellow{
+  color: #ffc107;
+}
+.text-kaki{
+  color:#43493f;
+}
+
+.bigger
+{
+  font-size: 1.2rem;
+}
+/* -------------------------------- */
+/*        backgrounds               */
+/* -------------------------------- */
+
+
+.bg-grey{
+    background-color: #ddd;
+}
+.bg-dust-light{
+background: #A9AABC;
+}
+
+.bg-dust-dark{
+background: #757687
+}
+
+.bg-white{
+    background-color: #fff;
+}
+.bg-separation{
+  background-color: #e1e1e1;
+  /* width: 100%; */
+  height:  10px;
+  margin-left: -15px !important;
+  margin-right: -15px !important;
+
+}
+.bg-alert{
+   padding: .75rem 1.25rem;
+   margin-bottom: 1rem;
+   border: 1px solid transparent;
+   border-radius: .25rem;
+}
+
+.bg-flashy-blue{
+  background: #007bff;
+  color: white;
+}
+
+.border-flashy-blue
+{
+  border: 1px solid #007bff;
+}
+.bg-dark-blue{
+    background: #004085;
+  color: #fff;
+}
+.bg-yellow{
+  background: #ffc107;
+  color: #fff;
+}
+
+.border-yellow{
+  border: 1px solid #ffc107;
+
+}
+
+
+.bg-kaki{
+    background: #43493f;
+    color: #fff;
+}
+.border-kaki{
+  border: 1px solid #43493f;
+}
+
+.bg-kaki-light
+{
+    background: #d7dad4;
+    color:#43493f;
+    /* border: 1px solid #43493f; */
+}
+.bg-yellow-light{
+  background-color: #fff7df;
+  color: #906c00 ;
+}
+.bg-reddish{
+  background: #a63446;
+}
+
+.border-reddish{
+  border: 1px solid #a63446;
+
+}
+
+.bg-orange{
+  background: #F18E0B;
+}
+.bg-cyan{
+  background: #17a2b8;
+  color: #fff;
+}
+.bg-teal{
+  background: #20c997;
+  color: #fff;
+
+}
+.bg-red{
+  background: #dc3545;
+  color: #fff;
+
+}
+
+.bg-alert-primary
+{
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+}
+.bg-alert-grey
+{
+    color: #383d41;
+    background-color: #e2e3e5;
+    border-color: #d6d8db;
+}
+
+.bg-alert-green
+{
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.bg-alert-red
+{
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.bg-alert-yellow
+{
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.bg-alert-info
+{
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+.bg-alert-white
+{
+    color: #818182;
+    background-color: #fefefe;
+    /* border-color: #fdfdfe; */
+    border-color: #d6d8db;
+
+}
+
+ .btn-primary{
+  background: #0D47A1 !important;
+  border:  #0D47A1 !important;
+  box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
+   transition: all 4s;
+  transition-timing: ease-in-out;
+ }
+.btn-primary:hover{
+   transform: scale(1.01);
+  background: #115fd7;
+  color: #fff;
+
+}
+
+.btn-red{
+    background: #a63446;
+  box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
+  transition: all 4s;
+  transition-timing: ease-in-out;
+  color: #fff;
+}
+
+
+.btn-red:hover{
+   transform: scale(1.01);
+  background: #c0707d;
+  color: #fff;
+
+}
+
+.btn-yellow{
+  background: #ffc107;
+  box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
+  transition: all 4s;
+  transition-timing: ease-in-out;
+  color: #3a231a;
+}
+
+
+.btn-yellow:hover{
+   transform: scale(1.01);
+  background: #ffd042;
+  color: #3a231a;
+
+}
+
+.btn-kaki{
+  background: #43493f;
+  box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
+  transition: all 4s;
+  transition-timing: ease-in-out;
+  color: #fff;
+}
+
+
+.btn-kaki:hover{
+   transform: scale(1.01);
+  background: #565e51;
+  color: #fff;
+
+}
+
+.btn-black{
+  background: #000;
+  box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
+  transition: all 4s;
+  transition-timing: ease-in-out;
+  color: #fff;
+}
+
+
+.btn-black:hover{
+   transform: scale(1.01);
+  background: #343a40;
+  color: #fff;
+
+}
+
+
+
+/* -------------------------------- */
+/*              titre               */
+/* -------------------------------- */
+h1{
+    font-family: "Khand", sans-serif !important;
+}
+
+/* h4 + hr {
+  width: 20% !important;
+  display: block !important;
+  height: 1px !important;
+  border: 0 !important;
+  border-top: 1px solid #0D47A1 !important;
+  margin: 0.6em 0 0 0 !important;
+  padding: 0 !important;
+} */
+
+/* h4{
+    font-family: mali, sans-serif !important;
+    margin: 0px !important;
+    padding-bottom: 20px !important;
+} */
+
+/* -------------------------------- */
+/*              liens               */
+/* -------------------------------- */
+
+a.link-blue{
+  color: #1976D2 !important;
+  font-weight: bold;
+}
+
+a:hover.link-blue{
+    color: #1976D2 !important;
+    font-weight: bold;
+    letter-spacing: 0.2px;
+    text-decoration: underline;
+
+}
+
+a.link-main-blue{
+  color: #0D47A1 !important;
+  font-weight: bold;
+}
+
+a:hover.link-main-blue{
+    color: #0D47A1 !important;
+    font-weight: bold;
+    letter-spacing: 0.2px;
+    text-decoration: underline;
+
+}
+
+a.red-link{
+  color: #a63446 !important;
+  font-weight: bold;
+
+}
+
+a.red-link:hover{
+  color: #616161 !important;
+  text-decoration: none;
+
+}
+
+a.green-link{
+  color: green !important;
+  font-weight: bold;
+
+}
+
+a.green-link:hover{
+  color: #616161 !important;
+  text-decoration: none;
+}
+a.nounderline-link{
+  font-weight: bold;
+}
+
+a.nounderline-link:hover{
+  text-decoration : none;
+  color: #616161 !important;
+
+}
+
+.bg-alert-primary>a
+{
+  color:#004085;
+}
+
+.bg-alert-primary>a:hover
+{
+  color:#004085;
+  text-decoration :  none;
+  font-weight: bold;
+}
+
+
+
+a.link-white{
+  color: #fff !important;
+}
+
+a:hover.link-white{
+    color: #fff !important;
+    letter-spacing: 0.2px;
+    text-decoration: none;
+
+}
+
+/* ------------------------------------------------------------
+
+                        sortable
+--------------------------------------------------------------- */
+
+
+.focus {
+ background-color: #e9e9e9;
+ color: #616161;
+ cursor: pointer;
+}
+.selected {
+ color: #616161;
+}
+
+/* groupé */
+.sortable:after
+{
+  font-family: 'Font Awesome 5 Free';
+  color: #afafaf;
+  content: "\f0dc";
+  padding-left: 5px;
+}
+
+/* up */
+.asc:after {
+  font-family: 'Font Awesome 5 Free';
+  content: "\f0de";
+  /* color: #616161; */
+  color: #ff9800;
+  padding-left: 5px;
+}
+/* up */
+.asc:before {
+  content: "" !important;
+}
+.desc:before {
+  content: "" !important;
+}
+
+
+/* down */
+.desc:after {
+  font-family: 'Font Awesome 5 Free';
+  content: "\f0dd";
+  /* color: #616161; */
+  color: #ff9800;
+  padding-left: 5px;
+
+
+}
+
+/* ------------------------------------------------------------
+
+                        BADGES
+--------------------------------------------------------------- */
+
+
+
+span.step {
+  border-radius: 0.8em;
+  -moz-border-radius: 0.8em;
+  -webkit-border-radius: 0.8em;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1.6em;
+  margin-right: 5px;
+  text-align: center;
+  width: 1.6em;
+}
+
+
+.step-bg-white
+{
+  background: #ffffff;
+  color: #004085;
+}
+
+.step-bg-blue
+{
+  background: #004085;
+  color: #fff;
+
+}
+.step-border-blue{
+   box-shadow: 0 5px 5px rgba(50, 50, 93, 0.2);
+
+  border:  solid 1px #004085;
+  color: #004085;
+
+}
+
+/* ------------------------------------------------------------
+
+                        EFFETS
+--------------------------------------------------------------- */
+
+ .light-shadow {
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.15) !important;
+}

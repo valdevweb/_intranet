@@ -1,0 +1,31 @@
+	tr, td{
+		padding : 0 0.5rem !important;
+	}
+
+
+
+
+	.no-padding{
+		padding : 0 !important;
+	}
+
+
+.hide{
+	display: none;
+}
+
+
+	.opacity div img {
+		opacity: 1;
+		-webkit-transform: scale(1);
+		transform: scale(1);
+		-webkit-transition: .3s ease-in-out;
+		transition: .3s ease-in-out;
+	}
+	.opacity div:hover img {
+		opacity: .5;
+		-webkit-transform: scale(0.8);
+		transform: scale(0.8);
+	}
+
+

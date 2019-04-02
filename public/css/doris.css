@@ -1,0 +1,355 @@
+@font-face {
+  font-family: 'Khand';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../vendor/fonts/khand-v6-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local('Khand Regular'), local('Khand-Regular'),
+  url('../../vendor/fonts/khand-v6-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../../vendor/fonts/khand-v6-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+  url('../../vendor/fonts/khand-v6-latin-regular.woff') format('woff'), /* Modern Browsers */
+  url('../../vendor/fonts/khand-v6-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('../../vendor/fonts/khand-v6-latin-regular.svg#Khand') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+  font-family: 'HiMelody';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../vendor/fonts/HiMelody-regular.ttf'); /* IE9 Compat Modes */
+}
+
+
+
+
+@font-face {
+  font-family: 'Mali';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../vendor/fonts/Mali-Regular.ttf'); /* IE9 Compat Modes */
+}
+
+
+/* -------------------------------- */
+/*              fond               */
+/* -------------------------------- */
+.bg-grey{
+    background-color: #ddd;
+}
+
+/* note : bg-white est dans bootstrap */
+/* il y a shadow-sm et autre extension et rounded et border avec plusieurs styles */
+
+/* -------------------------------- */
+/*              titre               */
+/* -------------------------------- */
+h4 + hr {
+  width: 50% !important;
+  display: block !important;
+  height: 1px !important;
+  border: 0 !important;
+  border-top: 1px solid #0D47A1 !important;
+  margin: 0.6em 0 0 0 !important;
+  padding: 0 !important;
+}
+
+h4{
+    font-family: "Khand", sans-serif !important;
+    margin: 0px !important;
+    padding-bottom: 20px !important;
+    color: #0D47A1 !important;
+}
+
+h1{
+    font-family: "Khand", sans-serif !important;
+    color: #0D47A1 !important;
+}
+
+.sub-h1{
+    font-size: 20px;
+}
+
+.fa.fa-hand-o-right {
+  padding-right: 20px;
+}
+
+
+/* -------------------------------- */
+/*              couleurs            */
+/* -------------------------------- */
+
+/* titres */
+.blue-text.text-darken-4 {
+    color: #0D47A1 !important;
+}
+
+/* -------------------------------- */
+/*              calendrier          */
+/* -------------------------------- */
+
+
+time.icon
+{
+  font-size: 0.8em; /* change icon size */
+  display: block;
+  position: relative;
+  width: 7em;
+  height: 7em;
+  background-color: #fff;
+  margin: 2em auto;
+  border-radius: 0.6em;
+  box-shadow: 0 1px 0 #bdbdbd, 0 2px 0 #fff, 0 3px 0 #bdbdbd, 0 4px 0 #fff, 0 5px 0 #bdbdbd, 0 0 0 1px #bdbdbd;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  -webkit-transform: rotate(0deg) skewY(0deg);
+  /* -webkit-transform-origin: 50% 10%; */
+  /* transform-origin: 50% 10%; */
+}
+
+time.icon *
+{
+  display: block;
+  width: 100%;
+  font-size: 1em;
+  font-weight: bold;
+  font-style: normal;
+  text-align: center;
+}
+
+time.icon strong
+{
+  position: absolute;
+  top: 0;
+  padding: 0.4em 0;
+  color: #fff;
+  background-color: #2196f3;
+  border-bottom: 1px dashed #0d47a1;
+  box-shadow: 0 2px 0 #2196f3;
+}
+
+time.icon em
+{
+  position: absolute;
+  bottom: 0.3em;
+  color: #fd9f1b;
+}
+
+time.icon span
+{
+  width: 100%;
+  font-size: 2.8em;
+  letter-spacing: -0.05em;
+  padding-top: 0.8em;
+  color: #2f2f2f;
+}
+
+time.icon:hover, time.icon:focus
+{
+  -webkit-animation: swing 0.6s ease-out;
+  animation: swing 0.6s ease-out;
+}
+
+
+
+
+.month
+{
+  font-family: 'Mali';
+    color: #0D47A1 !important;
+  font-weight :  bold;
+  font-size: 1.6rem;
+  /* margin: 0px auto; */
+}
+
+p{
+line-height: 0.8rem;
+
+}
+
+
+
+a.simple
+{
+color:  #212529;
+}
+
+
+a.simple:hover{
+  color:  #2196f3 !important;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+
+.triangle {
+  width: 16px;
+  height: 32px;
+  border-left: solid 16px #64b5f6;
+  border-bottom: solid 16px transparent;
+  border-top: solid 16px transparent;
+  display: inline-block;
+  position: absolute;
+  top: 4px;
+  left: 58px;
+  z-index: 999;
+
+}
+.triangle-bdr {
+  width: 20px;
+  height: 32px;
+  border-left: solid 20px #bbdefb;
+  border-bottom: solid 20px transparent;
+  border-top: solid 20px transparent;
+  display: inline-block;
+  position: absolute;
+  top: 0px;
+  left: 60px;
+  z-index: 99;
+
+}
+
+
+
+
+.rect
+{
+height: 40px;
+width: 60px;
+background-color: #64b5f6;
+display: inline-block;
+position: absolute;
+top: 0;
+left: 0;
+border-top: 4px #bbdefb solid;
+border-left: 4px #bbdefb solid;
+border-bottom: 4px #bbdefb solid;
+}
+
+
+
+.month-rect{
+  display: inline-block;
+  position: absolute;
+  height: 40px;
+  width: 60px;
+  border-top: 4px #bbdefb solid;
+  border-right: 2px #bbdefb solid;
+  border-bottom: 4px #bbdefb solid;
+  z-index: 1;
+  line-height:34px;
+  vertical-align:  middle;
+
+}
+.month-rect-1
+{
+height: 40px;
+width: 70px;
+background-color: #e3f2fd;
+display: inline-block;
+position: absolute;
+top: 0;
+left: 60px;
+border-top: 4px #bbdefb solid;
+border-right: 2px #bbdefb solid;
+border-bottom: 4px #bbdefb solid;
+z-index: 1;
+line-height:34px;
+vertical-align:  middle;
+}
+
+
+
+
+
+.rect p{
+  z-index: 99999;
+  line-height: 34px;
+  position: absolute;
+  top : 0;
+  left: 8px;
+  font-weight: bold;
+  color:  #fff;
+
+}
+/* foncé */
+.month-rect:nth-child(odd){
+  background-color:  #64b5f6;
+  color:  #fff;
+}
+.month-rect:nth-child(even){
+  background-color: #e3f2fd;
+  color : #000;
+}
+
+
+
+.month-rect-2
+{
+  top: 0;
+  left: 130px;
+}
+
+.month-rect-3
+{
+  top: 0;
+  left: 190px;
+}
+
+.month-rect-4
+{
+  top: 0;
+  left: 250px;
+}
+.month-rect-5
+{
+  top: 0;
+  left: 310px;
+}
+.month-rect-6
+{
+  top: 0;
+  left: 370px;
+}
+.month-rect-7
+{
+  top: 0;
+  left: 430px;
+}
+.month-rect-8
+{
+  top: 0;
+  left: 490px;
+}
+.month-rect-9
+{
+  top: 0;
+  left: 550px;
+}
+.month-rect-10
+{
+  top: 0;
+  left: 610px;
+}
+.month-rect-11
+{
+  top: 0;
+  left: 670px;
+}
+.month-rect-12
+{
+  top: 0;
+  left: 730px;
+}
+
+
+.year-slide
+{
+  height: 42px;
+  width: 790px;
+  margin : auto;
+  padding: 0;
+  /* border:  1px solid #fff; */
+  position: relative;
+  /* box-shadow: 0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.075); */
+  /* box-shadow: 0 0 2px 2px #ccc; */
+
+}

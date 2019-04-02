@@ -1,0 +1,11 @@
+
+	tr, td{
+  padding : 0 0.5rem !important;
+}
+
+hr {
+  background: -webkit-linear-gradient(left, white, #000, white) !important;
+  background: -o-linear-gradient(left, white, #000, white) !important;
+  background: linear-gradient(to right, white, #000, white) !important;
+  height: 2px !important;
+}
