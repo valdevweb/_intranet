@@ -15,8 +15,6 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //			FONCTION
 //------------------------------------------------------
 
-
-
 function getMinAndMaxDate($pdoLitige)
 {
 	$req=$pdoLitige->prepare("SELECT date_mvt, MIN(date_mvt) as mini, MAX(date_mvt) as maxi, DATE_FORMAT(MIN(date_mvt),'%d-%m-%Y') as ministr, DATE_FORMAT(MAX(date_mvt),'%d-%m-%Y') as maxistr FROM statsventeslitiges");
@@ -51,7 +49,7 @@ function getMagName($pdoBt)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-function insertDossier($pdoLitige)
+function insertDossier($pdoLitige, $numDossier)
 {
 	// par défaut l'état est à 0 = ouvert
 	if(isset($_POST['rapid']) && $_POST['rapid']=="oui")
@@ -65,38 +63,23 @@ function insertDossier($pdoLitige)
 	{
 		$dateDecl=$_POST['date_bt'];
 	}
-	else{
-	$dateDecl=	date('Y-m-d H:i:s');
+	else
+	{
+		$dateDecl=	date('Y-m-d H:i:s');
 	}
-	$req=$pdoLitige->prepare("INSERT INTO dossiers(date_crea,user_crea,nom,galec,vingtquatre) VALUES(:date_crea,:user_crea,:nom, :galec, :vingtquatre)");
+	$req=$pdoLitige->prepare("INSERT INTO dossiers(date_crea,user_crea,nom,galec,vingtquatre, dossier) VALUES(:date_crea,:user_crea,:nom, :galec, :vingtquatre, :dossier)");
 	$req->execute(array(
 		':date_crea'		=>$dateDecl,
 		':user_crea'		=>$_SESSION['id_web_user'],
 		':nom'				=>$_POST['nom'],
 		':galec'			=>$_SESSION['id_galec'],
-		':vingtquatre'		=>$vingtquatre
+		':vingtquatre'		=>$vingtquatre,
+		':dossier'		=>$numDossier,
 	));
 	return $pdoLitige->lastInsertId();
 }
 
-function createNumDossier($lastInsertId)
-{
-	$shortYear=date('y');
-	if($lastInsertId<10)
-	{
-		$numDossier=$shortYear.'00'.$lastInsertId;
-	}
-	elseif($lastInsertId>=10 && $lastInsertId<100)
-	{
-		$numDossier=$shortYear.'0'.$lastInsertId;
 
-	}
-	elseif($lastInsertId>=100 && $lastInsertId<1000)
-	{
-		$numDossier=$shortYear.$lastInsertId;
-	}
-	return $numDossier;
-}
 
 function updateDossier($pdoLitige,$numDossier, $lastInsertId)
 {
@@ -143,7 +126,14 @@ function addDetails($pdoLitige, $lastInsertId,$numDossier,$palette,	$facture,$da
 }
 
 
-
+// le numéro de dossier du litige et non l'id du litige
+function getLastNumDossier($pdoLitige)
+{
+	$req=$pdoLitige->prepare("SELECT dossier FROM dossiers ORDER BY dossier DESC LIMIT 1");
+	$req->execute();
+	return $req->fetch(PDO::FETCH_ASSOC);
+	// return $req->errorInfo();
+}
 
 //------------------------------------------------------
 //			AFFICHAGE RES RECHERCHE
@@ -162,29 +152,53 @@ $success=[];
 //
 if(isset($_POST['choose']))
 {
-//  on récupère tout les posts sauf le btn submit,
+
+//  on ne veut récuperer que les id donc on supprime les valeurs des champ submit, date, etc
 	foreach ($_POST as $key => $value)
 	{
-		if($key!='choose' && $key!='selectAll' && $key!='rapid')
+		if($key!='choose' && $key!='selectAll' && $key!='rapid' && $key !='nom' && $key !='date_bt' && $key != 'num_dossier_form')
 		{
 			$ids[]=$key;
 		}
-
 	}
-
 
 // 1- creation du dossier
 	if(count($ids)>0)
 	{
-		$lastInsertId=insertDossier($pdoLitige);
+
+		// soit le numéro de dossier a été saisi soit, on doit le calculer
+		if(!empty($_POST['num_dossier_form']))
+		{
+				$numDossier=$_POST['num_dossier_form'];
+				$lastInsertId=insertDossier($pdoLitige,$numDossier);
+
+		}
+		else
+		{
+			// si pas de numéro de dossier imposé, on prend le der num et on ajoute 1
+			$numDossier=getLastNumDossier($pdoLitige);
+			$numDossier=$numDossier['dossier'];
+			// il faut vérifier que l'on a pas changé d'année
+			// prend les 2 1er caractère du numdossier pour les comparer à l'année actuelle
+			// si différent de l'anneé actuelle, on a changé d'année par rapport au der dossier
+			// il faut donc créer le 1er numdossier
+			$yearDossier=substr($numDossier,0,2);
+			if($yearDossier==date('y'))
+			{
+				// pas de chg d'année, on prend le der num dossier, oon ajoute 1
+				$numDossier=$numDossier +1;
+			}
+			else
+			{
+				$numDossier=date('y').'001';
+
+			}
+			$lastInsertId=insertDossier($pdoLitige,$numDossier);
+		}
+		// créa du dossier (sans numéro pour l'instant)
 		if($lastInsertId>0)
 		{
-			$numDossier=createNumDossier($lastInsertId);
-			$newDossier=updateDossier($pdoLitige, $numDossier, $lastInsertId);
-			if($newDossier<=0)
-			{
-				$errors[]="Impossible d'enregistrer le dossier";
-			}
+			$sucess[]="ajout du dossier réussie";
 		}
 		else
 		{
@@ -373,8 +387,15 @@ DEBUT CONTENU CONTAINER
 
 					<?php
 					ob_start();
-					 ?>
-					<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">4</span>Date de déclaration</p>
+					?>
+					<div class="row">
+						<div class="col">
+							<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">4</span>Date de déclaration</p>
+						</div>
+						<div class="col">
+							<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">5</span>Numéro de dossier : </p>
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-4">
 							<div class="alert alert-light ">
@@ -383,18 +404,27 @@ DEBUT CONTENU CONTAINER
 								</div>
 							</div>
 						</div>
-							<div class="col"></div>
+						<div class="col-2"></div>
+						<div class="col-4">
+							<div class="alert alert-light ">
+								<div class="form-group pt-2">
+									<input type="text" class="form-control" name="num_dossier_form">
+								</div>
+							</div>
+
+						</div>
 					</div>
+
+
 					<?php
 					$datebtform=ob_get_contents();
 					ob_end_clean();
 					if($_SESSION['type']=="btlec")
 					{
-
 						echo $datebtform;
 					}
 
-					 ?>
+					?>
 
 					<p class="text-right"><button class="btn btn-primary" type="submit" name="choose" id="choose">Valider</button></p>
 
@@ -412,33 +442,19 @@ DEBUT CONTENU CONTAINER
 
 
 		?>
-
-
-
 		<!-- ./row -->
 	</div>
-
 	<script src="../js/sorttable.js"></script>
-
 	<script type="text/javascript">
 		$("#checkAll").click(function () {
 			$('input:checkbox').not(this).prop('checked', this.checked);
 		});
-
-
 		$("#choose").click(function() {
 			if ($('input[name="rapid"]:checked').length == 0) {
 				alert('Vous devez préciser si il s\'agit d\'une livraison 24/48h');
 				return false; }
 
-
-
 			});
-
-
-
-
-
 		</script>
 
 
