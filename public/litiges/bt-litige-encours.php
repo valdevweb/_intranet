@@ -25,7 +25,6 @@ function getAllDossier($pdoLitige)
 		ORDER BY dossiers.id DESC");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
-	// return $req->errorInfo();
 }
 
 
@@ -66,7 +65,7 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue pt-5 pb-3">Dossiers litiges en cours </h1>
+	<h1 class="text-main-blue pt-5 pb-3">Listing des dossiers litiges </h1>
 
 	<!-- formulaire de recherche -->
 	<div class="row my-5">
@@ -91,22 +90,32 @@ DEBUT CONTENU CONTAINER
 					</div>
 				</div>
 			</form>
+
 			<div class="row pt-5">
 				<div class="col-6">
-					<p class="text-red ">Filtrer les résultat:</p>
+					<p class="text-red ">Filtrer les résultats :</p>
 				</div>
 				<div class="col">
 					 <button class="btn btn-red " id="hide-clos"> <i class="fas fa-filter pr-3"></i>Dossiers en cours</button>
 				</div>
-				<!-- <div class="col-3"> -->
-					 <!-- <button class="btn btn-black ml-5" id="hide-clos"> <i class="fas fa-filter pr-3"></i>Dossiers clos</button> -->
-				<!-- </div> -->
 			</div>
+
 		</div>
 	<div class="col-2"></div>
 </div>
 <!-- ./formulaire de recherche-->
-
+<div class="row pt-2 pb-2">
+	<div class="col">
+		<div>
+			<div class="alert alert-primary">
+				<i class="fas fa-info-circle pr-3"></i>Vous pouvez cliquez sur le nom du magasin pour afficher l'historique de ses réclamations
+			</div>
+		</div>
+	</div>
+	<div class="col-auto text-right">
+		<a href="xl-encours.php" class="btn btn-red"> <i class="fas fa-file-excel pr-3"></i>Exporter</a>
+	</div>
+</div>
 <div class="row">
 	<div class="col">
 		<?php
@@ -158,7 +167,7 @@ DEBUT CONTENU CONTAINER
 					echo '<tr class="'.$active['etat_dossier'].'">';
 					echo'<td>'.$active['dossier'].'</td>';
 					echo'<td>'.$active['datecrea'].'</td>';
-					echo'<td>'.$active['mag'].'</td>';
+					echo'<td><a href="stat-litige-mag.php?galec='.$active['galec'].'">'.$active['mag'].'</a></td>';
 					echo'<td>'.$active['btlec'].'</td>';
 					echo'<td>'.$active['centrale'].'</td>';
 					echo'<td class="'.$etat.'">'.$active['etat'].'</td>';
