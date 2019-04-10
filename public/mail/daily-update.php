@@ -137,29 +137,29 @@ if($files>=1)
 		if($docDate > $deadLine)
 		{
 			//si résultat GFK
-			if($dbFile['code']==5)
+			if($dbFile['id_doc_type']==5)
 			{
 				$fileList[]="les nouveaux " . $dbFile['type'];
 			}
-			elseif($dbFile['code']==9)
+			elseif($dbFile['id_doc_type']==9)
 			{
 				$fileList[]="le " . $dbFile['type'] ." ". $dbFile['name'];
 			}
-			elseif($dbFile['code']==10)
+			elseif($dbFile['id_doc_type']==10)
 			{
 				$fileList[]="la " . $dbFile['type'];
 			}
-			elseif($dbFile['code']==7)
+			elseif($dbFile['id_doc_type']==7)
 			{
 				$fileList[]="les " . $dbFile['type'];
 			}
-			elseif($dbFile['code']==6 ||$dbFile['code']==3 || $dbFile['code']==11)
+			elseif($dbFile['id_doc_type']==6 || $dbFile['id_doc_type']==11)
 			{
 				$fileList[]="le " . $dbFile['type'];
 			}
-			elseif($dbFile['code']==4)
+			elseif($dbFile['id_doc_type']==4)
 			{
-				$fileList[]="l'" . $dbFile['type'];
+				$fileList[]= $dbFile['type'];
 			}
 			else
 			{
@@ -174,7 +174,7 @@ if($files>=1)
 // pour la gazette normal et la gazette speciale, on prend le champ date
 // gazette quotidienne => date = date sélectionnée par la personne donc normalement date du jour (si on a modifié une ancienne gazette, on ne veut pas l'afficher)
 // gazette spéciale => date de dépot ( pas de champ date pour la modifier dans le formulaire)
-$req=$pdoBt->prepare("SELECT * FROM gazette WHERE date= :today AND (code = 1 OR code = 8)");
+$req=$pdoBt->prepare("SELECT * FROM gazette WHERE date= :today AND (id_doc_type = 1 OR id_doc_type = 8)");
 $req->execute(array(
 	':today'	=> date('Y-m-d')
 ));
@@ -188,7 +188,7 @@ if($files>=1)
 }
 
 // pour la gazette appro, c'est la date de modif qu'il faut prendre en compte (date de dépot)
-$req=$pdoBt->prepare("SELECT * FROM gazette WHERE code = 2 AND DATE_FORMAT(date_modif, '%Y-%m-%d')= :today");
+$req=$pdoBt->prepare("SELECT * FROM gazette WHERE id_doc_type = 2 AND DATE_FORMAT(date_modif, '%Y-%m-%d')= :today");
 $req->execute(array(
 	':today'	=> date('Y-m-d')
 ));
@@ -199,6 +199,146 @@ if($files>=1)
 	$filename=$filename[0];
 	$fileList[]="la " . $files['category'] . " - " .$filename;
 }
+//------------------------------------------------------
+//			DORIS
+//------------------------------------------------------
+
+/*--------------------------------------------*/
+/*     recup date, centrale du nom de fichier */
+/*--------------------------------------------*/
+
+function fileInfos($explodedFilename)
+{
+	$strangeMonth=array('janv'=>1 ,'févr'=>2 ,'mars'=>3 ,'avr'=>4 ,'mai'=>5 ,'juin'=>6 ,'juil'=>7 ,'août'=>8 ,	'sept'=>9 ,	'oct'=>10,'nov'=>11,'déc'=>12);
+	$dateStr=$explodedFilename[1];
+	$exDate=explode(' ',$dateStr);
+
+	$monthStr=trim($exDate[1]);
+	$monthStr=str_replace('.','',$monthStr);
+	//quand existe pas ??
+	$year=trim($exDate[2]);
+	$centrale=$explodedFilename[2];
+	$arrCentrale=explode('.',$centrale);
+	$centrale=$arrCentrale[0];
+	//quand pas mois
+	$month=$strangeMonth[$monthStr];
+	$day=1;
+	$dorisDate=new DateTime($year.'-'.$month.'-'.$day);
+	return array($dorisDate,$centrale);
+
+}
+
+
+// function fileInfos($explodedFilename)
+// {
+// 	$strangeMonth=array('janv'=>1 ,'févr'=>2 ,'mars'=>3 ,'avr'=>4 ,'mai'=>5 ,'juin'=>6 ,'juil'=>7 ,'août'=>8 ,	'sept'=>9 ,	'oct'=>10,'nov'=>11,'déc'=>12);
+// 	$dateStr=$explodedFilename[1];
+// 	if($dateStr==" ")
+// 	{
+// 		$dateStr="vide";
+// 	}	$name=$explodedFilename[2];
+
+// 	// $exDate=explode(' ',$dateStr);
+
+// 	// $monthStr=trim($exDate[1]);
+// 	// $monthStr=str_replace('.','',$monthStr);
+// 	// //quand existe pas ??
+// 	// $year=trim($exDate[2]);
+// 	// $centrale=$explodedFilename[2];
+// 	// $arrCentrale=explode('.',$centrale);
+// 	// $centrale=$arrCentrale[0];
+// 	// //quand pas mois
+// 	// $month=$strangeMonth[$monthStr];
+// 	// $day=1;
+// 	// $dorisDate=new DateTime($year.'-'.$month.'-'.$day);
+// 	// return array($dorisDate,$centrale);
+// 	return array($dateStr,$name);
+// }
+
+
+
+
+function addDorisToDb($pdoBt,$filename,$dorisDate,$centrale){
+	$req=$pdoBt->prepare('INSERT INTO doris (filename,date_depot,date_extraction,centrale,id_doc_type) VALUES (:filename,:date_depot,:date_extraction,:centrale,:id_doc_type)');
+	$result=$req->execute(array(
+		':filename'		=>$filename,
+		':date_depot'	=> date('Y-m-d'),
+		':date_extraction'=>$dorisDate,
+		':centrale'		=>$centrale,
+		':id_doc_type'	=>19
+	));
+	return $result;
+}
+
+function dorisAlreadyInDb($pdoBt, $filename)
+{
+	$req=$pdoBt->prepare("SELECT * FROM doris  WHERE filename= :filename ");
+	$req->execute(array(
+		'filename'	=>$filename
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+// function dorisAlreadyInDb($pdoBt)
+// {
+// 	$req=$pdoBt->prepare("SELECT max(date_extraction) as last FROM doris ");
+// 	$req->execute();
+// 	return $req->fetch(PDO::FETCH_ASSOC);
+// }
+
+
+$dorisDir="D:\btlec\doris";
+$dorisFileList = scandir($dorisDir);
+$newdoris=0;
+// parcours la liste des fichier du répoertoire doris
+foreach ($dorisFileList as $filename)
+{
+
+	// récup la date de dépot du fichier
+	$fileDate=date ('Y-m-d H:i:s', filemtime($dorisDir.'\\'.$filename));
+	$lastMonth= new DateTime(date('Y-m').'-01');
+	$lastMonth=$lastMonth->modify('-1 month');
+	$objfileDate=new DateTime($fileDate);
+	// on trie les noms de fichiers en ne prenant que ceux du mois en cours et du mois dernier => inutile, il repousse tout tout les jours
+
+		// on vérifie si ces fichiers sont déjà dans la db si ils n'y sont pas on les ajoute
+	$nePasTraiter=dorisAlreadyInDb($pdoBt, $filename);
+
+
+	if(empty($nePasTraiter))
+	{
+		// echo 'à traiter '. $fileDate . ' '. $filename .'<br>';
+
+		// découpe du nom de fichier
+		$explodedFilename=explode('-',$filename);
+		// echo count($explodedFilename) .' :  ' .$filename.'<br>';
+		// les doris exploitable ont seulement 2 tirets  donc fichier découpé en 3
+		if(count($explodedFilename)==3 && $explodedFilename[1]!=" ")
+		{
+		// on récupère les infos du fichiers en passant le filename découpé par - à la fonction
+			list($dorisDate,$centrale)=fileInfos($explodedFilename);
+			echo $filename .'<br>';
+
+			if(!empty($dorisDate) && !empty($centrale))
+			{
+			$dorisDate=$dorisDate->format('Y-m-d');
+			$result=addDorisToDb($pdoBt,$filename,$dorisDate,$centrale);
+			$newdoris++;
+
+			}
+
+		}
+
+	}
+
+
+}
+
+if($newdoris>0)
+{
+		$fileList[]="les analyses Doris";
+}
+
+
 
 //------------------------------------------------------
 //			si list fichiers non vide => envoi mail
