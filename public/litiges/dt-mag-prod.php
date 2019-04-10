@@ -2,7 +2,7 @@
 		<div class="col">
 			<div class="row">
 				<div class="col">
-					<h5 class="khand text-main-blue pb-3">Produit(s) :</h5>
+					<h5 class="khand text-main-blue pb-3">Détail du litige :</h5>
 
 					<table class="table light-shadow">
 						<thead class="thead-dark">
