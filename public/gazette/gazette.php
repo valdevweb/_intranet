@@ -89,14 +89,15 @@ if (isset($_POST['submit']))
 	<div class="row">
 		<div class="col l1 m1"></div>
 		<div class="col l2 m2 s4 mini-nav">
-			<p><a href="#h2018"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette</a></p>
+			<p><a href="#h2019"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette</a></p>
+			<p><a href="#h2019"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2019</a></p>
 			<p><a href="#h2018"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2018</a></p>
 			<p><a href="#h2017"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2017</a></p>
 
 
 		</div>
 		<div class="col l2 m2 s4 mini-nav">
-			<p><a href="#a2018"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette appro</a></p>
+			<p><a href="#a2018"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette suivi livraison Catalogue</a></p>
 		</div>
 		<div class="col l2 m2 s4 mini-nav">
 			<p><a href="#opp"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette alerte promo</a></p>
@@ -118,22 +119,35 @@ if (isset($_POST['submit']))
 
 
 	<div class="row">
-		<h4 class="light-blue-text text-darken-2" id="h2018">Listing des gazettes de 2018</h4>
+		<h4 class="light-blue-text text-darken-2" id="h2019">Listing des gazettes de 2019</h4>
 	</div>
 	<div class="row">
 		<ul class="collapsible" data-collapsible="accordion">
 		<?php
 		//semaine à partir de laquelle on va afficher l'historique des gazettes
 		//l'année 2018 commence semaine 0 donc on retire 1 à la semaine actuelle
-			$year=2018;
+			$year=2019;
 			$nbWeek=new DateTime();
 			$nbWeek=$nbWeek->format('W');
 			$nbWeek=(int)$nbWeek-1;
+			// tricherie pour le 31/12/2018 qui tombe la 1ere semaine de 2019.....
+			$rustine=0;
+
 			$category="gazette";
 				for ($week=$nbWeek; $week >=0 ; $week--)
 				{
-					$histo=histoGaz($pdoBt,$week,$year,$category);
-					$link="http://172.30.92.53/".$version."upload/gazette/";
+					if($week==0 && $rustine==0)
+					{
+						$histo=histoGaz($pdoBt,52,2018,$category);
+						$link="http://172.30.92.53/".$version."upload/gazette/";
+						$rustine=1;
+					}
+					else{
+						$histo=histoGaz($pdoBt,$week,$year,$category);
+						$link="http://172.30.92.53/".$version."upload/gazette/";
+
+
+					}
 
 		?>
 			<!--un bloc semaine-->
@@ -160,24 +174,25 @@ if (isset($_POST['submit']))
  	</div> <!--row accordeon 2018 -->
 
 	<div class="row">
-		<h4 class="light-blue-text text-darken-2" id="h2017">Listing des gazettes hebdo de 2017</h4>
+		<h4 class="light-blue-text text-darken-2" id="h2018">Listing des gazettes hebdo de 2018</h4>
 	</div>
 
 	<div class="row">
 		<ul class="collapsible" data-collapsible="accordion">
 		<?php
 		//l'hiisto des gazettes en 2017 commence à la semaine 48
-			$year=2017;
-			$nbWeek2017=getIsoWeeksInYear(2017);
+			$year=2018;
+			$nbWeek2018=getIsoWeeksInYear(2018);
+			$nbWeek2018= $nbWeek2018 -1;
 			$category="gazette";
-				for ($week=52; $week >=48 ; $week--)
+				for ($week=$nbWeek2018; $week >=0 ; $week--)
 				{
 					$histo=histoGaz($pdoBt,$week,$year, $category);
 					$link="http://172.30.92.53/".$version."upload/gazette/";
 				?>
 			<!--un bloc semaine-->
 			<li>
-				<div class="collapsible-header"><i class="fa fa-newspaper-o" aria-hidden="true"></i>Semaine <?=$week ?><span class="new badge blue" data-badge-caption="gazette(s)"><?=count($histo)?></span></div>
+				<div class="collapsible-header"><i class="fa fa-newspaper-o" aria-hidden="true"></i>Semaine <?=$week+1 ?><span class="new badge blue" data-badge-caption="gazette(s)"><?=count($histo)?></span></div>
 				<div class="collapsible-body">
 					<ul class="browser-default">
 						<?php
@@ -197,9 +212,53 @@ if (isset($_POST['submit']))
  		<p class="uptonav"><a href="#up" class="uptonav">retour au menu</a></p>
  	</div>
  	<div class="row">
+		<h4 class="light-blue-text text-darken-2" id="h2017">Listing des gazettes hebdo de 2017</h4>
+	</div>
+
+	<div class="row">
+		<ul class="collapsible" data-collapsible="accordion">
+		<?php
+		//l'hiisto des gazettes en 2017 commence à la semaine 48
+			$year=2017;
+			$nbWeek2017=getIsoWeeksInYear(2017);
+			$nbWeek2017= $nbWeek2017 -1;
+			$category="gazette";
+				for ($week=$nbWeek2017; $week >=48 ; $week--)
+				{
+					$histo=histoGaz($pdoBt,$week,$year, $category);
+					$link="http://172.30.92.53/".$version."upload/gazette/";
+				?>
+			<!--un bloc semaine-->
+			<li>
+				<div class="collapsible-header"><i class="fa fa-newspaper-o" aria-hidden="true"></i>Semaine <?=$week+1 ?><span class="new badge blue" data-badge-caption="gazette(s)"><?=count($histo)?></span></div>
+				<div class="collapsible-body">
+					<ul class="browser-default">
+						<?php
+							foreach ($histo as $gazette)
+							{
+							echo "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .$gazette['file'] ."</a></li>";
+							}
+						?>
+					</ul>
+				</div>
+			</li>
+			<?php
+			//fin du for qui parcours les semaines
+				}
+				?>
+			</ul>
+ 		<p class="uptonav"><a href="#up" class="uptonav">retour au menu</a></p>
+ 	</div>
+
+
+
+
+
+
+ 	<div class="row ">
 		<h4 class="light-blue-text text-darken-2" id="opp">Les alertes promo</h4>
 	</div>
-	<div class="row">
+	<div class="row bg-white small-padding">
 	<ul class="browser-default"><li><a class='stat-link' data-user-session="<?=$_SESSION['user']?>" href="http://172.30.92.53/OPPORTUNITES/index.html" target="_blank">les opportunités du jour</a></li></ul>
 	<p class="uptonav"><a href="#up" class="uptonav">retour au menu</a></p>
 	</div>
@@ -212,9 +271,9 @@ if (isset($_POST['submit']))
  -->
 
 <div class="row">
-		<h4 class="light-blue-text text-darken-2" id="a2018">Les gazettes appros :</h4>
+		<h4 class="light-blue-text text-darken-2" id="a2018">Suivi livraison Catalogue :</h4>
 	</div>
-	<div class="row">
+	<div class="row bg-white">
 		<ul class="browser-default">
 		<?php
 			$histo=showLastGazettesAppros($pdoBt);
@@ -265,7 +324,7 @@ if (isset($_POST['submit']))
 <!-- formulaire de recherche -->
 	<div class="row">
 		<h4 class="light-blue-text text-darken-2" id="search">Chercher une gazette par date</h4>
-		<form method="post" action="gazette.php#result" class="w3-container">
+		<form method="post" action="gazette.php#result" class="w3-container bg-white">
 			<div class="col l2"></div>
 			<div class="col l4">
 
