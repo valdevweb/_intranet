@@ -275,7 +275,6 @@ DEBUT CONTENU CONTAINER
 
 	<div class="row">
 		<div class="col">
-			<!-- inside transporteurs -->
 			<div class="row">
 				<div class="col bg-kaki-light rounded p-3">
 					<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" enctype="multipart/form-data">
