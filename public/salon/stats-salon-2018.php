@@ -106,7 +106,7 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 require '../view/_head.php';
 require '../view/_navbar.php';
 
-require 'salon.ct.php';
+require 'stats-salon-2018.ct.php';
 
 
 //----------------------------------------------------
