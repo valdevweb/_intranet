@@ -67,16 +67,18 @@ if(isset($_POST['submit'])){
 		//si pano galec trouvé, le recherche dans table users
 		if($sca=$req->fetch(PDO::FETCH_ASSOC))
 			{
-				$req=$pdoUser->prepare("SELECT * FROM users WHERE galec= :galec AND type= :mag");
+				$req=$pdoUser->prepare("SELECT * FROM users WHERE galec= :galec AND (type='mag' OR type ='centrale')");
 				$req->execute(array(
 					":galec"	=>$sca['galec'],
-					":mag"		=>"mag"
+					// ":mag"		=>"mag"
 				));
-				$webuser=$req->fetch(PDO::FETCH_ASSOC);
+				$webuser=$req->fetchAll(PDO::FETCH_ASSOC);
 				//ld rbt du mag
 				$codeBt=$sca['btlec'];
+
 				$rbt=$codeBt."-RBT@btlec.fr";
 				// $rbt="valerie.montusclat@btlec.fr";
+
 
 				// ----------------------------------------
 				// si le mot de passe en clair existe déjà
@@ -87,6 +89,8 @@ if(isset($_POST['submit'])){
 					$link="";
 					$tplIdent='public/mail/envoi_identifiant.tpl.html';
 					$subject="PORTAIL BTLEC Est - Vos identifiants de connexion";
+
+
 					if(sendMail($rbt,$subject,$tplIdent,$webuser['login'],$webuser['nohash_pwd'], $link))
 					{
 						$redir="pwd.php?success=1";
@@ -99,16 +103,20 @@ if(isset($_POST['submit'])){
 					{
 						//err mail
 						$redir="pwd.php?error=1";
-						header('Location:'.$redir);
+						// header('Location:'.$redir);
+
 
 					}
 				}
 				else
 				{
+
 					$id=$webuser['id'];
 					$idMsg=addMsg($pdoBt,$id,$rbt,$mag);
-					$mailtoInfo="btlecest.portailweb.informatique@btlec.fr";
-				 	// $mailtoInfo="valerie.montusclat@btlec.fr";
+
+
+					// $mailtoInfo="btlecest.portailweb.informatique@btlec.fr";
+				 	$mailtoInfo="valerie.montusclat@btlec.fr";
 					$subject="PORTAIL BTLEC Est - demande d'identifiants - magasin " . $mag;
 					$tplIdent='public/mail/demande_identifiants.tpl.html';
 					$content="";
