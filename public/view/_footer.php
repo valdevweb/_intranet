@@ -1,7 +1,4 @@
 <!-- footer -->
-<div class="row center white">
-   <img class="logoBt" src="<?=ROOT_PATH ?>/public/img/navbar/logo-bt-mini.jpg">
-</div>
   <footer class="page-footer light-blue darken-4">
     <div class="container">
       <div class="row nobottom">
