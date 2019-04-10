@@ -1,4 +1,16 @@
 <?php
+// fonction pour vérifier les droits utilisateur
+function isUserAllowed($pdoUser, $params)
+{
+	$session=$_SESSION['id'];
+	$placeholders=implode(',', array_fill(0, count($params), '?'));
+	$req=$pdoUser->prepare("SELECT login FROM attributions WHERE id_droit IN($placeholders) AND id_user=$session" );
+	$req->execute($params);
+	 return $req->fetchAll(PDO::FETCH_ASSOC);
+
+}
+
+
 
 //determine si un user (id de la table web user appartient à un grou^pe
 function isUserInGroup($pdoBt,$idWebuser,$groupName)
@@ -10,40 +22,37 @@ function isUserInGroup($pdoBt,$idWebuser,$groupName)
 	));
 	return $req->rowCount();
 }
+// accès reversement : admin, compta, rev
+$revIds=array(5,7,8);
+$d_rev=isUserAllowed($pdoUser,$revIds);
+// accès comm : admin, comm
+$comIds=array(5,6);
+$d_comm=isUserAllowed($pdoUser,$comIds);
+// accès exploit : admin
+$exploitIds=array(5);
+$d_exploit=isUserAllowed($pdoUser,$exploitIds);
+// accès conseil : admin, consultation conseil,exploit conseil, inscription
+$conseilIds=array(5,9,10,27);
+$d_conseil=isUserAllowed($pdoUser,$conseilIds);
+// accès contactez nos services : compte mag
+$magIds=array(2);
+$d_mag=isUserAllowed($pdoUser,$magIds);
+//accès lcom user (lecture uniquement)
+$lcomUserIds=array(43,44);
+$d_lcomUser=isUserAllowed($pdoUser,$lcomUserIds);
+//accès lcom admin : luc et amenet
+$lcomAdminIds=array(44);
+$d_lcomAdmin=isUserAllowed($pdoUser,$lcomAdminIds);
 
-// affichage ou non de la page de téléchargement des documents
-$idUser=$_SESSION['id'];
-if (isUserInGroup($pdoBt,$idUser,"communication"))
-{
-	$uploadDocument=true;
-	$exploit=false;
-	$conseil=false;
+$tempSavIds=array(62);
+$d_tempSav=isUserAllowed($pdoUser,$tempSavIds);
 
-}
-elseif(isUserInGroup($pdoBt,$idUser,"admin"))
-{
-	$uploadDocument=true;
-	$exploit=true;
-	$conseil=true;
-}
-elseif(isUserInGroup($pdoBt,$idUser,"admin_conseil"))
-{
-	$uploadDocument=false;
-	$exploit=false;
-	$conseil=true;
-}
-elseif(isUserInGroup($pdoBt,$idUser,"conseil"))
-{
-	$uploadDocument=false;
-	$exploit=false;
-	$conseil=true;
-}
-else
-{
-	$uploadDocument=false;
-	$exploit=false;
-	$conseil=false;
-}
+$magSocamilIds=array(66,5);
+$d_Socamil=isUserAllowed($pdoUser,$magSocamilIds);
+
+$litigeBtIds=array(69);
+$d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
+
 ?>
 <div id='cssmenu'>
 	<ul>
@@ -77,6 +86,7 @@ else
 						<li data-module="17"><a href="<?= $contact?>gt=qual">qualité</a></li>
 				 </ul>
 			 </li>
+
 			 <?php
 			 	$magNav=ob_get_contents();
 			 	ob_end_clean();
@@ -148,76 +158,156 @@ else
 				 {
 				 	echo $magtest;
 				 }
-				 elseif($_SESSION['type']=="mag" || $_SESSION['type']=="scapsav" || $_SESSION['type']=="centrale" || $_SESSION['type']=="" || $_SESSION['type']=="adh")
+				 // elseif($_SESSION['type']=="mag" || $_SESSION['type']=="scapsav" || $_SESSION['type']=="centrale" || $_SESSION['type']=="" || $_SESSION['type']=="adh")
+				 elseif($d_mag)
 				 {
 				 	echo $magNav;
+
 				 }
-				 elseif ($_SESSION['type']=="btlec")
+				 if ($_SESSION['type']=="btlec")
 				 {
 				 	echo $bt;
+
 				 }
 				 else
 				 {
+
 					//sinon rien !!!
 				 }
+
+				 ob_start()
 			?>
+
+			 <li class='has-sub'><a href="#"><span>Litiges</span></a>
+			 	<ul>
+			 		<li><a href="#">----------MAG---------------</a></li>
+			 		<li><a href="<?= ROOT_PATH?>/public/litiges/basic-declaration.php">Déclaration de litige</a></li>
+			 		<li><a href="<?= ROOT_PATH?>/public/litiges/mag-litige-listing.php">Mes litiges</a></li>
+			 		<li><a href="#">----------BT---------------</a></li>
+			 		<li><a href="<?= ROOT_PATH?>/public/litiges/bt-declaration-basic.php">Déclarer un litige pour un magasin</a></li>
+			 		<li><a href="<?= ROOT_PATH?>/public/litiges/bt-litige-encours.php">Litiges en cours</a></li>
+			 		<li><a href="<?= ROOT_PATH?>/public/litiges/stat-litige-mag.php">Réclamations par magasin</a></li>
+			 		<li><a href="<?= ROOT_PATH?>/public/litiges/exploit-ltg.php">Exploitation</a></li>
+
+			 	</ul>
+			 </li>
+			<?php
+			$litiges=ob_get_contents();
+			ob_end_clean();
+			if($d_litigeBt){
+				echo $litiges;
+			}
+
+ 			?>
+
 			<!-- section sans sous menu -->
 			<li><a href="<?= ROOT_PATH. '/public/entrepot/discover.php'?>"><span>Entrepôt</span></a></li>
 
 			<li><a href="<?= ROOT_PATH. '/public/gazette/gazette.php'?>" >Les gazettes</a></li>
-			<li  class='active has-sub'><a href="<?= ROOT_PATH. '/public/doc/display-doc.php'?>" >documents</a>
+			<li  class='active has-sub'><a href="#" >documents</a>
 				<ul>
-					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#odr-title'?>">ODR</a></li>
-					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#tel-title'?>">TEL/BRII</a></li>
-					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#panier-title'?>">Panier Promo</a></li>
-					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#assortiment-title'?>">Assortiment</a></li>
-					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#mdd-title'?>">MDD</a></li>
-					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#gfk-title'?>">GFK</a></li>
-					<li><a href="<?= ROOT_PATH. '/public/doc/extralec.php'?>">Application Extralec</a></li>
-					<li><a href="<?= ROOT_PATH. '/public/doc/plancom2019.php'?>">Plan de Comm OP BTLec 2019</a></li>
-					<li><a href="<?= ROOT_PATH. '/public/doc/kitaffiche.php'?>">Kit affiches OP BTLec</a></li>
-					<li><a href="<?= ROOT_PATH. '/public/doc/convention.php'?>">Convention 2018</a></li>
-					<?php
-					$exceptSocara="<li><a href='".ROOT_PATH ."/public/infos/twentyfour.php#plv'>PLV 48h</a></li>";
-					if(!isset($_SESSION['centrale']))
-					{
-						echo $exceptSocara;
-					}
-					else
-					{
-						if($_SESSION['centrale'] !="SOCARA")
-						{
-							echo $exceptSocara;
-						}
-					}
-					?>
-				<?php
-					$btdoc="<li><a href='".ROOT_PATH."/public/doc/upload-main.php'>Ajouter des documents</a></li>";
-					if($uploadDocument){
-						echo $btdoc;
-					}
-				?>
+					<li class='has-sub'><a href="<?= ROOT_PATH. '/public/doc/display-doc.php'?>">Achats</a>
+						<ul>
+
+								<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#odr-title'?>">ODR</a></li>
+								<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#tel-title'?>">TEL/BRII</a></li>
+								<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#assortiment-title'?>">Assortiment et panier Promo</a></li>
+								<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#mdd-title'?>">MDD</a></li>
+								<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#gfk-title'?>">GFK</a></li>
+						</ul>
+					</li>
+						<li class='has-sub'><a href="#">Communication</a>
+							<ul>
+								<li><a href="<?= ROOT_PATH. '/public/doc/plancom2019.php'?>">Plan de Comm OP BTLec 2019</a></li>
+								<li><a href="<?= ROOT_PATH. '/public/doc/kitaffiche.php'?>">Kit affiches OP BTLec</a></li>
+								<?php
+								$exceptSocara="<li><a href='".ROOT_PATH ."/public/infos/twentyfour.php#plv'>PLV 48h</a></li>";
+								if(!isset($_SESSION['centrale']))
+								{
+									echo $exceptSocara;
+								}
+								else
+								{
+									if($_SESSION['centrale'] !="SOCARA")
+									{
+										echo $exceptSocara;
+									}
+								}
+								?>
+							</ul>
+						</li>
+						<li class='has-sub'><a href="#">Comptabilité</a>
+							<ul>
+								<?php
+								$a_rev="<li><a href='".ROOT_PATH."/public/doc/exploit_rev.php'>Exploit reversements</a></li>";
+								if($d_rev)
+								{
+									echo $a_rev;
+								}
+								 ?>
+								<li><a href="<?= ROOT_PATH. '/public/doc/histo_rev.php'?>">Reversements</a></li>
+
+							</ul>
+						</li>
+						<li><a href="<?= ROOT_PATH. '/public/doc/doris.php'?>">Doris</a></li>
+						<li><a href="<?= ROOT_PATH. '/public/doc/extralec.php'?>">Application Extralec</a></li>
+						<li><a href="<?= ROOT_PATH. '/public/doc/convention.php'?>">Convention 2018</a></li>
+							<?php
+
+								$btdoc="<li><a href='".ROOT_PATH."/public/doc/upload-main.php'>Ajouter des documents</a></li>";
+								if($d_comm)
+								{
+									echo $btdoc;
+								}
+
+							?>
+						<li><a href="<?= ROOT_PATH. '/public/doc/flash-add.php'?>">Ajouter une info flash</a></li>
+
+
 				 </ul>
 			</li>
 			<?php
 			//ajout menu exploitation salon
 			$exploitNav="<li class='active has-sub'><a href='".ROOT_PATH. "/public/exploit/connexion.php' ><span>Exploit</span></a>";
 			$exploitNav.="<ul><li><a href='".ROOT_PATH."/public/salon/salon.php'><span>Salon</span></a></li>";
+			$exploitNav.="<li><a href='".ROOT_PATH."/public/salon/inscription.php'><span>Salon inscription 2018</span></a></li>";
+			$exploitNav.="<li><a href='".ROOT_PATH."/public/doc/flash-validation.php'><span>Suivi des infos flash</span></a></li>";
+			$exploitNav.="<li><a href='".ROOT_PATH."/public/exploit/upload-adh.php'><span>Upload documents Adhérents</span></a></li>";
 			$exploitNav.="<li><a href='".ROOT_PATH."/public/exploit/connexion.php'><span>Suivi magasins</span></a></li></ul></li>";
-			if($exploit)
+			$lcomUserNav="<li class='active has-sub'><a href='#' title='espace LCommerce - documents' ><span>LCommerce</span></a>";
+			$lcomUserNav.="<ul><li><a href='".ROOT_PATH."/public/lcom/doc-lcom.php'><span>Documents</span></a></li>";
+			$lcomAdminNav="<li><a href='".ROOT_PATH."/public/lcom/upload-lcom.php'><span>Ajout de documents</span></a></li>";
+			$lcomAdminNav.="<li><a href='".ROOT_PATH."/public/lcom/move-lcom.php'><span>Gérer les documents</span></a></li></ul></li>";
+
+			if($d_exploit)
 			{
 			echo $exploitNav;
 			}
-			//menu conseil
-			if($conseil)
+
+			if($d_lcomUser && !$d_lcomAdmin)
 			{
-			$conseilNav="<li><a href='http://172.30.92.53/".$version."conseil/home.php' class='tooltipped' data-position='bottom' data-tooltip='Conseil'><span>Conseil</span></a></li>";
+				echo $lcomUserNav .'</ul></li>';
+			}
+			elseif ($d_lcomAdmin)
+			{
+				echo $lcomUserNav;
+				echo $lcomAdminNav;
+			}
+
+			//menu conseil
+			if($d_conseil)
+			{
+			$conseilNav="<li class='has-sub'><a href='http://172.30.92.53/".$version."conseil/home.php' class='tooltipped' data-position='bottom' data-tooltip='Réservé adhérents / conseil'><span>adhérents</span></a>";
+			$conseilNav.="<ul><li><a href='http://172.30.92.53/".$version."conseil/home.php' class='tooltipped' data-position='bottom' data-tooltip='Conseil'><span>Conseil</span></a></li>";
+			$conseilNav.="<li><a href='".ROOT_PATH."/public/exploit/doc-adh.php' class='tooltipped' data-position='bottom' data-tooltip='documents réservés adhérents'><span>Documents</span></a></li></ul>";
+			$conseilNav.='</li>';
+
 			echo $conseilNav;
 			}
 			?>
-			<li><a href="http://172.30.92.53/scapsav/intranet/magasin.php" class="tooltipped" data-position="bottom" data-tooltip="aller sur le site scapsav">Site Scapsav</a></li>
+			<li><a href="http://172.30.92.53/<?=$version?>sav/scapsav/home.php" class="tooltipped" data-position="bottom" data-tooltip="site du portail SAV">Portail SAV</a></li>
 			<li><a href="<?= ROOT_PATH ?>/public/user/profil.php" class="tooltipped" data-position="bottom" data-tooltip="Votre compte"><span><i class="fa fa-user"></i></span></a></li>
 			<li><a href="<?= ROOT_PATH ?>/public/logoff.php" class="tooltipped" data-position="bottom" data-tooltip="se déconnecter"><span><i class="fa fa-power-off"></i></span></a></li>
-	 </ul>
+			 </ul>
 </div>
 
