@@ -22,7 +22,7 @@ function getAllDossier($pdoLitige)
 		FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
-		ORDER BY dossiers.id DESC");
+		ORDER BY dossiers.dossier DESC");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
