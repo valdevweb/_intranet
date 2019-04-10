@@ -47,6 +47,8 @@ $message = (new Swift_Message($subject))
 ->addBcc('valerie.montusclat@btlec.fr');
 		// ->attach($attachmentPdf)
 		// ->attach(Swift_Attachment::fromPath('demande-culturel.xlsx'));
+// ou
+// ->setBcc([adress@btl.fr, adresse@bt.fr])
 
 // echec => renvoie 0
 $delivered=$mailer->send($message);
@@ -55,7 +57,35 @@ if($delivered >0)
 }
 
 
+
+
+
+
+
+//  Pass a variable name to the send() method
+if (!$mailer->send($message, $failures))
+{
+  echo "Failures:";
+  print_r($failures);
+}
+
+/*
+Failures:
+Array (
+  0 => receiver@bad-domain.org,
+  1 => other-receiver@bad-domain.org
+)
+*/
+
+
+
+
 ?>
+
+
+
+
+
 <!-- exemple mail -->
 
 

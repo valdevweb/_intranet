@@ -20,6 +20,8 @@ require "../functions/ld.fn.php";
 
 		$mpdf = new \Mpdf\Mpdf();
 		$mpdf->WriteHTML($html);
+
+
 		$pdfContent = $mpdf->Output('', 'S');
 		// $pdfContent = $mpdf->Output();
 		$filename='demande de rétrocession - ' .$magFrom['deno'].' vers '.$magDdeur['deno'] . '.pdf';
@@ -62,3 +64,14 @@ require "../functions/ld.fn.php";
 // 		// ->attach(Swift_Attachment::fromPath('demande-culturel.xlsx'));
 
 		$mailer->send($message);
+
+
+
+
+
+		// LES OPTIONS
+		//
+		//
+		//
+		// 		//CHANGER L ORIENTATION
+		// $mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);

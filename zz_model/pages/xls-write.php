@@ -10,8 +10,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 // ------------------------------------
 // JULIE
-$spreadsheetJulie = new Spreadsheet();
-$sheet = $spreadsheetJulie->getActiveSheet();
+$spreadsheet = new Spreadsheet();
+$sheet = $spreadsheet->getActiveSheet();
 $sheet->setCellValue('A1', 'Centrale');
 $sheet->setCellValue('B1', 'Magasin');
 $sheet->setCellValue('C1', 'Numéro de retour');
@@ -38,12 +38,12 @@ for ($i=0; $i < sizeof($cols) ; $i++)
 	$sheet->getColumnDimension($cols[$i])->setAutoSize(true);
 }
 $sheet->setTitle('Artemis');
-$writer = new Xlsx($spreadsheetJulie);
+$writer = new Xlsx($spreadsheet);
 $writer->save('demande-artemis-julie.xlsx');
 
 // pour lancer le téléchargement sur le poste client
 
-$writer = new Xlsx($spreadsheetJulie);
+$writer = new Xlsx($spreadsheet);
 $writer->save('plan navette.xlsx');
 header('Content-Type: application/vnd.ms-excel');
 header('Content-Disposition: attachment; filename="export.xlsx"');
@@ -52,4 +52,42 @@ exit;
 
 
 
+
+OPTION
+
+
+
+$styleArray = [
+		'font' => [
+			'bold' => true,
+			'color'=>['rgb'=>'FFFFFF']
+		],
+		'borders' => [
+			'top' => [
+				'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+			],
+		],
+		'fill' => [
+			'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+			'color' => [
+				'rgb' => '0075BC',
+			],
+		],
+	];
+	$spreadsheet->getActiveSheet()->getStyle('A1:C1')->applyFromArray($styleArray);
+	$colBStyle=[
+		'alignment' =>[
+			'wrapText' => true]
+		];
+		$spreadsheet->getActiveSheet()->getStyle('B2:B1000')->applyFromArray($colBStyle);
+
+
+
+
+
+
+
  ?>
+
+
+
