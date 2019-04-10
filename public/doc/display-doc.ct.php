@@ -1,10 +1,16 @@
 <div class="container">
-	<img src="../img/documents/analytics.png">
+	<div class="row shadow-sm bg-white rounded border p-2">
+	<div class="col">
+		<p class="text-center"><img src="../img/documents/analytics.png"></p>
+		</div>
+	</div>
+	<div class="row shadow-sm bg-white rounded border p-2">
 
-	<h1 class="blue-text text-darken-4">Vos documents</h1>
-	<div class="row">
+
 		<!-- colonne gauche -->
 		<div class="col-sm-12 col-md-10">
+		<h1 class="blue-text text-darken-4">Vos documents</h1>
+
 			<!-- ****************************************** -->
 			<!-- 			SECTION ODR 		 			-->
 			<!-- ****************************************** -->
@@ -23,22 +29,18 @@
 			<!-- 			SECTION ASSORTIMENT 			-->
 			<!-- ****************************************** -->
 			<?php
-				ob_start()
+			ob_start()
 			?>
-			<h4 class="blue-text text-darken-4" id="assortiment-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>L'assortiment :</h4>
-			<p>- <a href="<?= $path .$assortiment['file']."?".date("Y-m-d H:i:s")?>" target="_blank">l'assortiment du <?= $assortiment['datefull']?></a> </p>
+			<h4 class="blue-text text-darken-4" id="assortiment-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>L'assortiment et le panier promo :</h4>
+			<p>- <a href="<?= $path .$assortiment['file']."?".date("Y-m-d H:i:s")?>" target="_blank">l'assortiment et le panier promo du <?= $assortiment['datefull']?></a> </p>
 			<?php
-				$assortimentDisplay=ob_get_contents();
-				ob_end_clean();
-				 if(isset($assortiment['file'])){
-				 	echo $assortimentDisplay;
-				 }
-			 ?>
-			<!-- ****************************************** -->
-			<!-- 			SECTION PANIER PROMO 			-->
-			<!-- ****************************************** -->
-			<h4 class="blue-text text-darken-4" id="panier-title"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Le panier promo :</h4>
-			<p>- <a href="<?= $path .$panier['file']."?".date("Y-m-d H:i:s")?>" target="_blank">le panier promo du <?= $panier['datefull']?></a> </p>
+			$assortimentDisplay=ob_get_contents();
+			ob_end_clean();
+			if(isset($assortiment['file'])){
+				echo $assortimentDisplay;
+			}
+			?>
+
 			<!-- ****************************************** -->
 			<!-- 			SECTION MDD 			-->
 			<!-- ****************************************** -->
@@ -72,22 +74,20 @@
 					<a class="nav-link" href="#tel-title">Tickets / BRII</a>
 				</li>
 				<!--  ASSORTIMENT -->
-			<?php
+				<?php
 				ob_start()
-			?>
+				?>
 				<li class="nav-item">
-					<a class="nav-link" href="#assortiment-title">Assortiment</a>
+					<a class="nav-link" href="#assortiment-title">Assortiment et panier promo</a>
 				</li>
-			<?php
+				<?php
 				$assortimentTitle=ob_get_contents();
 				ob_end_clean();
 				if(isset($assortiment['file'])){
-				 	echo $assortimentTitle;
+					echo $assortimentTitle;
 				}
-			 ?>
-				<li class="nav-item">
-					<a class="nav-link" href="#panier-title">Panier promo</a>
-				</li>
+				?>
+
 				<!-- END EN ATTENTE -->
 				<li class="nav-item">
 					<a class="nav-link" href="#mdd-title">Point stock MDD</a>
@@ -103,6 +103,6 @@
 
 
 
-<!--*********************************  -->
+	<!--*********************************  -->
 </div> <!--fin container -->
 
