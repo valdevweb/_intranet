@@ -39,6 +39,17 @@ function getSav($pdoSav){
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
+function getUserSavInfo($pdoSav){
+	$req=$pdoSav->prepare("SELECT nom,prenom,sav FROM sav_users WHERE id_web_user= :id_web_user");
+	$req->execute(array(
+		':id_web_user'		=>$_SESSION['id_web_user']
+	));
+
+	return $req->fetch(PDO::FETCH_ASSOC);
+
+
+}
+
 
 /*_____________________________________________________________
 *
@@ -123,7 +134,8 @@ function login($dbUser, $pdoBt,$pdoSav)
 			$_SESSION['id_service']=$btInfo['id_service'];
 			$_SESSION['spe']="yes";
 		}
-		if($_SESSION['type']=="mag" || $_SESSION['type']=="bbj" || $_SESSION['type']=="centrale" || $_SESSION['type']=='scapsav' || $_SESSION['type']=='adh')
+
+		if($_SESSION['type']=="mag" || $_SESSION['type']=="bbj" || $_SESSION['type']=="centrale" || $_SESSION['type']=='adh')
 		{
 			$_SESSION['id_galec']=$web_users['galec'];
 		//recup info mag dans sca3
@@ -138,6 +150,15 @@ function login($dbUser, $pdoBt,$pdoSav)
 		{
 			$magSav=getSav($pdoSav);
 			$_SESSION['sav']=$magSav['sav'];
+
+		}
+		if($_SESSION['type']=='scapsav')
+		{
+			$savInfo=getUserSavInfo($pdoSav);
+			$prenom=$savInfo['prenom'];
+			$nom=$savInfo['nom'];
+			$_SESSION['nom'] = $prenom .' ' .$nom;
+			$_SESSION['sav']=$savInfo['sav'];
 
 		}
 
