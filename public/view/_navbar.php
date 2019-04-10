@@ -87,46 +87,18 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 				 </ul>
 			 </li>
 
+			 <li class='has-sub'><a href="#"><span>Litiges</span></a>
+			 	<ul>
+			 		<!-- <li><a href="<?= ROOT_PATH?>/public/litiges/basic-declaration.php">Déclaration de litige</a></li> -->
+			 		<li><a href="<?= ROOT_PATH?>/public/litiges/mag-litige-listing.php">Mes litiges</a></li>
+			 	</ul>
+			 </li>
+
 			 <?php
 			 	$magNav=ob_get_contents();
 			 	ob_end_clean();
 				//-----------------------------------------------------------------------------------------------------------------
 			 	//						fin menu pour les magasin
-				//-----------------------------------------------------------------------------------------------------------------
-
-			 	//-----------------------------------------------------------------------------------------------------------------
-				//							menu pour le mag de test
-				//-----------------------------------------------------------------------------------------------------------------
-
-			 	ob_start();
-			 ?>
-			<li><a href="<?= ROOT_PATH?>/public/mag/histo-mag.php"><span>Vos demandes</span></a></li>
-			<li class='active has-sub'><a href="#"><span>Contacter nos services</span></a>
-				 <ul>
-						<!-- sous menu niv 1 -->
-						<li data-module="7"><a href="<?= $contact?>gt=brun ">achats brun</a></li>
-						<li data-module="8"><a href="<?= $contact?>gt=gris ">achats gris</a></li>
-						<li data-module="9"><a href="<?= $contact?>gt=pemgem ">achats PEM/GEM</a></li>
-						<li data-module="16"><a href="<?= $contact?>gt=compta ">comptabilité</a></li>
-						<li data-module="10"><a href="<?= $contact?>gt=comm ">communication</a></li>
-						<li data-module="10"><a href="<?= $contact?>gt=cm ">contre-marque</a></li>
-						<li data-module="10"><a href="<?= $contact?>gt=ctrl_gestion">contrôle de gestion</a></li>
-						<li data-module="11"><a href="<?= $contact?>gt=dir ">direction</a></li>
-						<li data-module="12"><a href="<?= $contact?>gt=dircom ">direction commerciale</a></li>
-						<li data-module="13"><a href="<?= $contact?>gt=informatique ">exploitation informatique</a></li>
-						<li data-module="14"><a href="<?= $contact?>gt=logistique ">logistique</a></li>
-						<li data-module="17"><a href="<?= $contact?>gt=litige">litiges livraison</a></li>
-						<li data-module="15"><a href="<?= $contact?>gt=rh">social</a></li>
-						<li data-module="17"><a href="<?= $contact?>gt=qual">qualité</a></li>
-						<li data-module="17"><a href="<?= $contact?>gt=test">test</a></li>
-
-				 </ul>
-			 </li>
-			<?php
-			 	$magtest=ob_get_contents();
-			 	ob_end_clean();
-			 	//-----------------------------------------------------------------------------------------------------------------
-			 	//						fin menu pour le mag test
 				//-----------------------------------------------------------------------------------------------------------------
 
 			 	//-----------------------------------------------------------------------------------------------------------------
@@ -152,14 +124,7 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 			 	//						fin menu pour le bt
 				//-----------------------------------------------------------------------------------------------------------------
 
-
-				 //affichage du tampon en fonction du type de sessions
-				 if($_SESSION['id']==980)
-				 {
-				 	echo $magtest;
-				 }
-				 // elseif($_SESSION['type']=="mag" || $_SESSION['type']=="scapsav" || $_SESSION['type']=="centrale" || $_SESSION['type']=="" || $_SESSION['type']=="adh")
-				 elseif($d_mag)
+				 if($d_mag)
 				 {
 				 	echo $magNav;
 
@@ -174,16 +139,10 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 
 					//sinon rien !!!
 				 }
-
-				 ob_start()
+				 ob_start();
 			?>
-
-			 <li class='has-sub'><a href="#"><span>Litiges</span></a>
+			<li class='has-sub'><a href="#"><span>Litiges</span></a>
 			 	<ul>
-			 		<li><a href="#">----------MAG---------------</a></li>
-			 		<li><a href="<?= ROOT_PATH?>/public/litiges/basic-declaration.php">Déclaration de litige</a></li>
-			 		<li><a href="<?= ROOT_PATH?>/public/litiges/mag-litige-listing.php">Mes litiges</a></li>
-			 		<li><a href="#">----------BT---------------</a></li>
 			 		<li><a href="<?= ROOT_PATH?>/public/litiges/bt-declaration-basic.php">Déclarer un litige pour un magasin</a></li>
 			 		<li><a href="<?= ROOT_PATH?>/public/litiges/bt-litige-encours.php">Litiges en cours</a></li>
 			 		<li><a href="<?= ROOT_PATH?>/public/litiges/stat-litige-mag.php">Réclamations par magasin</a></li>
@@ -199,6 +158,7 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 			}
 
  			?>
+
 
 			<!-- section sans sous menu -->
 			<li><a href="<?= ROOT_PATH. '/public/entrepot/discover.php'?>"><span>Entrepôt</span></a></li>
