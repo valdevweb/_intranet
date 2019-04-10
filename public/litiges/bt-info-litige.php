@@ -51,13 +51,13 @@ function getLitige($pdoLitige)
 }
 function getAffrete($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT * FROM affrete WHERE mask=0");
+	$req=$pdoLitige->prepare("SELECT * FROM affrete WHERE mask=0 ORDER BY affrete");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 function getTransporteur($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT * FROM transporteur WHERE mask=0");
+	$req=$pdoLitige->prepare("SELECT * FROM transporteur WHERE mask=0 ORDER BY transporteur");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -65,7 +65,7 @@ function getTransporteur($pdoLitige)
 
 function getTransit($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT * FROM transit WHERE mask=0");
+	$req=$pdoLitige->prepare("SELECT * FROM transit WHERE mask=0 ORDER BY transit");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }

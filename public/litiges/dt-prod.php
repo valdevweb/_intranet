@@ -29,8 +29,6 @@
 								if($prod['pj']!='')
 								{
 									$pj=createFileLink($prod['pj']);
-										// $pj="jkoezfaji"	;
-
 								}
 								echo '<tr>';
 								echo '<td>'.$prod['article'].'</td>';
@@ -39,7 +37,14 @@
 								echo '<td>'.$prod['fournisseur'].'</td>';
 								echo '<td>'.$prod['reclamation'].'</td>';
 								echo '<td class="text-right">'.$prod['qte_litige'].'</td>';
-								echo '<td class="text-right">'.number_format((float)$valo,2,'.','').'&euro;</td>';
+								if($prod['id_reclamation']==6)
+								{
+									echo '<td class="text-right"> -'.number_format((float)$valo,2,'.','').'&euro;</td>';
+								}
+								else
+								{
+									echo '<td class="text-right">'.number_format((float)$valo,2,'.','').'&euro;</td>';
+								}
 								echo '<td class="text-right">'.$pj.'</td>';
 								echo '</tr>';
 								if($prod['inversion'] !="")

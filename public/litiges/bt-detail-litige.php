@@ -204,8 +204,18 @@ if($fLitige[0]['flag_valo'] == 0)
 		}
 		else
 		{
-			$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
-			$sumValo=$sumValo + $valo;
+			// si excédent
+			if($prod['id_reclamation']==6)
+			{
+				$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
+				$sumValo=$sumValo - $valo;
+
+			}
+			else
+			{
+				$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
+				$sumValo=$sumValo + $valo;
+			}
 		}
 	}
 	// si on a mis le flag à 2, ça veut dir eque l'on a au moins un des articles pour lequel, on a pas le tarif
