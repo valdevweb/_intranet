@@ -101,7 +101,6 @@ if(isset($_POST['submit']))
 		else
 		{
 			$newAction=addAction($pdoLitige);
-
 			if($newAction>0)
 			{
 				header('Location:contrainte.php?contrainte='.$help['id_contrainte'].'&id='.$_GET['id']);
