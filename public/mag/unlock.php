@@ -129,16 +129,9 @@ $replies=showReplies($pdoBt);
 
 if(isset($_GET['id_msg']))
 {
-	// $req=$pdoBt->prepare("SELECT * FROM msg WHERE id= :id_msg");
-	// $req->execute(array(
-	// 	':id_msg'	=>$_GET['id_msg']
-	// ));
 	$infoMsg=getMsgAndServiceDetails($pdoBt);
-		// echo "<pre>";
-		// var_dump($infoMsg);
-		// echo '</pre>';
-
 }
+
 
 if(isset($_POST['submit']))
 {
@@ -239,8 +232,10 @@ if(isset($_POST['submit']))
 				$contentTwo=$_GET['id_msg'];
 				$contentThree=$link;
 				$contentFour=$infoMsg['objet'];
-				$mailingList=$infoMsg['email'];
-				// if(sendMail($mailingList,$objBt,$tplForBtlec,$name,$magName, $link))
+				// $mailingList=$infoMsg['mailing'];
+				$mailingList= $infoMsg['mailing'] .', valerie.montusclat@btlec.fr';
+
+
 				if(sendMailVariablePlaceholder($mailingList,$objBt,$tplForBtlec,$placeholderOne,$contentOne, $placeholderTwo, $contentTwo, $placeholderThree, $contentThree, $placeholderFour, $contentFour))
 
 				{
