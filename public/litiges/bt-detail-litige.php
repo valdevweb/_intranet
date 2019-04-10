@@ -72,7 +72,6 @@ function createFileLink($filelist)
 		}
 	}
 	return $rValue;
-	// return $filelist;
 }
 
 function getInfos($pdoLitige)
