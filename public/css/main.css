@@ -10,14 +10,15 @@ body {
   min-height: 100vh !important;
   flex-direction: column !important;
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e0e0e0+2,eaeaea+16,ffffff+40 */
-  background: #f1f1f1 !important;
+  background: #e1e1e1 !important;
   font-family: verdana, Roboto, 'sans-serif';
 
 }
 
 
 /* khand-regular - latin */
-@font-face {
+@font-face
+{
   font-family: 'Khand';
   font-style: normal;
   font-weight: 400;
@@ -30,11 +31,72 @@ body {
   url('../../vendor/fonts/khand-v6-latin-regular.svg#Khand') format('svg'); /* Legacy iOS */
 }
 
+.bg-white{
+  background: white;
+}
+.bg-alert{
+   padding: .75rem 1.25rem;
+   margin-bottom: 1rem;
+   border: 1px solid transparent;
+   border-radius: .25rem;
+}
+/* #f57c00 */
+.bg-alert-orange
+{
+    color: #6c3700;
+    background-color: #fff0e1;
+    border-color: #ffca93;
+}
 
 
+.bg-alert-primary
+{
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
+}
+.bg-alert-grey
+{
+    color: #383d41;
+    background-color: #e2e3e5;
+    border-color: #d6d8db;
+}
 
+.bg-alert-green
+{
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
 
+.bg-alert-red
+{
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
 
+.bg-alert-yellow
+{
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.bg-alert-info
+{
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+.bg-alert-white
+{
+    color: #818182;
+    background-color: #fefefe;
+    /* border-color: #fdfdfe; */
+    border-color: #d6d8db;
+
+}
 
 
 
