@@ -1,0 +1,97 @@
+<?php
+
+ // require('../../config/pdo_connect.php');
+require('../../config/autoload.php');
+if(!isset($_SESSION['id'])){
+	echo "pas de variable session";
+	header('Location:'. ROOT_PATH.'/index.php');
+}
+//			css dynamique
+//----------------------------------------------------------------
+$pageCss=explode(".php",basename(__file__));
+$pageCss=$pageCss[0];
+$cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
+
+require_once  '../../vendor/autoload.php';
+
+//------------------------------------------------------
+//			FONCTION
+//------------------------------------------------------
+
+function getMagLitiges($pdoLitige)
+{
+	$req=$pdoLitige->prepare("SELECT dossier,DATE_FORMAT(date_crea,'%d-%m-%Y')as datecrea, typo, imputation, etat, tablegt.gt, valo, analyse, conclusion, mt_transp, mt_assur, mt_fourn, mt_mag, btlec.sca3.mag, btlec.sca3.btlec  FROM dossiers
+		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
+		LEFT JOIN typo ON dossiers.id_typo=typo.id
+		LEFT JOIN imputation ON dossiers.id_imputation=imputation.id
+		LEFT JOIN gt as tablegt ON dossiers.id_gt=tablegt.id
+		LEFT JOIN etat ON dossiers.id_etat=etat.id
+		LEFT JOIN gt ON dossiers.id_gt=gt.id
+		LEFT JOIN analyse ON dossiers.id_analyse=analyse.id
+		LEFT JOIN conclusion ON dossiers.id_conclusion=conclusion.id
+
+
+
+		WHERE dossiers.galec= :galec");
+	$req->execute(array(
+		':galec'	=>$_GET['galec']
+	));
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+$listLitige=getMagLitiges($pdoLitige);
+$nbLitiges=count($listLitige);
+$valoTotal=0;
+foreach ($listLitige as $litige)
+{
+	$valoTotal=$valoTotal+$litige['valo'];
+}
+$valoTotal=number_format((float)$valoTotal,2,'.','');
+
+
+
+		ob_start();
+		include('pdf-stat-litige-mag.php');
+		$html=ob_get_contents();
+		ob_end_clean();
+
+		$mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
+		$mpdf->WriteHTML($html);
+		// $pdfContent = $mpdf->Output('', 'S');
+		$pdfContent = $mpdf->Output();
+
+
+//------------------------------------------------------
+//			DECLARATIONS
+//------------------------------------------------------
+$errors=[];
+$success=[];
+
+//------------------------------------------------------
+//			VIEW
+//------------------------------------------------------
+include('../view/_head-bt.php');
+include('../view/_navbar.php');
+?>
+<!--********************************
+DEBUT CONTENU CONTAINER
+*********************************-->
+<div class="container">
+	<h1 class="text-main-blue py-5 ">Main title</h1>
+
+	<div class="row">
+		<div class="col-lg-1"></div>
+		<div class="col">
+			<?php
+			include('../view/_errors.php');
+			?>
+		</div>
+		<div class="col-lg-1"></div>
+	</div>
+
+
+	<!-- ./container -->
+</div>
+
+<?php
+require '../view/_footer-bt.php';
+?>
