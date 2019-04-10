@@ -331,7 +331,7 @@ DEBUT CONTENU CONTAINER
 				<p  class="text-center heavy alert-title-grey">Résultats :</p>
 				<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">1</span>Sélectionnez le ou les articles sur lesquels vous avez un litige à déclarer</p>
 				<div class="alert alert-light">
-				<p class="text-main-blue">Si la palette entière est concernée par la litige, merci de cocher ci dessous l'option "palette entière"</p>
+				<p class="text-main-blue">Si la palette entière est concernée par le litige, merci de cocher ci dessous l'option "palette entière"</p>
 					<div class="form-check">
 							<input type="checkbox" class="form-check-input" id="checkpalette" name="palette_complete">
 							<label class="form-check-label" for="checkAll">Palette entière</label>
