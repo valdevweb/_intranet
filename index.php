@@ -1,12 +1,42 @@
 <?php
 
 require('config/autoload.php');
-$okko= 'version : ' . ROOT_PATH  .', db  : '.$pdo_file;
 require 'functions/stats.fn.php';
 
 // on connecte l'utilisateur et recup $_SESSION['id']=$id (id web_user) et $_SESSION['user']=$_POST['login'];
 require('functions/login.fn.php');
 $err='';
+/*---------------------------------------------------------------------*/
+/* 						détection navigateur     							*/
+/*---------------------------------------------------------------------*/
+
+$thisAGENT = $_SERVER['HTTP_USER_AGENT'];
+$findme    = 'MSIE';
+$pos1 = stripos($thisAGENT, $findme);
+$pos2 = stripos($thisAGENT, 'Trident');
+
+if ($pos1 !== false)
+{
+	echo '<h1 style="font-family: arial, sans-serif; text-align: center">Votre navigateur n\'est pas compatible avec les portails BTLec et SAV.<br>veuillez utiliser Google Chrome</h1><br>';
+	echo '<center><img  style="text-align-center" src="public/img/index/chrome.png"></center>';
+	echo '<h1 style="font-family: arial, sans-serif; text-align: center">Ou Mozilla Firefox</h1>';
+	echo '<center><img  style="text-align-center" src="public/img/index/firefox.png"></center>';
+	echo '<h1 style="font-family: arial, sans-serif; text-align: center">Merci de votre compréhension<br><br></h1>';
+	exit;
+}
+elseif($pos2 !==false)
+{
+	echo '<h1 style="font-family: arial, sans-serif; text-align: center">Votre navigateur n\'est pas compatible avec les portails BTLec et SAV.<br>veuillez utiliser Google Chrome</h1><br>';
+	echo '<center><img  style="text-align-center" src="public/img/index/chrome.png"></center>';
+	echo '<h1 style="font-family: arial, sans-serif; text-align: center">Ou Mozilla Firefox</h1>';
+	echo '<center><img  style="text-align-center" src="public/img/index/firefox.png"></center>';
+	echo '<h1 style="font-family: arial, sans-serif; text-align: center">Merci de votre compréhension<br><br></h1>';
+	exit;
+}
+
+
+
+
 if(!empty( $_SERVER['QUERY_STRING']))
 {
 		//on met le goto dans champ cahcé du formulaire et la fonction de login recupère la valeur $_POST['goto'] pour la mettre dans session
@@ -110,14 +140,11 @@ if(!empty($revRes))
 				?>
 				<!-- flashs info -->
 				<div class="row infos mt-5">
-					<!-- <div class="col"></div> -->
 					<div class="col">
 						<hr>
-						<!-- <p class="text-white "><i class="fa fa-exclamation pr-2" aria-hidden="true"></i> FLASH INFOS</p> -->
 					</div>
-					<!-- <div class="col"></div> -->
 				</div>
-				<div class="row infos">
+			<!-- 	<div class="row infos">
 					<div class="col-1"></div>
 					<i class="pin"></i>
 					<div class="col px-5 inside-infos">
@@ -127,14 +154,30 @@ if(!empty($revRes))
 						<p class="text-left">Vous pouvez retrouver les dates des virements avec le type de reversement dans le menu : documents/Compta/reversements</p>
 					</div>
 					<div class="col-1"></div>
+				</div> -->
+					<!-- <div class="row infos">
+					<div class="col-1"></div>
+					<i class="pin"></i>
+					<div class="col px-5 inside-infos">
+						<p class="center-text pt-2"><i class="fa fa-bell fa-lg" aria-hidden="true"></i></p>
+						<h4 class="orange-text text-darken-3 text-center">Attention :</h4>
+						<p class="text-center"><b>Les lundi 24 et 31 décembre</b></p>
+						<p class="text-left">Pas de commandes 24/48H disponibles en raison du jour férié le lendemain.</p>
+					</div>
+					<div class="col-1"></div>
 				</div>
-				<!-- fin d'info1 -->
-				<!-- flash info auto si reversement -->
-				<?php echo isset($infoRev) ? $infoRev:"";?>
+			-->
 
 
-			</div>
+
+
+			<!-- fin d'info1 -->
+			<!-- flash info auto si reversement -->
+			<?php echo isset($infoRev) ? $infoRev:"";?>
+
+
 		</div>
+	</div>
 	<!-- 	<div class="row no-gutters bg-white logo-line">
 			<div class="col no-gutters">
 				<img id="logo-bt" src="public/img/index/bttransfull.png">
@@ -151,6 +194,7 @@ if(!empty($revRes))
 
 	<div class="modal" id="connexion">
 		<div class="modal-content">
+			<p class="text-center text-primary">Portails BT et SAV</p>
 			<form action="<?php echo $_SERVER['PHP_SELF'];?>"  method="post">
 				<div class="modal-form-row">
 					<div class="input-field">
