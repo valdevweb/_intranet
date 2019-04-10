@@ -20,3 +20,4 @@ $pdoStat= connectToDb('stats');
 // dev
 $pdoBt=connectToDb('btlec');
 $pdoSav=connectToDb('sav');
+$pdoLitige=connectToDb('litige');
