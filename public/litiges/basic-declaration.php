@@ -156,7 +156,7 @@ if(isset($_POST['choose']))
 //  on ne veut récuperer que les id donc on supprime les valeurs des champ submit, date, etc
 	foreach ($_POST as $key => $value)
 	{
-		if($key!='choose' && $key!='selectAll' && $key!='rapid' && $key !='nom' && $key !='date_bt' && $key != 'num_dossier_form')
+		if($key!='choose' && $key!='selectAll' && $key!='rapid' && $key !='nom' && $key !='date_bt' && $key != 'num_dossier_form' && $key != 'palette_complete')
 		{
 			$ids[]=$key;
 		}
@@ -229,9 +229,13 @@ if(isset($_POST['choose']))
 			}
 
 		}
-		if($added>0)
+		if($added>0 && !isset($_POST['palette_complete']))
 		{
 			header('Location:declaration-detail.php?id='.$lastInsertId);
+		}
+		elseif ($added>0 && isset($_POST['palette_complete']))
+		{
+			 header('Location:declaration-detail-palette.php?id='.$lastInsertId);
 		}
 	}
 }
@@ -326,6 +330,15 @@ DEBUT CONTENU CONTAINER
 				<p class="text-center alert-title-grey">Votre recherche : <span class="text-main-blue">"<?=  isset($searchStr) ? $searchStr : '' ?>"</span></p>
 				<p  class="text-center heavy alert-title-grey">Résultats :</p>
 				<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">1</span>Sélectionnez le ou les articles sur lesquels vous avez un litige à déclarer</p>
+				<div class="alert alert-light">
+				<p class="text-main-blue">Si la palette entière est concernée par la litige, merci de cocher ci dessous l'option "palette entière"</p>
+					<div class="form-check">
+							<input type="checkbox" class="form-check-input" id="checkpalette" name="palette_complete">
+							<label class="form-check-label" for="checkAll">Palette entière</label>
+						</div>
+
+				</div>
+
 				<!-- <p class="text-main-blue font-italic closer"><i class="fas fa-info-circle"></i>Vous pouvez trier les résultats en cliquant sur les entêtes de colonne</p> -->
 				<div class="alert alert-light"><i class="fas fa-info-circle pr-3"></i>Vous pouvez trier les résultats en cliquant sur les entêtes de colonne</div>
 
@@ -353,7 +366,7 @@ DEBUT CONTENU CONTAINER
 							echo'<td>'.$sResult['article'].'</td>';
 							echo'<td>'.$sResult['libelle'].'</td>';
 							echo'<td>';
-							echo '<div class="form-check"><input class="form-check-input" type="checkbox" name="'.$sResult['id'].'"></div>';
+							echo '<div class="form-check article"><input class="form-check-input" type="checkbox" name="'.$sResult['id'].'"></div>';
 							echo '</td></tr>';
 
 						}
@@ -447,6 +460,10 @@ DEBUT CONTENU CONTAINER
 	<script src="../js/sorttable.js"></script>
 	<script type="text/javascript">
 		$("#checkAll").click(function () {
+			$('.article input:checkbox').not(this).prop('checked', this.checked);
+			// $('input:checkbox').(#checkpalette).prop('unchecked', this.checked);
+		});
+		$("#checkpalette").click(function () {
 			$('input:checkbox').not(this).prop('checked', this.checked);
 		});
 		$("#choose").click(function() {
