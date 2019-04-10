@@ -5,3 +5,8 @@ padding-right: 5px;
 .warning{
 	color: red;
 }
+
+
+.brown, .grey {
+	color : #fff !important;
+}

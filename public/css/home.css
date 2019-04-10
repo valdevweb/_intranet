@@ -27,7 +27,18 @@ a.stat-link:hover{
 }
 
 
-
+.fa.fa-info-circle{
+	padding-right: 20px;
+	line-height: 30px;
+	vertical-align: middle;
+}
+.info{
+	padding-top:  10px;
+	line-height: 30px;
+}
+.detail{
+	padding-left: 35px;
+}
 .fa.fa-angle-double-right{
 	padding-right: 10px;
 }
@@ -77,4 +88,17 @@ font-size: 40px;
 #inside-info{
 	padding: 30px 50px 0 200px;
 	text-align: justify;
+}
+
+.p-5{
+	padding: 0 10px 10px;
+}
+
+.no-margin-bottom{
+	margin :0 !important;
+	padding:0 !important;
+}
+
+.no-neg{
+
 }
