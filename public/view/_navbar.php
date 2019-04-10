@@ -269,8 +269,8 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 			<?php
 			//ajout menu exploitation salon
 			$exploitNav="<li class='active has-sub'><a href='".ROOT_PATH. "/public/exploit/connexion.php' ><span>Exploit</span></a>";
-			$exploitNav.="<ul><li><a href='".ROOT_PATH."/public/salon/salon.php'><span>Salon</span></a></li>";
-			$exploitNav.="<li><a href='".ROOT_PATH."/public/salon/inscription.php'><span>Salon inscription 2018</span></a></li>";
+			$exploitNav.="<ul><li><a href='".ROOT_PATH."/public/salon/stats-salon-2018.php'><span>Stats Salon 2018</span></a></li>";
+			$exploitNav.="<li><a href='".ROOT_PATH."/public/salon/inscription-2018.php'><span>Salon inscription 2018</span></a></li>";
 			$exploitNav.="<li><a href='".ROOT_PATH."/public/doc/flash-validation.php'><span>Suivi des infos flash</span></a></li>";
 			$exploitNav.="<li><a href='".ROOT_PATH."/public/exploit/upload-adh.php'><span>Upload documents Adhérents</span></a></li>";
 			$exploitNav.="<li><a href='".ROOT_PATH."/public/exploit/connexion.php'><span>Suivi magasins</span></a></li></ul></li>";
