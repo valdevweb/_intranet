@@ -94,8 +94,6 @@ if($thisLitige[0]['galec'] !=$_SESSION['id_galec'])
 }
 
 $uploadDir= '..\..\..\upload\litiges\\';
-
-
 if(isset($_POST['submit']))
 {
 
