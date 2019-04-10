@@ -11,6 +11,14 @@ if(!isset($_SESSION['id'])){
 $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
+
+
+//------------------------------------------------------
+//			INFOS
+//------------------------------------------------------
+// 0=pas ajoutée, 1 ajoutée et correcte, 2 ajoutée mais incorrecte
+
+
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
@@ -20,7 +28,7 @@ function getLitige($pdoLitige)
 {
 	$req=$pdoLitige->prepare("
 		SELECT
-		dossiers.id as id_main,	dossiers.dossier,dossiers.date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,dossiers.user_crea,dossiers.galec,dossiers.etat_dossier,vingtquatre, inversion,inv_article,inv_fournisseur,inv_tarif,inv_descr,nom,
+		dossiers.id as id_main,	dossiers.dossier,dossiers.date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,dossiers.user_crea,dossiers.galec,dossiers.etat_dossier,vingtquatre, inversion,inv_article,inv_fournisseur,inv_tarif,inv_descr,nom, valo, flag_valo, id_reclamation,inv_palette,inv_qte,
 		details.id as id_detail,details.ean,details.id_dossier,	details.palette,details.article,details.tarif,details.qte_cde, details.qte_litige,details.dossier_gessica,details.descr,details.fournisseur,details.pj,
 		reclamation.reclamation,
 		btlec.sca3.mag, btlec.sca3.centrale, btlec.sca3.btlec,
@@ -162,10 +170,139 @@ if($coutTotal!=0){
 
 $fLitige=getLitige($pdoLitige);
 
+function updateValo($pdoLitige, $valo,$flag)
+{
+	$req=$pdoLitige->prepare("UPDATE dossiers SET valo= :valo, flag_valo= :flag_valo WHERE id= :id");
+	$req->execute(array(
+		':id'		=>$_GET['id'],
+		':valo'		=>$valo,
+		':flag_valo'	=>$flag
+	));
+	return $req->rowCount();
+}
 
+// si on n'a pas encore calculé la valo, on la calcul
+
+if($fLitige[0]['flag_valo'] == 0)
+{
+	$flag=0;
+	$sumValo=0;
+	foreach ($fLitige as $prod)
+	{
+		if($prod['inversion'] !="")
+		{
+			// si on a réussi à récupérer un tarif pour le produit livé en inversion
+			if($prod['inv_tarif'] !=NULL)
+			{
+				$valoInv=round( $prod['inv_qte']*$prod['inv_tarif'],2);
+				$sumValo=$sumValo+($prod['tarif']/$prod['qte_cde']*$prod['qte_litige'])-$valoInv;
+			}
+			else
+			{
+				// on met le flag pour la valo à 2 : indique que le calcul de la valo n'est pas ok car on a pas le tarif de l'article livré
+				$flag=2;
+			}
+		}
+		else
+		{
+			$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
+			$sumValo=$sumValo + $valo;
+		}
+	}
+	// si on a mis le flag à 2, ça veut dir eque l'on a au moins un des articles pour lequel, on a pas le tarif
+	// on met à jour le flag dans la db à 2 pour indique le pb
+	// sinon on le met à un pour indiquer que la valo  est à jour et correct
+	if($flag==2)
+	{
+		$upvalo=updateValo($pdoLitige, $sumValo, $flag);
+	}
+	else
+	{
+		$upvalo=updateValo($pdoLitige, $sumValo, 1);
+	}
+	if($upvalo==1)
+	{
+		$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'];
+		header($loc);
+	}
+
+}
+
+if($fLitige[0]['flag_valo']==1)
+{
+	$valoMag=$fLitige[0]['valo'] . '&euro;';
+}
+elseif($fLitige[0]['flag_valo']==2)
+{
+	$valoMag='impossible de calculer la valorisation sans le PU de la référence reçue';
+}
+else{
+	$valoMag=0;
+}
 $firstDial=getFirstDial($pdoLitige);
 
+function getInvPaletteDetail($pdoLitige)
+{
+	$req=$pdoLitige->prepare("SELECT * FROM palette_inv WHERE id_dossier = :id_dossier");
+	$req->execute(array(
+		':id_dossier'	=>$_GET['id']
+	));
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
 
+function sommeInvPalette($pdoLitige)
+{
+	$req=$pdoLitige->prepare("SELECT SUM(tarif) as valoInv, palette FROM palette_inv WHERE id_dossier = :id_dossier");
+	$req->execute(array(
+		':id_dossier'	=>$_GET['id']
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+function sommePaletteCde($pdoLitige)
+{
+	$req=$pdoLitige->prepare("SELECT SUM(tarif) as valoCde, palette,pj FROM details WHERE id_dossier = :id_dossier");
+	$req->execute(array(
+		':id_dossier'	=>$_GET['id']
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+function searchPalette($pdoLitige,$palette)
+{
+	$req=$pdoLitige->prepare("SELECT * FROM statsventeslitiges WHERE palette LIKE :palette");
+	$req->execute(array(
+		':palette'	=>'%'.$palette.'%'
+	));
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+// maj si recherche palette
+function addPaletteInv($pdoLitige,$palette,$facture,$date_facture,$article,$ean,$dossier_gessica,$descr,$qte_cde,$tarif,$fournisseur, $cnuf)
+{
+	$req=$pdoLitige->prepare("INSERT INTO palette_inv (id_dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf, found)
+		VALUES (:id_dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :found)");
+	$req->execute(array(
+		':id_dossier'		=>$_GET['id'],
+		':palette'			=>$palette,
+		':facture'			=>$facture,
+		':date_facture'	=>$date_facture,
+		':article'			=>$article,
+		':ean'				=>$ean,
+		':dossier_gessica'	=>$dossier_gessica,
+		':descr'			=>$descr,
+		':qte_cde'			=>$qte_cde,
+		':tarif'			=>$tarif,
+		':fournisseur'		=>$fournisseur,
+		':cnuf'			=>$cnuf,
+		':found'			=>1,
+
+	));
+	return $req->rowCount();
+}
+if(isset($_GET['successpal']))
+{
+	$success[]='la palette a  été trouvée et la base de donnée mise à jour';
+}
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
@@ -281,81 +418,72 @@ DEBUT CONTENU CONTAINER
 	</div>
 	<div class="bg-separation"></div>
 	<!-- infos produit -->
-	<div class="row mt-3 mb-3">
-		<div class="col">
-			<div class="row">
-				<div class="col">
-					<h5 class="khand text-main-blue pb-3">Produit(s) :</h5>
+	<?php
+	// affiche soit le tableau de detail des produits soit le tableau d'inversion de palette
 
-					<table class="table light-shadow">
-						<thead class="thead-dark">
-							<tr>
-								<th class="align-top">Article</th>
-								<th class="align-top">Dossier</th>
-								<th class="align-top">Désignation</th>
-								<th class="align-top">Fournisseur</th>
-								<th class="align-top">Réclamation</th>
-								<th class="align-top">Quantité <br>litige</th>
-								<!-- <th class="align-top text-right">Date déclaration</th> -->
-								<th class="align-top text-right">Valo</th>
-								<th class="align-top">Pièces jointes</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php
-							$sumValo=0;
-							foreach ($fLitige as $prod)
-							{
-								$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
-								$pj='';
-
-								if($prod['pj']!='')
-								{
-									$pj=createFileLink($prod['pj']);
+	if($fLitige[0]['id_reclamation']==7)
+	{
+	// traitement pour affichage détail palette
+		$detailInv=false;
+		$detailCde=false;
+		$majrecherchepalette='';
+		$pj='';
+		$invPal = sommeInvPalette($pdoLitige);
+		$cdePal=sommePaletteCde($pdoLitige);
+		if(isset($_GET['inv']))
+		{
+			$invPalette=getInvPaletteDetail($pdoLitige);
+			$detailInv=true;
+		}
+		if(isset($_GET['cde']))
+		{
+		//on réutilise fLitige
+			$detailCde=true;
+		}
+		// tableau palette + pj
+		if($cdePal['pj']!='')
+		{
+			$pj=createFileLink($cdePal['pj']);
 										// $pj="jkoezfaji"	;
 
-								}
-								echo '<tr>';
-								echo'<td>'.$prod['article'].'</td>';
-								echo'<td>'.$prod['dossier_gessica'].'</td>';
-								echo'<td>'.$prod['descr'].'</td>';
-								echo'<td>'.$prod['fournisseur'].'</td>';
-								echo'<td>'.$prod['reclamation'].'</td>';
-								echo'<td class="text-right">'.$prod['qte_litige'].'</td>';
-								echo'<td class="text-right">'.number_format((float)$valo,2,'.','').'&euro;</td>';
-								echo'<td class="text-right">'.$pj.'</td>';
-								echo '</tr>';
-								if($prod['inversion'] !="")
-								{
-									$valoInv=round( $prod['qte_cde']*$prod['inv_tarif'],2);
-									echo '<tr class="text-center bg-reddish text-white"><td colspan="8">Produit reçu à la place de la référence ci-dessus :</td></tr>';
-									echo '<tr>';
-									echo'<td>'.$prod['inv_article'].'</td>';
-									echo'<td></td>';
-									echo'<td>'.$prod['inv_descr'].'</td>';
-									echo'<td>'.$prod['inv_fournisseur'].'</td>';
-									echo'<td></td>';
-									echo'<td class="text-right">'.$prod['qte_litige'].'</td>';
-									echo'<td class="text-right">'.number_format((float)$valoInv,2,'.','').'&euro;</td>';
-									echo'<td class="text-right"></td>';
-									echo '</tr>';
-									$sumValo=$sumValo+$valo-$valoInv;
-								}
-								else
-								{
-									$sumValo=$sumValo + $valo;
+		}
+		if(isset($_GET['search']))
+		{
+			$newFoundPalette=searchPalette($pdoLitige, $fLitige[0]['inv_palette']);
+			if(empty($newFoundPalette))
+			{
+				$majrecherchepalette='<div class="alert alert-danger">la palette n\'a pas été trouvée</div>';
+			}
+			else
+			{
+				foreach ($newFoundPalette as $pal)
+				{
+					$paletteFound=addPaletteInv($pdoLitige,$pal['palette'],$pal['facture'], $pal['date_mvt'],$pal['article'],$pal['gencod'],$pal['dossier'],$pal['libelle'],$pal['qte'],$pal['tarif'],$pal['fournisseur'],$pal['cnuf']);
+					if($paletteFound!=1)
+					{
+						$errors[]="Problème d'enregistrement lors de l'ajout de la palette reçue";
+					}
+					else
+					{
+						$majrecherchepalette='<div class="alert alert-success">la palette a été trouvée et la base de donnée mise à jour. Cliquez <a href="?id='.$_GET['id'].'">ici pou rafraichir la page</a></div>';
+					}
+				}
 
-								}
-							}
-							?>
-						</tbody>
-					</table>
-					<p class="text-right heavy bigger mb-3 text-main-blue pr-3">Valorisation magasin : <?= number_format((float)$sumValo,2,'.','')?> &euro;</p>
-				</div>
-			</div>
+			}
+		}
+		include('dt-invpalette.php');
 
-		</div>
-	</div>
+
+	}
+
+	else
+	{
+		include('dt-prod.php');
+	}
+
+	?>
+
+
 	<div class="bg-separation"></div>
 
 	<!-- analyse service, imputation, typo, etat, analyse, conclusion -->
@@ -534,57 +662,57 @@ DEBUT CONTENU CONTAINER
 
 	<div class="row">
 		<div class="col">
-					<table class="table light-shadow">
-						<thead class="thead-dark">
-							<tr>
-								<th>Date</th>
-								<th>Interlocuteur</th>
-								<th>Message</th>
-								<th>PJ</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php
-							if(isset($dials) && count($dials)>0)
+			<table class="table light-shadow">
+				<thead class="thead-dark">
+					<tr>
+						<th>Date</th>
+						<th>Interlocuteur</th>
+						<th>Message</th>
+						<th>PJ</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+					if(isset($dials) && count($dials)>0)
+					{
+						foreach ($dials as $dial)
+						{
+							if(!empty($dial['msg']))
 							{
-								foreach ($dials as $dial)
+								if($dial['mag']==1)
 								{
-									if(!empty($dial['msg']))
-									{
-										if($dial['mag']==1)
-										{
-											$name=getMagName($pdoUser, $dial['id_web_user']);
-											$name=$name['mag'];
-											$type='bg-kaki-light';
+									$name=getMagName($pdoUser, $dial['id_web_user']);
+									$name=$name['mag'];
+									$type='bg-kaki-light';
 
-										}
-										else
-										{
-											$name=getBtName($pdoBt, $dial['id_web_user']);
-											$name=$name['name'];
-											$type='bg-alert-primary';
-										}
-										if($dial['filename']!='')
-										{
-											$pj=createFileLink($dial['filename']);
-										}
-										else
-										{
-											$pj='';
-										}
-										echo '<tr class="'.$type.'">';
-										echo '<td>'.$dial['dateFr'].'</td>';
-										echo '<td>'.$name.'</td>';
-										echo '<td>'.$dial['msg'].'</td>';
-										echo '<td>'.$pj.'</td>';
-										echo '</tr>';
-									}
 								}
-
+								else
+								{
+									$name=getBtName($pdoBt, $dial['id_web_user']);
+									$name=$name['name'];
+									$type='bg-alert-primary';
+								}
+								if($dial['filename']!='')
+								{
+									$pj=createFileLink($dial['filename']);
+								}
+								else
+								{
+									$pj='';
+								}
+								echo '<tr class="'.$type.'">';
+								echo '<td>'.$dial['dateFr'].'</td>';
+								echo '<td>'.$name.'</td>';
+								echo '<td>'.$dial['msg'].'</td>';
+								echo '<td>'.$pj.'</td>';
+								echo '</tr>';
 							}
-							?>
-						</tbody>
-					</table>
+						}
+
+					}
+					?>
+				</tbody>
+			</table>
 
 		</div>
 	</div>

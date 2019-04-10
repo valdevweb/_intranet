@@ -25,7 +25,7 @@ function getLitige($pdoLitige)
 {
 	$req=$pdoLitige->prepare("
 		SELECT
-		dossiers.id as id_main,	dossiers.dossier,dossiers.date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,dossiers.user_crea,dossiers.galec,dossiers.etat_dossier,vingtquatre, inversion,inv_article,inv_fournisseur,inv_tarif,inv_descr,nom,
+		dossiers.id as id_main,	dossiers.dossier,dossiers.date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,dossiers.user_crea,dossiers.galec,dossiers.etat_dossier,vingtquatre, inversion,inv_article,inv_fournisseur,inv_tarif,inv_descr,nom, inv_qte, valo,flag_valo,
 		details.id as id_detail,details.ean,details.id_dossier,	details.palette,details.article,details.tarif,details.qte_cde, details.qte_litige,details.dossier_gessica,details.descr,details.fournisseur,details.pj,
 		reclamation.reclamation,
 		btlec.sca3.mag, btlec.sca3.centrale, btlec.sca3.btlec,
@@ -169,6 +169,18 @@ $fLitige=getLitige($pdoLitige);
 
 
 $firstDial=getFirstDial($pdoLitige);
+
+if($fLitige[0]['flag_valo']==1)
+{
+	$valoMag=$fLitige[0]['valo'] . '&euro;';
+}
+elseif($fLitige[0]['flag_valo']==2)
+{
+	$valoMag='impossible de calculer la valorisation sans le PU de la référence reçue';
+}
+else{
+	$valoMag=0;
+}
 
 
 //----------------------------------------------
