@@ -67,7 +67,13 @@ include ('../view/_navbar.php');
 				<ul class='browser-default'>
 					<li>PLV à placer dans les rayons concernés par la livraison 24/48h. Cliquez sur l'image pour la télécharger</li>
 				</ul>
-				<p class="center"><a href="plv-livraison-24-48h.pdf"><img src="../img/twentyfour/24mini.jpg"></a></p>
+				<div class="col">
+					<p class="center"><a href="plv-livraison-24-48h.pdf"><img src="../img/twentyfour/24mini.jpg"></a></p>
+				</div>
+				<div class="col">
+					<p class="center"><a href="plv-livraison-24-48h_2.pdf"><img src="../img/twentyfour/24mini2.jpg"></a></p>
+				</div>
+
 
 			</div>
 		</div>
