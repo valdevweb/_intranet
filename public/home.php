@@ -20,6 +20,7 @@ require "../functions/userinfo.fn.php";
 require "../functions/gazette.fn.php";
 require "../functions/stats.fn.php";
 
+
 //recup gazette de la semaine en cours
 $gazettes=showThisWeek($pdoBt);
 $links=createLinks($pdoBt,$gazettes,$version);
@@ -82,8 +83,8 @@ if(!empty($_SERVER['HTTP_REFERER']))
 		}
 		else
 		{
-			$typeTitle="Centrale";
-			$nom=$_SESSION['nom'];
+			$typeTitle="";
+			$nom="Bienvenue " .$_SESSION['nom'].',';
 		}
 		//---------------------------
 		//stats
@@ -106,6 +107,7 @@ if(!empty($_SERVER['HTTP_REFERER']))
 	elseif ($_SESSION['type']=='scapsav')
 	{
 		$typeTitle="";
+		$nom="Bienvenue,";
 		//---------------------------
 		//stats
 		//---------------------------
@@ -117,7 +119,7 @@ if(!empty($_SERVER['HTTP_REFERER']))
 	{
 		// si ni de type mag, ni de type bt, ni scapsav
 		$typeTitle="";
-		$nom="";
+		$nom="Bienvenue,";
 		//---------------------------
 		//stats
 		//---------------------------
@@ -150,9 +152,58 @@ if(!empty($_SERVER['HTTP_REFERER']))
 
 
 	}
+/*--------------------------------------------------*/
+/*        reversements                              */
+/*            => si info moins de 7 jours afficher*/
+/*--------------------------------------------------*/
 
 
 
+function rev($pdoBt)
+{
+	$today=date('Y-m-d H:i:s');
+	$todayMoinsSept=date_sub(date_create($today), date_interval_create_from_date_string('7 days'));
+	$todayMoinsSept=date_format($todayMoinsSept,'Y-m-d H:i:s');
+
+	$req=$pdoBt->prepare("SELECT divers, date_rev,doc_type.name, id_type, DATE_FORMAT(date_rev,'%d/%m/%Y') as date_display FROM reversements LEFT JOIN doc_type ON reversements.id_type = doc_type.id WHERE date_rev >= :todayMoinsSept AND date_rev <= :today ");
+	$req->execute(array(
+		':todayMoinsSept' =>$todayMoinsSept,
+		':today'	=>$today
+	));
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+$revRes=rev($pdoBt);
+$info=[];
+if(!empty($revRes))
+{
+	$infoRev='<div class="info"><li class="orange-text text-darken-2"><i class="fa fa-info-circle fa-2x" aria-hidden="true"></i> Nouveaux documents déposés : </li></div><div class="detail orange-text text-darken-2">';
+	foreach ($revRes as $key => $thisRev)
+	{
+		if($thisRev['id_type']==18)
+		{
+			$infoRev.='<br> >> ' .$thisRev['divers'] . ' du ' .$thisRev['date_display'];
+
+		}
+		else
+		{
+			$infoRev.='<br> >> ' .$thisRev['name'] . ' du ' .$thisRev['date_display'] ;
+		}
+	}
+	$infoRev.='</div>';
+}
+
+function getFlashNews($pdoBt)
+{
+	$req=$pdoBt->prepare("SELECT * FROM flash WHERE valid=1 AND date_start <= :today AND date_end >= :today");
+	$req->execute(array(
+		':today'		=>date('Y-m-d 00:00:00')
+	));
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+$flashNews=getFlashNews($pdoBt);
+
+$flashFilesDir='..\..\..\upload\flash\\';
 
 
 include ('view/_head.php');
