@@ -49,7 +49,25 @@ function getMagName($pdoBt)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-function insertDossier($pdoLitige, $numDossier)
+function getMagIdwebuser($pdoUser)
+{
+	$req=$pdoUser->prepare("SELECT id FROM users WHERE galec=:galec");
+	$req->execute(array(
+		':galec'		=>$_SESSION['id_galec']
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+if($_SESSION['type']=='btlec')
+{
+	$magId=getMagIdwebuser($pdoUser);
+	$magId=$magId['id'];
+}
+else
+{
+	$magId=$_SESSION['id_web_user'];
+}
+
+function insertDossier($pdoLitige, $numDossier,$magId)
 {
 	// par défaut l'état est à 0 = ouvert
 	if(isset($_POST['rapid']) && $_POST['rapid']=="oui")
@@ -67,12 +85,13 @@ function insertDossier($pdoLitige, $numDossier)
 	{
 		$dateDecl=	date('Y-m-d H:i:s');
 	}
-	$req=$pdoLitige->prepare("INSERT INTO dossiers(date_crea,user_crea,nom,galec,vingtquatre, dossier) VALUES(:date_crea,:user_crea,:nom, :galec, :vingtquatre, :dossier)");
+	$req=$pdoLitige->prepare("INSERT INTO dossiers(date_crea,user_crea,nom,galec,id_web_user,vingtquatre, dossier) VALUES(:date_crea,:user_crea,:nom, :galec, :id_web_user, :vingtquatre, :dossier)");
 	$req->execute(array(
 		':date_crea'		=>$dateDecl,
 		':user_crea'		=>$_SESSION['id_web_user'],
 		':nom'				=>$_POST['nom'],
 		':galec'			=>$_SESSION['id_galec'],
+		':id_web_user'		=>$magId,
 		':vingtquatre'		=>$vingtquatre,
 		':dossier'		=>$numDossier,
 	));
@@ -170,7 +189,7 @@ if(isset($_POST['choose']))
 		if(!empty($_POST['num_dossier_form']))
 		{
 				$numDossier=$_POST['num_dossier_form'];
-				$lastInsertId=insertDossier($pdoLitige,$numDossier);
+				$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId);
 
 		}
 		else
@@ -193,7 +212,7 @@ if(isset($_POST['choose']))
 				$numDossier=date('y').'001';
 
 			}
-			$lastInsertId=insertDossier($pdoLitige,$numDossier);
+			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId);
 		}
 		// créa du dossier (sans numéro pour l'instant)
 		if($lastInsertId>0)
