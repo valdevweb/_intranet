@@ -1,4 +1,4 @@
-	$(document).ready(function() {
+  $(document).ready(function() {
     // $( "th:first" ).addClass('asc selected');
     // $( "th:first" ).addClass('descdef');
     // $( "th:first" ).addClass('descdef selected');
@@ -9,7 +9,8 @@
   function() { $(this).removeClass('focus'); }
  );
   $(this).click(function() {
-   if ($(this).is('.asc')) {
+    $(this).removeClass('sortable');
+    if ($(this).is('.asc')) {
     $(this).removeClass('asc');
     $(this).addClass('desc selected');
     sortOrder = -1;
@@ -21,6 +22,10 @@
    }
    $(this).siblings().removeClass('asc selected');
    $(this).siblings().removeClass('desc selected');
+       if ($(this).siblings().not('.sortable'))
+       {
+       $(this).siblings().addClass('sortable');
+ }
    var arrData = $('table').find('tbody >tr:has(td)').get();
    arrData.sort(function(a, b) {
     var val1 = $(a).children('td').eq(col).text().toUpperCase();
