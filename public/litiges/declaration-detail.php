@@ -29,12 +29,6 @@ Solution : ajout d'un index dans le nom de la varaible file qui s'incrémente à
 On commence à 1 car le 0 n'est pas pris en compte dans le name
  */
 
-
-
-
-
-
-
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
@@ -63,9 +57,9 @@ function updateDetail($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean){
 	));
 	return $req->rowCount();
 }
-function updateDetailInversion($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur)
+function updateDetailInversion($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur, $invQte)
 {
-	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, inv_article= :inv_article, inv_descr=:inv_descr,inv_tarif=:inv_tarif, inv_fournisseur=:inv_fournisseur   WHERE id= :id");
+	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, inv_article= :inv_article, inv_descr=:inv_descr,inv_tarif=:inv_tarif, inv_fournisseur=:inv_fournisseur, inv_qte=:inv_qte   WHERE id= :id");
 	$req->execute(array(
 		':reclamation' =>$reclamation,
 		':qte_litige'	=>$qteLitige,
@@ -76,6 +70,7 @@ function updateDetailInversion($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean,
 		':inv_descr'		=>$invDescr,
 		':inv_tarif'		=>$tarifUv,
 		':inv_fournisseur'		=>$invFournisseur,
+		':inv_qte'		=>$invQte,
 	));
 	return $req->rowCount();
 	// return $req->errorInfo();
@@ -102,7 +97,7 @@ $fMotif=getReclamation($pdoLitige);
 
 function getProdInversion($pdoLitige,$ean)
 {
-	$req=$pdoLitige->prepare("SELECT * FROM qlik WHERE gencod= :inversion ORDER BY date_mvt DESC");
+	$req=$pdoLitige->prepare("SELECT * FROM statsventeslitiges WHERE gencod= :inversion ORDER BY date_mvt DESC");
 	$req->execute(array(
 		':inversion'	=>$ean
 	));
@@ -126,7 +121,7 @@ $errors=[];
 $success=[];
 $newData=0;
 $uploadDir= '..\..\..\upload\litiges\\';
-
+$valoTotal=0;
 if(isset($_POST['submit']))
 {
 // on récupère le nombre d'article pour pouvoir boucler sur tableau de champ de formulaire
@@ -181,77 +176,90 @@ if(isset($_POST['submit']))
 		}
 		if(count($errors)==0)
 		{
-			if(isset($_POST['form_autre'][$i]) && !empty($_POST['form_autre'][$i]))
+			// cas d'une inversion de réf
+			if($_POST['form_motif'][$i]==5)
 			{
-			// cas de l'inversion de référence (5)
-				$ean=$_POST['form_autre'][$i];
-				// recup info du produit reçu à la place
-				$listProdInv=getProdInversion($pdoLitige,$ean);
-				if(count($listProdInv)>1)
+				// si formulaire rempli
+				if(!empty($_POST['form_autre_qte'][$i]) && !empty($_POST['form_autre'][$i]))
 				{
-					foreach ($listProdInv as $prodInv)
+			// cas de l'inversion de référence (5)
+					$ean=$_POST['form_autre'][$i];
+					$invQte=$_POST['form_autre_qte'][$i];
+				// recup info du produit reçu à la place
+					$listProdInv=getProdInversion($pdoLitige,$ean);
+				// si on trouve la réf qui a été livrée à la place
+					if(count($listProdInv)>1)
 					{
-						if($prodInv['dossier']==1000)
+					// on cherche en 1er dans le 1000
+						foreach ($listProdInv as $prodInv)
 						{
-							$invArticle=$prodInv['article'];
-							$invDescr=$prodInv['libelle'];
-							$invTarif=$prodInv['tarif'];
-							$invFournisseur=$prodInv['fournisseur'];
-							$qt_qlik=$prodInv['qte'];
-							$invDossier=$prodInv['dossier'];
-							$tarifUv=$invTarif/$qt_qlik;
-							break;
-						}
-						elseif(!empty($prodInv['article']) && !empty($prodInv['libelle']) && !empty($prodInv['tarif']) && !empty($prodInv['fournisseur']) && !empty($prodInv['qte']))
-						{
-							$invArticle=$prodInv['article'];
-							$invDescr=$prodInv['libelle'];
-							$invTarif=$prodInv['tarif'];
-							$invFournisseur=$prodInv['fournisseur'];
-							$qt_qlik=$prodInv['qte'];
-							$invDossier=$prodInv['dossier'];
-							$tarifUv=$invTarif/$qt_qlik;
+							if($prodInv['dossier']==1000)
+							{
+								$invArticle=$prodInv['article'];
+								$invDescr=$prodInv['libelle'];
+								$invTarif=$prodInv['tarif'];
+								$invFournisseur=$prodInv['fournisseur'];
+								$qt_qlik=$prodInv['qte'];
+								$invDossier=$prodInv['dossier'];
+								$tarifUv=$invTarif/$qt_qlik;
+								break;
+							}
+						// si trouvé en dehors du 1000
+							elseif(!empty($prodInv['article']) && !empty($prodInv['libelle']) && !empty($prodInv['tarif']) && !empty($prodInv['fournisseur']) && !empty($prodInv['qte']))
+							{
+								$invArticle=$prodInv['article'];
+								$invDescr=$prodInv['libelle'];
+								$invTarif=$prodInv['tarif'];
+								$invFournisseur=$prodInv['fournisseur'];
+								$qt_qlik=$prodInv['qte'];
+								$invDossier=$prodInv['dossier'];
+								$tarifUv=$invTarif/$qt_qlik;
+								break;
+							}
+						// si pas trouvé
+							else
+							{
+								$invArticle=$invDescr=$invTarif=$invFournisseur=$qt_qlik=$invDossier=$tarifUv=NULL;
 
-							break;
-						}
-						else
-						{
-							$invArticle=$invDescr=$invTarif=$invFournisseur=$qt_qlik=$invDossier=$tarifUv=NULL;
-
+							}
 						}
 					}
+					else
+					{
+					// ean non trouvé :
+						$invArticle=$invDescr=$invTarif=$invFournisseur=$qt_qlik=$invDossier=$tarifUv=NULL;
+					}
+				// article trouvé ou non , on met à jour la db avec des champ null si rien
+					$do=updateDetailInversion($pdoLitige,$_POST['form_motif'][$i], $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur, $invQte);
+				// echo '1 do '.$do;
 				}
 				else
 				{
-					// ean non trouvé :
-					$invArticle=$invDescr=$invTarif=$invFournisseur=$qt_qlik=$invDossier=$tarifUv=NULL;
-
+					$errors[]='merci de renseigner l\'EAN reçu et la quantité';
 				}
-				// article trouvé ou non , on met à jour la db avec des champ null si rien
-				$do=updateDetailInversion($pdoLitige,$_POST['form_motif'][$i], $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur);
-				echo '1 do '.$do;
+
 			}
 			else
 			{
+				// cas général (pas d'inversion de produit)
 				$ean="";
 				$do=updateDetail($pdoLitige,$_POST['form_motif'][$i], $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean);
-				echo '2 do '.$do;
+				// echo '2 do '.$do;
 			}
 			// $do=updateDetail($pdoLitige,$_POST['form_motif'][$i], $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean);
-				echo '3 do '.$do;
+				// echo '3 do '.$do;
 
 		}
 
 
-		if($do>0)
+		if(isset($do) && $do>0)
 		{
 			$foreachSuccess[]="success";
 
 		}
 		else
 		{
-			$foreachErrors[]="erreurs" .$do;
-
+			$foreachErrors[]="erreurs";
 
 		}
 	}
@@ -265,13 +273,13 @@ if(isset($_POST['submit']))
 		}
 		else
 		{
-			$errors[]="une erreur est survenue pendant l'enregistrement 2";
+			$errors[]="une erreur est survenue pendant l'enregistrement";
 
 		}
 	}
 	else
 	{
-		$errors[]="une erreur est survenue pendant l'enregistrement 1";
+		// $errors[]="une erreur est survenue pendant l'enregistrement";
 	}
 }
 // on va utiliser l'id pour enregistrer les produits sélectionnés sachant qu'à chaque import de la base, il changera
@@ -303,18 +311,17 @@ DEBUT CONTENU CONTAINER
 			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" enctype="multipart/form-data" class="light-shadow border-top-big">
 				<div class="row">
 					<div class="col p-5">
-
-
-
 						<!-- ./row -->
-
 						<?php
 						$subForm=1;
 						foreach ($fLitige as $litige)
 						{
 							// info produit
-							echo '<div class="row yellow-box"><div class="col">';
-							echo'<h5 class="khand heavy spacy  pt-3 ">Produit : '.$litige['descr'].' - Art. : '.$litige['article'].'</h5>';
+							echo '<div class="row yellow-box">';
+							echo '<div class="col">';
+
+
+							echo '<h5 class="khand heavy spacy  pt-3 ">Produit : '.$litige['descr'].' - Art. : '.$litige['article'].'</h5>';
 							echo '<div class="row no-gutters">';
 							echo '<div class="col ">';
 							echo '<span class="libelle">Fournisseur : </span>';
@@ -323,7 +330,6 @@ DEBUT CONTENU CONTAINER
 							echo '<span>'.$litige['ean'].'</span>';
 							echo '<span class="libelle pl-5"> Dossier : </span>';
 							echo '<span>'.$litige['dossier_gessica'].'</span>';
-
 							echo '</div>';
 							echo '</div>';
 							// fin de ligne 2
@@ -369,14 +375,25 @@ DEBUT CONTENU CONTAINER
 							echo '<input type="hidden" value="'.$litige['detail_id'].'" name="form_id[]">';
 							echo '</div>';
 							echo '</div>';
-							echo '<div class="col">';
+							echo '</div>';
 							echo '<div class="hidden" id="toggle'.$litige['detail_id'].'">';
+
+							echo '<div class="row">';
+							echo '<div class="col-4">';
 							echo '<p class="khand heavy">Ean article reçu : ';
 							echo '</p>';
 							echo '<div class="form-group">';
-							echo '<input type="text" class="form-control" name="form_autre[]">';
+							echo '<input type="text" class="form-control" name="form_autre[]" >';
 							echo '</div>';
 							echo '</div>';
+							echo '<div class="col-3">';
+							echo '<p class="khand heavy">Quantité UV reçue : ';
+							echo '</p>';
+							echo '<div class="form-group">';
+							echo '<input type="text" class="form-control" name="form_autre_qte[]">';
+							echo '</div>';
+							echo '</div>';
+							echo '<div class="col"></div>';
 							echo'</div>';
 							echo '</div>';
 
@@ -388,11 +405,14 @@ DEBUT CONTENU CONTAINER
 							echo '<label class="btn btn-upload btn-file text-center"><input name="form_file'.$subForm.'[]" id="form_file'.$litige['detail_id'].'" type="file" multiple="" class="form-control-file"><i class="fas fa-file-image pr-3"></i>Sélectionner</label>';
 							echo '</div>';
 							echo '</div>';
-														// file anme
+														// fileanme
 							echo '<div class="col" id="'.$litige['detail_id'].'">';
 
 							echo '</div>';
 							echo '</div>';
+							echo '</div>';
+							echo '</div>';
+
 
 
 
@@ -456,7 +476,6 @@ DEBUT CONTENU CONTAINER
 
 		$('select').on('change',function(e){
         // $("select#motif7").change(function(){
-        	console.log("hell");
         	var selectId=e.target.id;
         	sizeStrg=selectId.length;
         	selectId=selectId.substring(5,sizeStrg);
