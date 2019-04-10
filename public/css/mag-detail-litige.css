@@ -1,3 +1,7 @@
 	tr, td,th{
   padding : 0 0.5rem !important;
 }
+
+textarea{
+	height:  150px !important;
+}
