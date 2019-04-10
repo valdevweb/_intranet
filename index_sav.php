@@ -1,8 +1,6 @@
 <?php
 
 require('config/autoload.php');
-// $okko= 'version : ' . ROOT_PATH  .', db  : '.$pdo_file;
-// echo $version;
 require 'functions/stats.fn.php';
 
 // on connecte l'utilisateur et recup $_SESSION['id']=$id (id web_user) et $_SESSION['user']=$_POST['login'];
