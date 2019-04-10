@@ -32,9 +32,6 @@ table,td, tr{
 
 }
 
-
-
-
 .heavy{
 	font-weight: bold;
 }
@@ -88,6 +85,11 @@ table,td, tr{
 }
 
 
+.bordered-prim{
+	border: 1px solid #A63446;
+
+}
+
 .border-table-prim, .border-table-prim td{
 	border: 1px solid #A63446;
 	border-collapse: collapse;
@@ -136,7 +138,10 @@ h2{
 	height:  20px;
 	border : 0;
 }
-
+.spacing-l{
+	height:  40px;
+	border : 0;
+}
 .padding-table, .padding-table td{
 	padding:  10px;
 	border-collapse: collapse;
@@ -216,7 +221,7 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 
 	</table>
 
-	<p class="text-center heavy text-prim">VALORISATION : <?= $sumValo?> &euro;</p>
+	<p class="text-center heavy text-prim">VALORISATION : <?= $valoMag?> &euro;</p>
 	<div class="spacing-s"></div>
 
 	<table class="padding-table border-table-grey">
@@ -279,7 +284,7 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 			<td class="cinq bg-sec text-white">RECLAMATION</td>
 		</tr>
 		<?php
-		$sumValo=0;
+		// $sumValo=0;
 		foreach ($fLitige as $prod)
 		{
 			$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
@@ -292,20 +297,20 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 			echo '</tr>';
 			if($prod['inversion'] !="")
 			{
-				$valoInv=round( $prod['qte_cde']*$prod['inv_tarif'],2);
+				$valoInv=round( $prod['inv_qte']*$prod['inv_tarif'],2);
 				echo '<tr><td colspan="5" class="text-center text-prim heavy">Produit reçu à la place de la référence ci-dessus :</td></tr>';
 				echo '<tr>';
 				echo'<td class="text-prim heavy">'.$prod['inv_article'].'</td>';
 				echo'<td class="text-prim heavy">'.$prod['inv_descr'].'</td>';
-				echo'<td class="text-right text-prim heavy">'.$prod['qte_litige'].'</td>';
+				echo'<td class="text-right text-prim heavy">'.$prod['inv_qte'].'</td>';
 				echo'<td class="text-right text-prim heavy">'.number_format((float)$valoInv,2,'.','').'&euro;</td>';
 				echo'<td class="text-right"></td>';
 				echo '</tr>';
-				$sumValo=$sumValo+$valo-$valoInv;
+				// $sumValo=$sumValo+$valo-$valoInv;
 			}
 			else
 			{
-				$sumValo=$sumValo + $valo;
+				// $sumValo=$sumValo + $valo;
 
 			}
 		}
