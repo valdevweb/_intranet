@@ -153,6 +153,7 @@ h2{
 .full-width{
 	width: 700px;
 }
+
 .dix{
 	width: 70px;
 }
@@ -221,7 +222,7 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 
 	</table>
 
-	<p class="text-center heavy text-prim">VALORISATION : <?= $valoMag?> &euro;</p>
+	<p class="text-center heavy text-prim">VALORISATION : <?= $valoMag?></p>
 	<div class="spacing-s"></div>
 
 	<table class="padding-table border-table-grey">
@@ -277,10 +278,11 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 	<div class="spacing-s"></div>
 	<table class="padding-table border-table-sec">
 		<tr>
-			<td class="cinq bg-sec bg-sec text-white">CODE ARTICLE</td>
+			<td class="dix bg-sec bg-sec text-white">CODE ARTICLE</td>
 			<td class="cinq bg-sec text-white">DESIGNATION</td>
-			<td class="cinq bg-sec text-white">QUANTITE</td>
-			<td class="cinq bg-sec text-white">VALORISATION</td>
+			<td class="bg-sec text-white" style="width:50px;">QTE</td>
+			<td class="bg-sec trois text-white">FOURNISSEUR</td>
+			<td class="huit bg-sec text-white">VALORISATION</td>
 			<td class="cinq bg-sec text-white">RECLAMATION</td>
 		</tr>
 		<?php
@@ -292,6 +294,7 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 			echo'<td>'.$prod['article'].'</td>';
 			echo'<td>'.$prod['descr'].'</td>';
 			echo'<td class="text-right">'.$prod['qte_litige'].'</td>';
+			echo'<td>'.$prod['fournisseur'].'</td>';
 			echo'<td class="text-right">'.number_format((float)$valo,2,'.','').'&euro;</td>';
 			echo'<td>'.$prod['reclamation'].'</td>';
 			echo '</tr>';
@@ -303,6 +306,7 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 				echo'<td class="text-prim heavy">'.$prod['inv_article'].'</td>';
 				echo'<td class="text-prim heavy">'.$prod['inv_descr'].'</td>';
 				echo'<td class="text-right text-prim heavy">'.$prod['inv_qte'].'</td>';
+				echo'<td class="text-right text-prim heavy">'.$prod['inv_fournisseur'].'</td>';
 				echo'<td class="text-right text-prim heavy">'.number_format((float)$valoInv,2,'.','').'&euro;</td>';
 				echo'<td class="text-right"></td>';
 				echo '</tr>';
@@ -336,8 +340,12 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 
 
 		?>
-
 	</table>
+
+
+
+
+
 </body>
 </html>
 
