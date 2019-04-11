@@ -474,7 +474,7 @@ DEBUT CONTENU CONTAINER
 					}
 					else
 					{
-						$majrecherchepalette='<div class="alert alert-success">la palette a été trouvée et la base de donnée mise à jour. Cliquez <a href="?id='.$_GET['id'].'">ici pou rafraichir la page</a></div>';
+						$majrecherchepalette='<div class="alert alert-success">la palette a été trouvée et la base de donnée mise à jour. Cliquez <a href="?id='.$_GET['id'].'">ici pour rafraichir la page</a></div>';
 					}
 				}
 
