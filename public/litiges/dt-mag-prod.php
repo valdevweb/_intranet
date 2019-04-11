@@ -12,7 +12,7 @@
 								<th class="align-top">Désignation</th>
 								<th class="align-top">Fournisseur</th>
 								<th class="align-top">Réclamation</th>
-								<th class="align-top">Quantité <br>litige</th>
+								<th class="align-top text-right">Quantité <br>litige</th>
 								<!-- <th class="align-top text-right">Date déclaration</th> -->
 								<th class="align-top">Pièces jointes</th>
 							</tr>
