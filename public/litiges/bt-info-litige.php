@@ -12,7 +12,7 @@ $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
-
+require_once  '../../vendor/autoload.php';
 
 $errors=[];
 $success=[];
@@ -281,9 +281,69 @@ if(isset($_POST['submit_e']))
 if(isset($_POST['submit_f']))
 {
 	$row=addFac($pdoLitige);
-	if($row>0)
+	if($row==1)
 	{
-		header('Location:bt-info-litige.php?id='.$_GET['id'].'&etatfac=ok');
+		$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'].'&etatfac=ok';
+		header($loc);
+	}
+	else
+	{
+		$errors[]="impossible de mettre à jour la base de donnée";
+	}
+}
+if(isset($_POST['submit_mail']))
+{
+	$row=addFac($pdoLitige);
+	if($row==1)
+	{
+		if(!empty($_POST['fac_mag']))
+		{
+
+			if(VERSION =='_')
+			{
+				$mailMag=array('valerie.montusclat@btlec.fr');
+			}
+			else
+			{
+				if($_SESSION['code_bt']!='4201')
+				{
+					$mailMag=array($infoMag['btlec'].'-rbt@btlec.fr');
+				}
+				else
+				{
+					$mailMag=array('valerie.montusclat@btlec.fr');
+				}
+			}
+
+			$magTemplate = file_get_contents('mail-mag-fac.php');
+			$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
+			$magTemplate=str_replace('{FACTURE}',$_POST['fac_mag'],$magTemplate);
+			$magTemplate=str_replace('{MONTANT}',$_POST['mt_mag'],$magTemplate);
+			$subject='Portail BTLec Est  - information litige ' . $fLitige['dossier'];
+			// ---------------------------------------
+			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$mailer = new Swift_Mailer($transport);
+			$message = (new Swift_Message($subject))
+			->setBody($magTemplate, 'text/html')
+			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+			->setTo($mailMag)
+			->addBcc('valerie.montusclat@btlec.fr');
+			$delivered=$mailer->send($message);
+			if($delivered >0)
+			{
+				$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'].'&etatfac=ok';
+				header($loc);
+			}
+			else
+			{
+				$errors[]='Le mail n\'a pas pu être envoyé';
+			}
+		}
+		else
+		{
+			$errors[]='Impossible d\'envoyer un mail si le numéro de facture n\'est pas renseigné';
+		}
+
 	}
 	else
 	{
@@ -337,7 +397,7 @@ DEBUT CONTENU CONTAINER
 							<h3 class="pt-2"><img src="../img/litiges/transport.png" class="pr-3">Informations relatives au transport</h3>
 						</div>
 						<div class="col-auto text-right pt-2">
-						<i class="fas fa-save fa-lg <?= $etatTransp ?>"></i>
+							<i class="fas fa-save fa-lg <?= $etatTransp ?>"></i>
 						</div>
 					</div>
 
@@ -565,7 +625,7 @@ DEBUT CONTENU CONTAINER
 							<i class="fas fa-save fa-lg <?= $etatfac ?>"></i>
 						</div>
 					</div>
-					<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" >
+					<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" id="fac_form">
 						<div class="row">
 							<!-- col 1 facturation-->
 							<div class="col-6">
@@ -585,7 +645,7 @@ DEBUT CONTENU CONTAINER
 								</div>
 							</div>
 							<div class="col">
-							<p class="bigger heavy text-blue text-center">Coût du litige BTLec : <?= number_format((float)$coutTotal,2,'.','')?> &euro;</p>
+								<p class="bigger heavy text-blue text-center">Coût du litige BTLec : <?= number_format((float)$coutTotal,2,'.','')?> &euro;</p>
 
 							</div>
 						</div>
@@ -667,9 +727,10 @@ DEBUT CONTENU CONTAINER
 						<div class="row">
 							<div class="col">
 							</div>
-							<div class="col-3">
-								<div class="mb-3 text-center">
+							<div class="col">
+								<div class="mb-3 text-right">
 									<button type="submit" id="submit_f" class="btn btn-kaki" name="submit_f"><i class="fas fa-save pr-3"></i>Enregistrer</button>
+									<button type="submit" id="submit_mail" class="btn btn-red" name="submit_mail"><i class="fas fa-envelope pr-3"></i>Enregistrer et envoyer le mail</button>
 								</div>
 							</div>
 
@@ -700,6 +761,7 @@ DEBUT CONTENU CONTAINER
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){
+		// affichage ou non de l'input pur le transit
 		$('#transit_check').change(function(){
 			if($(this).prop("checked")) {
 				// $('#toogle_transit').show();
@@ -709,7 +771,8 @@ DEBUT CONTENU CONTAINER
 				$('#toogle_transit').attr('class', 'hidden');
 			}
 		});
-	});
+
+});
 </script>
 
 <?php
