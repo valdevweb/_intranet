@@ -232,7 +232,7 @@ DEBUT CONTENU CONTAINER
 										<?php
 										foreach($listPretxt as $pretxt)
 										{
-											echo '<option value="'.$pretxt['id'].'">'.$pretxt['nom'].' ('. $pretxt['pretxt'].'</option>';
+											echo '<option value="'.$pretxt['id'].'">'.$pretxt['nom'].' ('. $pretxt['pretxt'].')</option>';
 
 										}
 
@@ -276,24 +276,14 @@ DEBUT CONTENU CONTAINER
 </div>
 
 <script type="text/javascript">
-
 	$(document).ready(function (){
-
 		$('#pretxt').on('change',function(){
 			var txt=$('#pretxt option:selected').text();
-			// var pretxt=txt.split(' (');
-			var pretxt=txt.split(' (');
-			// var bjr="Bonjour,\n\n";
-			// var cdlt="\n\n"+"Cordialement,\n";
-
- 						// console.log(name);
- 						$('#msg').val(pretxt[1]);
- 					});
-
-
-
-
-	});
+			txt=txt.split(' (');
+			var pretxt=txt[1].split(')');
+ 						$('#msg').val(pretxt[0]);
+		});
+});
 
 </script>
 
