@@ -20,8 +20,8 @@ require_once  '../../vendor/autoload.php';
 //------------------------------------------------------
 function getThisLitige($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT galec, dossiers.dossier,
-		id_reclamation, article, descr, ean, fournisseur, qte_litige, pj, inv_palette, palette, inv_article, inv_qte, inv_descr, inv_tarif, inv_fournisseur, inversion,
+	$req=$pdoLitige->prepare("SELECT galec, dossiers.dossier, mt_mag,fac_mag, inv_article,inv_fournisseur,inv_tarif,inv_descr,nom, valo, flag_valo, id_reclamation,inv_palette,inv_qte,
+		 details.ean,details.id_dossier,	details.palette,details.article,details.tarif,details.qte_cde, details.qte_litige,details.dossier_gessica,details.descr,details.fournisseur,details.pj,details.inversion,
 		reclamation
 		FROM dossiers
 		LEFT JOIN details ON dossiers.id= details.id_dossier
@@ -77,6 +77,32 @@ function addMsg($pdoLitige, $filelist)
 	// return $req->errorInfo();
 }
 
+
+function sommeInvPalette($pdoLitige)
+{
+	$req=$pdoLitige->prepare("SELECT SUM(tarif) as valoInv, palette FROM palette_inv WHERE id_dossier = :id_dossier");
+	$req->execute(array(
+		':id_dossier'	=>$_GET['id']
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+function sommePaletteCde($pdoLitige)
+{
+	$req=$pdoLitige->prepare("SELECT SUM(tarif) as valoCde, palette,pj FROM details WHERE id_dossier = :id_dossier");
+	$req->execute(array(
+		':id_dossier'	=>$_GET['id']
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+function getInvPaletteDetail($pdoLitige)
+{
+	$req=$pdoLitige->prepare("SELECT * FROM palette_inv WHERE id_dossier = :id_dossier");
+	$req->execute(array(
+		':id_dossier'	=>$_GET['id']
+	));
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
 //------------------------------------------------------
 //			DECLARATIONS
 //------------------------------------------------------
@@ -92,6 +118,36 @@ if($thisLitige[0]['galec'] !=$_SESSION['id_galec'])
 {
 	header('Location:notyours.php');
 }
+// si litige sur une palette
+if($thisLitige[0]['id_reclamation']==7)
+{
+	$detailInv=false;
+	$detailCde=false;
+
+	$invPal = sommeInvPalette($pdoLitige);
+	$cdePal=sommePaletteCde($pdoLitige);
+	if(isset($_GET['inv']))
+	{
+		$invPalette=getInvPaletteDetail($pdoLitige);
+		$detailInv=true;
+	}
+	if(isset($_GET['cde']))
+	{
+		//on réutilise fLitige
+		$detailCde=true;
+	}
+	if($cdePal['pj']!='')
+	{
+		$pj=createFileLink($cdePal['pj']);
+	}
+	else{
+		$pj='';
+	}
+}
+
+
+
+
 
 $uploadDir= '..\..\..\upload\litiges\\';
 if(isset($_POST['submit']))
@@ -235,6 +291,16 @@ DEBUT CONTENU CONTAINER
 			?>
 		</div>
 	</div>
+	<?php
+
+	if(!empty($thisLitige[0]['fac_mag']))
+	{
+		include('dt-facturation.php');
+	}
+
+	?>
+
+
 	<div class="bg-separation"></div>
 	<div class="row mt-3">
 		<div class="col">
@@ -328,7 +394,11 @@ DEBUT CONTENU CONTAINER
 
 		</div>
 	</div>
-
+	<div class="row">
+		<div class="col text-center my-3">
+			<a href="mag-litige-listing.php" class="btn btn-primary">Retour</a>
+		</div>
+	</div>
 	<!-- ./container -->
 </div>
 <script type="text/javascript">
