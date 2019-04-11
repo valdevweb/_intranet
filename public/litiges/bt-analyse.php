@@ -11,6 +11,10 @@ if(!isset($_SESSION['id'])){
 $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
+
+require_once  '../../vendor/autoload.php';
+
+
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
@@ -112,18 +116,73 @@ $etat="etat-grey";
 if(isset($_POST['submit']))
 {
 	$maj=updateDossier($pdoLitige);
-		echo "<pre>";
-		print_r($maj);
-		echo '</pre>';
-
-	if($maj>0)
+	if($maj==1)
 	{
-		header('Location:bt-analyse.php?id='.$_GET['id'].'&etat=ok');
+		$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'].'&etat=ok';
+		header($loc);
 	}
 	else
 	{
 		$errors[]="enregistrement impossible";
+
+	}
+}
+		// on prend la date de cloture car on peut choisir de cloturer un dossier alors qu'on attend toujours des élements sur le dossier
+if(isset($_POST['submit_mail']))
+{
+
+	$maj=updateDossier($pdoLitige);
+	if($maj==1)
+	{
+		if(!empty($_POST['date_cloture']))
+		{
+			if(VERSION =='_')
+			{
+				$mailMag=array('valerie.montusclat@btlec.fr');
+			}
+			else
+			{
+				if($_SESSION['code_bt']!='4201')
+				{
+					$mailMag=array($infoMag['btlec'].'-rbt@btlec.fr');
+				}
+				else
+				{
+					$mailMag=array('valerie.montusclat@btlec.fr');
+				}
+			}
+
+			$magTemplate = file_get_contents('mail-mag-cloture.php');
+			$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
+			$subject='Portail BTLec Est  - clôture du dossier litige ' . $fLitige['dossier'];
+			// ---------------------------------------
+			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$mailer = new Swift_Mailer($transport);
+			$message = (new Swift_Message($subject))
+			->setBody($magTemplate, 'text/html')
+			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+			->setTo($mailMag)
+			->addBcc('valerie.montusclat@btlec.fr');
+			$delivered=$mailer->send($message);
+			if($delivered >0)
+			{
+				$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'].'&etat=ok';
+				header($loc);
+			}
+			else
+			{
+				$errors[]='Le mail n\'a pas pu être envoyé';
+			}
 		}
+		else
+		{
+			$errors[]='vous devez renseigner une date de clôture';
+		}
+	}
+	else
+	{
+		$errors[]="enregistrement impossible";
+	}
 
 }
 if(isset($_GET['etat']))
@@ -144,8 +203,8 @@ DEBUT CONTENU CONTAINER
 	<h1 class="text-main-blue py-5 ">Dossier N° <?= $fLitige['dossier']?></h1>
 	<h4 class="khand text-main-blue">Analyse du litige</h4>
 	<?php
-			include('../view/_errors.php');
-	 ?>
+	include('../view/_errors.php');
+	?>
 
 	<div class="row">
 		<div class="col">
@@ -354,12 +413,12 @@ DEBUT CONTENU CONTAINER
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-6">
-								<div class="text-right">
+							<div class="col">
+								<div class="text-center">
 									<button type="submit" id="submit" class="btn btn-primary" name="submit"><i class="fas fa-save pr-3"></i>Enregistrer</button>
+									<button type="submit" id="submit_mail" class="btn btn-red" name="submit_mail"><i class="fas fa-save pr-3"></i>Enregistrer et envoyer le mail de clôture</button>
 								</div>
 							</div>
-							<div class="col"></div>
 						</div>
 					</form>
 				</div>
@@ -370,15 +429,15 @@ DEBUT CONTENU CONTAINER
 
 
 	<div class="row mb-5">
-				<div class="col-lg-1 col-xxl-2"></div>
-				<div class="col mb-5">
-					<p>&nbsp;</p>
-					<p class="text-center"><a href="bt-detail-litige.php?id=<?=$_GET['id']?>" class="btn btn-primary">Retour</a></p>
-					<p>&nbsp;</p>
+		<div class="col-lg-1 col-xxl-2"></div>
+		<div class="col mb-5">
+			<p>&nbsp;</p>
+			<p class="text-center"><a href="bt-detail-litige.php?id=<?=$_GET['id']?>" class="btn btn-primary">Retour</a></p>
+			<p>&nbsp;</p>
 
-				</div>
-				<div class="col-lg-1 col-xxl-2"></div>
-			</div>
+		</div>
+		<div class="col-lg-1 col-xxl-2"></div>
+	</div>
 
 
 
