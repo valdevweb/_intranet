@@ -12,6 +12,10 @@ if(!isset($_SESSION['id'])){
 $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
+
+require_once  '../../vendor/autoload.php';
+
+
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
@@ -79,7 +83,7 @@ function getBtName($pdoBt, $idwebuser)
 
 function getMagName($pdoUser, $idwebuser)
 {
-	$req=$pdoUser->prepare("SELECT btlec.sca3.mag FROM users LEFT JOIN btlec.sca3 ON users.galec=btlec.sca3.galec WHERE users.id= :id_web_user ");
+	$req=$pdoUser->prepare("SELECT btlec.sca3.mag, btlec.sca3.btlec FROM users LEFT JOIN btlec.sca3 ON users.galec=btlec.sca3.galec WHERE users.id= :id_web_user ");
 	$req->execute(array(
 		':id_web_user'	=>$idwebuser
 	));
@@ -92,22 +96,24 @@ function createFileLink($filelist)
 	$rValue='';
 	$filelist=explode(';',$filelist);
 
-		for ($i=0; $i < count($filelist); $i++)
+	for ($i=0; $i < count($filelist); $i++)
+	{
+		if($filelist[$i] !="")
 		{
-			if($filelist[$i] !="")
-			{
 			$rValue.='<a href="'.UPLOAD_DIR.'/litiges/'.$filelist[$i].'"><span class="pr-3"><i class="fas fa-link"></i></span></a>';
 
-			}
 		}
+	}
 	return $rValue;
 }
 
 $errors=[];
 $success=[];
+
+
 $defaultTxt='Bonjour,&#13;&#10;&#13;&#10;&#13;&#10;Cordialement,&#13;&#10;'.$_SESSION['nom_bt'];
 $uploadDir= '..\..\..\upload\litiges\\';
-
+$infoMag=getMagName($pdoUser, $fLitige['id_web_user']);
 if(isset($_POST['submit']))
 {
 
@@ -157,25 +163,62 @@ if(isset($_POST['submit']))
 		if(count($errors)==0)
 		{
 			$newMsg=addMsg($pdoLitige, $filelist);
-			if($newMsg>0)
-			{
-				$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'].'&success=ok';
-				header($loc);
-				// reload
-			}
-			else
+			if($newMsg !=1)
 			{
 				$errors[]="impossible d'ajouter le message dans la base de donnée";
 			}
 		}
 
+		if(count($errors)==0)
+		{
+			if(VERSION =='_')
+			{
+				$mailMag=array('valerie.montusclat@btlec.fr');
+			}
+			else
+			{
+				if($_SESSION['code_bt']!='4201')
+				{
+					$mailMag=array($infoMag['btlec'].'-rbt@btlec.fr');
+				}
+				else
+				{
+					$mailMag=array('valerie.montusclat@btlec.fr');
+				}
+			}
+
+			$magTemplate = file_get_contents('mail-mag-msgbt.php');
+			$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
+			$subject='Portail BTLec Est  - nouveau message sur le dossier litige ' . $fLitige['dossier'];
+			// ---------------------------------------
+			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$mailer = new Swift_Mailer($transport);
+			$message = (new Swift_Message($subject))
+			->setBody($magTemplate, 'text/html')
+			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+			->setTo($mailMag)
+			->addBcc('valerie.montusclat@btlec.fr');
+			$delivered=$mailer->send($message);
+			if($delivered >0)
+			{
+				$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'].'&success=ok';
+				header($loc);
+			}
+			else
+			{
+				$errors[]='Le mail n\'a pas pu être envoyé à notre service livraison';
+			}
+
+
+		}
+
 	}
 
-if(isset($_GET['success']))
-	 {
+	if(isset($_GET['success']))
+	{
 		$success[]="message envoyé avec succés";
 
-	 }
+	}
 
 //------------------------------------------------------
 //			VIEW
@@ -224,15 +267,14 @@ DEBUT CONTENU CONTAINER
 									{
 										if($dial['mag']==1)
 										{
-											$name=getMagName($pdoUser, $dial['id_web_user']);
-											$name=$name['mag'];
+											$name=$infoMag['mag'];
 											$type='bg-kaki-light';
 
 										}
 										else
 										{
-											$name=getBtName($pdoBt, $dial['id_web_user']);
-											$name=$name['name'];
+											$infoBt=getBtName($pdoBt, $dial['id_web_user']);
+											$name=$infoBt['name'];
 											$type='bg-alert-primary';
 										}
 										if($dial['filename']!='')
@@ -306,9 +348,9 @@ DEBUT CONTENU CONTAINER
 								</div>
 							</fieldset>
 						</div>
-							<div id="filelist"></div>
+						<div id="filelist"></div>
 
-						<p class="text-right"><button type="submit" id="submit_t" class="btn btn-kaki" name="submit"><i class="fas fa-plus-square pr-3"></i>Ajouter</button></p>
+						<p class="text-right"><button type="submit" id="submit_t" class="btn btn-kaki" name="submit"><i class="fas fa-envelope pr-3"></i>Envoyer</button></p>
 
 					</form>
 				</div>
@@ -349,15 +391,15 @@ DEBUT CONTENU CONTAINER
 			var nbFiles=e.target.files.length;
 			for (var i = 0; i < nbFiles; i++)
 			{
-            fileName=e.target.files[i].name;
-            fileList += fileName + ' - ';
-        }
-        titre='<p><span class="heavy">Fichier(s) : </span>';
-        end='</p>';
-        all=titre+fileList+end;
-        $('#filelist').append(all);
-        fileList="";
-    });
+				fileName=e.target.files[i].name;
+				fileList += fileName + ' - ';
+			}
+			titre='<p><span class="heavy">Fichier(s) : </span>';
+			end='</p>';
+			all=titre+fileList+end;
+			$('#filelist').append(all);
+			fileList="";
+		});
 
 
 	});
