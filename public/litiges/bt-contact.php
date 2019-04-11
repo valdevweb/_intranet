@@ -114,10 +114,8 @@ $success=[];
 $defaultTxt='Bonjour,&#13;&#10;&#13;&#10;&#13;&#10;Cordialement,&#13;&#10;'.$_SESSION['nom_bt'];
 $uploadDir= '..\..\..\upload\litiges\\';
 $infoMag=getMagName($pdoUser, $fLitige['id_web_user']);
-if(isset($_POST['submit']))
+if(isset($_POST['submit']) ||isset($_POST['submit_mail']))
 {
-
-
 	if(empty($_FILES['form_file']['name'][0]))
 	{
 	// pas de fichier
@@ -171,42 +169,50 @@ if(isset($_POST['submit']))
 
 		if(count($errors)==0)
 		{
-			if(VERSION =='_')
+			if(isset($_POST['submit_mail']))
 			{
-				$mailMag=array('valerie.montusclat@btlec.fr');
-			}
-			else
-			{
-				if($_SESSION['code_bt']!='4201')
-				{
-					$mailMag=array($infoMag['btlec'].'-rbt@btlec.fr');
-				}
-				else
+				if(VERSION =='_')
 				{
 					$mailMag=array('valerie.montusclat@btlec.fr');
 				}
-			}
+				else
+				{
+					if($_SESSION['code_bt']!='4201')
+					{
+						$mailMag=array($infoMag['btlec'].'-rbt@btlec.fr');
+					}
+					else
+					{
+						$mailMag=array('valerie.montusclat@btlec.fr');
+					}
+				}
 
-			$magTemplate = file_get_contents('mail-mag-msgbt.php');
-			$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
-			$subject='Portail BTLec Est  - nouveau message sur le dossier litige ' . $fLitige['dossier'];
+				$magTemplate = file_get_contents('mail-mag-msgbt.php');
+				$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
+				$subject='Portail BTLec Est  - nouveau message sur le dossier litige ' . $fLitige['dossier'];
 			// ---------------------------------------
-			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
-			$mailer = new Swift_Mailer($transport);
-			$message = (new Swift_Message($subject))
-			->setBody($magTemplate, 'text/html')
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
-			->setTo($mailMag)
-			->addBcc('valerie.montusclat@btlec.fr');
-			$delivered=$mailer->send($message);
-			if($delivered >0)
-			{
-				$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'].'&success=ok';
-				header($loc);
+				$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+				$mailer = new Swift_Mailer($transport);
+				$message = (new Swift_Message($subject))
+				->setBody($magTemplate, 'text/html')
+				->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+				->setTo($mailMag)
+				->addBcc('valerie.montusclat@btlec.fr');
+				$delivered=$mailer->send($message);
+				if($delivered >0)
+				{
+					$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'].'&success=ok';
+					header($loc);
+				}
+				else
+				{
+					$errors[]='Le mail n\'a pas pu être envoyé';
+				}
 			}
 			else
 			{
-				$errors[]='Le mail n\'a pas pu être envoyé à notre service livraison';
+				$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'].'&success=okenreg';
+				header($loc);
 			}
 
 
@@ -214,10 +220,13 @@ if(isset($_POST['submit']))
 
 	}
 
-	if(isset($_GET['success']))
+	if(isset($_GET['success']) && $_GET['success']=='ok')
 	{
 		$success[]="message envoyé avec succés";
-
+	}
+	elseif(isset($_GET['success']) && $_GET['success']=='okenreg')
+	{
+		$success[]="votre message a été enregistré sans envoi";
 	}
 
 //------------------------------------------------------
@@ -327,7 +336,7 @@ DEBUT CONTENU CONTAINER
 								<?php
 								foreach($allPreTxt as $pretxt)
 								{
-									echo '<option value="'.$pretxt['id'].'">'.$pretxt['nom'].' ('. $pretxt['pretxt'].'</option>';
+									echo '<option value="'.$pretxt['id'].'">'.$pretxt['nom'].' ('. $pretxt['pretxt'].')</option>';
 
 								}
 
@@ -350,7 +359,8 @@ DEBUT CONTENU CONTAINER
 						</div>
 						<div id="filelist"></div>
 
-						<p class="text-right"><button type="submit" id="submit_t" class="btn btn-kaki" name="submit"><i class="fas fa-envelope pr-3"></i>Envoyer</button></p>
+						<div class="text-right"><button type="submit" id="submit_t" class="btn btn-kaki" name="submit"><i class="fas fa-save pr-3"></i>Enregistrer</button>
+						<button type="submit" id="submit_mail" class="btn btn-red" name="submit_mail"><i class="fas fa-envelope pr-3"></i>Envoyer</button></div>
 
 					</form>
 				</div>
@@ -378,12 +388,13 @@ DEBUT CONTENU CONTAINER
 
 		$('#pretxt').on('change',function(){
 			var txt=$('#pretxt option:selected').text();
-			var pretxt=txt.split(' (');
+			txt=txt.split(' (');
+			var pretxt=txt[1].split(')');
 			var bjr="Bonjour,\n\n";
 			var cdlt="\n\n"+"Cordialement,\n";
 			var name='<?php echo $_SESSION['nom_bt'];?>';
  						// console.log(name);
- 						$('#msg').val(bjr + pretxt[1] + cdlt + name);
+ 						$('#msg').val(bjr + pretxt[0] + cdlt + name);
  					});
 		var fileName='';
 		var fileList='';
