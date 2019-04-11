@@ -12,8 +12,7 @@ else {
 require('../../functions/form.bt.fn.php');
 //______________________________________
 
-include('../view/_head.php');
-include('../view/_navbar.php');
+
 
 
 $idMsg=$_GET['msg'];
@@ -23,7 +22,8 @@ $id_mag=$msg['id_mag'];
 
 //$mag_name=infoMag($pdoMag, $idMag);
 
-
+include('../view/_head.php');
+include('../view/_navbar.php');
 
 ?>
 <div class="container">
