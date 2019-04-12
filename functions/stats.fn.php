@@ -27,8 +27,8 @@
 
 function addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
 {
-	global $version;
-	if($version=="_"){
+
+	if(VERSION=="_"){
 		$typeLog="dev";
 	}
 	else
@@ -42,12 +42,13 @@ function addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
 		$detail="";
 	}
 
-	$req=$pdoStat->prepare('INSERT INTO stats_logs (type_log,id_user,site,date_heure,page,action,description, detail, code)
-		VALUE(:type_log,:id_user,:site,:date_heure,:page,:action,:description, :detail, :code)');
+	$req=$pdoStat->prepare('INSERT INTO stats_logs (type_log,id_user,id_web_user,site,date_heure,page,action,description, detail, code)
+		VALUE(:type_log,:id_user,:id_web_user,:site,:date_heure,:page,:action,:description, :detail, :code)');
 	$req->execute(array(
 		':type_log'=>$typeLog,
 		':id_user'=>$_SESSION['user'],
-		':site'	=>'portail BT',
+		':id_web_user'=>$_SESSION['id_web_user'],
+		':site'	=>'portail SAV',
 		':date_heure'=>date('Y-m-d H:i:s'),
 		':page'		=>$page,
 		':action'	=>$action,
