@@ -239,6 +239,11 @@ if(isset($_POST['submit']) ||isset($_POST['submit_mail']))
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
+	<div class="row py-3">
+		<div class="col">
+			<p class="text-right"><a href="bt-detail-litige.php?id=<?=$_GET['id']?>" class="btn btn-primary">Retour</a></p>
+		</div>
+	</div>
 	<h1 class="text-main-blue py-5 ">Dossier N° <?= $fLitige['dossier']?></h1>
 	<div class="row no-gutters">
 		<div class="col">
@@ -360,69 +365,68 @@ DEBUT CONTENU CONTAINER
 						<div id="filelist"></div>
 
 						<div class="text-right"><button type="submit" id="submit_t" class="btn btn-kaki" name="submit"><i class="fas fa-save pr-3"></i>Enregistrer</button>
-						<button type="submit" id="submit_mail" class="btn btn-red" name="submit_mail"><i class="fas fa-envelope pr-3"></i>Envoyer</button></div>
+							<button type="submit" id="submit_mail" class="btn btn-red" name="submit_mail"><i class="fas fa-envelope pr-3"></i>Envoyer</button></div>
 
-					</form>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
 
-	<!-- RETOUR -->
-	<div class="row my-5">
-		<div class="col-lg-1 col-xxl-2"></div>
-		<div class="col">
-			<p class="text-center"><a href="bt-detail-litige.php?id=<?=$_GET['id']?>" class="btn btn-primary">Retour</a></p>
+		<!-- RETOUR -->
+		<div class="row my-5">
+			<div class="col-lg-1 col-xxl-2"></div>
+			<div class="col">
 
 
+			</div>
+			<div class="col-lg-1 col-xxl-2"></div>
 		</div>
-		<div class="col-lg-1 col-xxl-2"></div>
+
+
 	</div>
+	<script type="text/javascript">
 
+		$(document).ready(function (){
 
-</div>
-<script type="text/javascript">
-
-	$(document).ready(function (){
-
-		$('#pretxt').on('change',function(){
-			var txt=$('#pretxt option:selected').text();
-			txt=txt.split(' (');
-			var pretxt=txt[1].split(')');
-			var bjr="Bonjour,\n\n";
-			var cdlt="\n\n"+"Cordialement,\n";
-			var name='<?php echo $_SESSION['nom_bt'];?>';
+			$('#pretxt').on('change',function(){
+				var txt=$('#pretxt option:selected').text();
+				txt=txt.split(' (');
+				var pretxt=txt[1].split(')');
+				var bjr="Bonjour,\n\n";
+				var cdlt="\n\n"+"Cordialement,\n";
+				var name='<?php echo $_SESSION['nom_bt'];?>';
  						// console.log(name);
  						$('#msg').val(bjr + pretxt[0] + cdlt + name);
  					});
-		var fileName='';
-		var fileList='';
-		$('input[type="file"]').change(function(e){
-			var nbFiles=e.target.files.length;
-			for (var i = 0; i < nbFiles; i++)
-			{
-				fileName=e.target.files[i].name;
-				fileList += fileName + ' - ';
-			}
-			titre='<p><span class="heavy">Fichier(s) : </span>';
-			end='</p>';
-			all=titre+fileList+end;
-			$('#filelist').append(all);
-			fileList="";
+			var fileName='';
+			var fileList='';
+			$('input[type="file"]').change(function(e){
+				var nbFiles=e.target.files.length;
+				for (var i = 0; i < nbFiles; i++)
+				{
+					fileName=e.target.files[i].name;
+					fileList += fileName + ' - ';
+				}
+				titre='<p><span class="heavy">Fichier(s) : </span>';
+				end='</p>';
+				all=titre+fileList+end;
+				$('#filelist').append(all);
+				fileList="";
+			});
+
+
 		});
 
-
-	});
-
-</script>
+	</script>
 
 
 
 
 
-<?php
+	<?php
 
-require '../view/_footer-bt.php';
+	require '../view/_footer-bt.php';
 
-?>
+	?>

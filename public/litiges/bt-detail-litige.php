@@ -322,7 +322,14 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<div class="row pt-5 pb-3 align-items-center">
+	<div class="row py-3">
+		<div class="col">
+			<p class="text-right"><a href="bt-litige-encours.php" class="btn btn-primary">Retour</a></p>
+		</div>
+	</div>
+
+
+	<div class="row  pb-3 align-items-center">
 
 		<div class="col">
 			<h1 class="text-main-blue ">
@@ -732,23 +739,6 @@ DEBUT CONTENU CONTAINER
 
 
 
-	<!-- start row -->
-	<div class="row mt-3 mb-5">
-		<div class="col-lg-1 col-xxl-2"></div>
-		<div class="col">
-			<p>&nbsp;</p>
-			<p class="text-center"><a href="bt-litige-encours.php" class="btn btn-primary">Retour</a></p>
-			<p>&nbsp;</p>
-
-		</div>
-		<div class="col-lg-1 col-xxl-2"></div>
-	</div>
-	<!-- ./row -->
-
-
-
-	<!-- ./row -->
-	<!-- ./row -->
 
 
 

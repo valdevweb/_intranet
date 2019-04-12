@@ -378,7 +378,13 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Ajout d'informations au dossier N° <?= $fLitige['dossier']?></h1>
+	<div class="row py-3">
+		<div class="col">
+			<p class="text-right"><a href="bt-detail-litige.php?id=<?=$_GET['id']?>" class="btn btn-primary">Retour</a></p>
+		</div>
+	</div>
+
+	<h1 class="text-main-blue pb-5 ">Ajout d'informations au dossier N° <?= $fLitige['dossier']?></h1>
 	<div class="row no-gutters">
 		<div class="col">
 			<?php
@@ -747,7 +753,6 @@ DEBUT CONTENU CONTAINER
 				<div class="col-lg-1 col-xxl-2"></div>
 				<div class="col mb-5">
 
-					<p class="text-center"><a href="bt-detail-litige.php?id=<?=$_GET['id']?>" class="btn btn-primary">Retour</a></p>
 
 
 				</div>
