@@ -219,6 +219,12 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 			<td class="quatre  heavy">DATE DECLARATION</td>
 			<td class="quatre"><?=$fLitige[0]['datecrea']?></td>
 		</tr>
+		<tr>
+			<td colspan="4">
+				<span class="heavy">Commentaires magasin :</span>
+				<?= $firstDial['msg']?>
+			</td>
+		</tr>
 
 	</table>
 
@@ -254,13 +260,25 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 
 	<div class="spacing-s"></div>
 
-	<table class="padding-table border-table-grey">
+	<table>
 		<tr>
-			<td class="cinq bg-dark-grey text-white">DATE PREPA :</td>
-			<td class="cinq"><?=$infos['dateprepa']?></td>
+			<td>
+				<table class="padding-table border-table-grey">
+					<tr>
+						<td class="cinq bg-dark-grey text-white">DATE PREPA :</td>
+						<td class="cinq"><?=$infos['dateprepa']?></td>
 
+					</tr>
+				</table>
+			</td>
+			<td class="text-right" style="width: 350px;">
+				<?= $vingtquatre?>
+			</td>
 		</tr>
+
+
 	</table>
+
 	<div class="spacing-s"></div>
 
 	<table class="padding-table border-table-grey">
@@ -332,8 +350,8 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 		foreach ($actionList as $action)
 		{
 			echo '<tr>';
-				echo '<td>'.$action['dateFr'].'</td>';
-				echo '<td>'.$action['libelle'].'</td>';
+			echo '<td>'.$action['dateFr'].'</td>';
+			echo '<td>'.$action['libelle'].'</td>';
 
 
 		}

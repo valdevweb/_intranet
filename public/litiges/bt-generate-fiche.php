@@ -167,7 +167,15 @@ if($coutTotal!=0){
 
 $fLitige=getLitige($pdoLitige);
 
+if($fLitige[0]['vingtquatre']==1)
+{
+	$vingtquatre='<img src="../img/litiges/2448_40.png">';
 
+}
+else
+{
+	$vingtquatre="";
+}
 $firstDial=getFirstDial($pdoLitige);
 
 if($fLitige[0]['flag_valo']==1)
@@ -188,18 +196,18 @@ else{
 		//----------------------------------------------
 
 		// récupération du contenu html du pdf
-		ob_start();
-		include('pdf-fiche-suivi.php');
-		$html=ob_get_contents();
-		ob_end_clean();
-		$footer='<table class="padding-table"><tr><td>TRAITEMENT</td></tr><tr><td class="spacing-l"></td></tr><tr><td>Date et validation</td></tr><tr><td class="spacing-l"></td></tr></table>';
-		$path='http://172.30.92.53/'.VERSION.'upload/litiges/'.$html;
+ob_start();
+include('pdf-fiche-suivi.php');
+$html=ob_get_contents();
+ob_end_clean();
+$footer='<table class="padding-table"><tr><td>TRAITEMENT</td></tr><tr><td class="spacing-l"></td></tr><tr><td>Date et validation</td></tr><tr><td class="spacing-l"></td></tr></table>';
+$path='http://172.30.92.53/'.VERSION.'upload/litiges/'.$html;
 
-		$mpdf = new \Mpdf\Mpdf();
-		$mpdf->SetHTMLFooter($footer);
-		$mpdf->WriteHTML($path);
+$mpdf = new \Mpdf\Mpdf();
+$mpdf->SetHTMLFooter($footer);
+$mpdf->WriteHTML($path);
 		// $pdfContent = $mpdf->Output('', 'S');
-		$pdfContent = $mpdf->Output();
+$pdfContent = $mpdf->Output();
 
 //------------------------------------------------------
 //			VIEW
