@@ -117,7 +117,9 @@ else
 				<P class="orange-text text-darken-2">LES ALERTES PROMOS</p>
 					<hr>
 					<ul class='links'>
-						<li><a class='stat-link' data-user-session="<?= $_SESSION['user']?>" href="http://172.30.92.53/OPPORTUNITES/index.html" target="_blank"><i class="fa fa-angle-double-right" aria-hidden="true"></i>voir les alertes promos</a></li>
+						<li>
+							<a class='stat-link' data-user-session="<?= $_SESSION['user']?>" href="http://172.30.92.53/OPPORTUNITES/index.html" target="_blank"><i class="fa fa-external-link pr-3" aria-hidden="true"></i>voir les alertes promos</a>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -127,10 +129,17 @@ else
 					<p class="orange-text text-darken-2">DOCUBASE :</p>
 					<hr>
 					<ul class='links'>
-						<li>Retrouvez les documents émis par BTlec : <a class="simple-link stat-link" data-user-session="<?= $_SESSION['user']?>"  href="http://172.30.101.66/rheaweb/auth">factures, bon livraison, etc</a></li>
+						<li>Retrouvez vos factures, reversement, bon livraison, etc<br>
+						<a class="simple-link stat-link" data-user-session="<?= $_SESSION['user']?>"  href="http://172.30.101.66/rheaweb/auth"><i class="fa fa-external-link pr-3" aria-hidden="true"></i>Docubase</a></li>
 						<?php echo isset($infoRev) ? $infoRev:"";?>
-
 					</ul>
+					<p class="orange-text text-darken-2">Le portail EXTRALEC :</p>
+					<hr>
+					<ul class='links'>
+						<li>Prenez en main rapidement et facilement les applications de l'univers Extralec grâce au portail (guide d'installation , formation, assistance technique) et administrez vos comptes utilisateurs.<br><a class="simple-link stat-link" data-user-session="<?= $_SESSION['user']?>"  href="https://www.extralecbtlec.fr/"><i class="fa fa-external-link pr-3" aria-hidden="true"></i>Portail Extralec</a><br><br></li>
+						<li>Si vous ne connaissez pas bien Extralec, n'hésitez pas à consulter <a class="simple-link stat-link" data-user-session="<?= $_SESSION['user']?>"  href="<?= ROOT_PATH. '/public/doc/extralec.php'?>">la plaquette commerciale </a></li>
+					</ul>
+
 				</div>
 						<!-- <div class="vm-card">
 							<P class="orange-text text-darken-2">VOS DEMANDES :</p>

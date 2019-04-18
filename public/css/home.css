@@ -11,16 +11,35 @@ hr {
 	margin-bottom: 40px !important;
 }
 a.stat-link{
+	color :#01579b !important;
+	font-weight: bold;
+
 	letter-spacing: -1px;
-	font-style: italic;
+	/* font-style: italic; */
 
 }
 a.stat-link:hover{
-	font-weight: bold;
-	color:#f57c00;
+	/* color:#f57c00; */
 	text-decoration: none;
+color :#01579b !important;
 
 }
+
+
+/* docubase et extralec */
+.home-link-external{
+color :#01579b !important;
+padding-left:  10px;
+}
+
+a.home-link-external:hover{
+color :#01579b !important;
+padding-left:  10px;
+}
+.pr-3{
+  padding-right: 8px;
+}
+
 
 .imgcenter{
 	text-align: center;

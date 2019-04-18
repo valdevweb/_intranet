@@ -45,7 +45,7 @@ if($gazetteAppros){
 		$filename=$gazette['file'];
 		$filename=explode(".",$filename);
 		$approFilename=$filename[0];
-		$approHtml .= "<li><i class='fa fa-angle-double-right'></i><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .$approFilename . $detail."</a></li>";
+		$approHtml .= "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'><i class='fa fa-hand-o-right pr-3' aria-hidden='true'></i>".$approFilename."</a>"  . $detail."</li>";
 	}
 }
 $gazetteSpe=showThisWeekSpe($pdoBt);
@@ -54,7 +54,7 @@ $speHtml="";
 if($gazetteSpe){
 	foreach ($gazetteSpe as $gSpe)
 	{
-		$speHtml .= "<li><i class='fa fa-angle-double-right'></i><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gSpe['file']."'>" .mb_strtolower($gSpe['title'],'UTF-8') ."</a></li>";
+		$speHtml .= "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gSpe['file']."'><i class='fa fa-hand-o-right pr-3' aria-hidden='true'></i>" .mb_strtolower($gSpe['title'],'UTF-8') ."</a></li>";
 	}
 }
 
@@ -194,7 +194,7 @@ if(!empty($revRes))
 
 function getFlashNews($pdoBt)
 {
-	$req=$pdoBt->prepare("SELECT * FROM flash WHERE valid=1 AND date_start <= :today AND date_end >= :today");
+	$req=$pdoBt->prepare("SELECT * FROM flash WHERE valid=1 AND date_start <= :today AND date_end >= :today ORDER BY id DESC");
 	$req->execute(array(
 		':today'		=>date('Y-m-d 00:00:00')
 	));
