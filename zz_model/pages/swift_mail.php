@@ -52,7 +52,7 @@ $message = (new Swift_Message($subject))
 
 // echec => renvoie 0
 $delivered=$mailer->send($message);
-if($delivered >0)
+if($delivered !=0)
 {
 }
 

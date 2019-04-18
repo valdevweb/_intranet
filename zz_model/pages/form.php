@@ -40,7 +40,9 @@ foreach ($gts as $gt)
 
 }
 
-
+if (filter_var($email_a, FILTER_VALIDATE_EMAIL)) {
+    echo "L'adresse email '$email_a' est considérée comme valide.";
+}
 
 foreach($equipes as $equipe)
 {
@@ -58,6 +60,24 @@ refresh after submit -->
 		$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?success=ok';
 		header($loc);
 ?>
+<!--
+MEMO
+
+form-group + form-control
+input
+select option
+text-area
+
+form-check + form-check-input
+input checkbox
+input radio
+
+
+ -->
+
+
+
+
 
 <!-- date -->
 <div class="row">

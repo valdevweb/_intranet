@@ -46,6 +46,11 @@ require "../functions/ld.fn.php";
 			$magDest[]=$mail['email'];
 		}
 
+$htmlMail = file_get_contents('mail_ar_mag_saisie.php');
+$htmlMail=str_replace('{PROD}',$prod,$htmlMail);
+$htmlMail=str_replace('{MAGFROM}',$from,$htmlMail);
+$htmlMail=str_replace('{MAGTO}',$_SESSION['nom'],$htmlMail);
+		$subject='Portail SAV Leclerc - Rétrocession - ';
 
 
 
