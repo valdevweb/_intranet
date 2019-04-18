@@ -15,7 +15,7 @@ require '../view/_navbar.php';
 <h1 class="blue-text text-darken-4">L'application Extralec</h1>
 
 <br>
- <embed src="<?=SITE_ADDRESS ."/public/doc/plaquette commerciale Extralec.pdf" ?>" type='application/pdf' width=100% height=900px/>
+ <embed src="<?=SITE_ADDRESS ."/public/doc/plaquetteCommercialeEXTRALEC-ZEPLV.pdf" ?>" type='application/pdf' width=100% height=900px/>
 </div>
 
 <?php
