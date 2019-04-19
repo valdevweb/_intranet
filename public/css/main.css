@@ -372,6 +372,14 @@ border-bottom: solid 1px #9e9e9e;
   /* blue-grey darken-1 */
   border: 2px solid #546e7a;
 }
+.blue-link{
+  color: #0d47A1;
+}
+
+.blue-link:hover{
+  color: #0d47A1;
+  font-weight: bold;
+}
 
 /* a.simple-link:hover
 {

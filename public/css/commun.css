@@ -40,7 +40,7 @@ body
 }
 
 .marck-script{
-  font-family:'Marck Script', sans-serif;
+  font-family:'Marck Script', sans-serif !important;
 }
 .roboto{
   font-family:Roboto, sans-serif;
@@ -144,6 +144,18 @@ color:#f57c00;
 .bigger
 {
   font-size: 1.2rem;
+}
+
+
+
+.opacity-un{
+  opacity: 0.8
+}
+.opacity-deux{
+  opacity: 0.6
+}
+.opacity-trois{
+  opacity: 0.4
 }
 /* -------------------------------- */
 /*        backgrounds               */
@@ -378,7 +390,21 @@ background: #757687
 
 }
 
+.btn-green{
+  background: #008C1C;
+  box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
+  transition: all 4s;
+  transition-timing: ease-in-out;
+  color: #fff;
+}
 
+
+.btn-green:hover{
+   transform: scale(1.01);
+  background: #006514;
+  color: #fff;
+
+}
 
 /* -------------------------------- */
 /*              titre               */
