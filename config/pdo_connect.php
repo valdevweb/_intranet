@@ -17,6 +17,8 @@ function connectToDb($dbname) {
 // no dev
 $pdoUser=connectToDb('web_users');
 $pdoStat= connectToDb('stats');
+$pdoQlik= connectToDb('qlik');
+
 // dev
 $pdoBt=connectToDb('btlec');
 $pdoSav=connectToDb('sav');
