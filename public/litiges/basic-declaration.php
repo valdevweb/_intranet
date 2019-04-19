@@ -15,16 +15,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //			FONCTION
 //------------------------------------------------------
 
-function getMinAndMaxDate($pdoLitige)
-{
-	$req=$pdoLitige->prepare("SELECT date_mvt, MIN(date_mvt) as mini, MAX(date_mvt) as maxi, DATE_FORMAT(MIN(date_mvt),'%d-%m-%Y') as ministr, DATE_FORMAT(MAX(date_mvt),'%d-%m-%Y') as maxistr FROM statsventeslitiges");
-	$req->execute(array(
-		':galec'	=>$_SESSION['id_galec']
 
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
-$dateBounderies=getMinAndMaxDate($pdoLitige);
 
 
 
@@ -188,8 +179,8 @@ if(isset($_POST['choose']))
 		// soit le numéro de dossier a été saisi soit, on doit le calculer
 		if(!empty($_POST['num_dossier_form']))
 		{
-				$numDossier=$_POST['num_dossier_form'];
-				$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId);
+			$numDossier=$_POST['num_dossier_form'];
+			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId);
 
 		}
 		else
@@ -254,7 +245,7 @@ if(isset($_POST['choose']))
 		}
 		elseif ($added>0 && isset($_POST['palette_complete']))
 		{
-			 header('Location:declaration-detail-palette.php?id='.$lastInsertId);
+			header('Location:declaration-detail-palette.php?id='.$lastInsertId);
 		}
 	}
 }
@@ -302,7 +293,7 @@ DEBUT CONTENU CONTAINER
 	<div class="row">
 		<div class="col-lg-1 col-xxl-2"></div>
 		<div class="col bg-alert bg-alert-primary">
-			<form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>">
+			<form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" id="search">
 				<!-- start row -->
 				<!-- start row -->
 				<div class="row pb-3">
@@ -320,7 +311,7 @@ DEBUT CONTENU CONTAINER
 					</div>
 					<div class="col">
 						<p class="text-left"><button class="btn btn-primary" type="submit" name="submit">Rechercher</button></p>
-
+						<div id="waitun"></div>
 					</div>
 				</div>
 			</form>
@@ -345,16 +336,16 @@ DEBUT CONTENU CONTAINER
 	<div class="row">
 		<div class="col-lg-1 col-xxl-2"></div>
 		<div class="col bg-alert bg-alert-grey">
-			<form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>">
+			<form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" id="submit">
 				<p class="text-center alert-title-grey">Votre recherche : <span class="text-main-blue">"<?=  isset($searchStr) ? $searchStr : '' ?>"</span></p>
 				<p  class="text-center heavy alert-title-grey">Résultats :</p>
 				<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">1</span>Sélectionnez le ou les articles sur lesquels vous avez un litige à déclarer</p>
 				<div class="alert alert-light">
-				<p class="text-main-blue">Si la palette entière est concernée par le litige, merci de cocher ci dessous l'option "palette entière"</p>
+					<p class="text-main-blue">Si la palette entière est concernée par le litige, merci de cocher ci dessous l'option "palette entière"</p>
 					<div class="form-check">
-							<input type="checkbox" class="form-check-input" id="checkpalette" name="palette_complete">
-							<label class="form-check-label" for="checkAll">Palette entière</label>
-						</div>
+						<input type="checkbox" class="form-check-input" id="checkpalette" name="palette_complete">
+						<label class="form-check-label" for="checkAll">Palette entière</label>
+					</div>
 
 				</div>
 
@@ -491,11 +482,21 @@ DEBUT CONTENU CONTAINER
 				return false; }
 
 			});
-		</script>
+		$("#search").submit(function( event )
+		{
+			$("#waitun" ).append('<i class="fas fa-spinner fa-spin"></i><span class="pl-3">Merci de patienter pendant la recherche</span>')
+		});
+
+		$("#submit").submit(function( event )
+		{
+			$("#waitdeux" ).append('<i class="fas fa-spinner fa-spin"></i><span class="pl-3">Merci de patienter</span>')
+
+		});
+	</script>
 
 
-		<?php
+	<?php
 
-		require '../view/_footer-bt.php';
+	require '../view/_footer-bt.php';
 
-		?>
+	?>
