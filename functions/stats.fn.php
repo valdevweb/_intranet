@@ -48,7 +48,7 @@ function addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
 		':type_log'=>$typeLog,
 		':id_user'=>$_SESSION['user'],
 		':id_web_user'=>$_SESSION['id_web_user'],
-		':site'	=>'portail SAV',
+		':site'	=>'portail BT',
 		':date_heure'=>date('Y-m-d H:i:s'),
 		':page'		=>$page,
 		':action'	=>$action,
