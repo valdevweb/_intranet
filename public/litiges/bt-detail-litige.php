@@ -179,18 +179,25 @@ function updateValo($pdoLitige, $valo,$flag)
 	));
 	return $req->rowCount();
 }
+$articleAZero='';
 
+// on boucle sur le detail, pour 2 raisons
 // si on n'a pas encore calculé la valo, on la calcul
 
 if($fLitige[0]['flag_valo'] == 0)
 {
 	$flag=0;
 	$sumValo=0;
+	// le flag ne change que si on a un tarif que l'on ne trouve pas
+	// =>résultat à la fin de la boucle, soit le flag est à 0 ce qui signifie que 'lon a récupéré tout les tarifs
+	// soit le flag est à 2 ce qui signifie que l'on a au moins un pb de tarif => si le flag est à 2, on le met à 2 dans la db
+	// pour conserver l'info de pb de tarif
 	foreach ($fLitige as $prod)
 	{
+		// cas d'un inversion de produi
 		if($prod['inversion'] !="")
 		{
-			// si on a réussi à récupérer un tarif pour le produit livé en inversion
+			// si on a réussi à récupérer un tarif pour le produit livré en inversion, on calcul la valo et on avance dans le calcul de la valo totale
 			if($prod['inv_tarif'] !=NULL)
 			{
 				$valoInv=round( $prod['inv_qte']*$prod['inv_tarif'],2);
@@ -201,6 +208,12 @@ if($fLitige[0]['flag_valo'] == 0)
 				// on met le flag pour la valo à 2 : indique que le calcul de la valo n'est pas ok car on a pas le tarif de l'article livré
 				$flag=2;
 			}
+		}
+		// tarif à zéro = cas des box
+		elseif($prod['tarif']==0)
+		{
+				$flag=2;
+				$articleAZero='Un des articles n\'a pas de tarif, veuillez cliquer sur le code article pour effectuer une recherche dans la base';
 		}
 		else
 		{
@@ -220,10 +233,11 @@ if($fLitige[0]['flag_valo'] == 0)
 	}
 	// si on a mis le flag à 2, ça veut dir eque l'on a au moins un des articles pour lequel, on a pas le tarif
 	// on met à jour le flag dans la db à 2 pour indique le pb
-	// sinon on le met à un pour indiquer que la valo  est à jour et correct
+	// sinon on le met à un pour indiquer que la valo  est à jour et correcte
 	if($flag==2)
 	{
 		$upvalo=updateValo($pdoLitige, $sumValo, $flag);
+
 	}
 	else
 	{
@@ -237,13 +251,36 @@ if($fLitige[0]['flag_valo'] == 0)
 
 }
 
+function getFinance($pdoQlik, $btlec, $year)
+{
+	$req=$pdoQlik->prepare("SELECT CA_Annuel FROM statsventesadh WHERE CodeBtlec= :btlec AND AnneeCA= :year");
+	$req->execute(array(
+		':btlec' =>$btlec,
+		':year'	=>$year
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+
+$yearN=date('Y');
+$yearNUn= date("Y",strtotime("-1 year"));
+$yearNDeux= date("Y",strtotime("-2 year"));
+
+$financeN=getFinance($pdoQlik,$fLitige[0]['btlec'],$yearN);
+$financeNUn=getFinance($pdoQlik,$fLitige[0]['btlec'],$yearNUn);
+$financeNDeux=getFinance($pdoQlik,$fLitige[0]['btlec'],$yearNDeux);
+
+
+
 if($fLitige[0]['flag_valo']==1)
 {
 	$valoMag=$fLitige[0]['valo'] . '&euro;';
 }
 elseif($fLitige[0]['flag_valo']==2)
 {
-	$valoMag='impossible de calculer la valorisation sans le PU de la référence reçue';
+	$valoMag='impossible de calculer la valorisation';
+	$articleAZero='<i class="fas fa-info-circle text-main-blue pr-3"></i>Un des articles n\'a pas de tarif, veuillez cliquer sur le code article pour effectuer une recherche dans la base';
+
 }
 else{
 	$valoMag=0;
@@ -308,10 +345,18 @@ function addPaletteInv($pdoLitige,$palette,$facture,$date_facture,$article,$ean,
 	));
 	return $req->rowCount();
 }
+
+
+
+
 if(isset($_GET['successpal']))
 {
 	$success[]='la palette a  été trouvée et la base de donnée mise à jour';
 }
+
+
+
+
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
@@ -399,6 +444,7 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-lg-2"></div>
 	</div>
+
 	<div class="bg-separation"></div>
 
 	<div class="row mt-3">
@@ -435,8 +481,8 @@ DEBUT CONTENU CONTAINER
 	<div class="bg-separation"></div>
 	<!-- infos produit -->
 	<?php
-	// affiche soit le tableau de detail des produits soit le tableau d'inversion de palette
 
+	// affiche soit le tableau de detail des produits soit le tableau d'inversion de palette
 	if($fLitige[0]['id_reclamation']==7)
 	{
 	// traitement pour affichage détail palette
@@ -488,7 +534,6 @@ DEBUT CONTENU CONTAINER
 			}
 		}
 		include('dt-invpalette.php');
-
 
 	}
 
