@@ -39,7 +39,7 @@
 </div>
 
 <?php
-
+// palette inversé non trouvée
 if(!$invPal['palette'])
 {
 
