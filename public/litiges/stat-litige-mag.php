@@ -49,6 +49,24 @@ if(isset($_POST['search_form']))
 	$magList=search($pdoBt);
 }
 
+function getFinance($pdoQlik, $btlec, $year)
+{
+	$req=$pdoQlik->prepare("SELECT CA_Annuel FROM statsventesadh WHERE CodeBtlec= :btlec AND AnneeCA= :year");
+	$req->execute(array(
+		':btlec' =>$btlec,
+		':year'	=>$year
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+
+$yearN=date('Y');
+$yearNUn= date("Y",strtotime("-1 year"));
+$yearNDeux= date("Y",strtotime("-2 year"));
+
+
+
+
 //------------------------------------------------------
 //			DECLARATIONS
 //------------------------------------------------------
@@ -120,9 +138,33 @@ DEBUT CONTENU CONTAINER
 			if(isset($_GET['galec']))
 			{
 				$listLitige=getMagLitiges($pdoLitige);
+				$financeN=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearN);
+				$financeNUn=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearNUn);
+				$financeNDeux=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearNDeux);
 				$nbLitiges=count($listLitige);
 				$valoTotal=0;
 				echo '<h3 class="text-center text-main-blue my-3">'.$listLitige[0]['mag'] .'</h3>';
+				echo '<div class="row">';
+				echo '<div class="col-lg-2"></div>';
+				echo '<div class="col">';
+				echo '<div class="text-center"> Chiffre d\'affaire :</div>';
+				echo '<table class="table border-blue light-shadow">';
+				echo '<thead class="thead-primary">';
+				echo '<th>'.$yearN.'</th>';
+				echo '<th>'.$yearNUn .'</th>';
+				echo '<th>'.$yearNDeux .'</th>';
+				echo '</thead>';
+				echo '<tbody>';
+				echo '<td>'.number_format((float)$financeN['CA_Annuel'],2,'.',' ').'&euro;</td>';
+				echo '<td>'.number_format((float)$financeNUn['CA_Annuel'],2,'.',' ').'&euro;</td>';
+				echo '<td>'.number_format((float)$financeNDeux['CA_Annuel'],2,'.',' ').'&euro;</td>';
+				echo '</tbody>';
+
+				echo '</table>';
+				echo '</div>';
+				echo '<div class="col-lg-2"></div>';
+				echo '</div>';
+
 				echo '<table class="table">';
 				echo '<thead class="thead-blue">';
 				echo '<tr>';
@@ -144,21 +186,21 @@ DEBUT CONTENU CONTAINER
 
 				foreach ($listLitige as $litige)
 				{
-						$cout=$litige['mt_transp']+$litige['mt_assur']+$litige['mt_fourn']+$litige['mt_mag'];
-						$cout=number_format((float)$cout,2,'.','');
-						echo '<tr>';
-						echo '<td>'.$litige['dossier'].'</td>';
-						echo '<td>'.$litige['datecrea'].'</td>';
-						echo '<td>'.$litige['gt'].'</td>';
-						echo '<td>'.$litige['typo'].'</td>';
-						echo '<td>'.$litige['imputation'].'</td>';
-						echo '<td>'.$litige['etat'].'</td>';
-						echo '<td>'.$litige['valo'].'</td>';
-						echo '<td>'.$litige['analyse'].'</td>';
-						echo '<td>'.$litige['conclusion'].'</td>';
-						echo '<td class="text-right">'.$cout.' &euro;</td>';
-						echo '</tr>';
-						$valoTotal=$valoTotal+$litige['valo'];
+					$cout=$litige['mt_transp']+$litige['mt_assur']+$litige['mt_fourn']+$litige['mt_mag'];
+					$cout=number_format((float)$cout,2,'.','');
+					echo '<tr>';
+					echo '<td>'.$litige['dossier'].'</td>';
+					echo '<td>'.$litige['datecrea'].'</td>';
+					echo '<td>'.$litige['gt'].'</td>';
+					echo '<td>'.$litige['typo'].'</td>';
+					echo '<td>'.$litige['imputation'].'</td>';
+					echo '<td>'.$litige['etat'].'</td>';
+					echo '<td>'.$litige['valo'].'</td>';
+					echo '<td>'.$litige['analyse'].'</td>';
+					echo '<td>'.$litige['conclusion'].'</td>';
+					echo '<td class="text-right">'.$cout.' &euro;</td>';
+					echo '</tr>';
+					$valoTotal=$valoTotal+$litige['valo'];
 
 				}
 
@@ -170,11 +212,11 @@ DEBUT CONTENU CONTAINER
 			?>
 		</div>
 	</div>
-<div class="row">
-	<div class="col text-right pb-5">
-		<a href="print-stat-litige-mag.php?galec=<?=$_GET['galec']?>" class="btn btn-primary"><i class="fas fa-print pr-3"></i>Imprimer</a>
+	<div class="row">
+		<div class="col text-right pb-5">
+			<a href="print-stat-litige-mag.php?galec=<?=$_GET['galec']?>" class="btn btn-primary"><i class="fas fa-print pr-3"></i>Imprimer</a>
+		</div>
 	</div>
-</div>
 
 	<!-- ./container -->
 </div>
