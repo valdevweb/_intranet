@@ -150,6 +150,22 @@ function getMagName($pdoUser, $idwebuser)
 
 }
 
+function getFinance($pdoQlik, $btlec, $year)
+{
+	$req=$pdoQlik->prepare("SELECT CA_Annuel FROM statsventesadh WHERE CodeBtlec= :btlec AND AnneeCA= :year");
+	$req->execute(array(
+		':btlec' =>$btlec,
+		':year'	=>$year
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+
+$yearN=date('Y');
+$yearNUn= date("Y",strtotime("-1 year"));
+$yearNDeux= date("Y",strtotime("-2 year"));
+
+
 
 $coutTotal=$infos['mt_transp']+$infos['mt_assur']+$infos['mt_fourn']+$infos['mt_mag'];
 if($infos['ctrl_ok']==0)
