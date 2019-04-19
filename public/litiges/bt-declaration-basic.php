@@ -120,8 +120,6 @@ DEBUT CONTENU CONTAINER
 	<!-- ./row -->
 </div>
 
-
-
 <?php
 
 require '../view/_footer-bt.php';
