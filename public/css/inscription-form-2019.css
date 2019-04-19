@@ -1,0 +1,29 @@
+.show{
+	display: block !important;
+}
+.hidden{
+	display: none !important;
+}
+
+.form-control {
+color : #004085 !important;
+border: 1px solid #b8daff !important;
+
+}
+
+::placeholder{
+color : #004085 !important;
+}
+select, option, label{
+color:  #004085 !important
+}
+
+input[type="checkbox"] {
+border: 1px solid #b8daff !important;
+
+
+}
+.form-check-input{
+border: 1px solid #b8daff !important;
+
+}
