@@ -11,6 +11,21 @@ if(!isset($_SESSION['id'])){
 $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
+
+//---------------------------------------
+//	ajout enreg dans stat
+//---------------------------------------
+// require "../../functions/stats.fn.php";
+// $descr="saisie déclaration mag hors qlik" ;
+// $page=basename(__file__);
+// $action="";
+// // addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
+// addRecord($pdoStat,$page,$action, $descr, 208);
+
+// require_once '../../vendor/autoload.php';
+
+
+
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
