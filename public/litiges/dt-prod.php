@@ -31,7 +31,14 @@
 									$pj=createFileLink($prod['pj']);
 								}
 								echo '<tr>';
-								echo '<td>'.$prod['article'].'</td>';
+								if($prod['tarif']==0)
+								{
+									echo '<td><a href="box-search.php?id='.$_GET['id'].'&searchart='.$prod['article'].'&searchdoss='.$prod['dossier_gessica'].'">'.$prod['article'].'</a></td>';
+								}
+								else
+								{
+									echo '<td>'.$prod['article'].'</td>';
+								}
 								echo '<td>'.$prod['dossier_gessica'].'</td>';
 								echo '<td>'.$prod['descr'].'</td>';
 								echo '<td>'.$prod['fournisseur'].'</td>';
@@ -47,6 +54,7 @@
 								}
 								echo '<td class="text-right">'.$pj.'</td>';
 								echo '</tr>';
+								// si il s'agit d'une inversion de produit, on rajoute une ligne avec le produit inversé
 								if($prod['inversion'] !="")
 								{
 									$valoInv=round( $prod['inv_qte']*$prod['inv_tarif'],2);
@@ -67,6 +75,8 @@
 						</tbody>
 					</table>
 					<p class="text-right heavy bigger mb-3 text-main-blue pr-3">Valorisation magasin : <?= $valoMag?> </p>
+					<p><?= $articleAZero?></p>
+
 				</div>
 			</div>
 		</div>
