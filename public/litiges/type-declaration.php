@@ -32,35 +32,29 @@ DEBUT CONTENU CONTAINER
 
 	<!-- SOUS TITRE -->
 	<div class="row mb-5">
-		<div class="col-lg-1 col-xxl-2"></div>
+		<div class="col-xl-1"></div>
 		<div class="col">
-			<h3 class="text-main-blue"><span class="step step-bg-blue mr-3">1</span>Sélectionnez le cas qui correspond à votre litige :</h3>
+			<h3 class="text-main-blue">Sélectionnez le cas qui correspond à votre litige :</h3>
 		</div>
-		<div class="col-lg-1 col-xxl-2"></div>
+		<div class="col-xl-1"></div>
 	</div>
 
 	<!-- CAS -->
 	<div class="row mb-4">
-		<div class="col-lg-1 col-xxl-2"></div>
+		<div class="col-xl-1"></div>
 		<div class="col pl-5">
-			<div class="btn-large bg-cyan"><a href="basic-declaration.php"><i class="fas fa-box-open fa-lg pr-5"></i>Le ou les produits incriminés SONT PRESENTS sur ma facture</a></div>
+			<div class="btn-large bg-red"><a href="basic-declaration.php"><i class="fas fa-box-open fa-lg pr-3"></i>J'ai une réclamation sur une de mes palettes ou liée à des produits présents sur une de mes palettes</a></div>
+			<div class="pt-3 pl-5"><i>Exemples : inversion de palette, inversion de produit, produits abîmés, produits manquants, etc</i></div>
 		</div>
-		<div class="col-lg-1 col-xxl-2"></div>
+		<div class="col-xl-1"></div>
 	</div>
-<div class="row mb-4">
-		<div class="col-lg-1 col-xxl-2"></div>
-		<div class="col pl-5">
-
-		</div>
-		<div class="col-lg-1 col-xxl-2"></div>
-	</div>
-
 	<div class="row mb-4">
-		<div class="col-lg-1 col-xxl-2"></div>
+		<div class="col-xl-1"></div>
 		<div class="col pl-5">
-			<div class="btn-large bg-red"><i class="fas fa-box-open fa-lg pr-5"></i>Le ou les produits incriminés NE SONT PAS PRESENTS sur ma facture</div>
+			<div class="btn-large bg-cyan"><a href="declaration-horsqlik.php"><i class="fas fa-box-open fa-lg pr-3"></i>J'ai reçu des produits/palettes en plus et je n'ai pas de produit/palette manquant</a></div>
+			<div class="pt-3 pl-5"><i>Exemples : palette en excédent sans inversion avec une de mes palettes, produits en excédent sans manquant</i></div>
 		</div>
-		<div class="col-lg-1 col-xxl-2"></div>
+		<div class="col-xl-1"></div>
 	</div>
 	<div class="to-footer"></div>
 
