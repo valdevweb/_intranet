@@ -201,8 +201,11 @@ foreach ($fLitige as $prod)
 
 	}
 }
-
+$financeN=getFinance($pdoQlik,$fLitige[0]['btlec'],$yearN);
+$financeNUn=getFinance($pdoQlik,$fLitige[0]['btlec'],$yearNUn);
+$financeNDeux=getFinance($pdoQlik,$fLitige[0]['btlec'],$yearNDeux);
 $sumValo=number_format((float)$sumValo,2,'.','');
+
 
 ?>
 <title></title>
@@ -219,14 +222,40 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 			<td class="quatre  heavy">DATE DECLARATION</td>
 			<td class="quatre"><?=$fLitige[0]['datecrea']?></td>
 		</tr>
+
+	</table>
+	<div class="spacing-s"></div>
+
+	<table class="padding-table border-table-prim">
 		<tr>
-			<td colspan="4">
+			<td class="deux bg-prim text-white text-center" colspan="3">CHIFFRE D'AFFAIRE</td>
+			<!-- <td class="deux bg-prim text-white bigger" colspan="2"></td> -->
+		</tr>
+		<tr>
+			<td class="trois text-right heavy"><?=$yearN?></td>
+			<td class="trois text-right heavy"><?=$yearNUn?></td>
+			<td class="trois text-right heavy"><?=$yearNDeux?></td>
+		</tr>
+		<tr>
+			<td class="trois text-right"><?=number_format((float)$financeN['CA_Annuel'],2,'.',' ')?>&euro;</td>
+			<td class="trois text-right"><?=number_format((float)$financeNUn['CA_Annuel'],2,'.',' ')?>&euro;</td>
+			<td class="trois text-right"><?=number_format((float)$financeNDeux['CA_Annuel'],2,'.',' ')?>&euro;</td>
+
+		</tr>
+	</table>
+	<div class="spacing-s"></div>
+
+	<table class="padding-table border-table-prim">
+
+		<tr>
+			<td class="full-width">
 				<span class="heavy">Commentaires magasin :</span>
 				<?= $firstDial['msg']?>
 			</td>
 		</tr>
 
 	</table>
+
 
 	<p class="text-center heavy text-prim">VALORISATION : <?= $valoMag?></p>
 	<div class="spacing-s"></div>
