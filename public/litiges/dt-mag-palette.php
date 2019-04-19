@@ -39,7 +39,7 @@
 
 <?php
 
-
+// si clic sur détail palette reçue
 if($detailInv)
 {
 
@@ -81,6 +81,7 @@ if($detailInv)
 echo '<div class="text-right pb-2"><a href="?id='.$_GET['id'].'" class="btn btn-primary"><i class="far fa-times-circle pr-3"></i>Fermer</a></div>';
 
 }
+// si clic sur détail palette cdée
 
 if($detailCde)
 {
