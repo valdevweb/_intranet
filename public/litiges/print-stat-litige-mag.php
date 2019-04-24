@@ -49,6 +49,27 @@ $valoTotal=number_format((float)$valoTotal,2,'.','');
 
 
 
+function getFinance($pdoQlik, $btlec, $year)
+{
+	$req=$pdoQlik->prepare("SELECT CA_Annuel FROM statsventesadh WHERE CodeBtlec= :btlec AND AnneeCA= :year");
+	$req->execute(array(
+		':btlec' =>$btlec,
+		':year'	=>$year
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+
+$yearN=date('Y');
+$yearNUn= date("Y",strtotime("-1 year"));
+$yearNDeux= date("Y",strtotime("-2 year"));
+				$financeN=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearN);
+				$financeNUn=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearNUn);
+				$financeNDeux=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearNDeux);
+
+
+
+
 		ob_start();
 		include('pdf-stat-litige-mag.php');
 		$html=ob_get_contents();

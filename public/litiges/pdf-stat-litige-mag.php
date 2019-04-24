@@ -176,7 +176,22 @@
 	<title></title>
 </head>
 <body>
-	<h3>Réclamation pour le magasin <?= $listLitige[0]['mag']?> - <?= $listLitige[0]['btlec']?> </h3>
+	<h3>Chiffres d'affaire du magasin <?= $listLitige[0]['mag']?> - <?= $listLitige[0]['btlec']?> </h3>
+
+	<table class=" border-table border-table-sec">
+		<tr class="bg-sec">
+			<th><?=$yearN?></th>
+			<th><?=$yearNUn?></th>
+			<th><?=$yearNDeux?></th>
+		</tr>
+		<tr>
+			<td><?=number_format((float)$financeN['CA_Annuel'],2,'.',' ')?>&euro;</td>
+			<td><?=number_format((float)$financeNUn['CA_Annuel'],2,'.',' ')?>&euro;</td>
+			<td><?=number_format((float)$financeNDeux['CA_Annuel'],2,'.',' ')?>&euro;</td>
+		</tr>
+	</table>
+	<div class="spacing-l"></div>
+	<h3>Réclamations : </h3>
 	<table class="border-table-sec">
 		<tr class="bg-sec">
 			<th>N°</th>
@@ -216,10 +231,10 @@
 			?>
 		</tbody>
 	</table>
-<p>Nombre de déclarations : <?= $nbLitiges?><br>
-Valeur totale déclarée par le magasin : <?= $valoTotal?> &euro;</p>
-</body>
-</html>
+	<p>Nombre de déclarations : <?= $nbLitiges?><br>
+		Valeur totale déclarée par le magasin : <?= $valoTotal?> &euro;</p>
+	</body>
+	</html>
 
 
 

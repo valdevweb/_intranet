@@ -144,12 +144,12 @@ DEBUT CONTENU CONTAINER
 				$nbLitiges=count($listLitige);
 				$valoTotal=0;
 				echo '<h3 class="text-center text-main-blue my-3">'.$listLitige[0]['mag'] .'</h3>';
+				echo '<h4 class="text-main-blue heavy my-3"> Chiffres d\'affaire :</h4>';
 				echo '<div class="row">';
 				echo '<div class="col-lg-2"></div>';
 				echo '<div class="col">';
-				echo '<div class="text-center"> Chiffre d\'affaire :</div>';
-				echo '<table class="table border-blue light-shadow">';
-				echo '<thead class="thead-primary">';
+				echo '<table class="table text-right table-bordered light-shadow">';
+				echo '<thead class="thead-dark">';
 				echo '<th>'.$yearN.'</th>';
 				echo '<th>'.$yearNUn .'</th>';
 				echo '<th>'.$yearNDeux .'</th>';
@@ -165,28 +165,31 @@ DEBUT CONTENU CONTAINER
 				echo '<div class="col-lg-2"></div>';
 				echo '</div>';
 
-				echo '<table class="table">';
-				echo '<thead class="thead-blue">';
+				echo '<h4 class="text-main-blue heavy my-3">Litiges :</h4>';
+
+				echo '<table class="table light-shadow table-bordered ">';
+				echo '<thead class="thead-dark">';
 				echo '<tr>';
-				echo '<th>N°</th>';
-				echo '<th>Date</th>';
-				echo '<th>Service</th>';
-				echo '<th>Typologie</th>';
-				echo '<th>Imputation</th>';
-				echo '<th>Statut</th>';
-				echo '<th>Valorisation magasin</th>';
-				echo '<th>Analyse</th>';
-				echo '<th>Réponse</th>';
-				echo '<th>Coût BTlec</th>';
+				echo '<th class="align-top">N°</th>';
+				echo '<th class="align-top">Date</th>';
+				echo '<th class="align-top">Service</th>';
+				echo '<th class="align-top">Typologie</th>';
+				echo '<th class="align-top">Imputation</th>';
+				echo '<th class="align-top">Statut</th>';
+				echo '<th class="align-top">Valorisation magasin</th>';
+				echo '<th class="align-top">Analyse</th>';
+				echo '<th class="align-top">Réponse</th>';
+				echo '<th class="align-top">Coût BTlec</th>';
 				echo '</tr>';
 				echo '</thead>';
 				echo '<tbody>';
 
 
-
+				$coutTotal=0;
 				foreach ($listLitige as $litige)
 				{
 					$cout=$litige['mt_transp']+$litige['mt_assur']+$litige['mt_fourn']+$litige['mt_mag'];
+					$coutTotal=$coutTotal+$cout;
 					$cout=number_format((float)$cout,2,'.','');
 					echo '<tr>';
 					echo '<td>'.$litige['dossier'].'</td>';
@@ -195,16 +198,20 @@ DEBUT CONTENU CONTAINER
 					echo '<td>'.$litige['typo'].'</td>';
 					echo '<td>'.$litige['imputation'].'</td>';
 					echo '<td>'.$litige['etat'].'</td>';
-					echo '<td>'.$litige['valo'].'</td>';
+					echo '<td class="text-right" >'.$litige['valo'].'</td>';
 					echo '<td>'.$litige['analyse'].'</td>';
 					echo '<td>'.$litige['conclusion'].'</td>';
 					echo '<td class="text-right">'.$cout.' &euro;</td>';
 					echo '</tr>';
 					$valoTotal=$valoTotal+$litige['valo'];
-
 				}
-
 			}
+			echo '<tr>';
+			echo '<td  class="no-border" colspan="2">TOTAUX</td>';
+			echo '<td  class="text-right no-border" colspan="5">'.$valoTotal.'</td>';
+			echo '<td class="text-right no-border order" colspan="3">'.$coutTotal.'</td>';
+			echo '</tr>';
+
 			echo '</tbody>';
 			echo '</table>';
 
@@ -214,7 +221,7 @@ DEBUT CONTENU CONTAINER
 	</div>
 	<div class="row">
 		<div class="col text-right pb-5">
-			<a href="print-stat-litige-mag.php?galec=<?=$_GET['galec']?>" class="btn btn-primary"><i class="fas fa-print pr-3"></i>Imprimer</a>
+			<a href="print-stat-litige-mag.php?galec=<?=$_GET['galec']?>" class="btn btn-primary" target="_blank"><i class="fas fa-print pr-3"></i>Imprimer</a>
 		</div>
 	</div>
 
