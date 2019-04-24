@@ -95,9 +95,9 @@ function addDial($pdoLitige)
 
 $fMotif=getReclamation($pdoLitige);
 
-function getProdInversion($pdoLitige,$ean)
+function getProdInversion($pdoQlik,$ean)
 {
-	$req=$pdoLitige->prepare("SELECT * FROM statsventeslitiges WHERE gencod= :inversion ORDER BY date_mvt DESC");
+	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges WHERE gencod= :inversion ORDER BY date_mvt DESC");
 	$req->execute(array(
 		':inversion'	=>$ean
 	));
@@ -186,7 +186,7 @@ if(isset($_POST['submit']))
 					$ean=$_POST['form_autre'][$i];
 					$invQte=$_POST['form_autre_qte'][$i];
 				// recup info du produit reçu à la place
-					$listProdInv=getProdInversion($pdoLitige,$ean);
+					$listProdInv=getProdInversion($pdoQlik,$ean);
 				// si on trouve la réf qui a été livrée à la place
 					if(count($listProdInv)>1)
 					{
