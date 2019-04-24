@@ -19,10 +19,10 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 
 
-function search($pdoLitige)
+function search($pdoQlik)
 {
 	// $req=$pdoLitige->prepare("SELECT * FROM statsventeslitiges  WHERE concat(facture,palette,gencod,article) LIKE :search AND galec= :galec");
-	$req=$pdoLitige->prepare("SELECT * FROM statsventeslitiges  WHERE concat( concat('0',facture),palette) LIKE :search AND galec= :galec ORDER BY article");
+	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  WHERE concat( concat('0',facture),palette) LIKE :search AND galec= :galec ORDER BY article");
 	$req->execute(array(
 		':search' =>'%'.$_POST['search_strg'] .'%',
 		':galec'	=>$_SESSION['id_galec']
@@ -102,9 +102,9 @@ function updateDossier($pdoLitige,$numDossier, $lastInsertId)
 	return	$row;
 }
 
-function getSelectedDetails($pdoLitige,$id)
+function getSelectedDetails($pdoQlik,$id)
 {
-	$req=$pdoLitige->prepare("SELECT * FROM statsventeslitiges WHERE id= :id");
+	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges WHERE id= :id");
 	$req->execute(array(
 		':id'	=>$id
 
@@ -150,7 +150,7 @@ function getLastNumDossier($pdoLitige)
 //------------------------------------------------------
 if(isset($_POST['submit']))
 {
-	$dataSearch=search($pdoLitige);
+	$dataSearch=search($pdoQlik);
 	$searchStr=$_POST['search_strg'];
 }
 //------------------------------------------------------
@@ -227,7 +227,7 @@ if(isset($_POST['choose']))
 		$nbArticle=count($ids);
 		for ($i=0; $i <$nbArticle ; $i++)
 		{
-			$art=getSelectedDetails($pdoLitige, $ids[$i]);
+			$art=getSelectedDetails($pdoQlik, $ids[$i]);
 			$dateFact=date('Y-m-d H:i:s',strtotime($art['date_mvt']));
 			$detail=addDetails($pdoLitige, $lastInsertId,$numDossier,$art['palette'],$art['facture'],$dateFact, $art['article'], $art['gencod'],$art['dossier'], $art['libelle'], $art['qte'],$art['tarif'], $art['fournisseur'], $art['cnuf']);
 			if($detail>0)
@@ -318,6 +318,31 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-lg-1 col-xxl-2"></div>
 	</div>
+	<!-- partie réservé BT : dossier libres -->
+	<?php
+	ob_start();
+	?>
+	<div class="row">
+		<div class="col-lg-1"></div>
+		<div class="col">
+			<p>Déclarer un litige via la <a href="bt-saisie-libre.php"> saisie libre</a></p>
+
+		</div>
+		<div class="col-lg-1"></div>
+
+	</div>
+
+	<?php
+	$saisieLibre=ob_get_contents();
+	ob_end_clean();
+	if($_SESSION['type']=="btlec")
+	{
+		echo $saisieLibre;
+	}
+
+	?>
+
+
 	<!-- start row -->
 	<div class="row no-gutters">
 		<div class="col-lg-1 col-xxl-2"></div>
@@ -330,7 +355,6 @@ DEBUT CONTENU CONTAINER
 	</div>
 	<!-- ./row -->
 	<?php
-
 	ob_start();
 	?>
 	<div class="row">
