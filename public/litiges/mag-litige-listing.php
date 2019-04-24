@@ -59,6 +59,23 @@ else
 	$listDossier=getDossier($pdoLitige);
 }
 
+
+function getWaiting($pdoLitige)
+{
+	$req=$pdoLitige->prepare("SELECT id, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj FROM ouverture WHERE etat=0 AND id_web_user= :id_web_user ORDER BY date_saisie");
+	$req->execute(array(
+		':id_web_user'	=>$_SESSION['id_web_user']
+
+	));
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+$waiting=getWaiting($pdoLitige);
+
+
+
+
+
 $etatDossier=['en cours', 'clos'];
 
 
@@ -110,16 +127,16 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-lg-1 col-xxl-2"></div>
 	</div>
-<div class="row">
-	<div class="col-lg-1"></div>
-	<div class="col">
-		<div class="alert alert-primary">
-			<i class="fas fa-info-circle pr-3"></i>Vous pouvez cliquer sur les entêtes du tableau pour effectuer un tri
+	<div class="row">
+		<div class="col-lg-1"></div>
+		<div class="col">
+			<div class="alert alert-primary">
+				<i class="fas fa-info-circle pr-3"></i>Vous pouvez cliquer sur les entêtes du tableau pour effectuer un tri
+			</div>
 		</div>
-	</div>
-	<div class="col-lg-1"></div>
+		<div class="col-lg-1"></div>
 
-</div>
+	</div>
 
 	<!-- start row -->
 	<div class="row pb-5">
@@ -160,9 +177,73 @@ DEBUT CONTENU CONTAINER
 			</tbody>
 		</table>
 	</div>
-		<div class="col-lg-1"></div>
-
+	<div class="col-lg-1"></div>
 </div>
+
+
+
+
+<?php
+// si demandes libre en attentes
+if(count($waiting)>=1)
+{
+
+	echo '<div class="row mb-3"><div class="col-lg-1"></div>';
+	echo '<div class="col"><h5 class="text-main-blue">Vos demandes d\'ouverture de dossier litige en attente</h5></div>';
+	echo '<div class="col-lg-1"></div></div>';
+	foreach ($waiting as $wait)
+	{
+
+
+
+
+
+		$pj='';
+		if(!empty($wait['pj']))
+		{
+			// $pjtemp=createFileLink($wait['pj']);
+			// $pj='Pièce jointe : <span class="pr-3">'.$pjtemp .'</span>';
+		}
+		echo '<div class="row">';
+		echo '<div class="col-lg-1"></div>';
+
+		echo '<div class="col ">';
+
+		echo '<div class="row">';
+		echo '<div class="col">';
+		echo $wait['msg'];
+		echo '</div>';
+		echo '<div class="col-auto text-right">';
+		echo '<i class="far fa-calendar-alt pr-3 text-main-blue"></i>'.$wait['datesaisie'];
+		echo '</div>';
+		echo '</div>';
+		echo '<div class="row pt-3">';
+		echo '<div class="col">';
+					// echo $pj;
+		echo '</div>';
+
+		echo '</div>';
+		echo '<div class="row mb-2">';
+		echo '<div class="col text-right">';
+		echo '<a href="mag-horsqlik.php?id='.$wait['id'].'" class="btn btn-primary">Détails</a>';
+		echo '</div>';
+		echo '</div>';
+		echo '</div>';
+		echo '<div class="col-lg-1"></div>';
+
+		echo '</div>';
+
+	}
+
+
+}
+
+
+
+?>
+
+
+
 <div class="row mt-5">
 	<div class="col"></div>
 </div>
