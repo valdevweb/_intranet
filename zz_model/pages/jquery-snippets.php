@@ -30,4 +30,25 @@ $(document).ready(function(){
 		});
 
 });
+
+
+
+
+// masquer ligne du tableeau ayant la class ""
+
+	$(document).ready(function(){
+		$('#hide-clos').click(function(){
+			$('#dossier > tbody > tr').each(function(){
+				if ($(this).find('td.text-dark-grey').length)
+				{
+					$(this).toggleClass('hide');
+					// console.log($(this).find('img.test').length);
+				}
+				else{
+					console.log('na');
+				}
+			});
+		});
+	});
+
 </script>
