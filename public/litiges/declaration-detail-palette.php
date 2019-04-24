@@ -100,9 +100,9 @@ function addDial($pdoLitige)
 
 $fMotif=getReclamation($pdoLitige);
 
-function getPaletteInversion($pdoLitige)
+function getPaletteInversion($pdoQlik)
 {
-	$req=$pdoLitige->prepare("SELECT * FROM statsventeslitiges WHERE palette LIKE :palette ORDER BY date_mvt DESC");
+	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges WHERE palette LIKE :palette ORDER BY date_mvt DESC");
 	$req->execute(array(
 		':palette'	=>'%'.$_POST['form_autre'].'%'
 	));
@@ -197,7 +197,7 @@ if(isset($_POST['submit']))
 				// cas de l'inversion de palette
 			$inv_palette=$_POST['form_autre'];
 				// recup info du produit reçu à la place
-			$paletteInv=getPaletteInversion($pdoLitige,$inv_palette);
+			$paletteInv=getPaletteInversion($pdoQlik,$inv_palette);
 				// si on trouve la réf qui a été livrée à la place
 			if(count($paletteInv)>=1)
 			{
