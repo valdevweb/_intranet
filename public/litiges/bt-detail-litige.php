@@ -314,9 +314,9 @@ function sommePaletteCde($pdoLitige)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-function searchPalette($pdoLitige,$palette)
+function searchPalette($pdoQlik,$palette)
 {
-	$req=$pdoLitige->prepare("SELECT * FROM statsventeslitiges WHERE palette LIKE :palette");
+	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges WHERE palette LIKE :palette");
 	$req->execute(array(
 		':palette'	=>'%'.$palette.'%'
 	));
@@ -511,7 +511,7 @@ DEBUT CONTENU CONTAINER
 		}
 		if(isset($_GET['search']))
 		{
-			$newFoundPalette=searchPalette($pdoLitige, $fLitige[0]['inv_palette']);
+			$newFoundPalette=searchPalette($pdoQlik, $fLitige[0]['inv_palette']);
 			if(empty($newFoundPalette))
 			{
 				$majrecherchepalette='<div class="alert alert-danger">la palette n\'a pas été trouvée</div>';
