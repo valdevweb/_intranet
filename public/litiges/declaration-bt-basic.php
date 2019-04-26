@@ -74,7 +74,8 @@ DEBUT CONTENU CONTAINER
 						<th>Déno</th>
 						<th>Ville</th>
 						<th>Centrale</th>
-						<th class="text-center">Sélectionner</th>
+						<th class="text-center">Saisie guidée</th>
+						<th class="text-center">Saisie libre</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -89,6 +90,7 @@ DEBUT CONTENU CONTAINER
 							echo'<td>'.$mag['city'].'</td>';
 							echo'<td>'.$mag['centrale'].'</td>';
 							echo'<td class="text-center"><a href="hidden-session.php?galec='.$mag['galec'].'"><i class="fas fa-hand-pointer"></i></td>';
+							echo'<td class="text-center"><a href="bt-ouv-saisie.php?galec='.$mag['galec'].'"><i class="fas fa-hand-pointer"></i></td>';
 							echo '</tr>';
 
 						}
@@ -114,21 +116,11 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-lg-1 col-xxl-2"></div>
 	</div>
-	<!-- ./row -->
-
-
-	<!-- ./row -->
 </div>
 
 <?php
 
 require '../view/_footer-bt.php';
-
-?>
-
-
-
-<?php
 
 ?>
 
