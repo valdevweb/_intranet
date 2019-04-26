@@ -16,6 +16,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 
 
+
 // on va utiliser l'id pour enregistrer les produits sélectionnés sachant qu'à chaque import de la base, il changera
 
 //------------------------------------------------------
@@ -43,7 +44,7 @@ DEBUT CONTENU CONTAINER
 	<div class="row mb-4">
 		<div class="col-xl-1"></div>
 		<div class="col pl-5">
-			<div class="btn-large bg-red"><a href="basic-declaration.php"><i class="fas fa-box-open fa-lg pr-3"></i>J'ai une réclamation sur une de mes palettes ou liée à des produits présents sur une de mes palettes</a></div>
+			<a href="declaration-basic.php" class="no-decoration"><div class="btn-large bg-red"><i class="fas fa-box-open fa-lg pr-3"></i>J'ai une réclamation sur une de mes palettes ou liée à des produits présents sur une de mes palettes</div></a>
 			<div class="pt-3 pl-5"><i>Exemples : inversion de palette, inversion de produit, produits abîmés, produits manquants, etc</i></div>
 		</div>
 		<div class="col-xl-1"></div>
@@ -51,7 +52,7 @@ DEBUT CONTENU CONTAINER
 	<div class="row mb-4">
 		<div class="col-xl-1"></div>
 		<div class="col pl-5">
-			<div class="btn-large bg-cyan"><a href="declaration-horsqlik.php"><i class="fas fa-box-open fa-lg pr-3"></i>J'ai reçu des produits/palettes en plus et je n'ai pas de produit/palette manquant</a></div>
+			<a href="declaration-horsqlik.php" class="no-decoration"><div class="btn-large bg-cyan"><i class="fas fa-box-open fa-lg pr-3"></i>J'ai reçu des produits/palettes en plus et je n'ai pas de produit/palette manquant</div></a>
 			<div class="pt-3 pl-5"><i>Exemples : palette en excédent sans inversion avec une de mes palettes, produits en excédent sans manquant</i></div>
 		</div>
 		<div class="col-xl-1"></div>
