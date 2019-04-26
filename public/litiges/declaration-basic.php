@@ -318,29 +318,7 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-lg-1 col-xxl-2"></div>
 	</div>
-	<!-- partie réservé BT : dossier libres -->
-	<?php
-	ob_start();
-	?>
-	<div class="row">
-		<div class="col-lg-1"></div>
-		<div class="col">
-			<p>Déclarer un litige via la <a href="bt-saisie-libre.php"> saisie libre</a></p>
 
-		</div>
-		<div class="col-lg-1"></div>
-
-	</div>
-
-	<?php
-	$saisieLibre=ob_get_contents();
-	ob_end_clean();
-	if($_SESSION['type']=="btlec")
-	{
-		echo $saisieLibre;
-	}
-
-	?>
 
 
 	<!-- start row -->
