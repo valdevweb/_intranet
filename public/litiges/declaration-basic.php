@@ -11,14 +11,22 @@ if(!isset($_SESSION['id'])){
 $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
+
+//---------------------------------------
+//	ajout enreg dans stat
+//---------------------------------------
+require "../../functions/stats.fn.php";
+$descr="saisie déclaration litige" ;
+$page=basename(__file__);
+$action="consultation";
+// addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
+addRecord($pdoStat,$page,$action, $descr, 101);
+
+
+
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-
-
-
-
-
 function search($pdoQlik)
 {
 	// $req=$pdoLitige->prepare("SELECT * FROM statsventeslitiges  WHERE concat(facture,palette,gencod,article) LIKE :search AND galec= :galec");
@@ -368,24 +376,33 @@ DEBUT CONTENU CONTAINER
 					</thead>
 					<tbody>
 						<?php
-						foreach ($dataSearch as $sResult)
+						if(empty($dataSearch))
 						{
-							echo '<tr>';
-							echo'<td>'.$sResult['date_mvt'].'</td>';
-							echo'<td>'.$sResult['facture'].'</td>';
-							echo'<td>'.$sResult['palette'].'</td>';
-							echo'<td>'.$sResult['gencod'].'</td>';
-							echo'<td>'.$sResult['article'].'</td>';
-							echo'<td>'.$sResult['libelle'].'</td>';
-							echo'<td>';
-							echo '<div class="form-check article"><input class="form-check-input" type="checkbox" name="'.$sResult['id'].'"></div>';
-							echo '</td></tr>';
+								echo '<p>La palette que vous recherchez n\'a pas été trouvée. Elle ne vous était pas destinée ? Veuillez vous rendre sur <a href="declaration-horsqlik.php">cette page</a></p>';
+						}
+						else
+						{
+							foreach ($dataSearch as $sResult)
+							{
+								echo '<tr>';
+								echo'<td>'.$sResult['date_mvt'].'</td>';
+								echo'<td>'.$sResult['facture'].'</td>';
+								echo'<td>'.$sResult['palette'].'</td>';
+								echo'<td>'.$sResult['gencod'].'</td>';
+								echo'<td>'.$sResult['article'].'</td>';
+								echo'<td>'.$sResult['libelle'].'</td>';
+								echo'<td>';
+								echo '<div class="form-check article"><input class="form-check-input" type="checkbox" name="'.$sResult['id'].'"></div>';
+								echo '</td></tr>';
+
+							}
+
 
 						}
-
 						?>
 					</tbody>
 				</table>
+				<p>Le produit que vous avez reçu n'apparaît pas dans la liste et vous avez bien reçu tous les autres produits commandés ? Veuillez vous rendre sur <a href="declaration-horsqlik.php">cette page</a></p>
 				<!-- <p> -->
 					<div class="alert alert-light">
 						<div class="form-check text-right">
