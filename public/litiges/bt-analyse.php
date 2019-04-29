@@ -212,15 +212,26 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Dossier N° <?= $fLitige['dossier']?></h1>
+	<div class="row pt-3">
+		<div class="col">
+			<p class="text-right"><a href="bt-detail-litige.php?id=<?=$_GET['id']?>" class="btn btn-primary">Retour</a></p>
+		</div>
+		<div class="col-lg-1 col-xxl-2"></div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<h1 class="text-main-blue pb-3 ">Dossier N° <?= $fLitige['dossier']?></h1>
 	<h4 class="khand text-main-blue">Analyse du litige</h4>
+
+		</div>
+	</div>
 	<?php
 	include('../view/_errors.php');
 	?>
 
 	<div class="row">
 		<div class="col">
-			<div class="row border p-3">
+			<div class="row border p-3 mb-5">
 				<div class="col">
 					<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post">
 						<!-- gt -->
@@ -435,21 +446,13 @@ DEBUT CONTENU CONTAINER
 					</form>
 				</div>
 			</div>
-
 		</div>
 	</div>
-
-
 	<div class="row mb-5">
-		<div class="col-lg-1 col-xxl-2"></div>
-		<div class="col mb-5">
-			<p>&nbsp;</p>
-			<p class="text-center"><a href="bt-detail-litige.php?id=<?=$_GET['id']?>" class="btn btn-primary">Retour</a></p>
-			<p>&nbsp;</p>
-
-		</div>
-		<div class="col-lg-1 col-xxl-2"></div>
+		<div class="col">&nbsp;</div>
 	</div>
+
+
 
 
 
