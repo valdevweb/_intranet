@@ -10,3 +10,9 @@ input{
 .hide{
 	display: none;
 }
+
+
+
+td:nth-child(7){
+	white-space: no-wrap;
+}
