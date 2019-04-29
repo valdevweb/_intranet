@@ -240,6 +240,17 @@ function addFac($pdoLitige)
 	return	$req->rowCount();
 }
 
+
+function getInfoMag($pdoBt, $galec)
+{
+	$req=$pdoBt->prepare("SELECT btlec FROM sca3 WHERE galec = :galec");
+	$req->execute(array(
+		':galec'		=>$galec,
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+
 // ----------------------------------
 // traitement transp			#4
 // ---------------------------------
@@ -305,20 +316,32 @@ if(isset($_POST['submit_mail']))
 			}
 			else
 			{
+				$btlec=getInfoMag($pdoBt,$fLitige['galec']);
 				if($_SESSION['code_bt']!='4201')
 				{
-					$mailMag=array($infoMag['btlec'].'-rbt@btlec.fr');
+					$mailMag=array($btlec['btlec'].'-rbt@btlec.fr');
 				}
 				else
 				{
 					$mailMag=array('valerie.montusclat@btlec.fr');
 				}
 			}
+			if($_POST['mt_mag']<0)
+			{
+				$type='un avoir ';
+				$mt=abs($_POST['mt_mag']);
+			}
+			else
+			{
+				$type='une facture ';
+				$mt=$_POST['mt_mag'];
 
+			}
 			$magTemplate = file_get_contents('mail-mag-fac.php');
 			$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
 			$magTemplate=str_replace('{FACTURE}',$_POST['fac_mag'],$magTemplate);
-			$magTemplate=str_replace('{MONTANT}',$_POST['mt_mag'],$magTemplate);
+			$magTemplate=str_replace('{TYPE}',$type,$magTemplate);
+			$magTemplate=str_replace('{MONTANT}',$mt,$magTemplate);
 			$subject='Portail BTLec Est  - information litige ' . $fLitige['dossier'];
 			// ---------------------------------------
 			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
@@ -327,7 +350,9 @@ if(isset($_POST['submit_mail']))
 			->setBody($magTemplate, 'text/html')
 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
 			->setTo($mailMag)
-			->addBcc('valerie.montusclat@btlec.fr');
+			->setBcc(['valerie.montusclat@btlec.fr', 'nathalie.pazik@btlec.fr']);
+
+			// ->addBcc('valerie.montusclat@btlec.fr');
 			$delivered=$mailer->send($message);
 			if($delivered >0)
 			{
