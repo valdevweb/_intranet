@@ -21,10 +21,10 @@ require_once  '../../vendor/autoload.php';
 //------------------------------------------------------
 
 
-function addFlash($pdoBt, $vignette,$flashfile){
+function addFlash($pdoBt, $vignette,$flashfile,$link){
 	$content=strip_tags($_POST['content-form']);
 	$content=nl2br($content);
-	$req=$pdoBt->prepare("INSERT INTO flash (title, content, vignette, pj, date_start, date_end, created_by) VALUES (:title, :content, :vignette, :pj, :date_start, :date_end, :created_by)");
+	$req=$pdoBt->prepare("INSERT INTO flash (title, content, vignette, pj, date_start, date_end, created_by, lien) VALUES (:title, :content, :vignette, :pj, :date_start, :date_end, :created_by, :lien)");
 	$req->execute(array(
 		':title'	=>$_POST['title-form'],
 		':content'	=>$content,
@@ -32,7 +32,8 @@ function addFlash($pdoBt, $vignette,$flashfile){
 		':pj'	=>$flashfile,
 		':date_start'	=>$_POST['date-start-form'],
 		':date_end'	=>$_POST['date-end-form'],
-		':created_by'	=>$_SESSION['id_web_user']
+		':created_by'	=>$_SESSION['id_web_user'],
+		':lien'	=>$link
 	));
 	return $req->rowCount();
 }
@@ -90,6 +91,10 @@ if(isset($_POST['submit']))
 			}
 		}
 	}
+	else
+	{
+		$vignette='';
+	}
 	if(!empty($_FILES['pj-form']['name']))
 	{
 		$maxFileSize = 3 * 1024 * 1024;
@@ -119,10 +124,23 @@ if(isset($_POST['submit']))
 			}
 		}
 	}
+	else
+	{
+		$flashfile="";
+	}
 	// si pas d'erreur d'upload, on ajoute les infos
 	if(count($errors)==0)
 	{
-		$row=addFlash($pdoBt, $vignette,$flashfile);
+		if(empty($_POST['lien-form']))
+		{
+			$link='';
+		}
+		else
+		{
+			$link=$_POST['lien_form'];
+
+		}
+		$row=addFlash($pdoBt, $vignette,$flashfile,$link);
 		if($row==1)
 		{
 			$dest=['valerie.montusclat@btlec.fr'];
@@ -165,7 +183,7 @@ if(isset($_POST['submit']))
 
 
 }
-
+// 981
 
 //------------------------------------------------------
 //			VIEW
@@ -191,9 +209,11 @@ DEBUT CONTENU CONTAINER
 	<div class="row">
 		<div class="col-lg-1"></div>
 
-		<div class="col"><p>Afin d'assurer un affichage correct de votre flash info, merci de respecter les consignes ci-dessous : <br>
-			- remplir tous les champs
-			- la vignette doit être le plus proche possible du format 150x150 pixels </p>
+		<div class="col"><p>Afin d'assurer un affichage correct de votre flash info, si vous ajoutez une vignette, celle-ci doit être le plus proche possible du format  <br>
+			<span class="heavy text-red">150x150 pixels</span> <br><br>
+			Exemple de rendu d'une info flash avec vignette et pdf :
+		</p>
+
 			<div class="text-center"><img src="../img/documents/exemple.jpg"></div>
 		</div>
 		<div class="col-lg-1"></div>
@@ -203,7 +223,6 @@ DEBUT CONTENU CONTAINER
 	<div class="row mt-3">
 		<div class="col-lg-1"></div>
 		<div class="col">
-			<p class="alert alert-warning">Attention, tous les champs sont obligatoires</p>
 
 			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post" enctype="multipart/form-data" id="">
 				<div class="row">
@@ -218,22 +237,8 @@ DEBUT CONTENU CONTAINER
 						</div>
 					</div>
 				</div>
-				<div class="row mt-3">
-					<div class="col">
-						<div class="form-group">
-							<div class="text-main-blue"><i class="far fa-image pr-3"></i><label for='vignette'> Ajouter la vignette : </label></div>
-							<input type='file' class='form-control-file' id='vignette' name='vignette-form' required>
-						</div>
-					</div>
-					<div class="col">
-						<div class="form-group">
-							<div class="text-reddish"><i class="far fa-file-pdf pr-3"></i><label for='pj'>Ajouter le pdf : </label></div>
-							<input type='file' class='form-control-file' id='pj' name='pj-form' required >
-						</div>
 
-					</div>
-				</div>
-				<p class="text-center mt-3">Veuillez spécifier préciser la période de parution : </p>
+				<p class="text-center mt-3 text-main-blue">Veuillez spécifier préciser la période de parution : </p>
 				<div class="row mt-3">
 					<div class="col">
 						<div class="form-group">
@@ -248,6 +253,45 @@ DEBUT CONTENU CONTAINER
 						</div>
 					</div>
 				</div>
+				<div class="row mt-3">
+					<div class="col">
+						<p class="text-main-blue">Informations optionnelles :</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="form-group">
+							<div class="text-main-blue"><i class="far fa-image pr-3"></i><label for='vignette'> Ajouter une vignette : </label></div>
+							<input type='file' class='form-control-file' id='vignette' name='vignette-form'>
+						</div>
+					</div>
+					<div class="col">
+						<div class="form-group">
+							<div class="text-reddish"><i class="far fa-file-pdf pr-3"></i><label for='pj'>Ajouter un document : </label></div>
+							<input type='file' class='form-control-file' id='pj' name='pj-form'>
+						</div>
+					</div>
+				</div>
+				<?php
+				ob_start()
+				 ?>
+				<div class="row">
+					<div class="col-6">
+						<div class="form-group">
+							<label class="text-main-blue">Lien :</label>
+							<input type="text" class="form-control" name="lien-form">
+						</div>
+					</div>
+					<div class="col"></div>
+				</div>
+				<?php
+				$admin=ob_get_contents();
+				ob_end_clean();
+				if($_SESSION['id_web_user']==981){
+					echo $admin;
+				}
+
+				 ?>
 
 				<!-- submit -->
 				<p class="pt-5 text-right"><button class="btn btn-primary" type="submit" id="" name="submit">Envoyer</button></p>

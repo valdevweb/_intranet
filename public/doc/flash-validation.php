@@ -78,7 +78,13 @@ DEBUT CONTENU CONTAINER
 							echo '<tr>';
 							echo '<td>'.$flash['title'].'</td>';
 							echo '<td>'.$flash['content'].'</td>';
-							echo '<td><a href="'.UPLOAD_DIR.'/flash/'.$flash['pj'].'" target="_blank"><img src="'.UPLOAD_DIR.'/flash/'.$flash['vignette'].'"></a></td>';
+							if(!empty($flash['vignette']))
+							{
+								echo '<td><a href="'.UPLOAD_DIR.'/flash/'.$flash['pj'].'" target="_blank"><img src="'.UPLOAD_DIR.'/flash/'.$flash['vignette'].'"></a></td>';
+							}
+							else{
+								echo '<td></td>';
+							}
 							echo '<td>'.$flash['datestart'].'</td>';
 							echo '<td>'.$flash['dateend'].'</td>';
 							echo '<td>'.$flash['fullname'].'</td>';
