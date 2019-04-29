@@ -10,5 +10,5 @@ if(!isset($_SESSION['id'])){
 
 $_SESSION['id_galec']= $_GET['galec'];
 
-	header('Location:basic-declaration.php');
+	header('Location:declaration-basic.php');
 
