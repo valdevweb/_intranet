@@ -34,7 +34,7 @@ function addMsg($pdoLitige,$pj)
 	$msg=strip_tags($_POST['msg']);
 	$msg=nl2br($msg);
 
-	$req=$pdoLitige->prepare("INSERT INTO ouverture (id_web_user, galec, msg, date_saisie, pj) VALUES (:id_web_user, :galec, :msg, :date_saisie, :pj)");
+	$req=$pdoLitige->prepare("INSERT INTO ouv (id_web_user, galec, msg, date_saisie, pj) VALUES (:id_web_user, :galec, :msg, :date_saisie, :pj)");
 	$req->execute(array(
 		':id_web_user'	=>$_SESSION['id_web_user'],
 		 ':galec'		=>$_SESSION['id_galec'],
