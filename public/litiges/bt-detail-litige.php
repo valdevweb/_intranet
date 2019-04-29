@@ -13,6 +13,9 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 
+
+require 'echanges.fn.php';
+
 //------------------------------------------------------
 //			INFOS
 //------------------------------------------------------
@@ -28,8 +31,8 @@ function getLitige($pdoLitige)
 {
 	$req=$pdoLitige->prepare("
 		SELECT
-		dossiers.id as id_main,	dossiers.dossier,dossiers.date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,dossiers.user_crea,dossiers.galec,dossiers.etat_dossier,vingtquatre, inversion,inv_article,inv_fournisseur,inv_tarif,inv_descr,nom, valo, flag_valo, id_reclamation,inv_palette,inv_qte,
-		details.id as id_detail,details.ean,details.id_dossier,	details.palette,details.article,details.tarif,details.qte_cde, details.qte_litige,details.dossier_gessica,details.descr,details.fournisseur,details.pj,
+		dossiers.id as id_main,	dossiers.dossier,dossiers.date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,dossiers.user_crea,dossiers.galec,dossiers.etat_dossier,vingtquatre, dossiers.id_web_user, inversion,inv_article,inv_fournisseur,inv_tarif,inv_descr,nom, valo, flag_valo, id_reclamation,inv_palette,inv_qte,
+		details.id as id_detail,details.ean,details.id_dossier,	details.palette,details.facture,details.article,details.tarif,details.qte_cde, details.qte_litige,details.dossier_gessica,details.descr,details.fournisseur,details.pj,
 		reclamation.reclamation,
 		btlec.sca3.mag, btlec.sca3.centrale, btlec.sca3.btlec,
 		etat.etat
@@ -50,7 +53,7 @@ function getLitige($pdoLitige)
 
 function getFirstDial($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT * FROM `dial` WHERE id_dossier=:id ORDER BY id ASC LIMIT 1");
+	$req=$pdoLitige->prepare("SELECT * FROM `dial` WHERE id_dossier=:id AND mag=3");
 	$req->execute(array(
 		':id'	=>$_GET['id']
 	));
@@ -58,21 +61,6 @@ function getFirstDial($pdoLitige)
 
 }
 
-function createFileLink($filelist)
-{
-	$rValue='';
-	$filelist=explode(';',$filelist);
-
-	for ($i=0; $i < count($filelist); $i++)
-	{
-		if($filelist[$i] !="")
-		{
-			$rValue.='<a href="'.UPLOAD_DIR.'/litiges/'.$filelist[$i].'" class="link-main-blue"><span class="pr-3"><i class="fas fa-link"></i></span></a>';
-
-		}
-	}
-	return $rValue;
-}
 
 function getInfos($pdoLitige)
 {
@@ -122,35 +110,7 @@ function getAction($pdoLitige)
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 $actionList=getAction($pdoLitige);
-function getDialog($pdoLitige)
-{
-	$req=$pdoLitige->prepare("SELECT id_dossier,DATE_FORMAT(date_saisie, '%d-%m-%Y') as dateFr,msg,id_web_user,filename,mag FROM dial WHERE id_dossier= :id ORDER BY date_saisie");
-	$req->execute(array(
-		':id'		=>$_GET['id']
-	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
 
-}
-$dials=getDialog($pdoLitige);
-function getBtName($pdoBt, $idwebuser)
-{
-	$req=$pdoBt->prepare("SELECT CONCAT (prenom, ' ', nom) as name FROM btlec WHERE id_webuser= :id_web_user");
-	$req->execute(array(
-		':id_web_user'	=>$idwebuser
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
-
-
-function getMagName($pdoUser, $idwebuser)
-{
-	$req=$pdoUser->prepare("SELECT btlec.sca3.mag FROM users LEFT JOIN btlec.sca3 ON users.galec=btlec.sca3.galec WHERE users.id= :id_web_user ");
-	$req->execute(array(
-		':id_web_user'	=>$idwebuser
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-
-}
 
 
 $coutTotal=$infos['mt_transp']+$infos['mt_assur']+$infos['mt_fourn']+$infos['mt_mag'];
@@ -354,6 +314,8 @@ if(isset($_GET['successpal']))
 	$success[]='la palette a  été trouvée et la base de donnée mise à jour';
 }
 
+// $name=getMagName($pdoUser, $dial['id_web_user']);
+$infoMag=getMagName($pdoUser, $fLitige[0]['id_web_user']);
 
 
 
@@ -470,7 +432,7 @@ DEBUT CONTENU CONTAINER
 					<p class="text-right"><a href="bt-info-litige.php?id=<?=$_GET['id']?>" class="btn btn-yellow"><i class="fas fa-highlighter pr-3"></i>Ajouter des informations</a></p>
 				</div>
 				<div class="col-auto">
-					<p class="text-right"><a href="bt-generate-fiche.php?id=<?=$_GET['id']?>" class="btn btn-black"><i class="fas fa-print pr-3"></i>Imprimer</a></p>
+					<p class="text-right"><a href="bt-generate-fiche.php?id=<?=$_GET['id']?>" class="btn btn-black" target="_blank"><i class="fas fa-print pr-3"></i>Imprimer</a></p>
 				</div>
 
 				<!-- <div class="col"></div> -->
@@ -723,57 +685,15 @@ DEBUT CONTENU CONTAINER
 
 	<div class="row">
 		<div class="col">
-			<table class="table light-shadow">
-				<thead class="thead-dark">
-					<tr>
-						<th>Date</th>
-						<th>Interlocuteur</th>
-						<th>Message</th>
-						<th>PJ</th>
-					</tr>
-				</thead>
-				<tbody>
+
 					<?php
 					if(isset($dials) && count($dials)>0)
 					{
-						foreach ($dials as $dial)
-						{
-							if(!empty($dial['msg']))
-							{
-								if($dial['mag']==1)
-								{
-									$name=getMagName($pdoUser, $dial['id_web_user']);
-									$name=$name['mag'];
-									$type='bg-kaki-light';
-
-								}
-								else
-								{
-									$name=getBtName($pdoBt, $dial['id_web_user']);
-									$name=$name['name'];
-									$type='bg-alert-primary';
-								}
-								if($dial['filename']!='')
-								{
-									$pj=createFileLink($dial['filename']);
-								}
-								else
-								{
-									$pj='';
-								}
-								echo '<tr class="'.$type.'">';
-								echo '<td>'.$dial['dateFr'].'</td>';
-								echo '<td>'.$name.'</td>';
-								echo '<td>'.$dial['msg'].'</td>';
-								echo '<td>'.$pj.'</td>';
-								echo '</tr>';
-							}
-						}
+						include('echanges.php');
 
 					}
 					?>
-				</tbody>
-			</table>
+
 
 		</div>
 	</div>
