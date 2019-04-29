@@ -216,11 +216,23 @@ ob_start();
 include('pdf-fiche-suivi.php');
 $html=ob_get_contents();
 ob_end_clean();
-$footer='<table class="padding-table"><tr><td>TRAITEMENT</td></tr><tr><td class="spacing-l"></td></tr><tr><td>Date et validation</td></tr><tr><td class="spacing-l"></td></tr></table>';
+$footer='<table class="padding-table">';
+$footer.='<tr><td>TRAITEMENT</td></tr>';
+$footer.='<tr><td class="spacing-l"></td></tr>';
+$footer.='<tr><td>Date et validation</td></tr>';
+$footer.='<tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>';
 $path='http://172.30.92.53/'.VERSION.'upload/litiges/'.$html;
 
 $mpdf = new \Mpdf\Mpdf();
 $mpdf->SetHTMLFooter($footer);
+$mpdf->AddPage('', // L - landscape, P - portrait
+        '', '', '', '',
+       '', // margin_left
+        '', // margin right
+       '', // margin top
+       40, // margin bottom
+        0, // margin header
+        10); // margin footer
 $mpdf->WriteHTML($path);
 		// $pdfContent = $mpdf->Output('', 'S');
 $pdfContent = $mpdf->Output();

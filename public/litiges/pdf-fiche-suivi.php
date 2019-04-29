@@ -181,10 +181,15 @@ h2{
 .deux{
 	width: 350px;
 }
-	.entete{
-			font-size: 10px;
-			font-style: italic;
-		}
+.entete{
+	font-size: 10px;
+	font-style: italic;
+}
+.footer{
+	font-size: 10px;
+	text-align : right;
+}
+
 </style>
 <?php
 
