@@ -4,6 +4,8 @@
 
 			<div class="col-auto">
 				<h5 class="khand text-main-blue pb-3">Palettes :</h5>
+				<p><span class="text-main-blue">Facture : </span><?=$fLitige[0]['facture'] .' du '.$fLitige[0]['datefacture']?></p>
+
 
 				<table class="table light-shadow table-bordered">
 					<thead>

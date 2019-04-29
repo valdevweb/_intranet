@@ -435,7 +435,6 @@ DEBUT CONTENU CONTAINER
 							<th class="sortable align-top">Centrale</th>
 							<th class="sortable align-top">Etat</th>
 							<th class="sortable align-top text-right">Valo</th>
-							<th class="sortable text-center align-top">Détails</th>
 							<th class="sortable text-center align-top">24/48h</th>
 
 						</tr>
@@ -472,7 +471,6 @@ DEBUT CONTENU CONTAINER
 							echo'<td class="'.$etat.'">'.$active['etat'].'</td>';
 							echo'<td class="text-right">'.number_format((float)$active['valo'],2,'.',' ').'&euro;</td>';
 
-							echo'<td class="text-center"><a href="bt-detail-litige.php?id='.$active['id_main'].'"><i class="fas fa-eye"></i></a></td>';
 							echo '<td class="text-center">'.$vingtquatre .'</td>';
 							echo '</tr>';
 

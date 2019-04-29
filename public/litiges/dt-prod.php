@@ -3,7 +3,7 @@
 			<div class="row">
 				<div class="col">
 					<h5 class="khand text-main-blue pb-3">Produit(s) :</h5>
-					<p><span class="text-main-blue">Facture : </span><?=$fLitige[0]['facture']?></p>
+					<p><span class="text-main-blue">Facture : </span><?=$fLitige[0]['facture'] .' du '.$fLitige[0]['datefacture']?></p>
 					<table class="table light-shadow">
 						<thead class="thead-dark">
 							<tr>
