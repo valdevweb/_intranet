@@ -80,3 +80,19 @@ $htmlMail=str_replace('{MAGTO}',$_SESSION['nom'],$htmlMail);
 		//
 		// 		//CHANGER L ORIENTATION
 		// $mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
+		//
+		//
+		// ob_start();
+		//
+		// AJOUTER UN FOOTER
+include('pdf-fiche-suivi.php');
+$html=ob_get_contents();
+ob_end_clean();
+$footer='<table class="padding-table"><tr><td>TRAITEMENT</td></tr><tr><td class="spacing-l"></td></tr><tr><td>Date et validation</td></tr><tr><td class="spacing-l"></td></tr></table>';
+$path='http://172.30.92.53/'.VERSION.'upload/litiges/'.$html;
+
+$mpdf = new \Mpdf\Mpdf();
+$mpdf->SetHTMLFooter($footer);
+$mpdf->WriteHTML($path);
+		// $pdfContent = $mpdf->Output('', 'S');
+$pdfContent = $mpdf->Output();
