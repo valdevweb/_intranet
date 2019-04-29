@@ -173,7 +173,10 @@
 		.deux{
 			width: 350px;
 		}
-
+.footer{
+	font-size: 10px;
+	text-align : right;
+}
 	</style>
 
 

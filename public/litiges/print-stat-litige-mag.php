@@ -74,8 +74,10 @@ ob_start();
 include('pdf-stat-litige-mag.php');
 $html=ob_get_contents();
 ob_end_clean();
+$footer='<p class="footer">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</p>';
 
 $mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
+$mpdf->SetHTMLFooter($footer);
 $mpdf->WriteHTML($html);
 		// $pdfContent = $mpdf->Output('', 'S');
 $pdfContent = $mpdf->Output();
