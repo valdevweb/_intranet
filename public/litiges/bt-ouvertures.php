@@ -29,7 +29,10 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 function getWaiting($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT ouverture.id, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, mag, btlec FROM ouverture LEFT JOIN btlec.sca3 ON ouverture.galec=btlec.sca3.galec WHERE etat=0 ORDER BY date_saisie");
+	$req=$pdoLitige->prepare("SELECT ouv.id as id_ouv, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, mag, btlec, etat,ouv.galec, dossiers.dossier,  dossiers.id as id_dossier_litige FROM ouv
+		LEFT JOIN btlec.sca3 ON ouv.galec=btlec.sca3.galec
+		LEFT JOIN dossiers ON ouv.id_litige=dossiers.id
+		ORDER BY etat, date_saisie");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -60,6 +63,8 @@ function createFileLink($filelist)
 $errors=[];
 $success=[];
 
+$etatAr=['en cours','accepté','refusé'];
+$classAr=['text-red heavy','text-dark-grey','text-dark-grey'];
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
@@ -70,8 +75,12 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Demandes d'ouvertures de dossiers</h1>
-
+	<div class="row">
+		<div class="col">
+			<h1 class="text-main-blue py-5 ">Demandes d'ouvertures de dossiers</h1>
+			<p><i class="fas fa-info-circle text-main-blue pr-3"></i>Pour répondre à une demande, veuillez cliquer sur le bouton répondre <i class="far fa-comments text-main-blue px-2"></i>Le bouton créer <i class="fas fa-folder-plus text-main-blue px-2"></i> vous permettra d'accéder à la saisie libre du dossier</p>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-lg-1"></div>
 		<div class="col">
@@ -79,52 +88,61 @@ DEBUT CONTENU CONTAINER
 			include('../view/_errors.php');
 			?>
 			<div class="spinner-border" role="status">
-  <span class="sr-only">Loading...</span>
-</div>
+				<span class="sr-only">Loading...</span>
+			</div>
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
-	<?php
-	foreach ($waiting as $wait)
-	{
-		$pj='';
-		if(!empty($wait['pj']))
-		{
-			$pjtemp=createFileLink($wait['pj']);
-			$pj='Pièce jointe : <span class="pr-3">'.$pjtemp .'</span>';
-		}
 
-	echo '<div class="row">';
-		echo '<div class="col alert alert-primary">';
-			echo '<div class="row">';
-				echo '<div class="col">';
-					echo $wait['btlec'].'-'.$wait['mag'];
-				echo '</div>';
-				echo '<div class="col text-right">';
-					echo 'date de la demande : '.$wait['datesaisie'];
-				echo '</div>';
-			echo '</div>';
-			echo '<div class="row">';
-				echo '<div class="col border-top-blue">';
-					echo $wait['msg'];
-				echo '</div>';
-			echo '</div>';
-			echo '<div class="row pt-3">';
-				echo '<div class="col">';
-					echo $pj;
-				echo '</div>';
+	<div class="row">
+		<div class="col">
+			<table class="table">
+				<thead class="thead-dark">
+					<tr>
+						<th>N°</th>
+						<th>Magasin</th>
+						<th>Date</th>
+						<th>Message</th>
+						<th>Etat</th>
+						<th class="text-center">Répondre</th>
+						<th class="text-center">Créer</th>
+						<th class="text-right">Dossier</th>
+					</tr>
+				</thead>
+				<tbody>
 
-			echo '</div>';
-			echo '<div class="row">';
-				echo '<div class="col text-right">';
-					echo '<a href="bt-ouv-traitement.php?id='.$wait['id'].'" class="btn btn-primary">Répondre</a>';
-				echo '</div>';
-			echo '</div>';
-		echo '</div>';
-	echo '</div>';
-}
 
-	?>
+					<?php
+					foreach ($waiting as $wait)
+					{
+						$msg=str_replace('<br />',', ', $wait['msg']);
+						$msg=substr($msg,0, 50) .'...';
+
+						echo '<tr>';
+						echo '<td class="text-right">'.$wait['id_ouv'].'</td>';
+						echo '<td>'.$wait['mag'].'</td>';
+						echo '<td>'.$wait['datesaisie'].'</td>';
+						echo '<td>'.$msg.'</td>';
+						echo '<td class="'.$classAr[$wait['etat']].'">'.$etatAr[$wait['etat']].'</td>';
+						echo '<td class="text-center"><a href="bt-ouv-traitement.php?id='.$wait['id_ouv'].'" ><i class="far fa-comments"></i></a></td>';
+						echo '<td class="text-center"><a href="bt-ouv-saisie.php?id_ouv='.$wait['id_ouv'].'&galec='.$wait['galec'].'" ><i class="fas fa-folder-plus"></i></a></td>';
+						echo '<td class="text-center"><a href="bt-detail-litige.php?id='.$wait['id_dossier_litige'].'">'.$wait['dossier'].'</a></td>';
+
+						echo '</tr>';
+
+
+					}
+
+					?>
+
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+
+
+
 
 
 
