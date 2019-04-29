@@ -181,7 +181,10 @@ h2{
 .deux{
 	width: 350px;
 }
-
+	.entete{
+			font-size: 10px;
+			font-style: italic;
+		}
 </style>
 <?php
 
@@ -211,6 +214,8 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 <title></title>
 </head>
 <body>
+	<p class="text-right entete">fiche au <?= date('d-m-Y')?></p>
+
 	<table class="padding-table border-table-prim">
 		<tr>
 			<td class="deux bg-prim text-white bigger text-center" colspan="4">FICHE DE SUIVI LITIGE - litige n°  <?= $fLitige[0]['dossier']?></td>
@@ -326,9 +331,10 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 	<table class="padding-table border-table-sec">
 		<tr>
 			<td class="dix bg-sec bg-sec text-white">CODE ARTICLE</td>
+			<td class="dix bg-sec bg-sec text-white">DOSSIER</td>
 			<td class="cinq bg-sec text-white">DESIGNATION</td>
 			<td class="bg-sec text-white" style="width:50px;">QTE</td>
-			<td class="bg-sec trois text-white">FOURNISSEUR</td>
+			<td class="bg-sec text-white">FOURNISSEUR</td>
 			<td class="huit bg-sec text-white">VALORISATION</td>
 			<td class="cinq bg-sec text-white">RECLAMATION</td>
 		</tr>
@@ -339,6 +345,7 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 			$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
 			echo '<tr>';
 			echo'<td>'.$prod['article'].'</td>';
+			echo'<td>'.$prod['dossier_gessica'].'</td>';
 			echo'<td>'.$prod['descr'].'</td>';
 			echo'<td class="text-right">'.$prod['qte_litige'].'</td>';
 			echo'<td>'.$prod['fournisseur'].'</td>';
