@@ -3,19 +3,20 @@
 			<div class="row">
 				<div class="col">
 					<h5 class="khand text-main-blue pb-3">Produit(s) :</h5>
-
+					<p><span class="text-main-blue">Facture : </span><?=$fLitige[0]['facture']?></p>
 					<table class="table light-shadow">
 						<thead class="thead-dark">
 							<tr>
 								<th class="align-top">Article</th>
 								<th class="align-top">Dossier</th>
+								<th class="align-top">Palette</th>
 								<th class="align-top">Désignation</th>
 								<th class="align-top">Fournisseur</th>
 								<th class="align-top">Réclamation</th>
-								<th class="align-top">Quantité <br>litige</th>
+								<th class="align-top">Qté <br>litige</th>
 								<!-- <th class="align-top text-right">Date déclaration</th> -->
 								<th class="align-top text-right">Valo</th>
-								<th class="align-top">Pièces jointes</th>
+								<th class="align-top">PJ</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -40,6 +41,7 @@
 									echo '<td>'.$prod['article'].'</td>';
 								}
 								echo '<td>'.$prod['dossier_gessica'].'</td>';
+								echo '<td>'.$prod['palette'].'</td>';
 								echo '<td>'.$prod['descr'].'</td>';
 								echo '<td>'.$prod['fournisseur'].'</td>';
 								echo '<td>'.$prod['reclamation'].'</td>';
