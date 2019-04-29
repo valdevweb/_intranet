@@ -6,7 +6,7 @@
 	<style type="text/css">
 		body{
 			font-family: helvetica, sans-serif;
-			font-size: 10pt;
+			/* font-size: 10pt; */
 		}
 		.bigger{
 			font-size: 20px;
@@ -19,6 +19,10 @@
 		table,td, tr{
 			font-size: 10px;
 
+		}
+		.entete{
+			font-size: 10px;
+			font-style: italic;
 		}
 
 		.heavy{
@@ -176,23 +180,24 @@
 	<title></title>
 </head>
 <body>
+	<p class="text-right entete">état au <?= date('d-m-Y')?></p>
 	<h3>Chiffres d'affaire du magasin <?= $listLitige[0]['mag']?> - <?= $listLitige[0]['btlec']?> </h3>
 
-	<table class=" border-table border-table-sec">
+	<table class="border-table border-table-sec">
 		<tr class="bg-sec">
 			<th><?=$yearN?></th>
 			<th><?=$yearNUn?></th>
 			<th><?=$yearNDeux?></th>
 		</tr>
 		<tr>
-			<td><?=number_format((float)$financeN['CA_Annuel'],2,'.',' ')?>&euro;</td>
-			<td><?=number_format((float)$financeNUn['CA_Annuel'],2,'.',' ')?>&euro;</td>
-			<td><?=number_format((float)$financeNDeux['CA_Annuel'],2,'.',' ')?>&euro;</td>
+			<td class="text-right"><?=number_format((float)$financeN['CA_Annuel'],2,'.',' ')?>&euro;</td>
+			<td class="text-right"><?=number_format((float)$financeNUn['CA_Annuel'],2,'.',' ')?>&euro;</td>
+			<td class="text-right"><?=number_format((float)$financeNDeux['CA_Annuel'],2,'.',' ')?>&euro;</td>
 		</tr>
 	</table>
 	<div class="spacing-l"></div>
 	<h3>Réclamations : </h3>
-	<table class="border-table-sec">
+	<table class="border-table border-table-sec">
 		<tr class="bg-sec">
 			<th>N°</th>
 			<th>Date</th>
@@ -219,7 +224,7 @@
 				echo '<td>'.$litige['typo'].'</td>';
 				echo '<td>'.$litige['imputation'].'</td>';
 				echo '<td>'.$litige['etat'].'</td>';
-				echo '<td>'.$litige['valo'].'</td>';
+				echo '<td class="text-right">'.$litige['valo'].'&euro;</td>';
 				echo '<td>'.$litige['analyse'].'</td>';
 				echo '<td>'.$litige['conclusion'].'</td>';
 				echo '<td class="text-right">'.$cout.' &euro;</td>';
