@@ -25,7 +25,7 @@ function search($pdoBt)
 
 function getMagLitiges($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT dossier,DATE_FORMAT(date_crea,'%d-%m-%Y')as datecrea, typo, imputation, etat, tablegt.gt, valo, analyse, conclusion, mt_transp, mt_assur, mt_fourn, mt_mag, btlec.sca3.mag, btlec.sca3.btlec  FROM dossiers
+	$req=$pdoLitige->prepare("SELECT dossiers.id as id, dossier,DATE_FORMAT(date_crea,'%d-%m-%Y')as datecrea, typo, imputation, etat, tablegt.gt, valo, analyse, conclusion, mt_transp, mt_assur, mt_fourn, mt_mag, btlec.sca3.mag, btlec.sca3.btlec  FROM dossiers
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
 		LEFT JOIN typo ON dossiers.id_typo=typo.id
 		LEFT JOIN imputation ON dossiers.id_imputation=imputation.id
@@ -83,7 +83,13 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Réclamations par magasin</h1>
+
+		<div class="row py-3">
+		<div class="col">
+			<p class="text-right"><a href="bt-litige-encours.php" class="btn btn-primary">Retour</a></p>
+		</div>
+	</div>
+	<h1 class="text-main-blue ">Réclamations par magasin</h1>
 
 	<div class="row">
 		<div class="col-lg-1"></div>
@@ -192,7 +198,7 @@ DEBUT CONTENU CONTAINER
 					$coutTotal=$coutTotal+$cout;
 					$cout=number_format((float)$cout,2,'.','');
 					echo '<tr>';
-					echo '<td>'.$litige['dossier'].'</td>';
+					echo '<td><a href="bt-detail-litige.php?id='.$litige['id'].'">'.$litige['dossier'].'</a></td>';
 					echo '<td>'.$litige['datecrea'].'</td>';
 					echo '<td>'.$litige['gt'].'</td>';
 					echo '<td>'.$litige['typo'].'</td>';
@@ -205,7 +211,7 @@ DEBUT CONTENU CONTAINER
 					echo '</tr>';
 					$valoTotal=$valoTotal+$litige['valo'];
 				}
-			}
+
 			echo '<tr>';
 			echo '<td  class="no-border" colspan="2">TOTAUX</td>';
 			echo '<td  class="text-right no-border" colspan="5">'.$valoTotal.'</td>';
@@ -214,6 +220,9 @@ DEBUT CONTENU CONTAINER
 
 			echo '</tbody>';
 			echo '</table>';
+
+			}
+
 
 
 			?>
