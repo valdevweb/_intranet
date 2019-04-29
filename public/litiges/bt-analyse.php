@@ -107,6 +107,17 @@ function updateDossier($pdoLitige)
 	// return $req->errorInfo();
 
 }
+
+function getInfoMag($pdoBt, $galec)
+{
+	$req=$pdoBt->prepare("SELECT btlec FROM sca3 WHERE galec = :galec");
+	$req->execute(array(
+		':galec'		=>$galec,
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+
 // -------------------------------
 // Variables
 // -------------------------------
@@ -144,6 +155,7 @@ if(isset($_POST['submit_mail']))
 			{
 				if($_SESSION['code_bt']!='4201')
 				{
+					$infoMag=getInfoMag($pdoBt, $fLitige['galec']);
 					$mailMag=array($infoMag['btlec'].'-rbt@btlec.fr');
 				}
 				else
@@ -162,7 +174,7 @@ if(isset($_POST['submit_mail']))
 			->setBody($magTemplate, 'text/html')
 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
 			->setTo($mailMag)
-			->addBcc('valerie.montusclat@btlec.fr');
+			->setBcc(['valerie.montusclat@btlec.fr', 'nathalie.pazik@btlec.fr']);
 			$delivered=$mailer->send($message);
 			if($delivered >0)
 			{
