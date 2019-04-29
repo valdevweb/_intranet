@@ -1,0 +1,5 @@
+mysql -u root -pSql19092017+ 
+
+mysqlfrm -server=root:Sql19092017+@localhost -port=3311 "C:\ProgramData\MySQL\MySQL Server 5.7\Data\_litige\dial_help" > "C:\ProgramData\MySQL\MySQL Server 5.7\Data\_test\recovered_mytable.sql"
+
+
