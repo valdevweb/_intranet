@@ -62,7 +62,10 @@ else
 
 function getWaiting($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT id, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj FROM ouverture WHERE etat=0 AND id_web_user= :id_web_user ORDER BY date_saisie");
+	$req=$pdoLitige->prepare("SELECT ouv.id as id_ouv, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, id_litige, etat,dossier FROM ouv
+	-- LEFT JOIN dossiers ON ouv.id_litige=dossiers.id
+
+	WHERE ouv.id_web_user= :id_web_user ORDER BY date_saisie");
 	$req->execute(array(
 		':id_web_user'	=>$_SESSION['id_web_user']
 
@@ -78,6 +81,8 @@ $waiting=getWaiting($pdoLitige);
 
 $etatDossier=['en cours', 'clos'];
 
+$etatAr=['en cours','acceptée','refusée'];
+$classAr=['text-red heavy','text-dark-grey','text-dark-grey'];
 
 //------------------------------------------------------
 //			VIEW
@@ -141,7 +146,7 @@ DEBUT CONTENU CONTAINER
 	<!-- start row -->
 	<div class="row pb-5">
 		<div class="col-lg-1"></div>
-		<div class="col">
+		<div class="col sorting-zone">
 			<table class="table border" id="dossier">
 				<thead class="thead-dark ">
 					<th class="sortable">Dossier</th>
@@ -150,7 +155,7 @@ DEBUT CONTENU CONTAINER
 					<th class="text-center">Détail</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody id="tosort">
 				<?php
 				foreach ($listDossier as $dossier)
 				{
@@ -180,65 +185,73 @@ DEBUT CONTENU CONTAINER
 	<div class="col-lg-1"></div>
 </div>
 
-
-
-
 <?php
-// si demandes libre en attentes
-if(count($waiting)>=1)
-{
+	ob_start();
+ ?>
+<div class="row mb-3"><div class="col-lg-1"></div>
+	<div class="col"><h5 class="text-main-blue">Vos demandes d'ouverture de dossier litige en attente</h5></div>
+	<div class="col-lg-1"></div>
+</div>
 
-	echo '<div class="row mb-3"><div class="col-lg-1"></div>';
-	echo '<div class="col"><h5 class="text-main-blue">Vos demandes d\'ouverture de dossier litige en attente</h5></div>';
-	echo '<div class="col-lg-1"></div></div>';
+<div class="row">
+	<div class="col-lg-1"></div>
+	<div class="col ">
+
+	<table class="table">
+	<thead class="thead-dark">
+	<tr>
+	<th>N°</th>
+	<th>Date</th>
+	<th>Message</th>
+	<th>Etat</th>
+	<th class="text-center">Répondre</th>
+	<th class="text-right">Dossier</th>
+	</tr>
+	</thead>
+	<tbody>
+
+
+	<?php
 	foreach ($waiting as $wait)
 	{
+		$msg=str_replace('<br />',', ', $wait['msg']);
+		$msg=substr($msg,0, 50) .'...';
+if($wait['dossier']==0)
+{
+	$dossier='';
+}
+else{
+	$dossier=$wait['dossier'];
+}
 
+		echo '<tr>';
+		echo '<td class="text-right">'.$wait['id_ouv'].'</td>';
+		echo '<td>'.$wait['datesaisie'].'</td>';
+		echo '<td>'.$msg.'</td>';
+		echo '<td class="'.$classAr[$wait['etat']].'">'.$etatAr[$wait['etat']].'</td>';
+		echo '<td class="text-center"><a href="ouv-mag-horsqlik.php?id='.$wait['id_ouv'].'" ><i class="far fa-comments"></i></a></td>';
+		echo '<td class="text-center">'.$dossier.'</td>';
+		echo '</tr>';
 
-
-
-
-		$pj='';
-		if(!empty($wait['pj']))
-		{
-			// $pjtemp=createFileLink($wait['pj']);
-			// $pj='Pièce jointe : <span class="pr-3">'.$pjtemp .'</span>';
-		}
-		echo '<div class="row">';
-		echo '<div class="col-lg-1"></div>';
-
-		echo '<div class="col ">';
-
-		echo '<div class="row">';
-		echo '<div class="col">';
-		echo $wait['msg'];
-		echo '</div>';
-		echo '<div class="col-auto text-right">';
-		echo '<i class="far fa-calendar-alt pr-3 text-main-blue"></i>'.$wait['datesaisie'];
-		echo '</div>';
-		echo '</div>';
-		echo '<div class="row pt-3">';
-		echo '<div class="col">';
-					// echo $pj;
-		echo '</div>';
-
-		echo '</div>';
-		echo '<div class="row mb-2">';
-		echo '<div class="col text-right">';
-		echo '<a href="mag-horsqlik.php?id='.$wait['id'].'" class="btn btn-primary">Détails</a>';
-		echo '</div>';
-		echo '</div>';
-		echo '</div>';
-		echo '<div class="col-lg-1"></div>';
-
-		echo '</div>';
 
 	}
 
+	?>
 
+</tbody>
+</table>
+</div>
+	<div class="col-lg-1"></div>
+
+</div>
+<?php
+$saisieLibre=ob_get_contents();
+ob_end_clean();
+// si demandes libre en attentes
+if(count($waiting)>=1)
+{
+	echo $saisieLibre;
 }
-
-
 
 ?>
 
@@ -253,7 +266,7 @@ if(count($waiting)>=1)
 </div>
 
 
-<script src="../js/sorttable.js"></script>
+<script src="../js/sorttable2.js"></script>
 
 <?php
 
