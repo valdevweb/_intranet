@@ -81,7 +81,6 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 				<li data-module="12"><a href="<?= $contact?>gt=dircom ">direction commerciale</a></li>
 				<li data-module="13"><a href="<?= $contact?>gt=informatique ">exploitation informatique</a></li>
 				<li data-module="14"><a href="<?= $contact?>gt=logistique ">logistique</a></li>
-				<li data-module="17"><a href="<?= $contact?>gt=litige">litiges livraison</a></li>
 				<li data-module="15"><a href="<?= $contact?>gt=rh">social</a></li>
 				<li data-module="17"><a href="<?= $contact?>gt=qual">qualité</a></li>
 			</ul>
@@ -89,7 +88,7 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 
 		<li class='has-sub'><a href="#"><span>Litiges</span></a>
 			<ul>
-				<!-- <li><a href="<?= ROOT_PATH?>/public/litiges/basic-declaration.php">Déclaration de litige</a></li> -->
+				<li><a href="<?= ROOT_PATH?>/public/litiges/declaration-basic.php">Déclaration de litige</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/mag-litige-listing.php">Mes litiges</a></li>
 			</ul>
 		</li>
@@ -143,7 +142,7 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 		?>
 		<li class='has-sub'><a href="#"><span>Litiges</span></a>
 			<ul>
-				<li><a href="<?= ROOT_PATH?>/public/litiges/bt-declaration-basic.php">Déclarer un litige pour un magasin</a></li>
+				<li><a href="<?= ROOT_PATH?>/public/litiges/declaration-bt-basic.php">Déclarer un litige pour un magasin</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/bt-litige-encours.php">Litiges en cours</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/bt-ouvertures.php">Demandes d'ouverture de dossier</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/stat-litige-mag.php">Réclamations par magasin</a></li>
