@@ -76,7 +76,7 @@ function updateDetailInversion($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean,
 	// return $req->errorInfo();
 }
 
-
+// 3 pour 1er commentaire
 function addDial($pdoLitige)
 {
 	$com=strip_tags($_POST['form_com']);
@@ -87,7 +87,7 @@ function addDial($pdoLitige)
 		':date_saisie' =>date('Y-m-d H:i:s'),
 		':msg' =>$com,
 		':id_web_user' =>$_SESSION['id_web_user'],
-		':mag' =>1,
+		':mag' =>3,
 
 	));
 	return $req->rowCount();
