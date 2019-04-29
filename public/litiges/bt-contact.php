@@ -60,52 +60,19 @@ function addMsg($pdoLitige, $filelist)
 	// return $req->errorInfo();
 }
 
-function getDialog($pdoLitige)
+
+
+function getFirstDialog($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT id_dossier,DATE_FORMAT(date_saisie, '%d-%m-%Y') as dateFr,msg,id_web_user,filename,mag FROM dial WHERE id_dossier= :id ORDER BY date_saisie");
+	$req=$pdoLitige->prepare("SELECT id_dossier,DATE_FORMAT(date_saisie, '%d-%m-%Y') as dateFr,msg,id_web_user,filename,mag FROM dial WHERE id_dossier= :id AND mag=3 ORDER BY date_saisie");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-
-}
-$dials=getDialog($pdoLitige);
-
-function getBtName($pdoBt, $idwebuser)
-{
-	$req=$pdoBt->prepare("SELECT CONCAT (prenom, ' ', nom) as name FROM btlec WHERE id_webuser= :id_web_user");
-	$req->execute(array(
-		':id_web_user'	=>$idwebuser
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
-
-
-function getMagName($pdoUser, $idwebuser)
-{
-	$req=$pdoUser->prepare("SELECT btlec.sca3.mag, btlec.sca3.btlec FROM users LEFT JOIN btlec.sca3 ON users.galec=btlec.sca3.galec WHERE users.id= :id_web_user ");
-	$req->execute(array(
-		':id_web_user'	=>$idwebuser
-	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 
 }
-
-function createFileLink($filelist)
-{
-	$rValue='';
-	$filelist=explode(';',$filelist);
-
-	for ($i=0; $i < count($filelist); $i++)
-	{
-		if($filelist[$i] !="")
-		{
-			$rValue.='<a href="'.UPLOAD_DIR.'/litiges/'.$filelist[$i].'"><span class="pr-3"><i class="fas fa-link"></i></span></a>';
-
-		}
-	}
-	return $rValue;
-}
+$firstDial=getFirstDialog($pdoLitige);
+require 'echanges.fn.php';
 
 $errors=[];
 $success=[];
@@ -244,7 +211,7 @@ DEBUT CONTENU CONTAINER
 			<p class="text-right"><a href="bt-detail-litige.php?id=<?=$_GET['id']?>" class="btn btn-primary">Retour</a></p>
 		</div>
 	</div>
-	<h1 class="text-main-blue py-5 ">Dossier N° <?= $fLitige['dossier']?></h1>
+	<h1 class="text-main-blue pb-5 ">Dossier N° <?= $fLitige['dossier']?></h1>
 	<div class="row no-gutters">
 		<div class="col">
 			<?php
@@ -253,68 +220,49 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-lg-1 col-xxl-2"></div>
 	</div>
+
+	<?php
+	if(!empty($firstDial))
+	{
+		echo '<div class="row alert bg-kaki-light mb-5">';
+		echo '<div class="col">';
+
+		echo '<div class="row ">';
+		echo '<div class="col heavy">Commentaire d\'origine :';
+		echo '</div>';
+		echo '<div class="col">';
+		echo '<div class="text-right"><i class="far fa-calendar-alt pr-3"></i>'.$firstDial['dateFr'] .'</div>';
+		echo '</div>';
+		echo '</div>';
+
+		echo '<div class="row ">';
+		echo '<div class="col">';
+		echo $firstDial['msg'];
+		echo '</div>';
+		echo '</div>';
+		echo '</div>';
+		echo '</div>';
+
+	}
+
+
+
+	?>
+
+
 	<div class="row">
 		<div class="col">
 			<h2 class="khand text-main-blue">Echanges avec le magasin</h2>
 		</div>
 	</div>
-	<div class="row no-gutters mb-5">
+	<div class="row  mb-5">
 		<div class="col">
-			<div class="row no-gutters">
-				<div class="col">
-					<table class="table table-bordered">
-						<thead class="bg-kaki">
-							<tr>
-								<th>Date</th>
-								<th>Interlocuteur</th>
-								<th>Message</th>
-								<th>PJ</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php
-							if(isset($dials) && count($dials)>0)
-							{
-								foreach ($dials as $dial)
-								{
-									if(!empty($dial['msg']))
-									{
-										if($dial['mag']==1)
-										{
-											$name=$infoMag['mag'];
-											$type='bg-kaki-light';
-
-										}
-										else
-										{
-											$infoBt=getBtName($pdoBt, $dial['id_web_user']);
-											$name=$infoBt['name'];
-											$type='bg-alert-primary';
-										}
-										if($dial['filename']!='')
-										{
-											$pj=createFileLink($dial['filename']);
-										}
-										else
-										{
-											$pj='';
-										}
-										echo '<tr class="'.$type.'">';
-										echo '<td>'.$dial['dateFr'].'</td>';
-										echo '<td>'.$name.'</td>';
-										echo '<td>'.$dial['msg'].'</td>';
-										echo '<td>'.$pj.'</td>';
-										echo '</tr>';
-									}
-								}
-
-							}
-							?>
-						</tbody>
-					</table>
-
-				</div>
-			</div>
+			<?php
+			if(isset($dials) && count($dials)>0)
+			{
+				include 'echanges.php';
+			}
+			?>
 		</div>
 	</div>
 
