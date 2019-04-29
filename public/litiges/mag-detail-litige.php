@@ -373,7 +373,7 @@ DEBUT CONTENU CONTAINER
 			{
 				foreach($dials as $dial)
 				{
-					if($dial['mag']==1)
+					if($dial['mag']==1 || $dial['mag']==3)
 					{
 						$bgColor='alert-primary';
 					}
