@@ -32,14 +32,7 @@
 									$pj=createFileLink($prod['pj']);
 								}
 								echo '<tr>';
-								if($prod['tarif']==0)
-								{
-									echo '<td><a href="box-search.php?id='.$_GET['id'].'&searchart='.$prod['article'].'&searchdoss='.$prod['dossier_gessica'].'">'.$prod['article'].'</a></td>';
-								}
-								else
-								{
-									echo '<td>'.$prod['article'].'</td>';
-								}
+								echo '<td>'.$prod['article'].'</td>';
 								echo '<td>'.$prod['dossier_gessica'].'</td>';
 								echo '<td>'.$prod['palette'].'</td>';
 								echo '<td>'.$prod['descr'].'</td>';
