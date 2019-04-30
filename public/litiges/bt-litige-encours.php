@@ -133,7 +133,7 @@ function searchValo($pdoLitige)
 	$req=$pdoLitige->prepare("SELECT  sum(valo) as valo_totale FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
-		WHERE concat(dossiers.dossier,mag,dossiers.galec,DATE_FORMAT(date_crea, '%d-%m-%Y'),sca3.btlec) LIKE :search GROUP BY etat");
+		WHERE concat(dossiers.dossier,mag,dossiers.galec,DATE_FORMAT(date_crea, '%d-%m-%Y'),sca3.btlec) LIKE :search ");
 	$req->execute(array(
 		':search' =>'%'.$_POST['search_strg'] .'%'
 	));
