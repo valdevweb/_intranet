@@ -170,11 +170,11 @@ if($fLitige[0]['flag_valo'] == 0)
 			}
 		}
 		// tarif à zéro = cas des box
-		elseif($prod['tarif']==0)
-		{
-				$flag=2;
-				$articleAZero='Un des articles n\'a pas de tarif, veuillez cliquer sur le code article pour effectuer une recherche dans la base';
-		}
+		// elseif($prod['tarif']==0)
+		// {
+		// 		$flag=2;
+		// 		$articleAZero='Un des articles n\'a pas de tarif, veuillez cliquer sur le code article pour effectuer une recherche dans la base';
+		// }
 		else
 		{
 			// si excédent
