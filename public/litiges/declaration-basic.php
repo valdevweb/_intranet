@@ -22,20 +22,53 @@ $action="consultation";
 // addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
 addRecord($pdoStat,$page,$action, $descr, 101);
 
-
+// SELECT * FROM statsventeslitiges  LEFT JOIN assortiments ON article=`SCEBFAST.AST-ART` WHERE palette='05314408'
 
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
 function search($pdoQlik)
 {
-	// $req=$pdoLitige->prepare("SELECT * FROM statsventeslitiges  WHERE concat(facture,palette,gencod,article) LIKE :search AND galec= :galec");
-	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  WHERE concat( concat('0',facture),palette) LIKE :search AND galec= :galec ORDER BY article");
+	// $req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  LEFT JOIN assortiments ON article=`SCEBFAST.AST-ART` WHERE concat( concat('0',facture),palette) LIKE :search AND galec= :galec ORDER BY article,dossier");
+	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  WHERE concat( concat('0',facture),palette) LIKE :search AND galec= :galec ORDER BY article,dossier");
 	$req->execute(array(
 		':search' =>'%'.$_POST['search_strg'] .'%',
 		':galec'	=>$_SESSION['id_galec']
 	));
 	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function checkBox($pdoQlik, $dossier,$article)
+{
+	// $req=$pdoLitige->prepare("SELECT * FROM statsventeslitiges  WHERE concat(facture,palette,gencod,article) LIKE :search AND galec= :galec");
+	$req=$pdoQlik->prepare("SELECT * FROM assortiments WHERE `SCEBFAST.AST-ART`= :article AND `SCEBFAST.DOS-COD`= :dossier ");
+	// $req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  WHERE concat( concat('0',facture),palette) LIKE :search AND galec= :galec ORDER BY article");
+	$req->execute(array(
+		':dossier' =>$dossier,
+		':article'	=>$article
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+function getBoxContent($pdoQlik,$dossier, $article)
+{
+	$req=$pdoQlik->prepare("SELECT `SCEBFAST.AST-ART` as tete FROM assortiments WHERE `SCEBFAST.ART-COD`= :article AND `SCEBFAST.DOS-COD` =:dossier");
+	$req->execute(array(
+		':article'	=>$article,
+		':dossier'	=>$dossier
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+function getBoxHead($pdoQlik,$dossier, $article)
+{
+	$req=$pdoQlik->prepare("SELECT * FROM assortiments WHERE `SCEBFAST.AST-ART`= :article AND `SCEBFAST.DOS-COD` =:dossier");
+	$req->execute(array(
+		':article'	=>$article,
+		':dossier'	=>$dossier
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+
 }
 
 // ca sou bt déclare pour un mag, on récupère le nom du mag
@@ -120,9 +153,9 @@ function getSelectedDetails($pdoQlik,$id)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-function addDetails($pdoLitige, $lastInsertId,$numDossier,$palette,	$facture,$dateFacture, $article, $ean,$dossierG, $descr, $qteC,	$tarif, $fou, $cnuf)
+function addDetails($pdoLitige, $lastInsertId,$numDossier,$palette,	$facture,$dateFacture, $article, $ean,$dossierG, $descr, $qteC,	$tarif, $fou, $cnuf,$boxTete,$boxDetail)
 {
-	$req=$pdoLitige->prepare("INSERT INTO details(id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf) VALUES(:id_dossier, :dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf)");
+	$req=$pdoLitige->prepare("INSERT INTO details(id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf, box_tete,box_art) VALUES(:id_dossier, :dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :box_tete, :box_art)");
 	$req->execute(array(
 		':id_dossier'	=>$lastInsertId,
 		':dossier'		=>$numDossier,
@@ -136,7 +169,9 @@ function addDetails($pdoLitige, $lastInsertId,$numDossier,$palette,	$facture,$da
 		':qte_cde'		=> $qteC,
 		':tarif'		=>$tarif,
 		':fournisseur'	=>$fou,
-		':cnuf'			=>$cnuf
+		':cnuf'			=>$cnuf,
+		':box_tete'		=>$boxTete,
+		':box_art'		=>$boxDetail,
 
 	));
 	$row=$req->rowCount();
@@ -153,13 +188,70 @@ function getLastNumDossier($pdoLitige)
 	// return $req->errorInfo();
 }
 
+
+
 //------------------------------------------------------
 //			AFFICHAGE RES RECHERCHE
 //------------------------------------------------------
 if(isset($_POST['submit']))
 {
+	$i=1;
+	$arrI=[];
 	$dataSearch=search($pdoQlik);
 	$searchStr=$_POST['search_strg'];
+	// on récupère les tete de box et contenu de box dans ces tableaux pour plus tard dans l'insertion de donnée pourvoir préciser si box
+	$boxTete=[];
+	$boxDetail=[];
+	foreach ($dataSearch as $key =>$data)
+	{
+		$dataSearch[$key]['box-tete']='';
+		$dataSearch[$key]['box-detail']='';
+
+		if($data['tarif']==0)
+		{
+			$teteboxFound=checkBox($pdoQlik, $data['dossier'], $data['article']);
+			if(!empty($teteboxFound))
+			{
+				$dataSearch[$key]['box-tete']=$i;
+				$arrI[]=$i;
+				// pour faciliter le tri on assigne le code  article -1 à la tête de box
+				$dataSearch[$key]['box-detail']= $data['article']-1;
+				$boxTete[]=$data['article'];
+				$i++;
+				// echo $data['article'] .' : '.$data['tarif'] .' - '.$dataSearch[$key]['box-tete'] .' - '.$dataSearch[$key]['box-detail'] .'<br>';
+			}
+		}
+
+	}
+	$arrI=implode(',', $arrI);
+
+	foreach ($dataSearch as $key =>$data)
+	{
+		// on verifie chaque couple code article et dossier, si il est dans la table assortiment => si oui article= detail box
+		$boxContent=getBoxContent($pdoQlik, $data['dossier'], $data['article']);
+
+			// si article =detail box, on mette le code article de la tete de box dans boxdetail
+		if(!empty($boxContent))
+		{
+			$boxDetail[]=$data['article'];
+			$dataSearch[$key]['box-detail']=$boxContent['tete'];
+		}
+
+	}
+
+	$boxExist=array_sum(array_column($dataSearch, 'box-tete'));
+	if($boxExist>=1)
+	{
+		function nameSort($a, $b)
+		{
+			return strcmp($a['box-detail'], $b['box-detail']);
+		}
+		usort($dataSearch, 'nameSort');
+
+	}
+
+
+
 }
 //------------------------------------------------------
 //			TRAITEMENT CHOIX ARTICLES
@@ -231,13 +323,43 @@ if(isset($_POST['choose']))
 // 2- ajout des ref art, num, num fac, date fac, n°palette, qte originale, num dossier,gencod, id_web_user, btlec, galec, deno
 	if(count($errors)==0)
 	{
+		$tete=0;
 		$added=0;
 		$nbArticle=count($ids);
 		for ($i=0; $i <$nbArticle ; $i++)
 		{
 			$art=getSelectedDetails($pdoQlik, $ids[$i]);
+			$isBoxHead=getBoxHead($pdoQlik,$art['dossier'], $art['article']);
+
+
+			if(!empty($isBoxHead))
+			{
+				$tete=1;
+				$detailbox=NULL;
+				$tetedebox=$art['article'];
+			}
+			else
+			{
+				$tete=0;
+				$detailbox=NULL;
+			}
+
+			$isBoxDetail=getBoxContent($pdoQlik,$art['dossier'], $art['article']);
+			if(!empty($isBoxDetail))
+			{
+				$detailbox=$tetedebox;
+			}
+			else
+			{
+				$detailbox=NULL;
+			}
+			// echo $art['article'] .' tete : '. $tete .' ('.$tetedebox .') detail :'.$detailbox .'<br>';
+
+
 			$dateFact=date('Y-m-d H:i:s',strtotime($art['date_mvt']));
-			$detail=addDetails($pdoLitige, $lastInsertId,$numDossier,$art['palette'],$art['facture'],$dateFact, $art['article'], $art['gencod'],$art['dossier'], $art['libelle'], $art['qte'],$art['tarif'], $art['fournisseur'], $art['cnuf']);
+			$detail=addDetails($pdoLitige, $lastInsertId,$numDossier,$art['palette'],$art['facture'],$dateFact, $art['article'], $art['gencod'],$art['dossier'], $art['libelle'], $art['qte'],$art['tarif'], $art['fournisseur'], $art['cnuf'],$tete,$detailbox);
+
+
 			if($detail>0)
 			{
 				$added++;
@@ -360,31 +482,58 @@ DEBUT CONTENU CONTAINER
 				</div>
 
 				<!-- <p class="text-main-blue font-italic closer"><i class="fas fa-info-circle"></i>Vous pouvez trier les résultats en cliquant sur les entêtes de colonne</p> -->
-				<div class="alert alert-light"><i class="fas fa-info-circle pr-3"></i>Vous pouvez trier les résultats en cliquant sur les entêtes de colonne</div>
+				<!-- <div class="alert alert-light"><i class="fas fa-info-circle pr-3"></i>Vous pouvez trier les résultats en cliquant sur les entêtes de colonne</div> -->
 
 				<table class="table table-striped border border-white">
 					<thead class="thead-dark">
 						<tr>
-							<th class="sortable">Date facture</th>
-							<th class="sortable">Facture</th>
-							<th class="sortable">Palette</th>
-							<th class="sortable">ean</th>
-							<th class="sortable">Article</th>
-							<th class="sortable">Désignation</th>
-							<th class="sortable"><i class="fas fa-times-circle"></i></th>
+							<th>Date facture</th>
+							<th>Facture</th>
+							<th>Palette</th>
+							<th>ean</th>
+							<th>Article</th>
+							<th>Désignation</th>
+							<th><i class="fas fa-times-circle"></i></th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php
 						if(empty($dataSearch))
 						{
-								echo '<p>La palette que vous recherchez n\'a pas été trouvée. Elle ne vous était pas destinée ? Veuillez vous rendre sur <a href="declaration-horsqlik.php">cette page</a></p>';
+							echo '<p>La palette que vous recherchez n\'a pas été trouvée. Elle ne vous était pas destinée ? Veuillez vous rendre sur <a href="declaration-horsqlik.php">cette page</a></p>';
 						}
 						else
 						{
+							$saveBoxTeteId='';
 							foreach ($dataSearch as $sResult)
 							{
-								echo '<tr>';
+								if(!empty($sResult['box-tete']))
+								{
+									$boxClass= 'heavy';
+									$idBox='id="'.$sResult['box-tete'].'"';
+									$saveBoxTeteId=$sResult['box-tete'];
+									$classBoxDetail='';
+								}
+								elseif(!empty($sResult['box-detail']))
+								{
+									$boxClass='none';
+									$idBox='';
+									$classBoxDetail=$saveBoxTeteId;
+
+								}
+								else
+								{
+									$boxClass='none';
+
+									$idBox='';
+									$saveBoxTeteId='';
+									$classBoxDetail='';
+
+
+
+								}
+
+								echo '<tr class="'.$boxClass.' '. $classBoxDetail.'">';
 								echo'<td>'.$sResult['date_mvt'].'</td>';
 								echo'<td>'.$sResult['facture'].'</td>';
 								echo'<td>'.$sResult['palette'].'</td>';
@@ -392,7 +541,7 @@ DEBUT CONTENU CONTAINER
 								echo'<td>'.$sResult['article'].'</td>';
 								echo'<td>'.$sResult['libelle'].'</td>';
 								echo'<td>';
-								echo '<div class="form-check article"><input class="form-check-input" type="checkbox" name="'.$sResult['id'].'"></div>';
+								echo '<div class="form-check article"><input class="form-check-input checkarticle" type="checkbox" name="'.$sResult['id'].'"' .$idBox.'></div>';
 								echo '</td></tr>';
 
 							}
@@ -488,6 +637,7 @@ DEBUT CONTENU CONTAINER
 	</div>
 	<script src="../js/sorttable.js"></script>
 	<script type="text/javascript">
+
 		$("#checkAll").click(function () {
 			$('.article input:checkbox').not(this).prop('checked', this.checked);
 			// $('input:checkbox').(#checkpalette).prop('unchecked', this.checked);
@@ -510,6 +660,105 @@ DEBUT CONTENU CONTAINER
 		{
 			$("#waitdeux" ).append('<i class="fas fa-spinner fa-spin"></i><span class="pl-3">Merci de patienter</span>')
 
+		});
+
+		$('.checkarticle').click(function(e)
+		{
+			var test=$(e.target).closest('tr');
+			// console.log(test);
+		});
+		var boxText='<tr><td class="heavy text-red"colspan="7"><i class="fas fa-exclamation-triangle pr-3"></i>Vous avez sélectionné un BOX, veuillez cocher parmi les articles du box (en bleu),ceux sur lesquels vous avez un litige </td>/<tr>';
+		$('.1').hide()
+		$('#1').change(function(){
+			if($(this).is(":checked")) {
+				$('#1').closest('tr').after(boxText);
+				$('.1').show();
+				$('.1').addClass('text-blue');
+			}
+			else
+			{
+				$('.1').hide();
+				var thistr=$('#1').closest('tr');
+				thistr.next().remove();
+			}
+		});
+
+
+		$('.2').hide()
+		$('#2').change(function(){
+			if($(this).is(":checked")) {
+				$('#2').closest('tr').after(boxText);
+				$('.2').show();
+				$('.2').addClass('text-blue');
+			}
+			else
+			{
+				$('.2').hide();
+				var thistr=$('#2').closest('tr');
+				thistr.next().remove();
+			}
+		});
+
+		$('.3').hide()
+		$('#3').change(function(){
+			if($(this).is(":checked")) {
+				$('#3').closest('tr').after(boxText);
+				$('.3').show();
+				$('.3').addClass('text-blue');
+			}
+			else
+			{
+				$('.3').hide();
+				var thistr=$('#3').closest('tr');
+				thistr.next().remove();
+			}
+		});
+
+		$('.4').hide()
+		$('#4').change(function(){
+			if($(this).is(":checked")) {
+				$('#4').closest('tr').after(boxText);
+				$('.4').show();
+				$('.4').addClass('text-blue');
+			}
+			else
+			{
+				$('.4').hide();
+				var thistr=$('#4').closest('tr');
+				thistr.next().remove();
+			}
+		});
+
+
+		$('.5').hide()
+		$('#5').change(function(){
+			if($(this).is(":checked")) {
+				$('#5').closest('tr').after(boxText);
+				$('.5').show();
+				$('.5').addClass('text-blue');
+			}
+			else
+			{
+				$('.5').hide();
+				var thistr=$('#5').closest('tr');
+				thistr.next().remove();
+			}
+		});
+
+
+		$('.6').hide()
+		$('#6').change(function(){
+			if($(this).is(":checked")) {
+				$('#6').closest('tr').after(boxText);
+				$('.6').show();
+				$('.6').addClass('text-blue');
+			}
+			else
+			{
+				$('.6').hide();
+				var thistr=$('#6').closest('tr');
+				thistr.next().remove();
+			}
 		});
 	</script>
 

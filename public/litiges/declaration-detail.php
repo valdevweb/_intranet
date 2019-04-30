@@ -33,7 +33,7 @@ On commence à 1 car le 0 n'est pas pris en compte dans le name
 //			FONCTION
 //------------------------------------------------------
 function getLitige($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id,details.id as detail_id,details.dossier,palette,facture, date_facture,DATE_FORMAT(date_facture,'%d-%m-%Y')as datefac,article, ean, dossier_gessica, descr,qte_cde,tarif,fournisseur FROM dossiers LEFT JOIN details ON dossiers.id=details.id_dossier WHERE dossiers.id= :id");
+	$req=$pdoLitige->prepare("SELECT dossiers.id as id,details.id as detail_id,details.dossier,palette,facture, date_facture,DATE_FORMAT(date_facture,'%d-%m-%Y')as datefac,article, ean, dossier_gessica, descr,qte_cde,tarif,fournisseur,details.box_tete, details.box_art FROM dossiers LEFT JOIN details ON dossiers.id=details.id_dossier WHERE dossiers.id= :id");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 	));
@@ -316,11 +316,17 @@ DEBUT CONTENU CONTAINER
 						$subForm=1;
 						foreach ($fLitige as $litige)
 						{
+							if($litige['box_tete']==1)
+							{
+								// on nb'affiche pas les tête de box
+							}
+							else
+							{
+
+
 							// info produit
 							echo '<div class="row yellow-box">';
 							echo '<div class="col">';
-
-
 							echo '<h5 class="khand heavy spacy  pt-3 ">Produit : '.$litige['descr'].' - Art. : '.$litige['article'].'</h5>';
 							echo '<div class="row no-gutters">';
 							echo '<div class="col ">';
@@ -413,7 +419,8 @@ DEBUT CONTENU CONTAINER
 							echo '</div>';
 							echo '</div>';
 
-
+								}
+						//fin du if  box
 
 
 
