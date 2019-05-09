@@ -68,7 +68,7 @@ function histoDdesMag($pdoBt)
 //récup pano galec dans table user de la db web_users
 function getPanoGalec($pdoUser,$idMag)
 {
-	$req=$pdoUser->prepare("SELECT galec FROM users WHERE id=:id");
+	$req=$pdoUser->prepare("SELECT galec, login FROM users WHERE id=:id");
 	$req->execute(array(
 		':id'=>$idMag
 	));
