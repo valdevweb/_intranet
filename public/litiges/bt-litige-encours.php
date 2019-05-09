@@ -1,5 +1,5 @@
 <?php
-
+session_cache_limiter('private_no_expire');
  // require('../../config/pdo_connect.php');
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
@@ -171,9 +171,6 @@ if(isset($_POST['search_form']))
 	$nbLitiges=count($fAllActive);
 	$valoTotal=searchValo($pdoLitige);
 	$valoEtat=searchGpType($pdoLitige);
-
-
-
 }
 elseif(isset($_POST['filter']))
 {
@@ -194,7 +191,6 @@ elseif(isset($_POST['filter']))
 
 	}
 	$nbLitiges=count($fAllActive);
-
 }
 
 else
@@ -203,9 +199,6 @@ else
 	$nbLitiges=count($fAllActive);
 	$valoTotal=getSumValoAll($pdoLitige);
 	$valoEtat=getSumValoAllGpType($pdoLitige);
-
-
-
 }
 if(isset($_POST['date_start']))
 {
