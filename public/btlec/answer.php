@@ -57,6 +57,7 @@ $replies=showReplies($pdoBt, $idMsg);
 
 //template html et données pour envoi mail
 $tpl="../mail/new_reply_from_bt.tpl.html";
+$tplpwd="../mail/identifiant.tpl.html";
 $objet="PORTAIL BTLec - réponse à votre demande";
 mb_internal_encoding('UTF-8');
 $objet = mb_encode_mimeheader($objet);
@@ -178,16 +179,32 @@ if(isset($_POST['post-reply']))
 						//-----------------------------------------
 						//				envoi du mail
 						//-----------------------------------------
-				if(sendMail($to,$objet,$tpl,$objetdde,$vide,$link))
+				if(!empty($_POST['mdp']))
 				{
-					$mail=true;
-					header('Location:'. ROOT_PATH.'/public/btlec/dashboard.php?success='.$mail);
+					$mail=sendMail($to,$objet,$tplpwd,$panoGalec['login'],$mdp,$link);
+				}
+				else
+				{
+					$mail=sendMail($to,$objet,$tpl,$objetdde,$vide,$link);
+				}
+					// echo "<pre>";
+					// print_r($mail);
+					// echo '</pre>';
 
+					// 	echo "<pre>";
+					// 	print_r($_POST);
+					// 	echo '</pre>';
+
+				if($mail==1)
+				{
+					header('Location:'. ROOT_PATH.'/public/btlec/dashboard.php?success='.$mail);
 				}
 				else
 				{
 					array_push($err, "Echec d'envoi de l'email");
 				}
+
+
 			}
 
 			//checkbox 'clos' =>  checked or not checked => majEtat
@@ -245,10 +262,10 @@ if(isset($_POST['closing'])){
 	if(isset($_POST['close-no-msg']))
 	{
 		$etat="clos";
-	if(!majEtat($pdoBt,$idMsg, $etat))
-	{
-		$err="impossible de clore le dossier";
-		die;
+		if(!majEtat($pdoBt,$idMsg, $etat))
+		{
+			$err="impossible de clore le dossier";
+			die;
 		}
 		else
 		{
@@ -383,16 +400,16 @@ if(isset($_POST['closing'])){
 				ob_end_clean();
 				if($oneMsg['objet']=="demande d'identifiants")
 				{
-						echo $identif;
+					echo $identif;
 				}
 				?>
 				<br><br>
 				<div id="file-upload">
 					<p>Joindre un document à votre réponse: </p>
-						<div class="col l12">
-							<p><input type="file" name="file_1" class='input-file'></p>
-							<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Ajouter d'autres fichiers</a></p>
-						</div>
+					<div class="col l12">
+						<p><input type="file" name="file_1" class='input-file'></p>
+						<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Ajouter d'autres fichiers</a></p>
+					</div>
 				</div>
 				<!--BOUTONS-->
 				<div class="row">
@@ -403,75 +420,75 @@ if(isset($_POST['closing'])){
 
 
 
-					<div class="row">
-						<div class='col l6'></div>
-						<div class='col l3'>
-							<p class="center">
-								<input type="checkbox" class="filled-in" id="clos" checked="checked" name="clos" />
-								<label for="clos">cloturer la demande</label>
-							</p>
-						</div>
-
-						<div class='col l3'>
-							<p class="center">
-								<button class="btn" type="submit" name="post-reply">Répondre</button>
-							</p>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	<br><br>
-	<?php
-	ob_start();
-	 ?>
-	<div class="row mag">
-		<div class="col l12 reply">
-			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Clôturer la demande sans envoyer de réponse :</h4>
-			<hr>
-			<br><br>
-			<form action="answer.php?msg=<?=$idMsg ?>" method="post" >
 				<div class="row">
-						<div class='col l9'>
-							<p>
-								<input type="checkbox" class="filled-in"  checked="checked" name="close-no-msg" />
-								<label for="close-no-msg">cloturer la demande</label>
-							</p>
-						</div>
-						<div class='col l3'>
-							<p class="center">
-								<button class="btn" type="submit" name="closing">Cloturer</button>
-							</p>
-						</div>
+					<div class='col l6'></div>
+					<div class='col l3'>
+						<p class="center">
+							<input type="checkbox" class="filled-in" id="clos" checked="checked" name="clos" />
+							<label for="clos">cloturer la demande</label>
+						</p>
 					</div>
+
+					<div class='col l3'>
+						<p class="center">
+							<button class="btn" type="submit" name="post-reply">Répondre</button>
+						</p>
+					</div>
+				</div>
 			</form>
 		</div>
 	</div>
-	<br><br>
-	<?php
-	$formCloture=ob_get_contents();
-	ob_end_clean();
-	$idUser=$_SESSION['id'];
-	if(isUserInGroup($pdoBt,$idUser,"admin"))
-	{
-		echo $formCloture;
-	}
+</div>
+<br><br>
+<?php
+ob_start();
+?>
+<div class="row mag">
+	<div class="col l12 reply">
+		<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Clôturer la demande sans envoyer de réponse :</h4>
+		<hr>
+		<br><br>
+		<form action="answer.php?msg=<?=$idMsg ?>" method="post" >
+			<div class="row">
+				<div class='col l9'>
+					<p>
+						<input type="checkbox" class="filled-in"  checked="checked" name="close-no-msg" />
+						<label for="close-no-msg">cloturer la demande</label>
+					</p>
+				</div>
+				<div class='col l3'>
+					<p class="center">
+						<button class="btn" type="submit" name="closing">Cloturer</button>
+					</p>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+<br><br>
+<?php
+$formCloture=ob_get_contents();
+ob_end_clean();
+$idUser=$_SESSION['id'];
+if(isUserInGroup($pdoBt,$idUser,"admin"))
+{
+	echo $formCloture;
+}
 
- 	?>
-	<div class="row mag">
-		<div class="col l12 reply">
-			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Réaffecter la demande :</h4>
-			<hr>
-			<br><br>
+?>
+<div class="row mag">
+	<div class="col l12 reply">
+		<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Réaffecter la demande :</h4>
+		<hr>
+		<br><br>
 		<p>La demande ne concerne pas votre service ? <a href="chg.php?msg=<?=$idMsg?>">Cliquez ici pour réaffecter la demande</a></p>
 
-		</div>
 	</div>
+</div>
 
 
 
-	<!-- affichage des messages d'erreur -->
+<!-- affichage des messages d'erreur -->
 
 
 </div>  <!--container
