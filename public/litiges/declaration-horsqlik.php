@@ -124,10 +124,13 @@ if(isset($_POST['submit']))
 			}
 			$msg=strip_tags($_POST['msg']);
 			$msg=nl2br($msg);
+			$link='<a href="'.SITE_ADDRESS.'/index.php?litiges/bt-ouvertures.php">Voir sa demande sur le portail</a>';
+
 			$btTemplate = file_get_contents('mail-bt-dde-ouverture.php');
 			$btTemplate=str_replace('{MAG}',$_SESSION['nom'],$btTemplate);
 			$btTemplate=str_replace('{BTLEC}',$_SESSION['code_bt'],$btTemplate);
 			$btTemplate=str_replace('{MSG}',$msg,$btTemplate);
+			$btTemplate=str_replace('{LINK}',$link,$btTemplate);
 			$subject='Portail BTLec Est  - demande d\'ouverture de dossier litige - ' . $_SESSION['nom'].'-'. $_SESSION['code_bt'];
 			// ---------------------------------------
 			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
@@ -135,6 +138,7 @@ if(isset($_POST['submit']))
 			$message = (new Swift_Message($subject))
 			->setBody($btTemplate, 'text/html')
 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+			// ->setTo(array('valerie.montusclat@btlec.fr'))
 			->setTo($mailBt)
 			->addBcc('valerie.montusclat@btlec.fr');
 			$delivered=$mailer->send($message);
