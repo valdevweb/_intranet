@@ -156,6 +156,7 @@ if($_GET['contrainte']==2)
 	->attach($attachmentPdf)
 	->setFrom(array('litigelivraison@btlec.fr' => 'Litige Livraison'))
 	->setTo(['pilotageprepa@btlec.fr']);
+	// ->setTo(['valerie.montusclat@btlec.fr']);
 	// ->addBcc('litigelivraison@btlec.fr');
 	$delivered = $mailer->send($message);
 	if($delivered !=0)
