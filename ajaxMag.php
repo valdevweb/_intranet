@@ -6,7 +6,8 @@ require 'config/_pdo_connect.php';
 if(!empty($_POST['centrale'])){
 	// echo $_POST['centrale'];
 	// $req=$pdoBt->query("SELECT * FROM sca3 WHERE centrale=" . $_POST['centrale'] ."");
-	$req=$pdoBt->prepare("SELECT* FROM sca3 where centrale= :centrale AND mag NOT LIKE '*%' ORDER BY mag");
+	// $req=$pdoBt->prepare("SELECT* FROM sca3 where centrale= :centrale AND mag NOT LIKE '*%' ORDER BY mag");
+	$req=$pdoBt->prepare("SELECT* FROM sca3 where centrale= :centrale  ORDER BY mag");
 	$req->execute(array(
 		'centrale' => $_POST['centrale']
 	));
