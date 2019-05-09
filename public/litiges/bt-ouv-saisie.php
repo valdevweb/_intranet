@@ -28,7 +28,6 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 // require_once '../../vendor/autoload.php';
 
 
-
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
