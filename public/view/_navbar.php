@@ -143,10 +143,12 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 		<li class='has-sub'><a href="#"><span>Litiges</span></a>
 			<ul>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/declaration-bt-basic.php">Déclarer un litige pour un magasin</a></li>
+				<li><a href="<?= ROOT_PATH?>/public/litiges/declaration-robbery.php">Déclarer un vol</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/bt-litige-encours.php">Litiges en cours</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/bt-ouvertures.php">Demandes d'ouverture de dossier</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/stat-litige-mag.php">Réclamations par magasin</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/exploit-ltg.php">Exploitation</a></li>
+				<li><a href="<?= ROOT_PATH?>/public/casse/bt-casse-dashboard.php" class="lighter-blue">Déclarer une casse</a></li>
 
 			</ul>
 		</li>
@@ -169,7 +171,6 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 			<ul>
 				<li class='has-sub'><a href="<?= ROOT_PATH. '/public/doc/display-doc.php'?>">Achats</a>
 					<ul>
-
 						<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#odr-title'?>">ODR</a></li>
 						<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#tel-title'?>">TEL/BRII</a></li>
 						<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#assortiment-title'?>">Assortiment et panier Promo</a></li>
