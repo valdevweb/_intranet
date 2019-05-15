@@ -90,9 +90,6 @@ border: 0 !important;
 margin: 0 !important;
 
 }
-#test{
-background: #0d47a1;
-}
 
 #cssmenu.align-right > ul > li {
   float: right;
@@ -127,8 +124,10 @@ background: #0d47a1;
 #cssmenu > ul > li.active > a {
   color: #ffffff;
   background: #0d47a1;
-  /* background: rgba(0, 0, 0, 0.1); */
 }
+
+
+
 #cssmenu > ul > li.has-sub > a {
   padding-right: 45px;
 }
@@ -232,16 +231,21 @@ background: #0d47a1;
   z-index: 99;
 }
 
+#cssmenu ul ul li a.lighter-blue {
+  background: #5b93d2;
+}
+
 #cssmenu ul ul li:hover > a,
 #cssmenu ul ul li.active > a {
-	/* letter-spacing: 1px; */
   background-color: #1976d2;
-  /* white-space:nowrap; */
-
-
-
-
 }
+
+#cssmenu ul ul li:hover > a.lighter-blue,
+#cssmenu ul ul li.active > a.lighter-blue {
+  background-color: #b2ccea;
+}
+
+
 #cssmenu ul ul li:first-child > a {
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
