@@ -1,4 +1,6 @@
 /*
+https://transfonter.org/
+
 Khand
 Mali
 Pacifico
@@ -8,29 +10,16 @@ Roboto
 Marvel
 */
 /* khand-regular - latin */
-@font-face
-{
-  font-family: 'Khand';
-  font-style: normal;
-  font-weight: 400;
-  src: url('../../vendor/fonts/khand-v6-latin-regular.eot'); /* IE9 Compat Modes */
-  src: local('Khand Regular'), local('Khand-Regular'),
-  url('../../vendor/fonts/khand-v6-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('../../vendor/fonts/khand-v6-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-  url('../../vendor/fonts/khand-v6-latin-regular.woff') format('woff'), /* Modern Browsers */
-  url('../../vendor/fonts/khand-v6-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
-  url('../../vendor/fonts/khand-v6-latin-regular.svg#Khand') format('svg'); /* Legacy iOS */
-}
 
 
 @font-face {
     font-family: 'Lato';
     src: url('Lato-Regular.eot');
     src: local('Lato Regular'), local('Lato-Regular'),
-        url('../vendors/fonts/lato/Lato-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/lato/Lato-Regular.woff2') format('woff2'),
-        url('../vendors/fonts/lato/Lato-Regular.woff') format('woff'),
-        url('../vendors/fonts/lato/Lato-Regular.ttf') format('truetype');
+        url('../../vendor/fonts/lato/Lato-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/lato/Lato-Regular.woff2') format('woff2'),
+        url('../../vendor/fonts/lato/Lato-Regular.woff') format('woff'),
+        url('../../vendor/fonts/lato/Lato-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -39,10 +28,10 @@ Marvel
     font-family: 'Lato';
     src: url('Lato-BlackItalic.eot');
     src: local('Lato Black Italic'), local('Lato-BlackItalic'),
-        url('../vendors/fonts/lato/Lato-BlackItalic.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/lato/Lato-BlackItalic.woff2') format('woff2'),
-        url('../vendors/fonts/lato/Lato-BlackItalic.woff') format('woff'),
-        url('../vendors/fonts/lato/Lato-BlackItalic.ttf') format('truetype');
+        url('../../vendor/fonts/lato/Lato-BlackItalic.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/lato/Lato-BlackItalic.woff2') format('woff2'),
+        url('../../vendor/fonts/lato/Lato-BlackItalic.woff') format('woff'),
+        url('../../vendor/fonts/lato/Lato-BlackItalic.ttf') format('truetype');
     font-weight: 900;
     font-style: italic;
 }
@@ -51,10 +40,10 @@ Marvel
     font-family: 'Mali';
     src: url('Mali-Bold.eot');
     src: local('Mali Bold'), local('Mali-Bold'),
-        url('../vendors/fonts/Mali/Mali-Bold.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Mali/Mali-Bold.woff2') format('woff2'),
-        url('../vendors/fonts/Mali/Mali-Bold.woff') format('woff'),
-        url('../vendors/fonts/Mali/Mali-Bold.ttf') format('truetype');
+        url('../../vendor/fonts/Mali/Mali-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Mali/Mali-Bold.woff2') format('woff2'),
+        url('../../vendor/fonts/Mali/Mali-Bold.woff') format('woff'),
+        url('../../vendor/fonts/Mali/Mali-Bold.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
 }
@@ -63,10 +52,10 @@ Marvel
     font-family: 'Lato';
     src: url('Lato-Italic.eot');
     src: local('Lato Italic'), local('Lato-Italic'),
-        url('../vendors/fonts/lato/Lato-Italic.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/lato/Lato-Italic.woff2') format('woff2'),
-        url('../vendors/fonts/lato/Lato-Italic.woff') format('woff'),
-        url('../vendors/fonts/lato/Lato-Italic.ttf') format('truetype');
+        url('../../vendor/fonts/lato/Lato-Italic.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/lato/Lato-Italic.woff2') format('woff2'),
+        url('../../vendor/fonts/lato/Lato-Italic.woff') format('woff'),
+        url('../../vendor/fonts/lato/Lato-Italic.ttf') format('truetype');
     font-weight: normal;
     font-style: italic;
 }
@@ -75,10 +64,10 @@ Marvel
     font-family: 'Mali';
     src: url('Mali-LightItalic.eot');
     src: local('Mali Light Italic'), local('Mali-LightItalic'),
-        url('../vendors/fonts/Mali/Mali-LightItalic.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Mali/Mali-LightItalic.woff2') format('woff2'),
-        url('../vendors/fonts/Mali/Mali-LightItalic.woff') format('woff'),
-        url('../vendors/fonts/Mali/Mali-LightItalic.ttf') format('truetype');
+        url('../../vendor/fonts/Mali/Mali-LightItalic.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Mali/Mali-LightItalic.woff2') format('woff2'),
+        url('../../vendor/fonts/Mali/Mali-LightItalic.woff') format('woff'),
+        url('../../vendor/fonts/Mali/Mali-LightItalic.ttf') format('truetype');
     font-weight: 300;
     font-style: italic;
 }
@@ -87,10 +76,10 @@ Marvel
     font-family: 'Mali';
     src: url('Mali-SemiBold.eot');
     src: local('Mali SemiBold'), local('Mali-SemiBold'),
-        url('../vendors/fonts/Mali/Mali-SemiBold.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Mali/Mali-SemiBold.woff2') format('woff2'),
-        url('../vendors/fonts/Mali/Mali-SemiBold.woff') format('woff'),
-        url('../vendors/fonts/Mali/Mali-SemiBold.ttf') format('truetype');
+        url('../../vendor/fonts/Mali/Mali-SemiBold.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Mali/Mali-SemiBold.woff2') format('woff2'),
+        url('../../vendor/fonts/Mali/Mali-SemiBold.woff') format('woff'),
+        url('../../vendor/fonts/Mali/Mali-SemiBold.ttf') format('truetype');
     font-weight: 600;
     font-style: normal;
 }
@@ -99,10 +88,10 @@ Marvel
     font-family: 'Lato';
     src: url('Lato-Black.eot');
     src: local('Lato Black'), local('Lato-Black'),
-        url('../vendors/fonts/lato/Lato-Black.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/lato/Lato-Black.woff2') format('woff2'),
-        url('../vendors/fonts/lato/Lato-Black.woff') format('woff'),
-        url('../vendors/fonts/lato/Lato-Black.ttf') format('truetype');
+        url('../../vendor/fonts/lato/Lato-Black.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/lato/Lato-Black.woff2') format('woff2'),
+        url('../../vendor/fonts/lato/Lato-Black.woff') format('woff'),
+        url('../../vendor/fonts/lato/Lato-Black.ttf') format('truetype');
     font-weight: 900;
     font-style: normal;
 }
@@ -111,10 +100,10 @@ Marvel
     font-family: 'Mali';
     src: url('Mali-ExtraLightItalic.eot');
     src: local('Mali ExtraLight Italic'), local('Mali-ExtraLightItalic'),
-        url('../vendors/fonts/Mali/Mali-ExtraLightItalic.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Mali/Mali-ExtraLightItalic.woff2') format('woff2'),
-        url('../vendors/fonts/Mali/Mali-ExtraLightItalic.woff') format('woff'),
-        url('../vendors/fonts/Mali/Mali-ExtraLightItalic.ttf') format('truetype');
+        url('../../vendor/fonts/Mali/Mali-ExtraLightItalic.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Mali/Mali-ExtraLightItalic.woff2') format('woff2'),
+        url('../../vendor/fonts/Mali/Mali-ExtraLightItalic.woff') format('woff'),
+        url('../../vendor/fonts/Mali/Mali-ExtraLightItalic.ttf') format('truetype');
     font-weight: 200;
     font-style: italic;
 }
@@ -123,10 +112,10 @@ Marvel
     font-family: 'Mali';
     src: url('Mali-Light.eot');
     src: local('Mali Light'), local('Mali-Light'),
-        url('../vendors/fonts/Mali/Mali-Light.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Mali/Mali-Light.woff2') format('woff2'),
-        url('../vendors/fonts/Mali/Mali-Light.woff') format('woff'),
-        url('../vendors/fonts/Mali/Mali-Light.ttf') format('truetype');
+        url('../../vendor/fonts/Mali/Mali-Light.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Mali/Mali-Light.woff2') format('woff2'),
+        url('../../vendor/fonts/Mali/Mali-Light.woff') format('woff'),
+        url('../../vendor/fonts/Mali/Mali-Light.ttf') format('truetype');
     font-weight: 300;
     font-style: normal;
 }
@@ -135,10 +124,10 @@ Marvel
     font-family: 'Mali';
     src: url('Mali-BoldItalic.eot');
     src: local('Mali Bold Italic'), local('Mali-BoldItalic'),
-        url('../vendors/fonts/Mali/Mali-BoldItalic.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Mali/Mali-BoldItalic.woff2') format('woff2'),
-        url('../vendors/fonts/Mali/Mali-BoldItalic.woff') format('woff'),
-        url('../vendors/fonts/Mali/Mali-BoldItalic.ttf') format('truetype');
+        url('../../vendor/fonts/Mali/Mali-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Mali/Mali-BoldItalic.woff2') format('woff2'),
+        url('../../vendor/fonts/Mali/Mali-BoldItalic.woff') format('woff'),
+        url('../../vendor/fonts/Mali/Mali-BoldItalic.ttf') format('truetype');
     font-weight: bold;
     font-style: italic;
 }
@@ -147,10 +136,10 @@ Marvel
     font-family: 'Lato';
     src: url('Lato-BoldItalic.eot');
     src: local('Lato Bold Italic'), local('Lato-BoldItalic'),
-        url('../vendors/fonts/lato/Lato-BoldItalic.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/lato/Lato-BoldItalic.woff2') format('woff2'),
-        url('../vendors/fonts/lato/Lato-BoldItalic.woff') format('woff'),
-        url('../vendors/fonts/lato/Lato-BoldItalic.ttf') format('truetype');
+        url('../../vendor/fonts/lato/Lato-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/lato/Lato-BoldItalic.woff2') format('woff2'),
+        url('../../vendor/fonts/lato/Lato-BoldItalic.woff') format('woff'),
+        url('../../vendor/fonts/lato/Lato-BoldItalic.ttf') format('truetype');
     font-weight: bold;
     font-style: italic;
 }
@@ -159,10 +148,10 @@ Marvel
     font-family: 'Mali';
     src: url('Mali-Regular.eot');
     src: local('Mali Regular'), local('Mali-Regular'),
-        url('../vendors/fonts/Mali/Mali-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Mali/Mali-Regular.woff2') format('woff2'),
-        url('../vendors/fonts/Mali/Mali-Regular.woff') format('woff'),
-        url('../vendors/fonts/Mali/Mali-Regular.ttf') format('truetype');
+        url('../../vendor/fonts/Mali/Mali-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Mali/Mali-Regular.woff2') format('woff2'),
+        url('../../vendor/fonts/Mali/Mali-Regular.woff') format('woff'),
+        url('../../vendor/fonts/Mali/Mali-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -171,10 +160,10 @@ Marvel
     font-family: 'Mali';
     src: url('Mali-MediumItalic.eot');
     src: local('Mali Medium Italic'), local('Mali-MediumItalic'),
-        url('../vendors/fonts/Mali/Mali-MediumItalic.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Mali/Mali-MediumItalic.woff2') format('woff2'),
-        url('../vendors/fonts/Mali/Mali-MediumItalic.woff') format('woff'),
-        url('../vendors/fonts/Mali/Mali-MediumItalic.ttf') format('truetype');
+        url('../../vendor/fonts/Mali/Mali-MediumItalic.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Mali/Mali-MediumItalic.woff2') format('woff2'),
+        url('../../vendor/fonts/Mali/Mali-MediumItalic.woff') format('woff'),
+        url('../../vendor/fonts/Mali/Mali-MediumItalic.ttf') format('truetype');
     font-weight: 500;
     font-style: italic;
 }
@@ -183,10 +172,10 @@ Marvel
     font-family: 'Mali';
     src: url('Mali-ExtraLight.eot');
     src: local('Mali ExtraLight'), local('Mali-ExtraLight'),
-        url('../vendors/fonts/Mali/Mali-ExtraLight.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Mali/Mali-ExtraLight.woff2') format('woff2'),
-        url('../vendors/fonts/Mali/Mali-ExtraLight.woff') format('woff'),
-        url('../vendors/fonts/Mali/Mali-ExtraLight.ttf') format('truetype');
+        url('../../vendor/fonts/Mali/Mali-ExtraLight.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Mali/Mali-ExtraLight.woff2') format('woff2'),
+        url('../../vendor/fonts/Mali/Mali-ExtraLight.woff') format('woff'),
+        url('../../vendor/fonts/Mali/Mali-ExtraLight.ttf') format('truetype');
     font-weight: 200;
     font-style: normal;
 }
@@ -195,10 +184,10 @@ Marvel
     font-family: 'Mali';
     src: url('Mali-SemiBoldItalic.eot');
     src: local('Mali SemiBold Italic'), local('Mali-SemiBoldItalic'),
-        url('../vendors/fonts/Mali/Mali-SemiBoldItalic.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Mali/Mali-SemiBoldItalic.woff2') format('woff2'),
-        url('../vendors/fonts/Mali/Mali-SemiBoldItalic.woff') format('woff'),
-        url('../vendors/fonts/Mali/Mali-SemiBoldItalic.ttf') format('truetype');
+        url('../../vendor/fonts/Mali/Mali-SemiBoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Mali/Mali-SemiBoldItalic.woff2') format('woff2'),
+        url('../../vendor/fonts/Mali/Mali-SemiBoldItalic.woff') format('woff'),
+        url('../../vendor/fonts/Mali/Mali-SemiBoldItalic.ttf') format('truetype');
     font-weight: 600;
     font-style: italic;
 }
@@ -207,34 +196,24 @@ Marvel
     font-family: 'Lato Hairline';
     src: url('Lato-HairlineItalic.eot');
     src: local('Lato-HairlineItalic'),
-        url('../vendors/fonts/lato/Lato-HairlineItalic.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/lato/Lato-HairlineItalic.woff2') format('woff2'),
-        url('../vendors/fonts/lato/Lato-HairlineItalic.woff') format('woff'),
-        url('../vendors/fonts/lato/Lato-HairlineItalic.ttf') format('truetype');
+        url('../../vendor/fonts/lato/Lato-HairlineItalic.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/lato/Lato-HairlineItalic.woff2') format('woff2'),
+        url('../../vendor/fonts/lato/Lato-HairlineItalic.woff') format('woff'),
+        url('../../vendor/fonts/lato/Lato-HairlineItalic.ttf') format('truetype');
     font-weight: 300;
     font-style: italic;
 }
 
-@font-face {
-    font-family: 'Marck Script';
-    src: url('MarckScript-Regular.eot');
-    src: local('Marck Script'), local('MarckScript-Regular'),
-        url('../vendors/fonts/MarckScript/MarckScript-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/MarckScript/MarckScript-Regular.woff2') format('woff2'),
-        url('../vendors/fonts/MarckScript/MarckScript-Regular.woff') format('woff'),
-        url('../vendors/fonts/MarckScript/MarckScript-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
+
 
 @font-face {
     font-family: 'Lato Hairline';
     src: url('Lato-Hairline.eot');
     src: local('Lato-Hairline'),
-        url('../vendors/fonts/lato/Lato-Hairline.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/lato/Lato-Hairline.woff2') format('woff2'),
-        url('../vendors/fonts/lato/Lato-Hairline.woff') format('woff'),
-        url('../vendors/fonts/lato/Lato-Hairline.ttf') format('truetype');
+        url('../../vendor/fonts/lato/Lato-Hairline.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/lato/Lato-Hairline.woff2') format('woff2'),
+        url('../../vendor/fonts/lato/Lato-Hairline.woff') format('woff'),
+        url('../../vendor/fonts/lato/Lato-Hairline.ttf') format('truetype');
     font-weight: 300;
     font-style: normal;
 }
@@ -243,10 +222,10 @@ Marvel
     font-family: 'Lato';
     src: url('Lato-Light.eot');
     src: local('Lato-Light'),
-        url('../vendors/fonts/lato/Lato-Light.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/lato/Lato-Light.woff2') format('woff2'),
-        url('../vendors/fonts/lato/Lato-Light.woff') format('woff'),
-        url('../vendors/fonts/lato/Lato-Light.ttf') format('truetype');
+        url('../../vendor/fonts/lato/Lato-Light.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/lato/Lato-Light.woff2') format('woff2'),
+        url('../../vendor/fonts/lato/Lato-Light.woff') format('woff'),
+        url('../../vendor/fonts/lato/Lato-Light.ttf') format('truetype');
     font-weight: 300;
     font-style: normal;
 }
@@ -255,10 +234,10 @@ Marvel
     font-family: 'Mali';
     src: url('Mali-Italic.eot');
     src: local('Mali Italic'), local('Mali-Italic'),
-        url('../vendors/fonts/Mali/Mali-Italic.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Mali/Mali-Italic.woff2') format('woff2'),
-        url('../vendors/fonts/Mali/Mali-Italic.woff') format('woff'),
-        url('../vendors/fonts/Mali/Mali-Italic.ttf') format('truetype');
+        url('../../vendor/fonts/Mali/Mali-Italic.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Mali/Mali-Italic.woff2') format('woff2'),
+        url('../../vendor/fonts/Mali/Mali-Italic.woff') format('woff'),
+        url('../../vendor/fonts/Mali/Mali-Italic.ttf') format('truetype');
     font-weight: normal;
     font-style: italic;
 }
@@ -267,10 +246,10 @@ Marvel
     font-family: 'Lato';
     src: url('Lato-LightItalic.eot');
     src: local('Lato-LightItalic'),
-        url('../vendors/fonts/lato/Lato-LightItalic.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/lato/Lato-LightItalic.woff2') format('woff2'),
-        url('../vendors/fonts/lato/Lato-LightItalic.woff') format('woff'),
-        url('../vendors/fonts/lato/Lato-LightItalic.ttf') format('truetype');
+        url('../../vendor/fonts/lato/Lato-LightItalic.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/lato/Lato-LightItalic.woff2') format('woff2'),
+        url('../../vendor/fonts/lato/Lato-LightItalic.woff') format('woff'),
+        url('../../vendor/fonts/lato/Lato-LightItalic.ttf') format('truetype');
     font-weight: 300;
     font-style: italic;
 }
@@ -279,10 +258,10 @@ Marvel
     font-family: 'Pacifico';
     src: url('Pacifico-Regular.eot');
     src: local('Pacifico Regular'), local('Pacifico-Regular'),
-        url('../vendors/fonts/Pacifico/Pacifico-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Pacifico/Pacifico-Regular.woff2') format('woff2'),
-        url('../vendors/fonts/Pacifico/Pacifico-Regular.woff') format('woff'),
-        url('../vendors/fonts/Pacifico/Pacifico-Regular.ttf') format('truetype');
+        url('../../vendor/fonts/Pacifico/Pacifico-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Pacifico/Pacifico-Regular.woff2') format('woff2'),
+        url('../../vendor/fonts/Pacifico/Pacifico-Regular.woff') format('woff'),
+        url('../../vendor/fonts/Pacifico/Pacifico-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -291,10 +270,10 @@ Marvel
     font-family: 'Mali';
     src: url('Mali-Medium.eot');
     src: local('Mali Medium'), local('Mali-Medium'),
-        url('../vendors/fonts/Mali/Mali-Medium.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Mali/Mali-Medium.woff2') format('woff2'),
-        url('../vendors/fonts/Mali/Mali-Medium.woff') format('woff'),
-        url('../vendors/fonts/Mali/Mali-Medium.ttf') format('truetype');
+        url('../../vendor/fonts/Mali/Mali-Medium.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Mali/Mali-Medium.woff2') format('woff2'),
+        url('../../vendor/fonts/Mali/Mali-Medium.woff') format('woff'),
+        url('../../vendor/fonts/Mali/Mali-Medium.ttf') format('truetype');
     font-weight: 500;
     font-style: normal;
 }
@@ -303,21 +282,21 @@ Marvel
     font-family: 'Lato';
     src: url('Lato-Bold.eot');
     src: local('Lato Bold'), local('Lato-Bold'),
-        url('../vendors/fonts/lato/Lato-Bold.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/lato/Lato-Bold.woff2') format('woff2'),
-        url('../vendors/fonts/lato/Lato-Bold.woff') format('woff'),
-        url('../vendors/fonts/lato/Lato-Bold.ttf') format('truetype');
+        url('../../vendor/fonts/lato/Lato-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/lato/Lato-Bold.woff2') format('woff2'),
+        url('../../vendor/fonts/lato/Lato-Bold.woff') format('woff'),
+        url('../../vendor/fonts/lato/Lato-Bold.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Lato Hairline';
-    src: url('../vendors/fonts/lato/Lato-Hairline_1.eot');
-    src: url('../vendors/fonts/lato/Lato-Hairline_1.eot?#iefix') format('embedded-opentype'),
-         url('../vendors/fonts/lato/Lato-Hairline_1.woff2') format('woff2'),
-         url('../vendors/fonts/lato/Lato-Hairline_1.woff') format('woff'),
-         url('../vendors/fonts/lato/Lato-Hairline_1.ttf') format('truetype');
+    src: url('../../vendor/fonts/lato/Lato-Hairline_1.eot');
+    src: url('../../vendor/fonts/lato/Lato-Hairline_1.eot?#iefix') format('embedded-opentype'),
+         url('../../vendor/fonts/lato/Lato-Hairline_1.woff2') format('woff2'),
+         url('../../vendor/fonts/lato/Lato-Hairline_1.woff') format('woff'),
+         url('../../vendor/fonts/lato/Lato-Hairline_1.ttf') format('truetype');
     font-weight: 300;
     font-style: normal;
 }
@@ -326,10 +305,10 @@ Marvel
     font-family: 'Lato Hairline';
     src: url('Lato-Hairline_2.eot');
     src: local('Lato-Hairline'),
-        url('../vendors/fonts/lato/Lato-Hairline_2.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/lato/Lato-Hairline_2.woff2') format('woff2'),
-        url('../vendors/fonts/lato/Lato-Hairline_2.woff') format('woff'),
-        url('../vendors/fonts/lato/Lato-Hairline_2.ttf') format('truetype');
+        url('../../vendor/fonts/lato/Lato-Hairline_2.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/lato/Lato-Hairline_2.woff2') format('woff2'),
+        url('../../vendor/fonts/lato/Lato-Hairline_2.woff') format('woff'),
+        url('../../vendor/fonts/lato/Lato-Hairline_2.ttf') format('truetype');
     font-weight: 300;
     font-style: normal;
 }
@@ -338,10 +317,10 @@ Marvel
     font-family: 'Roboto';
     src: url('Roboto-Medium.eot');
     src: local('Roboto Medium'), local('Roboto-Medium'),
-        url('../vendors/fonts/Roboto/Roboto-Medium.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Roboto/Roboto-Medium.woff2') format('woff2'),
-        url('../vendors/fonts/Roboto/Roboto-Medium.woff') format('woff'),
-        url('../vendors/fonts/Roboto/Roboto-Medium.ttf') format('truetype');
+        url('../../vendor/fonts/Roboto/Roboto-Medium.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Roboto/Roboto-Medium.woff2') format('woff2'),
+        url('../../vendor/fonts/Roboto/Roboto-Medium.woff') format('woff'),
+        url('../../vendor/fonts/Roboto/Roboto-Medium.ttf') format('truetype');
     font-weight: 500;
     font-style: normal;
 }
@@ -350,10 +329,10 @@ Marvel
     font-family: 'Roboto';
     src: url('Roboto-Bold.eot');
     src: local('Roboto Bold'), local('Roboto-Bold'),
-        url('../vendors/fonts/Roboto/Roboto-Bold.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Roboto/Roboto-Bold.woff2') format('woff2'),
-        url('../vendors/fonts/Roboto/Roboto-Bold.woff') format('woff'),
-        url('../vendors/fonts/Roboto/Roboto-Bold.ttf') format('truetype');
+        url('../../vendor/fonts/Roboto/Roboto-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Roboto/Roboto-Bold.woff2') format('woff2'),
+        url('../../vendor/fonts/Roboto/Roboto-Bold.woff') format('woff'),
+        url('../../vendor/fonts/Roboto/Roboto-Bold.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
 }
@@ -362,10 +341,10 @@ Marvel
     font-family: 'Roboto';
     src: url('Roboto-Light.eot');
     src: local('Roboto Light'), local('Roboto-Light'),
-        url('../vendors/fonts/Roboto/Roboto-Light.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Roboto/Roboto-Light.woff2') format('woff2'),
-        url('../vendors/fonts/Roboto/Roboto-Light.woff') format('woff'),
-        url('../vendors/fonts/Roboto/Roboto-Light.ttf') format('truetype');
+        url('../../vendor/fonts/Roboto/Roboto-Light.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Roboto/Roboto-Light.woff2') format('woff2'),
+        url('../../vendor/fonts/Roboto/Roboto-Light.woff') format('woff'),
+        url('../../vendor/fonts/Roboto/Roboto-Light.ttf') format('truetype');
     font-weight: 300;
     font-style: normal;
 }
@@ -374,10 +353,10 @@ Marvel
     font-family: 'Roboto';
     src: url('Roboto-Thin.eot');
     src: local('Roboto Thin'), local('Roboto-Thin'),
-        url('../vendors/fonts/Roboto/Roboto-Thin.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Roboto/Roboto-Thin.woff2') format('woff2'),
-        url('../vendors/fonts/Roboto/Roboto-Thin.woff') format('woff'),
-        url('../vendors/fonts/Roboto/Roboto-Thin.ttf') format('truetype');
+        url('../../vendor/fonts/Roboto/Roboto-Thin.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Roboto/Roboto-Thin.woff2') format('woff2'),
+        url('../../vendor/fonts/Roboto/Roboto-Thin.woff') format('woff'),
+        url('../../vendor/fonts/Roboto/Roboto-Thin.ttf') format('truetype');
     font-weight: 100;
     font-style: normal;
 }
@@ -386,10 +365,10 @@ Marvel
     font-family: 'Roboto';
     src: url('Roboto-Regular.eot');
     src: local('Roboto'), local('Roboto-Regular'),
-        url('../vendors/fonts/Roboto/Roboto-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Roboto/Roboto-Regular.woff2') format('woff2'),
-        url('../vendors/fonts/Roboto/Roboto-Regular.woff') format('woff'),
-        url('../vendors/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+        url('../../vendor/fonts/Roboto/Roboto-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Roboto/Roboto-Regular.woff2') format('woff2'),
+        url('../../vendor/fonts/Roboto/Roboto-Regular.woff') format('woff'),
+        url('../../vendor/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -398,10 +377,10 @@ Marvel
     font-family: 'Roboto';
     src: url('Roboto-Thin_1.eot');
     src: local('Roboto Thin'), local('Roboto-Thin'),
-        url('../vendors/fonts/Roboto/Roboto-Thin_1.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Roboto/Roboto-Thin_1.woff2') format('woff2'),
-        url('../vendors/fonts/Roboto/Roboto-Thin_1.woff') format('woff'),
-        url('../vendors/fonts/Roboto/Roboto-Thin_1.ttf') format('truetype');
+        url('../../vendor/fonts/Roboto/Roboto-Thin_1.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Roboto/Roboto-Thin_1.woff2') format('woff2'),
+        url('../../vendor/fonts/Roboto/Roboto-Thin_1.woff') format('woff'),
+        url('../../vendor/fonts/Roboto/Roboto-Thin_1.ttf') format('truetype');
     font-weight: 100;
     font-style: normal;
 }
@@ -410,10 +389,10 @@ Marvel
     font-family: 'Lato Hairline';
     src: url('Lato-Hairline_3.eot');
     src: local('Lato-Hairline'),
-        url('../vendors/fonts/lato/Lato-Hairline_3.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/lato/Lato-Hairline_3.woff2') format('woff2'),
-        url('../vendors/fonts/lato/Lato-Hairline_3.woff') format('woff'),
-        url('../vendors/fonts/lato/Lato-Hairline_3.ttf') format('truetype');
+        url('../../vendor/fonts/lato/Lato-Hairline_3.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/lato/Lato-Hairline_3.woff2') format('woff2'),
+        url('../../vendor/fonts/lato/Lato-Hairline_3.woff') format('woff'),
+        url('../../vendor/fonts/lato/Lato-Hairline_3.ttf') format('truetype');
     font-weight: 300;
     font-style: normal;
 }
@@ -422,10 +401,10 @@ Marvel
     font-family: 'Roboto';
     src: url('Roboto-Bold_1.eot');
     src: local('Roboto Bold'), local('Roboto-Bold'),
-        url('../vendors/fonts/Roboto/Roboto-Bold_1.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Roboto/Roboto-Bold_1.woff2') format('woff2'),
-        url('../vendors/fonts/Roboto/Roboto-Bold_1.woff') format('woff'),
-        url('../vendors/fonts/Roboto/Roboto-Bold_1.ttf') format('truetype');
+        url('../../vendor/fonts/Roboto/Roboto-Bold_1.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Roboto/Roboto-Bold_1.woff2') format('woff2'),
+        url('../../vendor/fonts/Roboto/Roboto-Bold_1.woff') format('woff'),
+        url('../../vendor/fonts/Roboto/Roboto-Bold_1.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
 }
@@ -434,10 +413,10 @@ Marvel
     font-family: 'Roboto';
     src: url('Roboto-Regular_1.eot');
     src: local('Roboto'), local('Roboto-Regular'),
-        url('../vendors/fonts/Roboto/Roboto-Regular_1.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Roboto/Roboto-Regular_1.woff2') format('woff2'),
-        url('../vendors/fonts/Roboto/Roboto-Regular_1.woff') format('woff'),
-        url('../vendors/fonts/Roboto/Roboto-Regular_1.ttf') format('truetype');
+        url('../../vendor/fonts/Roboto/Roboto-Regular_1.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Roboto/Roboto-Regular_1.woff2') format('woff2'),
+        url('../../vendor/fonts/Roboto/Roboto-Regular_1.woff') format('woff'),
+        url('../../vendor/fonts/Roboto/Roboto-Regular_1.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -446,20 +425,20 @@ Marvel
     font-family: 'Roboto';
     src: url('Roboto-Light_1.eot');
     src: local('Roboto Light'), local('Roboto-Light'),
-        url('../vendors/fonts/Roboto/Roboto-Light_1.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Roboto/Roboto-Light_1.woff2') format('woff2'),
-        url('../vendors/fonts/Roboto/Roboto-Light_1.woff') format('woff'),
-        url('../vendors/fonts/Roboto/Roboto-Light_1.ttf') format('truetype');
+        url('../../vendor/fonts/Roboto/Roboto-Light_1.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Roboto/Roboto-Light_1.woff2') format('woff2'),
+        url('../../vendor/fonts/Roboto/Roboto-Light_1.woff') format('woff'),
+        url('../../vendor/fonts/Roboto/Roboto-Light_1.ttf') format('truetype');
     font-weight: 300;
     font-style: normal;
 }
 @font-face {
     font-family: 'Roboto Mono';
-    src: url('../vendors/fonts/Roboto/RobotoMono-Regular.eot');
-    src: url('../vendors/fonts/Roboto/RobotoMono-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Roboto/RobotoMono-Regular.woff2') format('woff2'),
-        url('../vendors/fonts/Roboto/RobotoMono-Regular.woff') format('woff'),
-        url('../vendors/fonts/Roboto/RobotoMono-Regular.ttf') format('truetype');
+    src: url('../../vendor/fonts/Roboto/RobotoMono-Regular.eot');
+    src: url('../../vendor/fonts/Roboto/RobotoMono-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Roboto/RobotoMono-Regular.woff2') format('woff2'),
+        url('../../vendor/fonts/Roboto/RobotoMono-Regular.woff') format('woff'),
+        url('../../vendor/fonts/Roboto/RobotoMono-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -469,59 +448,105 @@ Marvel
     font-family: 'Roboto';
     src: url('Roboto-Medium_1.eot');
     src: local('Roboto Medium'), local('Roboto-Medium'),
-        url('../vendors/fonts/Roboto/Roboto-Medium_1.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Roboto/Roboto-Medium_1.woff2') format('woff2'),
-        url('../vendors/fonts/Roboto/Roboto-Medium_1.woff') format('woff'),
-        url('../vendors/fonts/Roboto/Roboto-Medium_1.ttf') format('truetype');
+        url('../../vendor/fonts/Roboto/Roboto-Medium_1.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Roboto/Roboto-Medium_1.woff2') format('woff2'),
+        url('../../vendor/fonts/Roboto/Roboto-Medium_1.woff') format('woff'),
+        url('../../vendor/fonts/Roboto/Roboto-Medium_1.ttf') format('truetype');
     font-weight: 500;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Marvel';
-    src: url('../vendors/fonts/Mali/Marvel-Regular.eot');
+    src: url('../../vendor/fonts/Mali/Marvel-Regular.eot');
     src: local('Marvel'), local('Marvel-Regular'),
-        url('../vendors/fonts/Marvel/Marvel-Regular.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Marvel/Marvel-Regular.woff2') format('woff2'),
-        url('../vendors/fonts/Marvel/Marvel-Regular.woff') format('woff'),
-        url('../vendors/fonts/Marvel/Marvel-Regular.ttf') format('truetype');
+        url('../../vendor/fonts/Marvel/Marvel-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Marvel/Marvel-Regular.woff2') format('woff2'),
+        url('../../vendor/fonts/Marvel/Marvel-Regular.woff') format('woff'),
+        url('../../vendor/fonts/Marvel/Marvel-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Marvel';
-    src: url('../vendors/fonts/Mali/Marvel-Bold.eot');
+    src: url('../../vendor/fonts/Mali/Marvel-Bold.eot');
     src: local('Marvel Bold'), local('Marvel-Bold'),
-        url('../vendors/fonts/Marvel/Marvel-Bold.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Marvel/Marvel-Bold.woff2') format('woff2'),
-        url('../vendors/fonts/Marvel/Marvel-Bold.woff') format('woff'),
-        url('../vendors/fonts/Marvel/Marvel-Bold.ttf') format('truetype');
+        url('../../vendor/fonts/Marvel/Marvel-Bold.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Marvel/Marvel-Bold.woff2') format('woff2'),
+        url('../../vendor/fonts/Marvel/Marvel-Bold.woff') format('woff'),
+        url('../../vendor/fonts/Marvel/Marvel-Bold.ttf') format('truetype');
     font-weight: bold;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Marvel';
-    src: url('../vendors/fonts/Mali/Marvel-BoldItalic.eot');
+    src: url('../../vendor/fonts/Mali/Marvel-BoldItalic.eot');
     src: local('Marvel Bold Italic'), local('Marvel-BoldItalic'),
-        url('../vendors/fonts/Marvel/Marvel-BoldItalic.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Marvel/Marvel-BoldItalic.woff2') format('woff2'),
-        url('../vendors/fonts/Marvel/Marvel-BoldItalic.woff') format('woff'),
-        url('../vendors/fonts/Marvel/Marvel-BoldItalic.ttf') format('truetype');
+        url('../../vendor/fonts/Marvel/Marvel-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Marvel/Marvel-BoldItalic.woff2') format('woff2'),
+        url('../../vendor/fonts/Marvel/Marvel-BoldItalic.woff') format('woff'),
+        url('../../vendor/fonts/Marvel/Marvel-BoldItalic.ttf') format('truetype');
     font-weight: bold;
     font-style: italic;
 }
 
 @font-face {
     font-family: 'Marvel';
-    src: url('../vendors/fonts/Mali/Marvel-Italic.eot');
+    src: url('../../vendor/fonts/Mali/Marvel-Italic.eot');
     src: local('Marvel Italic'), local('Marvel-Italic'),
-        url('../vendors/fonts/Marvel/Marvel-Italic.eot?#iefix') format('embedded-opentype'),
-        url('../vendors/fonts/Marvel/Marvel-Italic.woff2') format('woff2'),
-        url('../vendors/fonts/Marvel/Marvel-Italic.woff') format('woff'),
-        url('../vendors/fonts/Marvel/Marvel-Italic.ttf') format('truetype');
+        url('../../vendor/fonts/Marvel/Marvel-Italic.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/Marvel/Marvel-Italic.woff2') format('woff2'),
+        url('../../vendor/fonts/Marvel/Marvel-Italic.woff') format('woff'),
+        url('../../vendor/fonts/Marvel/Marvel-Italic.ttf') format('truetype');
     font-weight: normal;
     font-style: italic;
 }
 
+
+
+
+
+@font-face {
+    font-family: 'gochi_handregular';
+    src: url('../../vendor/fonts/GochiHand/gochihand-regular.woff2') format('woff2'),
+         url('../../vendor/fonts/GochiHand/gochihand-regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@font-face {
+    font-family: 'patrick_handregular';
+    src: url('../../vendor/fonts/PatrickHand/patrickhand-regular.woff2') format('woff2'),
+         url('../../vendor/fonts/PatrickHand/patrickhand-regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+@font-face
+{
+  font-family: 'Khand';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../vendor/fonts/khand/khand-v6-latin-regular.eot'); /* IE9 Compat Modes */
+  src: local('Khand Regular'), local('Khand-Regular'),
+  url('../../vendor/fonts/khand/khand-v6-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../../vendor/fonts/khand/khand-v6-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+  url('../../vendor/fonts/khand/khand-v6-latin-regular.woff') format('woff'), /* Modern Browsers */
+  url('../../vendor/fonts/khand/khand-v6-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('../../vendor/fonts/khand/khand-v6-latin-regular.svg#Khand') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+    font-family: 'Marck Script';
+    src: url('MarckScript-Regular.eot');
+    src: local('Marck Script'), local('MarckScript-Regular'),
+        url('../../vendor/fonts/MarckScript/MarckScript-Regular.eot?#iefix') format('embedded-opentype'),
+        url('../../vendor/fonts/MarckScript/MarckScript-Regular.woff2') format('woff2'),
+        url('../../vendor/fonts/MarckScript/MarckScript-Regular.woff') format('woff'),
+        url('../../vendor/fonts/MarckScript/MarckScript-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

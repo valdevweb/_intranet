@@ -40,7 +40,16 @@ body
 }
 
 .marck-script{
-  font-family:'Marck Script', sans-serif !important;
+  font-family:'Marck Script',  sans-serif !important;
+}
+.patrick-hand{
+  font-family:'patrick_handregular', sans-serif !important;
+
+}
+
+.gochi-hand{
+  font-family:'gochi_handregular', sans-serif !important;
+
 }
 .roboto{
   font-family:Roboto, sans-serif;
@@ -261,6 +270,12 @@ background: #757687
   background: #dc3545;
   color: #fff;
 
+}
+.bg-light-blue
+{
+    color: #004085;
+    background-color: #cce5ff;
+    /* border-color: #b8daff; */
 }
 
 .bg-alert-primary
