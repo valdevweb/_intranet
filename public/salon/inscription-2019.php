@@ -439,7 +439,7 @@ require '../view/_navbar.php';
 				</div>
 			</div>
 			<?php
-			if($_SESSION['type']=='mag' || $_SESSION['type']=='scapsav' || $_SESSION['user']=="MULLER" || $_SESSION['user']=="user")
+			if($_SESSION['type']=='mag'  || $_SESSION['user']=="user" ||  $_SESSION['type']=='centrale' )
 			{
 				include('inscription-form-2019.php');
 			}
