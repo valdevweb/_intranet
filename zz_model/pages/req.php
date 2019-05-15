@@ -12,6 +12,15 @@ function getThisParticipant($pdo,$idPart){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
+SELECT dans un select
+function nbMagCentrale($pdoBt)
+{
+  $req=$pdoBt->prepare("SELECT count(galec) as nb,centrale FROM (SELECT DISTINCT salon_2019.galec, centrale FROM salon_2019 LEFT JOIN sca3 ON salon_2019.galec=sca3.galec WHERE salon_2019.galec !='') sousreq GROUP BY centrale");
+  $req->execute();
+  return $req->fetchAll(PDO::FETCH_ASSOC);
+
+}
+
 
 INSERT
 function addToDocType($pdo)
