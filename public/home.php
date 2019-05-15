@@ -21,6 +21,8 @@ require "../functions/gazette.fn.php";
 require "../functions/stats.fn.php";
 
 
+
+
 //recup gazette de la semaine en cours
 $gazettes=showThisWeek($pdoBt);
 $links=createLinks($pdoBt,$gazettes,$version);
