@@ -208,7 +208,8 @@ if(isset($_POST['submit']))
 				$btlec=getInfoMag($pdoBt,$thisOuv);
 				if($_SESSION['code_bt']!='4201')
 				{
-					$mailMag=array($btlec['btlec'].'-rbt@btlec.fr');
+					// $mailMag=array($btlec['btlec'].'-rbt@btlec.fr');
+					$mailMag=array($thisOuv['btlec'].'-rbt@btlec.fr');
 				}
 				else
 				{
