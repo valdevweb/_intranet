@@ -39,6 +39,17 @@ function insert($pdoSav)
 	// return	$req->rowCount();
 }
 
+
+function copyDossiersNonClos($pdoSav)
+{
+	$req=$pdoSav->prepare("INSERT INTO temp_relance_nonclos (`id`, `id_mail2`, `id_mail2reponse`, `id_uploadinfos`, `date_dde`, `login`, `id_web_dd`, `mail`, `dem_name`, `orgfile`, `date_rep`, `login_rep`, `id_web_rep`, `repfile`, `etat`, `date_dde_clean`, `date_rep_clean`, `id_dossier`) SELECT `id`, `id_mail2`, `id_mail2reponse`, `id_uploadinfos`, `date_dde`, `login`, `id_web_dd`, `mail`, `dem_name`, `orgfile`, `date_rep`, `login_rep`, `id_web_rep`, `repfile`, `etat`, `date_dde_clean`, `date_rep_clean`, `id_dossier` FROM temp_relance WHERE etat=0");
+	$req->execute();
+	$row=$req->rowCount();
+	return	$row;
+
+}
+
+
 function delete($pdoSav){
 	$req=$pdoSav->prepare("DELETE FROM table WHERE");
 	$req->execute();
@@ -53,6 +64,17 @@ function select($pdoSav){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 	// return	$req->errorInfo();
 }
+
+function nbMagCentrale($pdoBt)
+{
+  $req=$pdoBt->prepare("SELECT count(galec) as nb,centrale FROM (SELECT DISTINCT salon_2019.galec, centrale FROM salon_2019 LEFT JOIN sca3 ON salon_2019.galec=sca3.galec WHERE salon_2019.galec !='') sousreq GROUP BY centrale");
+  $req->execute();
+  return $req->fetchAll(PDO::FETCH_ASSOC);
+
+}
+
+
+
 
 function update($pdoSav)
 {
