@@ -116,7 +116,17 @@ function getInfoMag($pdoBt, $galec)
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
-
+// ajout action quand envoi mail cloture au mag
+function addAction($pdoLitige, $action){
+	$req=$pdoLitige->prepare("INSERT INTO action (id_dossier, libelle, id_web_user, date_action) VALUES (:id_dossier, :libelle, :id_web_user, :date_action)");
+	$req->execute([
+		':id_dossier'		=> $_GET['id'],
+		 ':libelle'			=>$action,
+		 ':id_web_user'		=>$_SESSION['id_web_user'],
+		 ':date_action'		=> date('Y-m-d H:i:s'),
+	]);
+	return $req->rowCount();
+}
 
 // -------------------------------
 // Variables
@@ -178,8 +188,18 @@ if(isset($_POST['submit_mail']))
 			$delivered=$mailer->send($message);
 			if($delivered >0)
 			{
-				$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'].'&etat=ok';
-				header($loc);
+				// ajout d'une entrée dans les actions
+				$action='envoi du mail de clôture au magasin';
+				$add=addAction($pdoLitige, $action);
+				if($add==1)
+				{
+					$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'].'&etat=ok';
+					header($loc);
+				}
+				else{
+					$errors[]='l\'action n\'a pas pu être enregistrée';
+				}
+
 			}
 			else
 			{
