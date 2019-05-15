@@ -53,7 +53,7 @@ include('../view/_navbar.php');
 
 if(isset($_POST['search']))
 {
-	if($exploit)
+	if($d_exploit)
 	{
 			$histoMag=histoMagFn($pdoBt);
 	}
