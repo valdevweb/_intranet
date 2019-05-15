@@ -1,0 +1,34 @@
+
+span.step {
+  background: #0d47a1;
+  border-radius: 0.8em;
+  -moz-border-radius: 0.8em;
+  -webkit-border-radius: 0.8em;
+  color: #ffffff;
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1.6em;
+  margin-right: 5px;
+  text-align: center;
+  width: 1.6em;
+}
+
+  tr, td{
+  padding : 0 0.5rem !important;
+}
+
+#dossiers th:nth-child(6),#dossiers td:nth-child(6){
+text-align:  center;
+
+}
+
+
+
+#search-result th:nth-child(7),#search-result td:nth-child(7){
+text-align:  center;
+}
+
+#search-result th:nth-child(5),#search-result td:nth-child(5),#search-result th:nth-child(6),#search-result td:nth-child(6){
+  text-align: right;
+
+}
