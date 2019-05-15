@@ -6,13 +6,24 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<link rel="stylesheet" href="../css/font.css">
-<!-- nouvelle page pour style commun qui remplacera main  05/02/2019 -->
+	<!-- nouvelle page pour style commun qui remplacera main  05/02/2019 -->
 	<link rel="stylesheet" href="../css/commun.css">
 	<link rel="stylesheet" href="../css/nav.css">
 	<link rel="stylesheet" type="text/css" href="../css/footer.css">
+	<!-- style propre  -->
 	<?php
-	if(isset($cssFile)){
-		echo '<link rel="stylesheet" href="' .$cssFile .'">';
+	if(isset($cssFile))
+	{
+		// echo $cssFile;
+		$explodedCssfile=explode('/',$cssFile);
+
+		$cssFileName=$explodedCssfile[count($explodedCssfile)-1];
+		// $cssFileName='../css/'.$cssFileName;
+
+
+		if(file_exists('../css/'.$cssFileName)){
+			echo '<link rel="stylesheet" href="' .$cssFile .'">';
+		}
 	}
 	?>
 
