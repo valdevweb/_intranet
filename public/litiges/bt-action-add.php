@@ -81,7 +81,6 @@ if(isset($_POST['submit']))
 
 	if(!empty($_POST['pretxt']))
 	{
-		echo "non vide";
 		$help=getHelpInfo($pdoLitige);
 	// si l'action pré-écrite à une contrainte, on l'execute
 		if($help['id_contrainte'] ==NULL)
