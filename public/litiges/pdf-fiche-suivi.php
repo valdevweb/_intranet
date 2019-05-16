@@ -227,7 +227,7 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 			<!-- <td class="deux bg-prim text-white bigger" colspan="2"></td> -->
 		</tr>
 		<tr>
-			<td class="quatre heavy">ADHERENT</td>
+			<td class="quatre heavy"><?=$fLitige[0]['centrale']?></td>
 			<td class="quatre"><?=$fLitige[0]['mag'] .' - '. $fLitige[0]['btlec']?></td>
 			<td class="quatre  heavy">DATE DECLARATION</td>
 			<td class="quatre"><?=$fLitige[0]['datecrea']?></td>

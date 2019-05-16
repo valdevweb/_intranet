@@ -20,7 +20,7 @@ require_once  '../../vendor/autoload.php';
 
 function getMagLitiges($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT dossier,DATE_FORMAT(date_crea,'%d-%m-%Y')as datecrea, typo, imputation, etat, tablegt.gt, valo, analyse, conclusion, mt_transp, mt_assur, mt_fourn, mt_mag, btlec.sca3.mag, btlec.sca3.btlec  FROM dossiers
+	$req=$pdoLitige->prepare("SELECT dossier,DATE_FORMAT(date_crea,'%d-%m-%Y')as datecrea, typo, imputation, etat, tablegt.gt, valo, analyse, conclusion, mt_transp, mt_assur, mt_fourn, mt_mag, btlec.sca3.mag, btlec.sca3.btlec, btlec.sca3.centrale  FROM dossiers
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
 		LEFT JOIN typo ON dossiers.id_typo=typo.id
 		LEFT JOIN imputation ON dossiers.id_imputation=imputation.id

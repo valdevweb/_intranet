@@ -131,6 +131,7 @@ if($_GET['contrainte']==2)
 	$mpdf = new \Mpdf\Mpdf();
 	$mpdf->WriteHTML($html);
 	$pdfContent = $mpdf->Output('', 'S');
+	// $pdfContent = $mpdf->Output();
 	$filename='litige '.$fLitige[0]['dossier'].'- fiche pilotage.pdf';
 
 	// $pdfContent = $mpdf->Output();
