@@ -184,9 +184,21 @@ a:hover.blue-link{
 /* -------------------------------------
           modal
  --------------------------------------*/
-a.send-mail-to:link {color:#062b72    !important; font-size:0.9em;}
-a.send-mail-to:visited {color:#0000ff !important; font-size:0.9em;}
-a.send-mail-to:hover {color:#ff5722   !important; font-size:0.9em;}
+a.send-mail-to:link {color:#ff5722    !important; font-size:0.9em; }
+a.send-mail-to:visited {color:#0000ff !important; font-size:0.9em; }
+a.send-mail-to:hover {color: #999  !important; font-size:0.9em; }
+.identif{
+margin-top : 10px !important;
+text-align: center;
+font-weight: bold;
+}
+
+.fa.fa-exclamation-triangle{
+   padding-right :  5px;
+}
+
+
+
 input{
   /* width : 90% !important; */
   height: 1.5rem !important;

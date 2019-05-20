@@ -214,7 +214,7 @@ if(!empty($revRes))
 					</button>
 				</div>
 			</form>
-			<p><a class="send-mail-to" href="pwd.php">Demander mes identifiants</a></p>
+			<p class="identif"><a class="send-mail-to" href="pwd.php"> <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Demander mes identifiants</a></p>
 		</div>
 	<!-- 	<div class="modal-footer">
 			<p class=text-center><a href="#!" class="modal-action modal-close">fermer</a></p>
