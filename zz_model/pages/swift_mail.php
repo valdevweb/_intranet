@@ -90,19 +90,17 @@ Array (
 
 
 
-    <html>
+  <html>
     <head>
         <title></title>
     </head>
     <body style="font-family:arial,helvetica, 'sans serif'; color:dimGray;">
-        <p>Bonjour,</p>
-        <p>Veuillez trouver ci-joint le bordereau de demande d'enlèvement DEEE pour le magasin <span style="color:dodgerBlue;"><b>{MAG}</b></span></p>
-        <p>Détail de la demande : </p>
-        <p>{PROD}</p>
-
-        <p></p>
+        {MSG}
         <p>Cordialement,</p>
-        <p style="color:dodgerBlue;"><b>Portail SAV Leclerc</b></p>
+        <p style="color:darkblue;">------------------<br>
+        Portail BTLec EST</p>
+        <p style="color:firebrick;">*** Merci de ne pas répondre à ce mail, cette boîte mail n'est pas consultée ***</p>
+
 
     </body>
     </html>
