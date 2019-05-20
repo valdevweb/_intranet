@@ -15,6 +15,16 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require_once  '../../vendor/autoload.php';
 
+if($_SESSION['type']=='btlec'){
+	unset($_SESSION['id_galec']);
+	if(isset($_SESSION['palette']))
+	{
+		unset($_SESSION['palette']);
+		unset($_SESSION['vol-id']);
+
+	}
+}
+
 
 //------------------------------------------------------
 //			FONCTION

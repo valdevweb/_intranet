@@ -23,6 +23,8 @@ $action="consultation";
 addRecord($pdoStat,$page,$action, $descr, 101);
 
 // SELECT * FROM statsventeslitiges  LEFT JOIN assortiments ON article=`SCEBFAST.AST-ART` WHERE palette='05314408'
+//
+
 
 //------------------------------------------------------
 //			FONCTION
@@ -37,6 +39,18 @@ function search($pdoQlik)
 	));
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
+
+
+function getPaletteForRobbery($pdoQlik)
+{
+	$placeholders=array_fill(0, count($_SESSION['palette']), ' palette = ? OR ');
+	$placeholders[count($_SESSION['palette']) -1]= 'palette = ? ';
+	$placeholders=implode(' ',$placeholders);
+	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  WHERE $placeholders ORDER BY article,dossier");
+	$req->execute($_SESSION['palette']);
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
 function checkBox($pdoQlik, $dossier,$article)
 {
@@ -99,7 +113,7 @@ else
 	$magId=$_SESSION['id_web_user'];
 }
 
-function insertDossier($pdoLitige, $numDossier,$magId)
+function insertDossier($pdoLitige, $numDossier,$magId, $idRobbery)
 {
 	// par défaut l'état est à 0 = ouvert
 	if(isset($_POST['rapid']) && $_POST['rapid']=="oui")
@@ -117,7 +131,8 @@ function insertDossier($pdoLitige, $numDossier,$magId)
 	{
 		$dateDecl=	date('Y-m-d H:i:s');
 	}
-	$req=$pdoLitige->prepare("INSERT INTO dossiers(date_crea,user_crea,nom,galec,id_web_user,vingtquatre, dossier) VALUES(:date_crea,:user_crea,:nom, :galec, :id_web_user, :vingtquatre, :dossier)");
+
+	$req=$pdoLitige->prepare("INSERT INTO dossiers(date_crea,user_crea,nom,galec,id_web_user,vingtquatre, dossier, id_robbery) VALUES(:date_crea,:user_crea,:nom, :galec, :id_web_user, :vingtquatre, :dossier, :id_robbery)");
 	$req->execute(array(
 		':date_crea'		=>$dateDecl,
 		':user_crea'		=>$_SESSION['id_web_user'],
@@ -126,6 +141,7 @@ function insertDossier($pdoLitige, $numDossier,$magId)
 		':id_web_user'		=>$magId,
 		':vingtquatre'		=>$vingtquatre,
 		':dossier'		=>$numDossier,
+		':id_robbery'		=>$idRobbery,
 	));
 	return $pdoLitige->lastInsertId();
 }
@@ -153,9 +169,9 @@ function getSelectedDetails($pdoQlik,$id)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-function addDetails($pdoLitige, $lastInsertId,$numDossier,$palette,	$facture,$dateFacture, $article, $ean,$dossierG, $descr, $qteC,	$tarif, $fou, $cnuf,$boxTete,$boxDetail)
+function addDetails($pdoLitige, $lastInsertId,$numDossier,$palette,	$facture,$dateFacture, $article, $ean,$dossierG, $descr, $qteC,	$tarif, $fou, $cnuf,$boxTete,$boxDetail, $puv,$pul)
 {
-	$req=$pdoLitige->prepare("INSERT INTO details(id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf, box_tete,box_art) VALUES(:id_dossier, :dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :box_tete, :box_art)");
+	$req=$pdoLitige->prepare("INSERT INTO details(id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf, box_tete,box_art, puv, pul) VALUES(:id_dossier, :dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :box_tete, :box_art, :puv, :pul)");
 	$req->execute(array(
 		':id_dossier'	=>$lastInsertId,
 		':dossier'		=>$numDossier,
@@ -172,7 +188,8 @@ function addDetails($pdoLitige, $lastInsertId,$numDossier,$palette,	$facture,$da
 		':cnuf'			=>$cnuf,
 		':box_tete'		=>$boxTete,
 		':box_art'		=>$boxDetail,
-
+		':puv'			=>$puv,
+		':pul'			=>$pul
 	));
 	$row=$req->rowCount();
 	return	$row;
@@ -189,6 +206,27 @@ function getLastNumDossier($pdoLitige)
 }
 
 
+function getPoids($pdoQlik, $art,$dossier)
+{
+	$req=$pdoQlik->prepare("SELECT `GESSICA.PoidsBrutUV` as puv, `GESSICA.PoidsBrutUL` as pul FROM basearticles  WHERE `GESSICA.CodeArticle` = :article AND `GESSICA.CodeDossier` = :dossier LIMIT 1");
+	$req->execute([
+		':article'	=>	$art,
+		':dossier'	=>$dossier
+
+	]);
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+
+function insertRobbery($pdoLitige)
+{
+$req=$pdoLitige->prepare("INSERT INTO robbery (date_saisie) VALUES (:date_saisie)");
+$req->execute([
+	':date_saisie' =>date('Y-m-d H:i:s'),
+
+]);
+return $pdoLitige->lastInsertId();
+}
 
 //------------------------------------------------------
 //			AFFICHAGE RES RECHERCHE
@@ -250,9 +288,14 @@ if(isset($_POST['submit']))
 
 	}
 
-
-
 }
+if(isset($_SESSION['palette']))
+{
+	$_POST['submit']=true;
+	$dataSearch=getPaletteForRobbery($pdoQlik);
+}
+
+
 //------------------------------------------------------
 //			TRAITEMENT CHOIX ARTICLES
 //------------------------------------------------------
@@ -262,6 +305,9 @@ $success=[];
 //
 if(isset($_POST['choose']))
 {
+
+
+
 
 //  on ne veut récuperer que les id donc on supprime les valeurs des champ submit, date, etc
 	foreach ($_POST as $key => $value)
@@ -275,12 +321,48 @@ if(isset($_POST['choose']))
 // 1- creation du dossier
 	if(count($ids)>0)
 	{
+		//si on a une variable de session vol-id, il faut vérifier ce qu'elle renvoie :
+		//si elle est égale à zéro, c'est une nouvelle décalration de vol donc on la créé et on récupère son id,
+		//sinon c'est la suite d'une décalartion existante donc on récupère la valeur de session['id_vol']
+
+		if(isset($_SESSION['vol-id']))
+		{
+			if($_SESSION['vol-id']==0){
+
+
+				//ajout nouveau vol dans la table robbery
+				$idRobbery=insertRobbery($pdoLitige);
+				if($idRobbery>=0){
+
+				}
+				else{
+					$errors[]="impossible d'ajouter le vol";
+
+				}
+				$_SESSION['vol-id']=$idRobbery;
+
+
+			}
+			else{
+				$idRobbery=$_SESSION['vol-id'];
+
+
+			}
+		}
+		else
+		{
+			$idRobbery=null;
+		}
+
+
+
 
 		// soit le numéro de dossier a été saisi soit, on doit le calculer
 		if(!empty($_POST['num_dossier_form']))
 		{
 			$numDossier=$_POST['num_dossier_form'];
-			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId);
+
+			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId, $idRobbery);
 
 		}
 		else
@@ -303,18 +385,23 @@ if(isset($_POST['choose']))
 				$numDossier=date('y').'001';
 
 			}
-			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId);
-		}
-		// créa du dossier (sans numéro pour l'instant)
-		if($lastInsertId>0)
-		{
-			$sucess[]="ajout du dossier réussie";
-		}
-		else
-		{
-			$errors[]="Impossible de créer le dossier";
+			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId, $idRobbery);
 
 		}
+
+
+
+	// créa du dossier (sans numéro pour l'instant)
+			if($lastInsertId>0)
+			{
+				$sucess[]="ajout du dossier réussie";
+			}
+			else
+			{
+				$errors[]="Impossible de créer le dossier";
+
+			}
+
 	}
 	else
 	{
@@ -357,7 +444,37 @@ if(isset($_POST['choose']))
 
 
 			$dateFact=date('Y-m-d H:i:s',strtotime($art['date_mvt']));
-			$detail=addDetails($pdoLitige, $lastInsertId,$numDossier,$art['palette'],$art['facture'],$dateFact, $art['article'], $art['gencod'],$art['dossier'], $art['libelle'], $art['qte'],$art['tarif'], $art['fournisseur'], $art['cnuf'],$tete,$detailbox);
+			if(isset($_SESSION['vol-id']))
+			{
+
+
+				$poids=getPoids($pdoQlik,$art['article'],$art['dossier']);
+
+
+				if(count($poids==1))
+				{
+					$puv=$poids['puv'];
+					$pul=$poids['pul'];
+
+
+				}
+				else
+				{
+					$errors[]="ATTENTION, les poids n'ont pas pu être récupérés dans la base article";
+					$puv=null;
+					$pul=null;
+				}
+
+
+			}
+			else
+			{
+				$puv=null;
+				$pul=null;
+
+			}
+			$detail=addDetails($pdoLitige, $lastInsertId,$numDossier,$art['palette'],$art['facture'],$dateFact, $art['article'], $art['gencod'],$art['dossier'], $art['libelle'], $art['qte'],$art['tarif'], $art['fournisseur'], $art['cnuf'],$tete,$detailbox,$puv,$pul );
+
 
 
 			if($detail>0)
@@ -469,7 +586,7 @@ DEBUT CONTENU CONTAINER
 		<div class="col-lg-1 col-xxl-2"></div>
 		<div class="col bg-alert bg-alert-grey">
 			<form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" id="submit">
-				<p class="text-center alert-title-grey">Votre recherche : <span class="text-main-blue">"<?=  isset($searchStr) ? $searchStr : '' ?>"</span></p>
+				<p class="text-center alert-title-grey"><span class="text-main-blue"><?=  isset($searchStr) ? 'Votre recherche : '.$searchStr : '' ?></span></p>
 				<p  class="text-center heavy alert-title-grey">Résultats :</p>
 				<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">1</span>Sélectionnez le ou les articles sur lesquels vous avez un litige à déclarer</p>
 				<div class="alert alert-light">
@@ -502,7 +619,7 @@ DEBUT CONTENU CONTAINER
 						{
 							echo '<p>La palette que vous recherchez n\'a pas été trouvée. Elle ne vous était pas destinée ? Veuillez vous rendre sur <a href="declaration-horsqlik.php">cette page</a></p>';
 						}
-						else
+						elseif(!empty($dataSearch))
 						{
 							$saveBoxTeteId='';
 							foreach ($dataSearch as $sResult)

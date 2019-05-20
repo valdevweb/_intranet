@@ -29,6 +29,11 @@ Solution : ajout d'un index dans le nom de la varaible file qui s'incrémente à
 On commence à 1 car le 0 n'est pas pris en compte dans le name
  */
 
+	echo "<pre>";
+	print_r($_SESSION);
+	echo '</pre>';
+
+
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
@@ -45,8 +50,9 @@ function getReclamation($pdoLitige){
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-
+// pour les vols, il faut ajouter les GESSICA.PoidsBrutUV et GESSICA.PoidsBrutUL
 function updateDetail($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean){
+
 	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean WHERE id= :id");
 	$req->execute(array(
 		':reclamation' =>$reclamation,
@@ -244,10 +250,9 @@ if(isset($_POST['submit']))
 				// cas général (pas d'inversion de produit)
 				$ean="";
 				$do=updateDetail($pdoLitige,$_POST['form_motif'][$i], $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean);
-				// echo '2 do '.$do;
+
+
 			}
-			// $do=updateDetail($pdoLitige,$_POST['form_motif'][$i], $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean);
-				// echo '3 do '.$do;
 
 		}
 
