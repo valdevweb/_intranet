@@ -1,0 +1,37 @@
+
+.table-bordered th, .table-bordered td {
+    border: 2px solid #fff !important;
+}
+
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #fff;
+}
+
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #b8daff !important;
+}
+	tr, td{
+  padding : 0 0.5rem !important;
+}
+
+table
+{
+	margin-bottom:  0 !important;
+}
+
+
+.form-title{
+	color :#484759;
+}
+
+
+label{
+	color: #ecb397
+}
+
+.btn-thief{
+	background-color: #484759;
+	color:  white;
+}
