@@ -46,7 +46,7 @@ function getPaletteForRobbery($pdoQlik)
 	$placeholders=array_fill(0, count($_SESSION['palette']), ' palette = ? OR ');
 	$placeholders[count($_SESSION['palette']) -1]= 'palette = ? ';
 	$placeholders=implode(' ',$placeholders);
-	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  WHERE $placeholders ORDER BY article,dossier");
+	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  WHERE $placeholders ORDER BY palette, article");
 	$req->execute($_SESSION['palette']);
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -220,12 +220,12 @@ function getPoids($pdoQlik, $art,$dossier)
 
 function insertRobbery($pdoLitige)
 {
-$req=$pdoLitige->prepare("INSERT INTO robbery (date_saisie) VALUES (:date_saisie)");
-$req->execute([
-	':date_saisie' =>date('Y-m-d H:i:s'),
+	$req=$pdoLitige->prepare("INSERT INTO robbery (date_saisie) VALUES (:date_saisie)");
+	$req->execute([
+		':date_saisie' =>date('Y-m-d H:i:s'),
 
-]);
-return $pdoLitige->lastInsertId();
+	]);
+	return $pdoLitige->lastInsertId();
 }
 
 //------------------------------------------------------
@@ -392,15 +392,15 @@ if(isset($_POST['choose']))
 
 
 	// créa du dossier (sans numéro pour l'instant)
-			if($lastInsertId>0)
-			{
-				$sucess[]="ajout du dossier réussie";
-			}
-			else
-			{
-				$errors[]="Impossible de créer le dossier";
+		if($lastInsertId>0)
+		{
+			$sucess[]="ajout du dossier réussie";
+		}
+		else
+		{
+			$errors[]="Impossible de créer le dossier";
 
-			}
+		}
 
 	}
 	else
@@ -590,13 +590,66 @@ DEBUT CONTENU CONTAINER
 				<p  class="text-center heavy alert-title-grey">Résultats :</p>
 				<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">1</span>Sélectionnez le ou les articles sur lesquels vous avez un litige à déclarer</p>
 				<div class="alert alert-light">
-					<p class="text-main-blue">Si la palette entière est concernée par le litige, merci de cocher ci dessous l'option "palette entière"</p>
+					<p class="text-main-blue">Dans le cas d'une inversion de palette ou d'une palette manquante ou en excédent, merci de cocher ci dessous l'option "palette entière"</p>
 					<div class="form-check">
 						<input type="checkbox" class="form-check-input" id="checkpalette" name="palette_complete">
 						<label class="form-check-label" for="checkAll">Palette entière</label>
 					</div>
-
 				</div>
+
+				<div class="alert alert-light">
+					<p class="text-main-blue">Aide à la sélection : </p>
+					<div class="form-check">
+						<input type="checkbox" class="form-check-input" id="checkAll">
+						<label class="form-check-label" for="checkAll">Sélectionner tout / désélectionner tout les articles</label>
+					</div>
+					<p class="text-main-blue  mt-3">Sélectionner tous les articles d'une palette :</p>
+
+					<div class="form-check">
+
+						<?php
+						if(isset($_SESSION['palette']))
+						{
+
+							for ($i=0; $i < count($_SESSION['palette']) ; $i++)
+							{
+
+								echo '<div class="form-check">';
+								echo '<input type="checkbox" class="form-check-input vol-list-palette" id="'.$_SESSION['palette'][$i].'" >';
+								echo '<label class="form-check-label" for="checkAll">'.$_SESSION['palette'][$i].'</label>';
+								echo '</div>';
+
+
+							}
+						}
+						else{
+
+							if(!empty($dataSearch))
+							{
+								$paletteinitiale='';
+								foreach ($dataSearch as $palette)
+								{
+									if($paletteinitiale!=$palette['palette'])
+									{
+									echo '<div class="form-check">';
+									echo '<input type="checkbox" class="form-check-input vol-list-palette" id="'.$palette['palette'].'">';
+									echo '<label class="form-check-label" for="checkAll">'.$palette['palette'].'</label>';
+									echo '</div>';
+									$paletteinitiale=$palette['palette'];
+								}
+
+
+								}
+							}
+						}
+						?>
+
+
+
+
+					</div>
+				</div>
+
 
 				<!-- <p class="text-main-blue font-italic closer"><i class="fas fa-info-circle"></i>Vous pouvez trier les résultats en cliquant sur les entêtes de colonne</p> -->
 				<!-- <div class="alert alert-light"><i class="fas fa-info-circle pr-3"></i>Vous pouvez trier les résultats en cliquant sur les entêtes de colonne</div> -->
@@ -658,7 +711,7 @@ DEBUT CONTENU CONTAINER
 								echo'<td>'.$sResult['article'].'</td>';
 								echo'<td>'.$sResult['libelle'].'</td>';
 								echo'<td>';
-								echo '<div class="form-check article"><input class="form-check-input checkarticle" type="checkbox" name="'.$sResult['id'].'"' .$idBox.'></div>';
+								echo '<div class="form-check article"><input class="form-check-input checkarticle '.$sResult['palette'].'" type="checkbox" name="'.$sResult['id'].'"' .$idBox.'></div>';
 								echo '</td></tr>';
 
 							}
@@ -670,12 +723,7 @@ DEBUT CONTENU CONTAINER
 				</table>
 				<p>Le produit que vous avez reçu n'apparaît pas dans la liste et vous avez bien reçu tous les autres produits commandés ? Veuillez vous rendre sur <a href="declaration-horsqlik.php">cette page</a></p>
 				<!-- <p> -->
-					<div class="alert alert-light">
-						<div class="form-check text-right">
-							<input type="checkbox" class="form-check-input" id="checkAll">
-							<label class="form-check-label" for="checkAll">Sélectionner tout / désélectionner tout</label>
-						</div>
-					</div>
+
 					<!-- </p> -->
 					<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">2</span>S'agit-il d'une livraison 24/48h ?</p>
 					<div class="alert alert-light">
@@ -762,6 +810,17 @@ DEBUT CONTENU CONTAINER
 		$("#checkpalette").click(function () {
 			$('input:checkbox').not(this).prop('checked', this.checked);
 		});
+
+
+		$(".vol-list-palette").click(function(){
+			var palette=$(this).attr('id');
+				// var thisclass='.'+palette;
+				$('.'+ palette).prop('checked', this.checked);
+
+
+				console.log(palette);
+			});
+
 		$("#choose").click(function() {
 			if ($('input[name="rapid"]:checked').length == 0) {
 				alert('Vous devez préciser si il s\'agit d\'une livraison 24/48h');
