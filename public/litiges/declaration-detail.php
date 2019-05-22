@@ -29,10 +29,6 @@ Solution : ajout d'un index dans le nom de la varaible file qui s'incrémente à
 On commence à 1 car le 0 n'est pas pris en compte dans le name
  */
 
-	echo "<pre>";
-	print_r($_SESSION);
-	echo '</pre>';
-
 
 //------------------------------------------------------
 //			FONCTION
