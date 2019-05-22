@@ -42,14 +42,15 @@ function getAction($pdoLitige)
 }
 $actionList=getAction($pdoLitige);
 
-function addAction($pdoLitige)
+function addAction($pdoLitige, $contrainte)
 {
 	$action=strip_tags($_POST['action']);
 	$action=nl2br($action);
-	$req=$pdoLitige->prepare("INSERT INTO action (id_dossier,libelle,id_web_user,date_action) VALUES (:id_dossier,:libelle,:id_web_user,:date_action)");
+	$req=$pdoLitige->prepare("INSERT INTO action (id_dossier,libelle,id_contrainte,id_web_user,date_action) VALUES (:id_dossier,:libelle,:id_contrainte,:id_web_user,:date_action)");
 	$req->execute(array(
 		':id_dossier'		=>	$_GET['id'],
 		':libelle'		=>	$action,
+		':id_contrainte'	=>$contrainte,
 		':id_web_user'		=> $_SESSION['id_web_user'],
 		':date_action'		=> date('Y-m-d H:i:s'),
 	));
@@ -85,7 +86,7 @@ if(isset($_POST['submit']))
 	// si l'action pré-écrite à une contrainte, on l'execute
 		if($help['id_contrainte'] ==NULL)
 		{
-			$newAction=addAction($pdoLitige);
+			$newAction=addAction($pdoLitige, $contrainte=null);
 
 			if($newAction>0)
 			{
@@ -99,7 +100,7 @@ if(isset($_POST['submit']))
 		}
 		else
 		{
-			$newAction=addAction($pdoLitige);
+			$newAction=addAction($pdoLitige, $help['id_contrainte']);
 			if($newAction>0)
 			{
 				header('Location:contrainte.php?contrainte='.$help['id_contrainte'].'&id='.$_GET['id']);

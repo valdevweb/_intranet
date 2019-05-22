@@ -9,7 +9,7 @@ if(!isset($_SESSION['id'])){
 
 require_once '../../vendor/autoload.php';
 
-
+require 'info-litige.fn.php';
 
 //			css dynamique
 //----------------------------------------------------------------
@@ -24,66 +24,9 @@ $success=[];
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-function getLitige($pdoLitige)
-{
-	$req=$pdoLitige->prepare("
-		SELECT
-		dossiers.id as id_main,	dossiers.dossier,dossiers.date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,dossiers.user_crea,dossiers.galec,dossiers.etat_dossier,vingtquatre, inversion,inv_article,inv_fournisseur,inv_tarif,inv_descr,nom,
-		details.id as id_detail,details.ean,details.id_dossier,	details.palette,details.article,details.tarif,details.qte_cde, details.qte_litige,details.dossier_gessica,details.descr,details.fournisseur,details.pj,
-		reclamation.reclamation,
-		btlec.sca3.mag, btlec.sca3.centrale, btlec.sca3.btlec,
-		etat.etat
-		FROM dossiers
-		LEFT JOIN details ON dossiers.id=details.id_dossier
-		LEFT JOIN reclamation ON details.id_reclamation = reclamation.id
-		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
-		LEFT JOIN etat ON etat_dossier=etat.id
-		WHERE dossiers.id= :id ORDER BY date_crea");
-	$req->execute(array(
-		':id'	=>$_GET['id']
-	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-	// return $req->errorInfo();
-}
 
 
-function getInfos($pdoLitige)
-{
-	$req=$pdoLitige->prepare("SELECT transporteur.transporteur, affrete.affrete, transit.transit, CONCAT(prepa.nom,' ', prepa.prenom) as fullprepa, CONCAT(ctrl.nom,' ',ctrl.prenom) as fullctrl,CONCAT(chg.nom,' ',chg.prenom) as fullchg, mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag, DATE_FORMAT(date_prepa,'%d-%m-%Y') as dateprepa, ctrl_ok FROM dossiers
-		LEFT JOIN transporteur ON id_transp=transporteur.id
-		LEFT JOIN affrete ON id_affrete=affrete.id
-		LEFT JOIN transit ON id_transit=transit.id
-		LEFT JOIN equipe as prepa ON id_prepa=prepa.id
-		LEFT JOIN equipe as ctrl ON id_ctrl=ctrl.id
-		LEFT JOIN equipe as chg ON id_chg=chg.id
-		LEFT JOIN equipe as ctrl_stock ON id_ctrl_stock=ctrl_stock.id
-		WHERE  dossiers.id= :id ");
 
-	$req->execute(array(
-		':id'	=>$_GET['id']
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
-$infos=getInfos($pdoLitige);
-
-
-function getAnalyse($pdoLitige)
-{
-	$req=$pdoLitige->prepare("SELECT gt, imputation, typo, etat, analyse, conclusion FROM dossiers
-		LEFT JOIN gt ON id_gt=gt.id
-		LEFT JOIN imputation ON id_imputation=imputation.id
-		LEFT JOIN typo ON id_typo=typo.id
-		LEFT JOIN etat ON id_etat=etat.id
-		LEFT JOIN analyse ON id_analyse=analyse.id
-		LEFT JOIN conclusion ON id_conclusion=conclusion.id
-		WHERE dossiers.id= :id");
-	$req->execute(array(
-		':id'	=>$_GET['id']
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-
-}
-$analyse=getAnalyse($pdoLitige);
 
 
 
@@ -96,20 +39,27 @@ function getMagName($pdoUser, $idwebuser)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
+// $etat 1 =ctrl ok
+// $etat 0= rien
+// $etat 2 =ctrl demandé
 
-
-$fLitige=getLitige($pdoLitige);
-
-
-function updateCtrl($pdoLitige)
+function updateCtrl($pdoLitige, $etat)
 {
 	$req=$pdoLitige->prepare("UPDATE dossiers SET ctrl_ok=:ctrl_ok WHERE id=:id");
 	$req->execute(array(
-		':ctrl_ok'	=>1,
+		':ctrl_ok'	=>$etat,
 		':id'		=>$_GET['id']
 	));
 	return $req->rowCount();
 }
+
+
+
+$infos=getInfos($pdoLitige);
+$analyse=getAnalyse($pdoLitige);
+$litige=getLitige($pdoLitige);
+
+
 
 
 //------------------------------------------------------
@@ -132,7 +82,7 @@ if($_GET['contrainte']==2)
 	$mpdf->WriteHTML($html);
 	$pdfContent = $mpdf->Output('', 'S');
 	// $pdfContent = $mpdf->Output();
-	$filename='litige '.$fLitige[0]['dossier'].'- fiche pilotage.pdf';
+	$filename='litige '.$litige[0]['dossier'].'- fiche pilotage.pdf';
 
 	// $pdfContent = $mpdf->Output();
 	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
@@ -140,7 +90,7 @@ if($_GET['contrainte']==2)
 	$attachmentPdf = new Swift_Attachment($pdfContent, $filename, 'application/pdf');
 // // content
 	$htmlMail = file_get_contents('mail-dde-ctrl-stock.php');
-	$htmlMail=str_replace('{DOSSIER}',$fLitige[0]['dossier'],$htmlMail);
+	$htmlMail=str_replace('{DOSSIER}',$litige[0]['dossier'],$htmlMail);
 // // sujet
 	$subject='Portail BTLec - Litiges - Contrôle de stock ';
 	// PROD
@@ -155,13 +105,15 @@ if($_GET['contrainte']==2)
 	$message = (new Swift_Message($subject))
 	->setBody($htmlMail, 'text/html')
 	->attach($attachmentPdf)
-	->setFrom(array('litigelivraison@btlec.fr' => 'Litige Livraison'))
-	->setTo(['pilotageprepa@btlec.fr']);
-	// ->setTo(['valerie.montusclat@btlec.fr']);
+	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+	// ->setTo(['pilotageprepa@btlec.fr']);
+	->setTo(['valerie.montusclat@btlec.fr']);
 	// ->addBcc('litigelivraison@btlec.fr');
 	$delivered = $mailer->send($message);
 	if($delivered !=0)
 	{
+		// met à jour ctrl_ok =>2 =demande de contrôle en cours
+		updateCtrl($pdoLitige, 2);
 		header('Location:bt-action-add.php?id='.$_GET['id'].'&success=ok');
 	}
 	else

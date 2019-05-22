@@ -8,8 +8,7 @@
 
         <p>Restant à votre disposition,<br>
         Cordialement,</p>
-        <p style="color:darkblue;">L'équipe litige livraison<br>
-        litigelivraison@btlec.fr</p>
+        <p style="color:darkblue;">L'équipe litige livraison</p>
         <p style="color:darkblue;">------------------</p>
         <p style="color:darkblue;">Portail BTLec EST</p>
         <p>&nbsp;</p>

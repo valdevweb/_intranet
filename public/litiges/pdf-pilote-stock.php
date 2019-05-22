@@ -185,7 +185,7 @@ h2{
 <?php
 
 $sumValo=0;
-foreach ($fLitige as $prod)
+foreach ($litige as $prod)
 {
 	$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
 
@@ -209,14 +209,14 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 <body>
 	<table class="padding-table border-table-prim">
 		<tr>
-			<td class="deux bg-prim text-white bigger text-center" colspan="4">FICHE DE SUIVI PILOTAGE - litige n°  <?= $fLitige[0]['dossier']?></td>
+			<td class="deux bg-prim text-white bigger text-center" colspan="4">FICHE DE SUIVI PILOTAGE - litige n°  <?= $litige[0]['dossier']?></td>
 			<!-- <td class="deux bg-prim text-white bigger" colspan="2"></td> -->
 		</tr>
 		<tr>
-			<td class="quatre heavy"><?=$fLitige[0]['centrale']?></td>
-			<td class="quatre"><?=$fLitige[0]['mag'] .' - '. $fLitige[0]['btlec']?></td>
+			<td class="quatre heavy"><?=$litige[0]['centrale']?></td>
+			<td class="quatre"><?=$litige[0]['mag'] .' - '. $litige[0]['btlec']?></td>
 			<td class="quatre  heavy">DATE DECLARATION</td>
-			<td class="quatre"><?=$fLitige[0]['datecrea']?></td>
+			<td class="quatre"><?=$litige[0]['datecrea']?></td>
 		</tr>
 
 	</table>
@@ -285,7 +285,7 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 		</tr>
 		<?php
 		$sumValo=0;
-		foreach ($fLitige as $prod)
+		foreach ($litige as $prod)
 		{
 			$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
 			echo '<tr>';
