@@ -1,6 +1,4 @@
 <?php
-
- // require('../../config/pdo_connect.php');
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
 	echo "pas de variable session";
