@@ -11,6 +11,8 @@ if(!isset($_SESSION['id'])){
 $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
+// lien mail mis dans session
+unset($_SESSION['goto']);
 
 //---------------------------------------
 //	ajout enreg dans stat

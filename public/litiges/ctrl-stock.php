@@ -27,7 +27,7 @@ require 'info-litige.fn.php';
 
 $errors=[];
 $success=[];
-
+unset($_SESSION['goto']);
 
 //------------------------------------------------------
 //			DESCRIPTIF PAGE
