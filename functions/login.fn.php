@@ -46,20 +46,41 @@ function getUserSavInfo($pdoSav){
 	));
 
 	return $req->fetch(PDO::FETCH_ASSOC);
-
-
 }
 
+
+function getDateMajNohash($pdoUser){
+	$req=$pdoUser->prepare("SELECT date_maj_nohash FROM users WHERE id= :id_web_user LIMIT 1");
+	$req->execute([
+		':id_web_user'		=>$_SESSION['id_web_user']
+
+	]
+	);
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+
+
+function updateNoHash($pdoUser){
+	$req=$pdoUser->prepare('UPDATE users SET nohash_pwd=:pwd, date_maj_nohash= :today WHERE id= :id_web_user');
+	$req->execute([
+		':pwd'	=>$_POST['pwd'],
+		':today'	=>date('Y-m-d H:i:s'),
+		':id_web_user'		=>$_SESSION['id_web_user']
+
+	]);
+	return $req->rowCount();
+}
 
 /*_____________________________________________________________
 *
 * 							login
 _______________________________________________________________*/
 
-function login($dbUser, $pdoBt,$pdoSav)
+function login($pdoUser, $pdoBt,$pdoSav)
 {
 	//ETAPE 1 on récupère les infos du user grace au login
-	$req=$dbUser->prepare("SELECT * FROM users WHERE login= :postLogin");
+	$req=$pdoUser->prepare("SELECT * FROM users WHERE login= :postLogin");
 	$req->execute(array(
 		':postLogin'	=> $_POST['login']
 	));
@@ -91,7 +112,7 @@ function login($dbUser, $pdoBt,$pdoSav)
 					// convertion
 					$convertedPwd=pwdHash($_POST['pwd']);
 					// maj la db : sup old pwd et update pwd
-					$req=$dbUser->prepare('UPDATE users SET pwd=:convertedPwd, old_pwd=:old_pwd  WHERE login= :postLogin');
+					$req=$pdoUser->prepare('UPDATE users SET pwd=:convertedPwd, old_pwd=:old_pwd  WHERE login= :postLogin');
 					$result=$req->execute(array(
 						':convertedPwd'		=> $convertedPwd,
 						':old_pwd'			=>"",

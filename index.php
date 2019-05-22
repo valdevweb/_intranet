@@ -54,6 +54,12 @@ if(isset($_POST['connexion']))
 	authStat($pdoStat,$page,$action, $err[0]);
 	if($err[0]=="user authentifié")
 	{
+		// echo $pwd;
+		$dateMajPwd=getDateMajNohash($pdoUser);
+		if($dateMajPwd['date_maj_nohash']==null)
+		{
+			updateNoHash($pdoUser);
+		}
 		header('Location:'. ROOT_PATH. '/public/home.php');
 	}
 }
