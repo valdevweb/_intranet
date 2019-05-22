@@ -21,7 +21,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 function getAllDossier($pdoLitige)
 {
 	$req=$pdoLitige->prepare("
-		SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, valo, etat
+		SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, valo, etat, ctrl_ok
 		FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
@@ -431,6 +431,8 @@ DEBUT CONTENU CONTAINER
 							<th class="sortable align-top">Centrale</th>
 							<th class="sortable align-top">Etat</th>
 							<th class="sortable align-top text-right">Valo</th>
+							<th class="sortable text-center align-top">Ctrl Stock</th>
+
 							<th class="sortable text-center align-top">24/48h</th>
 
 						</tr>
@@ -458,6 +460,17 @@ DEBUT CONTENU CONTAINER
 								$etat="text-red";
 							}
 
+							if($active['ctrl_ok']==0){
+								$ctrl='';
+							}
+							elseif($active['ctrl_ok']==1){
+								$ctrl= '<i class="fas fa-boxes text-green"></i>';
+							}
+							elseif($active['ctrl_ok']==2)
+							{
+								$ctrl='<i class="fas fa-hourglass-end text-red"></i>';
+							}
+
 							echo '<tr class="'.$active['etat_dossier'].'">';
 							echo'<td><a href="bt-detail-litige.php?id='.$active['id_main'].'">'.$active['dossier'].'</a></td>';
 							echo'<td>'.$active['datecrea'].'</td>';
@@ -466,7 +479,7 @@ DEBUT CONTENU CONTAINER
 							echo'<td>'.$active['centrale'].'</td>';
 							echo'<td class="'.$etat.'">'.$active['etat'].'</td>';
 							echo'<td class="text-right">'.number_format((float)$active['valo'],2,'.',' ').'&euro;</td>';
-
+							echo '<td class="text-center">'.$ctrl .'</td>';
 							echo '<td class="text-center">'.$vingtquatre .'</td>';
 							echo '</tr>';
 
