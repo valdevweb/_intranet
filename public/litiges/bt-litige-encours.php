@@ -1,5 +1,5 @@
 <?php
-session_cache_limiter('private_no_expire');
+// session_cache_limiter('private_no_expire');
  // require('../../config/pdo_connect.php');
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
@@ -14,6 +14,9 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
+
+
+
 
 function getAllDossier($pdoLitige)
 {
