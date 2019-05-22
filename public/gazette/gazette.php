@@ -305,7 +305,7 @@ if (isset($_POST['submit']))
 		<h4 class="light-blue-text text-darken-2" id="spe">Les gazettes spéciales</h4>
 	</div>
 
-	<div class="row">
+	<div class="row bg-white">
 		<ul class="browser-default">
 			<?php
 			$gSpe=showAllSpe($pdoBt);

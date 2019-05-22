@@ -41,7 +41,7 @@ function showThisWeekSpe($pdoBt)
 
 function showAllSpe($pdoBt)
 {
-	$req=$pdoBt->query("SELECT * FROM gazette WHERE code = 8 ORDER BY ID DESC" );
+	$req=$pdoBt->query("SELECT * FROM gazette WHERE id_doc_type = 8 ORDER BY ID DESC" );
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 
 }
