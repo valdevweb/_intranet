@@ -120,6 +120,26 @@ class Uploader
 		unlink($this->destinationPath.$this->uploadName);
 	}
 
+
+// if(isset($_POST['submit']))
+// {
+// 	$uploader   =   new Uploader();
+// 	$uploader->setDir('..\..\..\upload\litiges\\');
+// 	$uploader->allowAllFormats();
+// 	$uploader->setMaxSize(.5);                          //set max file size to be allowed in MB//
+
+// 	if($uploader->uploadFile('file')){   //txtFile is the filebrowse element name //
+//     $success[]  =   $uploader->getUploadName(); //get uploaded file name, renames on upload//
+// 	}
+// 	else{//upload failed
+//     $errors[]=$uploader->getMessage(); //get upload error message
+// 	}
+
+
+
+
+
+
 }
 
 
