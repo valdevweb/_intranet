@@ -20,8 +20,22 @@ require "../functions/userinfo.fn.php";
 require "../functions/gazette.fn.php";
 require "../functions/stats.fn.php";
 
+// stats recup mdp
+function getnbRecupPwd($pdoUser){
+	$req=$pdoUser->prepare("SELECT count(id) as recup FROM  users WHERE date_maj_nohash IS NOT NULL");
+	$req->execute();
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
 
 
+function getnbCompte($pdoUser){
+	$req=$pdoUser->prepare("SELECT count(id) as compte FROM  users");
+	$req->execute();
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+$nbRecup=getnbRecupPwd($pdoUser);
+$nbCompte=getnbCompte($pdoUser);
 
 //recup gazette de la semaine en cours
 $gazettes=showThisWeek($pdoBt);
