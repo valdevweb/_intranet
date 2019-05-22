@@ -1,0 +1,9 @@
+  .accordion-toggle {cursor: pointer;}
+
+
+  .hide{
+	display: none;
+  }
+  .show{
+  	display: inline;
+  }
