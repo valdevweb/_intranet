@@ -90,10 +90,11 @@ function addAction($pdoLitige,$contrainte,$reportAction)
 
 function updateCtrl($pdoLitige)
 {
-	$req=$pdoLitige->prepare("UPDATE dossiers SET ctrl_ok=:ctrl_ok WHERE id=:id");
+	$req=$pdoLitige->prepare("UPDATE dossiers SET ctrl_ok=:ctrl_ok, id_user_ctrl_stock= :id_user_ctrl_stock WHERE id=:id");
 	$req->execute(array(
 		':ctrl_ok'	=>1,
-		':id'		=>$_GET['id']
+		':id'		=>$_GET['id'],
+		':id_user_ctrl_stock'=>$_SESSION['id_web_user']
 	));
 	return $req->rowCount();
 }
@@ -216,8 +217,8 @@ if(isset($_POST['submit']))
 		->setBody($htmlMail, 'text/html')
 
 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail SAV Leclerc'))
-		// ->setTo(array('btlecest.portailweb.logistique@btlec.fr'))
-		->setTo(array('valerie.montusclat@btlec.fr'))
+		->setTo(array('btlecest.portailweb.logistique@btlec.fr'))
+		// ->setTo(array('valerie.montusclat@btlec.fr'))
 		// ->addCc($copySender['email'])
 		->addBcc('valerie.montusclat@btlec.fr');
 		// ->attach($attachmentPdf)

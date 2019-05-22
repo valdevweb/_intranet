@@ -89,8 +89,11 @@ if($_GET['contrainte']==2)
 	$mailer = new Swift_Mailer($transport);
 	$attachmentPdf = new Swift_Attachment($pdfContent, $filename, 'application/pdf');
 // // content
+	$link='<a href="'.SITE_ADDRESS.'/index.php?litiges/ctrl-stock.php?id='.$litige[0]['id_main'].'"> cliquant ici</a>';
+
 	$htmlMail = file_get_contents('mail-dde-ctrl-stock.php');
 	$htmlMail=str_replace('{DOSSIER}',$litige[0]['dossier'],$htmlMail);
+	$htmlMail=str_replace('{LINK}',$link,$htmlMail);
 // // sujet
 	$subject='Portail BTLec - Litiges - Contrôle de stock ';
 	// PROD
@@ -106,8 +109,8 @@ if($_GET['contrainte']==2)
 	->setBody($htmlMail, 'text/html')
 	->attach($attachmentPdf)
 	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
-	// ->setTo(['pilotageprepa@btlec.fr']);
-	->setTo(['valerie.montusclat@btlec.fr']);
+	->setTo(['pilotageprepa@btlec.fr']);
+	// ->setTo(['valerie.montusclat@btlec.fr']);
 	// ->addBcc('litigelivraison@btlec.fr');
 	$delivered = $mailer->send($message);
 	if($delivered !=0)
@@ -126,7 +129,7 @@ if($_GET['contrainte']==2)
 }
 elseif($_GET['contrainte']==1)
 {
-	$row=updateCtrl($pdoLitige);
+	$row=updateCtrl($pdoLitige, 1);
 	if($row==1)
 	{
 		header('Location:bt-action-add.php?id='.$_GET['id'].'&success=ok');
