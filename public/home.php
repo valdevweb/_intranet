@@ -65,6 +65,9 @@ if($gazetteAppros){
 	}
 }
 $gazetteSpe=showThisWeekSpe($pdoBt);
+
+
+
 $speHtml="";
 
 if($gazetteSpe){
