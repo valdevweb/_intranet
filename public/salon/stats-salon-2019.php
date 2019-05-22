@@ -36,7 +36,7 @@ function getParticipant($pdoBt)
 
 function getNbMagInscrit($pdoBt)
 {
-  $req=$pdoBt->prepare("SELECT DISTINCT(galec) FROM salon_2019");
+  $req=$pdoBt->prepare("SELECT DISTINCT(galec) FROM salon_2019 WHERE mask=0 ");
   $req->execute();
   return $req->fetchAll();
 }
@@ -50,14 +50,14 @@ function getNbPart($pdoBt)
 
 function getNbMagInscritMardi($pdoBt)
 {
-  $req=$pdoBt->prepare("SELECT DISTINCT(galec) FROM salon_2019 WHERE mardi=1");
+  $req=$pdoBt->prepare("SELECT DISTINCT(galec) FROM salon_2019 WHERE mardi=1 AND mask=0");
   $req->execute();
   return $req->fetchAll();
 }
 
 function getNbMagInscritMercredi($pdoBt)
 {
-  $req=$pdoBt->prepare("SELECT DISTINCT(galec) FROM salon_2019 WHERE mercredi=1");
+  $req=$pdoBt->prepare("SELECT DISTINCT(galec) FROM salon_2019 WHERE mercredi=1 AND mask=0");
   $req->execute();
   return $req->fetchAll();
 }
@@ -65,7 +65,7 @@ function getNbMagInscritMercredi($pdoBt)
 
 function nbMagCentrale($pdoBt)
 {
-  $req=$pdoBt->prepare("SELECT count(galec) as nb,centrale FROM (SELECT DISTINCT salon_2019.galec, centrale FROM salon_2019 LEFT JOIN sca3 ON salon_2019.galec=sca3.galec WHERE salon_2019.galec !='') sousreq GROUP BY centrale");
+  $req=$pdoBt->prepare("SELECT count(galec) as nb,centrale FROM (SELECT DISTINCT salon_2019.galec, centrale FROM salon_2019 LEFT JOIN sca3 ON salon_2019.galec=sca3.galec WHERE salon_2019.galec !='' AND mask=0) sousreq GROUP BY centrale");
   $req->execute();
   return $req->fetchAll(PDO::FETCH_ASSOC);
 
@@ -230,18 +230,18 @@ DEBUT CONTENU CONTAINER
   </div>
   <div class="row">
     <div class="col">
-      <table class="table table-sm">
+      <table class="table table-sm" id="table-inscr">
         <thead class="thead-dark">
           <tr>
-            <th>Magasin</th>
-            <th>Galec</th>
-            <th>Centrale</th>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Fonction</th>
-            <th>Date Inscription</th>
-            <th>Mardi</th>
-            <th>Mercredi</th>
+            <th class="sortable" onclick="sortTable(0);">Magasin</th>
+            <th class="sortable" onclick="sortTable(1);">Galec</th>
+            <th class="sortable" onclick="sortTable(2);">Centrale</th>
+            <th class="sortable" onclick="sortTable(3);">Nom</th>
+            <th class="sortable" onclick="sortTable(4);">Prénom</th>
+            <th class="sortable" onclick="sortTable(5);">Fonction</th>
+            <th class="sortable" onclick="sortTable(6);">Date Inscription</th>
+            <th class="sortable" onclick="sortTable(7);">Mardi</th>
+            <th class="sortable" onclick="sortTable(8);">Mercredi</th>
           </tr>
         </thead>
         <tbody>
@@ -277,6 +277,16 @@ DEBUT CONTENU CONTAINER
 
   <!-- ./container -->
 </div>
+
+
+<script src="../js/sortmultitable.js"></script>
+<script type="text/javascript">
+
+
+function sortTable(n) {
+  sort_table(document.getElementById("table-inscr"), n);
+}
+</script>
 
 <?php
 require '../view/_footer-bt.php';
