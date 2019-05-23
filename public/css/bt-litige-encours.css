@@ -17,3 +17,138 @@ td:nth-child(7){
 	white-space: no-wrap !important;
 	width: 10% !important;
 }
+
+
+/*
+/* one */
+/* .yellow {
+  color: #DB9E36;
+}
+.yellow:before {
+  background-color: #DB9E36;
+}
+.green {
+  color: #105B63;
+}
+.green:before {
+  background-color: #105B63;
+}
+
+.stamp {
+  position: relative;
+  display: inline-block;
+  width: 20%;
+  font-family: 'Paytone One', sans-serif;
+  font-size: 1.25em;
+  text-align: center;
+  border-radius: 100%;
+  -webkit-transform: rotate(-25deg);
+  -ms-transform: rotate(-25deg);
+  transform: rotate(-25deg);
+}
+
+.stamp:after {
+  content: '';
+  float: left;
+  padding-bottom: 100%;
+}
+
+.stamp:before {
+  content: '';
+  position: absolute;
+  top: 10%; bottom: 10%; left: 10%; right: 10%;
+  border-radius: 100%;
+}
+
+.stamped {
+  position: absolute;
+  top: 50%; left: 0;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  width: 100%;
+  padding: .25em;
+  background: white;
+  margin: 0;
+  border: .25em solid;
+  border-radius: 2em;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: bold;
+} */
+.smaller{
+	font-size: .9rem;
+}
+
+.pending{
+    background: #de1434;
+    border:  2px #5d3037 solid;
+  transition-timing: ease-in-out;
+
+}
+
+.pending:hover{
+
+  border:  2px #a63446 solid;
+  background: #941e30;
+
+}
+
+.validated{
+    background:#3ee63e;
+    border:  2px #26a526 solid;
+  transition-timing: ease-in-out;
+}
+
+.validated:hover{
+    background: #26a526;
+    border:  2px #33d233 solid;
+  /* transition-timing: ease-in-out; */
+}
+
+.stamp {
+    padding:5px 4px 5px 5px;
+    border-radius: 50%;
+    color:  #fff;
+    text-align: center;
+    font-size: 0.7rem;
+  transition-timing: ease-in-out;
+
+}
+
+
+
+.stamp:hover{
+   transform: scale(.9);
+  color: #fff;
+
+}
+
+
+.anim{
+	animation:  show 3s;
+}
+
+@keyframes show{
+	0% {
+		background: #fff;
+		transform: scale(1);
+		text-shadow: 10px;
+	}
+	1% {
+		background: #fff;
+		transform: scale(0.2);
+	}
+	30%{background :#eefbee;}
+
+	40% {
+		background: #d8f7d8;
+		transform: scale(1);
+		text-shadow: 0px;
+
+	}
+	60%{background :#eefbee;}
+	100%{background :#fff;}
+}
