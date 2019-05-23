@@ -21,7 +21,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 function getAllDossier($pdoLitige)
 {
 	$req=$pdoLitige->prepare("
-		SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, valo, etat, ctrl_ok
+		SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, valo, etat, ctrl_ok,commission
 		FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
@@ -32,7 +32,7 @@ function getAllDossier($pdoLitige)
 
 function search($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, valo, etat
+	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, valo, etat,ctrl_ok,commission
 		FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
@@ -54,7 +54,7 @@ function getEtat($pdoLitige)
 function filterJustDate($pdoLitige)
 {
 
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, etat, valo
+	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, etat, valo,ctrl_ok,commission
 		FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
@@ -76,7 +76,7 @@ function getSumValoAll($pdoLitige)
 function getSumValoJustDate($pdoLitige)
 {
 	$req=$pdoLitige->prepare("SELECT  sum(valo) as valo_totale FROM dossiers WHERE DATE_FORMAT(date_crea,'%Y-%m-%d') BETWEEN :date_start AND :date_end");
-$req->execute(array(
+	$req->execute(array(
 		':date_start'		=>$_POST['date_start'],
 		':date_end'		=>$_POST['date_end'],
 	));
@@ -96,7 +96,7 @@ function getSumValoJustDateGpType($pdoLitige)
 function getSumValoFilter($pdoLitige)
 {
 	$req=$pdoLitige->prepare("SELECT  sum(valo) as valo_totale FROM dossiers WHERE DATE_FORMAT(date_crea,'%Y-%m-%d') BETWEEN :date_start AND :date_end  AND id_etat= :id_etat ");
-$req->execute(array(
+	$req->execute(array(
 		':date_start'		=>$_POST['date_start'],
 		':date_end'		=>$_POST['date_end'],
 		':id_etat'		=>$_POST['etat'],
@@ -154,7 +154,7 @@ function getSumValoAllGpType($pdoLitige)
 function filter($pdoLitige)
 {
 
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, etat, valo
+	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, etat, valo, ctrl_ok,commission
 		FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
@@ -166,6 +166,12 @@ function filter($pdoLitige)
 	));
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
+
+
+if(isset($_GET['notallowed'])){
+	$errors[]="Vous n'êtes pas autorisé à modifier le statut 'validé en commission'";
+}
+
 
 
 if(isset($_POST['search_form']))
@@ -233,7 +239,29 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue pt-5 pb-3">Listing des dossiers litiges </h1>
+	<div class="row pt-5 mb-5">
+		<div class="col">
+			<h1 class="text-main-blue">Listing des dossiers litiges </h1>
+
+		</div>
+		<div class="col border p-3">
+			<div class="row">
+				<div class="col-auto"><i class="fas fa-user-check stamp pending"></i></div>
+				<div class="col"> non statué</div>
+				<div class="col-auto"><i class="fas fa-hourglass-end text-red"></i></div>
+				<div class="col">en attente de contrôle</div>
+			</div>
+			<div class="row">
+				<div class="col-auto"><i class="fas fa-user-check stamp validated"></i></div>
+				<div class="col">statué</div>
+				<div class="col-auto"><i class="fas fa-boxes text-green"></i></div>
+				<div class="col">contrôlé</div>
+			</div>
+
+		</div>
+	</div>
+
+
 
 	<!-- formulaire de recherche -->
 	<div class="row mb-5">
@@ -359,12 +387,12 @@ DEBUT CONTENU CONTAINER
 				<h4 class="text-main-blue text-center"> Listing des  <?=$nbLitiges?> litiges de votre sélection</h4>
 			</div>
 		</div>
-	<div class="row">
-		<div class="col">
+		<div class="row">
+			<div class="col">
 				<p class="text-main-blue">Statistiques : </p>
 
+			</div>
 		</div>
-	</div>
 		<div class="row ">
 			<div class="col-6">
 				<table class="table">
@@ -423,16 +451,16 @@ DEBUT CONTENU CONTAINER
 		<div class="row">
 			<div class="col">
 				<table class="table border" id="dossier">
-					<thead class="thead-dark ">
+					<thead class="thead-dark smaller">
 						<th class="sortable align-top">Dossier</th>
-						<th class="sortable">Date déclaration</>
+						<th class="sortable smaller">Date déclaration</>
 							<th class="sortable align-top">Magasin</th>
 							<th class="sortable align-top">Code BT</th>
 							<th class="sortable align-top">Centrale</th>
 							<th class="sortable align-top">Etat</th>
 							<th class="sortable align-top text-right">Valo</th>
 							<th class="sortable text-center align-top">Ctrl Stock</th>
-
+							<th class="sortable text-center align-top">Statué</th>
 							<th class="sortable text-center align-top">24/48h</th>
 
 						</tr>
@@ -471,7 +499,26 @@ DEBUT CONTENU CONTAINER
 								$ctrl='<i class="fas fa-hourglass-end text-red"></i>';
 							}
 
-							echo '<tr class="'.$active['etat_dossier'].'">';
+
+							if($active['commission']==0)
+							{
+								$class='pending';
+
+							}
+							else{
+								$class='validated';
+							}
+	// <div class="row">
+	// 	<div class="col">
+	// 		<div class="text-center"><i class="fas fa-user-check stamp pending"></i></div><br>
+	// 		<div class="text-center"><i class="fas fa-user-check circle-icon validated"></i></div>
+
+	// 	</div>
+	// </div>
+
+
+
+							echo '<tr class="'.$active['etat_dossier'].'" id="'.$active['id_main'].'">';
 							echo'<td><a href="bt-detail-litige.php?id='.$active['id_main'].'">'.$active['dossier'].'</a></td>';
 							echo'<td>'.$active['datecrea'].'</td>';
 							echo'<td><a href="stat-litige-mag.php?galec='.$active['galec'].'">'.$active['mag'].'</a></td>';
@@ -480,6 +527,7 @@ DEBUT CONTENU CONTAINER
 							echo'<td class="'.$etat.'">'.$active['etat'].'</td>';
 							echo'<td class="text-right">'.number_format((float)$active['valo'],2,'.',' ').'&euro;</td>';
 							echo '<td class="text-center">'.$ctrl .'</td>';
+							echo '<td class="text-center"><a href="commission-traitement.php?id='.$active['id_main'].'&etat='.$class.'"><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';
 							echo '<td class="text-center">'.$vingtquatre .'</td>';
 							echo '</tr>';
 
@@ -498,6 +546,26 @@ DEBUT CONTENU CONTAINER
 
 	</div>
 	<script src="../js/sorttable2.js"></script>
+
+	<script type="text/javascript">
+
+		$(document).ready(function(){
+		var url = window.location + '';
+		var splited=url.split("#");
+		if(splited[1]==undefined){
+			var line='rien';
+		}
+		else{
+			var line=splited[1];
+		}
+			console.log(line);
+			// $('tr[id='+id+']').addClass('text-red');
+			$("tr#"+line).addClass("anim");
+
+
+
+		});
+	</script>
 
 	<?php
 
