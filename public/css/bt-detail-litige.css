@@ -21,3 +21,26 @@ hr {
 	background-color:  #0d47a1;
 	color:  #fff;
 }
+
+
+a.img-overlay{
+	display: block;
+	width: 177px;
+	height: 90px;
+	background-image: url('../img/litiges/thiefxlsbis.jpg');
+	text-decoration:none;
+	background-repeat:no-repeat;
+  transition: all 2s;
+
+  transition-timing: ease-in-out;
+
+}
+
+a.img-overlay:hover{
+	display: block;
+	width: 177px;
+	height: 90px;
+	background-image: url('../img/litiges/thiefxlsbishover.jpg');
+	text-decoration:none;
+	background-repeat:no-repeat;
+}
