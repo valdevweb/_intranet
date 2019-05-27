@@ -55,6 +55,7 @@
 				$alertColor='alert-warning';
 				$from=getBtName($pdoBt, $rep['id_web_user']);
 				$from=$from['fullname'];
+
 			}
 			else
 			{
@@ -76,5 +77,6 @@
 			echo '</div>';
 		}
 	}
+
 	?>
 	<div class="bg-separation"></div>

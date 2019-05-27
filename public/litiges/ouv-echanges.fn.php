@@ -6,7 +6,7 @@
 //------------------------------------------------------
 function getThisOuverture($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT ouv.id, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, mag, btlec, ouv.galec FROM ouv LEFT JOIN btlec.sca3 ON ouv.galec=btlec.sca3.galec WHERE ouv.id= :id");
+	$req=$pdoLitige->prepare("SELECT ouv.id, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, mag, btlec, ouv.galec, ouv.etat FROM ouv LEFT JOIN btlec.sca3 ON ouv.galec=btlec.sca3.galec WHERE ouv.id= :id");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 	));

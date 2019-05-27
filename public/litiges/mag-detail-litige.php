@@ -22,6 +22,7 @@ $action="consultation";
 addRecord($pdoStat,$page,$action, $descr, 101,$_GET['id']);
 
 require_once  '../../vendor/autoload.php';
+require_once  '../../Class/Helpers.php';
 
 
 //------------------------------------------------------
@@ -274,7 +275,8 @@ if(isset($_POST['submit']))
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Dossier litige n°<?=$thisLitige[0]['dossier']?></h1>
+	<?= Helpers::returnBtn('mag-litige-listing.php');?>
+	<h1 class="text-main-blue pb-5 ">Dossier litige n°<?=$thisLitige[0]['dossier']?></h1>
 
 	<div class="row">
 		<div class="col-lg-1"></div>

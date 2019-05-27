@@ -3,7 +3,10 @@
         <title></title>
     </head>
     <body style="font-family:arial,helvetica, 'sans serif'; color:dimGray;">
-        {MSG}
+        <p>Bonjour,</p>
+        <p>Ci dessous le nouveau message du magasin. </p>
+        <p style="color:royalblue;font-style:italic; padding-left:10px">{MSG}</p>
+        <p>Vous pouvez répondre à ce message en {LINK}
         <p>Cordialement,</p>
         <p style="color:darkblue;">------------------<br>
         Portail BTLec EST</p>

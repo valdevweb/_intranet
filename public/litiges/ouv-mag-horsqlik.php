@@ -37,17 +37,18 @@ require('ouv-echanges.fn.php');
 
 
 
-function addMsg($pdoLitige, $filelist)
+function addMsg($pdoLitige, $filelist,$magRep)
 {
 	$msg=strip_tags($_POST['msg']);
 	$msg=nl2br($msg);
-	$req=$pdoLitige->prepare("INSERT INTO ouv_rep (id_ouv,id_web_user,date_saisie,msg,pj) VALUES (:id_ouv,:id_web_user,:date_saisie,:msg,:pj)");
+	$req=$pdoLitige->prepare("INSERT INTO ouv_rep (id_ouv,id_web_user,date_saisie,msg,pj, mag) VALUES (:id_ouv,:id_web_user,:date_saisie,:msg,:pj, :mag)");
 	$req->execute(array(
 		':id_ouv'		=>$_GET['id'],
 		':id_web_user'		=>$_SESSION['id_web_user'],
 		':date_saisie'		=>date('Y-m-d H:i:s'),
 		':msg'				=> $msg,
 		':pj'				=>$filelist,
+		':mag'				=>$magRep
 	));
 	return $pdoLitige->lastInsertId();
 	// return $req->errorInfo();
@@ -72,6 +73,10 @@ $theseRep=getRep($pdoLitige);
 
 if(isset($_POST['submit']))
 {
+	if(empty($_POST['msg'])){
+		$errors[]="Vous devez saisir un message";
+		exit;
+	}
 	if(empty($_FILES['form_file']['name'][0]))
 	{
 		$filelist="";
@@ -110,9 +115,11 @@ if(isset($_POST['submit']))
 		}
 		// fin présence fichier
 
+
+
 		if(count($errors)==0)
 		{
-			$lastInsertId=addMsg($pdoLitige, $filelist);
+			$lastInsertId=addMsg($pdoLitige, $filelist,1);
 
 
 			if($lastInsertId<=0)
@@ -133,9 +140,11 @@ if(isset($_POST['submit']))
 			}
 			$msg=strip_tags($_POST['msg']);
 			$msg=nl2br($msg);
+			$link='<a href="'.SITE_ADDRESS.'/index.php?litiges/bt-ouv-traitement.php?id='.$_GET['id'].'"> cliquant ici</a>';
 			$btTemplate = file_get_contents('mail-bt-suivi-ouverture.php');
 			$btTemplate=str_replace('{MSG}',$msg,$btTemplate);
-			$subject='Portail BTLec Est  - saisie libre - réponse magasin' ;
+			$btTemplate=str_replace('{LINK}',$link,$btTemplate);
+			$subject='Portail BTLec Est  - saisie libre - réponse du magasin ' .$_SESSION['nom'] ;
 			// ---------------------------------------
 			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
 			$mailer = new Swift_Mailer($transport);
@@ -201,6 +210,13 @@ include('ouv-echanges.php');
 			<h5 class="khand text-main-blue"> Traitement / envoi de messages : </h5>
 		</div>
 	</div>
+
+
+<?php
+
+ob_start();
+ ?>
+
 	<div class="row">
 		<div class="col">
 			<div class="row bg-alert bg-yellow-light mb-5">
@@ -239,6 +255,28 @@ include('ouv-echanges.php');
 		</div>
 
 	</div>
+
+<?php
+
+$formRep=ob_get_contents();
+ob_get_clean();
+// si dossier non réfusé
+if($thisOuv['etat']!=2)
+{
+echo $formRep;
+}
+else{
+echo '<div class="row">';
+	echo '<div class="col">';
+		echo '<div class="row">';
+			echo '<div class="col alert alert-danger">Votre demande a été réfusée, vous ne pouvez plus envoyer de message sur ce dossier</div>';
+		echo '</div>';
+	echo '</div>';
+echo '</div>';
+}
+
+ ?>
+
 
 
 
