@@ -14,15 +14,14 @@
 	<?php
 	if(isset($cssFile))
 	{
-		// echo $cssFile;
-		$explodedCssfile=explode('/',$cssFile);
 
-		$cssFileName=$explodedCssfile[count($explodedCssfile)-1];
-		// $cssFileName='../css/'.$cssFileName;
+		$hexplodedCssfile=explode('/',$cssFile);
 
+		$hcssFileName=$hexplodedCssfile[count($hexplodedCssfile)-1];
+		$hcssUrl='../css/'.$hcssFileName;
 
-		if(file_exists('../css/'.$cssFileName)){
-			echo '<link rel="stylesheet" href="' .$cssFile .'?'.filemtime('../css/commun.css').'">';
+		if(file_exists($hcssUrl)){
+			echo '<link rel="stylesheet" href="' .$hcssUrl .'?'.filemtime($hcssUrl).'">';
 		}
 	}
 	?>
