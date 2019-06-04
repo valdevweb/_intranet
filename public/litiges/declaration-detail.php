@@ -34,7 +34,7 @@ On commence à 1 car le 0 n'est pas pris en compte dans le name
 //			FONCTION
 //------------------------------------------------------
 function getLitige($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id,details.id as detail_id,details.dossier,palette,facture, date_facture,DATE_FORMAT(date_facture,'%d-%m-%Y')as datefac,article, ean, dossier_gessica, descr,qte_cde,tarif,fournisseur,details.box_tete, details.box_art FROM dossiers LEFT JOIN details ON dossiers.id=details.id_dossier WHERE dossiers.id= :id");
+	$req=$pdoLitige->prepare("SELECT dossiers.id as id,details.id as detail_id,details.dossier,palette,facture, date_facture,DATE_FORMAT(date_facture,'%d-%m-%Y')as datefac,article, ean, dossier_gessica, descr,qte_cde,tarif, fournisseur,details.box_tete, details.box_art FROM dossiers LEFT JOIN details ON dossiers.id=details.id_dossier WHERE dossiers.id= :id");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 	));
@@ -47,21 +47,22 @@ function getReclamation($pdoLitige){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 // pour les vols, il faut ajouter les GESSICA.PoidsBrutUV et GESSICA.PoidsBrutUL
-function updateDetail($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean){
+function updateDetail($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean, $valoLig){
 
-	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean WHERE id= :id");
+	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, valo_lig= :valo_lig WHERE id= :id");
 	$req->execute(array(
 		':reclamation' =>$reclamation,
 		':qte_litige'	=>$qteLitige,
 		':id'			=>$id,
 		':pj'			=>$pj,
-		':ean'			=>$ean
+		':ean'			=>$ean,
+		':valo_lig'			=>$valoLig,
 	));
 	return $req->rowCount();
 }
-function updateDetailInversion($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur, $invQte)
+function updateDetailInversion($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur, $invQte, $valoLig)
 {
-	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, inv_article= :inv_article, inv_descr=:inv_descr,inv_tarif=:inv_tarif, inv_fournisseur=:inv_fournisseur, inv_qte=:inv_qte   WHERE id= :id");
+	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, inv_article= :inv_article, inv_descr=:inv_descr,inv_tarif=:inv_tarif, inv_fournisseur=:inv_fournisseur, inv_qte=:inv_qte, valo_lig= :valo_lig   WHERE id= :id");
 	$req->execute(array(
 		':reclamation' =>$reclamation,
 		':qte_litige'	=>$qteLitige,
@@ -73,6 +74,8 @@ function updateDetailInversion($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean,
 		':inv_tarif'		=>$tarifUv,
 		':inv_fournisseur'		=>$invFournisseur,
 		':inv_qte'		=>$invQte,
+		':valo_lig'			=>$valoLig,
+
 	));
 	return $req->rowCount();
 	// return $req->errorInfo();
@@ -124,6 +127,7 @@ $success=[];
 $newData=0;
 $uploadDir= '..\..\..\upload\litiges\\';
 $valoTotal=0;
+
 if(isset($_POST['submit']))
 {
 // on récupère le nombre d'article pour pouvoir boucler sur tableau de champ de formulaire
@@ -184,7 +188,7 @@ if(isset($_POST['submit']))
 				// si formulaire rempli
 				if(!empty($_POST['form_autre_qte'][$i]) && !empty($_POST['form_autre'][$i]))
 				{
-			// cas de l'inversion de référence (5)
+					// cas de l'inversion de référence (5)
 					$ean=$_POST['form_autre'][$i];
 					$invQte=$_POST['form_autre_qte'][$i];
 				// recup info du produit reçu à la place
@@ -225,14 +229,16 @@ if(isset($_POST['submit']))
 
 							}
 						}
+						$valoLig=($fLitige[$i]['tarif']/$fLitige[$i]['qte_cde']*$_POST['form_qte'][$i]) - ($tarifUv*$invQte);
+
 					}
 					else
 					{
 					// ean non trouvé :
-						$invArticle=$invDescr=$invTarif=$invFournisseur=$qt_qlik=$invDossier=$tarifUv=NULL;
+						$invArticle=$invDescr=$invTarif=$invFournisseur=$qt_qlik=$invDossier=$tarifUv=$valoLig=NULL;
 					}
 				// article trouvé ou non , on met à jour la db avec des champ null si rien
-					$do=updateDetailInversion($pdoLitige,$_POST['form_motif'][$i], $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur, $invQte);
+					$do=updateDetailInversion($pdoLitige,$_POST['form_motif'][$i], $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur, $invQte, $valoLig);
 				// echo '1 do '.$do;
 				}
 				else
@@ -243,9 +249,21 @@ if(isset($_POST['submit']))
 			}
 			else
 			{
+
+
 				// cas général (pas d'inversion de produit)
+				// exéédent :
+				if($_POST['form_motif'][$i]==6)
+				{
+
+					$valoLig= -(($fLitige[$i]['tarif']/$fLitige[$i]['qte_cde'])*$_POST['form_qte'][$i]);
+				}
+				else{
+					$valoLig=($fLitige[$i]['tarif']/$fLitige[$i]['qte_cde'])*$_POST['form_qte'][$i];
+
+				}
 				$ean="";
-				$do=updateDetail($pdoLitige,$_POST['form_motif'][$i], $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean);
+				$do=updateDetail($pdoLitige,$_POST['form_motif'][$i], $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean, $valoLig);
 
 
 			}

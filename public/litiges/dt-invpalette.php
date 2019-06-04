@@ -32,7 +32,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<p class="text-right heavy bigger mb-3 text-main-blue pr-3">Valorisation magasin : 0.0 &euro; </p>
+			<p class="text-right heavy bigger mb-3 text-main-blue pr-3">Valorisation magasin : <?=number_format((float)$fLitige[0]['valo'],2,'.',' ')?> &euro; </p>
 
 			</div>
 			<div class="col"></div>
@@ -41,7 +41,7 @@
 </div>
 
 <?php
-// palette inversé non trouvée
+// palette inversé non trouvée : requete getInvPaletteDetail($pdoLitige) qui interroge la table inv_palette de bt-detail-litige revnie vide
 if(!$invPal['palette'])
 {
 

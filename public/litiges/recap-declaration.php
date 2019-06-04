@@ -38,8 +38,76 @@ function getLitige($pdoLitige){
 }
 $fLitige=getLitige($pdoLitige);
 
+function getSumLitige($pdoLitige){
+		$req=$pdoLitige->prepare("SELECT sum(valo_line) as sumValo, dossiers.valo, id_reclamation FROM details LEFT JOIN dossiers ON details.id_dossier= dossiers.id WHERE details.id_dossier= :id");
+	$req->execute([
+		':id'		=>$_GET['id']
+	]
+
+	);
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+
+function getSumPaletteRecu($pdoLitige){
+	$req=$pdoLitige->prepare("SELECT sum(tarif) as sumValo FROM palette_inv  WHERE palette_inv.id_dossier= :id");
+	$req->execute([
+		':id'		=>$_GET['id']
+	]
+
+	);
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+function updateValoDossier($pdoLitige,$sumValo){
+	$req=$pdoLitige->prepare("UPDATE dossiers SET valo= :valo WHERE id= :id");
+	$req->execute([
+		':valo'			=>$sumValo,
+		':id'			=>$_GET['id']
+	]);
+	return $req->rowCount();
+}
+
+
+// on profite du recap pour calculer la valo totale d'un litige
+// 2 cas
+// normal : somme,
+// inversion de palette = somme palette cammandé - sommme palette reçue
+// inversion de palette =7
+$sumLitige=getSumLitige($pdoLitige);
+
+if($sumLitige['id_reclamation']==7)
+{
+	$sumRecu=getSumPaletteRecu($pdoLitige);
+	$sumCde=$sumLitige['sumValo'];
+	$sumRecu=$sumRecu['sumValo'];
+	$sumValo=$sumCde -$sumRecu;
+	$update=updateValoDossier($pdoLitige,$sumValo);
+
+}
+else{
+	$sumValo=$sumLitige['sumValo'];
+	$update=updateValoDossier($pdoLitige,$sumValo);
+}
+
 $errors=[];
 $success=[];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //------------------------------------------------------
 //			PRINCIPE ENVOI DE MAIL
 //------------------------------------------------------
@@ -175,14 +243,9 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
+
+<p class="text-right pt-1">
 	<h1 class="text-main-blue py-5 ">Ouverture du dossier de litige n° <?=$fLitige['dossier']?></h1>
-	<!-- start row -->
-
-
-
-
-
-
 	<?php
 	ob_start();
 	?>
@@ -237,12 +300,6 @@ DEBUT CONTENU CONTAINER
 
 
 	?>
-
-
-
-
-
-
 	<!-- ./row -->
 	<div class="row">
 		<div class="col-lg-1 col-xxl-2"></div>
