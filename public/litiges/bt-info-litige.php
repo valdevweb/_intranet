@@ -111,7 +111,7 @@ function addTransp($pdoLitige)
 	}
 	else
 	{
-		$id_affrete=	$_POST['affrete'];
+		$id_affrete=$_POST['affrete'];
 	}
 	if(empty($_POST['transit']))
 	{
@@ -240,6 +240,22 @@ function addFac($pdoLitige)
 	return	$req->rowCount();
 }
 
+function updateVingtQuatre($pdoLitige){
+	if(isset($_POST['vingtquatre']))
+	{
+		$fast=1;
+	}
+	else{
+		$fast=0;
+	}
+	$req=$pdoLitige->prepare("UPDATE dossiers SET vingtquatre=:vingtquatre WHERE id= :id");
+	$req->execute(array(
+		':vingtquatre'	=>$fast,
+		':id'	=>$_GET['id'],
+));
+	return	$req->rowCount();
+
+}
 
 function getInfoMag($pdoBt, $galec)
 {
@@ -270,8 +286,12 @@ function addAction($pdoLitige, $action){
 
 if(isset($_POST['submit_t']))
 {
+	$majOne=updateVingtQuatre($pdoLitige);
+
+
 	$row=addTransp($pdoLitige);
-	if($row>0)
+
+	if($row>0 || $majOne >0)
 	{
 		header('Location:bt-info-litige.php?id='.$_GET['id'].'&etatTransp=ok');
 
@@ -543,12 +563,30 @@ DEBUT CONTENU CONTAINER
 									</div>
 								</div>
 							</div>
+
+						</div>
+						<div class="row pb-3">
+							<div class="col-8">
+								<div class="form-check pb-3">
+									<?php
+									$isChecked="";
+									$phpClass="hidden";
+									if(isset($fLitige['vingtquatre']) && $fLitige['vingtquatre']==1)
+									{
+										$isChecked="checked";
+
+									}
+
+									?>
+									<input class="form-check-input" type="checkbox" value="" id="vingtquatre" name="vingtquatre"  <?= $isChecked ?>>
+									<label class="form-check-label" for="vingtquatre">livraison 24/48h</label>
+								</div>
+							</div>
 							<div class="col">
-								<div class="pt-4 mt-2 text-center">
+								<div class="text-center">
 									<button type="submit" id="submit_t" class="btn btn-yellow" name="submit_t"><i class="fas fa-save pr-3"></i>Enregistrer</button>
 								</div>
 							</div>
-
 						</div>
 					</form>
 
