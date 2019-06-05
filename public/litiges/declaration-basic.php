@@ -29,9 +29,9 @@ addRecord($pdoStat,$page,$action, $descr, 101);
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
+//recherche dans statsvente facture ou palette
 function search($pdoQlik)
 {
-	// $req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  LEFT JOIN assortiments ON article=`SCEBFAST.AST-ART` WHERE concat( concat('0',facture),palette) LIKE :search AND galec= :galec ORDER BY article,dossier");
 	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  WHERE concat( concat('0',facture),palette) LIKE :search AND galec= :galec ORDER BY article,dossier");
 	$req->execute(array(
 		':search' =>'%'.$_POST['search_strg'] .'%',
@@ -40,7 +40,7 @@ function search($pdoQlik)
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
+// recherche les palettes sélectionné dans page declaration-robbery (SESSION)
 function getPaletteForRobbery($pdoQlik)
 {
 	$placeholders=array_fill(0, count($_SESSION['palette']), ' palette = ? OR ');
@@ -51,12 +51,10 @@ function getPaletteForRobbery($pdoQlik)
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
+// si on a un tarif à 0, on peut-etre un tête de box, on vérifie donc si couple code art et dossier est dans assortiment
 function checkBox($pdoQlik, $dossier,$article)
 {
-	// $req=$pdoLitige->prepare("SELECT * FROM statsventeslitiges  WHERE concat(facture,palette,gencod,article) LIKE :search AND galec= :galec");
 	$req=$pdoQlik->prepare("SELECT * FROM assortiments WHERE `SCEBFAST.AST-ART`= :article AND `SCEBFAST.DOS-COD`= :dossier ");
-	// $req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  WHERE concat( concat('0',facture),palette) LIKE :search AND galec= :galec ORDER BY article");
 	$req->execute(array(
 		':dossier' =>$dossier,
 		':article'	=>$article
@@ -64,6 +62,7 @@ function checkBox($pdoQlik, $dossier,$article)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
+// si box, on récupère le contenu du box dans la table assortiment (voir powerpoint)
 function getBoxContent($pdoQlik,$dossier, $article)
 {
 	$req=$pdoQlik->prepare("SELECT `SCEBFAST.AST-ART` as tete FROM assortiments WHERE `SCEBFAST.ART-COD`= :article AND `SCEBFAST.DOS-COD` =:dossier");
@@ -73,7 +72,7 @@ function getBoxContent($pdoQlik,$dossier, $article)
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
-
+//  on vérifie si art = tete de box
 function getBoxHead($pdoQlik,$dossier, $article)
 {
 	$req=$pdoQlik->prepare("SELECT * FROM assortiments WHERE `SCEBFAST.AST-ART`= :article AND `SCEBFAST.DOS-COD` =:dossier");
@@ -85,7 +84,7 @@ function getBoxHead($pdoQlik,$dossier, $article)
 
 }
 
-// ca sou bt déclare pour un mag, on récupère le nom du mag
+// cas ou bt déclare pour un mag, on récupère le nom du mag
 function getMagName($pdoBt)
 {
 	$req=$pdoBt->prepare("SELECT mag FROM sca3 WHERE galec=:galec");
@@ -94,7 +93,7 @@ function getMagName($pdoBt)
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
-
+// recup idwebuser du mag
 function getMagIdwebuser($pdoUser)
 {
 	$req=$pdoUser->prepare("SELECT id FROM users WHERE galec=:galec");
@@ -103,6 +102,8 @@ function getMagIdwebuser($pdoUser)
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
+
+// initialisation des variables suivant le user connecté
 if($_SESSION['type']=='btlec')
 {
 	$magId=getMagIdwebuser($pdoUser);
@@ -113,16 +114,10 @@ else
 	$magId=$_SESSION['id_web_user'];
 }
 
+// création du dossier dans la table ($idRobbery = 0 si pas vol, 1 si vol)
 function insertDossier($pdoLitige, $numDossier,$magId, $idRobbery)
 {
-	// par défaut l'état est à 0 = ouvert
-	if(isset($_POST['rapid']) && $_POST['rapid']=="oui")
-	{
-		$vingtquatre=1;
-	}
-	else{
-		$vingtquatre=0;
-	}
+
 	if(isset($_POST['date_bt']) && !empty($_POST['date_bt']))
 	{
 		$dateDecl=$_POST['date_bt'];
@@ -132,14 +127,13 @@ function insertDossier($pdoLitige, $numDossier,$magId, $idRobbery)
 		$dateDecl=	date('Y-m-d H:i:s');
 	}
 
-	$req=$pdoLitige->prepare("INSERT INTO dossiers(date_crea,user_crea,nom,galec,id_web_user,vingtquatre, dossier, id_robbery) VALUES(:date_crea,:user_crea,:nom, :galec, :id_web_user, :vingtquatre, :dossier, :id_robbery)");
+	$req=$pdoLitige->prepare("INSERT INTO dossiers(date_crea,user_crea,nom,galec,id_web_user, dossier, id_robbery) VALUES(:date_crea,:user_crea,:nom, :galec, :id_web_user, :dossier, :id_robbery)");
 	$req->execute(array(
 		':date_crea'		=>$dateDecl,
 		':user_crea'		=>$_SESSION['id_web_user'],
 		':nom'				=>$_POST['nom'],
 		':galec'			=>$_SESSION['id_galec'],
 		':id_web_user'		=>$magId,
-		':vingtquatre'		=>$vingtquatre,
 		':dossier'		=>$numDossier,
 		':id_robbery'		=>$idRobbery,
 	));
@@ -147,7 +141,7 @@ function insertDossier($pdoLitige, $numDossier,$magId, $idRobbery)
 }
 
 
-
+// met à jour les dossiers avec le numéro de dossier officiel (AA000) calculé
 function updateDossier($pdoLitige,$numDossier, $lastInsertId)
 {
 	$req=$pdoLitige->prepare("UPDATE dossiers SET dossier= :dossier WHERE id= :id");
@@ -158,7 +152,7 @@ function updateDossier($pdoLitige,$numDossier, $lastInsertId)
 	$row=$req->rowCount();
 	return	$row;
 }
-
+// recupère les infos articles dans la base statventes
 function getSelectedDetails($pdoQlik,$id)
 {
 	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges WHERE id= :id");
@@ -168,7 +162,7 @@ function getSelectedDetails($pdoQlik,$id)
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
-
+// ajoute info produits dans table detail
 function addDetails($pdoLitige, $lastInsertId,$numDossier,$palette,	$facture,$dateFacture, $article, $ean,$dossierG, $descr, $qteC,	$tarif, $fou, $cnuf,$boxTete,$boxDetail, $puv,$pul)
 {
 	$req=$pdoLitige->prepare("INSERT INTO details(id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf, box_tete,box_art, puv, pul) VALUES(:id_dossier, :dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :box_tete, :box_art, :puv, :pul)");
@@ -205,7 +199,7 @@ function getLastNumDossier($pdoLitige)
 	// return $req->errorInfo();
 }
 
-
+// recup poids dans la base article (info non présente dans statsvente mais obligatoire pour les déclarations de vol )
 function getPoids($pdoQlik, $art,$dossier)
 {
 	$req=$pdoQlik->prepare("SELECT `GESSICA.PoidsBrutUV` as puv, `GESSICA.PoidsBrutUL` as pul FROM basearticles  WHERE `GESSICA.CodeArticle` = :article AND `GESSICA.CodeDossier` = :dossier LIMIT 1");
@@ -217,7 +211,7 @@ function getPoids($pdoQlik, $art,$dossier)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-
+// ajout d'un dossier vol => recupère l'id  pour le mettre ensuite dans table dossiers id_robbery
 function insertRobbery($pdoLitige)
 {
 	$req=$pdoLitige->prepare("INSERT INTO robbery (date_saisie) VALUES (:date_saisie)");
@@ -229,7 +223,7 @@ function insertRobbery($pdoLitige)
 }
 
 //------------------------------------------------------
-//			AFFICHAGE RES RECHERCHE
+//			AFFICHAGE DES RECHERCHES
 //------------------------------------------------------
 if(isset($_POST['submit']))
 {
@@ -287,8 +281,8 @@ if(isset($_POST['submit']))
 		usort($dataSearch, 'nameSort');
 
 	}
-
 }
+// si on vient de la page déclaration de vol et que l'on a récupéré les numéros de palettes volées, on lance la recherche directement
 if(isset($_SESSION['palette']))
 {
 	$_POST['submit']=true;
@@ -305,14 +299,10 @@ $success=[];
 //
 if(isset($_POST['choose']))
 {
-
-
-
-
 //  on ne veut récuperer que les id donc on supprime les valeurs des champ submit, date, etc
 	foreach ($_POST as $key => $value)
 	{
-		if($key!='choose' && $key!='selectAll' && $key!='rapid' && $key !='nom' && $key !='date_bt' && $key != 'num_dossier_form' && $key != 'palette_complete')
+		if($key!='choose' && $key!='selectAll'  && $key !='nom' && $key !='date_bt' && $key != 'num_dossier_form' && $key != 'palette_complete')
 		{
 			$ids[]=$key;
 		}
@@ -328,25 +318,17 @@ if(isset($_POST['choose']))
 		if(isset($_SESSION['vol-id']))
 		{
 			if($_SESSION['vol-id']==0){
-
-
 				//ajout nouveau vol dans la table robbery
 				$idRobbery=insertRobbery($pdoLitige);
 				if($idRobbery>=0){
-
 				}
 				else{
 					$errors[]="impossible d'ajouter le vol";
-
 				}
 				$_SESSION['vol-id']=$idRobbery;
-
-
 			}
 			else{
 				$idRobbery=$_SESSION['vol-id'];
-
-
 			}
 		}
 		else
@@ -361,9 +343,7 @@ if(isset($_POST['choose']))
 		if(!empty($_POST['num_dossier_form']))
 		{
 			$numDossier=$_POST['num_dossier_form'];
-
 			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId, $idRobbery);
-
 		}
 		else
 		{
@@ -388,23 +368,17 @@ if(isset($_POST['choose']))
 			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId, $idRobbery);
 
 		}
-
-
-
-	// créa du dossier (sans numéro pour l'instant)
-		if($lastInsertId>0)
-		{
+	// créa du dossier (sans numéro officiel pour l'instant)
+		if($lastInsertId>0){
 			$sucess[]="ajout du dossier réussie";
 		}
-		else
-		{
+		else{
 			$errors[]="Impossible de créer le dossier";
-
 		}
-
 	}
 	else
 	{
+		// pas d'article sélectionné
 		$errors[]="Merci de sélectionner au moins une ligne";
 	}
 // 2- ajout des ref art, num, num fac, date fac, n°palette, qte originale, num dossier,gencod, id_web_user, btlec, galec, deno
@@ -417,8 +391,6 @@ if(isset($_POST['choose']))
 		{
 			$art=getSelectedDetails($pdoQlik, $ids[$i]);
 			$isBoxHead=getBoxHead($pdoQlik,$art['dossier'], $art['article']);
-
-
 			if(!empty($isBoxHead))
 			{
 				$tete=1;
@@ -440,23 +412,15 @@ if(isset($_POST['choose']))
 			{
 				$detailbox=NULL;
 			}
-			// echo $art['article'] .' tete : '. $tete .' ('.$tetedebox .') detail :'.$detailbox .'<br>';
-
 
 			$dateFact=date('Y-m-d H:i:s',strtotime($art['date_mvt']));
 			if(isset($_SESSION['vol-id']))
 			{
-
-
 				$poids=getPoids($pdoQlik,$art['article'],$art['dossier']);
-
-
 				if(count($poids==1))
 				{
 					$puv=$poids['puv'];
 					$pul=$poids['pul'];
-
-
 				}
 				else
 				{
@@ -464,8 +428,6 @@ if(isset($_POST['choose']))
 					$puv=null;
 					$pul=null;
 				}
-
-
 			}
 			else
 			{
@@ -474,9 +436,6 @@ if(isset($_POST['choose']))
 
 			}
 			$detail=addDetails($pdoLitige, $lastInsertId,$numDossier,$art['palette'],$art['facture'],$dateFact, $art['article'], $art['gencod'],$art['dossier'], $art['libelle'], $art['qte'],$art['tarif'], $art['fournisseur'], $art['cnuf'],$tete,$detailbox,$puv,$pul );
-
-
-
 			if($detail>0)
 			{
 				$added++;
@@ -484,8 +443,8 @@ if(isset($_POST['choose']))
 			else{
 				$errors[]="erreur à l'enregistrement";
 			}
-
 		}
+		// suivant type de déclaration (palette complète ou non), on ne renvoie pas sur la même page
 		if($added>0 && !isset($_POST['palette_complete']))
 		{
 			header('Location:declaration-detail.php?id='.$lastInsertId);
@@ -496,6 +455,7 @@ if(isset($_POST['choose']))
 		}
 	}
 }
+// ajoute nom du mag au titre si dclaration faite par btlec
 $magtxt="";
 if($_SESSION['type']=='btlec')
 {
@@ -590,65 +550,14 @@ DEBUT CONTENU CONTAINER
 				<p  class="text-center heavy alert-title-grey">Résultats :</p>
 				<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">1</span>Sélectionnez le ou les articles sur lesquels vous avez un litige à déclarer</p>
 				<div class="alert alert-light">
-					<p class="text-main-blue">Dans le cas d'une inversion de palette ou d'une palette manquante ou en excédent, merci de cocher ci dessous l'option "palette entière"</p>
+					<p class="text-main-blue">Dans le cas d'une <span class="text-reddish">inversion de palette ou d'une palette manquante ou en excédent,</span> merci de cocher ci dessous l'option "palette entière"</p>
 					<div class="form-check">
 						<input type="checkbox" class="form-check-input" id="checkpalette" name="palette_complete">
 						<label class="form-check-label" for="checkAll">Palette entière</label>
 					</div>
 				</div>
 
-				<div class="alert alert-light">
-					<p class="text-main-blue">Aide à la sélection : </p>
-					<div class="form-check">
-						<input type="checkbox" class="form-check-input" id="checkAll">
-						<label class="form-check-label" for="checkAll">Sélectionner tout / désélectionner tout les articles</label>
-					</div>
-					<p class="text-main-blue  mt-3">Sélectionner tous les articles d'une palette :</p>
 
-					<div class="form-check">
-
-						<?php
-						if(isset($_SESSION['palette']))
-						{
-
-							for ($i=0; $i < count($_SESSION['palette']) ; $i++)
-							{
-
-								echo '<div class="form-check">';
-								echo '<input type="checkbox" class="form-check-input vol-list-palette" id="'.$_SESSION['palette'][$i].'" >';
-								echo '<label class="form-check-label" for="checkAll">'.$_SESSION['palette'][$i].'</label>';
-								echo '</div>';
-
-
-							}
-						}
-						else{
-
-							if(!empty($dataSearch))
-							{
-								$paletteinitiale='';
-								foreach ($dataSearch as $palette)
-								{
-									if($paletteinitiale!=$palette['palette'])
-									{
-									echo '<div class="form-check">';
-									echo '<input type="checkbox" class="form-check-input vol-list-palette" id="'.$palette['palette'].'">';
-									echo '<label class="form-check-label" for="checkAll">'.$palette['palette'].'</label>';
-									echo '</div>';
-									$paletteinitiale=$palette['palette'];
-								}
-
-
-								}
-							}
-						}
-						?>
-
-
-
-
-					</div>
-				</div>
 
 
 				<!-- <p class="text-main-blue font-italic closer"><i class="fas fa-info-circle"></i>Vous pouvez trier les résultats en cliquant sur les entêtes de colonne</p> -->
@@ -721,22 +630,66 @@ DEBUT CONTENU CONTAINER
 						?>
 					</tbody>
 				</table>
-				<p>Le produit que vous avez reçu n'apparaît pas dans la liste et vous avez bien reçu tous les autres produits commandés ? Veuillez vous rendre sur <a href="declaration-horsqlik.php">cette page</a></p>
-				<!-- <p> -->
-
-					<!-- </p> -->
-					<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">2</span>S'agit-il d'une livraison 24/48h ?</p>
-					<div class="alert alert-light">
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="rapid" value="oui" id="rapidoui">
-							<label class="form-check-label" for="rapidoui">Oui</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="rapid" value="non" id="rapidnon">
-							<label class="form-check-label" for="rapidnon">Non</label>
+				<div class="alert alert-light">
+					<div class="row">
+						<div class="col"></div>
+						<div class="col">
+							<div class="form-check">
+								<input type="checkbox" class="form-check-input" id="checkAll">
+								<label class="form-check-label" for="checkAll">Sélectionner tout / désélectionner tout</label>
+							</div>
 						</div>
 					</div>
-					<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">3</span>Nom de l'interlocuteur</p>
+					<?php
+					if(isset($_SESSION['palette']))
+					{
+
+						for ($i=0; $i < count($_SESSION['palette']) ; $i++)
+						{
+
+							echo '<div class="row">';
+							echo '<div class="col"></div>';
+							echo '<div class="col">';
+							echo '<div class="form-check">';
+							echo '<input type="checkbox" class="form-check-input vol-list-palette" id="'.$_SESSION['palette'][$i].'" >';
+							echo '<label class="form-check-label" for="checkAll">Sélectionner tous les articles de la palette : '.$_SESSION['palette'][$i].'</label>';
+							echo '</div>';
+							echo '</div>';
+							echo '</div>';
+						}
+					}
+					else{
+
+						if(!empty($dataSearch))
+						{
+							$paletteinitiale='';
+							foreach ($dataSearch as $palette)
+							{
+								if($paletteinitiale!=$palette['palette'])
+								{
+									echo '<div class="row">';
+									echo '<div class="col"></div>';
+									echo '<div class="col">';
+									echo '<div class="form-check">';
+									echo '<input type="checkbox" class="form-check-input vol-list-palette" id="'.$palette['palette'].'">';
+									echo '<label class="form-check-label" for="checkAll">Sélectionner tous les articles de la palette : '.$palette['palette'].'</label>';
+									echo '</div>';
+									echo '</div>';
+									echo '</div>';
+
+									$paletteinitiale=$palette['palette'];
+								}
+							}
+						}
+					}
+					?>
+
+
+					<p><i class="fas fa-info-circle  pr-3"></i>Le produit que vous avez reçu n'apparaît pas dans la liste et vous avez bien reçu tous les autres produits commandés ? Veuillez vous rendre sur <a href="declaration-horsqlik.php">cette page</a></p>
+
+
+				</div>
+					<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">2</span>Nom de l'interlocuteur</p>
 					<div class="form-group">
 						<input type="text" class="form-control"  name="nom" required>
 					</div>
@@ -746,10 +699,10 @@ DEBUT CONTENU CONTAINER
 					?>
 					<div class="row">
 						<div class="col">
-							<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">4</span>Date de déclaration</p>
+							<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">3</span>Date de déclaration</p>
 						</div>
 						<div class="col">
-							<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">5</span>Numéro de dossier : </p>
+							<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">4</span>Numéro de dossier : </p>
 						</div>
 					</div>
 					<div class="row">
@@ -821,12 +774,7 @@ DEBUT CONTENU CONTAINER
 				console.log(palette);
 			});
 
-		$("#choose").click(function() {
-			if ($('input[name="rapid"]:checked').length == 0) {
-				alert('Vous devez préciser si il s\'agit d\'une livraison 24/48h');
-				return false; }
 
-			});
 		$("#search").submit(function( event )
 		{
 			$("#waitun" ).append('<i class="fas fa-spinner fa-spin"></i><span class="pl-3">Merci de patienter pendant la recherche</span>')
