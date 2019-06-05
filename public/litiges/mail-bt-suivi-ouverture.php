@@ -4,7 +4,7 @@
     </head>
     <body style="font-family:arial,helvetica, 'sans serif'; color:dimGray;">
         <p>Bonjour,</p>
-        <p>Ci dessous le nouveau message du magasin. </p>
+        <p>Ci dessous le contenu du nouveau message du magasin : </p>
         <p style="color:royalblue;font-style:italic; padding-left:10px">{MSG}</p>
         <p>Vous pouvez répondre à ce message en {LINK}
         <p>Cordialement,</p>
