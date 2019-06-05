@@ -31,6 +31,7 @@ etat :
 1-= ok
 2=refusé
  */
+unset($_SESSION['goto']);
 
 require_once  '../../vendor/autoload.php';
 
