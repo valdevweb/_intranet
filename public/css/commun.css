@@ -272,8 +272,13 @@ background: #757687
 .bg-red{
   background: #dc3545;
   color: #fff;
-
 }
+
+.bg-light-red{
+  background: #eca6b1;
+  color: #fff;
+}
+
 .bg-light-blue
 {
     color: #004085;
@@ -483,8 +488,21 @@ a.red-link{
 
 }
 
+
 a.red-link:hover{
   color: #616161 !important;
+  text-decoration: none;
+
+}
+
+a.grey-link{
+  color: #999 !important;
+  /* font-weight: bold; */
+
+}
+
+a.grey-link:hover{
+  color: #5c5c5c !important;
   text-decoration: none;
 
 }
