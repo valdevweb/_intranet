@@ -41,6 +41,17 @@ function updateCommission($pdoLitige,$com)
 	return $req->rowCount($pdoLitige);
 }
 
+function addAction($pdoLitige, $idContrainte){
+	$req=$pdoLitige->prepare("INSERT INTO action (id_dossier, libelle, id_contrainte, id_web_user, date_action) VALUES (:id_dossier, :libelle, :id_contrainte, :id_web_user, :date_action)");
+	$req->execute([
+		':id_dossier'		=>$_GET['id'],
+		':libelle'			=>$_POST['cmt'],
+		':id_contrainte'	=>$idContrainte,
+		':id_web_user'		=>$_SESSION['id_web_user'],
+		':date_action'		=>date('Y-m-d H:i:s'),
+	]);
+	return $req->rowCount();
+}
 
 //------------------------------------------------------
 //			DECLARATIONS
@@ -59,11 +70,9 @@ if($_SESSION['id_web_user'] !=959 && $_SESSION['id_web_user'] !=981)
 if(isset($_GET['etat']) && isset($_GET['id']))
 {
 	// si pending, on le passe en validé
-	if($_GET['etat']=='pending'){
-		$result=updateCommission($pdoLitige,1);
-	}
+
 	// si validated on le devalide
-	elseif($_GET['etat']=='validated'){
+	if($_GET['etat']=='validated'){
 		$result=updateCommission($pdoLitige,0);
 	}
 	if($result==1){
@@ -71,7 +80,6 @@ if(isset($_GET['etat']) && isset($_GET['id']))
 	}
 	else{
 		header('Location:bt-litige-encours.php?updatefailed');
-
 	}
 }
 
@@ -85,21 +93,13 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Main title</h1>
-
-	<div class="row">
-		<div class="col-lg-1"></div>
-		<div class="col">
-			<?php
-			include('../view/_errors.php');
-			?>
-		</div>
-		<div class="col-lg-1"></div>
-	</div>
 
 
 	<!-- ./container -->
 </div>
+
+
+
 
 <?php
 require '../view/_footer-bt.php';
