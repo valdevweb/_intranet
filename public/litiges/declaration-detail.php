@@ -49,20 +49,21 @@ function getReclamation($pdoLitige){
 // pour les vols, il faut ajouter les GESSICA.PoidsBrutUV et GESSICA.PoidsBrutUL
 function updateDetail($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean, $valoLig){
 
-	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, valo_lig= :valo_lig WHERE id= :id");
+	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, valo_line= :valo_line WHERE id= :id");
 	$req->execute(array(
 		':reclamation' =>$reclamation,
 		':qte_litige'	=>$qteLitige,
 		':id'			=>$id,
 		':pj'			=>$pj,
 		':ean'			=>$ean,
-		':valo_lig'			=>$valoLig,
+		':valo_line'			=>$valoLig,
 	));
 	return $req->rowCount();
+	// return $req->errorInfo();
 }
 function updateDetailInversion($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur, $invQte, $valoLig)
 {
-	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, inv_article= :inv_article, inv_descr=:inv_descr,inv_tarif=:inv_tarif, inv_fournisseur=:inv_fournisseur, inv_qte=:inv_qte, valo_lig= :valo_lig   WHERE id= :id");
+	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, inv_article= :inv_article, inv_descr=:inv_descr,inv_tarif=:inv_tarif, inv_fournisseur=:inv_fournisseur, inv_qte=:inv_qte, valo_line= :valo_line   WHERE id= :id");
 	$req->execute(array(
 		':reclamation' =>$reclamation,
 		':qte_litige'	=>$qteLitige,
@@ -74,7 +75,7 @@ function updateDetailInversion($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean,
 		':inv_tarif'		=>$tarifUv,
 		':inv_fournisseur'		=>$invFournisseur,
 		':inv_qte'		=>$invQte,
-		':valo_lig'			=>$valoLig,
+		':valo_line'			=>$valoLig,
 
 	));
 	return $req->rowCount();
@@ -271,6 +272,7 @@ if(isset($_POST['submit']))
 		}
 
 
+
 		if(isset($do) && $do>0)
 		{
 			$foreachSuccess[]="success";
@@ -298,7 +300,9 @@ if(isset($_POST['submit']))
 	}
 	else
 	{
-		// $errors[]="une erreur est survenue pendant l'enregistrement";
+
+
+		$errors[]="une erreur est survenue pendant l'enregistrement";
 	}
 }
 // on va utiliser l'id pour enregistrer les produits sélectionnés sachant qu'à chaque import de la base, il changera
