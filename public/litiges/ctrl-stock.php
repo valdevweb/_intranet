@@ -99,7 +99,13 @@ function updateCtrl($pdoLitige)
 	return $req->rowCount();
 }
 
-
+function getOperateur($pdoLitige){
+	$req=$pdoLitige->prepare("SELECT concat(prenom, ' ', nom) as fullname FROM equipe WHERE id_web_user= :id_web_user");
+	$req->execute([
+		':id_web_user'	=>$_SESSION['id_web_user']
+	]);
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
 
 // SELECT * FROM (SELECT * FROM action WHERE id_contrainte=2 || id_contrainte=1 ORDER BY id_dossier ASC, id_contrainte ASC) sousreq GROUP BY id_dossier
 
@@ -191,7 +197,7 @@ if(isset($_POST['submit']))
 	}
 	if(count($errors)==0)
 	{
-		$reportAction=$reportAction .'<strong>Commentaire : </strong> '. $_POST['cmt'];
+		$reportAction=$reportAction .'<br><strong>Commentaire : </strong> <br>'. $_POST['cmt'];
 		$contrainte=1;
 		$added=addAction($pdoLitige,$contrainte,$reportAction);
 		if($added==1)
@@ -204,8 +210,16 @@ if(isset($_POST['submit']))
 	}
 	if(count($errors)==0){
 			// envoi mail
+		$operateur=getOperateur($pdoLitige);
+		if(empty($operateur)){
+			$operateur['fullname']='operateur inconnu';
+		}
+
 		$htmlMail = file_get_contents('mail-bt-ctrl-stock-ok.php');
 		$htmlMail=str_replace('{DOSSIER}',$litige[0]['dossier'],$htmlMail);
+		$htmlMail=str_replace('{CODEBT}',$litige[0]['btlec'],$htmlMail);
+		$htmlMail=str_replace('{MAG}',$litige[0]['mag'],$htmlMail);
+		$htmlMail=str_replace('{OPERATEUR}',$operateur['fullname'],$htmlMail);
 		$htmlMail=str_replace('{RECAP}',$reportAction,$htmlMail);
 		$subject='Portail BTLec - Litiges : retour contrôle de stock dossier - ' .$litige[0]['dossier'];
 
