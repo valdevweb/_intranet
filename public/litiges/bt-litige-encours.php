@@ -53,16 +53,15 @@ function globalSearch($pdoLitige)
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
 		WHERE
 		date_crea BETWEEN :date_start AND :date_end
-		AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search
-		$reqEtat
+		AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search 		$reqEtat
 		$reqCommission
-		");
+		ORDER BY dossiers.dossier DESC");
 // return  $req;
 
 	$req->execute(array(
 		':search' =>'%'.$strg.'%',
-		':date_start'=>$_SESSION['form-data']['date_start'],
-		':date_end'	=>$_SESSION['form-data']['date_end'],
+		':date_start'=>$_SESSION['form-data']['date_start']. ' 00:00:00',
+		':date_end'	=>$_SESSION['form-data']['date_end'].' 23:59:59',
 
 	));
 	return $req->fetchAll(PDO::FETCH_ASSOC);
@@ -105,8 +104,9 @@ function getSumValo($pdoLitige)
 
 	$req->execute(array(
 		':search' =>'%'.$strg.'%',
-		':date_start'		=>$_SESSION['form-data']['date_start'],
-		':date_end'		=>$_SESSION['form-data']['date_end'],
+				':date_start'=>$_SESSION['form-data']['date_start']. ' 00:00:00',
+		':date_end'	=>$_SESSION['form-data']['date_end'].' 23:59:59',
+
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 	// return $req->errorInfo();
@@ -139,12 +139,12 @@ function getSumValoByType($pdoLitige)
 	$req=$pdoLitige->prepare("SELECT  sum(valo) as valo_etat, dossiers.id_etat, etat.etat, count(dossiers.id) as nbEtat FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
-
 		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search $reqEtat $reqCommission GROUP BY etat");
 	$req->execute(array(
 		':search' =>'%'.$strg.'%',
-		':date_start'		=>$_SESSION['form-data']['date_start'],
-		':date_end'		=>$_SESSION['form-data']['date_end'],
+		':date_start'=>$_SESSION['form-data']['date_start']. ' 00:00:00',
+		':date_end'	=>$_SESSION['form-data']['date_end'].' 23:59:59',
+
 	));
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 	// return $req->errorInfo();
@@ -236,6 +236,8 @@ $fAllActive=globalSearch($pdoLitige);
 $nbLitiges=count($fAllActive);
 $valoTotal=getSumValo($pdoLitige);
 $valoEtat=getSumValoByType($pdoLitige);
+
+
 
 if(isset($_POST['validate'])){
 	if(!empty($_POST['cmt']))
