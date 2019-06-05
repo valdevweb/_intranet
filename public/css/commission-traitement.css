@@ -1,0 +1,25 @@
+/* modal */
+
+.vm-modal{
+  position : fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  width : 100%;
+  height:  100%;
+  /* opacifie page html */
+  background:  rgba(0,0,0,0.8);
+}
+
+
+.vm-modal-wrapper{
+  overflow: auto;
+  width : 600px;
+  padding: 20px;
+  max-width: calc(100vw -20px);
+  max-height: calc(100vh -20px);
+  background-color: #fff;
+}
+
