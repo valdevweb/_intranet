@@ -32,3 +32,9 @@ text-align:  center;
   text-align: right;
 
 }
+
+
+.container.no-padding{
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}

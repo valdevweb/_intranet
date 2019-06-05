@@ -96,8 +96,16 @@ include('../view/_navbar.php');
 <!--********************************
 DEBUT CONTENU CONTAINER
 *********************************-->
+
+<div class="container no-padding">
+	<div class="row no-gutters">
+		<div class="col">
+			<img src="../img/litiges/brokenphone2.png" class="img-fluid">
+		</div>
+	</div>
+</div>
 <div class="container">
-	<h1 class="text-main-blue py-5 ">La casse - accueil</h1>
+
 
 	<div class="row">
 		<div class="col-lg-1"></div>

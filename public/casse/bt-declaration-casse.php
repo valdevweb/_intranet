@@ -41,314 +41,316 @@ Page qui sert à saisir une déclaration initiale => GET['idBa']= article slecti
 
 // require_once '../../vendor/autoload.php';
 
-				require ('../../Class/Form/Select.php');
+require ('../../Class/Form/Select.php');
+require ('../../Class/Helpers.php');
 
 
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-				function getOperateur($pdoCasse){
-					$req=$pdoCasse->query("SELECT CONCAT(prenom, ' ', nom) as operateur,id FROM operateurs WHERE mask=0");
-					$req->execute();
-					return $req->fetchAll(PDO::FETCH_ASSOC);
-				}
-				$operateur=getOperateur($pdoCasse);
+function getOperateur($pdoCasse){
+	$req=$pdoCasse->query("SELECT CONCAT(prenom, ' ', nom) as operateur,id FROM operateurs WHERE mask=0");
+	$req->execute();
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+$operateur=getOperateur($pdoCasse);
 
-				function getCategorie($pdoCasse){
-					$req=$pdoCasse->query("SELECT * FROM categories WHERE mask=0 ORDER BY categorie");
-					$req->execute();
-					return $req->fetchAll(PDO::FETCH_ASSOC);
-				}
-				$categories=getCategorie($pdoCasse);
-
-
-				function getOrigine($pdoCasse){
-					$req=$pdoCasse->query("SELECT * FROM origines WHERE mask=0 ORDER BY origine");
-					$req->execute();
-					return $req->fetchAll(PDO::FETCH_ASSOC);
-				}
-				$origines=getOrigine($pdoCasse);
-
-				function getTypecasse($pdoCasse){
-					$req=$pdoCasse->query("SELECT * FROM type_casse WHERE mask=0 ORDER BY type");
-					$req->execute();
-					return $req->fetchAll(PDO::FETCH_ASSOC);
-				}
-
-				$types=getTypecasse($pdoCasse);
-				// utilisé pour info article quand nouvelle déclaration (quand  modif, utilise getCasse)
-				function getArticle($pdoQlik){
-					$req=$pdoQlik->prepare("SELECT `GESSICA.CodeDossier` as dossier, `GESSICA.CodeArticle` as article, `GESSICA.GT` as gt, `GESSICA.LibelleArticle` as libelle, `GESSICA.PCB` as pcb, `GESSICA.PANF` as valo, `GESSICA.CodeFournisseur` as cnuf, `GESSICA.NomFournisseur` as fournisseur,	id FROM basearticles WHERE id = :id");
-					$req->execute(array(
-						':id'	=>$_GET['idBa']
-					));
-					return $req->fetch(PDO::FETCH_ASSOC);
-				}
-
-				function addCasse($pdoCasse,$gt,$libelle,$pcb,$uvc,$valo,$pu,$fournisseur){
-					foreach ($_POST as $key => $post)
-					{
-		// le champ opérateur est obligatoire, les autres non car ils peuvent saisir leur déclaration en plusieurs fois
-						if($post=='' && $key!='operateur')
-						{
-							$_POST[$key]=null;
-						}
-					}
-					$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, palette,cde, etat, last_maj) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :palette, :cde, :etat, :last_maj)" );
-
-					$req->execute(array(
-						':date_casse'	=>$_POST['date_casse'],
-						':id_web_user'	=>$_SESSION['id_web_user'],
-						':id_operateur'	=>$_POST['operateur'],
-						':nb_colis'	=>$_POST['nb_colis'],
-						':id_categorie'	=>$_POST['categorie'],
-						':article'	=>$_POST['article'],
-						':dossier'	=>$_POST['dossier'],
-						':gt'	=>$gt,
-						':designation'	=>$libelle,
-						':pcb'	=>$pcb,
-						':uvc'	=>$uvc,
-						':valo'	=>$valo,
-						':pu'	=>$pu,
-						':fournisseur'	=>$fournisseur,
-						':id_origine'	=>$_POST['origine'],
-						':id_type'	=>$_POST['type'],
-						':palette'	=>$_POST['palette'],
-						':cde'	=>$_POST['cde'],
-						':etat'	=>0,
-						':last_maj' =>date('Y-m-d H:i:s')
+function getCategorie($pdoCasse){
+	$req=$pdoCasse->query("SELECT * FROM categories WHERE mask=0 ORDER BY categorie");
+	$req->execute();
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+$categories=getCategorie($pdoCasse);
 
 
-					));
-					return $pdoCasse->lastInsertId();
-	// return $req->errorInfo();
+function getOrigine($pdoCasse){
+	$req=$pdoCasse->query("SELECT * FROM origines WHERE mask=0 ORDER BY origine");
+	$req->execute();
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+$origines=getOrigine($pdoCasse);
 
-				}
+function getTypecasse($pdoCasse){
+	$req=$pdoCasse->query("SELECT * FROM type_casse WHERE mask=0 ORDER BY type");
+	$req->execute();
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+$types=getTypecasse($pdoCasse);
+// utilisé pour info article quand nouvelle déclaration (quand  modif, utilise getCasse)
+function getArticle($pdoQlik){
+	$req=$pdoQlik->prepare("SELECT `GESSICA.CodeDossier` as dossier, `GESSICA.CodeArticle` as article, `GESSICA.GT` as gt, `GESSICA.LibelleArticle` as libelle, `GESSICA.PCB` as pcb, `GESSICA.PANF` as valo, `GESSICA.CodeFournisseur` as cnuf, `GESSICA.NomFournisseur` as fournisseur,	id FROM basearticles WHERE id = :id");
+	$req->execute(array(
+		':id'	=>$_GET['idBa']
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+function addCasse($pdoCasse,$gt,$libelle,$pcb,$uvc,$valo,$pu,$fournisseur){
+	foreach ($_POST as $key => $post)
+	{
+// le champ opérateur est obligatoire, les autres non car ils peuvent saisir leur déclaration en plusieurs fois
+		if($post=='' && $key!='operateur')
+		{
+			$_POST[$key]=null;
+		}
+	}
+	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, palette,cde, etat, last_maj) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :palette, :cde, :etat, :last_maj)" );
+
+	$req->execute(array(
+		':date_casse'	=>$_POST['date_casse'],
+		':id_web_user'	=>$_SESSION['id_web_user'],
+		':id_operateur'	=>$_POST['operateur'],
+		':nb_colis'	=>$_POST['nb_colis'],
+		':id_categorie'	=>$_POST['categorie'],
+		':article'	=>$_POST['article'],
+		':dossier'	=>$_POST['dossier'],
+		':gt'	=>$gt,
+		':designation'	=>$libelle,
+		':pcb'	=>$pcb,
+		':uvc'	=>$uvc,
+		':valo'	=>$valo,
+		':pu'	=>$pu,
+		':fournisseur'	=>$fournisseur,
+		':id_origine'	=>$_POST['origine'],
+		':id_type'	=>$_POST['type'],
+		':palette'	=>$_POST['palette'],
+		':cde'	=>$_POST['cde'],
+		':etat'	=>0,
+		':last_maj' =>date('Y-m-d H:i:s')
 
 
-				function addSerials($pdoCasse,$lastInsertId,$serial)
-				{
-					$req=$pdoCasse->prepare("INSERT INTO serials (id_casse,serial_nb) VALUES (:id_casse,:serial_nb)");
-					$req->execute([
-						':id_casse'			=>$lastInsertId,
-						':serial_nb'		=>$serial
-					]);
-					return $req->rowCount();
-	// return $req->errorInfo();
+	));
+	return $pdoCasse->lastInsertId();
+// return $req->errorInfo();
 
-				}
-
-				function checkWebuser($pdoCasse)
-				{
-					$req=$pdoCasse->prepare("SELECT id FROM operateurs WHERE id_web_user= :id_web_user");
-					$req->execute([
-						'id_web_user'		=>$_SESSION['id_web_user']
-					]);
-					return $req->fetch(PDO::FETCH_ASSOC);
-				}
-
-				// utilisé pour info article + info déclaration quand dossier déjà ouvert
-				function getCasse($pdoCasse)
-				{
-					$req=$pdoCasse->prepare("SELECT * FROM casses WHERE  id= :id");
-					$req->execute([
-						':id'		=>$_GET['idKs']
-					]);
-					return $req->fetch(PDO::FETCH_ASSOC);
-				}
-
-				function getSerials($pdoCasse){
-					$req=$pdoCasse->prepare("SELECT * FROM serials WHERE  id_casse= :id_casse");
-					$req->execute([
-						':id_casse'		=>$_GET['idKs']
-					]);
-					return $req->fetchAll(PDO::FETCH_ASSOC);
-				}
+}
 
 
-				function updateCasse($pdoCasse){
-					foreach ($_POST as $key => $value)
-					{
-		// le champ opérateur est obligatoire, les autres non car ils peuvent saisir leur déclaration en plusieurs fois
-						if($value=='')
-						{
-							$_POST[$key]=null;
-						}
-					}
-					$req=$pdoCasse->prepare("UPDATE casses
-						SET id_operateur= :id_operateur, nb_colis= :nb_colis, id_categorie= :id_categorie, id_origine= :id_origine, id_type= :id_type, palette= :palette , cde= :cde, last_maj= :last_maj WHERE id= :id" );
-					$req->execute(array(
-						':id'		=>$_GET['idKs'],
-						':id_operateur'	=>$_POST['operateur'],
-						':nb_colis'	=>$_POST['nb_colis'],
-						':id_categorie'	=>$_POST['categorie'],
-						':id_origine'	=>$_POST['origine'],
-						':id_type'	=>$_POST['type'],
-						':palette'	=>$_POST['palette'],
-						':cde'	=>$_POST['cde'],
-						':last_maj' =>date('Y-m-d H:i:s')
+function addSerials($pdoCasse,$lastInsertId,$serial)
+{
+	$req=$pdoCasse->prepare("INSERT INTO serials (id_casse,serial_nb) VALUES (:id_casse,:serial_nb)");
+	$req->execute([
+		':id_casse'			=>$lastInsertId,
+		':serial_nb'		=>$serial
+	]);
+	return $req->rowCount();
+// return $req->errorInfo();
 
-					));
-					return $req->rowCount();
-	// return $req->errorInfo();
+}
 
-				}
+function checkWebuser($pdoCasse)
+{
+	$req=$pdoCasse->prepare("SELECT id FROM operateurs WHERE id_web_user= :id_web_user");
+	$req->execute([
+		'id_web_user'		=>$_SESSION['id_web_user']
+	]);
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
 
-				function deleteSerials($pdoCasse)
-				{
-					$req=$pdoCasse->prepare("DELETE FROM serials WHERE id_casse= :id ");
-					$req->execute([
-						':id'		=>$_GET['idKs']
+// utilisé pour info article + info déclaration quand dossier déjà ouvert
+function getCasse($pdoCasse)
+{
+	$req=$pdoCasse->prepare("SELECT * FROM casses WHERE  id= :id");
+	$req->execute([
+		':id'		=>$_GET['idKs']
+	]);
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
 
-					]);
-					return $req->rowCount();
-				}
+function getSerials($pdoCasse){
+	$req=$pdoCasse->prepare("SELECT * FROM serials WHERE  id_casse= :id_casse");
+	$req->execute([
+		':id_casse'		=>$_GET['idKs']
+	]);
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+function updateCasse($pdoCasse){
+	foreach ($_POST as $key => $value)
+	{
+// le champ opérateur est obligatoire, les autres non car ils peuvent saisir leur déclaration en plusieurs fois
+		if($value=='')
+		{
+			$_POST[$key]=null;
+		}
+	}
+	$req=$pdoCasse->prepare("UPDATE casses
+		SET id_operateur= :id_operateur, id_categorie= :id_categorie, id_origine= :id_origine, id_type= :id_type, palette= :palette , cde= :cde, last_maj= :last_maj WHERE id= :id" );
+	$req->execute(array(
+		':id'		=>$_GET['idKs'],
+		':id_operateur'	=>$_POST['operateur'],
+		':id_categorie'	=>$_POST['categorie'],
+		':id_origine'	=>$_POST['origine'],
+		':id_type'	=>$_POST['type'],
+		':palette'	=>$_POST['palette'],
+		':cde'	=>$_POST['cde'],
+		':last_maj' =>date('Y-m-d H:i:s')
+
+	));
+	return $req->rowCount();
+// return $req->errorInfo();
+
+}
+
+function deleteSerials($pdoCasse)
+{
+	$req=$pdoCasse->prepare("DELETE FROM serials WHERE id_casse= :id ");
+	$req->execute([
+		':id'		=>$_GET['idKs']
+
+	]);
+	return $req->rowCount();
+}
 
 
 
 //------------------------------------------------------
 //			DECLARATIONS
 //------------------------------------------------------
-				$errors=[];
-				$success=[];
+$errors=[];
+$success=[];
 // déclaration initiale
-				if(isset($_GET['idBa']))
+if(isset($_GET['idBa']))
+{
+	$dataArticle=getArticle($pdoQlik);
+	$pu=round($dataArticle['valo']/$dataArticle['pcb'],2);
+	$pu=number_format((float)$pu,2,'.',' ');
+	$uvc=$dataArticle['pcb'];
+	if(isset($_POST['submit']))
+	{
+		$postData=$_POST;
+		$lastInsertId=addCasse($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$uvc,$dataArticle['valo'],$pu,$dataArticle['fournisseur']);
+		// vide le tableau si il est vide (multidimentional array => jamais vide même si pas de donnée ppuis que contient au moins un tableau vide ou non)
+		$emptiedSerial = array_filter($_POST['serial']);
+		if($lastInsertId>0)
+		{
+		}
+		else
+		{
+			$errors[]='impossible d\'ajouter le dossier';
+// exit();
+		}
+
+		if(count($errors)==0){
+
+
+			if(!empty($emptiedSerial))
+			{
+
+				for($i=0;$i<count($_POST['serial']);$i++)
 				{
-					$dataArticle=getArticle($pdoQlik);
-					$pu=round($dataArticle['valo']/$dataArticle['pcb'],2);
-					$pu=number_format((float)$pu,2,'.',' ');
-					$uvc=$dataArticle['pcb'];
-					if(isset($_POST['submit']))
+					if(!empty($_POST['serial'][$i]))
 					{
-						$postData=$_POST;
-						$lastInsertId=addCasse($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$uvc,$dataArticle['valo'],$pu,$dataArticle['fournisseur']);
-						// vide le tableau si il est vide (multidimentional array => jamais vide même si pas de donnée ppuis que contient au moins un tableau vide ou non)
-						$emptiedSerial = array_filter($_POST['serial']);
-						if($lastInsertId>0)
-						{
+
+						$add=addSerials($pdoCasse,$lastInsertId,$_POST['serial'][$i]);
+
+
+						if($add!=1){
+							$errors[]="impossible d'ajouter le numéro de serie";
 						}
-						else
-						{
-							$errors[]='impossible d\'ajouter le dossier';
-		// exit();
-						}
-
-						if(count($errors)==0){
-
-
-							if(!empty($emptiedSerial))
-							{
-
-								for($i=0;$i<count($_POST['serial']);$i++)
-								{
-									if(!empty($_POST['serial'][$i]))
-									{
-
-										$add=addSerials($pdoCasse,$lastInsertId,$_POST['serial'][$i]);
-
-
-										if($add!=1){
-											$errors[]="impossible d'ajouter le numéro de serie";
-										}
-									}
-								}
-
-							}
-						}
-						if(count($errors)==0)
-						{
-							$loc='Location:bt-casse-dashboard.php?success='.$lastInsertId;
-							header($loc);
-						}
-
 					}
-
 				}
 
-				// déclaration en cours
-				if(isset($_GET['idKs']))
+			}
+		}
+		if(count($errors)==0)
+		{
+			$loc='Location:bt-casse-dashboard.php?success='.$lastInsertId;
+			header($loc);
+		}
+
+	}
+
+}
+
+// déclaration en cours
+if(isset($_GET['idKs']))
+{
+	$dataArticle=getCasse($pdoCasse);
+	//  on a pas forcement de numeros de series à chaque fois et ils puevent être saisi ulterieurement
+	if(getSerials($pdoCasse)){
+		$serials=getSerials($pdoCasse);
+	}
+	else{
+		$serials='';
+	}
+
+	if(isset($_POST['submit']))
+	{
+
+		$majCasse=updateCasse($pdoCasse);
+		if($majCasse==1)
+		{
+			$emptiedSerial = array_filter($_POST['serial']);
+			if(!empty($emptiedSerial))
+			{
+				//  on supprimer les nbum"o de serie si il en existe
+				if(count($serials)>0)
 				{
-					$dataArticle=getCasse($pdoCasse);
-					//  on a pas forcement de numeros de series à chaque fois et ils puevent être saisi ulterieurement
-					if(getSerials($pdoCasse)){
-						$serials=getSerials($pdoCasse);
+					$deletedSerials=deleteSerials($pdoCasse);
+					if($deletedSerials>0)
+					{
+						// $success[]="suppression des numéros de séries réussie";
 					}
 					else{
-						$serials='';
+						$errors[]="Impossible de supprimer les numéros de series pour la mise à jour de la table";
 					}
-
-					if(isset($_POST['submit']))
+				}
+				if(count($errors)==0)
+				{
+					for($i=0;$i<count($_POST['serial']);$i++)
 					{
-
-						$majCasse=updateCasse($pdoCasse);
-						if($majCasse==1)
+						if(!empty($_POST['serial'][$i]))
 						{
-							$emptiedSerial = array_filter($_POST['serial']);
-							if(!empty($emptiedSerial))
-							{
-								//  on supprimer les nbum"o de serie si il en existe
-								if(count($serials)>0)
-								{
-									$deletedSerials=deleteSerials($pdoCasse);
-									if($deletedSerials>0)
-									{
-										// $success[]="suppression des numéros de séries réussie";
-									}
-									else{
-										$errors[]="Impossible de supprimer les numéros de series pour la mise à jour de la table";
-									}
-								}
-								if(count($errors)==0)
-								{
-									for($i=0;$i<count($_POST['serial']);$i++)
-									{
-										if(!empty($_POST['serial'][$i]))
-										{
-											$id=$_GET['idKs'];
-											$add=addSerials($pdoCasse,$id,$_POST['serial'][$i]);
-											if($add!=1){
-												$errors[]="impossible d'ajouter le numéro de serie";
-											}
-										}
-									}
-								}
+							$id=$_GET['idKs'];
+							$add=addSerials($pdoCasse,$id,$_POST['serial'][$i]);
+							if($add!=1){
+								$errors[]="impossible d'ajouter le numéro de serie";
 							}
-							$success[]='mise à jour correctement effectuée';
 						}
-						else
-						{
-							$errors[]='impossible de mettre à jour le dossier';
-						}
-
 					}
-
-
 				}
+			}
+			$success[]='mise à jour correctement effectuée';
+		}
+		else
+		{
+			$errors[]='impossible de mettre à jour le dossier';
+		}
 
-				// vérifie si le user connecté à un id_web_user dans la table opérateur => si oui opérateur sélectionné par défaut dans la ld opérateur
-				if(checkWebuser($pdoCasse)){
-					$idOp=checkWebuser($pdoCasse);
-					$idOp=$idOp['id'];
-				}
-				else{
-					$idOp='';
-				}
+	}
 
 
-				$today=new DateTime();
-				$today=$today->format('Y-m-d');
+}
+
+// vérifie si le user connecté à un id_web_user dans la table opérateur => si oui opérateur sélectionné par défaut dans la ld opérateur
+if(checkWebuser($pdoCasse)){
+	$idOp=checkWebuser($pdoCasse);
+	$idOp=$idOp['id'];
+}
+else{
+	$idOp='';
+}
+
+
+$today=new DateTime();
+$today=$today->format('Y-m-d');
 
 
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
-				include('../view/_head-bt.php');
-				include('../view/_navbar.php');
-				?>
+include('../view/_head-bt.php');
+include('../view/_navbar.php');
+?>
 <!--********************************
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
+	<?= Helpers::returnBtn('bt-casse-dashboard.php'); ?>
+
 	<h1 class="text-main-blue pt-5 pb-3 ">Déclaration de casse</h1>
 	<div class="row">
 		<div class="col-lg-1"></div>
