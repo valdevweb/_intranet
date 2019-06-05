@@ -38,24 +38,38 @@
 						$sumValo=0;
 						foreach ($fLitige as $prod)
 						{
-							$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
+							// $valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
 							$pj='';
 
 							if($prod['pj']!='')
 							{
 								$pj=createFileLink($prod['pj']);
 							}
+							if($prod['box_tete']==1){
+								$classBoxHead='class=box-head';
+							}
+							else{
+							$classBoxHead='';
 
+							}
+							if($prod['box_art']!='')
+							{
+								$boxIco='<i class="fas fa-box-open text-green pr-2"></i>';
+							}
+							else{
+							$boxIco='';
+
+							}
 
 
 							// cas général = pas d'inversion de produit
 							if($prod['inversion'] =="")
 							{
-								echo '<tr>';
+								echo '<tr '.$classBoxHead.'>';
 								echo '<td>'.$prod['article'].'</td>';
 								echo '<td>'.$prod['dossier_gessica'].'</td>';
 								echo '<td>'.$prod['palette'].'</td>';
-								echo '<td>'.$prod['descr'].'</td>';
+								echo '<td>'.$boxIco.$prod['descr'].'</td>';
 								echo '<td>'.$prod['fournisseur'].'</td>';
 								echo '<td>'.$prod['reclamation'].'</td>';
 								echo '<td class="text-right">'.$prod['qte_litige'].'</td>';
@@ -75,7 +89,7 @@
 								echo '<td>'.$prod['fournisseur'].'</td>';
 								echo '<td>'.$prod['reclamation'].'</td>';
 								echo '<td class="text-right">'.$prod['qte_litige'].'</td>';
-								echo '<td class="text-right"> </td>';
+								echo '<td class="text-right"> '.number_format((float)$prod['tarif']/$prod['qte_cde']*$prod['qte_litige'],2,'.','').'</td>';
 
 								echo '<td class="text-right">'.$pj.'</td>';
 								echo '</tr>';
@@ -97,7 +111,7 @@
 								echo '<td class="text-right"></td>';
 								echo '</tr>';
 								echo '<tr class="text-center bg-reddish text-white">';
-								echo '<td colspan="9" class="text-right">'.number_format((float)$prod['valo_line'],2,'.','').'&euro;</td>';
+								echo '<td colspan="8" class="text-right">'.number_format((float)$prod['valo_line'],2,'.','').'&euro;</td>';
 								echo '<td></td>';
 								echo '</tr>';
 								echo '<tr>';
