@@ -79,3 +79,7 @@
 	color: #F2DC60;
 }
 
+
+.table-stat td, .table-stat th{
+	width : 20px !important;
+}

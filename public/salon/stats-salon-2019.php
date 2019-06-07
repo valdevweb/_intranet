@@ -26,7 +26,7 @@ addRecord($pdoStat,$page,$action, $descr, 101);
 
 function getParticipant($pdoBt)
 {
-  $req=$pdoBt->prepare("SELECT mag, salon_2019.galec, centrale, nom, prenom, fonction, DATE_FORMAT(date_saisie,'%d-%m-%Y') as datesaisie, mardi, mercredi,repas_mardi, repas_mercredi FROM salon_2019
+  $req=$pdoBt->prepare("SELECT mag, salon_2019.galec, centrale, nom, prenom, fonction, DATE_FORMAT(date_saisie,'%d-%m-%Y') as datesaisie, mardi, mercredi,repas_mardi, repas_mercredi, date_passage, DATE_FORMAT(date_passage,'%H:%i') as heure, valise FROM salon_2019
     LEFT JOIN sca3 ON salon_2019.galec=sca3.galec
     LEFT JOIN salon_fonction ON salon_2019.id_fonction=salon_fonction.id
     WHERE salon_2019.galec !='' ORDER BY sca3.mag");
@@ -40,6 +40,20 @@ function getNbMagInscrit($pdoBt)
   $req->execute();
   return $req->fetchAll();
 }
+
+function getNbMagPresent($pdoBt)
+{
+  $req=$pdoBt->prepare("SELECT DISTINCT galec FROM (SELECT * FROM salon_2019 WHERE date_passage !='' AND mask=0) sousreq ");
+  $req->execute();
+  return $req->fetchAll();
+}
+function getNbPresent($pdoBt)
+{
+  $req=$pdoBt->prepare("SELECT count(id) as nb FROM salon_2019 WHERE date_passage !='' AND mask=0");
+  $req->execute();
+  return $req->fetch();
+}
+
 
 function getNbPart($pdoBt)
 {
@@ -62,6 +76,13 @@ function getNbMagInscritMercredi($pdoBt)
   return $req->fetchAll();
 }
 
+function getValise($pdoBt){
+  $req=$pdoBt->prepare("SELECT count(id) as nb FROM salon_2019 WHERE valise=1");
+  $req->execute();
+  return $req->fetch();
+
+}
+
 
 function nbMagCentrale($pdoBt)
 {
@@ -78,16 +99,49 @@ function nbInscritFonction($pdoBt)
 
 }
 
+function getByHeure($pdoBt, $day){
+  $req=$pdoBt->query("SELECT count(id) as nb, DATE_FORMAT(date_passage, '%H') as hour, date_passage FROM (SELECT * FROM salon_2019 WHERE DATE_FORMAT(date_passage, '%d')=$day) as sousreq GROUP by DATE_FORMAT(date_passage, '%H')");
+  // return $req->rowCount();
+  return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+$statHeureMercredi=getByHeure($pdoBt, 5);
+
+$statHeureMardi=getByHeure($pdoBt, 4);
+
+$nbValise=getValise($pdoBt);
+
+// echo "<pre>";
+// print_r($statHeureMardi);
+// echo '</pre>';
+
+// echo "<pre>";
+// print_r($statHeureMercredi);
+// echo '</pre>';
+
+
+// function arriveesMercredi($pdoBt){
+//     $req=$pdoBt->query("SELECT count(id) as nb, substr(`heure_mercredi`,12,2) as hour, heure_mercredi FROM `salon` GROUP by substr(`heure_mercredi`,12,2)");
+//   // return $req->rowCount();
+//     return $req->fetchAll(PDO::FETCH_ASSOC);
+// }
+
+
+
+/*----------------------------------------------------
+
+INSCRIPTIONS
+
+-----------------------------------------------------*/
 
 $perCentrale=nbMagCentrale($pdoBt);
 $perFonction=nbInscritFonction($pdoBt);
-
 $nbMagInscrit=count(getNbMagInscrit($pdoBt));
+$nbMagPresent=count(getNbMagPresent($pdoBt));
 $nbPart=count(getParticipant($pdoBt));
+$nbPres=getNbPresent($pdoBt);
 $nb=getNbPart($pdoBt);
 $magMardi=count(getNbMagInscritMardi($pdoBt));
 $magMercredi =count(getNbMagInscritMercredi($pdoBt));
-
 $listParticipant=getParticipant($pdoBt);
 $presence=['non','oui'];
 $repas=['',' + <i class="fas fa-utensils"></i>'];
@@ -105,15 +159,15 @@ $class=['nothing','present', 'repas'];
 //------------------------------------------------------
 //      DECLARATIONS
 //------------------------------------------------------
-$errors=[];
-$success=[];
+                  $errors=[];
+                  $success=[];
 
 //------------------------------------------------------
 //      VIEW
 //------------------------------------------------------
-include('../view/_head-bt.php');
-include('../view/_navbar.php');
-?>
+                  include('../view/_head-bt.php');
+                  include('../view/_navbar.php');
+                  ?>
 <!--********************************
 DEBUT CONTENU CONTAINER
 *********************************-->
@@ -195,7 +249,7 @@ DEBUT CONTENU CONTAINER
       </div>
     </div>
   </div>
-   <div class="row pb-3">
+  <div class="row pb-3">
     <div class="col">
       <div class="text-main-blue heavy"> Répartition par fonction :</div>
     </div>
@@ -211,7 +265,7 @@ DEBUT CONTENU CONTAINER
         {
 
 
-            echo '<div class="col-auto text-center border">'.$fonction['short'] .' : <br>'. $fonction['nb'] . '</div>';
+          echo '<div class="col-auto text-center border">'.$fonction['short'] .' : <br>'. $fonction['nb'] . '</div>';
 
 
         }
@@ -219,6 +273,131 @@ DEBUT CONTENU CONTAINER
       </div>
     </div>
   </div>
+  <div class="row pb-3">
+    <div class="col">
+      <h5 class="text-main-blue heavy"> Présence :</h5>
+      <p>Nombre de magasins présents : <?= $nbMagPresent?></p>
+      <p>Nombre de personnes présentes : <?= $nbPres['nb'].' ('.  $nbValise['nb']?> valises)</p>
+    </div>
+  </div>
+
+
+<div class="row">
+  <div class="col-5">
+    <p class="text-main-blue heavy">Heures d'arrivées mardi :</p>
+  </div>
+  <div class="col-2"></div>
+   <div class="col-5">
+    <p class="text-main-blue heavy">Heures d'arrivées mercredi :</p>
+  </div>
+</div>
+<div class="row">
+
+    <div class="col-5">
+      <table class="table table-sm table-bordered text-right">
+        <thead class="thead-dark">
+          <?php
+          echo '<tr>';
+          foreach ($statHeureMardi as $heureMa) {
+            echo '<th>'.$heureMa['hour'].'h</th>';
+          }
+          echo '</tr>';
+          echo '</thead>';
+          echo '<tbody>';
+          echo '<tr>';
+          foreach ($statHeureMardi as $heureMa) {
+            echo '<td>'.$heureMa['nb'].'</td>';
+          }
+          echo '</tr>';
+          ?>
+        </tbody>
+      </table>
+    </div>
+  <div class="col-2"></div>
+
+
+    <div class="col-5">
+      <table class="table table-sm table-bordered text-right">
+        <thead class="thead-dark">
+          <?php
+          echo '<tr>';
+          foreach ($statHeureMercredi as $heureMe) {
+            echo '<th>'.$heureMe['hour'].'h</th>';
+          }
+          echo '</tr>';
+          echo '</thead>';
+          echo '<tbody>';
+          echo '<tr>';
+          foreach ($statHeureMercredi as $heureMe) {
+            echo '<td>'.$heureMe['nb'].'</td>';
+          }
+          echo '</tr>';
+          ?>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<div class="row">
+  <div class="col">
+    <p class="text-main-blue heavy">Présence des participants:</p>
+
+  </div>
+</div>
+
+  <div class="row">
+    <div class="col">
+      <table class="table table-sm" id="table-presence">
+        <thead class="thead-dark">
+          <tr>
+            <th class="sortable" onclick="sortTable(0);">Magasin</th>
+            <th class="sortable" onclick="sortTable(2);">Centrale</th>
+            <th class="sortable" onclick="sortTable(3);">Nom</th>
+            <th class="sortable" onclick="sortTable(4);">Prénom</th>
+            <th class="sortable" onclick="sortTable(5);">Jour</th>
+            <th class="sortable" onclick="sortTable(5);">Heure</th>
+            <th class="sortable" onclick="sortTable(6);">Valise</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php
+          foreach ($listParticipant as $part)
+          {
+            $valise = ($part['valise']==1) ? '<i class="fas fa-suitcase text-trois"></i>' : '' ;
+            if($part['date_passage'] !=''){
+              $jour=date('w',strtotime($part['date_passage']));
+              $jourStr = ($jour==2) ? 'mardi' : 'mercredi' ;
+            }
+            else{
+              $jourStr='';
+            }
+
+
+            echo '<tr>';
+            echo '<td class="'.strtolower($part['centrale']).'">'.$part['mag'].'</td>';
+            echo '<td>'.$part['centrale'].'</td>';
+            echo '<td>'.$part['nom'].'</td>';
+            echo '<td>'.$part['prenom'].'</td>';
+            echo '<td>'.$jourStr.'</td>';
+            echo '<td>'.$part['heure'].'</td>';
+            echo '<td class="text-center">'.$valise.'</td>';
+            echo '</tr>';
+
+          }
+
+          ?>
+
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+
+
+
+
+
 
   <div class="row pb-3">
     <div class="col">
@@ -283,9 +462,17 @@ DEBUT CONTENU CONTAINER
 <script type="text/javascript">
 
 
-function sortTable(n) {
-  sort_table(document.getElementById("table-inscr"), n);
-}
+  function sortTable(n) {
+    sort_table(document.getElementById("table-inscr"), n);
+  }
+
+  function sortTable(n) {
+    sort_table(document.getElementById("table-presence"), n);
+  }
+
+
+
+
 </script>
 
 <?php
