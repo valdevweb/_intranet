@@ -16,7 +16,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 function search($pdoBt)
 {
-	$req=$pdoBt->prepare("SELECT * FROM sca3  WHERE concat(mag,galec,btlec, city) LIKE :search AND mag NOT LIKE '%*%'");
+	$req=$pdoBt->prepare("SELECT * FROM sca3  WHERE concat(mag,sca3.galec,btlec, city) LIKE :search AND mag NOT LIKE '%*%'");
 	$req->execute(array(
 		':search' =>'%'.$_POST['search_strg'] .'%'
 	));
@@ -34,15 +34,17 @@ function getMagLitiges($pdoLitige)
 		LEFT JOIN gt ON dossiers.id_gt=gt.id
 		LEFT JOIN analyse ON dossiers.id_analyse=analyse.id
 		LEFT JOIN conclusion ON dossiers.id_conclusion=conclusion.id
-
-
-
 		WHERE dossiers.galec= :galec");
 	$req->execute(array(
 		':galec'	=>$_GET['galec']
 	));
 	return $req->fetchAll(PDO::FETCH_ASSOC);
+	// return $req->errorInfo();
 }
+
+
+
+
 
 if(isset($_POST['search_form']))
 {
@@ -143,107 +145,122 @@ DEBUT CONTENU CONTAINER
 			if(isset($_GET['galec']))
 			{
 				$listLitige=getMagLitiges($pdoLitige);
-				$financeN=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearN);
-				$financeNUn=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearNUn);
-				$financeNDeux=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearNDeux);
-				$nbLitiges=count($listLitige);
-				$valoTotal=0;
-				echo '<h3 class="text-center text-main-blue my-3">'.$listLitige[0]['mag'] .'</h3>';
-				echo '<h4 class="text-main-blue heavy my-3"> Chiffres d\'affaire :</h4>';
-				echo '<div class="row">';
-				echo '<div class="col-lg-2"></div>';
-				echo '<div class="col">';
-				echo '<table class="table text-right table-bordered light-shadow">';
-				echo '<thead class="thead-dark">';
-				echo '<th>'.$yearN.'</th>';
-				echo '<th>'.$yearNUn .'</th>';
-				echo '<th>'.$yearNDeux .'</th>';
-				echo '</thead>';
-				echo '<tbody>';
-				echo '<td>'.number_format((float)$financeN['CA_Annuel'],2,'.',' ').'&euro;</td>';
-				echo '<td>'.number_format((float)$financeNUn['CA_Annuel'],2,'.',' ').'&euro;</td>';
-				echo '<td>'.number_format((float)$financeNDeux['CA_Annuel'],2,'.',' ').'&euro;</td>';
-				echo '</tbody>';
-
-				echo '</table>';
-				echo '</div>';
-				echo '<div class="col-lg-2"></div>';
-				echo '</div>';
-
-				echo '<h4 class="text-main-blue heavy my-3">Litiges :</h4>';
-
-				echo '<table class="table light-shadow table-bordered ">';
-				echo '<thead class="thead-dark">';
-				echo '<tr>';
-				echo '<th class="align-top">N°</th>';
-				echo '<th class="align-top">Date</th>';
-				echo '<th class="align-top">Service</th>';
-				echo '<th class="align-top">Typologie</th>';
-				echo '<th class="align-top">Imputation</th>';
-				echo '<th class="align-top">Statut</th>';
-				echo '<th class="align-top">Valorisation magasin</th>';
-				echo '<th class="align-top">Analyse</th>';
-				echo '<th class="align-top">Réponse</th>';
-				echo '<th class="align-top">Coût BTlec</th>';
-				echo '</tr>';
-				echo '</thead>';
-				echo '<tbody>';
-
-
-				$coutTotal=0;
-				foreach ($listLitige as $litige)
+				// on vérifie que le mag a au moins un litige
+				if(isset($listLitige[0]['btlec']))
 				{
-					$cout=$litige['mt_transp']+$litige['mt_assur']+$litige['mt_fourn']+$litige['mt_mag'];
-					$coutTotal=$coutTotal+$cout;
-					$cout=number_format((float)$cout,2,'.','');
+
+					$financeN=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearN);
+					$financeNUn=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearNUn);
+					$financeNDeux=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearNDeux);
+					$nbLitiges=count($listLitige);
+					$valoTotal=0;
+					echo '<h3 class="text-center text-main-blue my-3">'.$listLitige[0]['mag'] .'</h3>';
+					echo '<h4 class="text-main-blue heavy my-3"> Chiffres d\'affaire :</h4>';
+					echo '<div class="row">';
+					echo '<div class="col-lg-2"></div>';
+					echo '<div class="col">';
+					echo '<table class="table text-right table-bordered light-shadow">';
+					echo '<thead class="thead-dark">';
+					echo '<th>'.$yearN.'</th>';
+					echo '<th>'.$yearNUn .'</th>';
+					echo '<th>'.$yearNDeux .'</th>';
+					echo '</thead>';
+					echo '<tbody>';
+					echo '<td>'.number_format((float)$financeN['CA_Annuel'],2,'.',' ').'&euro;</td>';
+					echo '<td>'.number_format((float)$financeNUn['CA_Annuel'],2,'.',' ').'&euro;</td>';
+					echo '<td>'.number_format((float)$financeNDeux['CA_Annuel'],2,'.',' ').'&euro;</td>';
+					echo '</tbody>';
+
+					echo '</table>';
+					echo '</div>';
+					echo '<div class="col-lg-2"></div>';
+					echo '</div>';
+
+					echo '<h4 class="text-main-blue heavy my-3">Litiges :</h4>';
+
+					echo '<table class="table light-shadow table-bordered ">';
+					echo '<thead class="thead-dark">';
 					echo '<tr>';
-					echo '<td><a href="bt-detail-litige.php?id='.$litige['id'].'">'.$litige['dossier'].'</a></td>';
-					echo '<td>'.$litige['datecrea'].'</td>';
-					echo '<td>'.$litige['gt'].'</td>';
-					echo '<td>'.$litige['typo'].'</td>';
-					echo '<td>'.$litige['imputation'].'</td>';
-					echo '<td>'.$litige['etat'].'</td>';
-					echo '<td class="text-right" >'.$litige['valo'].'</td>';
-					echo '<td>'.$litige['analyse'].'</td>';
-					echo '<td>'.$litige['conclusion'].'</td>';
-					echo '<td class="text-right">'.$cout.' &euro;</td>';
+					echo '<th class="align-top">N°</th>';
+					echo '<th class="align-top">Date</th>';
+					echo '<th class="align-top">Service</th>';
+					echo '<th class="align-top">Typologie</th>';
+					echo '<th class="align-top">Imputation</th>';
+					echo '<th class="align-top">Statut</th>';
+					echo '<th class="align-top">Valorisation magasin</th>';
+					echo '<th class="align-top">Analyse</th>';
+					echo '<th class="align-top">Réponse</th>';
+					echo '<th class="align-top">Coût BTlec</th>';
 					echo '</tr>';
-					$valoTotal=$valoTotal+$litige['valo'];
+					echo '</thead>';
+					echo '<tbody>';
+
+
+					$coutTotal=0;
+					foreach ($listLitige as $litige)
+					{
+						$cout=$litige['mt_transp']+$litige['mt_assur']+$litige['mt_fourn']+$litige['mt_mag'];
+						$coutTotal=$coutTotal+$cout;
+						$cout=number_format((float)$cout,2,'.','');
+						echo '<tr>';
+						echo '<td><a href="bt-detail-litige.php?id='.$litige['id'].'">'.$litige['dossier'].'</a></td>';
+						echo '<td>'.$litige['datecrea'].'</td>';
+						echo '<td>'.$litige['gt'].'</td>';
+						echo '<td>'.$litige['typo'].'</td>';
+						echo '<td>'.$litige['imputation'].'</td>';
+						echo '<td>'.$litige['etat'].'</td>';
+						echo '<td class="text-right" >'.$litige['valo'].'</td>';
+						echo '<td>'.$litige['analyse'].'</td>';
+						echo '<td>'.$litige['conclusion'].'</td>';
+						echo '<td class="text-right">'.$cout.' &euro;</td>';
+						echo '</tr>';
+						$valoTotal=$valoTotal+$litige['valo'];
+					}
+
+					echo '<tr>';
+					echo '<td  class="no-border" colspan="2">TOTAUX</td>';
+					echo '<td  class="text-right no-border" colspan="5">'.$valoTotal.'</td>';
+					echo '<td class="text-right no-border order" colspan="3">'.$coutTotal.'</td>';
+					echo '</tr>';
+
+					echo '</tbody>';
+					echo '</table>';
+
+
+					echo '</div>';
+					echo '</div>';
+					echo '<div class="row">';
+					echo '<div class="col text-right pb-5">';
+					echo '<a href="print-stat-litige-mag.php?galec='.$_GET['galec'].'" class="btn btn-primary" target="_blank"><i class="fas fa-print pr-3"></i>Imprimer</a>';
+
 				}
-
-				echo '<tr>';
-				echo '<td  class="no-border" colspan="2">TOTAUX</td>';
-				echo '<td  class="text-right no-border" colspan="5">'.$valoTotal.'</td>';
-				echo '<td class="text-right no-border order" colspan="3">'.$coutTotal.'</td>';
-				echo '</tr>';
-
-				echo '</tbody>';
-				echo '</table>';
+				else
+			{
+				echo '<h5 class="text-red text-center heavy my-5"><i class="fas fa-info-circle pr-3"></i>Pas de dossier litige pour ce magasin</h5>';
+			}
 
 
-			echo '</div>';
-			echo '</div>';
-			echo '<div class="row">';
-			echo '<div class="col text-right pb-5">';
-			echo '<a href="print-stat-litige-mag.php?galec='.$_GET['galec'].'" class="btn btn-primary" target="_blank"><i class="fas fa-print pr-3"></i>Imprimer</a>';
 
-}
+
+			}
+
+
 			?>
-				</div>
 		</div>
+	</div>
 
 
-			<div class="row">
-				<div class="col">
-					<p><a href="stats-mini.php"><i class="fas fa-external-link-alt pr-3"></i>Nb de fréquentations des pages litiges par jour</a></p>
-				</div>
-			</div>
-
-
-			<!-- ./container -->
+	<div class="row">
+		<div class="col">
+			<p><a href="stats-mini.php"><i class="fas fa-external-link-alt pr-3"></i>Nb de fréquentations des pages litiges par jour</a></p>
 		</div>
+	</div>
 
 
-		<?php
-		require '../view/_footer-bt.php';
-		?>
+	<!-- ./container -->
+</div>
+
+
+<?php
+require '../view/_footer-bt.php';
+?>
