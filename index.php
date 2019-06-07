@@ -173,9 +173,16 @@ if(!empty($revRes))
 					<div class="col-1"></div>
 				</div>
 			-->
+			<div class="row infos">
+				<div class="col-2"></div>
 
+				<div class="col inside-infos inside-padding">
+					<img src="public/img/salon/salon2019_5b.png">
+					<p class="w3-text-blue w3-large">Un grand merci à tous pour votre participation ! <br> Vous retrouverez les présentations auxquelles vous avez pu assister dans le menu salon 2019</p>
+				</div>
+				<div class="col-2"></div>
 
-
+			</div>
 
 			<!-- fin d'info1 -->
 			<!-- flash info auto si reversement -->
