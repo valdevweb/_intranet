@@ -179,7 +179,10 @@ a:hover.blue-link{
 
 }
 
+.inside-padding{
+padding : 15px 20px !important;
 
+}
 
 /* -------------------------------------
           modal
