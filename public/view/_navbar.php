@@ -162,7 +162,7 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 
 		?>
 
-		<li><a href="<?= ROOT_PATH. '/public/salon/inscription-2019.php'?>"><span>Salon 2019</span></a></li>
+		<li><a href="<?= ROOT_PATH. '/public/salon/presentation-salon-2019.php'?>"><span>Salon 2019</span></a></li>
 
 		<!-- section sans sous menu -->
 		<li><a href="<?= ROOT_PATH. '/public/entrepot/discover.php'?>"><span>Entrepôt</span></a></li>
