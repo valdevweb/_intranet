@@ -54,7 +54,7 @@ function addAction($pdoLitige, $contrainte)
 		':id_web_user'		=> $_SESSION['id_web_user'],
 		':date_action'		=> date('Y-m-d H:i:s'),
 	));
-	return $req->rowCount();
+	return $pdoLitige->lastInsertId();
 	// return $req->errorInfo();
 }
 
@@ -75,6 +75,19 @@ function getHelpInfo($pdoLitige)
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
+
+// recupère le pale sav du mag pour action 4 : demande intervention sav
+function getMagSav($pdoSav,$galec){
+	$req=$pdoSav->prepare("SELECT sav FROM mag WHERE galec = :galec");
+	$req->execute([
+		':galec'		=>$galec
+	]);
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+
+
+
 if(isset($_POST['submit']))
 {
 
@@ -90,6 +103,7 @@ if(isset($_POST['submit']))
 
 			if($newAction>0)
 			{
+
 				header('Location:bt-action-add.php?id='.$_GET['id']);
 
 			}
@@ -98,22 +112,35 @@ if(isset($_POST['submit']))
 				$errors[]="Une erreur est survenue, impossible d'enregistrer votre action";
 			}
 		}
+
+
 		else
 		{
-			$newAction=addAction($pdoLitige, $help['id_contrainte']);
-			if($newAction>0)
+			if($help['id_contrainte'] ==4)
 			{
-				header('Location:contrainte.php?contrainte='.$help['id_contrainte'].'&id='.$_GET['id']);
+				$galec=$fLitige['galec'];
+				$sav=getMagSav($pdoSav,$galec);
 
+			}
+
+			if(isset($sav) && empty($sav))
+			{
+				$errors[]="Vous ne pouvez pas ajouter cette action, aucun pôle SAV n'a été renseigné pour ce magasin";
 			}
 			else
 			{
-				$errors[]="Une erreur est survenue, impossible d'enregistrer votre action";
+				$newAction=addAction($pdoLitige, $help['id_contrainte']);
+				if($newAction>0)
+				{
+					header('Location:contrainte.php?contrainte='.$help['id_contrainte'].'&id='.$_GET['id'].'&action='.$newAction) ;
+				}
+				else
+				{
+					$errors[]="Une erreur est survenue, impossible d'enregistrer votre action";
+				}
+
 			}
-
 		}
-
-
 	}
 	else
 	{

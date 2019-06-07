@@ -10,6 +10,7 @@ if(!isset($_SESSION['id'])){
 require_once '../../vendor/autoload.php';
 
 require 'info-litige.fn.php';
+require 'echanges.fn.php';
 
 //			css dynamique
 //----------------------------------------------------------------
@@ -26,22 +27,22 @@ $success=[];
 //------------------------------------------------------
 
 
-
-
-
-
-function getMagName($pdoUser, $idwebuser)
-{
-	$req=$pdoUser->prepare("SELECT btlec.sca3.mag FROM users LEFT JOIN btlec.sca3 ON users.galec=btlec.sca3.galec WHERE users.id= :id_web_user ");
-	$req->execute(array(
-		':id_web_user'	=>$idwebuser
-	));
+function getMagSav($pdoSav,$galec){
+	$req=$pdoSav->prepare("SELECT sav FROM mag WHERE galec = :galec");
+	$req->execute([
+		':galec'		=>$galec
+	]);
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-// $etat 1 =ctrl ok
-// $etat 0= rien
-// $etat 2 =ctrl demandé
+function getLdSav($pdoSav, $sav, $module){
+	$req=$pdoSav->prepare("SELECT email FROM mail_sav LEFT JOIN sav_users ON mail_sav.id_user_sav=sav_users.id WHERE mail_sav.sav= :sav AND module= :module");
+	$req->execute([
+		':sav'			=>$sav,
+		':module'		=>$module
+	]);
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
 
 function updateCtrl($pdoLitige, $etat)
 {
@@ -53,11 +54,24 @@ function updateCtrl($pdoLitige, $etat)
 	return $req->rowCount();
 }
 
-
+function getActionMsg($pdoLitige){
+	$req=$pdoLitige->prepare("SELECT libelle FROM action WHERE id= :id");
+	$req->execute([
+		':id'		=>$_GET['action']
+	]);
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
 
 $infos=getInfos($pdoLitige);
 $analyse=getAnalyse($pdoLitige);
 $litige=getLitige($pdoLitige);
+$firstCmt=getComment($pdoLitige);
+	// echo "<pre>";
+	// print_r($echange);
+	// echo '</pre>';
+	// 	echo "<pre>";
+	// 	print_r($firstCmt);
+	// 	echo '</pre>';
 
 
 
@@ -127,6 +141,7 @@ if($_GET['contrainte']==2)
 
 
 }
+// controle de stock fait
 elseif($_GET['contrainte']==1)
 {
 	$row=updateCtrl($pdoLitige, 1);
@@ -139,6 +154,99 @@ elseif($_GET['contrainte']==1)
 		$errors[]="impossible de mettre à jour la base de donnée";
 
 	}
+}
+// demande d'intervention du pole sav
+elseif($_GET['contrainte']==4){
+	$galec=$litige[0]['galec'];
+	$sav=getMagSav($pdoSav,$galec);
+	$ldSav=getLdSav($pdoSav, $sav['sav'], 'litige');
+	if(!empty($ldSav)){
+
+		// génération du pdf
+		$footer='<table class="padding-table">';
+		$footer.='<tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>';
+		ob_start();
+		include('pdf-sav.php');
+		$html=ob_get_contents();
+		ob_end_clean();
+		$mpdf = new \Mpdf\Mpdf();
+		$mpdf->SetHTMLFooter($footer);
+		$mpdf->AddPage('', '', '', '', '','', '',  '',  40, 0, 10); // margin footer
+		$mpdf->WriteHTML($html);
+		$pdfContent = $mpdf->Output('', 'S');
+		// $pdfContent = $mpdf->Output();
+		$filename='litige '.$litige[0]['dossier'].' - fiche suivi sav.pdf';
+
+		// recup msg action
+		$msg=getActionMsg($pdoLitige);
+
+
+
+		// mail
+		foreach ($ldSav as $ld) {
+			$savDest[]=$ld['email'];
+		}
+		$link='<a href="'.SITE_ADDRESS.'/index.php?litiges/intervention-sav.php?id='.$litige[0]['id_main'].'"> cliquant ici</a>';
+
+		$htmlMail = file_get_contents('mail_dde_sav.php');
+		$htmlMail=str_replace('{MAG}',$litige[0]['mag'],$htmlMail);
+		$htmlMail=str_replace('{DOSSIER}',$litige[0]['dossier'],$htmlMail);
+		$htmlMail=str_replace('{MSG}',$msg['libelle'],$htmlMail);
+		$htmlMail=str_replace('{LINK}',$link,$htmlMail);
+		$subject='Portail SAV Leclerc - Litige livraison '.$litige[0]['dossier'].' - '.$litige[0]['mag'];
+// ---------------------------------------
+// initialisation de swift
+		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$mailer = new Swift_Mailer($transport);
+		$attachmentPdf = new Swift_Attachment($pdfContent, $filename, 'application/pdf');
+
+		$message = (new Swift_Message($subject))
+		->setBody($htmlMail, 'text/html')
+
+		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail SAV Leclerc'))
+// ->setTo(array('valerie.montusclat@btlec.fr', 'valerie.montusclat@btlec.fr' => 'val'))
+		->setTo($savDest)
+		->setTo('valerie.montusclat@btlec.fr')
+		->addCc('btlecest.portailweb.logistique@btlec.fr')
+		// ->addCc('valerie.montusclat@btlec.fr')
+		->addBcc('valerie.montusclat@btlec.fr')
+		->attach($attachmentPdf);
+		// ->attach(Swift_Attachment::fromPath('demande-culturel.xlsx'));
+// ou
+// ->setBcc([adress@btl.fr, adresse@bt.fr])
+
+// echec => renvoie 0
+
+		$delivered=$mailer->send($message);
+
+		if($delivered !=0)
+		{
+			header('Location:bt-action-add.php?id='.$_GET['id'].'&success=ok');
+
+		}
+		else
+		{
+			$errors[]="impossible d'envoyer le mail";
+
+		}
+
+
+
+	}
+	else
+	{
+		$errors[]="la liste de diffusion sav est vide";
+	}
+
+// $pdfContent = $mpdf->Output();
+
+
+
+
+
+
+
+
 }
 
 

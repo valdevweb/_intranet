@@ -25,7 +25,7 @@ function getBtName($pdoBt, $idwebuser)
 
 function getMagName($pdoUser, $idwebuser)
 {
-	$req=$pdoUser->prepare("SELECT btlec.sca3.mag, btlec.sca3.btlec FROM users LEFT JOIN btlec.sca3 ON users.galec=btlec.sca3.galec WHERE users.id= :id_web_user ");
+	$req=$pdoUser->prepare("SELECT btlec.sca3.mag, btlec.sca3.btlec FROM btlec.sca3 LEFT JOIN web_users.users ON btlec.sca3.galec= web_users.users.galec WHERE web_users.users.id= :id_web_user ");
 	$req->execute(array(
 		':id_web_user'	=>$idwebuser
 	));

@@ -5,7 +5,7 @@ function getLitige($pdoLitige)
 	$req=$pdoLitige->prepare("
 		SELECT
 		dossiers.id as id_main,	dossiers.dossier,dossiers.date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,dossiers.user_crea,dossiers.galec,dossiers.etat_dossier,vingtquatre, inversion,inv_article,inv_fournisseur,inv_tarif,inv_descr,nom,
-		details.id as id_detail,details.ean,details.id_dossier,	details.palette,details.article,details.tarif,details.qte_cde, details.qte_litige,details.dossier_gessica,details.descr,details.fournisseur,details.pj,
+		details.id as id_detail,details.ean,details.id_dossier,	details.palette,details.article,details.tarif,details.qte_cde, details.qte_litige,details.dossier_gessica,details.descr,details.fournisseur,details.pj,details.valo_line,
 		reclamation.reclamation,
 		btlec.sca3.mag, btlec.sca3.centrale, btlec.sca3.btlec,
 		etat.etat
@@ -59,3 +59,24 @@ function getAnalyse($pdoLitige)
 	return $req->fetch(PDO::FETCH_ASSOC);
 
 }
+
+function getComment($pdoLitige){
+	$req=$pdoLitige->prepare("SELECT * FROM dial WHERE id_dossier= :id AND mag =3 LIMIT 1");
+	$req->execute([
+		':id'	=>$_GET['id']
+	]);
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+
+
+// function getDial($pdoLitige){
+
+// 	$req=$pdoLitige->prepare("SELECT * FROM dial WHERE id_dossier= :id AND mag <>3");
+// 	$req->execute([
+// 		':id'	=>$_GET['id']
+// 	]);
+// 	return $req->fetchAll(PDO::FETCH_ASSOC);
+
+
+// }
