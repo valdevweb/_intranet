@@ -43,59 +43,27 @@ Page qui sert à saisir une déclaration initiale => GET['idBa']= article slecti
 
 require ('../../Class/Form/Select.php');
 require ('../../Class/Helpers.php');
-
+require ('../../functions/global.fn.php');
+require('casse-getters.fn.php');
 
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-function getOperateur($pdoCasse){
-	$req=$pdoCasse->query("SELECT CONCAT(prenom, ' ', nom) as operateur,id FROM operateurs WHERE mask=0");
-	$req->execute();
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
-$operateur=getOperateur($pdoCasse);
 
-function getCategorie($pdoCasse){
-	$req=$pdoCasse->query("SELECT * FROM categories WHERE mask=0 ORDER BY categorie");
-	$req->execute();
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
+$operateur=getOperateur($pdoUser);
 $categories=getCategorie($pdoCasse);
-
-
-function getOrigine($pdoCasse){
-	$req=$pdoCasse->query("SELECT * FROM origines WHERE mask=0 ORDER BY origine");
-	$req->execute();
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
 $origines=getOrigine($pdoCasse);
-
-function getTypecasse($pdoCasse){
-	$req=$pdoCasse->query("SELECT * FROM type_casse WHERE mask=0 ORDER BY type");
-	$req->execute();
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
-
 $types=getTypecasse($pdoCasse);
-// utilisé pour info article quand nouvelle déclaration (quand  modif, utilise getCasse)
-function getArticle($pdoQlik){
-	$req=$pdoQlik->prepare("SELECT `GESSICA.CodeDossier` as dossier, `GESSICA.CodeArticle` as article, `GESSICA.GT` as gt, `GESSICA.LibelleArticle` as libelle, `GESSICA.PCB` as pcb, `GESSICA.PANF` as valo, `GESSICA.CodeFournisseur` as cnuf, `GESSICA.NomFournisseur` as fournisseur,	id FROM basearticles WHERE id = :id");
-	$req->execute(array(
-		':id'	=>$_GET['idBa']
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
 
-function addCasse($pdoCasse,$gt,$libelle,$pcb,$uvc,$valo,$pu,$fournisseur){
-	foreach ($_POST as $key => $post)
-	{
-// le champ opérateur est obligatoire, les autres non car ils peuvent saisir leur déclaration en plusieurs fois
-		if($post=='' && $key!='operateur')
-		{
-			$_POST[$key]=null;
-		}
-	}
-	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, palette,cde, etat, last_maj) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :palette, :cde, :etat, :last_maj)" );
+				// $lastInsertId=addCasse($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$dataArticle['panf'],$dataArticle['fournisseur']);
+
+
+
+function addCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette){
+
+	$uvc=$pcb * $_POST['nb_colis'];
+	$valo=$_POST['nb_colis']*$panf;
+	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj)" );
 
 	$req->execute(array(
 		':date_casse'	=>$_POST['date_casse'],
@@ -110,233 +78,168 @@ function addCasse($pdoCasse,$gt,$libelle,$pcb,$uvc,$valo,$pu,$fournisseur){
 		':pcb'	=>$pcb,
 		':uvc'	=>$uvc,
 		':valo'	=>$valo,
-		':pu'	=>$pu,
+		':pu'	=>$panf,
 		':fournisseur'	=>$fournisseur,
 		':id_origine'	=>$_POST['origine'],
 		':id_type'	=>$_POST['type'],
-		':palette'	=>$_POST['palette'],
-		':cde'	=>$_POST['cde'],
+		':id_palette'	=>$idPalette,
 		':etat'	=>0,
 		':last_maj' =>date('Y-m-d H:i:s')
 
-
 	));
-	return $pdoCasse->lastInsertId();
-// return $req->errorInfo();
-
-}
-
-
-function addSerials($pdoCasse,$lastInsertId,$serial)
-{
-	$req=$pdoCasse->prepare("INSERT INTO serials (id_casse,serial_nb) VALUES (:id_casse,:serial_nb)");
-	$req->execute([
-		':id_casse'			=>$lastInsertId,
-		':serial_nb'		=>$serial
-	]);
-	return $req->rowCount();
-// return $req->errorInfo();
-
-}
-
-function checkWebuser($pdoCasse)
-{
-	$req=$pdoCasse->prepare("SELECT id FROM operateurs WHERE id_web_user= :id_web_user");
-	$req->execute([
-		'id_web_user'		=>$_SESSION['id_web_user']
-	]);
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
-
-// utilisé pour info article + info déclaration quand dossier déjà ouvert
-function getCasse($pdoCasse)
-{
-	$req=$pdoCasse->prepare("SELECT * FROM casses WHERE  id= :id");
-	$req->execute([
-		':id'		=>$_GET['idKs']
-	]);
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
-
-function getSerials($pdoCasse){
-	$req=$pdoCasse->prepare("SELECT * FROM serials WHERE  id_casse= :id_casse");
-	$req->execute([
-		':id_casse'		=>$_GET['idKs']
-	]);
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
-
-
-function updateCasse($pdoCasse){
-	foreach ($_POST as $key => $value)
+	if($req->rowCount()==1)
 	{
-// le champ opérateur est obligatoire, les autres non car ils peuvent saisir leur déclaration en plusieurs fois
-		if($value=='')
-		{
-			$_POST[$key]=null;
-		}
+		return $pdoCasse->lastInsertId();
 	}
-	$req=$pdoCasse->prepare("UPDATE casses
-		SET id_operateur= :id_operateur, id_categorie= :id_categorie, id_origine= :id_origine, id_type= :id_type, palette= :palette , cde= :cde, last_maj= :last_maj WHERE id= :id" );
-	$req->execute(array(
-		':id'		=>$_GET['idKs'],
-		':id_operateur'	=>$_POST['operateur'],
-		':id_categorie'	=>$_POST['categorie'],
-		':id_origine'	=>$_POST['origine'],
-		':id_type'	=>$_POST['type'],
-		':palette'	=>$_POST['palette'],
-		':cde'	=>$_POST['cde'],
-		':last_maj' =>date('Y-m-d H:i:s')
+	else{
+		return false;
+	}
+	// return $pdoCasse->lastInsertId();
 
-	));
-	return $req->rowCount();
+}
+
+function paletteExist($pdoCasse){
+	$req=$pdoCasse->prepare("SELECT id FROM palettes WHERE palette= :palette");
+	$req->execute([
+		':palette'	=>$_POST['palette']
+	]);
+	if ($req) {
+        return $req->fetch(PDO::FETCH_ASSOC);
+    }
+    else {
+        return false;
+    }
+}
+
+function addPalette($pdoCasse){
+	$req=$pdoCasse->prepare("INSERT INTO palettes (palette, date_crea) VALUES (:palette, :date_crea) ");
+	$req->execute([
+		':palette'	=>$_POST['palette'],
+		':date_crea'=>date('Y-m-d H:i:s')
+	]);
+	return $pdoCasse->lastInsertId();
+}
+
+	function addSerials($pdoCasse,$lastInsertId,$serial)
+	{
+		$req=$pdoCasse->prepare("INSERT INTO serials (id_casse,serial_nb) VALUES (:id_casse,:serial_nb)");
+		$req->execute([
+			':id_casse'			=>$lastInsertId,
+			':serial_nb'		=>$serial
+		]);
+		return $req->rowCount();
 // return $req->errorInfo();
 
-}
+	}
 
-function deleteSerials($pdoCasse)
-{
-	$req=$pdoCasse->prepare("DELETE FROM serials WHERE id_casse= :id ");
-	$req->execute([
-		':id'		=>$_GET['idKs']
-
-	]);
-	return $req->rowCount();
-}
-
+	function checkWebuser($pdoCasse)
+	{
+		$req=$pdoCasse->prepare("SELECT id FROM operateurs WHERE id_web_user= :id_web_user");
+		$req->execute([
+			'id_web_user'		=>$_SESSION['id_web_user']
+		]);
+		return $req->fetch(PDO::FETCH_ASSOC);
+	}
 
 
 //------------------------------------------------------
 //			DECLARATIONS
 //------------------------------------------------------
-$errors=[];
-$success=[];
+	$errors=[];
+	$success=[];
+
 // déclaration initiale
-if(isset($_GET['idBa']))
-{
-	$dataArticle=getArticle($pdoQlik);
-	$pu=round($dataArticle['valo']/$dataArticle['pcb'],2);
-	$pu=number_format((float)$pu,2,'.',' ');
-	$uvc=$dataArticle['pcb'];
-	if(isset($_POST['submit']))
+	if(isset($_GET['idBa']))
 	{
-		$postData=$_POST;
-		$lastInsertId=addCasse($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$uvc,$dataArticle['valo'],$pu,$dataArticle['fournisseur']);
-		// vide le tableau si il est vide (multidimentional array => jamais vide même si pas de donnée ppuis que contient au moins un tableau vide ou non)
-		$emptiedSerial = array_filter($_POST['serial']);
-		if($lastInsertId>0)
+	// utilisé pour info article quand nouvelle déclaration (quand  modif, utilise getCasse)
+		$dataArticle=getArticleFromBA($pdoQlik,$_GET['idBa']);
+
+		if(isset($_POST['submit']))
 		{
-		}
-		else
-		{
-			$errors[]='impossible d\'ajouter le dossier';
-// exit();
-		}
-
-		if(count($errors)==0){
-
-
-			if(!empty($emptiedSerial))
+		//  si GEM - TV, numéro de série obligatoires
+			if($_POST['categorie']==2)
 			{
-
-				for($i=0;$i<count($_POST['serial']);$i++)
-				{
-					if(!empty($_POST['serial'][$i]))
-					{
-
-						$add=addSerials($pdoCasse,$lastInsertId,$_POST['serial'][$i]);
-
-
-						if($add!=1){
-							$errors[]="impossible d'ajouter le numéro de serie";
-						}
-					}
+			//	$_POST['serial'] renvoie un tableau de tableau
+			// vide le tableau si il est vide (multidimentional array => jamais vide même si pas de donnée ppuis que contient au moins un tableau vide ou non)
+			// nb de numero de series demandés
+				$nbSerialsAsked=count($_POST['serial']);
+				$emptiedSerial = array_filter($_POST['serial']);
+			// nb de serie remplis
+				$nbSerialsGiven=count($emptiedSerial);
+				if($nbSerialsAsked != $nbSerialsGiven){
+					$errors[]="Il manque des numeros de séries, merci de compléter";
 				}
-
 			}
-		}
-		if(count($errors)==0)
-		{
-			$loc='Location:bt-casse-dashboard.php?success='.$lastInsertId;
-			header($loc);
-		}
-
-	}
-
-}
-
-// déclaration en cours
-if(isset($_GET['idKs']))
-{
-	$dataArticle=getCasse($pdoCasse);
-	//  on a pas forcement de numeros de series à chaque fois et ils puevent être saisi ulterieurement
-	if(getSerials($pdoCasse)){
-		$serials=getSerials($pdoCasse);
-	}
-	else{
-		$serials='';
-	}
-
-	if(isset($_POST['submit']))
-	{
-
-		$majCasse=updateCasse($pdoCasse);
-		if($majCasse==1)
-		{
-			$emptiedSerial = array_filter($_POST['serial']);
-			if(!empty($emptiedSerial))
+			if(not_empty(['date_casse','operateur', 'article','dossier','categorie','origine','type','nb_colis','palette'])){
+			}
+			else{
+				$errors[]="Veuillez remplir tous les champs";
+			}
+			if(count($errors)==0)
 			{
-				//  on supprimer les nbum"o de serie si il en existe
-				if(count($serials)>0)
+				// on vérifie si la palette existe déjà, si oui on récupère son id si non on l'ajoute et récupère son id
+				$idPalette=paletteExist($pdoCasse);
+				if($idPalette==false)
 				{
-					$deletedSerials=deleteSerials($pdoCasse);
-					if($deletedSerials>0)
-					{
-						// $success[]="suppression des numéros de séries réussie";
-					}
-					else{
-						$errors[]="Impossible de supprimer les numéros de series pour la mise à jour de la table";
-					}
+					$idPalette=addPalette($pdoCasse);
 				}
-				if(count($errors)==0)
+				else
 				{
-					for($i=0;$i<count($_POST['serial']);$i++)
+					$idPalette=$idPalette['id'];
+				}
+				$lastInsertId=addCasse($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$dataArticle['panf'],$dataArticle['fournisseur'],$idPalette);
+				if($lastInsertId !=false)
+				{
+					echo "lastinsertid n'est pas faux";
+					if(!empty($emptiedSerial))
 					{
-						if(!empty($_POST['serial'][$i]))
+
+						for($i=0;$i<count($_POST['serial']);$i++)
 						{
-							$id=$_GET['idKs'];
-							$add=addSerials($pdoCasse,$id,$_POST['serial'][$i]);
-							if($add!=1){
-								$errors[]="impossible d'ajouter le numéro de serie";
+							if(!empty($_POST['serial'][$i]))
+							{
+
+								$add=addSerials($pdoCasse,$lastInsertId,$_POST['serial'][$i]);
+								if($add!=1){
+									$errors[]="impossible d'ajouter le numéro de serie";
+								}
 							}
 						}
 					}
 				}
+				else{
+					$errors[]='impossible d\'enregistrer les infos casses';
+
+				}
 			}
-			$success[]='mise à jour correctement effectuée';
-		}
-		else
-		{
-			$errors[]='impossible de mettre à jour le dossier';
+			else
+			{
+				$errors[]='impossible d\'ajouter le dossier';
+			}
+
+
+			if(count($errors)==0)
+			{
+				$loc='Location:bt-casse-dashboard.php?success='.$lastInsertId;
+				header($loc);
+			}
+
 		}
 
 	}
 
-
-}
-
 // vérifie si le user connecté à un id_web_user dans la table opérateur => si oui opérateur sélectionné par défaut dans la ld opérateur
-if(checkWebuser($pdoCasse)){
-	$idOp=checkWebuser($pdoCasse);
-	$idOp=$idOp['id'];
-}
-else{
-	$idOp='';
-}
+	if(checkWebuser($pdoCasse)){
+		$idOp=checkWebuser($pdoCasse);
+		$idOp=$idOp['id'];
+	}
+	else{
+		$idOp='';
+	}
 
 
-$today=new DateTime();
-$today=$today->format('Y-m-d');
+	$today=new DateTime();
+	$today=$today->format('Y-m-d');
 
 
 //------------------------------------------------------
@@ -351,7 +254,7 @@ DEBUT CONTENU CONTAINER
 <div class="container">
 	<?= Helpers::returnBtn('bt-casse-dashboard.php'); ?>
 
-	<h1 class="text-main-blue pt-5 pb-3 ">Déclaration de casse</h1>
+	<h1 class="text-main-blue pb-3 ">Déclaration de casse</h1>
 	<div class="row">
 		<div class="col-lg-1"></div>
 		<div class="col">
@@ -383,17 +286,11 @@ DEBUT CONTENU CONTAINER
 			<div class="row mb-1">
 				<div class="col-2 py-1">PCB : </div>
 				<div class="col-3 py-1 bg-light-blue text-right"><?=$dataArticle['pcb']?></div>
-				<div class="col-2 py-1">soit (uvc)</div>
-				<div class="col-3 py-1 bg-light-blue text-right"></div>
+				<div class="col-2 py-1">PU</div>
+				<div class="col-3 py-1 bg-light-blue text-right"><?=isset($dataArticle['panf']) ? $dataArticle['panf'] :''?>&euro;</div>
 				<div class="col py-1"></div>
 			</div>
-			<div class="row">
-				<div class="col-2 py-1">Valo :</div>
-				<div class="col-3 py-1 bg-light-blue text-right"> <?=$dataArticle['valo']?>&euro;</div>
-				<div class="col-2 py-1">soit (PU)</div>
-				<div class="col-3 py-1 bg-light-blue text-right"><?=isset($dataArticle['pu']) ? $dataArticle['pu'] :$pu?>&euro;</div>
-				<div class="col py-1"></div>
-			</div>
+
 		</div>
 	</div>
 
@@ -420,67 +317,39 @@ DEBUT CONTENU CONTAINER
 							<select name="operateur" id="operateur" class="form-control" required>
 								<option value="">Sélectionnez</option>
 								<?php
-								if(isset($dataArticle['id_operateur']))
+								foreach($operateur as $op)
 								{
-									foreach($operateur as $op)
-									{
-										if($dataArticle['id_operateur']==$op['id'])
-										{
-											$selected="selected";
-
-										}
-										else{
-											$selected='';
-										}
-										echo '<option value="'.$op['id'].'" '.$selected.'>'.$op['operateur'].'</option>';
-
-									}
-								}
-								else
-								{
-									foreach($operateur as $op)
-									{
 										// si l'opérateur a un code id_web_user, on met par défaut le select sur ce code
-										if($idOp==$op['id'])
-										{
-											$selected="selected";
-										}
-										else{
-											$selected='';
-										}
-										echo '<option value="'.$op['id'].'" '.$selected.'>'.$op['operateur'].'</option>';
-
+									if($idOp==$op['id'])
+									{
+										$selected="selected";
 									}
+									else{
+										$selected='';
+									}
+									echo '<option value="'.$op['id'].'" '.$selected.'>'.$op['operateur'].'</option>';
 
 								}
+
+
 								?>
 							</select>
-
 						</div>
-
-
-
-
-
 					</div>
 					<div class="col">
-
 					</div>
 				</div>
-
 				<div class="row">
-
 					<div class="col-4">
 						<div class="form-group">
 							<label label="article">Article</label>
-							<input type="text" name="article" class="form-control" id="article" value="<?= isset($dataArticle['article']) ? $dataArticle['article'] :'';?>">
+							<input type="text" name="article" class="form-control" id="article" value="<?= isset($dataArticle['article']) ? $dataArticle['article'] :'';?>" readonly>
 						</div>
 					</div>
 					<div class="col-4">
-
 						<div class="form-group">
 							<label label="Dossier">Dossier</label>
-							<input type="text" name="dossier" id="dossier" class="form-control"  value="<?= isset($dataArticle['dossier']) ? $dataArticle['dossier'] :'';?>">
+							<input type="text" name="dossier" id="dossier" class="form-control"  value="<?= isset($dataArticle['dossier']) ? $dataArticle['dossier'] :'';?>" readonly>
 						</div>
 					</div>
 					<div class="col-4">
@@ -489,36 +358,20 @@ DEBUT CONTENU CONTAINER
 							<select name="categorie" id="categorie" class="form-control">
 								<option value="">Sélectionnez</option>
 								<?php
-								if(isset($dataArticle['id_categorie']))
-								{
-									foreach($categories as $categorie)
-									{
 
-										if($dataArticle['id_categorie']==$categorie['id'])
-										{
-											$selected="selected";
-										}
-										else{
-											$selected='';
-										}
-										echo '<option value="'.$categorie['id'].'" '.$selected.'>'.$categorie['categorie'].'</option>';
-									}
-								}
-								else
+								foreach($categories as $categorie)
 								{
-									foreach($categories as $categorie)
-									{
 
-										if($_POST['categorie']==$categorie['id'])
-										{
-											$selected="selected";
-										}
-										else{
-											$selected='';
-										}
-										echo '<option value="'.$categorie['id'].'" '.$selected.'>'.$categorie['categorie'].'</option>';
+									if(isset($_POST['categorie']) && $_POST['categorie']==$categorie['id'])
+									{
+										$selected="selected";
 									}
+									else{
+										$selected='';
+									}
+									echo '<option value="'.$categorie['id'].'" '.$selected.'>'.$categorie['categorie'].'</option>';
 								}
+
 								?>
 							</select>
 						</div>
@@ -531,35 +384,17 @@ DEBUT CONTENU CONTAINER
 							<select name="origine" id="origine" class="form-control">
 								<option value="">Sélectionnez</option>
 								<?php
-								if(isset($dataArticle['id_origine']))
+								foreach($origines as $origine)
 								{
-									foreach($origines as $origine)
-									{
 
-										if($dataArticle['id_origine']==$origine['id'])
-										{
-											$selected="selected";
-										}
-										else{
-											$selected='';
-										}
-										echo '<option value="'.$origine['id'].'" '.$selected.'>'.$origine['origine'].'</option>';
-									}
-								}
-								else
-								{
-									foreach($origines as $origine)
+									if(isset($_POST['origine']) && $_POST['origine']==$origine['id'])
 									{
-
-										if($_POST['origine']==$origine['id'])
-										{
-											$selected="selected";
-										}
-										else{
-											$selected='';
-										}
-										echo '<option value="'.$origine['id'].'" '.$selected.'>'.$origine['origine'].'</option>';
+										$selected="selected";
 									}
+									else{
+										$selected='';
+									}
+									echo '<option value="'.$origine['id'].'" '.$selected.'>'.$origine['origine'].'</option>';
 								}
 								?>
 							</select>
@@ -571,36 +406,19 @@ DEBUT CONTENU CONTAINER
 							<select name="type" id="type" class="form-control">
 								<option value="">Sélectionnez</option>
 								<?php
-								if(isset($dataArticle['id_type']))
+								foreach($types as $type)
 								{
-									foreach($types as $type)
-									{
 
-										if($dataArticle['id_type']==$type['id'])
-										{
-											$selected="selected";
-										}
-										else{
-											$selected='';
-										}
-										echo '<option value="'.$type['id'].'" '.$selected.'>'.$type['type'].'</option>';
-									}
-								}
-								else
-								{
-									foreach($types as $type)
+									if(isset($_POST['type']) && $_POST['type']==$type['id'])
 									{
-
-										if($_POST['type']==$type['id'])
-										{
-											$selected="selected";
-										}
-										else{
-											$selected='';
-										}
-										echo '<option value="'.$type['id'].'" '.$selected.'>'.$type['type'].'</option>';
+										$selected="selected";
 									}
+									else{
+										$selected='';
+									}
+									echo '<option value="'.$type['id'].'" '.$selected.'>'.$type['type'].'</option>';
 								}
+
 								?>
 							</select>
 						</div>
@@ -612,20 +430,17 @@ DEBUT CONTENU CONTAINER
 					<div class="col-4">
 						<div class="form-group">
 							<label for="nb_colis">Nombre de colis</label>
-							<input type="text" name="nb_colis" class="form-control" id="nb_colis" required value="<?=isset($dataArticle['nb_colis']) ? $dataArticle['nb_colis'] :''?>">
+							<input type="text" name="nb_colis" class="form-control" id="nb_colis" required >
 						</div>
 					</div>
 					<div class="col-4">
 						<div class="form-group">
-							<label for="palette">Palette</label>
-							<input type="text" class="form-control" name="palette" id="palette" value="<?=isset($dataArticle['palette']) ? $dataArticle['palette'] :''?>">
+							<label for="palette">Palette 4919</label>
+							<input type="text" class="form-control" name="palette" id="palette" required>
 						</div>
 					</div>
 					<div class="col-4">
-						<div class="form-group">
-							<label for="cde">Commande</label>
-							<input type="text" class="form-control" name="cde" id="cde" value="<?=isset($dataArticle['cde']) ? $dataArticle['cde'] :''?>">
-						</div>
+
 					</div>
 
 				</div>
@@ -679,19 +494,6 @@ DEBUT CONTENU CONTAINER
 					$('#serial').append(serialInput);
 				}
 			});
-			// recup url
-			// découpe pour avoir le nom du param
-			// si idKs => certains champ doivent être bloqué à la modif
-			var parts = window.location.href;
-			parts=parts.split("?");
-			parts=parts[1].split('=');
-
-			if(parts[0]=='idKs')
-			{
-				$('#nb_colis').attr("disabled",true);
-				$('#article').attr("disabled",true);
-				$('#dossier').attr("disabled",true);
-			}
 
 
 
