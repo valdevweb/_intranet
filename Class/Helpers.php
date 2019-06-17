@@ -25,6 +25,8 @@ class Helpers{
 			return '<div class="row py-3"><div class="col"><p class="text-right"><a href="'.$page.'" class="btn btn-primary">Retour</a></p></div></div>';
 	}
 
+// exemple
+	// Helpers::returnBtn('bt-casse-dashboard.php');
 
     public static function withZero($chiffre){
         if($chiffre < 10){
