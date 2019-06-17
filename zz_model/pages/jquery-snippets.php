@@ -31,6 +31,15 @@ $(document).ready(function(){
 
 });
 
+// afficher message si option (radio) non cliquée (choose = le submit)
+	$("#choose").click(function() {
+			if ($('input[name="rapid"]:checked').length == 0) {
+				alert('Vous devez préciser si il s\'agit d\'une livraison 24/48h');
+				return false; }
+
+			});
+
+
 
 
 
