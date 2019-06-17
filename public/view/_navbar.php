@@ -149,7 +149,7 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 				<li><a href="<?= ROOT_PATH?>/public/litiges/stat-litige-mag.php">Réclamations par magasin</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/exploit-ltg.php">Exploitation</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/ctrl-stock.php">Contrôle de stock</a></li>
-				<li><a href="<?= ROOT_PATH?>/public/casse/bt-casse-dashboard.php" class="lighter-blue">Déclarer une casse</a></li>
+				<li><a href="<?= ROOT_PATH?>/public/casse/bt-casse-dashboard.php" class="lighter-blue">Traitement casse</a></li>
 
 			</ul>
 		</li>
