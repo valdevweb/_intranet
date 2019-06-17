@@ -17,9 +17,18 @@ span.step {
   padding : 0 0.5rem !important;
 }
 
+#dossiers th:nth-child(4),#dossiers td:nth-child(4),
+#dossiers th:nth-child(5),#dossiers td:nth-child(5),
 #dossiers th:nth-child(6),#dossiers td:nth-child(6){
-text-align:  center;
+text-align:  right;
+}
 
+#dossiers td:nth-child(5)::after{
+  content: '\20AC';
+  }
+
+#dossiers th:nth-child(7),#dossiers td:nth-child(7){
+text-align:  center;
 }
 
 
@@ -37,4 +46,10 @@ text-align:  center;
 .container.no-padding{
   padding-left: 0px !important;
   padding-right: 0px !important;
+}
+
+
+#list-palette ul, #list-palette li{
+  /* list-style-type: none !important; */
+  color : #0D47A1
 }
