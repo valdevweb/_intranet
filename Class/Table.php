@@ -2,6 +2,7 @@
 /**
  * création d'un tableau html avec parcours d'un tableau multi et possibilité de désigner une colonne avec des liens
  * voir bt-casse-dashboard pour exempe d'utilisation
+ * bt-casse-dashboard , detail-palette
  */
 class Table{
 
@@ -10,20 +11,22 @@ class Table{
 	private $fields;
 	private $arrLink;
 	private $tableId;
+	private $tableClass;
 
 
 	/**
 	 * [__construct html code pour 1 table avec ou sans id]
 	 * @param string $tableId [#]
 	 */
-	public function __construct($tableId=null)
+	public function __construct($tableClass, $tableId=null)
 	{
-
+		$this->tableClass=$tableClass;
+		$tableClass=implode(' ',$tableClass);
 		if(!is_null($this->tableId=$tableId)){
-				echo '<table class="table" id="'.$this->tableId=$tableId.'"><thead class="thead-dark"><tr>';
+				echo '<table class="'.$tableClass.'" id="'.$this->tableId=$tableId.'"><thead class="thead-dark"><tr>';
 		}
 		else{
-		echo '<table class="table"><thead class="thead-dark"><tr>';
+		echo '<table class="'.$tableClass.'""><thead class="thead-dark"><tr>';
 	}
 	}
 
