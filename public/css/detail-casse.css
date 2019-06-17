@@ -1,0 +1,25 @@
+.yellow-box{
+color: #3a231a;
+border-top : 1px solid #ccc;
+background: #ffc107;
+}
+
+.libelle{
+	/* color:#ffff00 */
+color: #856404;
+font-weight: bold;
+}
+.border-top-big{
+    border-top: 5px solid #43493f !important;
+}
+
+
+.ico-circle {
+    padding:3px 5px 5px 5px;
+    background: #0d47a1;
+    border-radius: 50%;
+    color:  #fff;
+    text-align: center;
+    font-size: 0.7rem;
+	font-weight: bold;
+}
