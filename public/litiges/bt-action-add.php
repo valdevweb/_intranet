@@ -12,8 +12,10 @@ $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
+require('../../Class/Uploader.php');
 
 
+unset($_SESSION['goto']);
 $errors=[];
 $success=[];
 //------------------------------------------------------
@@ -33,7 +35,7 @@ $fLitige=getLitige($pdoLitige);
 
 function getAction($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT libelle, action.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y')as dateFr, concat(prenom, ' ', nom) as name FROM action LEFT JOIN btlec.btlec ON action.id_web_user=btlec.btlec.id_webuser WHERE action.id_dossier= :id ORDER BY date_action");
+	$req=$pdoLitige->prepare("SELECT libelle, action.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y')as dateFr, concat(prenom, ' ', nom) as name, pj FROM action LEFT JOIN btlec.btlec ON action.id_web_user=btlec.btlec.id_webuser WHERE action.id_dossier= :id ORDER BY date_action");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 
@@ -42,16 +44,17 @@ function getAction($pdoLitige)
 }
 $actionList=getAction($pdoLitige);
 
-function addAction($pdoLitige, $contrainte)
+function addAction($pdoLitige, $fileList, $contrainte)
 {
 	$action=strip_tags($_POST['action']);
 	$action=nl2br($action);
-	$req=$pdoLitige->prepare("INSERT INTO action (id_dossier,libelle,id_contrainte,id_web_user,date_action) VALUES (:id_dossier,:libelle,:id_contrainte,:id_web_user,:date_action)");
+	$req=$pdoLitige->prepare("INSERT INTO action (id_dossier,libelle,id_contrainte,id_web_user,pj,date_action) VALUES (:id_dossier,:libelle,:id_contrainte,:id_web_user,:pj,:date_action)");
 	$req->execute(array(
 		':id_dossier'		=>	$_GET['id'],
 		':libelle'		=>	$action,
 		':id_contrainte'	=>$contrainte,
 		':id_web_user'		=> $_SESSION['id_web_user'],
+		':pj'				=>$fileList,
 		':date_action'		=> date('Y-m-d H:i:s'),
 	));
 	return $pdoLitige->lastInsertId();
@@ -85,7 +88,21 @@ function getMagSav($pdoSav,$galec){
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
+function createFileLink($filelist)
+{
+	$rValue='';
+	$filelist=explode(';',$filelist);
 
+	for ($i=0; $i < count($filelist); $i++)
+	{
+		if($filelist[$i] !="")
+		{
+			$rValue.='<a href="'.UPLOAD_DIR.'/litiges/'.$filelist[$i].'"><span class="pr-3"><i class="fas fa-link"></i></span></a>';
+
+		}
+	}
+	return $rValue;
+}
 
 
 if(isset($_POST['submit']))
@@ -93,13 +110,57 @@ if(isset($_POST['submit']))
 
 // si une action préécrite est choisie, il faut vérifie si elle a des contraintes et si oui, faire l'action nécessaire
 
+
+
+	if(isset($_FILES['incfile']['name'][0]) && empty($_FILES['incfile']['name'][0])){
+		$allfilename="";
+	}
+	else
+	{
+		$uploadDir='..\..\..\upload\litiges\\';
+		$uploaded=false;
+		$allfilename="";
+		$nbFiles=count($_FILES['incfile']['name']);
+		for ($f=0; $f <$nbFiles ; $f++)
+		{
+			$filename=$_FILES['incfile']['name'][$f];
+			$maxFileSize = 5 * 1024 * 1024; //5MB
+
+			if($_FILES['incfile']['size'][$f] > $maxFileSize)
+			{
+				$errors[] = 'Attention un des fichiers dépasse la taille autorisée de 5 Mo';
+			}
+			else
+			{
+				// cryptage nom fichier
+		 		// Get the fileextension
+				$ext = pathinfo($filename, PATHINFO_EXTENSION);
+				  // Get filename without extesion
+				$filename_without_ext = basename($filename, '.'.$ext);
+					// Generate new filename => ajout d'un timestamp au nom du fichier
+				$filename = str_replace(' ', '_', $filename_without_ext) . '_' . time() . '.' . $ext;
+				$uploaded=move_uploaded_file($_FILES['incfile']['tmp_name'][$f],$uploadDir.$filename );
+
+			}
+			if($uploaded==false)
+			{
+				$errors[]="impossible de télécharger le fichier";
+			}
+			else
+			{
+
+				$allfilename.=$filename .';';
+			}
+		}
+	}
+
 	if(!empty($_POST['pretxt']))
 	{
 		$help=getHelpInfo($pdoLitige);
 	// si l'action pré-écrite à une contrainte, on l'execute
 		if($help['id_contrainte'] ==NULL)
 		{
-			$newAction=addAction($pdoLitige, $contrainte=null);
+			$newAction=addAction($pdoLitige, $allfilename,$contrainte=null);
 
 			if($newAction>0)
 			{
@@ -129,10 +190,11 @@ if(isset($_POST['submit']))
 			}
 			else
 			{
-				$newAction=addAction($pdoLitige, $help['id_contrainte']);
+				$newAction=addAction($pdoLitige, $allfilename, $help['id_contrainte']);
 				if($newAction>0)
 				{
 					header('Location:contrainte.php?contrainte='.$help['id_contrainte'].'&id='.$_GET['id'].'&action='.$newAction) ;
+
 				}
 				else
 				{
@@ -144,11 +206,12 @@ if(isset($_POST['submit']))
 	}
 	else
 	{
-		$newAction=addAction($pdoLitige);
+		$newAction=addAction($pdoLitige, $allfilename);
 
 		if($newAction>0)
 		{
 			header('Location:bt-action-add.php?id='.$_GET['id']);
+
 
 		}
 		else
@@ -157,12 +220,12 @@ if(isset($_POST['submit']))
 		}
 	}
 
-/*
-
-traitement simple sans contrainte
-
-*/
 }
+
+
+
+
+
 if(isset($_GET['success']))
 {
 	$success[]='action effectuée avec succès';
@@ -205,20 +268,31 @@ DEBUT CONTENU CONTAINER
 						<th>date</th>
 						<th>Par</th>
 						<th>Action</th>
+						<th>Pièces jointes</th>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
 					if(isset($actionList) && count($actionList)>0)
 					{
+
 						foreach ($actionList as $action)
 						{
+							if($action['pj']!='')
+							{
+								$pj=createFileLink($action['pj']);
+							}
+							else
+							{
+								$pj='';
+							}
 
 							echo '<tr>';
 							echo'<td>'.$action['dateFr'].'</td>';
 							echo'<td>'.$action['name'].'</td>';
 
 							echo'<td>'.$action['libelle'].'</td>';
+							echo'<td>'.$pj.'</td>';
 							echo '</tr>';
 						}
 
@@ -254,7 +328,7 @@ DEBUT CONTENU CONTAINER
 			<!-- inside transporteurs -->
 			<div class="row">
 				<div class="col bg-kaki-light">
-					<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" >
+					<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" enctype="multipart/form-data" >
 						<div class="row align-items-end p-3">
 							<div class="col">
 								<p class="heavy">Action existante :</p>
@@ -264,7 +338,13 @@ DEBUT CONTENU CONTAINER
 										<?php
 										foreach($listPretxt as $pretxt)
 										{
-											echo '<option value="'.$pretxt['id'].'">'.$pretxt['nom'].' ('. $pretxt['pretxt'].')</option>';
+											if($pretxt['pretxt']==''){
+												echo '<option value="'.$pretxt['id'].'">'.$pretxt['nom'].'</option>';
+
+											}
+											else{
+												echo '<option value="'.$pretxt['id'].'">'.$pretxt['nom'].' ('. $pretxt['pretxt'].')</option>';
+											}
 
 										}
 
@@ -280,6 +360,12 @@ DEBUT CONTENU CONTAINER
 								<div class="form-group">
 									<label for="action">Description de l'action :</label>
 									<textarea type="text" class="form-control" row="10" name="action" id="msg"></textarea>
+								</div>
+								<div id="upload-zone">
+									<label for='incfile'>Ajouter une pièce jointe : </label>
+									<input type='file' class='form-control-file' id='incfile' name='incfile[]' multiple="" >
+									<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Envoyer d'autres fichiers</a></p>
+									<div id="filelist"></div>
 								</div>
 							</div>
 							<div class="col-auto">
@@ -308,10 +394,36 @@ DEBUT CONTENU CONTAINER
 	$(document).ready(function (){
 		$('#pretxt').on('change',function(){
 			var txt=$('#pretxt option:selected').text();
-			txt=txt.split(' (');
-			var pretxt=txt[1].split(')');
-			$('#msg').val(pretxt[0]);
+			splittxt=txt.split(' (');
+			console.log();
+			if(splittxt.length>1){
+					var pretxt=splittxt[1].split(')');
+				$('#msg').val(pretxt[0]);
+			}else{
+				$('#msg').val('');
+
+			}
+
+
+
 		});
+		var fileName='';
+		var fileList='';
+		$('input[type="file"]').change(function(e){
+			var nbFiles=e.target.files.length;
+			for (var i = 0; i < nbFiles; i++)
+			{
+    		    // var fileName = e.target.files[0].name;
+    		    fileName=e.target.files[i].name;
+    		    fileList += fileName + ' - ';
+    		}
+ 		   // console.log(fileList);
+ 		   titre='<p><span class="heavy">Fichier(s) : </span>'
+ 		   end='</p>';
+ 		   all=titre+fileList+end;
+ 		   $('#filelist').append(all);
+ 		   fileList="";
+ 		});
 	});
 
 </script>

@@ -12,6 +12,7 @@ $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
+unset($_SESSION['goto']);
 
 
 require 'echanges.fn.php';
@@ -103,7 +104,7 @@ $analyse=getAnalyse($pdoLitige);
 
 function getAction($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT libelle, action.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y')as dateFr, concat(prenom, ' ', nom) as name FROM action LEFT JOIN btlec.btlec ON action.id_web_user=btlec.btlec.id_webuser WHERE action.id_dossier= :id ORDER BY date_action");
+	$req=$pdoLitige->prepare("SELECT libelle, action.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y')as dateFr, concat(prenom, ' ', nom) as name, pj FROM action LEFT JOIN btlec.btlec ON action.id_web_user=btlec.btlec.id_webuser WHERE action.id_dossier= :id ORDER BY date_action");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 
@@ -314,12 +315,12 @@ if(isset($_POST['annuler']))
 }
 // calcul valo totale uniquement si inversion de palette et palette reçue non toruvéé au moment de la déclaration
 function getSumLitige($pdoLitige){
-		$req=$pdoLitige->prepare("SELECT sum(valo_line) as sumValo, dossiers.valo, id_reclamation FROM details LEFT JOIN dossiers ON details.id_dossier= dossiers.id WHERE details.id_dossier= :id");
+	$req=$pdoLitige->prepare("SELECT sum(valo_line) as sumValo, dossiers.valo, id_reclamation FROM details LEFT JOIN dossiers ON details.id_dossier= dossiers.id WHERE details.id_dossier= :id");
 	$req->execute([
 		':id'		=>$_GET['id']
 	]
 
-	);
+);
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
@@ -330,7 +331,7 @@ function getSumPaletteRecu($pdoLitige){
 		':id'		=>$_GET['id']
 	]
 
-	);
+);
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
@@ -744,6 +745,7 @@ DEBUT CONTENU CONTAINER
 							<th>date</th>
 							<th>Par</th>
 							<th>Action</th>
+							<th>PJ</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -752,12 +754,20 @@ DEBUT CONTENU CONTAINER
 						{
 							foreach ($actionList as $action)
 							{
-
+								if($action['pj']!='')
+								{
+									$pj=createFileLink($action['pj']);
+								}
+								else
+								{
+									$pj='';
+								}
 								echo '<tr>';
 								echo'<td>'.$action['dateFr'].'</td>';
 								echo'<td>'.$action['name'].'</td>';
 
 								echo'<td>'.$action['libelle'].'</td>';
+								echo'<td>'.$pj.'</td>';
 								echo '</tr>';
 							}
 
