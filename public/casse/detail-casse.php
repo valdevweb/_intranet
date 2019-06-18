@@ -126,7 +126,7 @@ if(isset($_POST['submit_clos']))
 
  // on affiche soit les info financières, soit la cloture avec reprise ou destruction  soit les formulaires de traitement
 
-if($casseInfo['detruit']==1 || $casseInfo['repris']==1){
+if($casseInfo['detruit']==1 ){
 	$sansSuite=true;
 }
 elseif($casseInfo['mt_mag'] != null || $casseInfo['mt_decote'] != null || $casseInfo['mt_ndd'] != null ){
@@ -329,10 +329,7 @@ DEBUT CONTENU CONTAINER
 				if($casseInfo['detruit'] ==1){
 					$closMotif= ' détruits';
 				}
-				elseif($casseInfo['repris'] ==1){
-					$closMotif= ' repris';
 
-				}
 				echo '<div class="row mb-5">';
 				echo '<div class="col">';
 				echo '<p class="alert alert-primary ">Ce ou ces produits ont été '.$closMotif.'</p>';
