@@ -105,7 +105,7 @@ function addCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette){
 function addAndCloseCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette){
 	$uvc=$pcb * $_POST['nb_colis'];
 	$valo=$uvc*$panf;
-	$decote=round($valo/2);
+	$decote=0;
 	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj,  detruit, date_clos, mt_mag, mt_decote) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :detruit, :date_clos, :mt_mag, :mt_decote)" );
 
 	$req->execute(array(
@@ -130,7 +130,7 @@ function addAndCloseCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPal
 		':last_maj' =>date('Y-m-d H:i:s'),
 		':detruit'	=>1,
 		':date_clos'	=>date('Y-m-d H:i:s'),
-		':mt_mag'		=> $decote,
+		':mt_mag'		=> 0,
 		':mt_decote'	=>$decote
 
 	));
