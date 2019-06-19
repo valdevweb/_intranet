@@ -59,9 +59,10 @@ $types=getTypecasse($pdoCasse);
 
 
 function addCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette){
-
+	//panf =pu
+	//valo = nbcolis *
 	$uvc=$pcb * $_POST['nb_colis'];
-	$valo=$_POST['nb_colis']*$panf;
+	$valo=$uvc*$panf;
 	$decote=round($valo/2);
 
 	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj, mt_mag, mt_decote) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :mt_mag, :mt_decote)" );
@@ -86,7 +87,7 @@ function addCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette){
 		':id_palette'	=>$idPalette,
 		':etat'	=>0,
 		':last_maj' =>date('Y-m-d H:i:s'),
-		':mt_mag'		=> $valo,
+		':mt_mag'		=> $decote,
 		':mt_decote'	=>$decote
 
 	));
@@ -102,9 +103,8 @@ function addCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette){
 
 
 function addAndCloseCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette){
-
 	$uvc=$pcb * $_POST['nb_colis'];
-	$valo=$_POST['nb_colis']*$panf;
+	$valo=$uvc*$panf;
 	$decote=round($valo/2);
 	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj,  detruit, date_clos, mt_mag, mt_decote) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :detruit, :date_clos, :mt_mag, :mt_decote)" );
 
@@ -130,7 +130,7 @@ function addAndCloseCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPal
 		':last_maj' =>date('Y-m-d H:i:s'),
 		':detruit'	=>1,
 		':date_clos'	=>date('Y-m-d H:i:s'),
-		':mt_mag'		=> $valo,
+		':mt_mag'		=> $decote,
 		':mt_decote'	=>$decote
 
 	));
@@ -161,10 +161,18 @@ function paletteExist($pdoCasse){
 }
 
 function addPalette($pdoCasse){
-	$req=$pdoCasse->prepare("INSERT INTO palettes (palette, date_crea) VALUES (:palette, :date_crea) ");
+	// si le produit par en detruction, il est mis sur un palette "hsXXX" et donc on peut mettre le statut de la palette à 3 =détruite
+	if(isset($_POST['destroy'])){
+		$statut=3;
+	}
+	else{
+		$statut=0;
+	}
+	$req=$pdoCasse->prepare("INSERT INTO palettes (palette, date_crea, statut) VALUES (:palette, :date_crea, :statut) ");
 	$req->execute([
 		':palette'	=>$_POST['palette'],
-		':date_crea'=>date('Y-m-d H:i:s')
+		':date_crea'=>date('Y-m-d H:i:s'),
+		':statut'=>$statut
 	]);
 	return $pdoCasse->lastInsertId();
 }
