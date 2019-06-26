@@ -435,6 +435,7 @@ if(isset($_POST['choose']))
 				$pul=null;
 
 			}
+
 			$detail=addDetails($pdoLitige, $lastInsertId,$numDossier,$art['palette'],$art['facture'],$dateFact, $art['article'], $art['gencod'],$art['dossier'], $art['libelle'], $art['qte'],$art['tarif'], $art['fournisseur'], $art['cnuf'],$tete,$detailbox,$puv,$pul );
 			if($detail>0)
 			{
@@ -451,6 +452,7 @@ if(isset($_POST['choose']))
 		}
 		elseif ($added>0 && isset($_POST['palette_complete']))
 		{
+
 			header('Location:declaration-detail-palette.php?id='.$lastInsertId);
 		}
 	}
