@@ -242,17 +242,19 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 	<div class="spacing-s"></div>
 	<table class="padding-table border-table-sec">
 		<tr>
-			<td class="cinq bg-sec text-white">CODE ARTICLE</td>
-			<td class="cinq bg-sec text-white">DESIGNATION</td>
-			<td class="cinq bg-sec text-white">QUANTITE</td>
-			<td class="cinq bg-sec text-white">VALORISATION</td>
-			<td class="cinq bg-sec text-white">RECLAMATION</td>
+			<td class="sept bg-sec text-white">PALETTE</td>
+			<td class="sept bg-sec text-white">CODE ARTICLE</td>
+			<td class="trois bg-sec text-white">DESIGNATION</td>
+			<td class="dix bg-sec text-white">QTE</td>
+			<td class="sept bg-sec text-white">VALO</td>
+			<td class="sept bg-sec text-white">RECLAMATION</td>
 		</tr>
 		<?php
 		$sumValo=0;
 		foreach ($litige as $prod)
 		{
 			echo '<tr>';
+			echo'<td>'.$prod['palette'].'</td>';
 			echo'<td>'.$prod['article'].'</td>';
 			echo'<td>'.$prod['descr'].'</td>';
 			echo'<td class="text-right">'.$prod['qte_litige'].'</td>';
