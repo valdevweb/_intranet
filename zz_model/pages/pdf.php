@@ -88,7 +88,9 @@ $htmlMail=str_replace('{MAGTO}',$_SESSION['nom'],$htmlMail);
 include('pdf-fiche-suivi.php');
 $html=ob_get_contents();
 ob_end_clean();
-$footer='<table class="padding-table"><tr><td>TRAITEMENT</td></tr><tr><td class="spacing-l"></td></tr><tr><td>Date et validation</td></tr><tr><td class="spacing-l"></td></tr></table>';
+$footer='<table class="padding-table">';
+$footer.='<tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>';
+
 $path='http://172.30.92.53/'.VERSION.'upload/litiges/'.$html;
 
 $mpdf = new \Mpdf\Mpdf();
@@ -96,3 +98,13 @@ $mpdf->SetHTMLFooter($footer);
 $mpdf->WriteHTML($path);
 		// $pdfContent = $mpdf->Output('', 'S');
 $pdfContent = $mpdf->Output();
+
+
+
+MULTIPDF
+
+soit addPage()
+
+soit css
+	<div style="page-break-after:always"></div>
+voir btlecest=>casse => pdf-mag

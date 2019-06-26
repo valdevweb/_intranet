@@ -43,6 +43,8 @@ $message = (new Swift_Message($subject))
 ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail SAV Leclerc'))
 // ->setTo(array('valerie.montusclat@btlec.fr', 'valerie.montusclat@btlec.fr' => 'val'))
 ->setTo($magDest)
+// ->setCc($cc);
+
 // ->addCc($copySender['email'])
 ->addBcc('valerie.montusclat@btlec.fr');
 		// ->attach($attachmentPdf)

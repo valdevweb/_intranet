@@ -61,3 +61,68 @@ $(document).ready(function(){
 	});
 
 </script>
+
+		<aside id="modal1" class="vm-modal" aria-hidden="true" role="modal"  style="display: none;">
+			<div class="vm-modal-wrapper">
+				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
+					<div class="form-group">
+						<label class="text-main-blue">Commentaire :</label>
+						<textarea class="form-control" name="cmt" rows="3" id="cmtarea"></textarea>
+					</div>
+					<div class="form-group">
+
+						<input type="hidden" class="form-control" name="iddossier" id="hiddeninput">
+					</div>
+					<button class="btn btn-primary" name="validate">Valider</button>
+					<button class="btn btn-red" id="annuler">Annuler</button>
+				</form>
+			</div>
+		</aside>
+
+
+
+
+
+	<script type="text/javascript">
+
+		$(document).ready(function(){
+			// recup url et decoupage
+			var url = window.location + '';
+			var splited=url.split("#");
+			if(splited[1]==undefined)
+			{
+				var line='';
+			}
+			else if(splited.length==2)
+			{
+				var line=splited[1];
+				$("tr#"+line).addClass("anim");
+			}
+
+			// affichage modal
+			$('.stamps').on('click',function(){
+				var line=$(this).attr("data")
+			;
+				$('#hiddeninput').val(line);
+				$('#modal1').css("display","null");
+				$('#modal1').removeAttr('aria-hidden');
+				// $('#modal1').attr('aria-modal', true);
+				$('#cmtarea').focus();
+			// $("tr#"+line).addClass("anim");
+		});
+			$('#annuler').on('click', function(){
+
+				$('#modal1').css("display","hidden");
+
+			});
+
+			// boite de dialogue confirmation clic sur lien
+			$('.unvalidate').on('click', function(){
+			return confirm('Etes vous sûrs de vouloir passer le statut du dossier en non statué ?')
+		});
+
+		});
+
+
+
+	</script>
