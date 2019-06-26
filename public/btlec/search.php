@@ -17,8 +17,14 @@ function listMagFn($pdoBt){
 	$req=$pdoBt->query("SELECT * FROM msg LEFT JOIN sca3 on msg.id_galec=sca3.galec GROUP BY sca3.mag ORDER BY sca3.mag");
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-$listMag=listMagFn($pdoBt);
 
+function listMagServiceFn($pdoBt){
+	$req=$pdoBt->prepare("SELECT * FROM msg LEFT JOIN sca3 on msg.id_galec=sca3.galec WHERE msg.id_service= :id_service GROUP BY sca3.mag ORDER BY sca3.mag");
+	$req->execute(array(
+		':id_service'	=>$_SESSION['id_service']
+	));
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
 
 function histoMagFn($pdoBt){
 	$req=$pdoBt->prepare("SELECT msg.id as id_detail, date_msg, real_service, etat, msg FROM msg LEFT JOIN sca3 on msg.id_galec=sca3.galec INNER JOIN  services on msg.id_service=services.id WHERE msg.id_galec= :mag ORDER BY date_msg DESC");
@@ -37,10 +43,13 @@ function histoMagServiceFn($pdoBt){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
-
-
-
+function getMyService($pdoBt){
+	$req=$pdoBt->prepare("SELECT full_name FROM services WHERE id= :id_service ");
+	$req->execute(array(
+		':id_service'	=>$_SESSION['id_service']
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
 
 //----------------------------------------------------
 // VIEW - HEADER
@@ -49,18 +58,27 @@ function histoMagServiceFn($pdoBt){
 include('../view/_head.php');
 include('../view/_navbar.php');
 
+if($d_searchMag)
+{
+	$listMag=listMagFn($pdoBt);
+	$infoService='';
+}
+else{
 
+	$listMag=listMagServiceFn($pdoBt);
+	$infoService=getMyService($pdoBt);
+	$infoService= ' - service ' . $infoService['full_name'];
+}
 
 if(isset($_POST['search']))
 {
-	if($d_exploit)
+	if($d_searchMag)
 	{
-			$histoMag=histoMagFn($pdoBt);
+		$histoMag=histoMagFn($pdoBt);
 	}
 	else
 	{
 		$histoMag=histoMagServiceFn($pdoBt);
-
 	}
 }
 
@@ -69,7 +87,7 @@ if(isset($_POST['search']))
 ?>
 <div class="container">
 
-	<h1 class="blue-text text-darken-4">Historique des demandes par magasin</h1>
+	<h1 class="blue-text text-darken-4">Historique des demandes par magasin <?= $infoService?></h1>
 
 	<div class="row bgwhite">
 		<div class="int-padding">
@@ -78,19 +96,19 @@ if(isset($_POST['search']))
 			<br><br>
 			<div class="col m4">
 				<form method="post">
-				<div class="form-group">
-					<!-- <label for="mag">Sélectionner le magasin :</label> -->
-					<select class="browser-default" id="mag" name="mag">
-						<option value="">Sélectionner</option>
-						<?php foreach ($listMag as $mag) : ?>
-							<option value="<?= $mag['id_galec']?>"><?= $mag['mag'] ?></option>
-						<?php endforeach ?>
+					<div class="form-group">
+						<!-- <label for="mag">Sélectionner le magasin :</label> -->
+						<select class="browser-default" id="mag" name="mag">
+							<option value="">Sélectionner</option>
+							<?php foreach ($listMag as $mag) : ?>
+								<option value="<?= $mag['id_galec']?>"><?= $mag['mag'] ?></option>
+							<?php endforeach ?>
 
-					</select>
-				</div>
-				<p class="right-align"><button type="submit" id="search" class="btn btn-primary" name="search">Rechercher</button></p>
-				<p>&nbsp;</p>
-			</form>
+						</select>
+					</div>
+					<p class="right-align"><button type="submit" id="search" class="btn btn-primary" name="search">Rechercher</button></p>
+					<p>&nbsp;</p>
+				</form>
 			</div>
 			<div class="col m8"></div>
 
@@ -111,41 +129,41 @@ if(isset($_POST['search']))
 				</tr>
 
 				<?php if(isset($histoMag)): ?>
-				<?php foreach ($histoMag as $msg) : ?>
-					<tr>
-						<td><?=$msg['msg']?></td>
-						<td><?= date('d-m-Y',strtotime($msg['date_msg']))?></td>
-						<td><?= $msg['real_service']?></td>
-						<td><?= $msg['etat']?></td>
-						<td><a href="answer.php?msg=<?=$msg['id_detail']?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
-					</tr>
-				<?php endforeach ?>
-				<?php else: ?>
-					<tr>
-						<td colspan="5">Aucun magasin sélectionné</td>
-					</tr>
-				<?php endif; ?>
-			</table>
+					<?php foreach ($histoMag as $msg) : ?>
+						<tr>
+							<td><?=$msg['msg']?></td>
+							<td><?= date('d-m-Y',strtotime($msg['date_msg']))?></td>
+							<td><?= $msg['real_service']?></td>
+							<td><?= $msg['etat']?></td>
+							<td><a href="answer.php?msg=<?=$msg['id_detail']?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+						</tr>
+					<?php endforeach ?>
+					<?php else: ?>
+						<tr>
+							<td colspan="5">Aucun magasin sélectionné</td>
+						</tr>
+					<?php endif; ?>
+				</table>
+			</div>
 		</div>
+
+
+
+
+
 	</div>
 
+	<?php
 
 
-
-
-</div>
-
-<?php
-
-
-?>
+	?>
 
 
 
 
 
-<?php
+	<?php
 //----------------------------------------------------
 // VIEW - FOOTER
 //----------------------------------------------------
-include('../view/_footer.php');
+	include('../view/_footer.php');
