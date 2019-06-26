@@ -11,7 +11,6 @@ if (preg_match('/_btlecest/', $path))
 	define("VERSION",'_');
 	define("PORTAIL","Portail BTlec - dev" );
 	define("UPLOAD_DIR","http://172.30.92.53/_upload" );
-
 }
 else
 {
@@ -25,6 +24,9 @@ else
 
 
 }
+
+define("PDF_FOOTER", '<table class="padding-table"><tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>');
+
 
 require_once $pdo_file;
 $okko= 'version : ' . ROOT_PATH  .', db  : '.$pdo_file;
