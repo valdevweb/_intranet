@@ -52,14 +52,17 @@ function getReclamation($pdoLitige){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function updateDetail($pdoLitige,$id,$qteLitige,$pj, $inv_palette){
-	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inv_palette= :inv_palette WHERE id= :id");
+// même fonction que ce sont inversion de palette ou non ($inv_palette mis à nul si non)
+function updateDetail($pdoLitige,$id,$qteLitige,$pj, $inv_palette, $valoLig){
+	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inv_palette= :inv_palette, valo_line= :valo_line WHERE id= :id");
 	$req->execute(array(
 		':reclamation' =>$_POST['form_motif'],
 		':qte_litige'	=>$qteLitige,
 		':id'			=>$id,
 		':pj'			=>$pj,
-		':inv_palette'	=>$inv_palette
+		':inv_palette'	=>$inv_palette,
+		':valo_line'			=>$valoLig,
+
 	));
 	return $req->rowCount();
 }
@@ -226,7 +229,8 @@ if(isset($_POST['submit']))
 		{
 			foreach ($fLitige as $litige)
 			{
-				$do=updateDetail($pdoLitige,$litige['detail_id'], $litige['qte_cde'], $allfilename, $inv_palette);
+				$valoLig=$litige['tarif'];
+				$do=updateDetail($pdoLitige,$litige['detail_id'], $litige['qte_cde'], $allfilename, $inv_palette, $valoLig);
 				if($do>0)
 				{
 					$foreachSuccess[]="success";
