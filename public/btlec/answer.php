@@ -38,8 +38,7 @@ addRecord($pdoStat,$page,$action, $descr);
 
 //------------------------------>
 
-include '../view/_head.php';
-include '../view/_navbar.php';
+
 
 //------------------------------------------------------------
 //				affiche lien vers piec jointe si existe
@@ -165,6 +164,7 @@ if(isset($_POST['post-reply']))
 		//------------------------------
 		if(count($err)>0)
 		{
+			header('Location:'. ROOT_PATH.'/public/btlec/dashboard.php?success=2');
 
 		}
 		else
@@ -276,7 +276,8 @@ if(isset($_POST['closing'])){
 	}
 
 }
-
+include '../view/_head.php';
+include '../view/_navbar.php';
 
 ?>
 <div class="container">
@@ -421,7 +422,11 @@ if(isset($_POST['closing'])){
 
 
 				<div class="row">
-					<div class='col l6'></div>
+					<div class='col l3'></div>
+					<div class='col l3' id="wait">
+
+					</div>
+
 					<div class='col l3'>
 						<p class="center">
 							<input type="checkbox" class="filled-in" id="clos" checked="checked" name="clos" />
@@ -431,9 +436,10 @@ if(isset($_POST['closing'])){
 
 					<div class='col l3'>
 						<p class="center">
-							<button class="btn" type="submit" name="post-reply">Répondre</button>
+							<button class="btn" type="submit" name="post-reply" >Répondre</button>
 						</p>
 					</div>
+
 				</div>
 			</form>
 		</div>
@@ -491,9 +497,19 @@ if(isUserInGroup($pdoBt,$idUser,"admin"))
 <!-- affichage des messages d'erreur -->
 
 
-</div>  <!--container
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+
+		$("#answer").submit(function( event )
+		{
+			$("#wait" ).append('<i class="fa fa-spinner" aria-hidden="true"></i>&nbsp;&nbsp;<span class="pl-3">Merci de patienter</span>')
+		});
+	});
 
 
+</script>
 <?php
 include('../view/_footer.php');
 ?>
