@@ -28,9 +28,16 @@ $d_rev=isUserAllowed($pdoUser,$revIds);
 // accès comm : admin, comm
 $comIds=array(5,6);
 $d_comm=isUserAllowed($pdoUser,$comIds);
-// accès exploit : admin
+// accès exploit + : admin
 $exploitIds=array(5);
 $d_exploit=isUserAllowed($pdoUser,$exploitIds);
+
+// accès exploit stat : admin + chargé de mission
+$exploitStatIds=array(5,78);
+$d_exploitStat=isUserAllowed($pdoUser,$exploitStatIds);
+
+$searchMagIds=array(5,78);
+$d_searchMag=isUserAllowed($pdoUser, $searchMagIds);
 // accès conseil : admin, consultation conseil,exploit conseil, inscription
 $conseilIds=array(5,9,10,27);
 $d_conseil=isUserAllowed($pdoUser,$conseilIds);
@@ -50,8 +57,10 @@ $d_tempSav=isUserAllowed($pdoUser,$tempSavIds);
 $magSocamilIds=array(66,5);
 $d_Socamil=isUserAllowed($pdoUser,$magSocamilIds);
 
-$litigeBtIds=array(69);
+$litigeBtIds=array(69,78);
 $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
+$missionIds=array(78,5);
+$d_mission=isUserAllowed($pdoUser, $missionIds);
 
 ?>
 <div id='cssmenu'>
@@ -234,13 +243,15 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 		</li>
 		<?php
 			//ajout menu exploitation salon
-		$exploitNav="<li class='active has-sub'><a href='".ROOT_PATH. "/public/exploit/connexion.php' ><span>Exploit</span></a>";
-		$exploitNav.="<ul><li><a href='".ROOT_PATH."/public/salon/stats-salon-2019.php'><span>Stats Salon 2019</span></a></li>";
+		$exploitHead="<li class='active has-sub'><a href='".ROOT_PATH. "/public/exploit/connexion.php' ><span>Exploit</span></a>";
+		$exploitStat="<ul><li><a href='".ROOT_PATH."/public/salon/stats-salon-2019.php'><span>Stats Salon 2019</span></a></li>";
+		$exploitStat.="<li><a href='".ROOT_PATH."/public/exploit/connexion.php'><span>Suivi magasins</span></a></li>";
 
+		$exploitMore="<li><a href='".ROOT_PATH."/public/doc/flash-validation.php'><span>Suivi des infos flash</span></a></li>";
+		$exploitMore.="<li><a href='".ROOT_PATH."/public/exploit/upload-adh.php'><span>Upload documents Adhérents</span></a></li>";
+		$exploitEnd='</ul>';
+		$exploitEnd.="</li>";
 
-		$exploitNav.="<li><a href='".ROOT_PATH."/public/doc/flash-validation.php'><span>Suivi des infos flash</span></a></li>";
-		$exploitNav.="<li><a href='".ROOT_PATH."/public/exploit/upload-adh.php'><span>Upload documents Adhérents</span></a></li>";
-		$exploitNav.="<li><a href='".ROOT_PATH."/public/exploit/connexion.php'><span>Suivi magasins</span></a></li></ul></li>";
 		$lcomUserNav="<li class='active has-sub'><a href='#' title='espace LCommerce - documents' ><span>LCommerce</span></a>";
 		$lcomUserNav.="<ul><li><a href='".ROOT_PATH."/public/lcom/doc-lcom.php'><span>Documents</span></a></li>";
 		$lcomAdminNav="<li><a href='".ROOT_PATH."/public/lcom/upload-lcom.php'><span>Ajout de documents</span></a></li>";
@@ -248,10 +259,19 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 
 		if($d_exploit)
 		{
-			echo $exploitNav;
-		}
+			echo $exploitHead;
 
-		if($d_lcomUser && !$d_lcomAdmin)
+			echo $exploitStat;
+			echo $exploitMore;
+			echo $exploitEnd;
+		}
+		elseif($d_exploitStat){
+			echo $exploitHead;
+
+			echo $exploitStat;
+			echo $exploitEnd;
+		}
+		elseif($d_lcomUser && !$d_lcomAdmin)
 		{
 			echo $lcomUserNav .'</ul></li>';
 		}
@@ -271,6 +291,19 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 
 			echo $conseilNav;
 		}
+
+		if($d_mission)
+		{
+			$missionNav="<li class='has-sub'><a href='http://172.30.92.53/".$version."' ><span>CHARGES DE MISSION</span></a>";
+			$missionNav.="<ul><li><a href='http://172.30.92.53/".$version."cm/cm/index.php' ><span>Portail CM</span></a></li>";
+			$missionNav.="<li><a href='http://172.30.92.53/".$version."' ><span>Fichier hebdo</span></a></li>";
+			$missionNav.="<li><a href='http://172.30.92.53/".$version."' ><span>Fil d'actu</span></a></li>";
+			$missionNav.='</ul>';
+			$missionNav.='</li>';
+			echo $missionNav;
+		}
+
+
 		?>
 		<li><a href="http://172.30.92.53/<?=$version?>sav/scapsav/home.php" class="tooltipped" data-position="bottom" data-tooltip="site du portail SAV">Portail SAV</a></li>
 		<li><a href="<?= ROOT_PATH ?>/public/user/profil.php" class="tooltipped" data-position="bottom" data-tooltip="Votre compte"><span><i class="fa fa-user"></i></span></a></li>
