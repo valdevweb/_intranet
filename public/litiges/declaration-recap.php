@@ -15,20 +15,37 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require_once  '../../vendor/autoload.php';
 
-if($_SESSION['type']=='btlec'){
-	unset($_SESSION['id_galec']);
-	if(isset($_SESSION['palette']))
-	{
-		unset($_SESSION['palette']);
-		unset($_SESSION['vol-id']);
+// if($_SESSION['type']=='btlec'){
+// 	unset($_SESSION['id_galec']);
+// 	if(isset($_SESSION['palette']))
+// 	{
+// 		unset($_SESSION['palette']);
+// 		unset($_SESSION['vol-id']);
 
-	}
-}
+// 	}
+// 	if(isset($_SESSION['dossier_litige'])){
+// 		$numDossier=$_SESSION['dossier_litige'];
+// 		unset($_SESSION['dossier_litige']);
+
+// 	}
+// }
 
 
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
+
+// le numéro de dossier du litige et non l'id du litige
+function getLastNumDossier($pdoLitige)
+{
+	$req=$pdoLitige->prepare("SELECT dossier FROM dossiers ORDER BY dossier DESC LIMIT 1");
+	$req->execute();
+	return $req->fetch(PDO::FETCH_ASSOC);
+	// return $req->errorInfo();
+}
+
+
+
 function getLitige($pdoLitige){
 	$req=$pdoLitige->prepare("SELECT dossiers.id as id, dossier, mag, btlec FROM dossiers LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec WHERE dossiers.id= :id");
 	$req->execute(array(
@@ -39,12 +56,12 @@ function getLitige($pdoLitige){
 $fLitige=getLitige($pdoLitige);
 
 function getSumLitige($pdoLitige){
-		$req=$pdoLitige->prepare("SELECT sum(valo_line) as sumValo, dossiers.valo, id_reclamation FROM details LEFT JOIN dossiers ON details.id_dossier= dossiers.id WHERE details.id_dossier= :id");
+	$req=$pdoLitige->prepare("SELECT sum(valo_line) as sumValo, dossiers.valo, id_reclamation FROM details LEFT JOIN dossiers ON details.id_dossier= dossiers.id WHERE details.id_dossier= :id");
 	$req->execute([
 		':id'		=>$_GET['id']
 	]
 
-	);
+);
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
@@ -55,7 +72,7 @@ function getSumPaletteRecu($pdoLitige){
 		':id'		=>$_GET['id']
 	]
 
-	);
+);
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
@@ -67,9 +84,36 @@ function updateValoDossier($pdoLitige,$sumValo){
 	]);
 	return $req->rowCount();
 }
+// on a normalement toute les infos donc on peut recopier de la table temp à la table de prod
+
+if(isset($_GET['id']))
+{
+	// si on a imposé un numéro de dossier sur la page déclaration basic, on l'a récupéré dans la var de session et affecté à numDossier
+	if(!isset($numDossier)){
+		$numDossier=getLastNumDossier($pdoLitige);
+		$numDossier=$numDossier['dossier'];
+			// il faut vérifier que l'on a pas changé d'année
+			// prend les 2 1er caractère du numdossier pour les comparer à l'année actuelle
+			// si différent de l'anneé actuelle, on a changé d'année par rapport au der dossier
+			// il faut donc créer le 1er numdossier
+		$yearDossier=substr($numDossier,0,2);
+		if($yearDossier==date('y'))
+		{
+				// pas de chg d'année, on prend le der num dossier, oon ajoute 1
+			$numDossier=$numDossier +1;
+		}
+		else
+		{
+			$numDossier=date('y').'001';
+
+		}
+	}
+//------------------------------------------------------
+//			Recopie de la base temp vers la base
+//------------------------------------------------------
 
 
-// on profite du recap pour calculer la valo totale d'un litige
+	// on profite du recap pour calculer la valo totale d'un litige
 // 2 cas
 // normal : somme,
 // inversion de palette = somme palette cammandé - sommme palette reçue
@@ -89,6 +133,13 @@ else{
 	$sumValo=$sumLitige['sumValo'];
 	$update=updateValoDossier($pdoLitige,$sumValo);
 }
+
+}
+
+
+
+
+
 
 $errors=[];
 $success=[];
@@ -244,79 +295,79 @@ DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
 
-<p class="text-right pt-1">
-	<h1 class="text-main-blue py-5 ">Ouverture du dossier de litige n° <?=$fLitige['dossier']?></h1>
-	<?php
-	ob_start();
-	?>
-	<div class="row">
-		<div class="col-lg-1 col-xxl-2"></div>
-		<div class="col">
-			<div class="alert alert-success">
-				Votre dossier litige <strong>n° <?= $fLitige['dossier'] ?> </strong>a été transmis à BTLec pour étude. <br> Vous pourrez consulter l'avancement de votre dossier sur le portail sous cette référence.
-			</div>
-		</div>
-		<div class="col-lg-1 col-xxl-2"></div>
-	</div>
-	<?php
-	$magContent=ob_get_contents();
-	ob_end_clean();
-	ob_start();
-	?>
-	<div class="row">
-		<div class="col-lg-1 col-xxl-2"></div>
-		<div class="col">
-			<div class="alert alert-success">
-				<div class="row">
-					<div class="col">
-						Le dossier litige <strong>n° <?= $fLitige['dossier'] ?> </strong>a bien été enregistré. Souhaitez vous envoyer le mail pour avertir le magasin ?
-					</div>
-				</div>
-				<div class="row">
-					<div class="col">
-						<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" >
-							<div class="text-center pt-3">
-								<button type="submit" id="submit" class="btn btn-secondary" name="submit"><i class="fas fa-envelope pr-3"></i>Envoyer</button>
-							</div>
-						</form>
-					</div>
+	<p class="text-right pt-1">
+		<h1 class="text-main-blue py-5 ">Ouverture du dossier de litige n° <?=$fLitige['dossier']?></h1>
+		<?php
+		ob_start();
+		?>
+		<div class="row">
+			<div class="col-lg-1 col-xxl-2"></div>
+			<div class="col">
+				<div class="alert alert-success">
+					Votre dossier litige <strong>n° <?= $fLitige['dossier'] ?> </strong>a été transmis à BTLec pour étude. <br> Vous pourrez consulter l'avancement de votre dossier sur le portail sous cette référence.
 				</div>
 			</div>
+			<div class="col-lg-1 col-xxl-2"></div>
 		</div>
-		<div class="col-lg-1 col-xxl-2"></div>
+		<?php
+		$magContent=ob_get_contents();
+		ob_end_clean();
+		ob_start();
+		?>
+		<div class="row">
+			<div class="col-lg-1 col-xxl-2"></div>
+			<div class="col">
+				<div class="alert alert-success">
+					<div class="row">
+						<div class="col">
+							Le dossier litige <strong>n° <?= $fLitige['dossier'] ?> </strong>a bien été enregistré. Souhaitez vous envoyer le mail pour avertir le magasin ?
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" >
+								<div class="text-center pt-3">
+									<button type="submit" id="submit" class="btn btn-secondary" name="submit"><i class="fas fa-envelope pr-3"></i>Envoyer</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-1 col-xxl-2"></div>
+		</div>
+		<?php
+
+		$exploitLitigeContent=ob_get_contents();
+		ob_end_clean();
+		if($d_litigeBt)
+		{
+			echo $exploitLitigeContent;
+		}
+		else
+		{
+			echo $magContent;
+		}
+
+
+		?>
+		<!-- ./row -->
+		<div class="row">
+			<div class="col-lg-1 col-xxl-2"></div>
+			<div class="col">
+				<?php
+				include('../view/_errors.php');
+				?>
+			</div>
+			<div class="col-lg-1 col-xxl-2"></div>
+
+		</div>
+
+
+
+
+
 	</div>
 	<?php
-
-	$exploitLitigeContent=ob_get_contents();
-	ob_end_clean();
-	if($d_litigeBt)
-	{
-		echo $exploitLitigeContent;
-	}
-	else
-	{
-		echo $magContent;
-	}
-
-
+	require '../view/_footer-bt.php';
 	?>
-	<!-- ./row -->
-	<div class="row">
-		<div class="col-lg-1 col-xxl-2"></div>
-		<div class="col">
-			<?php
-			include('../view/_errors.php');
-			?>
-		</div>
-		<div class="col-lg-1 col-xxl-2"></div>
-
-	</div>
-
-
-
-
-
-</div>
-<?php
-require '../view/_footer-bt.php';
-?>
