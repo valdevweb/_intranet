@@ -580,7 +580,7 @@ DEBUT CONTENU CONTAINER
 							// echo '<td class="text-center"><a href="commission-traitement.php?id='.$active['id_main'].'&etat='.$class.'" class="stamps"><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';
 							if($class=='validated'){
 
-								echo '<td class="text-center"><a href="commission-traitement.php?id='.$active['id_main'].'&etat='.$class.'" ><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';
+								echo '<td class="text-center"><a href="commission-traitement.php?id='.$active['id_main'].'&etat='.$class.'" class="unvalidate"><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';
 							}
 							else{
 								echo '<td class="text-center"><a href="#modal1" data="'.$active['id_main'].'" class="stamps"><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';
@@ -655,7 +655,9 @@ DEBUT CONTENU CONTAINER
 
 			});
 
-
+			$('.unvalidate').on('click', function(){
+			return confirm('Etes vous sûrs de vouloir passer le statut du dossier en non statué ?')
+		});
 
 		});
 

@@ -22,8 +22,22 @@ $action="consultation";
 // addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
 addRecord($pdoStat,$page,$action, $descr, 101);
 
-// SELECT * FROM statsventeslitiges  LEFT JOIN assortiments ON article=`SCEBFAST.AST-ART` WHERE palette='05314408'
-//
+//------------------------------------------------------
+//			INFO
+//------------------------------------------------------
+/*
+maj du 26/06/2019
+pb rencontré : il arrive que des magasins d'arrêtent au milieu d'une déclaration, on a ainsi des dossiers litiges ouverts mais non complet
+on souhaite que seuls les dossiers finalisés soient enregistrés (arrivé sur la page récap)
+remède : cré de 2 tables temporaires : dossiers_temp, details_temp
+
+=>pb le numéro de litige est un numéro calculé et non un id (nu)
+
+
+
+ */
+
+
 
 
 //------------------------------------------------------
@@ -127,7 +141,7 @@ function insertDossier($pdoLitige, $numDossier,$magId, $idRobbery)
 		$dateDecl=	date('Y-m-d H:i:s');
 	}
 
-	$req=$pdoLitige->prepare("INSERT INTO dossiers(date_crea,user_crea,nom,galec,id_web_user, dossier, id_robbery) VALUES(:date_crea,:user_crea,:nom, :galec, :id_web_user, :dossier, :id_robbery)");
+	$req=$pdoLitige->prepare("INSERT INTO dossiers_temp(date_crea,user_crea,nom,galec,id_web_user, dossier, id_robbery) VALUES(:date_crea,:user_crea,:nom, :galec, :id_web_user, :dossier, :id_robbery)");
 	$req->execute(array(
 		':date_crea'		=>$dateDecl,
 		':user_crea'		=>$_SESSION['id_web_user'],
@@ -141,17 +155,6 @@ function insertDossier($pdoLitige, $numDossier,$magId, $idRobbery)
 }
 
 
-// met à jour les dossiers avec le numéro de dossier officiel (AA000) calculé
-function updateDossier($pdoLitige,$numDossier, $lastInsertId)
-{
-	$req=$pdoLitige->prepare("UPDATE dossiers SET dossier= :dossier WHERE id= :id");
-	$req->execute(array(
-		':dossier'		=>$numDossier,
-		':id'			=>$lastInsertId
-	));
-	$row=$req->rowCount();
-	return	$row;
-}
 // recupère les infos articles dans la base statventes
 function getSelectedDetails($pdoQlik,$id)
 {
@@ -165,7 +168,7 @@ function getSelectedDetails($pdoQlik,$id)
 // ajoute info produits dans table detail
 function addDetails($pdoLitige, $lastInsertId,$numDossier,$palette,	$facture,$dateFacture, $article, $ean,$dossierG, $descr, $qteC,	$tarif, $fou, $cnuf,$boxTete,$boxDetail, $puv,$pul)
 {
-	$req=$pdoLitige->prepare("INSERT INTO details(id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf, box_tete,box_art, puv, pul) VALUES(:id_dossier, :dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :box_tete, :box_art, :puv, :pul)");
+	$req=$pdoLitige->prepare("INSERT INTO details_temp(id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf, box_tete,box_art, puv, pul) VALUES(:id_dossier, :dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :box_tete, :box_art, :puv, :pul)");
 	$req->execute(array(
 		':id_dossier'	=>$lastInsertId,
 		':dossier'		=>$numDossier,
@@ -190,14 +193,7 @@ function addDetails($pdoLitige, $lastInsertId,$numDossier,$palette,	$facture,$da
 }
 
 
-// le numéro de dossier du litige et non l'id du litige
-function getLastNumDossier($pdoLitige)
-{
-	$req=$pdoLitige->prepare("SELECT dossier FROM dossiers ORDER BY dossier DESC LIMIT 1");
-	$req->execute();
-	return $req->fetch(PDO::FETCH_ASSOC);
-	// return $req->errorInfo();
-}
+
 
 // recup poids dans la base article (info non présente dans statsvente mais obligatoire pour les déclarations de vol )
 function getPoids($pdoQlik, $art,$dossier)
@@ -336,35 +332,22 @@ if(isset($_POST['choose']))
 			$idRobbery=null;
 		}
 
-
-
-
-		// soit le numéro de dossier a été saisi soit, on doit le calculer
+		// soit le numéro de dossier a été saisi, on écrit dans la table finale => c'est un utilisateur btlec donc il est censé terminer sa déclaration
+		// soit il n'a pas été saisi, on
 		if(!empty($_POST['num_dossier_form']))
 		{
-			$numDossier=$_POST['num_dossier_form'];
+			// le numéro de dossier sera ecrasé au moment de la recopie de la table temporaire vers la table active
+			// on mémorise donc le numéro de dossier dans une variable session
+			$_SESSION['dossier_litige']=$_POST['num_dossier_form'];
+			$numDossier=9999;
 			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId, $idRobbery);
 		}
 		else
 		{
-			// si pas de numéro de dossier imposé, on prend le der num et on ajoute 1
-			$numDossier=getLastNumDossier($pdoLitige);
-			$numDossier=$numDossier['dossier'];
-			// il faut vérifier que l'on a pas changé d'année
-			// prend les 2 1er caractère du numdossier pour les comparer à l'année actuelle
-			// si différent de l'anneé actuelle, on a changé d'année par rapport au der dossier
-			// il faut donc créer le 1er numdossier
-			$yearDossier=substr($numDossier,0,2);
-			if($yearDossier==date('y'))
-			{
-				// pas de chg d'année, on prend le der num dossier, oon ajoute 1
-				$numDossier=$numDossier +1;
-			}
-			else
-			{
-				$numDossier=date('y').'001';
 
-			}
+			// si pas de numéro de dossier imposé, on prend le der num et on ajoute 1
+			$numDossier=9999;
+
 			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId, $idRobbery);
 
 		}
@@ -496,6 +479,14 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-lg-1 col-xxl-2"></div>
 	</div>
+	<div class="row no-gutters">
+		<div class="col-lg-1 col-xxl-2"></div>
+		<div class="col">
+			<div class="bg-alert bg-alert-red">ATTENTION !<br>Assurez vous d'avoir toutes les informations en votre possession avant de faire votre déclaration de litige, <strong>toute déclaration non menée jusqu'au bout sera supprimée</strong></div>
+		</div>
+		<div class="col-lg-1 col-xxl-2"></div>
+	</div>
+
 	<!-- ./row -->
 	<!-- ./row -->
 	<!-- FORMULAIRE DE RECHERCHE -->

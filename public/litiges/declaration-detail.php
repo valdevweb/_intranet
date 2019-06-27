@@ -33,8 +33,8 @@ On commence à 1 car le 0 n'est pas pris en compte dans le name
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-function getLitige($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id,details.id as detail_id,details.dossier,palette,facture, date_facture,DATE_FORMAT(date_facture,'%d-%m-%Y')as datefac,article, ean, dossier_gessica, descr,qte_cde,tarif, fournisseur,details.box_tete, details.box_art FROM dossiers LEFT JOIN details ON dossiers.id=details.id_dossier WHERE dossiers.id= :id");
+function getLitigeTemp($pdoLitige){
+	$req=$pdoLitige->prepare("SELECT dossiers_temp.id as id,details_temp.id as detail_id,details_temp.dossier,palette,facture, date_facture,DATE_FORMAT(date_facture,'%d-%m-%Y')as datefac,article, ean, dossier_gessica, descr,qte_cde,tarif, fournisseur,details_temp.box_tete, details_temp.box_art FROM dossiers_temp LEFT JOIN details_temp ON dossiers_temp.id=details_temp.id_dossier WHERE dossiers_temp.id= :id");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 	));
@@ -49,7 +49,7 @@ function getReclamation($pdoLitige){
 // pour les vols, il faut ajouter les GESSICA.PoidsBrutUV et GESSICA.PoidsBrutUL
 function updateDetail($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean, $valoLig){
 
-	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, valo_line= :valo_line WHERE id= :id");
+	$req=$pdoLitige->prepare("UPDATE details_temp SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, valo_line= :valo_line WHERE id= :id");
 	$req->execute(array(
 		':reclamation' =>$reclamation,
 		':qte_litige'	=>$qteLitige,
@@ -63,7 +63,7 @@ function updateDetail($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean, $valoLig
 }
 function updateDetailInversion($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur, $invQte, $valoLig)
 {
-	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, inv_article= :inv_article, inv_descr=:inv_descr,inv_tarif=:inv_tarif, inv_fournisseur=:inv_fournisseur, inv_qte=:inv_qte, valo_line= :valo_line   WHERE id= :id");
+	$req=$pdoLitige->prepare("UPDATE details_temp SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, inv_article= :inv_article, inv_descr=:inv_descr,inv_tarif=:inv_tarif, inv_fournisseur=:inv_fournisseur, inv_qte=:inv_qte, valo_line= :valo_line   WHERE id= :id");
 	$req->execute(array(
 		':reclamation' =>$reclamation,
 		':qte_litige'	=>$qteLitige,
@@ -87,7 +87,7 @@ function addDial($pdoLitige)
 {
 	$com=strip_tags($_POST['form_com']);
 	$com=nl2br($com);
-	$req=$pdoLitige->prepare("INSERT INTO dial(id_dossier,date_saisie,msg,id_web_user,mag) VALUES (:id_dossier,:date_saisie,:msg,:id_web_user,:mag)");
+	$req=$pdoLitige->prepare("INSERT INTO dial_temp(id_dossier,date_saisie,msg,id_web_user,mag) VALUES (:id_dossier,:date_saisie,:msg,:id_web_user,:mag)");
 	$req->execute(array(
 		':id_dossier' =>$_GET['id'],
 		':date_saisie' =>date('Y-m-d H:i:s'),
@@ -113,9 +113,8 @@ function getProdInversion($pdoQlik,$ean)
 
 if(isset($_GET['id']))
 {
-	$fLitige=getLitige($pdoLitige);
+	$fLitige=getLitigeTemp($pdoLitige);
 }
-
 
 
 
@@ -262,6 +261,7 @@ if(isset($_POST['submit']))
 				else{
 					$valoLig=($fLitige[$i]['tarif']/$fLitige[$i]['qte_cde'])*$_POST['form_qte'][$i];
 
+
 				}
 				$ean="";
 				$do=updateDetail($pdoLitige,$_POST['form_motif'][$i], $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean, $valoLig);
@@ -290,7 +290,7 @@ if(isset($_POST['submit']))
 		$addCom=addDial($pdoLitige);
 		if($addCom>0)
 		{
-			header('Location:recap-declaration.php?id='.$_GET['id']);
+			header('Location:declaration-validation.php?id='.$_GET['id']);
 		}
 		else
 		{
@@ -317,7 +317,7 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Dossier litige n° <?=$fLitige[0]['dossier']?></h1>
+	<h1 class="text-main-blue py-5 ">Déclaration de litige 2/2</h1>
 	<!-- start row -->
 	<div class="row no-gutters">
 		<div class="col-lg-1 col-xxl-2"></div>

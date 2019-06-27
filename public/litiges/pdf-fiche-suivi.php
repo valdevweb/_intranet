@@ -267,7 +267,7 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 	</table>
 
 
-	<p class="text-center heavy text-prim">VALORISATION : <?= $fLitige[0]['valo']?> &euros;</p>
+	<p class="text-center heavy text-prim">VALORISATION : <?= $fLitige[0]['valo']?> &euro;</p>
 	<div class="spacing-s"></div>
 
 	<table class="padding-table border-table-grey">

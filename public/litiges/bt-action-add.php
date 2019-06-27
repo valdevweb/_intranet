@@ -409,23 +409,49 @@ DEBUT CONTENU CONTAINER
 		});
 		var fileName='';
 		var fileList='';
+    	var fileSizeMo=0;
+
+		var totalFileSize=0;
 		$('input[type="file"]').change(function(e){
 			var nbFiles=e.target.files.length;
 			for (var i = 0; i < nbFiles; i++)
 			{
     		    // var fileName = e.target.files[0].name;
     		    fileName=e.target.files[i].name;
-    		    fileList += fileName + ' - ';
+    		    fileSize=e.target.files[i].size;
+    		    totalFileSize=totalFileSize+ fileSize;
+    		    fileSizeMo=Math.round(fileSize/1000000);
+    		    // 5120
+    		    if(fileSize>10000000){
+    		    	fileList += '<div class="text-red">Attention le fichier "' + fileName + '" est trop lourd (' +fileSizeMo + 'Mo au lieu du 10Mo maximum)</div>';
+
+    		    }
+    		    else
+    		    {
+    		  	  fileList += fileName + ' - ';
+    		    }
+
     		}
  		   // console.log(fileList);
  		   titre='<p><span class="heavy">Fichier(s) : </span>'
  		   end='</p>';
- 		   all=titre+fileList+end;
+ 		   if(totalFileSize>10000000)
+ 		   {
+ 		   	totalFileSizeMo=Math.round(totalFileSize/1000000);
+ 		   		warning='<div class="text-red">Attention la taille totale des fichiers dépasse la taille autorisée de 10Mo (Poids total de vos fichiers : ' +totalFileSizeMo + 'Mo)<br></div>';
+ 		   }else{
+ 		   	warning=''
+ 		   }
+ 		   all=titre+warning+fileList+end;
  		   $('#filelist').append(all);
  		   fileList="";
  		});
-	});
 
+
+
+
+
+	});
 </script>
 
 

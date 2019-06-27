@@ -38,8 +38,8 @@ On commence à 1 car le 0 n'est pas pris en compte dans le name
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-function getLitige($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id,details.id as detail_id,details.dossier,palette,facture, date_facture,DATE_FORMAT(date_facture,'%d-%m-%Y')as datefac,article, ean, dossier_gessica, descr,qte_cde,tarif,fournisseur FROM dossiers LEFT JOIN details ON dossiers.id=details.id_dossier WHERE dossiers.id= :id");
+function getLitigeTemp($pdoLitige){
+	$req=$pdoLitige->prepare("SELECT dossiers_temp.id as id,details_temp.id as detail_id,details_temp.dossier,palette,facture, date_facture,DATE_FORMAT(date_facture,'%d-%m-%Y')as datefac,article, ean, dossier_gessica, descr,qte_cde,tarif, fournisseur,details_temp.box_tete, details_temp.box_art FROM dossiers_temp LEFT JOIN details_temp ON dossiers_temp.id=details_temp.id_dossier WHERE dossiers_temp.id= :id");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 	));
@@ -54,7 +54,7 @@ function getReclamation($pdoLitige){
 
 // même fonction que ce sont inversion de palette ou non ($inv_palette mis à nul si non)
 function updateDetail($pdoLitige,$id,$qteLitige,$pj, $inv_palette, $valoLig){
-	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inv_palette= :inv_palette, valo_line= :valo_line WHERE id= :id");
+	$req=$pdoLitige->prepare("UPDATE details_temp SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inv_palette= :inv_palette, valo_line= :valo_line WHERE id= :id");
 	$req->execute(array(
 		':reclamation' =>$_POST['form_motif'],
 		':qte_litige'	=>$qteLitige,
@@ -66,30 +66,13 @@ function updateDetail($pdoLitige,$id,$qteLitige,$pj, $inv_palette, $valoLig){
 	));
 	return $req->rowCount();
 }
-function updateDetailInversion($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur)
-{
-	$req=$pdoLitige->prepare("UPDATE details SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, inv_article= :inv_article, inv_descr=:inv_descr,inv_tarif=:inv_tarif, inv_fournisseur=:inv_fournisseur   WHERE id= :id");
-	$req->execute(array(
-		':reclamation' =>$reclamation,
-		':qte_litige'	=>$qteLitige,
-		':id'			=>$id,
-		':pj'			=>$pj,
-		':ean'			=>$ean,
-		':inv_article'		=>$invArticle,
-		':inv_descr'		=>$invDescr,
-		':inv_tarif'		=>$tarifUv,
-		':inv_fournisseur'		=>$invFournisseur,
-	));
-	return $req->rowCount();
-	// return $req->errorInfo();
-}
 
 // 3 ^pour 1er commentaire
 function addDial($pdoLitige)
 {
 	$com=strip_tags($_POST['form_com']);
 	$com=nl2br($com);
-	$req=$pdoLitige->prepare("INSERT INTO dial(id_dossier,date_saisie,msg,id_web_user,mag) VALUES (:id_dossier,:date_saisie,:msg,:id_web_user,:mag)");
+	$req=$pdoLitige->prepare("INSERT INTO dial_temp(id_dossier,date_saisie,msg,id_web_user,mag) VALUES (:id_dossier,:date_saisie,:msg,:id_web_user,:mag)");
 	$req->execute(array(
 		':id_dossier' =>$_GET['id'],
 		':date_saisie' =>date('Y-m-d H:i:s'),
@@ -115,13 +98,13 @@ function getPaletteInversion($pdoQlik)
 
 if(isset($_GET['id']))
 {
-	$fLitige=getLitige($pdoLitige);
+	$fLitige=getLitigeTemp($pdoLitige);
 }
 // $paletteFound['palette'],$paletteFound['facture'],$paletteFound['article'],$paletteFound['gencod'],$paletteFound['dossier'],$paletteFound['libelle'],$paletteFound['qte'],$paletteFound['tarif'],$paletteFound['fournisseur'],$paletteFound['cnuf']
 // qd inversion de palette on enregistre dans la table palette inv le contenu de la palette qui a été reçue
 function addPaletteInv($pdoLitige,$palette,$facture,$date_facture,$article,$ean,$dossier_gessica,$descr,$qte_cde,$tarif,$fournisseur, $cnuf)
 {
-	$req=$pdoLitige->prepare("INSERT INTO palette_inv (id_dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf, found)
+	$req=$pdoLitige->prepare("INSERT INTO palette_inv_temp (id_dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf, found)
 		VALUES (:id_dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :found)");
 	$req->execute(array(
 		':id_dossier'		=>$_GET['id'],
@@ -255,7 +238,7 @@ if(isset($_POST['submit']))
 			$addCom=addDial($pdoLitige);
 			if($addCom>0)
 			{
-				header('Location:recap-declaration.php?id='.$_GET['id']);
+				header('Location:declaration-validation.php?id='.$_GET['id']);
 			}
 			else
 			{
