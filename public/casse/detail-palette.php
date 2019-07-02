@@ -26,7 +26,7 @@ require('../../Class/Table.php');
 // // addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
 // addRecord($pdoStat,$page,$action, $descr, 208);
 
-// require_once '../../vendor/autoload.php';
+require_once '../../vendor/autoload.php';
 
 
 
@@ -154,6 +154,7 @@ DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
 
+
 	<div class="row">
 		<div class="col-auto"> <img src="../img/litiges/broken-ico.jpg"> </div>
 		<div class="col">
@@ -170,7 +171,6 @@ DEBUT CONTENU CONTAINER
 		</div>
 	</div>
 
-
 	<div class="row">
 		<div class="col-lg-1"></div>
 		<div class="col">
@@ -184,8 +184,8 @@ DEBUT CONTENU CONTAINER
 	<div class="row">
 		<div class="col">
 			<?php
-			$th=['N° casse','Article','Désignation','nb colis','pcb'];
-			$fields=['idcasse','article','designation','nb_colis','pcb'];
+			$th=['N° casse','Article','Désignation','nb colis','pcb','valo'];
+			$fields=['idcasse','article','designation','nb_colis','pcb','valo'];
 			$tablePalette=new Table(['table', 'table-bordered', 'table-sm' ],'palette');
 			$arrLink=[
 				'href'	=>'detail-casse.php',
@@ -200,6 +200,13 @@ DEBUT CONTENU CONTAINER
 
 
 
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col text-right">
+				<a href="g-pdf-detail-palette-valo.php?id=<?=$_GET['id']?>"  target="_blank"><button class="btn btn-primary"><i class="fas fa-print pr-3" name="print-valo"></i>Avec Valo</button></a>
+				<a href="g-pdf-detail-palette.php?id=<?=$_GET['id']?>"  target="_blank"><button class="btn btn-black"><i class="fas fa-print pr-3" name="print"></i>Sans valo</button></a>
 		</div>
 	</div>
 	<?php
@@ -269,6 +276,8 @@ DEBUT CONTENU CONTAINER
 	}
 
 	?>
+
+
 
 
 	<!-- ./container -->

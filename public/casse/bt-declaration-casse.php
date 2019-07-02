@@ -58,14 +58,14 @@ $types=getTypecasse($pdoCasse);
 
 
 
-function addCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette){
+function addCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette, $pfnp, $deee,$sacem){
 	//panf =pu
 	//valo = nbcolis *
 	$uvc=$pcb * $_POST['nb_colis'];
-	$valo=$uvc*$panf;
+	$valo=$uvc*$pfnp;
 	$decote=round($valo/2);
 
-	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj, mt_mag, mt_decote) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :mt_mag, :mt_decote)" );
+	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj, mt_mag, mt_decote,pfnp, deee,sacem) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :mt_mag, :mt_decote, :pfnp, :deee,:sacem)" );
 
 	$req->execute(array(
 		':date_casse'	=>$_POST['date_casse'],
@@ -87,8 +87,11 @@ function addCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette){
 		':id_palette'	=>$idPalette,
 		':etat'	=>0,
 		':last_maj' =>date('Y-m-d H:i:s'),
-		':mt_mag'		=> $decote,
-		':mt_decote'	=>$decote
+		':mt_mag'		=> $valo,
+		':mt_decote'	=>$decote,
+		':pfnp'			=>$pfnp,
+		':deee'			=>$deee,
+		':sacem'		=>$sacem
 
 	));
 	if($req->rowCount()==1)
@@ -98,15 +101,13 @@ function addCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette){
 	else{
 		return false;
 	}
-
 }
 
 
-function addAndCloseCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette){
+function addCasseDestroy($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette, $pfnp,$deee,$sacem){
 	$uvc=$pcb * $_POST['nb_colis'];
-	$valo=$uvc*$panf;
-	$decote=0;
-	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj,  detruit, date_clos, mt_mag, mt_decote) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :detruit, :date_clos, :mt_mag, :mt_decote)" );
+	$valo=$uvc*$pfnp;
+	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj,  detruit, mt_mag, mt_decote, pfnp, deee, sacem) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :detruit,  :mt_mag, :mt_decote, :pfnp, :deee, :sacem)" );
 
 	$req->execute(array(
 		':date_casse'	=>$_POST['date_casse'],
@@ -126,12 +127,14 @@ function addAndCloseCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPal
 		':id_origine'	=>$_POST['origine'],
 		':id_type'	=>$_POST['type'],
 		':id_palette'	=>$idPalette,
-		':etat'	=>1,
+		':etat'	=>0,
 		':last_maj' =>date('Y-m-d H:i:s'),
 		':detruit'	=>1,
-		':date_clos'	=>date('Y-m-d H:i:s'),
 		':mt_mag'		=> 0,
-		':mt_decote'	=>$decote
+		':mt_decote'	=>0,
+		':pfnp'			=>$pfnp,
+		':deee'			=>$deee,
+		':sacem'		=>$sacem
 
 	));
 	if($req->rowCount()==1)
@@ -246,10 +249,10 @@ if(isset($_GET['idBa']))
 			}
 			if(isset($_POST['destroy'])){
 // si à détruire a été selectionné, on peut clore le dossier
-				$lastInsertId=addAndCloseCasse($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$dataArticle['panf'],$dataArticle['fournisseur'],$idPalette);
+				$lastInsertId=addCasseDestroy($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$dataArticle['panf'],$dataArticle['fournisseur'],$idPalette, $dataArticle['pfnp'],  $dataArticle['deee'],  $dataArticle['sacem']);
 			}
 			else{
-				$lastInsertId=addCasse($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$dataArticle['panf'],$dataArticle['fournisseur'],$idPalette);
+				$lastInsertId=addCasse($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$dataArticle['panf'],$dataArticle['fournisseur'],$idPalette,  $dataArticle['pfnp'],  $dataArticle['deee'],  $dataArticle['sacem']);
 
 			}
 			if($lastInsertId !=false)
@@ -352,8 +355,8 @@ DEBUT CONTENU CONTAINER
 			<div class="row mb-1">
 				<div class="col-2 py-1">PCB : </div>
 				<div class="col-3 py-1 bg-light-blue text-right"><?=$dataArticle['pcb']?></div>
-				<div class="col-2 py-1">PU</div>
-				<div class="col-3 py-1 bg-light-blue text-right"><?=isset($dataArticle['panf']) ? $dataArticle['panf'] :''?>&euro;</div>
+				<div class="col-2 py-1">PFNP :</div>
+				<div class="col-3 py-1 bg-light-blue text-right"><?=isset($dataArticle['pfnp']) ? $dataArticle['pfnp'] :''?>&euro;</div>
 				<div class="col py-1"></div>
 			</div>
 

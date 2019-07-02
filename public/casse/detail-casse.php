@@ -91,7 +91,10 @@ if(isset($_GET['id']))
 	$idCasse=$_GET['id'];
 	$casseInfo=getCasse($pdoCasse, $idCasse);
 	$sansSuite=false;
-	$infoFi=false;
+	$mtMag= ($casseInfo['mt_mag']!=null) ? $casseInfo['mt_mag'] : '0.00';
+	$mtDecote= ($casseInfo['mt_decote']!=null) ? $casseInfo['mt_decote'] : '0.00';
+	$mtNdd= ($casseInfo['mt_ndd']!=null) ? $casseInfo['mt_ndd'] : '0.00';
+	$numNdd= ($casseInfo['num_ndd']!=null) ? $casseInfo['num_ndd'] : '_';
 }
 else{
 	$loc='Location:bt-casse-dashboard.php?error=1';
@@ -128,9 +131,6 @@ if(isset($_POST['submit_clos']))
 
 if($casseInfo['detruit']==1 ){
 	$sansSuite=true;
-}
-elseif($casseInfo['mt_mag'] != null || $casseInfo['mt_decote'] != null || $casseInfo['mt_ndd'] != null ){
-	$infoFi=true;
 }
 
 
@@ -277,78 +277,46 @@ DEBUT CONTENU CONTAINER
 				</div>
 				<div class="row">
 					<div class="col-1 heavy">PU : </div>
-					<div class="col-2 text-right"><?=$casseInfo['pu']?>&euro;</div>
+					<div class="col-2 text-right"><?=$casseInfo['pfnp']?>&euro;</div>
 					<div class="col-1 heavy">Valo : </div>
 					<div class="col-2 text-right bg-light-blue"><?=$casseInfo['valo']?>&euro;</div>
 				</div>
 
 			</div>
 		</div>
-		<div class="bg-separation"></div>
-
 
 		<div class="row">
-			<div class="col">
-				<h5 class="text-main-blue pt-5">Traitement : </h5>
-			</div>
+			<div class="col-3">Montant Vente Magasin :</div><div class="col-2 text-right"> <?=$mtMag?> &euro;</div>
 		</div>
-
-		<!-- on affiche soit les info financières, soit la cloture avec reprise ou destruction  soit les formulaires de traitement -->
-		<?php
-		if($infoFi==true || $sansSuite==true)
-		{
-
-			if($infoFi==true){
-				$mtMag= ($casseInfo['mt_mag']!=null) ? $casseInfo['mt_mag'] : '0.00';
-				$mtDecote= ($casseInfo['mt_decote']!=null) ? $casseInfo['mt_decote'] : '0.00';
-				$mtNdd= ($casseInfo['mt_ndd']!=null) ? $casseInfo['mt_ndd'] : '0.00';
-				$numNdd= ($casseInfo['num_ndd']!=null) ? $casseInfo['num_ndd'] : '_';
-
-				echo '<div class="row">';
-				echo '<div class="col">';
-				echo '<p class="alert alert-primary ">Cette casse a été traitée : ';
-				echo '</p>';
-				echo '</div>';
-				echo '</div>';
-				echo '<div class="row">';
-				echo '<div class="col-3">Montant Vente Magasin :</div><div class="col-2 text-right"> '.$mtMag.' &euro;</div>';
-				echo '</div>';
-				echo '<div class="row">';
-				echo '<div class="col-3">Décote /avoir :</div><div class="col-2 text-right"> '.$mtDecote.' &euro;</div>';
-				echo '</div>';
-				echo '<div class="row">';
-				echo '<div class="col-3">Note de débit fournisseur :</div><div class="col-2 text-right"> '.$mtNdd.' &euro;</div>';
-				echo '</div>';
-				echo '<div class="row mb-5">';
-				echo '<div class="col-3">Numéro de la note de débit :</div><div class="col-2 text-right"> '.$numNdd.'</div>';
-				echo '</div>';
-
-
-			}
-			else{
-				if($casseInfo['detruit'] ==1){
-					$closMotif= ' détruits';
-				}
-
-				echo '<div class="row mb-5">';
-				echo '<div class="col">';
-				echo '<p class="alert alert-primary ">Ce ou ces produits ont été '.$closMotif.'</p>';
-				echo '</div>';
-				echo '</div>';
-			}
-		}
-
-		else{
-			include('traitement-casse.dt.php');
-		}
-		?>
+		<div class="row">
+			<div class="col-3">Décote /avoir :</div><div class="col-2 text-right"> <?=$mtDecote?> &euro;</div>
+		</div>
+		<div class="row">
+			<div class="col-3">Note de débit fournisseur :</div><div class="col-2 text-right"> <?=$mtNdd?> &euro;</div>
+		</div>
+		<div class="row pb-5">
+			<div class="col-3">Numéro de la note de débit :</div><div class="col-2 text-right"> <?=$numNdd?></div>
+		</div>
+	<!-- si dossier clos -->
+		<?php if ($casseInfo['etat']==1): ?>
+			<div class="row pb-5">
+			<div class="col">
+			<?php if ($casseInfo['detruit'] ==1): ?>
+				<p class="alert alert-primary ">Ce ou ces produits ont été détruits</p>
+			<?php else: ?>
+				<p class="alert alert-primary ">Ce ou ces produits ont été expédiés</p>
+			<?php endif ?>
+			</div>
+			</div>
+		<?php endif ?>
 
 
 
 
-		<!-- ./container -->
-	</div>
 
-	<?php
-	require '../view/_footer-bt.php';
-	?>
+					<!-- ./container -->
+				</div>
+
+				<?php
+				require '../view/_footer-bt.php';
+				?>

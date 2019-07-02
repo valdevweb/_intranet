@@ -24,7 +24,7 @@ function getTypecasse($pdoCasse){
 }
 
 function getArticleFromBA($pdoQlik, $idArticle){
-	$req=$pdoQlik->prepare("SELECT `GESSICA.CodeDossier` as dossier, `GESSICA.CodeArticle` as article, `GESSICA.GT` as gt, `GESSICA.LibelleArticle` as libelle, `GESSICA.PCB` as pcb, `GESSICA.PANF` as panf, `GESSICA.CodeFournisseur` as cnuf, `GESSICA.NomFournisseur` as fournisseur,	id FROM basearticles WHERE id = :id");
+	$req=$pdoQlik->prepare("SELECT `GESSICA.CodeDossier` as dossier, `GESSICA.CodeArticle` as article, `GESSICA.GT` as gt, `GESSICA.LibelleArticle` as libelle, `GESSICA.PCB` as pcb, `GESSICA.PANF` as panf, `GESSICA.CodeFournisseur` as cnuf, `GESSICA.NomFournisseur` as fournisseur,`GESSICA.PFNP` as pfnp,`GESSICA.D3E` as deee, `GESSICA.SORECOP` as sacem,	id FROM basearticles WHERE id = :id");
 	$req->execute(array(
 		':id'	=>$idArticle
 	));
@@ -56,7 +56,7 @@ function getCasse($pdoCasse, $idCasse){
 
 
 function getStockPalette($pdoCasse){
-	$req=$pdoCasse->query("SELECT * FROM palettes WHERE temp=0 ORDER BY palette");
+	$req=$pdoCasse->query("SELECT *, palettes.id as paletteid FROM palettes INNER JOIN qlik.palettes4919 ON palettes.palette = qlik.palettes4919.NumeroPalette GROUP BY palette ORDER BY palette");
 	if($req){
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
@@ -114,7 +114,7 @@ function getDetailExp($pdoCasse,$idExp){
 }
 
 function getExpAndPalette($pdoCasse,$idExp){
-	$req=$pdoCasse->prepare("SELECT * FROM exps LEFT JOIN palettes ON exps.id=palettes.id_exp WHERE exps.id= :id_exp");
+	$req=$pdoCasse->prepare("SELECT *, palettes.id as paletteid,exps.id as expid FROM exps LEFT JOIN palettes ON exps.id=palettes.id_exp WHERE exps.id= :id_exp");
 	$req->execute([
 		':id_exp'			=>$idExp
 	]);
@@ -135,4 +135,41 @@ function magExpAlreadyExist($pdoCasse, $btlec)
 	else{
 		return false;
 	}
+}
+
+function getExpPaletteCasse($pdoCasse,$idExp){
+	$req=$pdoCasse->prepare("SELECT *, palettes.id as paletteid,exps.id as expid FROM exps LEFT JOIN palettes ON exps.id=palettes.id_exp LEFT JOIN casses ON palettes.id= casses.id_palette WHERE exps.id= :id_exp");
+	$req->execute([
+		':id_exp'			=>$idExp
+	]);
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+function getPaletteList($pdoCasse,$idExp){
+	$req=$pdoCasse->prepare("SELECT  DISTINCT palette  FROM exps LEFT JOIN palettes ON exps.id=palettes.id_exp  WHERE exps.id= :id_exp");
+	$req->execute([
+		':id_exp'			=>$idExp
+	]);
+	return $req->fetchAll(PDO::FETCH_COLUMN);
+}
+
+//  utilisé pour la facturation
+function getArticleByGt($pdoCasse, $idExp, $gt){
+	if($gt=='blanc'){
+		$gtParam=' (gt=1 OR gt=2) ';
+	}elseif($gt=='brun'){
+		$gtParam=' (gt=3 OR gt=4 OR gt=5) ';
+
+	}
+	elseif($gt='gris'){
+		$gtParam='(gt=6 OR gt=7 OR gt=8 OR gt=9 OR gt=10) ';
+	}
+
+	$req=$pdoCasse->prepare("SELECT *, palettes.id as paletteid,exps.id as expid FROM exps LEFT JOIN palettes ON exps.id=palettes.id_exp LEFT JOIN casses ON palettes.id= casses.id_palette WHERE exps.id= :id_exp AND $gtParam ");
+	$req->execute([
+		':id_exp'			=>$idExp,
+
+	]);
+	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
