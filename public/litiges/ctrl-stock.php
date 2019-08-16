@@ -62,15 +62,34 @@ function getDdCtrl($pdoLitige){
 
 function updateDetail($pdoLitige,$key, $ctrlKo, $ecart,$mvt)
 {
-	$req=$pdoLitige->prepare("UPDATE details SET ctrl_ko= :ctrlKo, ecart= :ecart, mvt= :mvt WHERE id= :key");
+	$req=$pdoLitige->prepare("UPDATE details SET ctrl_ko= :ctrlKo, ecart= :ecart, mvt= :mvt, date_ctrl= :date_ctrl WHERE id= :key");
 	$req->execute([
 		':ctrlKo'	=>$ctrlKo,
 		':ecart'	=>$ecart,
 		':mvt'		=>$mvt,
-		':key'		=>$key
+		':key'		=>$key,
+		':date_ctrl'		=>date('Y-m-d H:i:s')
 
 	]);
 	return $req->rowCount();
+	// return $req->errorInfo();
+
+}
+
+function updateDetailInv($pdoLitige,$key, $ctrlKo, $ecart,$mvt)
+{
+	$req=$pdoLitige->prepare("UPDATE details SET ctrl_ko_inv= :ctrlKo, ecart_inv= :ecart, mvt_inv= :mvt, date_ctrl= :date_ctrl WHERE id= :key");
+	$req->execute([
+		':ctrlKo'	=>$ctrlKo,
+		':ecart'	=>$ecart,
+		':mvt'		=>$mvt,
+		':key'		=>$key,
+		':date_ctrl'		=>date('Y-m-d H:i:s')
+
+	]);
+	return $req->rowCount();
+	// return $req->errorInfo();
+
 }
 
 function addAction($pdoLitige,$contrainte,$reportAction)
@@ -96,7 +115,8 @@ function updateCtrl($pdoLitige)
 		':id'		=>$_GET['id'],
 		':id_user_ctrl_stock'=>$_SESSION['id_web_user']
 	));
-	return $req->rowCount();
+	// return $req->rowCount();
+	return $req->errorInfo();
 }
 
 function getOperateur($pdoLitige){
@@ -163,19 +183,27 @@ $reportAction=$art=$ctrlKo=$ecart=$mvt="";
 
 if(isset($_POST['submit']))
 {
-// liste des article à contrôler : dans le input hidden 'id_detail' => on doit parcourir ce tableau pour
-// récupérer l'index des tableau post puisque l'id_detail est passé en clé des tableau
+
+
+//les champs de formoulaires renvoient des tableaus avec pour index soit i soit pour le champ art, l'id_detail
+// les id_details sont stockés dans les champs hidden du tableau id_detail
+// On boucle donc sur les $_POST[id_detail] pour récupérer les id_details ainsi que les noms de champs
+// Dans le cas d'une inversion d'article, on a des champs supplementaires pour saisir les infos des articles inversés
+// (meme nom de champ avec prefixe inv_). Etant donné que sur un litige on peut avoir plusieurs types de réclamations,
+// l'index i n'est pas forcement en phase entre les articles normaux et les articles inversés => voir shéma ctrl_stock.pptx
+// on vérifie si il existe un champ art-inv['id_detail']
 	for($i=0; $i<count($_POST['id_detail']); $i++)
 	{
  	//exemple $_POST['id_detail'][0]=488
 		$key=$_POST['id_detail'][$i];
+
  	// si btn radio sur ko, on récupère les autres champs, sinon non
 		if($_POST['ctrl'][$key]=="no")
 		{
 			$ctrlKo=1;
-			$ecart=$_POST['ecart'][$key];
-			$mvt=$_POST['mvt'][$key];
 			$art=$_POST['art'][$key];
+			$ecart=$_POST['ecart'][$art];
+			$mvt=$_POST['mvt'][$art];
 			$reportAction.='- article ' .$art . ' : ' . $ecart .' pièce(s) - mouvement : '.$mvt .'<br>';
 
 		}
@@ -183,11 +211,35 @@ if(isset($_POST['submit']))
 			$ctrlKo=0;
 			// 0 pour qu'une mise à jour soit faite sinon la fonction ne renvoie pas 1
 			$ecart=0;
-			$mvt='';
+			$mvt=' ';
 			$art=$_POST['art'][$key];
 			$reportAction.='- article ' .$art . ' : contrôle ok<br>';
 		}
 		$majdetail=updateDetail($pdoLitige, $key, $ctrlKo, $ecart,$mvt);
+		// dans le cas d'un inversion d'article, on fait une 2ème maj avec les données de l'article inversé
+		if(isset($_POST['art-inv'][$key])){
+			if($_POST['ctrl-inv'][$key]=="no")
+			{
+				$ctrlKo=1;
+				$art=$_POST['art-inv'][$key];
+				$ecart=$_POST['ecart-inv'][$art];
+				$mvt=$_POST['mvt-inv'][$art];
+				$reportAction.='- article ' .$art . ' : ' . $ecart .' pièce(s) - mouvement : '.$mvt .'<br>';
+
+			}
+			else{
+				$ctrlKo=0;
+			// 0 pour qu'une mise à jour soit faite sinon la fonction ne renvoie pas 1
+				$ecart=0;
+				$mvt=' ';
+				$art=$_POST['art'][$key];
+				$reportAction.='- article ' .$art . ' : contrôle ok<br>';
+			}
+			$majdetailInv=updateDetailInv($pdoLitige, $key, $ctrlKo, $ecart,$mvt);
+
+		}
+
+
 		if($majdetail!=1){
 			$errors[]="impossible de mettre à jour la base détail article";
 		}
@@ -244,7 +296,7 @@ if(isset($_POST['submit']))
 		$delivered=$mailer->send($message);
 		if($delivered !=0)
 		{
-		$success[]="Vos informations ont bien été enregistrées, un mail récapitulatif a été envoyé";
+			$success[]="Vos informations ont bien été enregistrées, un mail récapitulatif a été envoyé";
 
 		}
 
@@ -360,23 +412,51 @@ include('../view/_navbar.php');
 								</div>
 								<div class="col-2">
 									<div class="form-check">
-										<input class="form-check-input ctrl-ok" type="radio" name="ctrl[<?=$prod['id_detail']?>]" value="ok" data="<?=$prod['id_detail']?>" required>
+										<input class="form-check-input ctrl-ok" type="radio" name="ctrl[<?=$prod['id_detail']?>]" value="ok" data="<?=$prod['article']?>" required>
 										<label class="form-check-label text-green" for="ctrl">ok</label>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input ctrl-ko" type="radio" name="ctrl[<?=$prod['id_detail']?>]" id="<?=$prod['id_detail']?>" value="no" required>
+										<input class="form-check-input ctrl-ko" type="radio" name="ctrl[<?=$prod['id_detail']?>]" id="<?=$prod['id_detail']?>" value="no" data="<?=$prod['article']?>" required>
 										<label class="form-check-label text-red" for="ctrl">ko</label>
 									</div>
 									<input type="hidden" name="id_detail[]" value="<?=$prod['id_detail']?>">
 									<input type="hidden" name="art[<?=$prod['id_detail']?>]" value="<?=$prod['article']?>">
 								</div>
-								<div class="col ctrl-ko-<?=$prod['id_detail']?>">
+								<div class="col ctrl-ko-<?=$prod['article']?>"></div>
+							</div>
+							<!-- si inversion de produit, on demande aussi le contrôle des produits inversés -->
+							<?php if ($prod['inversion']!=''): ?>
 
+								<div class="row pb-3">
+									<div class="col-5">
+										<span class="heavy">
+											<?=$prod['inv_article']?> :
+										</span>
+										<?=$prod['inv_descr']?>
 
+									</div>
+									<div class="col-auto">
+										Stock :
+
+									</div>
+									<div class="col-2">
+										<div class="form-check">
+											<input class="form-check-input ctrl-ok-inv" type="radio" name="ctrl-inv[<?=$prod['id_detail']?>]" value="ok" data="<?=$prod['inv_article']?>" required>
+											<label class="form-check-label text-green" for="ctrl">ok</label>
+										</div>
+										<div class="form-check">
+											<input class="form-check-input ctrl-ko-inv" type="radio" name="ctrl-inv[<?=$prod['id_detail']?>]" id="<?=$prod['id_detail']?>" value="no" data="<?=$prod['inv_article']?>" required>
+											<label class="form-check-label text-red" for="ctrl">ko</label>
+										</div>
+										<input type="hidden" name="id_detail_inv[]" value="<?=$prod['id_detail']?>">
+										<input type="hidden" name="art-inv[<?=$prod['id_detail']?>]" value="<?=$prod['inv_article']?>">
+									</div>
+									<div class="col ctrl-ko-inv-<?=$prod['inv_article']?>"></div>
 								</div>
 
 
-							</div>
+
+							<?php endif ?>
 						<?php endforeach ?>
 					<?php endif ?>
 					<div class="row">
@@ -402,7 +482,6 @@ include('../view/_navbar.php');
 	<script type="text/javascript">
 
 		$(".ctrl-ko").click(function () {
-
 			function createCtrl(article){
 				var ctrlInputs='';
 				ctrlInputs+='<div class="form-group">';
@@ -414,12 +493,8 @@ include('../view/_navbar.php');
 				ctrlInputs+='<input type="text" class="form-control" name="mvt['+article+']" id="mvt">';
 				ctrlInputs+='</div>';
 				return ctrlInputs;
-
-
 			}
-
-
-			var article=$(this).attr('id');
+			var article=$(this).attr('data');
 			var ctrlInputs=createCtrl(article);
 			$(".ctrl-ko-"+article).append(ctrlInputs);
 
@@ -427,9 +502,35 @@ include('../view/_navbar.php');
 		$(".ctrl-ok").click(function () {
 			var article=$(this).attr('data');
 			$(".ctrl-ko-"+article).empty();
+		});
 
+
+
+		$(".ctrl-ko-inv").click(function () {
+			function createCtrl(article){
+				var ctrlInputs='';
+				ctrlInputs+='<div class="form-group">';
+				ctrlInputs+='<label for="ecart">Ecart constaté (nb colis +/-) : </label>';
+				ctrlInputs+='<input type="text" class="form-control" name="ecart-inv['+article+']" id="ecart" title="chiffres positif ou négatif uniqement" pattern="[-+]?[0-9]*[.]?[0-9]+" required>';
+				ctrlInputs+='</div>';
+				ctrlInputs+='<div class="form-group">';
+				ctrlInputs+='<label for="mvt">Mouvement passé :</label>';
+				ctrlInputs+='<input type="text" class="form-control" name="mvt-inv['+article+']" id="mvt">';
+				ctrlInputs+='</div>';
+				return ctrlInputs;
+			}
+			var article=$(this).attr('data');
+			var ctrlInputs=createCtrl(article);
+			$(".ctrl-ko-inv-"+article).append(ctrlInputs);
 
 		});
+		$(".ctrl-ok-inv").click(function () {
+			var article=$(this).attr('data');
+			console.log(article);
+
+			$(".ctrl-ko-inv-"+article).empty();
+		});
+
 
 	</script>
 	<?php
