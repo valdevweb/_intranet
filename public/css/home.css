@@ -1,14 +1,29 @@
-hr {
-	margin :  15px 0 !important;
-    /* width: 40% !important; */
+/* hr {
     border-bottom: 1px solid #f57c00 !important;
-    width:  90% !important;
+    width:  80% !important;
+    text-align: left;
     /* box-shadow: 0px 10px 10px -10px #333 !important; */
     /* margin : 80px auto 60px auto !important; */
-}
 
+
+.subtitle:after {
+    content: " ";
+    border: 0.5px solid #f57c00;
+    margin-top: 8px;
+    margin-bottom: 15px;
+    display: block;
+    max-width: 80%;
+}
+.rounded-box{
+	    border-radius: 0.8rem !important;
+}
 .links{
 	margin-bottom: 40px !important;
+}
+ul.links{
+list-style-type: none;
+padding-left: 0 !important;
+
 }
 a.stat-link{
 	color :#01579b !important;
@@ -24,7 +39,11 @@ a.stat-link:hover{
 color :#01579b !important;
 
 }
+h1{
+	margin-top: 0 !important;
+	padding-top: 0 !important;
 
+}
 
 /* docubase et extralec */
 .home-link-external{
@@ -128,3 +147,44 @@ font-size: 40px;
 width: 100%;
 
 }
+
+@media all and (max-width : 1600px){
+.subtitle{
+	font-size: 0.8rem;
+}
+.links, .bg-alert-primary{
+	font-size: 0.9rem;
+}
+
+
+}
+
+
+/*
+@media all and (max-width : 1280px){
+.subtitle{
+	font-size: 0.6rem;
+}
+
+}
+ */
+@media only screen and (max-width: 1024px) {
+
+
+}
+@media only screen and (max-width: 992px) {
+
+
+}
+
+
+
+@media all and (max-width : 960px){
+
+}
+
+
+
+
+
+

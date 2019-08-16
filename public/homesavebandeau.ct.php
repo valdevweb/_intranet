@@ -5,7 +5,7 @@
 
 			<div class="container-fluid">
 				<div class="row">
-					<div class="col s12 m4">
+				 <div class="col s12 col m4">
 						<p class="bg-alert bg-alert-primary">
 							<strong><?= $nbRecup['recup']?></strong> mots de passes récupérés sur <?= $nbCompte['compte']?> comptes
 						</p>
@@ -26,8 +26,9 @@
 
 
 			<div class="container">
+
 				<header>
-					<h1 class="header center grey-text text-darken-2"><?= $typeTitle .' '.$nom ?></h1>
+					<h1 class="center grey-text text-darken-2"><?= $typeTitle .' '.$nom ?></h1>
 				</header>
 				<!-- encadré -->
 
@@ -39,34 +40,12 @@
 
 				<br>
 
-			<section>
-				<h4 class="grey-text text-darken-2"><i>Quelques mots sur votre centrale d'achats Bazar Technique Leclerc:</i></h4>
-				<div class="row">
-					<div class="w3-content" style="max-width:1000px">
-						<div class="mySlides w3-container w3-deep-orange">
-							<div class="slider-height">
-								<h2><b>Quelques chiffres</b></h2>
-								<h2><i>380 magasins adhérents repartis dans 9 centrales</i></h2>
-							</div>
-						</div>
-						<div class="mySlides w3-container w3-blue-grey">
-							<div class="slider-height">
-								<h2><b>L'entrepot</b></h2>
-								<h2><i>52 000 m2 de surface de stockage avec environ 4000 références de produits différents</i></h2>
-							</div>
-						</div>
-
-					</div>
-
-				</div>
-			</section>
-
 			<div class="down"></div>
 			<section>
 				<!-- titre des colonnes principales -->
 				<div class="row">
 					<div class="col s12 m5 l5">
-						<h4 class="grey-text text-darken-2">Vos actualités : </h4>
+						<h4 class="grey-text text-darken-2">Vos actualités de la semaine : </h4>
 					</div>
 					<div class="col l2"></div>
 					<div class="col s12 m5 l5">

@@ -1,5 +1,5 @@
 <?php
-require('../config/autoload.php');
+require('../../config/autoload.php');
 
 if(!isset($_SESSION['id'])){
 	echo "pas de variable session";
@@ -9,16 +9,14 @@ if(!isset($_SESSION['id'])){
 //----------------------------------------------------------------
 //	css dynamique
 //----------------------------------------------------------------
-$page=(basename(__FILE__));
-$page=explode(".php",$page);
-$page=$page[0];
-$cssFile=ROOT_PATH ."/public/css/".$page.".css";
+$pageCss=explode(".php",basename(__file__));
+$pageCss=$pageCss[0];
+$cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
-
-require "../functions/form.fn.php";
-require "../functions/userinfo.fn.php";
-require "../functions/gazette.fn.php";
-require "../functions/stats.fn.php";
+require "../../functions/form.fn.php";
+require "../../functions/userinfo.fn.php";
+require "../../functions/gazette.fn.php";
+require "../../functions/stats.fn.php";
 
 // stats recup mdp
 function getnbRecupPwd($pdoUser){
@@ -97,7 +95,7 @@ if(!empty($_SERVER['HTTP_REFERER']))
 
 		if($_SESSION['type']=='mag')
 		{
-			$typeTitle="Leclerc";
+			$typeTitle="Bienvenue Leclerc";
 			$nom=$_SESSION['nom'];
 		}
 		else
@@ -114,7 +112,7 @@ if(!empty($_SERVER['HTTP_REFERER']))
 	}
 	elseif($_SESSION['type']=='btlec')
 	{
-		$typeTitle="";
+		$typeTitle="Bienvenue";
 		$nom=$_SESSION['nom_bt'];
 		//---------------------------
 		//stats
@@ -224,9 +222,8 @@ $flashNews=getFlashNews($pdoBt);
 
 $flashFilesDir='..\..\..\upload\flash\\';
 
-
-include ('view/_head.php');
-include ('view/_navbar.php');
+include('../view/_head-bt.php');
+include ('../view/_navbar.php');
 
 
 
@@ -235,9 +232,5 @@ include('home.ct.php');
 ?>
 <script src="js/slider.js"></script>
 <?php
-
-
-
-// footer avec les scripts et fin de html
-include('view/_footer.php');
- ?>
+require '../view/_footer-bt.php';
+?>
