@@ -99,6 +99,12 @@ $mpdf->WriteHTML($path);
 		// $pdfContent = $mpdf->Output('', 'S');
 $pdfContent = $mpdf->Output();
 
+// numéro de page (numéro de page sur nb total)
+$mpdf->setFooter('{PAGENO}{nbpg}');
+$mpdf->SetHTMLFooter($footer);
+$mpdf->WriteHTML($html);
+
+
 
 
 MULTIPDF
@@ -108,3 +114,18 @@ soit addPage()
 soit css
 	<div style="page-break-after:always"></div>
 voir btlecest=>casse => pdf-mag
+
+
+
+
+// numéroter led pages (mag-infoi-casse
+//
+$mpdf = new \Mpdf\Mpdf([
+    'pagenumPrefix' => 'page ',
+    'pagenumSuffix' => ' / ',
+    'nbpgPrefix' => '',
+    'nbpgSuffix' => ''
+]);
+$mpdf->setFooter('{PAGENO}{nbpg}');
+$mpdf->WriteHTML($html);
+$pdfContent = $mpdf->Output();

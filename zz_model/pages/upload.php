@@ -1,4 +1,7 @@
 <?php
+// voir certif-upload dans la casse pour input file stylisé différemment et nom de fichier quand un seul fichier
+//
+//
 
 $uploadDir='D:\scapsav\intersite\\';
 $authorizedFiles=[

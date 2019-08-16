@@ -50,6 +50,17 @@ header('Content-Disposition: attachment; filename="export.xlsx"');
 $writer->save("php://output");
 exit;
 
+OU
+
+
+$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+ob_end_clean();
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header('Content-Disposition: attachment; filename="facturecasse.xlsx"');
+$writer->save("php://output");
+exit;
+
+
 
 
 
