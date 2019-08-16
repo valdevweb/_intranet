@@ -5,6 +5,7 @@ function showThisWeek($pdoBt)
 {
 	//debut et fin de la semaine en cours
 	$start=new DateTime('Monday this week');
+	// $start->modify('- 5 days');
 	$start=$start->format('Y-m-d');
 	$end=new DateTime('Friday this week');
 	$end=$end->format('Y-m-d');
@@ -58,7 +59,7 @@ function createLinks($pdoBt,$gazettes,$version)
 	 	$month=$months[$month];
 	 	$year=$g['year'];
 	 	$link="http://172.30.92.53/".$version."upload/gazette/" .$g['file'];
-	 	$html="<li><a href='".$link."' class='simple-link stat-link' data-user-session='".$_SESSION['user']."'><i class='fa fa-hand-o-right pr-3' aria-hidden='true'></i>la gazette du ".$jour .' '. $month .' '.$year ."</a></li>";
+	 	$html="<li><a href='".$link."' class='simple-link stat-link' data-user-session='".$_SESSION['user']."'><i class='far fa-hand-point-right pr-3'></i>la gazette du ".$jour .' '. $month .' '.$year ."</a></li>";
 	 	array_push($gazette,$html);
 	 }
 	 return $gazette;

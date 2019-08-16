@@ -1,8 +1,8 @@
 <?php
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
-  echo "pas de variable session";
-  header('Location:'. ROOT_PATH.'/index.php');
+	echo "pas de variable session";
+	header('Location:'. ROOT_PATH.'/index.php');
 }
 
 require "../../functions/gazette.fn.php";
@@ -24,337 +24,283 @@ addRecord($pdoStat,$page,$action, $descr);
 //----------------------------------------------
 // css dynamique
 //----------------------------------------------
-$page=(basename(__FILE__));
-$page=explode(".php",$page);
-$page=$page[0];
-$cssFile=ROOT_PATH ."/public/css/".$page.".css";
+$pageCss=explode(".php",basename(__file__));
+$pageCss=$pageCss[0];
+$cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 
 
 
+$errors=[];
+$success=[];
 
-include('../view/_head.php');
-include('../view/_navbar.php');
 
 //upload des gazette renvoi sur cette page
 if (!empty($_GET['type'])) {
-    if ($_GET['type'] === 'success') {
-        $message = 'La gazette a été uploadé avec succés';
-    }
+	if ($_GET['type'] === 'success') {
+		$message = 'La gazette a été uploadé avec succés';
+	}
+}
+
+function getGazette($pdoBt, $doccode){
+	$req=$pdoBt->prepare("SELECT * FROM gazette WHERE id_doc_type = :id_doc_type ORDER BY date DESC LIMIT 5");
+	$req->execute([
+		':id_doc_type'		=>$doccode
+	]);
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+
 }
 
 
 
 
+function getGazetteSpeciale($pdoBt, $doccode, $dateStart,$dateEnd){
+	$req=$pdoBt->prepare("SELECT * FROM gazette WHERE date BETWEEN :dateStart AND :dateEnd AND id_doc_type = :id_doc_type ORDER BY date DESC");
+	$req->execute([
+		':dateStart'	=> $dateStart,
+		':dateEnd'	=> $dateEnd,
+		':id_doc_type'		=>$doccode
+	]);
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getGazetteSuivi($pdoBt, $doccode, $dateEnd){
+
+	$req=$pdoBt->prepare("SELECT * , DATE_FORMAT(date,'%d/%m/%Y') AS deb, DATE_FORMAT(date_fin,'%d/%m/%Y') AS fin FROM gazette WHERE id_doc_type=:id_doc_type AND  date_fin>= :today ORDER BY date DESC,file DESC");
+	$req->execute(array(
+		':today'	=> $dateEnd,
+		':id_doc_type'  =>2
+	));
+
+	$data=$req->fetchAll(PDO::FETCH_ASSOC);
+	return $data;
+}
 //recherche gazette
 if (isset($_POST['submit']))
 {
 	$linkSearch="";
-	if ( !preg_match ( "/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/" , $_POST['date'] ) )
+	if ( !preg_match ( "/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/" , $_POST['start'] ) )
 	{
-		$linkSearch="merci de saisir une date valide";
+		$linkSearch="merci de saisir un début de période valide";
 		die;
 	}
-	$date=$_POST['date'];
-	$req=$pdoBt->prepare("SELECT * FROM gazette where date= :date");
+	if ( !preg_match ( "/([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/" , $_POST['end'] ) )
+	{
+		$linkSearch="merci de saisir une fin de période valide";
+		die;
+	}
+
+	$req=$pdoBt->prepare("SELECT * FROM gazette where date BETWEEN :start AND :end");
 	$req->execute(array(
-		':date'		=>$date
+		':start'		=>$_POST['start'],
+		':end'		=>$_POST['end']
 	));
 	if($result=$req->fetchAll(PDO::FETCH_ASSOC))
 	{
-		foreach ($result as $value)
-		{
-
-			$file=$value['file'];
-			$linkSearch.="<p><a href='http://172.30.92.53/".$version ."upload/gazette/" . $file . "'>" .$file ."</a></p>";
+		$linkSearch="<p class='pl-5'>";
+		foreach ($result as $value){
+			$linkSearch.="<a href='http://172.30.92.53/".$version ."upload/gazette/" . $value['file'] . "'>" .$value['file'] ."</a><br>";
 		}
+		$linkSearch.="</p>";
+
 		// $file=$result['file'];
 
 		// $linkSearch= "<a href='http://172.30.92.53/".$version ."upload/gazette/" . $file . "'>" .$file ."</a>";
 	}
-		else
-		{
-			echo "pas de resultat";
-		}
-		unset( $_POST);
+	else
+	{
+		echo "pas de resultat";
+	}
+	unset( $_POST);
+
+}
+$today=new DateTime();
+$todayInput=$today->format('Y-m-d');
+$monday=clone $today;
+$monday->modify('Monday this week');
+$saturday=clone $today;
+$saturday->modify('saturday this week');
+
+$quotidienne=getGazette($pdoBt, 1);
+$suiviCata=getGazetteSuivi($pdoBt,2, $today->format('Y-m-d'));
+$speciale=getGazetteSpeciale($pdoBt, 8, $monday->format('Y-m-d'), $saturday->format('Y-m-d'));
+
+$opp="D:\www\intranet\opportunites\index.html";
+if (file_exists($opp))
+{
+	$oppLastMaj=date ('Y-m-d', filemtime($opp));
+	setlocale(LC_TIME, 'fr_FR.utf-8','fra');
+	$oppLastMaj =  strftime("%A %d %B %Y", strtotime($oppLastMaj));
+	$oppLastMaj = utf8_encode($oppLastMaj);
 
 }
 
 
+
+	// echo "<pre>";
+	// print_r($monday);
+	// echo '</pre>';
+	// echo "<pre>";
+	// print_r($saturday);
+	// echo '</pre>';
+
+//------------------------------------------------------
+//			VIEW
+//------------------------------------------------------
+include('../view/_head-bt.php');
+include('../view/_navbar.php');
 ?>
-<div class="container"  id="up">
-	<div class="myrow">
-		<img class="w3-grayscale gazette" src="../img/gazette/newspaper.jpg">
-	</div>
+<div class="container-fluid bg-white">
 	<div class="row">
-		<div class="col l1 m1"></div>
-		<div class="col l2 m2 s4 mini-nav">
-			<p><a href="#h2019"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette</a></p>
-			<p><a href="#h2019"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2019</a></p>
-			<p><a href="#h2018"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2018</a></p>
-			<p><a href="#h2017"><i class="fa fa-angle-double-right" aria-hidden="true"></i>2017</a></p>
-
-
+		<div class="col">
+			<h1 class="text-main-blue py-5 ">L'essentielle des gazettes</h1>
 		</div>
-		<div class="col l2 m2 s4 mini-nav">
-			<p><a href="#a2018"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette suivi livraison Catalogue</a></p>
-		</div>
-		<div class="col l2 m2 s4 mini-nav">
-			<p><a href="#opp"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette alerte promo</a></p>
-
-		</div>
-		<div class="col l2 m2 mini-nav">
-			<p><a href="#spe"><i class="fa fa-newspaper-o" aria-hidden="true"></i>la gazette spéciale</a></p>
-
-		</div>
-
-		<div class="col l2 m2 s4 mini-nav">
-			<p><a href="#search"><i class="fa fa-search" aria-hidden="true"></i>Rechercher</a></p>
-		</div>
-		<div class="col l1 m1"></div>
-
 	</div>
 
-		<h1 class="light-blue-text text-darken-2">les Gazettes</h1>
-
-
 	<div class="row">
-		<h4 class="light-blue-text text-darken-2" id="h2019">Listing des gazettes de 2019</h4>
-	</div>
-	<div class="row">
-		<ul class="collapsible" data-collapsible="accordion">
-		<?php
-		//semaine à partir de laquelle on va afficher l'historique des gazettes
-		//l'année 2018 commence semaine 0 donc on retire 1 à la semaine actuelle
-			$year=2019;
-			$nbWeek=new DateTime();
-			$nbWeek=$nbWeek->format('W');
-			$nbWeek=(int)$nbWeek-1;
-			// tricherie pour le 31/12/2018 qui tombe la 1ere semaine de 2019.....
-			$rustine=0;
+		<div class="col-xl-1"></div>
 
-			$category="gazette";
-				for ($week=$nbWeek; $week >=0 ; $week--)
-				{
-					if($week==0 && $rustine==0)
-					{
-						$histo=histoGaz($pdoBt,52,2018,$category);
-						$link="http://172.30.92.53/".$version."upload/gazette/";
-						$rustine=1;
-					}
-					else{
-						$histo=histoGaz($pdoBt,$week,$year,$category);
-						$link="http://172.30.92.53/".$version."upload/gazette/";
-
-
-					}
-
-		?>
-			<!--un bloc semaine-->
-			<li>
-				<!-- on rajoute 1 au numéro de semaine pour l'affichage -->
-				<div class="collapsible-header"><i class="fa fa-newspaper-o" aria-hidden="true"></i>Semaine <?=$week+1 ?><span class="new badge blue" data-badge-caption="gazette(s)"><?=count($histo)?></span></div>
-				<div class="collapsible-body">
-					<ul class="browser-default">
-						<?php
-							foreach ($histo as $gazette)
-							{
-							echo "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .$gazette['file'] ."</a></li>";
-							}
-						?>
-					</ul>
+		<div class="col">
+			<!-- ligne 1 -->
+			<div class="row mx-5 ">
+				<div class="col row-eq-height">
+					<div class="row mb-3  p-3 gaz-list quot  full-width">
+						<div class="col" >
+							<img class="d-inline-block align-top" src="../img/gazette/gaz-quotidienne.png">
+							<div class="d-inline-block pl-3" id="quot-list">
+								<p class="heavy" >Les 5 dernières gazettes : </p>
+								<?php if (!empty($quotidienne)): ?>
+									<ul>
+										<?php foreach ($quotidienne as $gazQuotidienne): ?>
+											<li><a href="<?=UPLOAD_DIR?>/gazette/<?= $gazQuotidienne['file']?>"><?= $gazQuotidienne['file'] ?></a></li>
+										<?php endforeach ?>
+									</ul>
+								<?php endif ?>
+							</div>
+						</div>
+					</div>
 				</div>
-			</li>
-		<?php
-		}//fin du for qui parcours les semaines
-		?>
-		</ul>
- 	<p class="uptonav"><a href="#up" class="uptonav">retour au menu</a></p>
 
- 	</div> <!--row accordeon 2018 -->
+				<!-- <div class="col-1"></div> -->
+				<div class="col">
+					<div class="row mb-3 p-3 gaz-list suivi-livraison">
+						<div class="col">
+							<img class="d-inline-block align-top" src="../img/gazette/gaz-suivi-livraison.png">
+							<div class="d-inline-block pl-3" id="suivi-livraison-list">
+								<p class="heavy">Gazettes suivi livraison catalogue(s) en cours :</p>
+								<?php if (!empty($suiviCata)): ?>
 
-	<div class="row">
-		<h4 class="light-blue-text text-darken-2" id="h2018">Listing des gazettes hebdo de 2018</h4>
-	</div>
+									<?php foreach ($suiviCata as $suivi): ?>
+										<?php $fileTitle=explode('.xls', $suivi['file']);?>
+										<ul><li class="heavy"><a href="<?=UPLOAD_DIR?>/gazette/<?=$suivi['file']?>"><?= $fileTitle[0] .' <br><i>('.$suivi['deb'].' au '.$suivi['fin'].') : ' ?></i></a></li></ul>
+										<div class="detail"><?= $suivi['title'] ?></div>
 
-	<div class="row">
-		<ul class="collapsible" data-collapsible="accordion">
-		<?php
-		//l'hiisto des gazettes en 2017 commence à la semaine 48
-			$year=2018;
-			$nbWeek2018=getIsoWeeksInYear(2018);
-			$nbWeek2018= $nbWeek2018 -1;
-			$category="gazette";
-				for ($week=$nbWeek2018; $week >=0 ; $week--)
-				{
-					$histo=histoGaz($pdoBt,$week,$year, $category);
-					$link="http://172.30.92.53/".$version."upload/gazette/";
-				?>
-			<!--un bloc semaine-->
-			<li>
-				<div class="collapsible-header"><i class="fa fa-newspaper-o" aria-hidden="true"></i>Semaine <?=$week+1 ?><span class="new badge blue" data-badge-caption="gazette(s)"><?=count($histo)?></span></div>
-				<div class="collapsible-body">
-					<ul class="browser-default">
-						<?php
-							foreach ($histo as $gazette)
-							{
-							echo "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .$gazette['file'] ."</a></li>";
-							}
-						?>
-					</ul>
+									<?php endforeach ?>
+									<?php else: ?>
+										<p>Aucune gazette en cours</p>
+									<?php endif ?>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
-			</li>
-			<?php
-			//fin du for qui parcours les semaines
-				}
-				?>
-			</ul>
- 		<p class="uptonav"><a href="#up" class="uptonav">retour au menu</a></p>
- 	</div>
- 	<div class="row">
-		<h4 class="light-blue-text text-darken-2" id="h2017">Listing des gazettes hebdo de 2017</h4>
-	</div>
 
-	<div class="row">
-		<ul class="collapsible" data-collapsible="accordion">
-		<?php
-		//l'hiisto des gazettes en 2017 commence à la semaine 48
-			$year=2017;
-			$nbWeek2017=getIsoWeeksInYear(2017);
-			$nbWeek2017= $nbWeek2017 -1;
-			$category="gazette";
-				for ($week=$nbWeek2017; $week >=48 ; $week--)
-				{
-					$histo=histoGaz($pdoBt,$week,$year, $category);
-					$link="http://172.30.92.53/".$version."upload/gazette/";
-				?>
-			<!--un bloc semaine-->
-			<li>
-				<div class="collapsible-header"><i class="fa fa-newspaper-o" aria-hidden="true"></i>Semaine <?=$week+1 ?><span class="new badge blue" data-badge-caption="gazette(s)"><?=count($histo)?></span></div>
-				<div class="collapsible-body">
-					<ul class="browser-default">
-						<?php
-							foreach ($histo as $gazette)
-							{
-							echo "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'>" .$gazette['file'] ."</a></li>";
-							}
-						?>
-					</ul>
+				<!-- ligne 2 -->
+				<div class="row mx-5 mt-3">
+					<div class="col row-eq-height">
+						<div class="row mb-3 p-3 gaz-list alerte-promo full-width">
+							<div class="col">
+								<img class="d-inline-block align-top" src="../img/gazette/gaz-alerte-promo.png">
+								<div class="d-inline-block pl-3" id="alerte-promo-list">
+
+									<ul>
+										<li><a href="http://172.30.92.53/OPPORTUNITES/index.html">l'alerte promo</a> <br>dernière mise à jour : <?=$oppLastMaj?></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- <div class="col-1"></div> -->
+					<div class="col">
+						<div class="row mb-3 p-3 gaz-list speciale">
+							<div class="col">
+								<img class="d-inline-block align-top" src="../img/gazette/gaz-speciale.png">
+								<div class="d-inline-block pl-3" id="speciale-list">
+									<?php if (!empty($speciale)): ?>
+										<ul>
+											<?php foreach ($speciale as $spe): ?>
+												<?php $fileTitle=explode('.xls', $spe['file']);?>
+
+												<li><a href="<?=UPLOAD_DIR?>/gazette/<?=$spe['file']?>"><?= $fileTitle[0] ?></a></li>
+
+											<?php endforeach ?>
+										</ul>
+										<?php else: ?>
+											<p>Aucune gazette spéciale</p>
+										<?php endif ?>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
 				</div>
-			</li>
-			<?php
-			//fin du for qui parcours les semaines
-				}
-				?>
-			</ul>
- 		<p class="uptonav"><a href="#up" class="uptonav">retour au menu</a></p>
- 	</div>
+				<div class="col-xl-1"></div>
 
-
-
-
-
-
- 	<div class="row ">
-		<h4 class="light-blue-text text-darken-2" id="opp">Les alertes promo</h4>
-	</div>
-	<div class="row bg-white small-padding">
-	<ul class="browser-default"><li><a class='stat-link' data-user-session="<?=$_SESSION['user']?>" href="http://172.30.92.53/OPPORTUNITES/index.html" target="_blank">les opportunités du jour</a></li></ul>
-	<p class="uptonav"><a href="#up" class="uptonav">retour au menu</a></p>
-	</div>
- <!--row accordeon 2017 -->
-
-<!--
-*
-*		gazette appros
-*
- -->
-
-<div class="row">
-		<h4 class="light-blue-text text-darken-2" id="a2018">Suivi livraison Catalogue :</h4>
-	</div>
-	<div class="row bg-white">
-		<ul class="browser-default">
-		<?php
-			$histo=showLastGazettesAppros($pdoBt);
-			$link="http://172.30.92.53/".$version."upload/gazette/";
-			foreach ($histo as $gazette)
-			{
-					//modif du 20/06
-				if(!empty($gazette['title']))
-				{
-					$detail=" : <ul class='browser-default'><li>";
-					$detail.=str_replace("<br />","</li><li>",$gazette['title']);
-					$detail.= "</li></ul>";
-				}
-				else
-				{
-					$detail="";
-				}
-				$filename=$gazette['file'];
-				$filename=explode(".",$filename);
-				$approFilename=$filename[0];
-				echo "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'><strong>" .$approFilename ."</strong> operations du " .$gazette['deb']. " au ".$gazette['fin'] .$detail ."</a> </li>";
-			}
-		?>
-		</ul>
- 	<p class="uptonav"><a href="#up" class="uptonav">retour au menu</a></p>
-
- 	</div>
-	<div class="row">
-		<h4 class="light-blue-text text-darken-2" id="spe">Les gazettes spéciales</h4>
-	</div>
-
-	<div class="row bg-white">
-		<ul class="browser-default">
-			<?php
-			$gSpe=showAllSpe($pdoBt);
-			foreach ($gSpe as $spe)
-			{
-				echo "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$spe['file']."'>" .$spe['title'] ."</a> </li>";
-			}
-			?>
-		</ul>
-	</div>
-
-
-
-
-
-<!-- formulaire de recherche -->
-	<div class="row">
-		<h4 class="light-blue-text text-darken-2" id="search">Chercher une gazette par date</h4>
-		<form method="post" action="gazette.php#result" class="w3-container bg-white">
-			<div class="col l2"></div>
-			<div class="col l4">
-
-				<label class="w3-text-grey" for="date">Selectionnez la date à partir du 1er décembre 2017</label>
-				<input type="date" class="w3-input w3-border" name="date" id="date" >
 			</div>
 
-			<div class="col l4 align-left">
 
-				<br>
 
-				<button class="btn waves-effect waves-light orange darken-3 align-right" type="submit" name="submit" >Rechercher</button>
+
+
+			<!-- formulaire de recherche -->
+			<div class="row mt-5">
+				<div class="col">
+					<h1 class="text-main-blue" id="search">Historique des gazettes</h1>
+					<p class="pl-5">Pour rechercher une gazette, veuillez saisir la période dans le formulaire ci dessous (les gazettes antérieures à septembre 2017 n'ont pas été conservées)</p>
+				</div>
 			</div>
-			<div class="col l2"></div>
+			<div class="row mb-5 pl-5">
+				<div class="col-auto">
+					<img src="../img/gazette/gaz-search.png">
+				</div>
+				<div class="col mt-3">
+					<form method="post" action="">
+						<div class="row">
+							<div class="col-xl-2">
+								<div class="form-group">
+									<label for="date">Début de période</label>
+									<input type="date" value="<?= $todayInput?>" class="form-control" name="start" min="2017-09-01" >
+								</div>
+							</div>
+							<div class="col-xl-2">
+								<div class="form-group">
+									<label for="date">Début de période</label>
+									<input type="date" value="<?= $todayInput?>" class="form-control" name="end" min="2017-09-01">
+								</div>
+							</div>
+							<div class="col-xl-3 mt-4 pt-2">
+								<button class="btn btn-primary" type="submit" name="submit" >Rechercher</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-xl-1"></div>
+			</div>
 
 
-		</form>
- 	<p class="uptonav"><a href="#up" class="uptonav">retour au menu</a></p>
-
-	</div>
-	<div class="row" id="result">
-		<?php if(isset($linkSearch)){echo "<p>Resultat(s) : </p>". $linkSearch ;} ?>
-	</div>
-<!-- END formulaire de recherche -->
-</div><!-- END container -->
 
 
+			<div class="row" id="result">
+				<div class="col">
+					<?php if(isset($linkSearch)){echo "<p>Resultat de votre recherche : </p>". $linkSearch ;} ?>
+				</div>
+
+			</div>
+			<!-- END formulaire de recherche -->
+		</div><!-- END container -->
 
 
-<?php
-include('../view/_footer.php');
 
-?>
+
+		<?php require '../view/_footer-bt.php'; ?>
