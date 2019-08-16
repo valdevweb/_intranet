@@ -386,9 +386,29 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<div class="row py-3">
+	<div class="row pb-3">
 		<div class="col">
-			<p class="text-right pt-1">
+			<?php
+			echo '<table class="table text-right table-bordered ">';
+					echo '<tr>';
+
+					echo '<td>'.$yearN.'</td>';
+					echo '<td>'.$yearNUn .'</td>';
+					echo '<td>'.$yearNDeux .'</td>';
+					echo '</tr>';
+
+					echo '<tr>';
+
+					echo '<td>'.number_format((float)$financeN['CA_Annuel'],2,'.',' ').'&euro;</td>';
+					echo '<td>'.number_format((float)$financeNUn['CA_Annuel'],2,'.',' ').'&euro;</td>';
+					echo '<td>'.number_format((float)$financeNDeux['CA_Annuel'],2,'.',' ').'&euro;</td>';
+					echo '</tr>';
+
+					echo '</table>';
+					 ?>
+		</div>
+		<div class="col">
+			<p class="text-right pt-3">
 				<?php if ($prev!=0): ?>
 					<a href="bt-detail-litige.php?id=<?=$prev?>" class="grey-link"><i class="fas fa-angle-left pr-2 pt-2"></i>Litige précédent</a>
 				<?php endif ?>
@@ -397,7 +417,7 @@ DEBUT CONTENU CONTAINER
 
 				<?php endif ?>
 			</div>
-			<div class="col-auto">
+			<div class="col-auto  pt-3">
 				<p class="text-right"><a href="bt-litige-encours.php" class="btn btn-primary">Retour</a></p>
 			</div>
 		</div>

@@ -54,6 +54,21 @@ function getCasse($pdoCasse, $idCasse){
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
+function getCmt($pdoCasse, $id){
+	$req=$pdoCasse->prepare("SELECT *, DATE_FORMAT(date_cmt, '%d-%m-%Y') as dateCmt FROM cmt WHERE id_casse= :id ORDER BY date_cmt DESC");
+	$req->execute([
+		':id'		=>$id
+	]);
+	$result=$req->fetchAll(PDO::FETCH_ASSOC);
+	if(!empty($result)){
+		return $result;
+	}
+	else{
+		return false;
+	}
+}
+
+
 
 function getStockPalette($pdoCasse){
 	$req=$pdoCasse->query("SELECT *, palettes.id as paletteid FROM palettes INNER JOIN qlik.palettes4919 ON palettes.palette = qlik.palettes4919.NumeroPalette GROUP BY palette ORDER BY palette");
@@ -68,7 +83,7 @@ function getStockPalette($pdoCasse){
 
 
 function getPaletteInfo($pdoCasse, $id){
-	$req=$pdoCasse->prepare("SELECT *, palettes.id as idpalette, casses.id as idcasse FROM palettes LEFT JOIN casses ON palettes.id=casses.id_palette LEFT join exps ON palettes.id_exp= exps.id WHERE casses.id_palette= :id ORDER BY casses.id");
+	$req=$pdoCasse->prepare("SELECT *, palettes.id as idpalette, casses.id as idcasse, DATE_FORMAT(date_dd_pilote,'%d-%m-%Y') as dateddpilote, DATE_FORMAT(date_retour_pilote,'%d-%m-%Y') as dateretourpilote,DATE_FORMAT(date_info_mag,'%d-%m-%Y') as dateinfomag,DATE_FORMAT(date_delivery,'%d-%m-%Y') as datedelivery,DATE_FORMAT(palettes.date_clos,'%d-%m-%Y') as dateclos FROM palettes LEFT JOIN casses ON palettes.id=casses.id_palette LEFT join exps ON palettes.id_exp= exps.id WHERE casses.id_palette= :id ORDER BY casses.id");
 	$req->execute([
 		':id'		=>$id
 	]);
@@ -153,6 +168,18 @@ function getPaletteList($pdoCasse,$idExp){
 	]);
 	return $req->fetchAll(PDO::FETCH_COLUMN);
 }
+
+
+
+function getContremarqueList($pdoCasse,$idExp){
+	$req=$pdoCasse->prepare("SELECT  DISTINCT contremarque  FROM exps LEFT JOIN palettes ON exps.id=palettes.id_exp  WHERE exps.id= :id_exp");
+	$req->execute([
+		':id_exp'			=>$idExp
+	]);
+	return $req->fetchAll(PDO::FETCH_COLUMN);
+}
+
+
 
 //  utilisé pour la facturation
 function getArticleByGt($pdoCasse, $idExp, $gt){

@@ -13,25 +13,6 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 // id litige passé par get['id']
 //------------------------------------------------------
-//			INFOS
-//------------------------------------------------------
-/*
-On peut avoir plisuers articles dans une seule décalration de litige
-On doit donc faire une boucle pour récupérer tous les articles
-Les champs de formulaires sont donc répétés autant de fois qu'il y a d'article
-Pour parcourir les postes, il suffit 'ajouter un index pour chq ""sous formulaire. on a des resultat du genre :
-POST[champ]	=>[0]
-			=>[1]
-la plupart des champs post ne pouvant pas être vides, on peut les parcourir sans problème. Ce n'est
-pas le cas avec la gloable file car, rien ne force l'utilisateur à mettre une pièce jointe
-Problème : comment relier les fichiers uploadé au produit concerné ?
-Solution : ajout d'un index dans le nom de la varaible file qui s'incrémente à chq boucle
-On commence à 1 car le 0 n'est pas pris en compte dans le name
- */
-
-
-
-
 
 
 

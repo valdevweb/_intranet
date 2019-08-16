@@ -147,10 +147,14 @@ color:#f57c00;
   color: #ffc107;
 }
 .text-yellow-dark{
-color: #e4ac02;
+color: #e4ac02 !important;
+}
+
+.text-yellow-darker{
+color: #4e3b03 !important;
 }
 .text-kaki{
-  color:#43493f;
+  color:#43493f !important;
 }
 
 .text-green{
@@ -554,6 +558,8 @@ a:hover.link-white{
     text-decoration: none;
 
 }
+
+
 
 /* ------------------------------------------------------------
 

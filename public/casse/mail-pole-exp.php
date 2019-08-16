@@ -4,7 +4,7 @@
     </head>
     <body style="font-family:arial,helvetica, 'sans serif'; color:dimGray;">
         <p>Bonjour,</p>
-        <p>Nous vous informons que nous vous faisons parvenir  <span style="color:darkblue;">{NB} palettes de casses</span>. Vous trouverez en pièce jointes le certificat de destruction à nous retourner via le portail {LINK}</p>
+        <p>Nous vous informons que nous vous faisons parvenir  <span style="color:darkblue;">{NB} palette(s) de casses</span>. Vous trouverez en pièce jointe le certificat de destruction à nous retourner via le portail {LINK}</p>
         <p>&nbsp;</p>
 
         Cordialement,</p>

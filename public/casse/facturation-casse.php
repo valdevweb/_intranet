@@ -52,13 +52,8 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 $articles=getExpPaletteCasse($pdoCasse,$idExp);
 $numPalette=getPaletteList($pdoCasse,$idExp);
-	echo "<pre>";
-	print_r($numPalette);
-	echo '</pre>';
-	$numPalette=implode(', ',$numPalette);
-	echo "<pre>";
-	print_r($numPalette);
-	echo '</pre>';
+$numPalette=implode(', ',$numPalette);
+
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 $sheet->setCellValue('A1', 'LIBELLE FACTURE');

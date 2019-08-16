@@ -200,7 +200,7 @@ h2{
 <title>Palette</title>
 </head>
 <body>
-	<p class="text-right entete">date d'édition : <?= date('d-m-Y')?></p>
+	<p class="entete text-right">date d'édition : <?= date('d-m-Y')?></p>
 
 	<table class="padding-table border-table-prim">
 		<tr>
@@ -266,18 +266,27 @@ h2{
 		<p>Ces produits ont été détruits par l'intermédiaire d'un organisme agréé</p>
 		<table class="padding-table">
 			<tr>
-				<td class="quatre"></td>
+				<td class="deux"></td>
 				<td class="deux medium" colspan="2">
-				Fait le ___________________ à ___________________</p>
+				Fait le ______________________________ </p>
 			</td>
-			<td class="quatre"></td>
 		</tr>
+
 		<tr>
-			<td class="quatre"></td>
+			<td class="deux"></td>
 			<td class="deux medium" colspan="2">
-				Signature et tampon :
+				Signature :
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
+				<p>&nbsp;</p>
 			</td>
-			<td class="quatre"></td>
+		</tr>
+				<tr>
+			<td class="deux"></td>
+			<td class="deux medium" colspan="2">
+				<?= $address ?>
+			</td>
 		</tr>
 	</table>
 

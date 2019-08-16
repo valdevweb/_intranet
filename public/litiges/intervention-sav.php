@@ -34,9 +34,11 @@ $success=[];
 
 UNSET($_SESSION['goto']);
 
+
+
 function getAction($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT libelle, action.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y')as dateFr, pj FROM action WHERE action.id_dossier= :id AND id_contrainte=4 ORDER BY date_action");
+	$req=$pdoLitige->prepare("SELECT libelle, action.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y')as dateFr, pj FROM action WHERE action.id_dossier= :id AND id_contrainte=5 OR id_contrainte=4 ORDER BY date_action");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 
@@ -51,6 +53,15 @@ function getLitige($pdoLitige){
 	));
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function getListDossier($pdoLitige){
+	$req=$pdoLitige->query("SELECT DISTINCT dossier,dossiers.id  FROM action LEFT JOIN dossiers ON action.id_dossier=dossiers.id WHERE id_contrainte =4 ORDER BY dossier DESC");
+	$req->execute();
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+$listDossier=getListDossier($pdoLitige);
+
 
 function addAction($pdoLitige, $filelist){
 
@@ -69,13 +80,30 @@ function addAction($pdoLitige, $filelist){
 	return $req->rowCount();
 }
 
+function createFileLink($filelist)
+{
+	$rValue='';
+	$filelist=explode(';',$filelist);
+
+	for ($i=0; $i < count($filelist); $i++)
+	{
+		if($filelist[$i] !="")
+		{
+			$rValue.='<a href="'.UPLOAD_DIR.'/litiges/'.$filelist[$i].'"><span class="pr-3"><i class="fas fa-link"></i></span></a>';
+
+		}
+	}
+	return $rValue;
+}
+
+if(isset($_POST['id_dossier'])){
+				header('Location:intervention-sav.php?id='.$_POST['id_dossier']);
+
+}
+
 if(isset($_GET['id'])){
 	$listAction=getAction($pdoLitige);
 	$thisLitige=getlitige($pdoLitige);
-}
-else{
-	header('Location:../home.php');
-
 }
 
 
@@ -133,6 +161,7 @@ if(isset($_POST['submit'])){
 
 			if(VERSION=='_'){
 				$dest='valerie.montusclat@btlec.fr';
+
 			}
 			else{
 				$dest='btlecest.portailweb.logistique@btlec.fr';
@@ -192,8 +221,26 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Litige #<?= $thisLitige[0]['dossier']?></h1>
-
+	<h1 class="text-main-blue pt-5 ">Litige #<?= $thisLitige[0]['dossier']?></h1>
+	<div class="row">
+		<div class="col"></div>
+		<div class="col-2">
+			<form action="" method="post">
+				<div class="form-group">
+					<label>Changer de dossier :</label>
+					<select name="id_dossier" class="form-control" onchange='this.form.submit()'>
+						<option value="">Selectionnez</option>
+						<?php foreach ($listDossier as $dossier)
+						{
+							echo '<option value="'.$dossier['id'].'">'.$dossier['dossier'].'</option>';
+						}
+						?>
+					</select>
+				</div>
+			</form>
+		</div>
+		<div class="col"></div>
+	</div>
 	<div class="row">
 		<div class="col-lg-1"></div>
 		<div class="col">
@@ -205,6 +252,9 @@ DEBUT CONTENU CONTAINER
 		<div class="col-lg-1"></div>
 	</div>
 	<div class="bg-separation"></div>
+	<?php
+	ob_start();
+	 ?>
 	<div class="row mb-3 pt-3">
 		<div class="col text-yellow-dark heavy">Détail du litige :</div>
 	</div>
@@ -254,7 +304,7 @@ DEBUT CONTENU CONTAINER
 	</div>
 	<!-- <div class="bg-separation"></div> -->
 	<div class="row mb-3 pt-3">
-		<div class="col heavy text-main-blue">Demande de BTLec :</div>
+		<div class="col heavy text-main-blue">Echanges sur le dossier :</div>
 	</div>
 
 	<?php
@@ -328,7 +378,14 @@ DEBUT CONTENU CONTAINER
 		<div class="col-2"></div>
 	</div>
 
+<?php
+$html=ob_get_contents();
+ob_end_clean();
+if(isset($_GET['id'])){
+	echo $html;
+}
 
+ ?>
 
 	<!-- ./container -->
 </div>

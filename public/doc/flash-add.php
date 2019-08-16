@@ -143,7 +143,7 @@ if(isset($_POST['submit']))
 		$row=addFlash($pdoBt, $vignette,$flashfile,$link);
 		if($row==1)
 		{
-			$dest=['valerie.montusclat@btlec.fr'];
+			$dest=['valerie.montusclat@btlec.fr', 'stephane.wendling@btlec.fr'];
 // ---------------------------------------
 
 
@@ -159,7 +159,7 @@ if(isset($_POST['submit']))
 			$message = (new Swift_Message($subject))
 			->setBody($htmlMail, 'text/html')
 
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail SAV Leclerc'))
+			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BT'))
 // ->setTo(array('valerie.montusclat@btlec.fr', 'valerie.montusclat@btlec.fr' => 'val'))
 			->setTo($dest);
 // ->addCc($copySender['email'])

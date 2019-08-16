@@ -127,6 +127,8 @@ $today=date('Y-m-d');
 $start=date('Y-m-d',strtotime("2019-01-01"));
 $yesterday=date('Y-m-d',strtotime("-1 days"));
 $existingExp=getActiveExp($pdoCasse);
+//  palkette en stock sur le 4919
+$paletteEnStock=getStockPalette($pdoCasse);
 
 if(isset($_POST['varticle']))
 {
@@ -343,6 +345,8 @@ DEBUT CONTENU CONTAINER
 			// si résultat
 			if(isset($casses) && !empty($casses))
 			{
+				$arrStatutCasse=['<span class="text-red">en cours</span>','clos'];
+
 				echo '<h5 class="text-main-blue py-3 text-center">Résultat pour votre recherche : <span class="heavy bg-grey patrick-hand px-3">'.$_POST['search_strg'].'</span></h5>';
 				echo '<div class="text-center pb-3"><a href="xl-dashboard-casse.php?date_start='.$_POST['date_start'].'&date_end='.$_POST['date_end'].'&statut='.$_POST['statut'].'&search_strg='.$_POST['statut'].'" class="btn secTwo"><i class="fas fa-file-excel pr-3"></i>Exporter</a></div>';
 
@@ -356,7 +360,8 @@ DEBUT CONTENU CONTAINER
 				echo '<th>Fournisseur</th>';
 				echo '<th class="text-right">PCB</th>';
 				echo '<th class="text-right">Valo</th>';
-				echo '<th class="text-right">Supprimer</th>';
+				echo '<th>Statut</th>';
+				echo '<th class="text-right"><i class="far fa-trash-alt"></i></th>';
 				echo '</tr>';
 				echo '</thead>';
 				echo '<tbody>';
@@ -372,6 +377,7 @@ DEBUT CONTENU CONTAINER
 					echo '<td>'.$casse['fournisseur'].'</td>';
 					echo '<td class="text-right">'.$casse['pcb'].'</td>';
 					echo '<td class="text-right">'.$casse['valo'].'</td>';
+					echo '<td class="text-right">'.$arrStatutCasse[$casse['etat']].'</td>';
 					echo '<td class="text-right"><a href="delete-casse.php?id='.$casse['id'].'" class="red-link"><i class="far fa-trash-alt"></i></a></td>';
 					echo '</tr>';
 				}
@@ -390,6 +396,7 @@ DEBUT CONTENU CONTAINER
 	</div>
 
 
+
 	<?php if(isset($_POST['vpalette'])): ?>
 		<div class="row mb-3">
 			<div class="col">
@@ -397,28 +404,37 @@ DEBUT CONTENU CONTAINER
 				<table class="table table-sm table-bordered" id="palettes">
 					<thead class="thead-dark">
 						<tr>
-							<th>Palette</th>
-							<th>Palette contremarque</th>
-							<th>Statut</th>
-							<th>Date création palette</th>
-							<th>Date expé</th>
+							<th class="sortable" onclick="sortTable(0);">Palette</th>
+							<th class="sortable" onclick="sortTable(1);">Palette contremarque</th>
+							<th class="sortable" onclick="sortTable(2);">Statut</th>
+							<th class="sortable" onclick="sortTable(3);">Date création palette</th>
+							<th class="sortable" onclick="sortTable(4);">Date expé</th>
 						</tr>
 					</thead>
 					<tbody>
-
-
 						<?php
-
-
-
-						foreach ($palettes as $palette) {
+						foreach ($palettes as $palette)
+						{
+							// on met les palettes en stock en statut à expédier alors que dans la base, elles ont le statut en cours
+							// pour ça on vérifies si elle sont dans le tableau de résultat de la requete sur la table palettes 4919
+							if($paletteEnStock){
+								$stock=in_array($palette['palette'],array_column($paletteEnStock,'palette'));
+							}
+							else{
+								$stock=false;
+							}
 							$arrStatut=['<span class="text-red">en cours</span>','à expédier', 'expédiée','détruite'];
 
 
 							echo '<tr>';
 							echo '<td><a href="detail-palette.php?id='.$palette['id'].'">'.$palette['palette'].'</a></td>';
 							echo '<td>'.$palette['contremarque'].'</td>';
-							echo '<td>'.$arrStatut[$palette['statut']].'</td>';
+							if($stock){
+								echo '<td>à expédier</td>';
+							}
+							else{
+								echo '<td>'.$arrStatut[$palette['statut']].'</td>';
+							}
 							echo '<td class="text-right">'.$palette['dateCrea'].'</td>';
 
 							echo '<td class="text-right">'.$palette['dateDelivery'].'</td>';
@@ -461,16 +477,15 @@ DEBUT CONTENU CONTAINER
 		<div class="col">
 			<?php
 
-			$paletteList=getStockPalette($pdoCasse);
-			if($paletteList==false){
+			if($paletteEnStock==false){
 				echo "<p>aucune palette de casse en stock</p>";
 			}
 			else
 			{
-				$nbPalette=count($paletteList);
+				$nbPalette=count($paletteEnStock);
 				$statut=[0=>'<span class="text-red"><i class="fas fa-info-circle"></i></span>',1=>'<span class="text-orange"><i class="fas fa-clipboard-check"></i></span>', 2=>'<i class="fas fa-paper-plane text-green"></i>'];
 				echo '<ul id="list-palette">';
-				foreach ($paletteList as $palette)
+				foreach ($paletteEnStock as $palette)
 				{
 					echo '<li><a href="detail-palette.php?id='.$palette['paletteid'].'" class="link-main-blue">'.$palette['palette'].'</a> - '.$statut[$palette['statut']].'</li>';
 				}
@@ -528,7 +543,7 @@ DEBUT CONTENU CONTAINER
 				$fac=formatExistingDate($detail['date_fac']);
 					// $ddPilote=isset() ? $detail['date_dd_pilote'] : false;
 				echo '<tr>';
-				echo '<td>'.$detail['palette'].'</td>';
+				echo '<td><a href="detail-palette.php?id='.$detail['paletteid'].'">'.$detail['palette'].'</a></td>';
 				echo '<td>'.$detail['contremarque'].'</td>';
 				echo '<td class="text-right">'.$ddPilote.'</td>';
 				echo '<td class="text-right">'.$retourPilote.'</td>';
@@ -545,13 +560,19 @@ DEBUT CONTENU CONTAINER
 			echo '<td class="text-center py-3"><a href="pilote-palette-ok.php?id='.$exp['id'].'"><button class="btn secTwo"><i class="far fa-edit pr-3"></i>Saisir</button></a></td>';
 			echo '<td class="text-center py-3"><a href="delivery-ok.php?id='.$exp['id'].'"><button class="btn secThree"><i class="far fa-edit pr-3"></i>Saisir</button></a></td>';
 			echo '<td class="text-center py-3"><a href="mag-info-casse.php?id='.$exp['id'].'" id="mailMag"><button class="btn secFour"><i class="far fa-envelope pr-3"></i>Envoyer</button></a></td>';
-			echo '<td class="text-center py-3"><a href="facturation-casse.php?id='.$exp['id'].'" id="mailMag"><button class="btn secFive"><i class="far fa-credit-card pr-3"></i>Facturer</button></a></td>';
+			//  pas de btn facturer si pôle
+			if($exp['btlec']==2051 || $exp['btlec']==2054 || $exp['btlec']==2069){
+				echo '<td class="text-center py-3"></td>';
+			}
+			else{
+				echo '<td class="text-center py-3"><a href="facturation-casse.php?id='.$exp['id'].'" id="mailMag"><button class="btn secFive"><i class="far fa-credit-card pr-3"></i>Facturer</button></a></td>';
+
+			}
 			echo '</tr>';
 			echo '</table>';
 			echo '</div>';
 			echo '</div>';
 			echo '<div class="row">';
-
 
 
 
@@ -577,8 +598,15 @@ DEBUT CONTENU CONTAINER
 
 	<!-- ./container -->
 </div>
+<script src="../js/sortmultitable.js"></script>
 
 <script type="text/javascript">
+	function sortTable(n) {
+		sort_table(document.getElementById("palettes"), n);
+	}
+
+
+
 	$(document).ready(function(){
 	// boite de dialogue confirmation clic sur lien
 	$('.red-link').on('click', function(e){

@@ -1,3 +1,31 @@
-#palette td:nth-child(4), #palette td:nth-child(5){
+#palette td:nth-child(4), #palette td:nth-child(5),#palette td:nth-child(6){
 	text-align :  right;
 }
+
+#palette td:nth-child(6)::after{
+	content:'\20AC'
+}
+
+/*
+
+@keyframes popup {
+  0% {
+opacity:0;
+  }
+  34% {
+    opacity: 0.3;
+  }
+  67% {
+    opacity :0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
+  .arrow {
+    animation: popup 2s ease infinite;
+  } */
+
+

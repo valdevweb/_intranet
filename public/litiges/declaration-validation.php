@@ -8,19 +8,27 @@ if(!isset($_SESSION['id'])){
 
 if($_SESSION['type']=='btlec'){
 	unset($_SESSION['id_galec']);
-	if(isset($_SESSION['palette']))
-	{
-		unset($_SESSION['palette']);
-		unset($_SESSION['vol-id']);
-
-	}
-	// dossier_litige= si num dossier saisi manuellement par nat ou christelle
-	if(isset($_SESSION['dossier_litige'])){
-		$numDossier=$_SESSION['dossier_litige'];
-		unset($_SESSION['dossier_litige']);
-
-	}
 }
+if(isset($_SESSION['palette']))
+{
+	unset($_SESSION['palette']);
+	unset($_SESSION['vol-id']);
+}
+	// dossier_litige= si num dossier saisi manuellement par nat ou christelle
+if(isset($_SESSION['dossier_litige'])){
+	$numDossier=$_SESSION['dossier_litige'];
+	unset($_SESSION['dossier_litige']);
+
+}
+if(isset($_SESSION['dd_ouv'])){
+	$idOuv=$_SESSION['dd_ouv'];
+	unset($_SESSION['dd_ouv']);
+
+}
+else{
+	$idOuv=false;
+}
+
 
 
 $errors=[];
@@ -120,7 +128,7 @@ function copyInvPalette($pdoLitige,$idDossier){
 }
 
 function copyDetail($pdoLitige,$idDossier){
-	$req=$pdoLitige->prepare("INSERT INTO details( id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inversion, inv_article, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj, ctrl_ko, ecart, mvt) SELECT  id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inversion, inv_article, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj, ctrl_ko, ecart, mvt FROM details_temp WHERE details_temp.id_dossier= :id_dossier");
+	$req=$pdoLitige->prepare("INSERT INTO details( id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inversion, inv_article, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj, ctrl_ko, ecart, mvt, date_ctrl) SELECT  id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inversion, inv_article, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj, ctrl_ko, ecart, mvt,date_ctrl FROM details_temp WHERE details_temp.id_dossier= :id_dossier");
 	$req->execute([
 		':id_dossier'	=>$idDossier
 	]);
@@ -153,6 +161,18 @@ function isDial($pdoLitige){
 }
 
 
+function updateOuv($pdoLitige,$lastInsertId,$numdossier, $idOuv)
+{
+
+	$req=$pdoLitige->prepare("UPDATE ouv SET id_litige= :id_litige, dossier= :dossier WHERE id= :id");
+	$req->execute(array(
+		':id_litige'		=>$lastInsertId,
+		':dossier'		=>$numdossier,
+		'id'		=>$idOuv
+	));
+	return $req->rowCount();
+
+}
 
 
 function isPaletteInv($pdoLitige){
@@ -208,11 +228,20 @@ if(isset($_GET['id']))
 
 // 5-copie details_temp vers prod
 	$copyDetail=copyDetail($pdoLitige,$idDossier);
+// 		echo "<pre>";
+// 		print_r($copyDetail);
+// 		echo '</pre>';
+
+// exit();
+
 // si dial
 	$isDial=isDial($pdoLitige);
 	if($isDial){
 		$upTempDial=updateTempDial($pdoLitige,$idDossier);
 		$copyDial=copyDial($pdoLitige, $idDossier);
+	}
+	if($idOuv){
+		updateOuv($pdoLitige,$idDossier,$numDossier, $idOuv);
 	}
 
 	$invPalette=isPaletteInv($pdoLitige);
@@ -233,37 +262,6 @@ if(isset($_GET['id']))
 
 
 }
-
-	// on profite du recap pour calculer la valo totale d'un litige
-// 2 cas
-// normal : somme,
-// inversion de palette = somme palette cammandé - sommme palette reçue
-// inversion de palette =7
-// 	$sumLitige=getSumLitige($pdoLitige);
-
-// 	if($sumLitige['id_reclamation']==7)
-// 	{
-// 		$sumRecu=getSumPaletteRecu($pdoLitige);
-// 		$sumCde=$sumLitige['sumValo'];
-// 		$sumRecu=$sumRecu['sumValo'];
-// 		$sumValo=$sumCde -$sumRecu;
-// 		$update=updateValoDossier($pdoLitige,$sumValo);
-
-// 	}
-// 	else{
-// 		$sumValo=$sumLitige['sumValo'];
-// 		$update=updateValoDossier($pdoLitige,$sumValo);
-// 	}
-
-// }
-
-
-
-
-
-
-
-
 
 //------------------------------------------------------
 //			VIEW

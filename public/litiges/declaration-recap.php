@@ -88,31 +88,6 @@ function updateValoDossier($pdoLitige,$sumValo){
 
 if(isset($_GET['id']))
 {
-	// si on a imposé un numéro de dossier sur la page déclaration basic, on l'a récupéré dans la var de session et affecté à numDossier
-	if(!isset($numDossier)){
-		$numDossier=getLastNumDossier($pdoLitige);
-		$numDossier=$numDossier['dossier'];
-			// il faut vérifier que l'on a pas changé d'année
-			// prend les 2 1er caractère du numdossier pour les comparer à l'année actuelle
-			// si différent de l'anneé actuelle, on a changé d'année par rapport au der dossier
-			// il faut donc créer le 1er numdossier
-		$yearDossier=substr($numDossier,0,2);
-		if($yearDossier==date('y'))
-		{
-				// pas de chg d'année, on prend le der num dossier, oon ajoute 1
-			$numDossier=$numDossier +1;
-		}
-		else
-		{
-			$numDossier=date('y').'001';
-
-		}
-	}
-//------------------------------------------------------
-//			Recopie de la base temp vers la base
-//------------------------------------------------------
-
-
 	// on profite du recap pour calculer la valo totale d'un litige
 // 2 cas
 // normal : somme,

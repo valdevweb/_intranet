@@ -76,7 +76,7 @@ function insertDossier($pdoLitige, $numDossier,$magId)
 	{
 		$dateDecl=	date('Y-m-d H:i:s');
 	}
-	$req=$pdoLitige->prepare("INSERT INTO dossiers(date_crea,user_crea,nom,galec,id_web_user,vingtquatre, dossier) VALUES(:date_crea,:user_crea,:nom, :galec, :id_web_user, :vingtquatre, :dossier)");
+	$req=$pdoLitige->prepare("INSERT INTO dossiers_temp(date_crea,user_crea,nom,galec,id_web_user,vingtquatre, dossier) VALUES(:date_crea,:user_crea,:nom, :galec, :id_web_user, :vingtquatre, :dossier)");
 	$req->execute(array(
 		':date_crea'		=>$dateDecl,
 		':user_crea'		=>$_SESSION['id_web_user'],
@@ -119,7 +119,7 @@ function getSelectedDetails($pdoQlik,$id)
 
 function addDetails($pdoLitige, $lastInsertId,$numDossier, $article, $ean,$dossierG, $descr, $qteC,	$tarif, $fou, $cnuf)
 {
-	$req=$pdoLitige->prepare("INSERT INTO details(id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf) VALUES(:id_dossier, :dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf)");
+	$req=$pdoLitige->prepare("INSERT INTO details_temp(id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf) VALUES(:id_dossier, :dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf)");
 	$req->execute(array(
 		':id_dossier'	=>$lastInsertId,
 		':dossier'		=>$numDossier,
@@ -143,18 +143,7 @@ function addDetails($pdoLitige, $lastInsertId,$numDossier, $article, $ean,$dossi
 }
 
 
-function updateOuv($pdoLitige,$lastInsertId,$numdossier)
-{
 
-	$req=$pdoLitige->prepare("UPDATE ouv SET id_litige= :id_litige, dossier= :dossier WHERE id= :id");
-	$req->execute(array(
-		':id_litige'		=>$lastInsertId,
-		':dossier'		=>$numdossier,
-		'id'		=>$_GET['id_ouv']
-	));
-	return $req->rowCount();
-
-}
 // le numéro de dossier du litige et non l'id du litige
 function getLastNumDossier($pdoLitige)
 {
@@ -229,36 +218,22 @@ if(isset($_POST['choose']))
 	if(count($ids)>0)
 	{
 
-		// soit le numéro de dossier a été saisi soit, on doit le calculer
 		if(!empty($_POST['num_dossier_form']))
 		{
-			$numDossier=$_POST['num_dossier_form'];
-			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId);
-
+			// le numéro de dossier sera ecrasé au moment de la recopie de la table temporaire vers la table active
+			// on mémorise donc le numéro de dossier dans une variable session
+			$_SESSION['dossier_litige']=$_POST['num_dossier_form'];
+			$numDossier=9999;
+			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId, $idRobbery);
 		}
 		else
 		{
+
 			// si pas de numéro de dossier imposé, on prend le der num et on ajoute 1
-			$numDossier=getLastNumDossier($pdoLitige);
+			$numDossier=9999;
 
+			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId, $idRobbery);
 
-			$numDossier=$numDossier['dossier'];
-			// il faut vérifier que l'on a pas changé d'année
-			// prend les 2 1er caractère du numdossier pour les comparer à l'année actuelle
-			// si différent de l'anneé actuelle, on a changé d'année par rapport au der dossier
-			// il faut donc créer le 1er numdossier
-			$yearDossier=substr($numDossier,0,2);
-			if($yearDossier==date('y'))
-			{
-				// pas de chg d'année, on prend le der num dossier, oon ajoute 1
-				$numDossier=$numDossier +1;
-			}
-			else
-			{
-				$numDossier=date('y').'001';
-
-			}
-			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId);
 		}
 		// créa du dossier (sans numéro pour l'instant)
 		if($lastInsertId>0)
@@ -299,9 +274,11 @@ if(isset($_POST['choose']))
 		}
 		if($added>0)
 		{
+			// si la délcaration provient d'une demande magasin, on memorise l'id de cette demande pour ensuite pouvoir mettre ç jour la demande
 			if(isset($_GET['id_ouv']))
 			{
-				updateOuv($pdoLitige,$lastInsertId,$numDossier);
+				$_SESSION['dd_ouv']=$_GET['id_ouv'];
+
 			}
 			header('Location:declaration-detail.php?id='.$lastInsertId);
 		}

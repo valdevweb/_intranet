@@ -18,6 +18,7 @@ require_once '../../vendor/autoload.php';
 require ('../../Class/Helpers.php');
 
 require 'casse-getters.fn.php';
+unset($_SESSION['goto']);
 
 //---------------------------------------
 //	ajout enreg dans stat
@@ -91,7 +92,6 @@ if(isset($_POST['submit'])){
 		else{
 			$dest='btlecest.portailweb.logistique@btlec.fr';
 			$cc=['valerie.montusclat@btlec.fr'];
-
 		}
 		$table='';
 		$table.='<table style="border-collapse: collapse; border: 1px solid grey;padding:10px;"><tr style="background-color:firebrick;color:white;"><th style="border: 1px solid grey;padding:10px;">Palette 4919</th><th style="border: 1px solid grey;padding:10px;">Palette contremarque</th><th style="border: 1px solid grey;padding:10px;">Commentaires</th></tr>';

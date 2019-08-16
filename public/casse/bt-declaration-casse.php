@@ -151,9 +151,10 @@ function addCasseDestroy($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPale
 
 
 function paletteExist($pdoCasse){
+	$palette=strtoupper($_POST['palette']);
 	$req=$pdoCasse->prepare("SELECT id FROM palettes WHERE palette= :palette");
 	$req->execute([
-		':palette'	=>$_POST['palette']
+		':palette'	=>$palette
 	]);
 	if ($req) {
 		return $req->fetch(PDO::FETCH_ASSOC);
@@ -164,18 +165,13 @@ function paletteExist($pdoCasse){
 }
 
 function addPalette($pdoCasse){
-	// si le produit par en detruction, il est mis sur un palette "hsXXX" et donc on peut mettre le statut de la palette à 3 =détruite
-	if(isset($_POST['destroy'])){
-		$statut=3;
-	}
-	else{
-		$statut=0;
-	}
+	//palette à détruire ou non, on met en statut 0
+
 	$req=$pdoCasse->prepare("INSERT INTO palettes (palette, date_crea, statut) VALUES (:palette, :date_crea, :statut) ");
 	$req->execute([
-		':palette'	=>$_POST['palette'],
+		':palette'	=>strtoupper($_POST['palette']),
 		':date_crea'=>date('Y-m-d H:i:s'),
-		':statut'=>$statut
+		':statut'=>0
 	]);
 	return $pdoCasse->lastInsertId();
 }

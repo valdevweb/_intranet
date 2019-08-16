@@ -21,19 +21,19 @@ function search($pdoCasse)
 {
 
 	if($_GET['statut']==''){
-		$etat=' etat IS NOT NULL ';
+		$etat='';
 	}
 	elseif($_GET['statut']==0){
-		$etat=' etat=0 ';
+		$etat=' AND etat=0 ';
 	}
 	elseif($_GET['statut']==1){
-		$etat=' etat =1 ';
+		$etat=' AND etat =1 ';
 
 	}
 
 	$req=$pdoCasse->prepare("SELECT DATE_FORMAT(date_casse,'%d-%m-%y') as dateCasse, nb_colis,
 		categories.categorie,
-		article, dossier, gt, designation, pcb, uvc, valo, pu, fournisseur, mt_decote,etat, detruit,cmt,DATE_FORMAT(date_clos, '%d-%m-%y') as dateClos,
+		article, dossier, gt, designation, pcb, uvc, valo, pu, fournisseur, mt_decote,etat, detruit,cmt,DATE_FORMAT(casses.date_clos, '%d-%m-%y') as dateClos,
 		origines.origine,
 		type_casse.type,
 		palettes.palette, palettes.contremarque
@@ -42,7 +42,7 @@ function search($pdoCasse)
 		LEFT JOIN origines ON id_origine=origines.id
 		LEFT JOIN type_casse ON id_type =type_casse.id
 		LEFT JOIN palettes ON id_palette=palettes.id
-		WHERE concat(article,casses.id) LIKE :search AND date_casse BETWEEN :date_start AND :date_end AND $etat");
+		WHERE concat(article,casses.id) LIKE :search AND date_casse BETWEEN :date_start AND :date_end $etat");
 	$req->execute(array(
 		':search' =>'%'.$_GET['search_strg'] .'%',
 		':date_start'		=>$_GET['date_start'],
@@ -53,8 +53,6 @@ function search($pdoCasse)
 }
 if(isset($_GET)){
 	$listCasse=search($pdoCasse);
-
-
 }
 
 //------------------------------------------------------

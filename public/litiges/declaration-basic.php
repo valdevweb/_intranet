@@ -33,6 +33,9 @@ remède : cré de 2 tables temporaires : dossiers_temp, details_temp
 
 =>pb le numéro de litige est un numéro calculé et non un id (nu)
 
+GESTION DES BOX
+Lorsque l’on trouve une tête de box dans les résultats, ajoute une clé "box-tete" que l’on initialise avec la valeur de $i (boucle sur le resultat de la requete sur les tete de box) et une clé "box-detail" avec le code article -1. On reparcourt le tableau de résultat pour récupérer les détail de box, on met le code article dans "box-detail" du tableau de résultat et dans le tableau boxdetail. On tri le tableau de résultat
+Lors de l’affichage des résultats, on met la class none aux détails de box et via javascript on affichera le détail uniquement si la case de la tête de box est cochée, on recache si décochée (utilisation, d’id et de class avec l’id des box pour savoir quelles lignes afficher et masquer)
 
 
  */

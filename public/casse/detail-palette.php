@@ -120,20 +120,7 @@ if(isset($_POST['submitnew']))
 	}
 }
 
-if(isset($_POST['submitadd']))
-{
-	$added=updatePal($pdoCasse,$existingExp[0]['id']);
-	if($added==1){
-		$mag=$existingExp[0]['btlec'];
-		$loc='Location:detail-palette.php?id='.$_GET['id'].'&mag='.$mag;
-		header($loc);
-	}
-	else{
-		$errors[]="impossible d'ajouter la palette à l'expédition";
-	}
 
-
-}
 
 if(isset($_GET['mag']))
 {
@@ -205,8 +192,8 @@ DEBUT CONTENU CONTAINER
 
 	<div class="row">
 		<div class="col text-right">
-				<a href="g-pdf-detail-palette-valo.php?id=<?=$_GET['id']?>"  target="_blank"><button class="btn btn-primary"><i class="fas fa-print pr-3" name="print-valo"></i>Avec Valo</button></a>
-				<a href="g-pdf-detail-palette.php?id=<?=$_GET['id']?>"  target="_blank"><button class="btn btn-black"><i class="fas fa-print pr-3" name="print"></i>Sans valo</button></a>
+			<a href="g-pdf-detail-palette-valo.php?id=<?=$_GET['id']?>"  target="_blank"><button class="btn btn-primary"><i class="fas fa-print pr-3" name="print-valo"></i>Avec Valo</button></a>
+			<a href="g-pdf-detail-palette.php?id=<?=$_GET['id']?>"  target="_blank"><button class="btn btn-black"><i class="fas fa-print pr-3" name="print"></i>Sans valo</button></a>
 		</div>
 	</div>
 	<?php
@@ -249,55 +236,105 @@ DEBUT CONTENU CONTAINER
 	<?php
 	$formExp=ob_get_contents();
 	ob_end_clean();
-
 	// si la palette  n'ets pas positionnée sur une edxpédition et si elle n'a pas étét expédiée c'est à dire statut palette =0
 	// on affiche soit un bouton pour créer une nouvelle expédition soit un bouton pour ajouter à l'expédition en cours
-	if($paletteInfo[0]['statut']==0 )
-	{
-		echo $formExp;
-	}
-	// si palette est positionnée sur une expé
-	elseif($paletteInfo[0]['statut']==1)
-	{
-		echo '<div class="row">';
-		echo '<div class="col">';
-		echo '<p class="alert alert-primary"><i class="fas fa-info-circle pr-3"></i>Cette palette est positionnée sur l\'expédition du magasin '.$paletteInfo[0]['btlec'];
-		echo '</div>';
-		echo '</div>';
-
-	}
-	elseif($paletteInfo[0]['statut']==2)
-	{
-		echo '<div class="row">';
-		echo '<div class="col">';
-		echo '<p class="alert alert-primary"><i class="fas fa-info-circle pr-3"></i>Cette palette a été expédiée sur le magasin '.$paletteInfo[0]['btlec'];
-		echo '</div>';
-		echo '</div>';
-	}
 
 	?>
+	<?php if ($paletteInfo[0]['statut']==0): ?>
+		<!-- en cours -->
+		<?php echo $formExp; ?>
+		<!-- expé en cours -->
+		<?php elseif($paletteInfo[0]['statut']==1 || $paletteInfo[0]['statut']==2): ?>
+			<div class="pb-5">
+
+				<div class="row pb-3">
+					<div class="col">
+						<div class="text-main-blue"><img src ="../img/litiges/arrow.svg" class="arrow pr-3">Etat de la palette :</div>
+					</div>
+
+				</div>
+
+				<div class="row">
+					<div class="col-md-5 col-lg-4 ml-5"><img src="../img/icons/ico-cross.svg" class="pr-1">Palette contremarque : </div>
+					<div class="col-md-2 bg-light-blue text-right">
+						<?= !is_null($paletteInfo[0]['contremarque']) ? $paletteInfo[0]['contremarque'] :'' ?>
+					</div>
+					<div class="col-md"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-5 col-lg-4 ml-5"><img src="../img/icons/ico-cross.svg" class="pr-1">Magasin /pôle destinataire : </div>
+					<div class="col-md-2 bg-light-blue text-right">
+						<?= !is_null($paletteInfo[0]['btlec']) ? $paletteInfo[0]['btlec'] :'' ?>
+
+					</div>
+					<div class="col-md"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-5 col-lg-4 ml-5"><img src="../img/icons/ico-cross.svg" class="pr-1">Demande de contrôle le : </div>
+					<div class="col-md-2 bg-light-blue text-right">
+						<?= !is_null($paletteInfo[0]['dateddpilote']) ? $paletteInfo[0]['dateddpilote'] :'' ?>
+
+					</div>
+					<div class="col-md"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-5 col-lg-4 ml-5"><img src="../img/icons/ico-cross.svg" class="pr-1">Retour de contrôle le </div>
+					<div class="col-md-2 bg-light-blue text-right">
+						<?= !is_null($paletteInfo[0]['dateretourpilote']) ? $paletteInfo[0]['dateretourpilote'] :'' ?>
+
+					</div>
+					<div class="col-md"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-5 col-lg-4 ml-5"><img src="../img/icons/ico-cross.svg" class="pr-1">Expédition le  : </div>
+					<div class="col-md-2 bg-light-blue text-right">
+						<?= !is_null($paletteInfo[0]['datedelivery']) ? $paletteInfo[0]['datedelivery'] :'' ?>
+					</div>
+					<div class="col-md"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-5 col-lg-4 ml-5"><img src="../img/icons/ico-cross.svg" class="pr-1">Information magasin /pôle le : </div>
+					<div class="col-md-2 bg-light-blue text-right">
+						<?= !is_null($paletteInfo[0]['dateinfomag']) ? $paletteInfo[0]['dateinfomag'] :'' ?>
+
+					</div>
+					<div class="col-md"></div>
+				</div>
+				<?php if (!is_null($paletteInfo[0]['certificat'])): ?>
+					<div class="row">
+						<div class="col-md-5 col-lg-4 ml-5"><img src="../img/icons/ico-cross.svg" class="pr-1">Certificat de destruction : </div>
+						<div class="col-md-2 bg-light-blue text-right">
+							<a href="<?=UPLOAD_DIR?>\casse\<?=$paletteInfo[0]['certificat']?>" target="_blank">voir / télécharger</a>
+
+						</div>
+						<div class="col-md"></div>
+					</div>
+
+			<?php endif ?>
+				</div>
+		<?php endif ?>
 
 
 
 
-	<!-- ./container -->
-</div>
+		<!-- ./container -->
+	</div>
 
-<script type="text/javascript">
-	$(document).ready(function(){
+	<script type="text/javascript">
+		$(document).ready(function(){
 
-		$('#form-new-exp').submit(function(){
-			var mag=$('#mag').val();
+			$('#form-new-exp').submit(function(){
+				var mag=$('#mag').val();
 
-			boxState="Confirmez la préparation de l'expédition pour le magasin " +mag +" ?";
-			return confirm(boxState);
+				boxState="Confirmez la préparation de l'expédition pour le magasin " +mag +" ?";
+				return confirm(boxState);
 
+			});
 		});
-	});
 
-</script>
+	</script>
 
 
-<?php
-require '../view/_footer-bt.php';
-?>
+	<?php
+	require '../view/_footer-bt.php';
+	?>
