@@ -57,15 +57,18 @@ $d_tempSav=isUserAllowed($pdoUser,$tempSavIds);
 $magSocamilIds=array(66,5);
 $d_Socamil=isUserAllowed($pdoUser,$magSocamilIds);
 
-$litigeBtIds=array(69,78);
+$litigeBtIds=array(29,69,78);
 $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 $missionIds=array(78,5);
 $d_mission=isUserAllowed($pdoUser, $missionIds);
 
+
+
+
 ?>
 <div id='cssmenu'>
 	<ul>
-		<li><a class="less-padding"  href='<?= ROOT_PATH ?>/public/home.php' data-tooltip="Accueil"><span><i class="fa fa-home fa-2x" aria-hidden="true"></i></span></a></li>
+		<li><a class="less-padding"  href='<?= ROOT_PATH ?>/public/home/home.php' data-tooltip="Accueil"><span><i class="fa fa-home fa-2x" aria-hidden="true"></i></span></a></li>
 		<!-- sous menu 1 -->
 		<?php
 
@@ -158,6 +161,7 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 				<li><a href="<?= ROOT_PATH?>/public/litiges/stat-litige-mag.php">Réclamations par magasin</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/exploit-ltg.php">Exploitation</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/ctrl-stock.php">Contrôle de stock</a></li>
+				<li><a href="<?= ROOT_PATH?>/public/litiges/intervention-sav.php">Retour SAV</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/casse/bt-casse-dashboard.php" class="lighter-blue">Traitement casse</a></li>
 
 			</ul>
@@ -171,7 +175,6 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 
 		?>
 
-		<li><a href="<?= ROOT_PATH. '/public/salon/presentation-salon-2019.php'?>"><span>Salon 2019</span></a></li>
 
 		<!-- section sans sous menu -->
 		<li><a href="<?= ROOT_PATH. '/public/entrepot/discover.php'?>"><span>Entrepôt</span></a></li>
@@ -225,7 +228,7 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 				</li>
 				<li><a href="<?= ROOT_PATH. '/public/doc/doris.php'?>">Doris</a></li>
 				<li><a href="<?= ROOT_PATH. '/public/doc/extralec.php'?>">Application Extralec</a></li>
-				<li><a href="<?= ROOT_PATH. '/public/doc/convention.php'?>">Convention 2018</a></li>
+				<li><a href="<?= ROOT_PATH. '/public/salon/presentation-salon-2019.php'?>">Convention 2019</a></li>
 				<?php
 
 				$btdoc="<li><a href='".ROOT_PATH."/public/doc/upload-main.php'>Ajouter des documents</a></li>";
@@ -296,7 +299,6 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 		{
 			$missionNav="<li class='has-sub'><a href='http://172.30.92.53/".$version."' ><span>CHARGES DE MISSION</span></a>";
 			$missionNav.="<ul><li><a href='http://172.30.92.53/".$version."cm/cm/index.php' ><span>Portail CM</span></a></li>";
-			$missionNav.="<li><a href='http://172.30.92.53/".$version."' ><span>Fichier hebdo</span></a></li>";
 			$missionNav.="<li><a href='http://172.30.92.53/".$version."' ><span>Fil d'actu</span></a></li>";
 			$missionNav.='</ul>';
 			$missionNav.='</li>';
