@@ -1,0 +1,76 @@
+/* .gazette {
+	height: 350px !important;
+	width: 100% !important;
+} */
+
+.myrow >img{
+	height: 350px !important;
+	width: 100% !important;
+/* 	filter:blur(1px);
+	z-index: -99999; */
+}
+.fa.fa-search, .fa.fa-newspaper-o{
+	padding-right: 15px;
+}
+.mini-nav{
+	background-color: #0288d1;
+	text-align: center;
+	border: 1px solid white;
+    border-radius: 4px;
+	color: #fff;
+
+}
+
+a:hover{
+	letter-spacing: 0.05em;
+}
+.fa.fa-angle-double-right{
+	padding-right: 5px;
+}
+
+/* a.uptonav
+{
+	color: #0288d1;
+	text-align: right !important;
+} */
+
+.uptonav{
+	text-align: right;
+	color: #0288d1;
+	font-size: 13px;
+}
+
+.small-padding{
+	padding-top : 5px;
+}
+
+h4{
+	padding-bottom: 0 !important;
+}
+
+/* ------------------------------- */
+@media only screen and (max-width: 992px){
+	.myrow >img{
+		height: 250px !important;
+		width: 100% !important;
+		filter:blur(1px);
+	}
+}
+
+
+@media only screen and (max-width: 1024px)
+{
+	.mini-nav{
+		font-size: 13px;
+		padding: 0 !important;
+	}
+
+	.mini-nav> p{
+
+	}
+
+	.fa.fa-search, .fa.fa-newspaper-o{
+		padding-right: 5px;
+	}
+
+}
