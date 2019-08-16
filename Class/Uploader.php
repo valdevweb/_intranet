@@ -82,9 +82,6 @@ class Uploader
 		$ext    =   $this->getExtension($name);
 		$extPoint='.'.$ext;
 		$nameWithoutExt=explode($extPoint,$name)[0];
-			echo "<pre>";
-			print_r($nameWithoutExt);
-			echo '</pre>';
 
 		if(!is_dir($this->destinationPath)){
 			$this->setMessage("Le répertoire de destination n'existe pas ");
