@@ -10,6 +10,14 @@ $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
+
+//------------------------------------------------------
+//			REQUIRES
+//------------------------------------------------------
+// require_once '../../vendor/autoload.php';
+
+
+
 //---------------------------------------
 //	ajout enreg dans stat
 //---------------------------------------
@@ -20,7 +28,13 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 // // addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
 // addRecord($pdoStat,$page,$action, $descr, 208);
 
-// require_once '../../vendor/autoload.php';
+
+ //------------------------------------------------------
+//			DECLARATIONS
+//------------------------------------------------------
+$errors=[];
+$success=[];
+
 
 
 
@@ -28,11 +42,6 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //			FONCTION
 //------------------------------------------------------
 
-//------------------------------------------------------
-//			DECLARATIONS
-//------------------------------------------------------
-$errors=[];
-$success=[];
 
 //------------------------------------------------------
 //			VIEW
