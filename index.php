@@ -60,7 +60,7 @@ if(isset($_POST['connexion']))
 		{
 			updateNoHash($pdoUser);
 		}
-		header('Location:'. ROOT_PATH. '/public/home.php');
+		header('Location:'. ROOT_PATH. '/public/home/home.php');
 	}
 }
 /*---------------------------------------------------------------------*/
@@ -177,8 +177,14 @@ if(!empty($revRes))
 				<div class="col-2"></div>
 
 				<div class="col inside-infos inside-padding">
-					<img src="public/img/salon/salon2019_5b.png">
-					<p class="w3-text-blue w3-large">Un grand merci à tous pour votre participation ! <br> Vous retrouverez les présentations auxquelles vous avez pu assister dans le menu salon 2019</p>
+					<img class="float-left" src="http://172.30.92.53/upload/flash/vignette-20190722-043439.gif">
+					<p class="w3-text-blue"><b>Les books Promo PEM vont être livrés à l'attention du Responsable Bazar Technique et du Directeur </b>par un coursier qui se présentera à l'accueil de votre magasin<br><br>
+						Nous vous demandons de prévenir votre personnel à l'accueil et de bien préciser de ne pas refuser ce colis qui est stické des destinataires "Responsable Bazar Technique et Directeur"<br>
+						En cas de refus aucun book ne sera renvoyé en magasin<br><br>
+
+						<b>Date de livraison : entre jeudi 25 juillet et mardi 30 juillet</b>
+
+					</p>
 				</div>
 				<div class="col-2"></div>
 
