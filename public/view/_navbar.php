@@ -299,7 +299,7 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 		{
 			$missionNav="<li class='has-sub'><a href='http://172.30.92.53/".$version."' ><span>CHARGES DE MISSION</span></a>";
 			$missionNav.="<ul><li><a href='http://172.30.92.53/".$version."cm/cm/index.php' ><span>Portail CM</span></a></li>";
-			$missionNav.="<li><a href='http://172.30.92.53/".$version."' ><span>Fil d'actu</span></a></li>";
+			$missionNav.="<li><a href='http://172.30.92.53/".$version."btlecest/public/cm/cm-news.php' ><span>Fil d'actu</span></a></li>";
 			$missionNav.='</ul>';
 			$missionNav.='</li>';
 			echo $missionNav;
