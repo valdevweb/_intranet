@@ -9,10 +9,17 @@ if(!isset($_SESSION['id'])){
 //----------------------------------------------
 // css dynamique
 //----------------------------------------------
-$page=(basename(__FILE__));
-$page=explode(".php",$page);
-$page=$page[0];
-$cssFile=ROOT_PATH ."/public/css/".$page.".css";
+$pageCss=explode(".php",basename(__file__));
+$pageCss=$pageCss[0];
+$cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
+
+//---------------------------------------
+//	ajout enreg dans stat
+//---------------------------------------
+require "../../functions/stats.fn.php";
+addRecord($pdoStat,basename(__file__),'consultation', "fichiers d'info du service achats", 101);
+
+
 
 $months=array('','janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre');
 
