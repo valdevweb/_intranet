@@ -58,8 +58,8 @@ DEBUT CONTENU CONTAINER
 <div class="row">
 	<div class="col"></div>
 	<div class="col">
-		<a href="plancom2019.php"><img src="../img/documents/plan_com.jpg" class="border"></a>
-		<a href="plancom2019.php">Plan de com 2019</a>
+		<a href="plancom2020.php"><img src="../img/documents/plan_com.jpg" class="border"></a>
+		<a href="plancom2020.php">Plan de com 2020</a>
 	</div>
 	<div class="col">
 		<a href="kitaffiche.php"><img src="../img/documents/kit_affiche.jpg" class="border"></a>
@@ -67,7 +67,7 @@ DEBUT CONTENU CONTAINER
 	</div>
 	<div class="col">
 	<a href="twentyfour.php#plv">	<img src="../img/documents/2448_90.png" class="border"></a>
-		<a href="twentyfour.php#plv">PLV 24/48h</a>
+		<a href="../infos/twentyfour.php#plv">PLV 24/48h</a>
 	</div>
 	<div class="col"></div>
 </div>
