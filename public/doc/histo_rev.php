@@ -10,17 +10,13 @@ if(!isset($_SESSION['id'])){
 require "../../functions/utilities.fn.php";
 //----------------------------------------------------------------
 require "../../functions/stats.fn.php";
-$descr="historique des reversements";
-$page=basename(__file__);
-$action="consultation";
-$code=101;
-// addRecord($pdoStat,$page,$action, $descr,$code);
+addRecord($pdoStat,basename(__file__),"consultation", "historique des reversements",101);
 
 //----------------------------------------------------------------
 //			css dynamique
 //----------------------------------------------------------------
 // $page=basename(__file__);
-$pageCss=explode(".php",$page);
+$pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 

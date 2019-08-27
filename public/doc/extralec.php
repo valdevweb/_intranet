@@ -6,6 +6,11 @@ require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
 }
+
+require "../../functions/stats.fn.php";
+addRecord($pdoStat,basename(__file__),"consultation", "présentation extralec",101);
+
+
 require '../view/_head.php';
 require '../view/_navbar.php';
 
