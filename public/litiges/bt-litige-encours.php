@@ -34,9 +34,10 @@ function globalSearch($pdoLitige)
 	{
 		$reqEtat='';
 	}
+	// attention quand pendig =0, c'est vide
 	if(!empty($_SESSION['pending'])){
 		if($_SESSION['pending']=='pending'){
-			$reqCommission= ' AND commission !=1';
+			$reqCommission= ' AND commission !=1 ';
 		}
 		else{
 			$reqCommission= ' AND commission =' .intval($_SESSION['pending']);
@@ -47,6 +48,17 @@ function globalSearch($pdoLitige)
 		$reqCommission='';
 	}
 
+	if(isset($_SESSION['vingtquatre'])){
+		if($_SESSION['vingtquatre']==1){
+			$reqLivraison= ' AND vingtquatre=1 ';
+		}elseif($_SESSION['vingtquatre']==0){
+			$reqLivraison= ' AND vingtquatre='.intval(0);
+		}
+	}
+	else{
+		$reqLivraison= ' AND vingtquatre is NOT NULL';
+	}
+
 	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, valo, etat,ctrl_ok,commission
 		FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
@@ -54,9 +66,8 @@ function globalSearch($pdoLitige)
 		WHERE
 		date_crea BETWEEN :date_start AND :date_end
 		AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search 		$reqEtat
-		$reqCommission
+		$reqCommission $reqLivraison
 		ORDER BY dossiers.dossier DESC");
-// return  $req;
 
 	$req->execute(array(
 		':search' =>'%'.$strg.'%',
@@ -66,10 +77,6 @@ function globalSearch($pdoLitige)
 	));
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-
-
-
-
 
 function getSumValo($pdoLitige)
 {
@@ -96,15 +103,26 @@ function getSumValo($pdoLitige)
 	else{
 		$reqCommission='';
 	}
+
+	if(isset($_SESSION['vingtquatre'])){
+		if($_SESSION['vingtquatre']==1){
+			$reqLivraison= ' AND vingtquatre=1 ';
+		}elseif($_SESSION['vingtquatre']==0){
+			$reqLivraison= ' AND vingtquatre='.intval(0);
+		}
+	}
+	else{
+		$reqLivraison= ' AND vingtquatre is NOT NULL';
+	}
 	$req=$pdoLitige->prepare("SELECT  sum(valo) as valo_totale
 		FROM dossiers
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
-		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search $reqEtat $reqCommission ");
+		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search $reqEtat $reqCommission $reqLivraison ");
 
 
 	$req->execute(array(
 		':search' =>'%'.$strg.'%',
-				':date_start'=>$_SESSION['form-data']['date_start']. ' 00:00:00',
+		':date_start'=>$_SESSION['form-data']['date_start']. ' 00:00:00',
 		':date_end'	=>$_SESSION['form-data']['date_end'].' 23:59:59',
 
 	));
@@ -136,10 +154,22 @@ function getSumValoByType($pdoLitige)
 	else{
 		$reqCommission='';
 	}
+
+	if(isset($_SESSION['vingtquatre'])){
+		if($_SESSION['vingtquatre']==1){
+			$reqLivraison= ' AND vingtquatre=1 ';
+		}elseif($_SESSION['vingtquatre']==0){
+			$reqLivraison= ' AND vingtquatre='.intval(0);
+		}
+	}
+	else{
+		$reqLivraison= ' AND vingtquatre is NOT NULL';
+	}
+
 	$req=$pdoLitige->prepare("SELECT  sum(valo) as valo_etat, dossiers.id_etat, etat.etat, count(dossiers.id) as nbEtat FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
-		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search $reqEtat $reqCommission GROUP BY etat");
+		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search $reqEtat $reqCommission $reqLivraison GROUP BY etat");
 	$req->execute(array(
 		':search' =>'%'.$strg.'%',
 		':date_start'=>$_SESSION['form-data']['date_start']. ' 00:00:00',
@@ -176,27 +206,25 @@ function addAction($pdoLitige, $idContrainte){
 	return $req->rowCount();
 }
 
+
 if(isset($_GET['notallowed'])){
 	$errors[]="Vous n'êtes pas autorisé à modifier le statut 'validé en commission'";
 }
 
 // initialisation
 if(empty($_SESSION['form-data']['date_start'])){
-	// $_POST['date_start']='2019-01-01';
 	$_SESSION['form-data']['date_start']='2019-01-01';
 }
 
 if(empty($_SESSION['form-data']['date_end'])){
-	// $_POST['date_end']=date('Y-m-d');
 	$_SESSION['form-data']['date_end']=date('Y-m-d');
-
 }
 
 if(isset($_POST['search_form'])){
 	foreach ($_POST as $key => $value) {
-		if($key != 'reset-pending' || $key != 'clear_form' || $key != 'pending'){
+		if($key != 'reset-pending' || $key != 'clear_form' || $key != 'pending' || $key !='vingtquatre' || $key != 'reset-vingtquatre'){
 			if($value !=''){
-			$_SESSION['form-data'][$key]=$value;
+				$_SESSION['form-data'][$key]=$value;
 
 			}
 		}
@@ -215,27 +243,42 @@ if(isset($_POST['clear_form']))
 if(isset($_POST['pending'])){
 	if($_POST['pending']==0){
 		$_SESSION['pending']='pending';
-
+		$_SESSION['pending-ico']=	'<i class="fas fa-user-check stamp pending"></i>';
 	}
-	else
-	{
-
+	else{
 		$_SESSION['pending']=$_POST['pending'];
+		$_SESSION['pending-ico']=	'<i class="fas fa-user-check stamp validated"></i>';
 
 	}
 }
 
+if(isset($_POST['vingtquatre'])){
+	$_SESSION['vingtquatre']=$_POST['vingtquatre'];
+	if($_SESSION['vingtquatre']==1){
+		$_SESSION['vingtquatre-ico']='<div class="d-inline-block pl-3"><img src="../img/litiges/2448_ico.png"></div>';
+
+	}elseif($_SESSION['vingtquatre']==1){
+		$_SESSION['vingtquatre-ico']='<div class="d-inline-block  pl-3"><img src="../img/litiges/2448_no_ico.png"></div>';
+
+	}
+}
 
 if(isset($_POST['reset-pending'])){
 	unset($_POST['pending']);
 	unset($_SESSION['pending']);
+	unset($_SESSION['pending-ico']);
 }
-
+if(isset($_POST['reset-vingtquatre'])){
+	unset($_POST['vingtquatre']);
+	unset($_SESSION['vingtquatre']);
+	unset($_SESSION['vingtquatre-ico']);
+}
 
 $fAllActive=globalSearch($pdoLitige);
 $nbLitiges=count($fAllActive);
 $valoTotal=getSumValo($pdoLitige);
 $valoEtat=getSumValoByType($pdoLitige);
+
 
 
 
@@ -418,6 +461,8 @@ DEBUT CONTENU CONTAINER
 		<div class="row">
 			<div class="col">
 				<h4 class="text-main-blue text-center"> Listing des  <?=$nbLitiges?> litiges de votre sélection</h4>
+				<h5 class="text-main-blue text-center"> Filtre(s) actif(s) : <?=isset($_SESSION['pending-ico'])?$_SESSION['pending-ico']:'' ?><?=isset($_SESSION['vingtquatre-ico'])?$_SESSION['vingtquatre-ico']:'' ?><?= !isset($_SESSION['pending-ico']) && !isset($_SESSION['vingtquatre-ico']) ? '<span class="text-grey">aucun</span>' : ''?></h5>
+
 			</div>
 		</div>
 		<div class="row">
@@ -481,6 +526,11 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="row mt-3">
 			<div class="col">
+
+			</div>
+		</div>
+		<div class="row mt-3">
+			<div class="col">
 				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
 					<div class="row">
 						<div class="col-auto">
@@ -488,13 +538,33 @@ DEBUT CONTENU CONTAINER
 						</div>
 
 						<div class="col">
-							<button class="stamp pending" type="submit" name="pending" value="0"><i class="fas fa-user-check"></i></button>
-							<button class="stamp validated" type="submit" name="pending" value="1"><i class="fas fa-user-check"></i></button>
+							<button class="stamp pending" type="submit" name="pending" value="0" ><i class="fas fa-user-check"></i></button>
+							<button class="stamp validated" type="submit" name="pending" value="1" ><i class="fas fa-user-check"></i></button>
 							<button class="stamp reset-pending" type="submit" name="reset-pending" ><i class="fas fa-user-check"></i></button>
+
+
 						</div>
 						<div class="col"></div>
 					</div>
 				</form>
+			</div>
+			<div class="col text-right">
+				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
+					<div class="row justify-content-end">
+						<div class="col"></div>
+
+						<div class="col-auto">
+							<p class="text-red heavy">Filtrer par type de livraison :</p>
+						</div>
+
+						<div class="col-auto">
+							<button class="no-btn" type="submit" name="vingtquatre" value="1"><img src="../img/litiges/2448_ico.png"></button>
+							<button class="no-btn" type="submit" name="vingtquatre" value="0"><img src="../img/litiges/2448_no_ico.png"></button>
+							<button class="no-btn" type="submit" name="reset-vingtquatre" ><img src="../img/litiges/2448_reset_ico.png"></button>
+						</div>
+					</div>
+				</form>
+
 			</div>
 		</div>
 		<!-- start row -->
@@ -656,8 +726,8 @@ DEBUT CONTENU CONTAINER
 			});
 
 			$('.unvalidate').on('click', function(){
-			return confirm('Etes vous sûrs de vouloir passer le statut du dossier en non statué ?')
-		});
+				return confirm('Etes vous sûrs de vouloir passer le statut du dossier en non statué ?')
+			});
 
 		});
 
