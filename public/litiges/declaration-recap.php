@@ -234,7 +234,7 @@ if(isset($_POST['submit']))
 	$mailMag=array($fLitige['btlec'].'-rbt@btlec.fr');
 	$magTemplate = file_get_contents('mail-mag-force-litige.php');
 	$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
-	$subject='Portail BTLec Est  - ouverture du dossier litige ' . $fLitige['dossier'];
+	$subject='Portail BTLec Est  - ouverture du dossier litige ' . $fLitige['dossier'] . ' - ' .$fLitige['mag'];
 	// ---------------------------------------
 	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
 	$mailer = new Swift_Mailer($transport);
@@ -242,6 +242,7 @@ if(isset($_POST['submit']))
 	->setBody($magTemplate, 'text/html')
 	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
 	->setTo($mailMag)
+	// ->setTo('valerie.montusclat@btlec.fr');
 	->setBcc(['valerie.montusclat@btlec.fr', 'btlecest.portailweb.logistique@btlec.fr']);
 	$delivered=$mailer->send($message);
 	if($delivered >0)
