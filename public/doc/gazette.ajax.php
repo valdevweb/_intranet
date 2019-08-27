@@ -4,14 +4,15 @@ require('../../config/autoload.php');
 if(!empty($_POST['id_doc_type']))
 {
 	$dir="http://172.30.92.53/".$version."upload/gazette/";
+	echo "<h5 class='text-center pb-3'>Derniers fichiers :</h5>";
 	// entete tableau
-	echo"<table class='table table-striped'>";
+	echo"<table class='table table-striped table-sm'>";
 	echo"<thead><tr>";
-	echo "<th scope='col'>date (début)</th>";
-	echo "<th scope='col'>date (fin) </th>";
-	echo "<th scope='col'>fichier</th>";
-	echo "<th scope='col'>descriptif</th>";
-	echo "<th scope='col'>supprimer</th></tr></thead><tbody>";
+	echo "<th>Du</th>";
+	echo "<th>Au </th>";
+	echo "<th>Fichier</th>";
+	echo "<th>Descriptif</th>";
+	echo "<th  class='text-center'>Supprimer</th></tr></thead><tbody>";
 
 	// récupère les 10 dernière gazette du type de document sélectionné par le select de la page upload-main
 	$req=$pdoBt->prepare("SELECT id,file, DATE_FORMAT(date,'%d-%m-%Y') as deb, DATE_FORMAT(date_fin,'%d-%m-%Y') as fin,title  FROM gazette WHERE id_doc_type= :id_doc_type ORDER BY id DESC LIMIT 10");
@@ -26,7 +27,7 @@ if(!empty($_POST['id_doc_type']))
 		echo "<td>".$gazette['fin']. "</td>";
 		echo "<td><a href='". $dir .$gazette['file'] ."'>".$gazette['file']. "</a></td>";
 		echo "<td>".$gazette['title']. "</td>";
-		echo "<td id='".$gazette['id']."'><a href='#' class='delete' onclick='deleteEl(".$gazette['id'].")'><i class='fa fa-trash fa-lg delete'   aria-hidden='true' id='".$gazette['id']."'></i></a></td></tr>";
+		echo "<td id='".$gazette['id']."' class='text-center'><a href='#' class='delete' onclick='deleteEl(".$gazette['id'].")'><i class='fas fa-trash-alt' id='".$gazette['id']."'></i></a></td></tr>";
 	}
 
 	// print_r($result);
