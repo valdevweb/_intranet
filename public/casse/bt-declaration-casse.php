@@ -58,14 +58,14 @@ $types=getTypecasse($pdoCasse);
 
 
 
-function addCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette, $pfnp, $deee,$sacem){
+function addCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette, $pfnp, $deee,$sacem,$deeeCodif){
 	//panf =pu
 	//valo = nbcolis *
 	$uvc=$pcb * $_POST['nb_colis'];
 	$valo=$uvc*$pfnp;
 	$decote=round($valo/2);
 
-	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj, mt_mag, mt_decote,pfnp, deee,sacem) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :mt_mag, :mt_decote, :pfnp, :deee,:sacem)" );
+	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj, mt_mag, mt_decote,pfnp, deee,sacem, deee_codif) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :mt_mag, :mt_decote, :pfnp, :deee,:sacem, :deee_codif)" );
 
 	$req->execute(array(
 		':date_casse'	=>$_POST['date_casse'],
@@ -91,7 +91,8 @@ function addCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette, $p
 		':mt_decote'	=>$decote,
 		':pfnp'			=>$pfnp,
 		':deee'			=>$deee,
-		':sacem'		=>$sacem
+		':sacem'		=>$sacem,
+		':deee_codif'	=>$deeeCodif
 
 	));
 	if($req->rowCount()==1)
@@ -104,10 +105,10 @@ function addCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette, $p
 }
 
 
-function addCasseDestroy($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette, $pfnp,$deee,$sacem){
+function addCasseDestroy($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette, $pfnp,$deee,$sacem, $deeeCodif){
 	$uvc=$pcb * $_POST['nb_colis'];
 	$valo=$uvc*$pfnp;
-	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj,  detruit, mt_mag, mt_decote, pfnp, deee, sacem) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :detruit,  :mt_mag, :mt_decote, :pfnp, :deee, :sacem)" );
+	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj,  detruit, mt_mag, mt_decote, pfnp, deee, sacem, deee_codif) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :detruit,  :mt_mag, :mt_decote, :pfnp, :deee, :sacem, :deee_codif)" );
 
 	$req->execute(array(
 		':date_casse'	=>$_POST['date_casse'],
@@ -134,7 +135,8 @@ function addCasseDestroy($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPale
 		':mt_decote'	=>0,
 		':pfnp'			=>$pfnp,
 		':deee'			=>$deee,
-		':sacem'		=>$sacem
+		':sacem'		=>$sacem,
+		':deee_codif'	=>$deeeCodif
 
 	));
 	if($req->rowCount()==1)
@@ -245,10 +247,10 @@ if(isset($_GET['idBa']))
 			}
 			if(isset($_POST['destroy'])){
 // si à détruire a été selectionné, on peut clore le dossier
-				$lastInsertId=addCasseDestroy($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$dataArticle['panf'],$dataArticle['fournisseur'],$idPalette, $dataArticle['pfnp'],  $dataArticle['deee'],  $dataArticle['sacem']);
+				$lastInsertId=addCasseDestroy($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$dataArticle['panf'],$dataArticle['fournisseur'],$idPalette, $dataArticle['pfnp'],  $dataArticle['deee'],  $dataArticle['sacem'], $dataArticle['deee_codif']);
 			}
 			else{
-				$lastInsertId=addCasse($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$dataArticle['panf'],$dataArticle['fournisseur'],$idPalette,  $dataArticle['pfnp'],  $dataArticle['deee'],  $dataArticle['sacem']);
+				$lastInsertId=addCasse($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$dataArticle['panf'],$dataArticle['fournisseur'],$idPalette,  $dataArticle['pfnp'],  $dataArticle['deee'],  $dataArticle['sacem'], $dataArticle['deee_codif']);
 
 			}
 			if($lastInsertId !=false)
