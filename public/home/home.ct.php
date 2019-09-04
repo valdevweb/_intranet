@@ -25,7 +25,7 @@
 		<h1 class="text-center text-main-blue <?= $marge ?>"><?= $typeTitle .' '.$nom ?></h1>
 	</header>
 	<?php
-	include('../public/doc/flash-view.php');
+	include('../doc/flash-view.php');
 	?>
 <div class="row pb-5">
 	<div class="col-lg-1"></div>

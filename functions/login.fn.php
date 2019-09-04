@@ -28,6 +28,7 @@ function magInfo($pdoBt){
 	));
 
 	return $req->fetch(PDO::FETCH_ASSOC);
+	// return $req->errorInfo();
 }
 
 function getSav($pdoSav){
@@ -143,7 +144,7 @@ function login($pdoUser, $pdoBt,$pdoSav)
 		{
 			// recup info mag auquel le user bt est rattaché
 			$_SESSION['id_galec']=$web_users['galec'];
-			$scatrois=magInfo($pdoBt,$web_users['galec']);
+			$scatrois=magInfo($pdoBt);
 			$_SESSION['nom']=$scatrois['mag'];
 			$_SESSION['city']=$scatrois['city'];
 			$_SESSION['code_bt']=$scatrois['btlec'];
@@ -159,8 +160,10 @@ function login($pdoUser, $pdoBt,$pdoSav)
 		if($_SESSION['type']=="mag" || $_SESSION['type']=="bbj" || $_SESSION['type']=="centrale" || $_SESSION['type']=='adh')
 		{
 			$_SESSION['id_galec']=$web_users['galec'];
+
+
 		//recup info mag dans sca3
-			$scatrois=magInfo($pdoBt,$web_users['galec']);
+			$scatrois=magInfo($pdoBt);
 			$_SESSION['nom']=$scatrois['mag'];
 			$_SESSION['centrale']=$scatrois['centrale'];
 			$_SESSION['city']=$scatrois['city'];
