@@ -39,9 +39,9 @@ $lig=0;
 
 
 // info msg
-$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter le message</a>";
+$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter la demande magasin</a>";
 
-$tplt="../mail/new_mag_msg.tpl.html";
+$tplt="../mail/reaffectation.html";
 mb_internal_encoding('UTF-8');
 
 $name=$oneMsg['who'];
@@ -51,12 +51,9 @@ $mag=getPanoGalec($pdoUser,$oneMsg['id_mag']);
 
 $magSca3=getMag($pdoBt,$mag['galec']);
 $magName=$magSca3['mag'];
+$username=repliedByIntoName($pdoUser,$_SESSION['id_web_user']);
 
 
-
-
-include '../view/_head-mig-bis.php';
-include '../view/_navbar.php';
 
 
 
@@ -79,10 +76,13 @@ if(isset($_POST['affect']))
 		{
 
 			$serviceInfo=service($pdoBt,$newService);
-			$mailingList=$serviceInfo['mailing'];
+			// $mailingList=$serviceInfo['mailing'];
+			$mailingList='valerie.montusclat@btlec.fr';
 			$objet="PORTAIL BTLec - demande magasin réaffectée au service " . $serviceInfo['full_name'];
 			$objet = mb_encode_mimeheader($objet);
-			sendMail($mailingList,$objet,$tplt,$name,$magName,$link);
+			$done=sendMail($mailingList,$objet,$tplt,$username,$magName,$link);
+
+
 
 			// $msg ="demande réaffectée au service " . $serviceInfo['full_name'];
 			$success[] ="demande réaffectée au service " . $serviceInfo['full_name'];
@@ -103,6 +103,8 @@ if(isset($_POST['affect']))
 }
 
 
+include '../view/_head-mig-bis.php';
+include '../view/_navbar.php';
 
 ?>
 <div class="container">
