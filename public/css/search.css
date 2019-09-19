@@ -11,6 +11,10 @@ td:nth-child(1){
 	width: 50%;
 }
 
+input{
+  width: 350px !important;
+}
+
 .bggrey{
     background-color: #ddd;
 
@@ -20,7 +24,7 @@ td:nth-child(1){
     background-color: #fff;
 }
 .int-padding{
-    padding: 20px;
+    margin: auto;
 }
 /* -------------------------------- */
 /*              titre               */

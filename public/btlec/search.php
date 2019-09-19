@@ -7,35 +7,34 @@ if(!isset($_SESSION['id'])){
 //----------------------------------------------------------------
 //	css dynamique
 //----------------------------------------------------------------
-$page=(basename(__FILE__));
-$page=explode(".php",$page);
-$page=$page[0];
-$cssFile=ROOT_PATH ."/public/css/".$page.".css";
+$pageCss=explode(".php",basename(__file__));
+$pageCss=$pageCss[0];
+$cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 
-function listMagFn($pdoBt){
-	$req=$pdoBt->query("SELECT * FROM msg LEFT JOIN sca3 on msg.id_galec=sca3.galec GROUP BY sca3.mag ORDER BY sca3.mag");
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
 
-function listMagServiceFn($pdoBt){
-	$req=$pdoBt->prepare("SELECT * FROM msg LEFT JOIN sca3 on msg.id_galec=sca3.galec WHERE msg.id_service= :id_service GROUP BY sca3.mag ORDER BY sca3.mag");
-	$req->execute(array(
-		':id_service'	=>$_SESSION['id_service']
-	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
+function search($pdoUser){
+	$req=$pdoUser->prepare("SELECT * FROM mag WHERE concat(deno, btlec, galec, city) LIKE :search ORDER BY deno");
+	$req->execute([
+		':search' =>'%'.$_POST['search_strg'] .'%'
+	]);
+	$datas=$req->fetchAll(PDO::FETCH_ASSOC);
+	if(empty($datas)){
+		return false;
+	}
+	return $datas;
 }
 
 function histoMagFn($pdoBt){
-	$req=$pdoBt->prepare("SELECT msg.id as id_detail, date_msg, real_service, etat, msg FROM msg LEFT JOIN sca3 on msg.id_galec=sca3.galec INNER JOIN  services on msg.id_service=services.id WHERE msg.id_galec= :mag ORDER BY date_msg DESC");
+	$req=$pdoBt->prepare("SELECT msg.id as id_detail, date_msg, real_service, etat, msg, objet,deno FROM msg LEFT JOIN web_users.mag on msg.id_galec=web_users.mag.galec LEFT JOIN  services on msg.id_service=services.id WHERE msg.id_galec= :mag ORDER BY date_msg DESC");
 	$req->execute(array(
-		':mag'		=>$_POST['mag']
+		':mag'		=>$_GET['galec']
 	));
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function histoMagServiceFn($pdoBt){
-	$req=$pdoBt->prepare("SELECT msg.id as id_detail, date_msg, real_service, etat, msg FROM msg LEFT JOIN sca3 on msg.id_galec=sca3.galec INNER JOIN  services on msg.id_service=services.id WHERE msg.id_galec= :mag AND msg.id_service= :id_service ORDER BY date_msg DESC");
+	$req=$pdoBt->prepare("SELECT msg.id as id_detail, date_msg, real_service, etat, msg,objet FROM msg LEFT JOIN sca3 on msg.id_galec=sca3.galec INNER JOIN  services on msg.id_service=services.id WHERE msg.id_galec= :mag AND msg.id_service= :id_service ORDER BY date_msg DESC");
 	$req->execute(array(
 		':mag'		=>$_POST['mag'],
 		':id_service'	=>$_SESSION['id_service']
@@ -51,74 +50,131 @@ function getMyService($pdoBt){
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-//----------------------------------------------------
-// VIEW - HEADER
-//----------------------------------------------------
+if(isset($_GET['galec'])){
 
-include('../view/_head.php');
+	$histoMag=histoMagFn($pdoBt);
+
+}
+
+if(isset($_POST['search'])){
+	$magList=search($pdoUser);
+
+
+}
+
+// if($d_searchMag)
+// {
+// 	$listMag=listMagFn($pdoBt);
+// 	$infoService='';
+// }
+// else{
+
+// 	$listMag=listMagServiceFn($pdoBt);
+// 	$infoService=getMyService($pdoBt);
+// 	$infoService= ' - service ' . $infoService['full_name'];
+// }
+
+// if(isset($_POST['search']))
+// {
+// 	if($d_searchMag)
+// 	{
+// 		$histoMag=histoMagFn($pdoBt);
+// 	}
+// 	else
+// 	{
+// 		$histoMag=histoMagServiceFn($pdoBt);
+// 	}
+// }
+
+//------------------------------------------------------
+//			REQUIRES
+//------------------------------------------------------
+// require_once '../../vendor/autoload.php';
+
+
+
+//---------------------------------------
+//	ajout enreg dans stat
+//---------------------------------------
+// require "../../functions/stats.fn.php";
+// addRecord($pdoStat,basename(__file__),'consultation', "fichiers d'info du service achats", 101);
+
+
+ //------------------------------------------------------
+//			DECLARATIONS
+//------------------------------------------------------
+
+
+
+
+
+
+//------------------------------------------------------
+//			FONCTION
+//------------------------------------------------------
+
+
+//------------------------------------------------------
+//			VIEW
+//------------------------------------------------------
+include('../view/_head-bt.php');
 include('../view/_navbar.php');
-
-if($d_searchMag)
-{
-	$listMag=listMagFn($pdoBt);
-	$infoService='';
-}
-else{
-
-	$listMag=listMagServiceFn($pdoBt);
-	$infoService=getMyService($pdoBt);
-	$infoService= ' - service ' . $infoService['full_name'];
-}
-
-if(isset($_POST['search']))
-{
-	if($d_searchMag)
-	{
-		$histoMag=histoMagFn($pdoBt);
-	}
-	else
-	{
-		$histoMag=histoMagServiceFn($pdoBt);
-	}
-}
-
-
 
 ?>
 <div class="container">
+	<h1 class="text-main-blue py-5 ">Historique des demandes d'un magasin</h1>
 
-	<h1 class="blue-text text-darken-4">Historique des demandes par magasin <?= $infoService?></h1>
+	<div class="row">
+		<div class="col-lg-1"></div>
+		<div class="col">
+			<?php
+			include('../view/_errors.php');
+			?>
+		</div>
+		<div class="col-lg-1"></div>
+	</div>
 
-	<div class="row bgwhite">
-		<div class="int-padding">
-			<h4 class="blue-text text-darken-4" id="modalite-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Sélectionner le magasin</h4>
-			<hr>
-			<br><br>
-			<div class="col m4">
-				<form method="post">
-					<div class="form-group">
-						<!-- <label for="mag">Sélectionner le magasin :</label> -->
-						<select class="browser-default" id="mag" name="mag">
-							<option value="">Sélectionner</option>
-							<?php foreach ($listMag as $mag) : ?>
-								<option value="<?= $mag['id_galec']?>"><?= $mag['mag'] ?></option>
-							<?php endforeach ?>
 
-						</select>
-					</div>
-					<p class="right-align"><button type="submit" id="search" class="btn btn-primary" name="search">Rechercher</button></p>
-					<p>&nbsp;</p>
-				</form>
-			</div>
-			<div class="col m8"></div>
+	<div class="row">
+		<div class="col pb-5">
+			<p>Chercher un magasin :</p>
 
+			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post" class="form-inline">
+				<div class="form-group">
+					<input class="form-control mr-5 pr-5" placeholder="deno, ville, panonceau galec, code btlec" name="search_strg" id="" type="text"  value="<?=isset($search_strg)? $search_strg: false?>">
+				</div>
+				<button class="btn btn-primary mr-5" type="submit" id="" name="search"><i class="fas fa-search pr-2"></i>Rechercher</button>
+			</form>
 		</div>
 	</div>
-	<div class="row bgwhite">
+
+	<?php if (isset($magList)): ?>
+		<div class="row">
+			<div class="col">Les résultats de votre recherche : <?= isset($_POST['search_strg'])?$_POST['search_strg']:''?></div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<ul>
+					<?php foreach ($magList as $mag): ?>
+						<li><a href="search.php?galec=<?=$mag['galec']?>"><?=$mag['galec'].'/'.$mag['btlec'] .' - '.$mag['deno'] .' ('.$mag['city']?>)</a></li>
+					<?php endforeach ?>
+				</ul>
+			</div>
+		</div>
+
+	<?php endif ?>
+
+	<?php if (isset($histoMag)): ?>
+		<div class="row">
+			<div class="col">
+				<div class="int-padding text-center pb-3 text-main-blue">
+					<h5 class="d-inline">Demandes du magasin de <?=$histoMag[0]['deno']?></h5>
+				</div>
+			</div>
+		</div>
+	<?php endif ?>
+	<div class="row">
 		<div class="int-padding">
-			<h4 class="blue-text text-darken-4" id="modalite-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Résultats</h4>
-			<hr>
-			<br><br>
 			<table class="striped responsive-table">
 				<tr>
 					<th>DEMANDE</th>
@@ -131,7 +187,7 @@ if(isset($_POST['search']))
 				<?php if(isset($histoMag)): ?>
 					<?php foreach ($histoMag as $msg) : ?>
 						<tr>
-							<td><?=$msg['msg']?></td>
+							<td><?=$msg['objet']?></td>
 							<td><?= date('d-m-Y',strtotime($msg['date_msg']))?></td>
 							<td><?= $msg['real_service']?></td>
 							<td><?= $msg['etat']?></td>
@@ -152,18 +208,4 @@ if(isset($_POST['search']))
 
 
 	</div>
-
-	<?php
-
-
-	?>
-
-
-
-
-
-	<?php
-//----------------------------------------------------
-// VIEW - FOOTER
-//----------------------------------------------------
-	include('../view/_footer.php');
+	<?php require '../view/_footer-bt.php'; ?>
