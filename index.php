@@ -128,7 +128,7 @@ if(!empty($revRes))
 				<p class="text-center mt-5"><img id="img-france" src="public/img/index/france-new.png"></p>
 				<h3 class="center">BTLEC, c'est aussi des structures SAV :</h3>
 				<br>
-				<p class="center"><a href="http://scapsav.fr/"><img class="shadow" src="public/img/index/scapsav.png"></a></p>
+				<p class="center"><a href="http://scapsav.fr/"><img class="shadow" src="public/img/logos/sav-logo-200.jpg"></a></p>
 				<p>&nbsp;</p>
 			</div>
 			<!-- photo bt -->
@@ -173,7 +173,7 @@ if(!empty($revRes))
 					<div class="col-1"></div>
 				</div>
 			-->
-			<div class="row infos">
+			<!-- <div class="row infos">
 				<div class="col-2"></div>
 
 				<div class="col inside-infos inside-padding">
@@ -188,7 +188,7 @@ if(!empty($revRes))
 				</div>
 				<div class="col-2"></div>
 
-			</div>
+			</div> -->
 
 			<!-- fin d'info1 -->
 			<!-- flash info auto si reversement -->
