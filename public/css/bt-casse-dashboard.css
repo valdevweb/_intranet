@@ -216,3 +216,74 @@ a.uplink:hover{
   text-decoration: none;
 
 }
+
+.result-zone{
+  margin-left: -15px !important;
+  margin-right: -15px !important;
+  background-color: #C3C2D3;
+}
+
+.bg-title{
+ background-color: #fff;
+ color:#6b6b6b;
+ /* #e1e1e1 */
+}
+.sum-txt{
+  color:#000;
+}
+
+.mag-txt{
+  color: #fff;
+}
+.smaller{
+  font-size: 0.8rem;
+}
+.under{
+/*   text-decoration: underline;
+  text-decoration-color: crimson; */
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: crimson;
+}
+
+
+
+ul.leaders {
+  /* max-width: 37em; */
+  padding: 0;
+  overflow-x: hidden;
+  list-style: none;
+}
+ul.leaders li:before {
+  float: left;
+  width: 0;
+  white-space: nowrap;
+  content: ". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  ";
+}
+ul.leaders span:first-child {
+  padding-right: 0.5em;
+  background-color:  #C3C2D3;
+}
+
+ul.leaders span + span {
+  float: right;
+  padding-left: 0.33em;
+  background-color:  #C3C2D3;
+
+}
+ul.leaders span + span:before {
+  padding-right: 0.15em;
+}
+
+.legend{
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 10px;
+
+}
+
+.rounded-more{
+  border-radius: 10px;
+}
+
+
