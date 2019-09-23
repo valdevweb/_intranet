@@ -120,3 +120,29 @@ function pwdStat($pdoStat,$login,$page, $action, $descr, $version)
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
+
+
+function errorlog($pdoUser){
+	$data='';
+	if(isset($_SESSION) && !empty($_SESSION) ){
+		foreach ($_SESSION as $key => $session) {
+			if(!is_array($session)){
+				$data.='['.$key.'] = '.$session.'<br>';
+			}
+		}
+	}elseif(empty($_SESSION)){
+		$data="la session existe mais est vide";
+
+	}
+	else{
+		$data="session inexistante";
+	}
+
+	$req=$pdoUser->prepare("INSERT INTO log_error (session, page,date_log) VALUES (:session, :page,:date_log)");
+	$req->execute([
+		':session'	=>$data,
+		':page'		=>basename(__FILE__),
+		':date_log'	=>date('Y-m-d H:i:s')
+	]);
+
+}
