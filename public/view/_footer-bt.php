@@ -1,5 +1,6 @@
 <!-- footer -->
 
+
 <footer class="footer">
 
   <div class="container-fluid dark-blue-bg">
@@ -31,8 +32,33 @@
 
   </div>
 </footer>
-<!-- a ajouter sur la page directement-->
-<!-- <script src="../js/dashboard-select.js"></script> -->
+<script type="text/javascript">
+  $(document).ready(function(){
+
+    function checkSession(){
+
+      $.ajax({
+        url:"../../config/checksession.php",
+        method:"POST",
+        success:function(data){
+          if(data==1){
+            alert("Votre session a expirée, vous allez être déconnecté");
+            window.location.href='../../index.php';
+          }
+          else{
+            // console.log(data);
+          }
+        }
+      });
+    }
+
+    setInterval(function(){
+      checkSession();
+    },10000);
+
+  });
+
+</script>
 
 
 </body>

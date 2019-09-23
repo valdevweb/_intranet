@@ -1,7 +1,6 @@
 <?php
 // fonction pour vérifier les droits utilisateur
-function isUserAllowed($pdoUser, $params)
-{
+function isUserAllowed($pdoUser, $params){
 	$session=$_SESSION['id'];
 	$placeholders=implode(',', array_fill(0, count($params), '?'));
 	$req=$pdoUser->prepare("SELECT login FROM attributions WHERE id_droit IN($placeholders) AND id_user=$session" );
@@ -57,7 +56,7 @@ $d_tempSav=isUserAllowed($pdoUser,$tempSavIds);
 $magSocamilIds=array(66,5);
 $d_Socamil=isUserAllowed($pdoUser,$magSocamilIds);
 
-$litigeBtIds=array(29,69,78);
+$litigeBtIds=array(29,69,78,7);
 $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 $missionIds=array(78,5);
 $d_mission=isUserAllowed($pdoUser, $missionIds);
@@ -135,20 +134,15 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 			 	//						fin menu pour le bt
 				//-----------------------------------------------------------------------------------------------------------------
 
-		if($d_mag)
-		{
+		if($d_mag){
 			echo $magNav;
-
 		}
-		if ($_SESSION['type']=="btlec")
-		{
+		if (isset($_SESSION['type']) && $_SESSION['type']=="btlec"){
 			echo $bt;
-
 		}
-		else
-		{
-
-					//sinon rien !!!
+		elseif(!isset($_SESSION['type'])){
+			// si pas de type, on a une erreur donc on log
+			errorlog($pdoUser);
 		}
 		ob_start();
 		?>
@@ -163,6 +157,7 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 				<li><a href="<?= ROOT_PATH?>/public/litiges/ctrl-stock.php">Contrôle de stock</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/intervention-sav.php">Retour SAV</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/casse/bt-casse-dashboard.php" class="lighter-blue">Traitement casse</a></li>
+				<li><a href="<?= ROOT_PATH?>/public/casse/histo-casse.php" class="lighter-blue">Historique casse</a></li>
 
 			</ul>
 		</li>
