@@ -144,10 +144,24 @@ $req=$pdoBt->prepare("SELECT * FROM services WHERE id = :id");
 
 }
 //affichage nom personne qui a répondu en clair (histo mag)
-function repliedByIntoName($pdoBt,$idUser)
+// function repliedByIntoName($pdoBt,$idUser)
+// {
+// 	// $req=$pdoBt->prepare("SELECT CONCAT( prenom ,' ', nom)AS fullname FROM btlec JOIN lk_user ON lk_user.id_btlec=btlec.id WHERE lk_user.iduser = :iduser");
+// 	$req=$pdoBt->prepare("SELECT CONCAT( prenom ,' ', nom)AS fullname FROM btlec WHERE id_webuser = :iduser");
+// 	$req->execute(array(
+// 		'iduser' =>$idUser
+// 	));
+
+// 	$fullName=$req->fetch();
+// 	$fullName=$fullName['fullname'];
+// 	return $fullName;
+// }
+
+
+function repliedByIntoName($pdoUser,$idUser)
 {
 	// $req=$pdoBt->prepare("SELECT CONCAT( prenom ,' ', nom)AS fullname FROM btlec JOIN lk_user ON lk_user.id_btlec=btlec.id WHERE lk_user.iduser = :iduser");
-	$req=$pdoBt->prepare("SELECT CONCAT( prenom ,' ', nom)AS fullname FROM btlec WHERE id_webuser = :iduser");
+	$req=$pdoUser->prepare("SELECT CONCAT( prenom ,' ', nom)AS fullname FROM intern_users WHERE id_web_user = :iduser");
 	$req->execute(array(
 		'iduser' =>$idUser
 	));
@@ -156,8 +170,6 @@ function repliedByIntoName($pdoBt,$idUser)
 	$fullName=$fullName['fullname'];
 	return $fullName;
 }
-
-
 
 //-------------------------------------------------------------------------------------
 //
