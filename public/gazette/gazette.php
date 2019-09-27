@@ -43,7 +43,7 @@ if (!empty($_GET['type'])) {
 }
 
 function getGazette($pdoBt, $doccode){
-	$req=$pdoBt->prepare("SELECT * FROM gazette WHERE id_doc_type = :id_doc_type ORDER BY date DESC LIMIT 5");
+	$req=$pdoBt->prepare("SELECT *, month(date) as month, day(date) as day, year(date) as year FROM gazette WHERE id_doc_type = :id_doc_type ORDER BY date DESC LIMIT 5");
 	$req->execute([
 		':id_doc_type'		=>$doccode
 	]);
@@ -120,6 +120,7 @@ $monday=clone $today;
 $monday->modify('Monday this week');
 $saturday=clone $today;
 $saturday->modify('saturday this week');
+$months= array('','janvier', 'février', 'mars', 'avril', 'mai', 'juin','juillet', 'août', 'septembre', 'octobre','novembre','décembre');
 
 $quotidienne=getGazette($pdoBt, 1);
 $suiviCata=getGazetteSuivi($pdoBt,2, $today->format('Y-m-d'));
@@ -172,7 +173,8 @@ include('../view/_navbar.php');
 								<?php if (!empty($quotidienne)): ?>
 									<ul>
 										<?php foreach ($quotidienne as $gazQuotidienne): ?>
-											<li><a href="<?=UPLOAD_DIR?>/gazette/<?= $gazQuotidienne['file']?>"><?= $gazQuotidienne['file'] ?></a></li>
+
+											<li><a href="<?=UPLOAD_DIR?>/gazette/<?= $gazQuotidienne['file']?>">la gazette du <?= $gazQuotidienne['day'] . ' '. $months[$gazQuotidienne['month']] . ' '. $gazQuotidienne['year']?></a></li>
 										<?php endforeach ?>
 									</ul>
 								<?php endif ?>
@@ -231,7 +233,7 @@ include('../view/_navbar.php');
 											<?php foreach ($speciale as $spe): ?>
 												<?php $fileTitle=explode('.xls', $spe['file']);?>
 
-												<li><a href="<?=UPLOAD_DIR?>/gazette/<?=$spe['file']?>"><?= $fileTitle[0] ?></a></li>
+												<li><a href="<?=UPLOAD_DIR?>/gazette/<?=$spe['file']?>"><?= $spe['title'] ?></a></li>
 
 											<?php endforeach ?>
 										</ul>
