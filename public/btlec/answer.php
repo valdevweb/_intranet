@@ -330,7 +330,7 @@ include '../view/_navbar.php';
 	<?php foreach($replies as $reply): ?>
 		<?php
 	//reponse mag ou bt
-		if($who=repliedByIntoName($pdoBt,$reply['replied_by']))
+		if($who=repliedByIntoName($pdoUser,$reply['replied_by']))
 		{
 
 			$magOrBt='mag';
