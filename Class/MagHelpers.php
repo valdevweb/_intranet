@@ -11,8 +11,11 @@ class MagHelpers{
 	}
 
 	public static function deno($pdo,$galec){
-		$data=self::magInfo($pdo, $galec);
-		return $data['deno'];
+		if($galec!=''){
+			$data=self::magInfo($pdo, $galec);
+			return $data['deno'];
+		}
+		return false;
 	}
 
 	public static function centrale($pdo,$galec){
