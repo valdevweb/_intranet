@@ -103,7 +103,7 @@ $fMotif=getReclamation($pdoLitige);
 
 function getProdInversion($pdoQlik,$ean)
 {
-	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges WHERE gencod= :inversion ORDER BY date_mvt DESC");
+	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges WHERE gencod LIKE :inversion ORDER BY date_mvt DESC");
 	$req->execute(array(
 		':inversion'	=>$ean
 	));
@@ -193,8 +193,9 @@ if(isset($_POST['submit']))
 					$invQte=$_POST['form_autre_qte'][$i];
 				// recup info du produit reçu à la place
 					$listProdInv=getProdInversion($pdoQlik,$ean);
+
 				// si on trouve la réf qui a été livrée à la place
-					if(count($listProdInv)>1)
+					if(count($listProdInv)>=1)
 					{
 					// on cherche en 1er dans le 1000
 						foreach ($listProdInv as $prodInv)
@@ -211,7 +212,7 @@ if(isset($_POST['submit']))
 								break;
 							}
 						// si trouvé en dehors du 1000
-							elseif(!empty($prodInv['article']) && !empty($prodInv['libelle']) && !empty($prodInv['tarif']) && !empty($prodInv['fournisseur']) && !empty($prodInv['qte']))
+							elseif(!empty($prodInv['article']))
 							{
 								$invArticle=$prodInv['article'];
 								$invDescr=$prodInv['libelle'];
@@ -237,6 +238,8 @@ if(isset($_POST['submit']))
 					// ean non trouvé :
 						$invArticle=$invDescr=$invTarif=$invFournisseur=$qt_qlik=$invDossier=$tarifUv=$valoLig=NULL;
 					}
+
+
 				// article trouvé ou non , on met à jour la db avec des champ null si rien
 					$do=updateDetailInversion($pdoLitige,$_POST['form_motif'][$i], $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur, $invQte, $valoLig);
 				// echo '1 do '.$do;
@@ -412,7 +415,7 @@ DEBUT CONTENU CONTAINER
 							echo '<p class="khand heavy">Ean article reçu : ';
 							echo '</p>';
 							echo '<div class="form-group">';
-							echo '<input type="text" class="form-control" name="form_autre[]" >';
+							echo '<input type="text" class="form-control" name="form_autre[]" pattern="[-+]?[0-9]*[.]?[0-9]+" title="Seuls les chiffres sont autorisés" id="ean-received" >';
 							echo '</div>';
 							echo '</div>';
 							echo '<div class="col-3">';
@@ -526,8 +529,19 @@ DEBUT CONTENU CONTAINER
   			// $("#td_id").toggleClass('change_me newClass');
   		});
 
+$(function(){
 
+  $('#ean-received').keyup(function(e) {
+        if(this.value!='-')
+          while(isNaN(this.value))
+            this.value = this.value.split('').reverse().join('').replace(/[\D]/i,'')
+                                   .split('').reverse().join('');
+    })
+    .on("cut copy paste",function(e){
+    	e.preventDefault();
+    });
 
+});
 
 	});
 
