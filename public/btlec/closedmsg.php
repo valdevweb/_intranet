@@ -74,7 +74,7 @@ $replies=showReplies($pdoBt, $idMsg);
 			<p class="orange-text text-darken-2 boldtxt">Réponse du : <?= date('d-m-Y', strtotime($reply['date_reply']))?></p>
 		</div>
 		<div class="col l6">
-			<p class="orange-text text-darken-2 boldtxt">Par : <?= repliedByIntoName($pdoBt,$reply['replied_by'])?></p>
+			<p class="orange-text text-darken-2 boldtxt">Par : <?= repliedByIntoName($pdoUser,$reply['replied_by'])?></p>
 		</div>
 		<div class="col l12">
 			<p><?= $reply['reply'] ?></p>
