@@ -40,8 +40,9 @@ require ('../../Class/Helpers.php');
 $errors=[];
 $success=[];
 $idExp=$_GET['id'];
-$codeDeee="170277";
-$codeSacem="170279";
+// $codeDeee="170277";
+// $codeSacem="170279";
+// $codeMeuble="171498";
 $today=date("d-m-Y");
 $echeance=new DateTime;
 $echeance->modify('+ 30 days');
@@ -50,11 +51,8 @@ $mtBlanc=0;
 $mtBrun=0;
 $mtGris=0;
 $mtFac=0;
-$mtDeee=0;
-$mtSacem=0;
 $mtAvoir=0;
-$mtAvoirDeee=0;
-$mtAvoirSacem=0;
+
 
 
 
@@ -63,9 +61,7 @@ $mtAvoirSacem=0;
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-//----------------------------------------------
-//  		excel
-//----------------------------------------------
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -74,8 +70,13 @@ $articles=getExpPaletteCasse($pdoCasse,$idExp);
 $numPalette=getPaletteList($pdoCasse,$idExp);
 $numPalette=implode(', ',$numPalette);
 
+//----------------------------------------------
+//  		FACTURE
+//----------------------------------------------
+// 1- création du fichier
 $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
+// 2-ajout entête
 $sheet->setCellValue('A1', 'LIBELLE FACTURE');
 $sheet->setCellValue('B1', 'Facturation palettes casse : '.$numPalette);
 $sheet->setCellValue('A2', 'Date facture');
@@ -83,7 +84,7 @@ $sheet->setCellValue('B2', $today);
 $sheet->setCellValue('A3', 'Date echeance');
 $sheet->setCellValue('B3', $echeance);
 $sheet->setCellValue('A4', 'Motif');
-$sheet->setCellValue('B4', '?');
+$sheet->setCellValue('B4', '001');
 $sheet->setCellValue('A5', 'Dossiers');
 $sheet->setCellValue('A6', 'Articles');
 $sheet->setCellValue('A7', 'PU');
@@ -91,72 +92,137 @@ $sheet->setCellValue('A8', 'MAGASIN');
 $sheet->setCellValue('A9', $articles[0]['btlec']);
 $sheet->setCellValue('A10', "Total Qte");
 $sheet->setCellValue('A11', 'Total MT');
-	// echo "<pre>";
-	// print_r($articles);
-	// echo '</pre>';
-// pour chauqe article, on a 3 colonne donc :
-$nbResult=3*(count($articles))+1;
 
+
+$column=2;
 $i=0;
-for ($column = 2; $column <= $nbResult; $column++) {
-	// on facture le pfnp - deee - sacem
-	$prixFac=$articles[$i]['pfnp'] -$articles[$i]['deee']- $articles[$i]['sacem'];
+// si plus de 99 colonne, il faut faire un nouveau fichier facture
+$maxcol=29;
+$uploadDir= '..\..\..\upload\casse\\';
+$nbFac=$nbAvoir=0;
 
-	$mtFac=$mtFac+($prixFac*$articles[$i]['uvc']);
-	$mtDeee=$mtDeee+($articles[$i]['deee']*$articles[$i]['uvc']);
-	$mtSacem=$mtSacem+($articles[$i]['sacem']*$articles[$i]['uvc']);
-
-	$sheet->setCellValueByColumnAndRow($column, 5, $articles[$i]['dossier']);
-	$sheet->setCellValueByColumnAndRow($column, 6, $articles[$i]['article']);
-	$sheet->setCellValueByColumnAndRow($column, 7, str_replace('.',',',$prixFac));
-	$sheet->setCellValueByColumnAndRow($column, 8, "QTE");
+for($i=0;$i<count($articles);$i++){
+	if($column==$maxcol){
+		// ajout dernière données sur cette feuille
+		$prixFac=$articles[$i]['pfnp'];
+		$mtFac=$mtFac+($prixFac*$articles[$i]['uvc']);
+		$sheet->setCellValueByColumnAndRow($column, 5, $articles[$i]['dossier']);
+		$sheet->setCellValueByColumnAndRow($column, 6, $articles[$i]['article']);
+		$sheet->setCellValueByColumnAndRow($column, 7, str_replace('.',',',$prixFac));
+		$sheet->setCellValueByColumnAndRow($column, 8, "QTE");
         // qte produit de produit pour le mag
-	$sheet->setCellValueByColumnAndRow($column, 9, $articles[$i]['uvc']);
-    // qte totale (sera tj égale à la qte pour le mag puisque un seul mag)
-	$sheet->setCellValueByColumnAndRow($column, 10, $articles[$i]['uvc']);
-    // montant total
-	$sheet->setCellValueByColumnAndRow($column, 11, str_replace('.',',',$articles[$i]['uvc']* $prixFac));
+		$sheet->setCellValueByColumnAndRow($column, 9, $articles[$i]['uvc']);
+	    // qte totale (sera tj égale à la qte pour le mag puisque un seul mag)
+		$sheet->setCellValueByColumnAndRow($column, 10, $articles[$i]['uvc']);
+		$sheet->setCellValueByColumnAndRow($column, 11, str_replace('.',',',$articles[$i]['uvc']* $prixFac));
+		// mise au format csv
+		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
+		$writer->setDelimiter(';');
+		$writer->setEnclosure('');
+		$writer->setLineEnding("\r\n");
+		$writer->setSheetIndex(0);
+		$nbFac++;
+		// sauvegarde
+		$writer->save($uploadDir.'\FACTCASSE_'.date('dmy').$nbFac.'.csv');
+		//réinitialisation colonne pour nouveau doc + nv doc + intitulé
+		$column=2;
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+		$sheet->setCellValue('A1', 'LIBELLE FACTURE');
+		$sheet->setCellValue('B1', 'Facturation palettes casse : '.$numPalette);
+		$sheet->setCellValue('A2', 'Date facture');
+		$sheet->setCellValue('B2', $today);
+		$sheet->setCellValue('A3', 'Date echeance');
+		$sheet->setCellValue('B3', $echeance);
+		$sheet->setCellValue('A4', 'Motif');
+		$sheet->setCellValue('B4', '001');
+		$sheet->setCellValue('A5', 'Dossiers');
+		$sheet->setCellValue('A6', 'Articles');
+		$sheet->setCellValue('A7', 'PU');
+		$sheet->setCellValue('A8', 'MAGASIN');
+		$sheet->setCellValue('A9', $articles[0]['btlec']);
+		$sheet->setCellValue('A10', "Total Qte");
+		$sheet->setCellValue('A11', 'Total MT');
+	}else{
+		//ajout données
+		$prixFac=$articles[$i]['pfnp'];
+		$mtFac=$mtFac+($prixFac*$articles[$i]['uvc']);
+		$sheet->setCellValueByColumnAndRow($column, 5, $articles[$i]['dossier']);
+		$sheet->setCellValueByColumnAndRow($column, 6, $articles[$i]['article']);
+		$sheet->setCellValueByColumnAndRow($column, 7, str_replace('.',',',$prixFac));
+		$sheet->setCellValueByColumnAndRow($column, 8, "QTE");
+		$sheet->setCellValueByColumnAndRow($column, 9, $articles[$i]['uvc']);
+		$sheet->setCellValueByColumnAndRow($column, 10, $articles[$i]['uvc']);
+		$sheet->setCellValueByColumnAndRow($column, 11, str_replace('.',',',$articles[$i]['uvc']* $prixFac));
+		$column++;
+	}
 
-    //  on avance d'un colonne mais on reste sur le même article
-	$column=$column+1;
-
-	// même produit => montant de sa deee avec code article de la deee
-	$sheet->setCellValueByColumnAndRow($column, 5, $articles[$i]['dossier']);
-	$sheet->setCellValueByColumnAndRow($column, 6, $codeDeee);
-	$sheet->setCellValueByColumnAndRow($column, 7, str_replace('.',',',$articles[$i]['deee']));
-	$sheet->setCellValueByColumnAndRow($column, 8, "QTE");
-	$sheet->setCellValueByColumnAndRow($column, 9, $articles[$i]['uvc']);
-	$sheet->setCellValueByColumnAndRow($column, 10, $articles[$i]['uvc']);
-	$sheet->setCellValueByColumnAndRow($column, 11,str_replace('.',',',$articles[$i]['uvc']*$articles[$i]['deee']) );
-
-	$column=$column+1;
-	$sheet->setCellValueByColumnAndRow($column, 5, $articles[$i]['dossier']);
-	$sheet->setCellValueByColumnAndRow($column, 6, $codeSacem);
-	$sheet->setCellValueByColumnAndRow($column, 7, str_replace('.',',',$articles[$i]['sacem']));
-	$sheet->setCellValueByColumnAndRow($column, 8, "QTE");
-	$sheet->setCellValueByColumnAndRow($column, 9, $articles[$i]['uvc']);
-	$sheet->setCellValueByColumnAndRow($column, 10, $articles[$i]['uvc']);
-	$sheet->setCellValueByColumnAndRow($column, 11, str_replace('.',',',$articles[$i]['uvc']*$articles[$i]['sacem']));
-
-
-	$i++;
 }
+//  mise au format facture en cours
 $writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
 $writer->setDelimiter(';');
 $writer->setEnclosure('');
 $writer->setLineEnding("\r\n");
 $writer->setSheetIndex(0);
-// $writer->save("facture_casse.csv");
-$uploadDir= '..\..\..\upload\casse\\';
-$writer->save($uploadDir.'\FACTCASSE '.date('dmy').'.csv');
+// sauvegarde facture en cours
+// pour éviter le 0 si une seule facture
+$nbFac=($nbFac==0)?'':$nbFac+1;
+$writer->save($uploadDir.'\FACTCASSE_'.date('dmy').$nbFac.'.csv');
+
+//----------------------------------------------
+//  		AVOIR
+//----------------------------------------------
+$spreadsheet = new Spreadsheet();
+$sheet = $spreadsheet->getActiveSheet();
+$sheet->setCellValue('A1', 'LIBELLE FACTURE');
+$sheet->setCellValue('B1', 'Avoir palettes casse '.$numPalette);
+$sheet->setCellValue('A2', 'Date facture');
+$sheet->setCellValue('B2', $today);
+$sheet->setCellValue('A3', 'Date echeance');
+$sheet->setCellValue('B3', $echeance);
+$sheet->setCellValue('A4', 'Motif');
+$sheet->setCellValue('B4', '001');
+$sheet->setCellValue('A5', 'Dossiers');
+$sheet->setCellValue('A6', 'Articles');
+$sheet->setCellValue('A7', 'PU');
+$sheet->setCellValue('A8', 'MAGASIN');
+$sheet->setCellValue('A9', $articles[0]['btlec']);
+$sheet->setCellValue('A10', "Total Qte");
+$sheet->setCellValue('A11', 'Total MT');
+
+//reinitialise
+$column=2;
+$i=0;
+
+for($i=0;$i<count($articles);$i++){
+	$prixFac=round(($articles[$i]['pfnp'])/2,2);
+	$mtAvoir=$mtAvoir+($prixFac*$articles[$i]['uvc']);
+	if($articles[$i]['gt']==1 || $articles[$i]['gt']==2){
+		$mtBlanc=$mtBlanc + ($prixFac*$articles[$i]['uvc']);
+	}elseif($articles[$i]['gt']==3 || $articles[$i]['gt']==4 || $articles[$i]['gt']==5){
+		$mtBrun=$mtBrun+($prixFac*$articles[$i]['uvc']);
+	}
+	elseif($articles[$i]['gt']==6 || $articles[$i]['gt']==7 || $articles[$i]['gt']==8 || $articles[$i]['gt']==9 || $articles[$i]['gt']==10){
+		$mtGris=$mtGris + ($prixFac*$articles[$i]['uvc']);
+	}
 
 
-// $listGt=['blanc', 'brun', 'gris'];
-// $listComptes=['70717221', '70717223', '70717229'];
-
-
-	if(!empty($articles))
-	{
+	if($column==$maxcol){
+		$sheet->setCellValueByColumnAndRow($column, 5, $articles[$i]['dossier']);
+		$sheet->setCellValueByColumnAndRow($column, 6, $articles[$i]['article']);
+		$sheet->setCellValueByColumnAndRow($column, 7, str_replace('.',',',$prixFac));
+		$sheet->setCellValueByColumnAndRow($column, 8, "QTE");
+		$sheet->setCellValueByColumnAndRow($column, 9, '-'.$articles[$i]['uvc']);
+		$sheet->setCellValueByColumnAndRow($column, 10, '-'.$articles[$i]['uvc']);
+		$sheet->setCellValueByColumnAndRow($column, 11, str_replace('.',',',(-$articles[$i]['uvc']* $prixFac)));
+		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
+		$writer->setDelimiter(';');
+		$writer->setEnclosure('');
+		$writer->setLineEnding("\r\n");
+		$writer->setSheetIndex(0);
+		$nbAvoir++;
+		$writer->save($uploadDir.'\AVCASSE_'.date('dmy').$nbAvoir.'.csv');
+		$column=2;
 		$spreadsheet = new Spreadsheet();
 		$sheet = $spreadsheet->getActiveSheet();
 		$sheet->setCellValue('A1', 'LIBELLE FACTURE');
@@ -166,7 +232,7 @@ $writer->save($uploadDir.'\FACTCASSE '.date('dmy').'.csv');
 		$sheet->setCellValue('A3', 'Date echeance');
 		$sheet->setCellValue('B3', $echeance);
 		$sheet->setCellValue('A4', 'Motif');
-		$sheet->setCellValue('B4', '?');
+		$sheet->setCellValue('B4', '001');
 		$sheet->setCellValue('A5', 'Dossiers');
 		$sheet->setCellValue('A6', 'Articles');
 		$sheet->setCellValue('A7', 'PU');
@@ -174,88 +240,45 @@ $writer->save($uploadDir.'\FACTCASSE '.date('dmy').'.csv');
 		$sheet->setCellValue('A9', $articles[0]['btlec']);
 		$sheet->setCellValue('A10', "Total Qte");
 		$sheet->setCellValue('A11', 'Total MT');
-// pour chauqe article, on a 3 colonne donc :
-		$nbResult=3*(count($articles))+1;
-		$i=0;
-		for ($column = 2; $column <= $nbResult; $column++) {
-    // on facture le pfnp - deee - sacem
-			$prixFac=round(($articles[$i]['pfnp'] -$articles[$i]['deee']- $articles[$i]['sacem'])/2,2);
-			$mtAvoir=$mtAvoir+($prixFac*$articles[$i]['uvc']);
-			if($articles[$i]['gt']==1 || $articles[$i]['gt']==2){
-				$mtBlanc=$mtBlanc + $prixFac;
-			}elseif($articles[$i]['gt']==3 || $articles[$i]['gt']==4 || $articles[$i]['gt']==5){
-				$mtBrun=$mtBrun+$prixFac;
 
-			}
-			elseif($articles[$i]['gt']==6 || $articles[$i]['gt']==7 || $articles[$i]['gt']==8 || $articles[$i]['gt']==9 || $articles[$i]['gt']==10){
-				$mtGris=$mtGris + $prixFac;
-			}
-
-
-			if($articles[$i]['deee']>0){
-				$deee=round(($articles[$i]['deee'] /2),2);
-			}
-			else{
-				// pas de division par 0
-				$deee=$articles[$i]['deee'];
-			}
-			if($articles[$i]['sacem'] >0){
-				$sacem=round(($articles[$i]['sacem'] /2),2);
-			}
-			else{
-				$sacem=$articles[$i]['sacem'];
-			}
-			$mtAvoirDeee=$mtAvoirDeee+($deee*$articles[$i]['uvc']);
-			$mtAvoirSacem=$mtAvoirSacem+($sacem*$articles[$i]['uvc']);
-
-			$sheet->setCellValueByColumnAndRow($column, 5, $articles[$i]['dossier']);
-			$sheet->setCellValueByColumnAndRow($column, 6, $articles[$i]['article']);
-			$sheet->setCellValueByColumnAndRow($column, 7, str_replace('.',',',$prixFac));
-			$sheet->setCellValueByColumnAndRow($column, 8, "QTE");
-        // qte produit de produit pour le mag
-			$sheet->setCellValueByColumnAndRow($column, 9, '-'.$articles[$i]['uvc']);
-    // qte totale (sera tj égale à la qte pour le mag puisque un seul mag)
-			$sheet->setCellValueByColumnAndRow($column, 10, '-'.$articles[$i]['uvc']);
-    // montant total
-			$sheet->setCellValueByColumnAndRow($column, 11, str_replace('.',',',(-$articles[$i]['uvc']* $prixFac)));
-    //  on avance d'un colonne mais on reste sur le même article
-			$column=$column+1;
-
-	// même produit => montant de sa deee avec code article de la deee
-			$sheet->setCellValueByColumnAndRow($column, 5, $articles[$i]['dossier']);
-			$sheet->setCellValueByColumnAndRow($column, 6, $codeDeee);
-			$sheet->setCellValueByColumnAndRow($column, 7, str_replace('.',',',$articles[$i]['deee']));
-			$sheet->setCellValueByColumnAndRow($column, 8, "QTE");
-			$sheet->setCellValueByColumnAndRow($column, 9, '-'.$articles[$i]['uvc']);
-			$sheet->setCellValueByColumnAndRow($column, 10, '-'.$articles[$i]['uvc']);
-			$sheet->setCellValueByColumnAndRow($column, 11, str_replace('.',',',(-$articles[$i]['uvc']*$articles[$i]['deee'])));
-
-			$column=$column+1;
-			$sheet->setCellValueByColumnAndRow($column, 5, $articles[$i]['dossier']);
-			$sheet->setCellValueByColumnAndRow($column, 6, $codeSacem);
-			$sheet->setCellValueByColumnAndRow($column, 5, str_replace('.',',',$articles[$i]['sacem']));
-			$sheet->setCellValueByColumnAndRow($column, 8, "QTE");
-			$sheet->setCellValueByColumnAndRow($column, 9, '-'.$articles[$i]['uvc']);
-			$sheet->setCellValueByColumnAndRow($column, 10, '-'.$articles[$i]['uvc']);
-			$sheet->setCellValueByColumnAndRow($column, 11, str_replace('.',',',-($articles[$i]['uvc']*$articles[$i]['sacem'])));
-
-			$i++;
-		}
-
-
-		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
-		$writer->setDelimiter(';');
-		$writer->setEnclosure('');
-		$writer->setLineEnding("\r\n");
-		$writer->setSheetIndex(0);
-// $writer->save("facture_casse.csv");
-		$uploadDir= '..\..\..\upload\casse\\';
-		$writer->save($uploadDir.'\AVCASSE '.date('dmy').'.csv');
-
+	}else{
+		$sheet->setCellValueByColumnAndRow($column, 5, $articles[$i]['dossier']);
+		$sheet->setCellValueByColumnAndRow($column, 6, $articles[$i]['article']);
+		$sheet->setCellValueByColumnAndRow($column, 7, str_replace('.',',',$prixFac));
+		$sheet->setCellValueByColumnAndRow($column, 8, "QTE");
+		$sheet->setCellValueByColumnAndRow($column, 9, '-'.$articles[$i]['uvc']);
+		$sheet->setCellValueByColumnAndRow($column, 10, '-'.$articles[$i]['uvc']);
+		$sheet->setCellValueByColumnAndRow($column, 11, str_replace('.',',',(-$articles[$i]['uvc']* $prixFac)));
+		$column++;
 	}
-$mtAvectaxes=$mtFac+$mtDeee+$mtSacem;
-$mtAvoirAvecTaxes=$mtAvoir+$mtAvoirDeee+$mtAvoirSacem;
+}
 
+$writer = new \PhpOffice\PhpSpreadsheet\Writer\Csv($spreadsheet);
+$writer->setDelimiter(';');
+$writer->setEnclosure('');
+$writer->setLineEnding("\r\n");
+$writer->setSheetIndex(0);
+$nbAvoir=($nbAvoir==0)?'':$nbAvoir+1;
+
+$writer->save($uploadDir.'\AVCASSE_'.date('dmy').$nbAvoir.'.csv');
+
+
+// maj db avec montant factures
+if(isset($mtFac) && isset($mtBlanc) && isset($mtGris) && isset($mtBrun) && $mtFac!=0){
+	$req=$pdoCasse->prepare("UPDATE exps SET mt_fac= :mt_fac, mt_blanc= :mt_blanc, mt_gris= :mt_gris, mt_brun= :mt_brun, date_fac= :date_fac WHERE id= :id");
+	$req->execute([
+		':mt_fac' =>$mtFac,
+		':mt_blanc'	=>$mtBlanc,
+		':mt_gris'=>$mtGris,
+		':mt_brun'=>$mtBrun,
+		':date_fac'=>date('Y-m-d H:i:s'),
+		':id'	=>$_GET['id']
+	]);
+	$maj=$req->rowCount();
+	if($maj!=1){
+		$errors[]="impossible de mettre à jour la base de donnée";
+	}
+}
 
 
 //------------------------------------------------------
@@ -280,28 +303,118 @@ include('../view/_navbar.php');
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
-	<div class="row ">
-		<div class="col">
-			<p>Télécharger les factures : </p>
-		</div>
-	</div>
-	<div class="row pb-5">
-		<div class="col">
-			<?php
-			if(file_exists($uploadDir.'\FACTCASSE '.date('dmy').'.csv')){
-				echo '<a href="'.UPLOAD_DIR.'\casse\FACTCASSE '.date('dmy').'.csv" onclick="confirmFac('.$idExp.')"><i class="fas fa-download pr-3" ></i>facture casse - expe '.$idExp.'</a>, montant de la facture : '.$mtAvectaxes.'&euro; ('. $mtFac.'&euro; + '.$mtDeee.'&euro; DEEE + '.+$mtSacem.'&euro; SACEM)<br>';
-			}
-				if(file_exists($uploadDir.'\AVCASSE '.date('dmy').'.csv')){
-					echo '<a href="'.UPLOAD_DIR.'\casse\AVCASSE '.date('dmy').'.csv"><i class="fas fa-download pr-3"></i>avoir casse - expe '.$idExp.'</a>, montant de l\'avoir : '.$mtAvoirAvecTaxes.'&euro; ('. $mtAvoir.'&euro; + '.$mtAvoirDeee.'&euro; DEEE + '.+$mtAvoirSacem.'&euro; SACEM)<br>';
-					echo 'Montant avoir séparé blanc : '.$mtBlanc.'&euro; <br>';
-					echo 'Montant avoir séparé brun : '.$mtBrun.'&euro; <br>';
-					echo 'Montant avoir séparé gris : '.$mtGris.'&euro; <br>';
-				}
 
-			?>
-		</div>
-	</div>
 	<div id="result"></div>
+
+
+	<div class="row">
+		<div class="col-lg-1"></div>
+		<div class="col">
+			<div class="pricing-table">
+				<header class="pricing-header-plus">
+				<!-- 			<span data-tooltip class="top" tabindex="2" title="Plus Basic Information.">
+					<i class="fas fa-info-circle"></i></span> -->
+					<!-- <a href="#"><p>Plus</p></a> -->
+					<div class="price-box">
+						<p class="title"><?=number_format((float)$mtFac,2,'.',' ')?><span class="">&euro;</span></p>
+						<h5>Facture</h5>
+					</div>
+				</header>
+				<div class="pricing-content-plus">
+					<ul>
+						<li class="bullet-item">
+							<i class="fa fa-plus"></i>Hors taxe :
+							<div class="pricingh-basic float-right pr-5 "><?=number_format((float)$mtFac,2,'.', ' ')?>&euro;</div>
+						</li>
+
+					</ul>
+					<?php
+					if($nbFac==0){
+						// si un seul fichier facture
+						if(file_exists($uploadDir.'\FACTCASSE_'.date('dmy').'.csv')){
+							echo '<a href="'.UPLOAD_DIR.'\casse\FACTCASSE_'.date('dmy').'.csv" class="flash"><button type="button" class="button btn-plus">Télécharger</button></a>';
+						}
+					}else{
+						echo '<button type="button" class="button btn-plus">Télécharger :<br>';
+
+						for($i=1;$i<=$nbFac;$i++){
+							if(file_exists($uploadDir.'\FACTCASSE_'.date('dmy').$i.'.csv')){
+								echo '<a href="'.UPLOAD_DIR.'\casse\FACTCASSE_'.date('dmy').$i.'.csv" class="flash">Fichier '.$i.'</a>';
+								echo ($i==$nbFac) ? '' : ' - ' ;
+
+							}
+						}
+						echo '</button>';
+
+					}
+
+					?>
+				</div>
+			</div>
+		</div>
+		<div class="col-1"></div>
+		<div class="col">
+			<div class="pricing-table">
+				<header class="pricing-header-premium">
+					<div class="price-box">
+						<p class="title"><?=number_format((float)$mtAvoir,2,'.',' ')?>&euro;</p>
+						<h5>Avoir</h5>
+					</div>
+				</header>
+				<div class="pricing-content-premium">
+					<ul>
+						<li class="bullet-item">
+							<i class="fa fa-plus"></i>Blanc :
+							<div class="float-right pr-5 pricingh-plus"><?=number_format((float)$mtBlanc,2,'.',' ')?>&euro;</div>
+						</li>
+						<li class="bullet-item">
+							<i class="fa fa-plus"></i>Brun :
+
+							<div class="float-right pr-5  pricingh-plus"><?=number_format((float)$mtBrun,2,'.',' ')?>&euro;</div>
+						</li>
+						<li class="bullet-item">
+							<i class="fa fa-plus"></i>Gris :
+							<div class="float-right pr-5  pricingh-plus"><?=number_format((float)$mtGris,2,'.',' ')?>&euro;</div>
+						</li>
+
+					</ul>
+					<?php
+					if($nbAvoir==0){
+						// si un seul fichier facture
+						if(file_exists($uploadDir.'\AVCASSE_'.date('dmy').'.csv')){
+							echo '<a href="'.UPLOAD_DIR.'\casse\AVCASSE_'.date('dmy').'.csv" class="flash"><button type="button" class="button btn-plus">Télécharger</button></a>';
+						}
+					}else{
+						echo '<button type="button" class="button btn-plus">Télécharger :<br>';
+
+						for($i=1;$i<=$nbAvoir;$i++){
+							if(file_exists($uploadDir.'\AVCASSE_'.date('dmy').$i.'.csv')){
+								echo '<a href="'.UPLOAD_DIR.'\casse\AVCASSE_'.date('dmy').$i.'.csv" class="flash">Fichier '.$i.'</a>';
+								echo ($i==$nbAvoir) ? '' : ' - ' ;
+							}
+						}
+						echo '</button>';
+
+					}
+
+					?>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-1"></div>
+
+	</div>
+	<!-- </section> -->
+
+	<div class="row mt-5">
+		<div class="col-lg-1"></div>
+		<div class="col text-center">
+			<a href="casse-clos.php?id=<?=$_GET['id']?>">Clôturer l'expédition</a>
+		</div>
+		<div class="col-lg-1"></div>
+	</div>
+
+
 
 	<div class="row py-5"></div>
 
@@ -310,25 +423,7 @@ include('../view/_navbar.php');
 
 	<!-- ./container -->
 </div>
-<script type="text/javascript">
 
-	function confirmFac(idExp) {
-		if (confirm('Ajouter la date du jour en date de facturation et clôturer le dossier ?')) {
-
-			$.ajax({
-				url: "casse-clos.php",
-				type: "POST",
-				data: {id : idExp},
-
-				success: function(html) {
-					$('#result').append(html);
-				}
-			});
-
-		}
-	}
-
-</script>
 
 <?php
 require '../view/_footer-bt.php';
