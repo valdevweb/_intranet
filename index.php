@@ -63,6 +63,19 @@ if(isset($_POST['connexion']))
 		header('Location:'. ROOT_PATH. '/public/home/home.php');
 	}
 }
+
+// if(isset($_GET['deco'])){
+// 	$req=$pdoUser->prepare("INSERT INTO log_error (session, page,date_log) VALUES (:session, :page,:date_log)");
+// 	$req->execute([
+// 		':session'	=>"user deconnecté par js",
+// 		':page'		=>$_SERVER['HTTP_REFERER'],
+// 		':date_log'	=>date('Y-m-d H:i:s')
+// 	]);
+
+// }
+
+
+
 /*---------------------------------------------------------------------*/
 /* 						reversements     							*/
 /*---------------------------------------------------------------------*/
