@@ -209,7 +209,7 @@ if($files>=1)
 
 function fileInfos($explodedFilename)
 {
-	$strangeMonth=array('janv'=>1 ,'févr'=>2 ,'mars'=>3 ,'avr'=>4 ,'mai'=>5 ,'juin'=>6 ,'juil'=>7 ,'août'=>8 ,	'sept'=>9 ,	'oct'=>10,'nov'=>11,'déc'=>12);
+	$strangeMonth=array('janv'=>1 ,'févr'=>2 ,'mars'=>3 ,'avr'=>4 ,'mai'=>5 ,'juin'=>6 ,'juil'=>7 ,'aout'=>8 ,	'sept'=>9 ,	'oct'=>10,'nov'=>11,'déc'=>12);
 	$dateStr=$explodedFilename[1];
 	$exDate=explode(' ',$dateStr);
 
@@ -229,31 +229,6 @@ function fileInfos($explodedFilename)
 }
 
 
-// function fileInfos($explodedFilename)
-// {
-// 	$strangeMonth=array('janv'=>1 ,'févr'=>2 ,'mars'=>3 ,'avr'=>4 ,'mai'=>5 ,'juin'=>6 ,'juil'=>7 ,'août'=>8 ,	'sept'=>9 ,	'oct'=>10,'nov'=>11,'déc'=>12);
-// 	$dateStr=$explodedFilename[1];
-// 	if($dateStr==" ")
-// 	{
-// 		$dateStr="vide";
-// 	}	$name=$explodedFilename[2];
-
-// 	// $exDate=explode(' ',$dateStr);
-
-// 	// $monthStr=trim($exDate[1]);
-// 	// $monthStr=str_replace('.','',$monthStr);
-// 	// //quand existe pas ??
-// 	// $year=trim($exDate[2]);
-// 	// $centrale=$explodedFilename[2];
-// 	// $arrCentrale=explode('.',$centrale);
-// 	// $centrale=$arrCentrale[0];
-// 	// //quand pas mois
-// 	// $month=$strangeMonth[$monthStr];
-// 	// $day=1;
-// 	// $dorisDate=new DateTime($year.'-'.$month.'-'.$day);
-// 	// return array($dorisDate,$centrale);
-// 	return array($dateStr,$name);
-// }
 
 
 
@@ -316,7 +291,7 @@ foreach ($dorisFileList as $filename)
 		{
 		// on récupère les infos du fichiers en passant le filename découpé par - à la fonction
 			list($dorisDate,$centrale)=fileInfos($explodedFilename);
-			echo $filename .'<br>';
+			// echo $filename .'<br>';
 
 			if(!empty($dorisDate) && !empty($centrale))
 			{
