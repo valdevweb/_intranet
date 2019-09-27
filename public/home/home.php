@@ -37,6 +37,8 @@ $nbCompte=getnbCompte($pdoUser);
 
 //recup gazette de la semaine en cours
 $gazettes=showThisWeek($pdoBt);
+
+
 $links=createLinks($pdoBt,$gazettes,$version);
 
 // les 2 dernière gazettes opportunités
@@ -71,7 +73,7 @@ $speHtml="";
 if($gazetteSpe){
 	foreach ($gazetteSpe as $gSpe)
 	{
-		$speHtml .= "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gSpe['file']."'><i class='fa fa-hand-o-right pr-3' aria-hidden='true'></i>" .mb_strtolower($gSpe['title'],'UTF-8') ."</a></li>";
+		$speHtml .= "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gSpe['file']."'><i class='fa fa-hand-o-right pr-3' aria-hidden='true'></i>" .$gSpe['title'] ."</a></li>";
 	}
 }
 

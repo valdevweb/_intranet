@@ -41,8 +41,13 @@
 					<?php foreach ($links as $link): ?>
 						<?= $link ?>
 					<?php endforeach ?>
-					<?= isset($speHtml)? $speHtml: ''?>
 				</ul>
+				<?php if(isset($speHtml)): ?>
+				<p class="text-orange subtitle">LA GAZETTE SPECIALE :</p>
+				<ul class='links'>
+				<?= $speHtml?>
+				</ul>
+				<?php endif	?>
 				<p class="text-orange subtitle">LES GAZETTES SUIVI LIVRAISON CATALOGUE :</p>
 				<ul class='links'>
 					<?= isset($approHtml)? $approHtml: ''?>
