@@ -293,7 +293,12 @@ include('../view/_navbar.php');
 								<select class="form-control" name="type" id="type" onchange='this.form.submit()'>
 									<option value="">type de fichier</option>
 									<?php foreach($types as $type):  ?>
-										<?php $selected=($type['id']==$_POST['type'])? 'selected' :'' ?>
+										<?php
+										$selected='';
+										if(isset($_POST['type'])){
+											$selected=($type['id']==$_POST['type'])? 'selected' :'' ;
+										}
+										?>
 
 										<option value="<?= $type['id']?>" <?= $selected?>><?= $type['name']?></option>
 									<?php endforeach ?>
