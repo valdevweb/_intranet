@@ -52,7 +52,7 @@
 <?php foreach($replies as $reply): ?>
 		<?php
 	//nom de la personne qui a répondu si bt
-		$by=repliedByIntoName($pdoBt,$reply['replied_by']);
+		$by=repliedByIntoName($pdoUser,$reply['replied_by']);
 		if(is_null($by))
 		{
 			$by="";
