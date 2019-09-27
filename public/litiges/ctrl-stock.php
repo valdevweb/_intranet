@@ -395,8 +395,9 @@ include('../view/_navbar.php');
 		<div class="row">
 			<div class="col-1"></div>
 			<div class="col">
-				<form method="post" action="<?=htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>">
-					<?php if (isset($litige)): ?>
+				<?php if (isset($litige)): ?>
+
+					<form method="post" action="<?=htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>">
 						<?php foreach ($litige as $key => $prod): ?>
 							<div class="row pb-3">
 								<div class="col-5">
@@ -458,81 +459,83 @@ include('../view/_navbar.php');
 
 							<?php endif ?>
 						<?php endforeach ?>
-					<?php endif ?>
-					<div class="row">
-						<div class="col">
-							<div class="form-group">
-								<label>Commentaires : </label>
-								<textarea class="form-control" row="3" name="cmt"></textarea>
+						<div class="row">
+							<div class="col">
+								<div class="form-group">
+									<label>Commentaires : </label>
+									<textarea class="form-control" row="3" name="cmt"></textarea>
+								</div>
 							</div>
+
+						</div>
+						<div class="row mb-5">
+							<div class="col text-right"><button class="btn btn-primary" name="submit" type="submit"><i class="fas fa-save pr-3"></i>Enregistrer</button></div>
 						</div>
 
-					</div>
-					<div class="row mb-5">
-						<div class="col text-right"><button class="btn btn-primary" name="submit" type="submit"><i class="fas fa-save pr-3"></i>Enregistrer</button></div>
-					</div>
+					</form>
+					<?php else: ?>
+						<div class="alert alert-primary">Veuillez sélectionner un dossier</div>
+					<?php endif ?>
 
-				</form>
-
+				</div>
+				<div class="col-1"></div>
 			</div>
-			<div class="col-1"></div>
+			<!-- ./container -->
 		</div>
-		<!-- ./container -->
-	</div>
-	<script type="text/javascript">
+		<script type="text/javascript">
 
-		$(".ctrl-ko").click(function () {
-			function createCtrl(article){
-				var ctrlInputs='';
-				ctrlInputs+='<div class="form-group">';
-				ctrlInputs+='<label for="ecart">Ecart constaté (nb colis +/-) : </label>';
-				ctrlInputs+='<input type="text" class="form-control" name="ecart['+article+']" id="ecart" title="chiffres positif ou négatif uniqement" pattern="[-+]?[0-9]*[.]?[0-9]+" required>';
-				ctrlInputs+='</div>';
-				ctrlInputs+='<div class="form-group">';
-				ctrlInputs+='<label for="mvt">Mouvement passé :</label>';
-				ctrlInputs+='<input type="text" class="form-control" name="mvt['+article+']" id="mvt">';
-				ctrlInputs+='</div>';
-				return ctrlInputs;
-			}
-			var article=$(this).attr('data');
-			var ctrlInputs=createCtrl(article);
-			$(".ctrl-ko-"+article).append(ctrlInputs);
+			$(".ctrl-ko").click(function () {
+				function createCtrl(article){
+					var ctrlInputs='';
+					ctrlInputs+='<div class="form-group">';
+					ctrlInputs+='<label for="ecart">Ecart constaté (nb colis +/-) : </label>';
+					ctrlInputs+='<input type="text" class="form-control" name="ecart['+article+']" id="ecart" title="chiffres positif ou négatif uniqement" pattern="[-+]?[0-9]*[.]?[0-9]+" required>';
+					ctrlInputs+='</div>';
+					ctrlInputs+='<div class="form-group">';
+					ctrlInputs+='<label for="mvt">Mouvement passé :</label>';
+					ctrlInputs+='<input type="text" class="form-control" name="mvt['+article+']" id="mvt">';
+					ctrlInputs+='</div>';
+					return ctrlInputs;
+				}
+				var article=$(this).attr('data');
+				var ctrlInputs=createCtrl(article);
+				$(".ctrl-ko-"+article).append(ctrlInputs);
 
-		});
-		$(".ctrl-ok").click(function () {
-			var article=$(this).attr('data');
-			$(".ctrl-ko-"+article).empty();
-		});
+			});
+			$(".ctrl-ok").click(function () {
+				var article=$(this).attr('data');
+				$(".ctrl-ko-"+article).empty();
+			});
 
 
 
-		$(".ctrl-ko-inv").click(function () {
-			function createCtrl(article){
-				var ctrlInputs='';
-				ctrlInputs+='<div class="form-group">';
-				ctrlInputs+='<label for="ecart">Ecart constaté (nb colis +/-) : </label>';
-				ctrlInputs+='<input type="text" class="form-control" name="ecart-inv['+article+']" id="ecart" title="chiffres positif ou négatif uniqement" pattern="[-+]?[0-9]*[.]?[0-9]+" required>';
-				ctrlInputs+='</div>';
-				ctrlInputs+='<div class="form-group">';
-				ctrlInputs+='<label for="mvt">Mouvement passé :</label>';
-				ctrlInputs+='<input type="text" class="form-control" name="mvt-inv['+article+']" id="mvt">';
-				ctrlInputs+='</div>';
-				return ctrlInputs;
-			}
-			var article=$(this).attr('data');
-			var ctrlInputs=createCtrl(article);
-			$(".ctrl-ko-inv-"+article).append(ctrlInputs);
+			$(".ctrl-ko-inv").click(function () {
+				function createCtrl(article){
+					var ctrlInputs='';
+					ctrlInputs+='<div class="form-group">';
+					ctrlInputs+='<label for="ecart">Ecart constaté (nb colis +/-) : </label>';
+					ctrlInputs+='<input type="text" class="form-control" name="ecart-inv['+article+']" id="ecart" title="chiffres positif ou négatif uniqement" pattern="[-+]?[0-9]*[.]?[0-9]+" required>';
+					ctrlInputs+='</div>';
+					ctrlInputs+='<div class="form-group">';
+					ctrlInputs+='<label for="mvt">Mouvement passé :</label>';
+					ctrlInputs+='<input type="text" class="form-control" name="mvt-inv['+article+']" id="mvt">';
+					ctrlInputs+='</div>';
+					return ctrlInputs;
+				}
+				var article=$(this).attr('data');
+				var ctrlInputs=createCtrl(article);
+				$(".ctrl-ko-inv-"+article).append(ctrlInputs);
 
-		});
-		$(".ctrl-ok-inv").click(function () {
-			var article=$(this).attr('data');
-			console.log(article);
+			});
+			$(".ctrl-ok-inv").click(function () {
+				var article=$(this).attr('data');
+				console.log(article);
 
-			$(".ctrl-ko-inv-"+article).empty();
-		});
+				$(".ctrl-ko-inv-"+article).empty();
+			});
 
 
-	</script>
-	<?php
-	require '../view/_footer-bt.php';
-	?>
+		</script>
+		<?php
+		require '../view/_footer-bt.php';
+		?>
