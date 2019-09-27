@@ -100,7 +100,7 @@
 						<p><span class="boldtxt">Dernière réponse le : </span><?= $lastDateRep ?> </p>
 					</div>
 					<div class="col l3">
-						<p><span class="boldtxt">Par : </span><?=  repliedByIntoName($pdoBt,$by) ?> </p>
+						<p><span class="boldtxt">Par : </span><?=  repliedByIntoName($pdoUser,$by) ?> </p>
 						<p>
 					</div>
 

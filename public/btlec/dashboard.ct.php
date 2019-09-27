@@ -126,7 +126,7 @@
 						<p><span class="labelFor">Dernière réponse le : </span><?= $lastDateRep ?> </p>
 					</div>
 					<div class="col l3">
-						<p><span class="labelForSmaller">Par : </span><?=  repliedByIntoName($pdoBt,$by) ?> </p>
+						<p><span class="labelForSmaller">Par : </span><?=  repliedByIntoName($pdoUser,$by) ?> </p>
 						<p>
 					</div>
 
