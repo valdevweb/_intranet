@@ -196,15 +196,15 @@ if(isset($_POST['submit']))
 	{
  	//exemple $_POST['id_detail'][0]=488
 		$key=$_POST['id_detail'][$i];
-
+		$art=$_POST['art'][$key];
+		$descr=$_POST['descr'][$key];
  	// si btn radio sur ko, on récupère les autres champs, sinon non
 		if($_POST['ctrl'][$key]=="no")
 		{
 			$ctrlKo=1;
-			$art=$_POST['art'][$key];
 			$ecart=$_POST['ecart'][$art];
 			$mvt=$_POST['mvt'][$art];
-			$reportAction.='- article ' .$art . ' : ' . $ecart .' pièce(s) - mouvement : '.$mvt .'<br>';
+			$reportAction.='- article ' .$art . ' - '.$descr. ' : ' . $ecart .' pièce(s) - mouvement : '.$mvt .'<br>';
 
 		}
 		else{
@@ -212,8 +212,7 @@ if(isset($_POST['submit']))
 			// 0 pour qu'une mise à jour soit faite sinon la fonction ne renvoie pas 1
 			$ecart=0;
 			$mvt=' ';
-			$art=$_POST['art'][$key];
-			$reportAction.='- article ' .$art . ' : contrôle ok<br>';
+			$reportAction.='- article ' .$art . ' - '.$descr.  ' : contrôle ok<br>';
 		}
 		$majdetail=updateDetail($pdoLitige, $key, $ctrlKo, $ecart,$mvt);
 		// dans le cas d'un inversion d'article, on fait une 2ème maj avec les données de l'article inversé
@@ -221,10 +220,9 @@ if(isset($_POST['submit']))
 			if($_POST['ctrl-inv'][$key]=="no")
 			{
 				$ctrlKo=1;
-				$art=$_POST['art-inv'][$key];
 				$ecart=$_POST['ecart-inv'][$art];
 				$mvt=$_POST['mvt-inv'][$art];
-				$reportAction.='- article ' .$art . ' : ' . $ecart .' pièce(s) - mouvement : '.$mvt .'<br>';
+				$reportAction.='- article ' .$art . ' - '.$descr.  ' : ' . $ecart .' pièce(s) - mouvement : '.$mvt .'<br>';
 
 			}
 			else{
@@ -232,8 +230,7 @@ if(isset($_POST['submit']))
 			// 0 pour qu'une mise à jour soit faite sinon la fonction ne renvoie pas 1
 				$ecart=0;
 				$mvt=' ';
-				$art=$_POST['art'][$key];
-				$reportAction.='- article ' .$art . ' : contrôle ok<br>';
+				$reportAction.='- article ' .$art .  ' - '.$descr. ' : contrôle ok<br>';
 			}
 			$majdetailInv=updateDetailInv($pdoLitige, $key, $ctrlKo, $ecart,$mvt);
 
@@ -422,6 +419,7 @@ include('../view/_navbar.php');
 									</div>
 									<input type="hidden" name="id_detail[]" value="<?=$prod['id_detail']?>">
 									<input type="hidden" name="art[<?=$prod['id_detail']?>]" value="<?=$prod['article']?>">
+									<input type="hidden" name="descr[<?=$prod['id_detail']?>]" value="<?=$prod['descr']?>">
 								</div>
 								<div class="col ctrl-ko-<?=$prod['article']?>"></div>
 							</div>
