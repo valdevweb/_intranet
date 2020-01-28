@@ -25,7 +25,7 @@ function search($pdoBt)
 
 function getMagLitiges($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id, dossier,DATE_FORMAT(date_crea,'%d-%m-%Y')as datecrea, typo, imputation, etat, tablegt.gt, valo, analyse, conclusion, mt_transp, mt_assur, mt_fourn, mt_mag, btlec.sca3.mag, btlec.sca3.btlec, btlec.sca3.centrale  FROM dossiers
+	$req=$pdoLitige->prepare("SELECT dossiers.id as id,dossiers.galec as galec, dossier,DATE_FORMAT(date_crea,'%d-%m-%Y')as datecrea, typo, imputation, etat, tablegt.gt, valo, analyse, conclusion, mt_transp, mt_assur, mt_fourn, mt_mag, btlec.sca3.mag, btlec.sca3.btlec, btlec.sca3.centrale  FROM dossiers
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
 		LEFT JOIN typo ON dossiers.id_typo=typo.id
 		LEFT JOIN imputation ON dossiers.id_imputation=imputation.id
@@ -60,6 +60,37 @@ function getFinance($pdoQlik, $btlec, $year)
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
+
+function getSumDeclare($pdoLitige,$galec,$year){
+	$req=$pdoLitige->prepare("SELECT sum(valo) as sumValo FROM dossiers WHERE galec=:galec AND DATE_FORMAT(date_crea, '%Y')=:year");
+	$req->execute([
+		':galec'		=>$galec,
+		':year'			=>$year
+	]);
+	return $req->fetch(PDO::FETCH_ASSOC);
+
+}
+
+function getMtMag($pdoLitige,$galec,$year){
+	$req=$pdoLitige->prepare("SELECT sum(mt_mag) as sumMtMag FROM dossiers WHERE galec=:galec AND DATE_FORMAT(date_crea, '%Y')=:year");
+	$req->execute([
+		':galec'		=>$galec,
+		':year'			=>$year
+	]);
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+
+function getCoutTotalYear($pdoLitige,$galec,$year){
+	$req=$pdoLitige->prepare("SELECT sum(mt_mag) as mtMag, sum(mt_assur) as mtassur, sum(mt_transp) as mttransp, sum(mt_fourn) as mtfourn FROM dossiers WHERE galec=:galec AND DATE_FORMAT(date_crea, '%Y')=:year");
+	$req->execute([
+		':galec'		=>$galec,
+		':year'			=>$year
+	]);
+	return $req->fetch(PDO::FETCH_ASSOC);
+
+}
+
 
 
 $yearN=date('Y');
@@ -152,6 +183,28 @@ DEBUT CONTENU CONTAINER
 					$financeN=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearN);
 					$financeNUn=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearNUn);
 					$financeNDeux=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearNDeux);
+					// $reclameN=getSumDeclare($pdoBt,$listLitige[0]['galec'],$yearN);
+					$reclameN=getSumDeclare($pdoLitige,$listLitige[0]['galec'],$yearN);
+					$reclameNUn=getSumDeclare($pdoLitige,$listLitige[0]['galec'],$yearNUn);
+					$reclameNDeux=getSumDeclare($pdoLitige,$listLitige[0]['galec'],$yearNDeux);
+
+					$rembourseN=getMtMag($pdoLitige,$listLitige[0]['galec'],$yearN);
+					$rembourseNUn=getMtMag($pdoLitige,$listLitige[0]['galec'],$yearNUn);
+					$rembourseNDeux=getMtMag($pdoLitige,$listLitige[0]['galec'],$yearNDeux);
+
+					$coutN=getCoutTotalYear($pdoLitige,$listLitige[0]['galec'],$yearN);
+					$coutN=$coutN['mtMag']+$coutN['mtfourn']+$coutN['mttransp']+$coutN['mtassur'];
+					$coutNUn=getCoutTotalYear($pdoLitige,$listLitige[0]['galec'],$yearNUn);
+						$coutNUn=$coutNUn['mtMag']+$coutNUn['mtfourn']+$coutNUn['mttransp']+$coutNUn['mtassur'];
+
+					$coutNDeux=getCoutTotalYear($pdoLitige,$listLitige[0]['galec'],$yearNDeux);
+
+					$coutNDeux=$coutNDeux['mtMag']+$coutNDeux['mtfourn']+$coutNDeux['mttransp']+$coutNDeux['mtassur'];
+
+
+
+
+
 					$nbLitiges=count($listLitige);
 					$valoTotal=0;
 					echo '<h3 class="text-center text-main-blue my-3">'.$listLitige[0]['mag'] .'</h3>';
@@ -161,14 +214,38 @@ DEBUT CONTENU CONTAINER
 					echo '<div class="col">';
 					echo '<table class="table text-right table-bordered light-shadow">';
 					echo '<thead class="thead-dark">';
+					echo '<th></th>';
 					echo '<th>'.$yearN.'</th>';
 					echo '<th>'.$yearNUn .'</th>';
 					echo '<th>'.$yearNDeux .'</th>';
 					echo '</thead>';
 					echo '<tbody>';
+					echo '<tr>';
+					echo '<td class="text-main-blue heavy"> Chiffres d\'affaire :</td>';
 					echo '<td>'.number_format((float)$financeN['CA_Annuel'],2,'.',' ').'&euro;</td>';
 					echo '<td>'.number_format((float)$financeNUn['CA_Annuel'],2,'.',' ').'&euro;</td>';
 					echo '<td>'.number_format((float)$financeNDeux['CA_Annuel'],2,'.',' ').'&euro;</td>';
+					echo '</tr>';
+
+					echo '<tr>';
+					echo '<td class="text-main-blue heavy"> Montant réclamé :</td>';
+					echo '<td>'.number_format((float)$reclameN['sumValo'],2,'.',' ').'&euro;</td>';
+					echo '<td>'.number_format((float)$reclameNUn['sumValo'],2,'.',' ').'&euro;</td>';
+					echo '<td>'.number_format((float)$reclameNDeux['sumValo'],2,'.',' ').'&euro;</td>';
+					echo '</tr>';
+					echo '<tr>';
+					echo '<td class="text-main-blue heavy"> Montant remboursé :</td>';
+					echo '<td>'.number_format((float)$rembourseN['sumMtMag'],2,'.',' ').'&euro;</td>';
+					echo '<td>'.number_format((float)$rembourseNUn['sumMtMag'],2,'.',' ').'&euro;</td>';
+					echo '<td>'.number_format((float)$rembourseNDeux['sumMtMag'],2,'.',' ').'&euro;</td>';
+					echo '</tr>';
+
+						echo '<td class="text-main-blue heavy"> Coût BTlec</td>';
+					echo '<td>'.number_format((float)$coutN,2,'.',' ').'&euro;</td>';
+					echo '<td>'.number_format((float)$coutNUn,2,'.',' ').'&euro;</td>';
+					echo '<td>'.number_format((float)$coutNDeux,2,'.',' ').'&euro;</td>';
+					echo '</tr>';
+
 					echo '</tbody>';
 
 					echo '</table>';
@@ -235,9 +312,9 @@ DEBUT CONTENU CONTAINER
 
 				}
 				else
-			{
-				echo '<h5 class="text-red text-center heavy my-5"><i class="fas fa-info-circle pr-3"></i>Pas de dossier litige pour ce magasin</h5>';
-			}
+				{
+					echo '<h5 class="text-red text-center heavy my-5"><i class="fas fa-info-circle pr-3"></i>Pas de dossier litige pour ce magasin</h5>';
+				}
 
 
 
