@@ -82,6 +82,7 @@ function getEquipe($pdoLitige)
 // ---------------------------------
 
 $fLitige=getLitige($pdoLitige);
+
 $coutTotal=$fLitige['mt_transp']+$fLitige['mt_assur']+$fLitige['mt_fourn']+$fLitige['mt_mag'];
 $thisId=$_GET['id'];
 $affretes=getAffrete($pdoLitige);
@@ -257,6 +258,24 @@ function updateVingtQuatre($pdoLitige){
 
 }
 
+
+function updateVingtQuatreEsp($pdoLitige){
+	if(isset($_POST['esp'])){
+		$fast=1;
+	}
+	else{
+		$fast=0;
+	}
+	$req=$pdoLitige->prepare("UPDATE dossiers SET esp=:esp WHERE id= :id");
+	$req->execute(array(
+		':esp'	=>$fast,
+		':id'	=>$_GET['id'],
+));
+	return	$req->rowCount();
+}
+
+
+
 function getInfoMag($pdoBt, $galec)
 {
 	$req=$pdoBt->prepare("SELECT btlec FROM sca3 WHERE galec = :galec");
@@ -287,11 +306,12 @@ function addAction($pdoLitige, $action){
 if(isset($_POST['submit_t']))
 {
 	$majOne=updateVingtQuatre($pdoLitige);
+	$majTwo=updateVingtQuatreEsp($pdoLitige);
 
 
 	$row=addTransp($pdoLitige);
 
-	if($row>0 || $majOne >0)
+	if($row>0 || $majOne >0 || $majTwo >0)
 	{
 		header('Location:bt-info-litige.php?id='.$_GET['id'].'&etatTransp=ok');
 
@@ -566,13 +586,12 @@ DEBUT CONTENU CONTAINER
 
 						</div>
 						<div class="row pb-3">
-							<div class="col-8">
+							<div class="col-3">
 								<div class="form-check pb-3">
 									<?php
 									$isChecked="";
 									$phpClass="hidden";
-									if(isset($fLitige['vingtquatre']) && $fLitige['vingtquatre']==1)
-									{
+									if(isset($fLitige['vingtquatre']) && $fLitige['vingtquatre']==1){
 										$isChecked="checked";
 
 									}
@@ -580,6 +599,21 @@ DEBUT CONTENU CONTAINER
 									?>
 									<input class="form-check-input" type="checkbox" value="" id="vingtquatre" name="vingtquatre"  <?= $isChecked ?>>
 									<label class="form-check-label" for="vingtquatre">livraison 24/48h</label>
+								</div>
+							</div>
+							<div class="col-5">
+								<div class="form-check pb-3">
+									<?php
+									$isChecked="";
+									$phpClass="hidden";
+									if(isset($fLitige['esp']) && $fLitige['esp']==1){
+										$isChecked="checked";
+
+									}
+
+									?>
+									<input class="form-check-input" type="checkbox" value="" id="esp" name="esp"  <?= $isChecked ?>>
+									<label class="form-check-label" for="esp">livraison 24/48h ESP</label>
 								</div>
 							</div>
 							<div class="col">
