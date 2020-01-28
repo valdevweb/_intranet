@@ -20,7 +20,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 function getAllDossier($pdoLitige)
 {
 	$req=$pdoLitige->prepare("
-		SELECT dossiers.id as id_main, dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, etat, transporteur, affrete, transit, CONCAT(prepa.nom,' ', prepa.prenom) as fullprepa, CONCAT(ctrl.nom,' ',ctrl.prenom) as fullctrl,CONCAT(chg.nom,' ',chg.prenom) as fullchg, mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag,
+		SELECT dossiers.id as id_main, dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,DATE_FORMAT(date_cloture, '%d-%m-%Y') as dateclos, user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, etat, transporteur, affrete, transit, CONCAT(prepa.nom,' ', prepa.prenom) as fullprepa, CONCAT(ctrl.nom,' ',ctrl.prenom) as fullctrl,CONCAT(chg.nom,' ',chg.prenom) as fullchg, mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag, esp,
 		details.palette, details.facture, DATE_FORMAT(details.date_facture, '%d-%m-%Y') as datefacture ,details.article, details.ean, details.dossier_gessica, details.descr, details.qte_cde, details.tarif, details.fournisseur, qte_litige, inv_palette, inv_article,inv_descr, inv_tarif, inv_fournisseur,inv_qte, reclamation, id_reclamation, valo,inversion,imputation, typo,analyse, conclusion, valo_line,
 		qte_litige, inv_article,inv_descr, inv_tarif, inv_fournisseur,inv_qte, reclamation, id_reclamation, valo,inversion,imputation, typo,analyse, conclusion
 
@@ -59,11 +59,11 @@ $dossiers=getAllDossier($pdoLitige);
 
 function getPaletteRecu($pdoLitige, $id_dossier)
 {
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main, dossiers.dossier,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, mag, sca3.btlec, dossiers.galec,centrale, etat, vingtquatre,etat_dossier, palette_inv.palette as palette,DATE_FORMAT(details.date_facture, '%d-%m-%Y') as datefacture, palette_inv.article, palette_inv.ean,palette_inv.descr, palette_inv.qte_cde, palette_inv.tarif as valo_line,palette_inv.fournisseur, palette_inv.cnuf,
-CONCAT(prepa.nom,' ', prepa.prenom) as fullprepa, CONCAT(ctrl.nom,' ',ctrl.prenom) as fullctrl,CONCAT(chg.nom,' ',chg.prenom) as fullchg,
- mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag, imputation, typo,analyse, conclusion, transporteur, transit, affrete
+	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main, dossiers.dossier,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,,DATE_FORMAT(date_cloture, '%d-%m-%Y') as dateclos, mag, sca3.btlec, dossiers.galec,centrale, etat, vingtquatre, esp, etat_dossier, palette_inv.palette as palette,DATE_FORMAT(details.date_facture, '%d-%m-%Y') as datefacture, palette_inv.article, palette_inv.ean,palette_inv.descr, palette_inv.qte_cde, palette_inv.tarif as valo_line,palette_inv.fournisseur, palette_inv.cnuf,
+		CONCAT(prepa.nom,' ', prepa.prenom) as fullprepa, CONCAT(ctrl.nom,' ',ctrl.prenom) as fullctrl,CONCAT(chg.nom,' ',chg.prenom) as fullchg,
+		mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag, imputation, typo,analyse, conclusion, transporteur, transit, affrete
 
-	 FROM palette_inv
+		FROM palette_inv
 		LEFT JOIN dossiers ON palette_inv.id_dossier=dossiers.id
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
 		LEFT JOIN transporteur ON id_transp=transporteur.id
@@ -89,6 +89,14 @@ CONCAT(prepa.nom,' ', prepa.prenom) as fullprepa, CONCAT(ctrl.nom,' ',ctrl.preno
 }
 
 
+function nullToZero($value){
+	if($value==null){
+		$value=0;
+	}
+	return $value;
+}
+
+
 //------------------------------------------------------
 //			DECLARATIONS
 //------------------------------------------------------
@@ -111,38 +119,40 @@ $sheet->setCellValue('D1', 'Code BT');
 $sheet->setCellValue('E1', 'Galec');
 $sheet->setCellValue('F1', 'Centrale');
 $sheet->setCellValue('G1', 'Etat');
-$sheet->setCellValue('H1', '24/48h');
-$sheet->setCellValue('I1', 'Soldé');
-$sheet->setCellValue('J1', 'palette');
-$sheet->setCellValue('K1', 'date facture');
-$sheet->setCellValue('L1', 'article');
-$sheet->setCellValue('M1', 'ean');
-$sheet->setCellValue('N1', 'Désignation');
-$sheet->setCellValue('O1', 'Fournisseur');
-$sheet->setCellValue('P1', 'Quantité commandée');
-$sheet->setCellValue('Q1', 'Tarif');
-$sheet->setCellValue('R1', 'Quantité litige');
-$sheet->setCellValue('S1', 'Réclamation');
-$sheet->setCellValue('T1', 'Article reçu');
-$sheet->setCellValue('U1', 'Quantité reçue');
-$sheet->setCellValue('V1', 'EAN / palette reçu');
-$sheet->setCellValue('W1', 'Tarif article reçu');
-$sheet->setCellValue('X1', 'Valo');
-$sheet->setCellValue('Y1', 'Transporteur');
-$sheet->setCellValue('Z1', 'Affreteur');
-$sheet->setCellValue('AA1', 'Transit');
-$sheet->setCellValue('AB1', 'Preparateur');
-$sheet->setCellValue('AC1', 'Contrôleur');
-$sheet->setCellValue('AD1', 'Chargeur');
-$sheet->setCellValue('AE1', 'Réglement Transporteur');
-$sheet->setCellValue('AF1', 'Réglement assurance');
-$sheet->setCellValue('AG1', 'Réglement fournisseur');
-$sheet->setCellValue('AH1', 'Réglement magasin');
-$sheet->setCellValue('AI1', 'Facture magasin');
-$sheet->setCellValue('AJ1', 'Typologie');
-$sheet->setCellValue('AK1', 'Imputation');
-$sheet->setCellValue('AL1', 'Analyse');
-$sheet->setCellValue('AM1', 'Réponse');
+$sheet->setCellValue('H1', 'Date clôture');
+$sheet->setCellValue('I1', '24/48h');
+$sheet->setCellValue('J1', '24/48h ESP');
+$sheet->setCellValue('K1', 'Soldé');
+$sheet->setCellValue('L1', 'palette');
+$sheet->setCellValue('M1', 'date facture');
+$sheet->setCellValue('N1', 'article');
+$sheet->setCellValue('O1', 'ean');
+$sheet->setCellValue('P1', 'Désignation');
+$sheet->setCellValue('Q1', 'Fournisseur');
+$sheet->setCellValue('R1', 'Quantité commandée');
+$sheet->setCellValue('S1', 'Tarif');
+$sheet->setCellValue('T1', 'Quantité litige');
+$sheet->setCellValue('U1', 'Réclamation');
+$sheet->setCellValue('V1', 'Article reçu');
+$sheet->setCellValue('W1', 'Quantité reçue');
+$sheet->setCellValue('X1', 'EAN / palette reçu');
+$sheet->setCellValue('Y1', 'Tarif article reçu');
+$sheet->setCellValue('Z1', 'Valo');
+$sheet->setCellValue('AA1', 'Transporteur');
+$sheet->setCellValue('AB1', 'Affreteur');
+$sheet->setCellValue('AC1', 'Transit');
+$sheet->setCellValue('AD1', 'Preparateur');
+$sheet->setCellValue('AE1', 'Contrôleur');
+$sheet->setCellValue('AF1', 'Chargeur');
+$sheet->setCellValue('AG1', 'Réglement Transporteur');
+$sheet->setCellValue('AH1', 'Réglement assurance');
+$sheet->setCellValue('AI1', 'Réglement fournisseur');
+$sheet->setCellValue('AJ1', 'Réglement magasin');
+$sheet->setCellValue('AK1', 'Facture magasin');
+$sheet->setCellValue('AL1', 'Typologie');
+$sheet->setCellValue('AM1', 'Imputation');
+$sheet->setCellValue('AN1', 'Analyse');
+$sheet->setCellValue('AO1', 'Réponse');
 
 $styleArray = [
 	'font' => [
@@ -204,15 +214,16 @@ $styleArrayAnalyse = [
 	],
 ];
 
-$spreadsheet->getActiveSheet()->getStyle('A1:AL1')->applyFromArray($styleArray);
+$spreadsheet->getActiveSheet()->getStyle('A1:AO1')->applyFromArray($styleArray);
 
-$spreadsheet->getActiveSheet()->getStyle('A1:I1')->applyFromArray($styleArrayDossier);
-$spreadsheet->getActiveSheet()->getStyle('J1:W1')->applyFromArray($styleArrayDetail);
-$spreadsheet->getActiveSheet()->getStyle('X1:Z1')->applyFromArray($styleArrayAutre);
-$spreadsheet->getActiveSheet()->getStyle('AA1:AC1')->applyFromArray($styleArrayEquipe);
-$spreadsheet->getActiveSheet()->getStyle('AD1:AI1')->applyFromArray($styleArrayMontant);
-$spreadsheet->getActiveSheet()->getStyle('AJ1:AM1')->applyFromArray($styleArrayAnalyse);
+$spreadsheet->getActiveSheet()->getStyle('A1:K1')->applyFromArray($styleArrayDossier);
+$spreadsheet->getActiveSheet()->getStyle('L1:Y1')->applyFromArray($styleArrayDetail);
+$spreadsheet->getActiveSheet()->getStyle('Z1:AB1')->applyFromArray($styleArrayAutre);
+$spreadsheet->getActiveSheet()->getStyle('AC1:AE1')->applyFromArray($styleArrayEquipe);
+$spreadsheet->getActiveSheet()->getStyle('AF1:AK1')->applyFromArray($styleArrayMontant);
+$spreadsheet->getActiveSheet()->getStyle('AL1:AO1')->applyFromArray($styleArrayAnalyse);
 
+$dossierW=0;
 
 $row=2;
 foreach ($dossiers as $key => $dossier){
@@ -222,6 +233,14 @@ foreach ($dossiers as $key => $dossier){
 	}else{
 		$vingtquatre='non';
 	}
+
+	if($dossier['esp']==1){
+		$esp='oui';
+	}else{
+		$esp='non';
+	}
+
+
 	// si inversion de palette, il faut aller chercher dans la table palette_inv
 	if($dossier['id_reclamation']==7){
 		$valoLig= $dossier['valo_line'];
@@ -244,6 +263,20 @@ foreach ($dossiers as $key => $dossier){
 
 	}
 
+	if($dossier['id_main']==$dossierW){
+		$mtTransp=0;
+		$mtAssur=0;
+		$mtFourn=0;
+		$mtMag=0;
+	}else{
+
+		$mtTransp=nullToZero($dossier['mt_transp']);
+		$mtAssur=nullToZero($dossier['mt_assur']);
+		$mtFourn=nullToZero($dossier['mt_fourn']);
+		$mtMag=nullToZero($dossier['mt_mag']);
+	}
+
+
 	$solde=($dossier['etat_dossier']==0)?'non':'oui';
 	$sheet->setCellValue('A'.$row, $dossier['dossier']);
 	$sheet->setCellValue('B'.$row, $dossier['datecrea']);
@@ -252,39 +285,42 @@ foreach ($dossiers as $key => $dossier){
 	$sheet->setCellValue('E'.$row, $dossier['galec']);
 	$sheet->setCellValue('F'.$row, $dossier['centrale']);
 	$sheet->setCellValue('G'.$row, $dossier['etat']);
-	$sheet->setCellValue('H'.$row, $vingtquatre);
-	$sheet->setCellValue('I'.$row, $solde);
-	$sheet->setCellValue('J'.$row, $dossier['palette']);
-	$sheet->setCellValue('K'.$row, $dossier['datefacture']);
-	$sheet->setCellValue('L'.$row, $dossier['article']);
-	$sheet->setCellValue('M'.$row, $dossier['ean']);
-	$sheet->setCellValue('N'.$row, $dossier['descr']);
-	$sheet->setCellValue('O'.$row, $dossier['fournisseur']);
-	$sheet->setCellValue('P'.$row, $dossier['qte_cde']);
-	$sheet->setCellValue('Q'.$row, $dossier['tarif']);
-	$sheet->setCellValue('R'.$row, $dossier['qte_litige']);
-	$sheet->setCellValue('S'.$row, $dossier['reclamation']);
-	$sheet->setCellValue('T'.$row, $dossier['inv_article']);
-	$sheet->setCellValue('U'.$row, $dossier['inv_qte']);
-	$sheet->setCellValue('V'.$row, $dossier['inversion']);
-	$sheet->setCellValue('W'.$row, $dossier['inv_tarif']);
-	$sheet->setCellValue('X'.$row, $valoLig);
-	$sheet->setCellValue('Y'.$row, $dossier['transporteur']);
-	$sheet->setCellValue('Z'.$row, $dossier['affrete']);
-	$sheet->setCellValue('AA'.$row, $dossier['transit']);
-	$sheet->setCellValue('AB'.$row, $dossier['fullprepa']);
-	$sheet->setCellValue('AC'.$row, $dossier['fullctrl']);
-	$sheet->setCellValue('AD'.$row, $dossier['fullchg']);
-	$sheet->setCellValue('AE'.$row, $dossier['mt_transp']);
-	$sheet->setCellValue('AF'.$row, $dossier['mt_assur']);
-	$sheet->setCellValue('AG'.$row, $dossier['mt_fourn']);
-	$sheet->setCellValue('AH'.$row, $dossier['mt_mag']);
-	$sheet->setCellValue('AI'.$row, $dossier['fac_mag']);
-	$sheet->setCellValue('AJ'.$row, $dossier['typo']);
-	$sheet->setCellValue('AK'.$row, $dossier['imputation']);
-	$sheet->setCellValue('AL'.$row, $dossier['analyse']);
-	$sheet->setCellValue('AM'.$row, $dossier['conclusion']);
+	$sheet->setCellValue('H'.$row, $dossier['dateclos']);
+	$sheet->setCellValue('I'.$row, $vingtquatre);
+	$sheet->setCellValue('J'.$row, $esp);
+	$sheet->setCellValue('K'.$row, $solde);
+	$sheet->setCellValue('L'.$row, $dossier['palette']);
+	$sheet->setCellValue('M'.$row, $dossier['datefacture']);
+	$sheet->setCellValue('N'.$row, $dossier['article']);
+	$sheet->setCellValue('O'.$row, $dossier['ean']);
+	$sheet->setCellValue('P'.$row, $dossier['descr']);
+	$sheet->setCellValue('Q'.$row, $dossier['fournisseur']);
+	$sheet->setCellValue('R'.$row, $dossier['qte_cde']);
+	$sheet->setCellValue('S'.$row, $dossier['tarif']);
+	$sheet->setCellValue('T'.$row, $dossier['qte_litige']);
+	$sheet->setCellValue('U'.$row, $dossier['reclamation']);
+	$sheet->setCellValue('V'.$row, $dossier['inv_article']);
+	$sheet->setCellValue('W'.$row, $dossier['inv_qte']);
+	$sheet->setCellValue('X'.$row, $dossier['inversion']);
+	$sheet->setCellValue('Y'.$row, $dossier['inv_tarif']);
+	$sheet->setCellValue('Z'.$row, $valoLig);
+	$sheet->setCellValue('AA'.$row, $dossier['transporteur']);
+	$sheet->setCellValue('AB'.$row, $dossier['affrete']);
+	$sheet->setCellValue('AC'.$row, $dossier['transit']);
+	$sheet->setCellValue('AD'.$row, $dossier['fullprepa']);
+	$sheet->setCellValue('AE'.$row, $dossier['fullctrl']);
+	$sheet->setCellValue('AF'.$row, $dossier['fullchg']);
+	$sheet->setCellValue('AG'.$row, $mtTransp);
+	$sheet->setCellValue('AH'.$row, $mtAssur);
+	$sheet->setCellValue('AI'.$row, $mtFourn);
+	$sheet->setCellValue('AJ'.$row, $mtMag);
+	$sheet->setCellValue('AK'.$row, $dossier['fac_mag']);
+	$sheet->setCellValue('AL'.$row, $dossier['typo']);
+	$sheet->setCellValue('AM'.$row, $dossier['imputation']);
+	$sheet->setCellValue('AN'.$row, $dossier['analyse']);
+	$sheet->setCellValue('AO'.$row, $dossier['conclusion']);
 
+	$dossierW=$dossier['id_main'];
 	$row++;
 }
 
@@ -292,7 +328,17 @@ foreach ($dossiers as $key => $dossier){
 if(!empty($listDossierInvPalette)){
 	for ($i=0; $i <count($listDossierInvPalette) ; $i++) {
 		$dossiers=getPaletteRecu($pdoLitige, $listDossierInvPalette[$i]);
-
+		if($dossier['id_main']==$dossierW){
+			$mtTransp=0;
+			$mtAssur=0;
+			$mtFourn=0;
+			$mtMag=0;
+		}else{
+		$mtTransp=nullToZero($dossier['mt_transp']);
+		$mtAssur=nullToZero($dossier['mt_assur']);
+		$mtFourn=nullToZero($dossier['mt_fourn']);
+		$mtMag=nullToZero($dossier['mt_mag']);
+		}
 
 		foreach ($dossiers as $key => $dossier){
 
@@ -300,6 +346,11 @@ if(!empty($listDossierInvPalette)){
 				$vingtquatre='oui';
 			}else{
 				$vingtquatre='non';
+			}
+			if($dossier['esp']==1){
+				$esp='oui';
+			}else{
+				$esp='non';
 			}
 			$vide="";
 			$solde=($dossier['etat_dossier']==0)?'non':'oui';
@@ -310,38 +361,41 @@ if(!empty($listDossierInvPalette)){
 			$sheet->setCellValue('E'.$row, $dossier['galec']);
 			$sheet->setCellValue('F'.$row, $dossier['centrale']);
 			$sheet->setCellValue('G'.$row, $dossier['etat']);
-			$sheet->setCellValue('H'.$row, $vingtquatre);
-			$sheet->setCellValue('I'.$row, $solde);
-			$sheet->setCellValue('J'.$row, $dossier['palette']);
-			$sheet->setCellValue('K'.$row, $dossier['datefacture']);
-			$sheet->setCellValue('L'.$row, $dossier['article']);
-			$sheet->setCellValue('M'.$row, $dossier['ean']);
-			$sheet->setCellValue('N'.$row, $dossier['descr']);
-			$sheet->setCellValue('O'.$row, $dossier['fournisseur']);
-			$sheet->setCellValue('P'.$row, $dossier['qte_cde']);
-			$sheet->setCellValue('Q'.$row, $dossier['valo_line']);
+			$sheet->setCellValue('H'.$row, $dossier['dateclos']);
+			$sheet->setCellValue('I'.$row, $vingtquatre);
+			$sheet->setCellValue('J'.$row, $esp);
+			$sheet->setCellValue('K'.$row, $solde);
+			$sheet->setCellValue('L'.$row, $dossier['palette']);
+			$sheet->setCellValue('M'.$row, $dossier['datefacture']);
+			$sheet->setCellValue('N'.$row, $dossier['article']);
+			$sheet->setCellValue('O'.$row, $dossier['ean']);
+			$sheet->setCellValue('P'.$row, $dossier['descr']);
+			$sheet->setCellValue('Q'.$row, $dossier['fournisseur']);
 			$sheet->setCellValue('R'.$row, $dossier['qte_cde']);
-			$sheet->setCellValue('S'.$row, "Inversion palette");
-			$sheet->setCellValue('T'.$row, $vide);
-			$sheet->setCellValue('U'.$row, $vide);
+			$sheet->setCellValue('S'.$row, $dossier['valo_line']);
+			$sheet->setCellValue('T'.$row, $dossier['qte_cde']);
+			$sheet->setCellValue('U'.$row, "Inversion palette");
 			$sheet->setCellValue('V'.$row, $vide);
 			$sheet->setCellValue('W'.$row, $vide);
-			$sheet->setCellValue('X'.$row, -$dossier['valo_line']);
-			$sheet->setCellValue('Y'.$row, $dossier['transporteur']);
-			$sheet->setCellValue('Z'.$row, $dossier['affrete']);
-			$sheet->setCellValue('AA'.$row, $dossier['transit']);
-			$sheet->setCellValue('AB'.$row, $dossier['fullprepa']);
-			$sheet->setCellValue('AC'.$row, $dossier['fullctrl']);
-			$sheet->setCellValue('AD'.$row, $dossier['fullchg']);
-			$sheet->setCellValue('AE'.$row, $dossier['mt_transp']);
-			$sheet->setCellValue('AF'.$row, $dossier['mt_assur']);
-			$sheet->setCellValue('AG'.$row, $dossier['mt_fourn']);
-			$sheet->setCellValue('AH'.$row, $dossier['mt_mag']);
-			$sheet->setCellValue('AI'.$row, $dossier['fac_mag']);
-			$sheet->setCellValue('AJ'.$row, $dossier['typo']);
-			$sheet->setCellValue('AK'.$row, $dossier['imputation']);
-			$sheet->setCellValue('AL'.$row, $dossier['analyse']);
-			$sheet->setCellValue('AM'.$row, $dossier['conclusion']);
+			$sheet->setCellValue('X'.$row, $vide);
+			$sheet->setCellValue('Y'.$row, $vide);
+			$sheet->setCellValue('Z'.$row, -$dossier['valo_line']);
+			$sheet->setCellValue('AA'.$row, $dossier['transporteur']);
+			$sheet->setCellValue('AB'.$row, $dossier['affrete']);
+			$sheet->setCellValue('AC'.$row, $dossier['transit']);
+			$sheet->setCellValue('AD'.$row, $dossier['fullprepa']);
+			$sheet->setCellValue('AE'.$row, $dossier['fullctrl']);
+			$sheet->setCellValue('AF'.$row, $dossier['fullchg']);
+			$sheet->setCellValue('AG'.$row, $mtTransp);
+			$sheet->setCellValue('AH'.$row, $mtAssur);
+			$sheet->setCellValue('AI'.$row, $mtFourn);
+			$sheet->setCellValue('AJ'.$row, $mtMag);
+			$sheet->setCellValue('AK'.$row, $dossier['fac_mag']);
+			$sheet->setCellValue('AL'.$row, $dossier['typo']);
+			$sheet->setCellValue('AM'.$row, $dossier['imputation']);
+			$sheet->setCellValue('AN'.$row, $dossier['analyse']);
+			$sheet->setCellValue('AO'.$row, $dossier['conclusion']);
+	$dossierW=$dossier['id_main'];
 
 			$row++;
 
@@ -351,7 +405,7 @@ if(!empty($listDossierInvPalette)){
 }
 
  // dimensionnement des colnes
-$cols=['A','B','C','D','E','F','G', 'H', 'I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC', 'AD','AE','AF','AG', 'AH', 'AI','AJ', 'AK', 'AL','AM'];
+$cols=['A','B','C','D','E','F','G', 'H', 'I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC', 'AD','AE','AF','AG', 'AH', 'AI','AJ', 'AK', 'AL','AM', 'AN', 'AO'];
 for ($i=0; $i < sizeof($cols) ; $i++)
 {
 	$sheet->getColumnDimension($cols[$i])->setAutoSize(true);
