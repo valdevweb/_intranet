@@ -61,15 +61,26 @@ function globalSearch($pdoLitige)
 		$reqLivraison= ' AND vingtquatre is NOT NULL';
 	}
 
+	if(isset($_SESSION['esp'])){
+		if($_SESSION['esp']==1){
+			$reqLivraison= ' AND esp=1 ';
+		}elseif($_SESSION['esp']==0){
+			$reqLivraison= ' AND esp='.intval(0);
+		}
+	}
+	else{
+		$reqLivraison= ' AND esp is NOT NULL';
+	}
+
 	if(isset($_SESSION['form-data']['btlec'])){
-			$concatField=" sca3.btlec " ;
+		$concatField=" sca3.btlec " ;
 	}
 
 	if(isset($_SESSION['form-data']['galec'])){
-			$concatField= "dossiers.galec ";
+		$concatField= "dossiers.galec ";
 	}
 
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, valo, etat,ctrl_ok,commission, details.article
+	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, esp, sca3.btlec,vingtquatre, valo, etat,ctrl_ok,commission, details.article
 		FROM dossiers
 		LEFT JOIN details ON dossiers.id=details.id_dossier
 		LEFT JOIN etat ON id_etat=etat.id
@@ -281,6 +292,18 @@ if(isset($_POST['vingtquatre'])){
 	}
 }
 
+if(isset($_POST['esp'])){
+	$_SESSION['esp']=$_POST['esp'];
+	if($_SESSION['esp']==1){
+		$_SESSION['esp-ico']='<div class="d-inline-block pl-3"><img src="../img/litiges/2448esp_ico.png"></div>';
+
+	}elseif($_SESSION['esp']==1){
+		$_SESSION['esp-ico']='<div class="d-inline-block  pl-3"><img src="../img/litiges/2448esp_no_ico.png"></div>';
+
+	}
+}
+
+
 if(isset($_POST['reset-pending'])){
 	unset($_POST['pending']);
 	unset($_SESSION['pending']);
@@ -291,7 +314,11 @@ if(isset($_POST['reset-vingtquatre'])){
 	unset($_SESSION['vingtquatre']);
 	unset($_SESSION['vingtquatre-ico']);
 }
-
+if(isset($_POST['reset-esp'])){
+	unset($_POST['esp']);
+	unset($_SESSION['esp']);
+	unset($_SESSION['esp-ico']);
+}
 $fAllActive=globalSearch($pdoLitige);
 $nbLitiges=count($fAllActive);
 $valoTotal=getSumValo($pdoLitige);
@@ -327,30 +354,30 @@ if(isset($_POST['validate'])){
 }
 if(isset($_POST['chg_pending'])){
 
-foreach ($_POST as $key => $value) {
-	if($key !='chg_pending'){
+	foreach ($_POST as $key => $value) {
+		if($key !='chg_pending'){
 		// recup le nom du champ et le découpe :
 		// pending-box-id-etat
-		$idforcom=explode('-',$key);
-		if($idforcom[2]==1){
-			$etat=0;
-		}else{
-			$etat=1;
-		}
-		$done=updateCommission($pdoLitige,$idforcom[1],$etat);
-		if($done==1){
-			unset($_POST);
-			header("Location: ".$_SERVER['PHP_SELF'],true,303);
+			$idforcom=explode('-',$key);
+			if($idforcom[2]==1){
+				$etat=0;
+			}else{
+				$etat=1;
+			}
+			$done=updateCommission($pdoLitige,$idforcom[1],$etat);
+			if($done==1){
+				unset($_POST);
+				header("Location: ".$_SERVER['PHP_SELF'],true,303);
+			}
 		}
 	}
-}
 
 
 }
 
 // etat des cases à cocher
-	$checkedbt=(isset($_SESSION['form-data']['btlec'])) ? " checked " :"";
-	$checkedgalec=(isset($_SESSION['form-data']['galec']))? " checked " :"";
+$checkedbt=(isset($_SESSION['form-data']['btlec'])) ? " checked " :"";
+$checkedgalec=(isset($_SESSION['form-data']['galec']))? " checked " :"";
 
 $listEtat=getEtat($pdoLitige);
 //------------------------------------------------------
@@ -627,70 +654,108 @@ DEBUT CONTENU CONTAINER
 
 			</div>
 		</div>
+		<div class="row">
+			<div class="col"></div>
+			<div class="col text-right">
+				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
+					<div class="row justify-content-end">
+						<div class="col"></div>
+
+						<div class="col-auto">
+							<p class="text-red heavy"></p>
+						</div>
+
+						<div class="col-auto">
+							<button class="no-btn" type="submit" name="esp" value="1"><img src="../img/litiges/2448esp_ico.png"></button>
+							<button class="no-btn" type="submit" name="esp" value="0"><img src="../img/litiges/2448esp_no_ico.png"></button>
+							<button class="no-btn" type="submit" name="reset-esp" ><img src="../img/litiges/2448esp_reset_ico.png"></button>
+						</div>
+					</div>
+				</form>
+
+			</div>
+
+		</div>
+
+
+
 		<!-- start row -->
 		<div class="row">
 			<div class="col">
 				<form method="post" action=<?=$_SERVER['PHP_SELF']?>>
-				<table class="table border" id="dossier">
-					<thead class="thead-dark smaller">
-						<th class="sortable align-top">Dossier</th>
-						<th class="sortable smaller">Date déclaration</>
-							<th class="sortable align-top">Magasin</th>
-							<th class="sortable align-top">Code BT</th>
-							<th class="sortable align-top">Centrale</th>
-							<th class="sortable align-top">Etat</th>
-							<th class="sortable align-top text-right">Valo</th>
-							<th class="sortable text-center align-top">Ctrl Stock</th>
-							<th class="sortable text-center align-top">Statué</th>
-							<th class="sortable text-center align-top"><input type="checkbox" name="title"></th>
+					<table class="table border" id="dossier">
+						<thead class="thead-dark smaller">
+							<th class="sortable align-top">Dossier</th>
+							<th class="sortable smaller">Date déclaration</>
+								<th class="sortable align-top">Magasin</th>
+								<th class="sortable align-top">Code BT</th>
+								<th class="sortable align-top">Centrale</th>
+								<th class="sortable align-top">Etat</th>
+								<th class="sortable align-top text-right">Valo</th>
+								<th class="sortable text-center align-top">Ctrl Stock</th>
+								<th class="sortable text-center align-top">Statué</th>
+								<th class="sortable text-center align-top"><input type="checkbox" name="title"></th>
 
-							<th class="sortable text-center align-top">24/48h</th>
+								<th class="sortable text-center align-top">24/48h</th>
+								<th class="sortable text-center align-top">Esp</th>
 
-						</tr>
-					</thead>
-					<tbody id="tosort">
-						<?php
-						foreach ($fAllActive as $active)
-						{
-							if($active['vingtquatre']==1)
+							</tr>
+						</thead>
+						<tbody id="tosort">
+							<?php
+							foreach ($fAllActive as $active)
 							{
-								$vingtquatre='<img src="../img/litiges/2448_ico.png">';
+								if($active['vingtquatre']==1)
+								{
+									$vingtquatre='<img src="../img/litiges/2448_ico.png">';
 
-							}
-							else
-							{
-								$vingtquatre="";
-							}
+								}
+								else
+								{
+									$vingtquatre="";
+								}
 
-							if($active['etat']=="Cloturé")
-							{
-								$etat="text-dark-grey";
-							}
-							else
-							{
-								$etat="text-red";
-							}
+								if($active['esp']==1)
+								{
+									$esp='<img src="../img/litiges/2448esp_ico.png">';
 
-							if($active['ctrl_ok']==0){
-								$ctrl='';
-							}
-							elseif($active['ctrl_ok']==1){
-								$ctrl= '<i class="fas fa-boxes text-green"></i>';
-							}
-							elseif($active['ctrl_ok']==2)
-							{
-								$ctrl='<i class="fas fa-hourglass-end text-red"></i>';
-							}
+								}
+								else
+								{
+									$esp="";
+								}
 
 
-							if($active['commission']==0)
-							{
-								$class='pending';
 
-							}
-							else{
-								$class='validated';
-							}
+								if($active['etat']=="Cloturé")
+								{
+									$etat="text-dark-grey";
+								}
+								else
+								{
+									$etat="text-red";
+								}
+
+								if($active['ctrl_ok']==0){
+									$ctrl='';
+								}
+								elseif($active['ctrl_ok']==1){
+									$ctrl= '<i class="fas fa-boxes text-green"></i>';
+								}
+								elseif($active['ctrl_ok']==2)
+								{
+									$ctrl='<i class="fas fa-hourglass-end text-red"></i>';
+								}
+
+
+								if($active['commission']==0)
+								{
+									$class='pending';
+
+								}
+								else{
+									$class='validated';
+								}
 	// <div class="row">
 	// 	<div class="col">
 	// 		<div class="text-center"><i class="fas fa-user-check stamp pending"></i></div><br>
@@ -701,45 +766,46 @@ DEBUT CONTENU CONTAINER
 
 
 
-							echo '<tr class="'.$active['etat_dossier'].'" id="'.$active['id_main'].'">';
-							echo'<td><a href="bt-detail-litige.php?id='.$active['id_main'].'">'.$active['dossier'].'</a></td>';
-							echo'<td>'.$active['datecrea'].'</td>';
-							echo'<td><a href="stat-litige-mag.php?galec='.$active['galec'].'">'.$active['mag'].'</a></td>';
-							echo'<td>'.$active['btlec'].'</td>';
-							echo'<td>'.$active['centrale'].'</td>';
-							echo'<td class="'.$etat.'">'.$active['etat'].'</td>';
-							echo'<td class="text-right">'.number_format((float)$active['valo'],2,'.',' ').'&euro;</td>';
-							echo '<td class="text-center">'.$ctrl .'</td>';
+								echo '<tr class="'.$active['etat_dossier'].'" id="'.$active['id_main'].'">';
+								echo'<td><a href="bt-detail-litige.php?id='.$active['id_main'].'">'.$active['dossier'].'</a></td>';
+								echo'<td>'.$active['datecrea'].'</td>';
+								echo'<td><a href="stat-litige-mag.php?galec='.$active['galec'].'">'.$active['mag'].'</a></td>';
+								echo'<td>'.$active['btlec'].'</td>';
+								echo'<td>'.$active['centrale'].'</td>';
+								echo'<td class="'.$etat.'">'.$active['etat'].'</td>';
+								echo'<td class="text-right">'.number_format((float)$active['valo'],2,'.',' ').'&euro;</td>';
+								echo '<td class="text-center">'.$ctrl .'</td>';
 							// echo '<td class="text-center"><a href="commission-traitement.php?id='.$active['id_main'].'&etat='.$class.'" class="stamps"><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';
-							if($class=='validated'){
+								if($class=='validated'){
 
-								echo '<td class="text-center"><a href="commission-traitement.php?id='.$active['id_main'].'&etat='.$class.'" class="unvalidate"><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';
+									echo '<td class="text-center"><a href="commission-traitement.php?id='.$active['id_main'].'&etat='.$class.'" class="unvalidate"><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';
+								}
+								else{
+									echo '<td class="text-center"><a href="#modal1" data="'.$active['id_main'].'" class="stamps"><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';
+
+								}
+								echo '<td><input type="checkbox" name="pendingbox-'.$active['id_main'].'-'.$active['commission'].'"></td>';
+
+								echo '<td class="text-center">'.$vingtquatre .'</td>';
+								echo '<td class="text-center">'.$esp .'</td>';
+								echo '</tr>';
+
 							}
-							else{
-								echo '<td class="text-center"><a href="#modal1" data="'.$active['id_main'].'" class="stamps"><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';
 
-							}
-							echo '<td><input type="checkbox" name="pendingbox-'.$active['id_main'].'-'.$active['commission'].'"></td>';
-
-							echo '<td class="text-center">'.$vingtquatre .'</td>';
-							echo '</tr>';
-
-						}
-
-						?>
-					</tbody>
-				</table>
+							?>
+						</tbody>
+					</table>
 
 
 
-				<?php if($_SESSION['id_web_user'] ==959 || $_SESSION['id_web_user'] ==981): ?>
+					<?php if($_SESSION['id_web_user'] ==959 || $_SESSION['id_web_user'] ==981): ?>
 
-				<div class="row">
-					<div class="col text-right mr-5">
-						<button type="submit"  class="btn btn-red right mb-5" name="chg_pending"><i class="fas fa-user-check pr-3"></i>Statuer</button>
-					</div>
-				</div>
-				<?php endif	?>
+						<div class="row">
+							<div class="col text-right mr-5">
+								<button type="submit"  class="btn btn-red right mb-5" name="chg_pending"><i class="fas fa-user-check pr-3"></i>Statuer</button>
+							</div>
+						</div>
+					<?php endif	?>
 
 				</form>
 			</div>
