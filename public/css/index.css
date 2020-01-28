@@ -4,15 +4,33 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #1976d2 !important;
+  height:100%;
+  /* background-color: #1976d2 !important; */
+  /* background-color: #0d47A1 !important; */
+  /* background-color: #000 !important; */
+  /* background: linear-gradient(0deg, rgba(34,195,189,1) 0%, rgba(13,71,161,1) 47%, rgba(7,44,101,1) 100%); */
+  /* background: linear-gradient(0deg, rgba(175,119,24,1) 0%, rgba(34,195,189,1) 16%, rgba(13,71,161,1) 33%, rgba(7,44,101,1) 100%); */
+/* background: linear-gradient(0deg, rgba(247,107,10,1) 2%, rgba(34,195,189,1) 10%, rgba(13,71,161,1) 24%, rgba(7,44,101,1) 100%); */
+  background: radial-gradient(ellipse at bottom, #0d47a1 5%, #062350 55%, #020e20 78%);
+
+}
+
+body, html{
+  height:100%;
 }
 .container-fluid{
   padding : 0 !important;
+  height:100%;
 }
 .bg-white{
   background-color: #fff;
 }
 
+.row{
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  width: 99% !important;
+}
 /* -------------------------------------
           titres
  --------------------------------------*/
@@ -224,7 +242,7 @@ input[type="text"].msg::placeholder {
  .modal{
   width:220px !important;
   max-height: 40% !important;
-  top: -200px !important;
+  /* top: -100px !important; */
   height : 25% !important;
 }
 
@@ -240,8 +258,7 @@ input[type="text"].msg::placeholder {
 
 @media all and (max-width : 960px){
   .logo-bt{
-    width: 200px;
-    max-width: : 200px;
+    width: 200px    max-width: : 200px;
   }
 }
 

@@ -82,13 +82,12 @@ function updateTempDossier($pdoLitige,$numDossier){
 
 }
 
-function updateTempDetail($pdoLitige,$idDossier,$numDossier){
+function updateTempDetail($pdoLitige,$numDossier){
 
-	$req=$pdoLitige->prepare("UPDATE details_temp SET id_dossier= :id_dossier, dossier =:dossier WHERE id_dossier= :id");
+	$req=$pdoLitige->prepare("UPDATE details_temp SET dossier =:dossier WHERE id_dossier= :id");
 	$req->execute([
 		':id'		=>$_GET['id'],
 		':dossier'	=>$numDossier,
-		':id_dossier'	=>$idDossier
 	]);
 	return $req->rowCount();
 	// return $req->errorInfo();
@@ -105,6 +104,18 @@ function updateTempInvPalette($pdoLitige,$idDossier){
 
 }
 
+function deleteTempInvPalette($pdoLitige,$idDossier){
+	$req=$pdoLitige->prepare("DELETE FROM palette_inv_temp  WHERE id_dossier= :id_dossier");
+	$req->execute([
+		':idDossier'	=>$idDossier,
+
+	]);
+	return $req->rowCount();
+
+}
+
+
+
 function updateTempDial($pdoLitige,$idDossier){
 	$req=$pdoLitige->prepare("UPDATE dial_temp SET id_dossier= :idDossier WHERE id_dossier= :id");
 	$req->execute([
@@ -116,6 +127,15 @@ function updateTempDial($pdoLitige,$idDossier){
 
 }
 
+function deleteTempDial($pdoLitige,$idDossier){
+	$req=$pdoLitige->prepare("DELETE FROM dial_temp  WHERE id_dossier= :id_dossier");
+	$req->execute([
+		':id_dossier'	=>$idDossier,
+	]);
+	return $req->rowCount();
+	// return $req->errorInfo();
+
+}
 
 
 function copyInvPalette($pdoLitige,$idDossier){
@@ -127,10 +147,22 @@ function copyInvPalette($pdoLitige,$idDossier){
 	return $req->errorInfo();
 }
 
-function copyDetail($pdoLitige,$idDossier){
-	$req=$pdoLitige->prepare("INSERT INTO details( id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inversion, inv_article, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj, ctrl_ko, ecart, mvt, date_ctrl) SELECT  id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inversion, inv_article, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj, ctrl_ko, ecart, mvt,date_ctrl FROM details_temp WHERE details_temp.id_dossier= :id_dossier");
+function copyDetail($pdoLitige,$numDossier){
+	$req=$pdoLitige->prepare("INSERT INTO details( id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inversion, inv_article, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj, ctrl_ko, ecart, mvt, date_ctrl) SELECT  id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inversion, inv_article, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj, ctrl_ko, ecart, mvt,date_ctrl FROM details_temp WHERE details_temp.dossier= :dossier");
 	$req->execute([
-		':id_dossier'	=>$idDossier
+		':dossier'	=>$numDossier
+	]);
+	return $req->rowCount();
+	// return $req->errorInfo();
+
+}
+
+function updateDetail($pdoLitige,$numDossier,$idDossier){
+
+	$req=$pdoLitige->prepare("UPDATE details SET id_dossier =:id_dossier WHERE dossier= :dossier");
+	$req->execute([
+		':id_dossier'		=>$idDossier,
+		':dossier'	=>$numDossier,
 	]);
 	return $req->rowCount();
 	// return $req->errorInfo();
@@ -197,7 +229,7 @@ if(isset($_GET['id']))
 //			Recopie de la base temp vers la base
 //------------------------------------------------------
 // 1-recup le der numDossier de dossier
-// // si on a imposé un numéro de dossier sur la page déclaration basic, on l'a récupéré dans la var de session et affecté à numDossier
+// // si on a imposé un numéro de dossier sur la page déclaration basic, on l'a récupéré dans la var de session et affecté à numDossier au moment de lunset des var de session en haut de la page
 	if(!isset($numDossier)){
 		$numDossier=getLastNumDossier($pdoLitige);
 		$numDossier=$numDossier['dossier'];
@@ -222,12 +254,18 @@ if(isset($_GET['id']))
 // 2-update dossier_temp avec vrai numDossier
 	updateTempDossier($pdoLitige,$numDossier);
 // 3-copy dossier-temp en dossier prod
+// on récupère le vrai id de notre dossier
 	$idDossier=copyDossier($pdoLitige);
+
+
 // 4- update details temp avec id dossier et numDossier
-	$upDetail=updateTempDetail($pdoLitige,$idDossier,$numDossier);
+	$upDetail=updateTempDetail($pdoLitige,$numDossier);
 
 // 5-copie details_temp vers prod
-	$copyDetail=copyDetail($pdoLitige,$idDossier);
+	$copyDetail=copyDetail($pdoLitige,$numDossier);
+	// maj prod detail avec bon id dossier
+	updateDetail($pdoLitige,$numDossier,$idDossier);
+
 // 		echo "<pre>";
 // 		print_r($copyDetail);
 // 		echo '</pre>';
@@ -239,6 +277,8 @@ if(isset($_GET['id']))
 	if($isDial){
 		$upTempDial=updateTempDial($pdoLitige,$idDossier);
 		$copyDial=copyDial($pdoLitige, $idDossier);
+		// delte temp dial
+		 deleteTempDial($pdoLitige,$idDossier);
 	}
 	if($idOuv){
 		updateOuv($pdoLitige,$idDossier,$numDossier, $idOuv);
@@ -250,6 +290,8 @@ if(isset($_GET['id']))
 		$upInvPalette=updateTempInvPalette($pdoLitige,$idDossier);
 // 7- copie palette_inv_temp
 		copyInvPalette($pdoLitige,$idDossier);
+		// delete palette_inv_temp
+		deleteTempInvPalette($pdoLitige, $idDossier);
 		header('Location:declaration-recap.php?id='.$idDossier);
 
 	}

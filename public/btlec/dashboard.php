@@ -25,6 +25,8 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 //----------------------------------------------------
 //			msg non clos
 $msg=ddesMag($pdoBt);
+
+
 //			liste déroulante
 $services=listServices($pdoBt);
 //				recherche du service du user connecté dans l'array services

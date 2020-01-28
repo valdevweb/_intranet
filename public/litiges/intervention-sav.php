@@ -38,15 +38,15 @@ UNSET($_SESSION['goto']);
 
 function getAction($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT libelle, action.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y')as dateFr, pj FROM action WHERE action.id_dossier= :id AND id_contrainte=5 OR id_contrainte=4 ORDER BY date_action");
+	$req=$pdoLitige->prepare("SELECT id, libelle,id_dossier, action.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y')as dateFr, pj FROM action WHERE id_dossier= :id_dossier AND (id_contrainte=5 OR id_contrainte=4) ORDER BY date_action");
 	$req->execute(array(
-		':id'		=>$_GET['id']
+		':id_dossier'		=>$_GET['id']
 
 	));
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 function getLitige($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT DATE_FORMAT(date_crea, '%d-%m-%Y') as dateFr, dossiers.id as mainid, dossiers.dossier, btlec.sca3.mag, btlec.sca3.centrale,btlec.sca3.btlec, details.article,details.descr,details.qte_litige, details.valo_line, reclamation.reclamation, details.inversion,details.qte_cde,details.inv_tarif,details.inv_article,details.inv_descr FROM dossiers LEFT JOIN details ON dossiers.id=details.id_dossier LEFT JOIN reclamation ON details.id_reclamation = reclamation.id LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec WHERE dossiers.id= :id ");
+	$req=$pdoLitige->prepare("SELECT DATE_FORMAT(date_crea, '%d-%m-%Y') as dateFr, dossiers.id as mainid, dossiers.dossier, btlec.sca3.mag, btlec.sca3.centrale,btlec.sca3.btlec, etat_dossier, details.article,details.descr,details.qte_litige, details.valo_line, reclamation.reclamation, details.inversion,details.qte_cde,details.inv_tarif,details.inv_article,details.inv_descr FROM dossiers LEFT JOIN details ON dossiers.id=details.id_dossier LEFT JOIN reclamation ON details.id_reclamation = reclamation.id LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec WHERE dossiers.id= :id ");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 
@@ -97,7 +97,7 @@ function createFileLink($filelist)
 }
 
 if(isset($_POST['id_dossier'])){
-				header('Location:intervention-sav.php?id='.$_POST['id_dossier']);
+	header('Location:intervention-sav.php?id='.$_POST['id_dossier']);
 
 }
 
@@ -105,9 +105,6 @@ if(isset($_GET['id'])){
 	$listAction=getAction($pdoLitige);
 	$thisLitige=getlitige($pdoLitige);
 }
-
-
-
 
 if(isset($_POST['submit'])){
 // vérifie si pièce jointes
@@ -221,7 +218,7 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue pt-5 ">Litige #<?= $thisLitige[0]['dossier']?></h1>
+	<h1 class="text-main-blue pt-5 ">Litige <?= $title=(isset($thisLitige[0]['dossier']))? $thisLitige[0]['dossier'] : '(pas de litige sélectionné)'?></h1>
 	<div class="row">
 		<div class="col"></div>
 		<div class="col-2">
@@ -254,14 +251,15 @@ DEBUT CONTENU CONTAINER
 	<div class="bg-separation"></div>
 	<?php
 	ob_start();
-	 ?>
+	?>
 	<div class="row mb-3 pt-3">
 		<div class="col text-yellow-dark heavy">Détail du litige :</div>
 	</div>
 	<div class="row pb-3">
 		<div class="col"><span class="heavy text-yellow-dark"> Magasin : </span><?= $thisLitige[0]['mag'] .' - '. $thisLitige[0]['btlec'] ?></div>
 		<div class="col"><span class="heavy text-yellow-dark"> Centrale : </span><?=$thisLitige[0]['centrale']?></div>
-		<div class="col text-right"><i class="fas fa-calendar-alt pr-3 text-yellow-dark"></i><?=$thisLitige[0]['dateFr']?></div>
+		<div class="col-3"><span class="heavy text-yellow-dark">Etat :</span> <?= ($thisLitige[0]['etat_dossier']==1) ? 'Dossier clôturé' : 'Dossier en cours'?></div>
+		<div class="col-2 text-right"><i class="fas fa-calendar-alt pr-3 text-yellow-dark"></i><?=$thisLitige[0]['dateFr']?></div>
 	</div>
 	<div class="row">
 		<div class="col">
@@ -367,9 +365,10 @@ DEBUT CONTENU CONTAINER
 					<textarea class="form-control" name="msg" required></textarea>
 				</div>
 				<div id="upload-zone">
-					<label for='incfile'>Ajouter une pièce jointe : </label>
+					<label for='incfile'>Ajouter des pièces jointes :
+					<br><i> (pour ajouter plusieurs fichiers, maintenez la touche ctrl pendant que vous sélectionnez les fichiers)</i>  </label>
 					<input type='file' class='form-control-file' id='incfile' name='incfile[]' multiple="" >
-					<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Envoyer d'autres fichiers</a></p>
+
 					<div id="filelist"></div>
 				</div>
 				<div class="text-right"><button class="btn btn-primary" name="submit"><i class="far fa-envelope pr-3"></i>Envoyer</button></div>
@@ -378,14 +377,14 @@ DEBUT CONTENU CONTAINER
 		<div class="col-2"></div>
 	</div>
 
-<?php
-$html=ob_get_contents();
-ob_end_clean();
-if(isset($_GET['id'])){
-	echo $html;
-}
+	<?php
+	$html=ob_get_contents();
+	ob_end_clean();
+	if(isset($_GET['id'])){
+		echo $html;
+	}
 
- ?>
+	?>
 
 	<!-- ./container -->
 </div>
@@ -396,6 +395,7 @@ if(isset($_GET['id'])){
 		var fileName='';
 		var fileList='';
 		$('input[type="file"]').change(function(e){
+			$('#filelist').empty();
 			var nbFiles=e.target.files.length;
 			for (var i = 0; i < nbFiles; i++)
 			{

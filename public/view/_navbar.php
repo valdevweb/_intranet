@@ -3,7 +3,7 @@
 function isUserAllowed($pdoUser, $params){
 	$session=$_SESSION['id'];
 	$placeholders=implode(',', array_fill(0, count($params), '?'));
-	$req=$pdoUser->prepare("SELECT login FROM attributions WHERE id_droit IN($placeholders) AND id_user=$session" );
+	$req=$pdoUser->prepare("SELECT id_user FROM attributions WHERE id_droit IN($placeholders) AND id_user=$session" );
 	$req->execute($params);
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 
@@ -12,15 +12,15 @@ function isUserAllowed($pdoUser, $params){
 
 
 //determine si un user (id de la table web user appartient à un grou^pe
-function isUserInGroup($pdoBt,$idWebuser,$groupName)
-{
-	$req=$pdoBt->prepare("SELECT * FROM groups WHERE id_webuser= :idWebuser AND group_name= :groupName");
-	$req->execute(array(
-		":idWebuser" =>$idWebuser,
-		":groupName" =>$groupName
-	));
-	return $req->rowCount();
-}
+// function isUserInGroup($pdoBt,$idWebuser,$groupName)
+// {
+// 	$req=$pdoBt->prepare("SELECT * FROM groups WHERE id_webuser= :idWebuser AND group_name= :groupName");
+// 	$req->execute(array(
+// 		":idWebuser" =>$idWebuser,
+// 		":groupName" =>$groupName
+// 	));
+// 	return $req->rowCount();
+// }
 // accès reversement : admin, compta, rev
 $revIds=array(5,7,8);
 $d_rev=isUserAllowed($pdoUser,$revIds);
@@ -56,10 +56,11 @@ $d_tempSav=isUserAllowed($pdoUser,$tempSavIds);
 $magSocamilIds=array(66,5);
 $d_Socamil=isUserAllowed($pdoUser,$magSocamilIds);
 
-$litigeBtIds=array(29,69,78,7);
+$litigeBtIds=array(29,69,78,7,79,80);
 $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 $missionIds=array(78,5);
 $d_mission=isUserAllowed($pdoUser, $missionIds);
+
 
 
 
@@ -103,7 +104,11 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 				<li><a href="<?= ROOT_PATH?>/public/litiges/mag-litige-listing.php">Mes litiges</a></li>
 			</ul>
 		</li>
-
+		<li class='has-sub'><a href="#"><span>Chargé de mission</span></a>
+			<ul>
+				<li><a href="<?= ROOT_PATH?>/public/cm/rdv.php">Vos rendez-vous</a></li>
+			</ul>
+		</li>
 
 		<?php
 		$magNav=ob_get_contents();
@@ -155,7 +160,18 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 				<li><a href="<?= ROOT_PATH?>/public/litiges/stat-litige-mag.php">Réclamations par magasin</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/exploit-ltg.php">Exploitation</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/ctrl-stock.php">Contrôle de stock</a></li>
-				<li><a href="<?= ROOT_PATH?>/public/litiges/intervention-sav.php">Retour SAV</a></li>
+				<?php if (isUserAllowed($pdoUser,[5,80])): ?>
+					<li><a href="<?= ROOT_PATH?>/public/litiges/intervention-commission-sav.php">Retour Commission SAV</a></li>
+				<?php endif ?>
+
+				<?php if (isUserAllowed($pdoUser,[29,5])): ?>
+					<li><a href="<?= ROOT_PATH?>/public/litiges/intervention-sav.php">Retour SAV</a></li>
+				<?php endif ?>
+
+				<?php if (isUserAllowed($pdoUser,[79,5])): ?>
+					<li><a href="<?= ROOT_PATH?>/public/litiges/intervention-achats.php">Retour Service achats</a></li>
+				<?php endif ?>
+
 				<li><a href="<?= ROOT_PATH?>/public/casse/bt-casse-dashboard.php" class="lighter-blue">Traitement casse</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/casse/histo-casse.php" class="lighter-blue">Historique casse</a></li>
 
@@ -244,6 +260,7 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 		$exploitHead="<li class='active has-sub'><a href='".ROOT_PATH. "/public/exploit/connexion.php' ><span>Exploit</span></a>";
 		$exploitStat="<ul><li><a href='".ROOT_PATH."/public/salon/stats-salon-2019.php'><span>Stats Salon 2019</span></a></li>";
 		$exploitStat.="<li><a href='".ROOT_PATH."/public/exploit/connexion.php'><span>Suivi magasins</span></a></li>";
+		$exploitStat.="<li><a href='".ROOT_PATH."/public/exploit/ld-exploit.php'><span>Listes de diffu BTLec</span></a></li>";
 
 		$exploitMore="<li><a href='".ROOT_PATH."/public/doc/flash-validation.php'><span>Suivi des infos flash</span></a></li>";
 		$exploitMore.="<li><a href='".ROOT_PATH."/public/exploit/upload-adh.php'><span>Upload documents Adhérents</span></a></li>";
@@ -282,9 +299,10 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 			//menu conseil
 		if($d_conseil)
 		{
-			$conseilNav="<li class='has-sub'><a href='http://172.30.92.53/".$version."conseil/home.php' class='tooltipped' data-position='bottom' data-tooltip='Réservé adhérents / conseil'><span>adhérents</span></a>";
+			$conseilNav="<li class='has-sub'><a href='http://172.30.92.53/".$version."conseil/home.php' class='tooltipped' data-position='bottom' data-tooltip='Réservé adhérents / conseil'><span>adhérents & pres</span></a>";
 			$conseilNav.="<ul><li><a href='http://172.30.92.53/".$version."conseil/home.php' class='tooltipped' data-position='bottom' data-tooltip='Conseil'><span>Conseil</span></a></li>";
-			$conseilNav.="<li><a href='".ROOT_PATH."/public/exploit/doc-adh.php' class='tooltipped' data-position='bottom' data-tooltip='documents réservés adhérents'><span>Documents</span></a></li></ul>";
+			$conseilNav.="<li><a href='".ROOT_PATH."/public/exploit/doc-adh.php' class='tooltipped' data-position='bottom' data-tooltip='documents réservés adhérents'><span>Documents</span></a></li>";
+			$conseilNav.="<li><a href='".ROOT_PATH."/public/pres/home-pres.php' ><span>Présentations</span></a></li></ul>";
 			$conseilNav.='</li>';
 
 			echo $conseilNav;

@@ -24,3 +24,4 @@ $pdoBt=connectToDb('btlec');
 $pdoSav=connectToDb('sav');
 $pdoLitige=connectToDb('litige');
 $pdoCasse=connectToDb('casse');
+$pdoCm=connectToDb('cm');

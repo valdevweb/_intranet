@@ -27,6 +27,31 @@
 	<?php
 	include('../doc/flash-view.php');
 	?>
+
+<div class="row pb-5 align-items-center">
+	<div class="col-lg-1"></div>
+	<div class="col  py-3 text-center  ">
+		<img class="border border-secondary" src="../img/salon/salon2020.jpg">
+	</div>
+	<div class="col text-main-blue">
+		<h1 class="jump">
+  		<span>S</span>
+  		<span>A</span>
+  		<span>L</span>
+  		<span>O</span>
+  		<span>N</span>
+  		<span>&nbsp;</span>
+  		<span>2</span>
+  		<span>0</span>
+  		<span>2</span>
+  		<span>0</span>
+</h1>
+		<h4>Le salon bazar Technique BTLec Est aura lieu les 9 et 10 juin 2020.<br>Vous retrouverez ici toutes les informations sur votre rendez-vous annuel, très prochainement</h4>
+	</div>
+	<div class="col-lg-1"></div>
+
+</div>
+
 <div class="row pb-5">
 	<div class="col-lg-1"></div>
 

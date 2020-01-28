@@ -1,10 +1,3 @@
-<style type="text/css">
-	h1{
-		color:  blue;
-	}
-</style>
-
-
 <?php
 //------------------------------------------------------
 //			INFOS
@@ -12,114 +5,69 @@
 /*
 Page lancée par tâche planifiée à 18h du lundi au vendredi
 pas d'autoload car :
-- include impossible (doc root point sur le c)
+- include impossible
 - pas de démarrage de session
 
  */
 //------------------------------------------------------
-//			CONNEXION A LA DB
+//			DETECTION ENVIRONNEMENT DEV OU PROD
 //------------------------------------------------------
 $path=dirname(__FILE__);
-if (preg_match('/_btlecest/', $path))
-{
+if (preg_match('/_btlecest/', $path)){
 	$database='_btlec';
+	$prefix='_';
+	$mailingList="valerie.montusclat@btlec.fr";
 }
-else
-{
+else{
 	$database='btlec';
-}
-$host='localhost';
-$username='sql';
-$pwd='User19092017+';
+	$prefix='';
+	$mailingList="btlecest.portailweb.gazettes@btlec.fr";
+	// $mailingList="valerie.montusclat@btlec.fr";
 
-try {
-	$pdoBt=new PDO("mysql:host=$host;dbname=$database", $username, $pwd);
 }
 
-catch(Exception $e)
-{
-	die('Erreur : '.$e->getMessage());
+require_once  'D:\www\\'.$prefix.'intranet\\'.$prefix.'btlecest\vendor\autoload.php';
+
+
+function dbConnect($database){
+	$host='localhost';
+	$username='sql';
+	$pwd='User19092017+';
+	try {
+		$pdoBt=new PDO("mysql:host=$host;dbname=$database", $username, $pwd);
+		return $pdoBt;
+	}
+	catch(Exception $e){
+		die('Erreur : '.$e->getMessage());
+		return false;
+	}
 }
+
+$pdoBt=dbConnect($database);
 
 
 //------------------------------------------------------
-//			date
+//			INIT
 //------------------------------------------------------
 $jours=array("Dimanche","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi");
 $months=array("","janvier", "février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre");
-
 $today= $jours[date('w')] .' '. date('d'). ' ' . $months[date('n')] . ' '. date('Y') ;
-
-
-//------------------------------------------------------
-//			fn mail
-//------------------------------------------------------
-function mailUpdateDoc($mailingList,$subject,$fileList, $today)
-{
-	$content="<html><body style='font-family: helvetica, arial, sans-serif; width :900px;'>";
-	$content.="<table cellspacing='0' cellpadding='0'><tr><td style='width:20px;background-color:#90caf9;'></td><td style='width:20px;background-color:#90caf9;'></td><td style='width:800px; background-color:#90caf9;'>";
-	$content.="<br><p style='font-style:italic; text-align:right'>".$today . "</p><br>";
-	$content.="</td><td style='width:20px;background-color:#90caf9;'></td></tr><tr><td style='background-color:#e3f2fd;'></td><td colspan='2' style='background-color:#e3f2fd;'>";
-	$content.="<br><h2 style='font-weight:normal'>Bonjour,</h2><br>";
-    $content.="<p>Aujourd'hui, sur <a href='http://172.30.92.53/btlecest' target='_blank'>votre portail</a>, vous trouverez : </p><br>";
-	$content.="</td><td style='width:20px;background-color:#e3f2fd;'></td></tr><tr><td style='background-color:#e3f2fd;'></td><td style='background-color:#e3f2fd;'></td><td style='background-color:#90caf9;'>";
-	$content.="<div style = 'padding : 10px;'>";
-    $content .="<ul style='list-style-type:circle'> ";
-    foreach ($fileList as $file) {
-        $content .= "<li>";
-        $content .=$file;
-        $content .= "</li>";
-    }
-    $content .="</ul>";
-    $content .="</div><br><br>";
-    $content .="</td><td style='width:20px;background-color:#e3f2fd;'></td></tr><tr><td style='background-color:#e3f2fd;'></td><td colspan='2' style='background-color:#e3f2fd;'>";
-    $content .="<br><p>Cordialement,</p>";
-    $content .="<p><img src='http://172.30.92.53/_btlecest/public/mail/logo.png' width='180px' height='60px'></p>";
-    $content .= "<p style='color: #f57c00'>BTLec EST - Portail</p><br>";
-    $content .="</td><td style='background-color:#e3f2fd;'></td></tr></table>";
-	$content .="</body></html>";
-    $htmlContent=$content;
-
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-    $headers .= 'From: ne_pas_repondre@btlec.fr>' . "\r\n";
-    $headers .= 'Cc: ' . "\r\n";
-    $headers .= 'Bcc: valerie.montusclat@btlec.fr' . "\r\n";
-
-    if(mail($mailingList,$subject,$htmlContent,$headers))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-
-}
-
-//------------------------------------------------------
-//			INITIALISATION
-//------------------------------------------------------
 //liste des fichiers mis à jour depuis hier 18h
 $fileList=array();
 $deadLine=new DateTime('yesterday 18:00:00');
-	// echo "<pre>";
-	// var_dump($deadLine);
-	// echo '</pre>';
+
 
 //------------------------------------------------------
 //			OPPORTUNITES
 //------------------------------------------------------
 $opp="D:\www\intranet\opportunites\index.html";
-if (file_exists($opp))
-{
+if (file_exists($opp)){
 	$opp=date ('Y-m-d H:i:s', filemtime($opp));
 	$majOpp=new DateTime($opp);
 	if($majOpp > $deadLine)
 	{
 		$fileList[]="de nouvelles alertes promos";
 	}
-
 }
 
 //------------------------------------------------------
@@ -130,8 +78,7 @@ if (file_exists($opp))
 $req=$pdoBt->prepare("SELECT * FROM documents");
 $req->execute();
 $files=$req->fetchAll(PDO::FETCH_ASSOC);
-if($files>=1)
-{
+if($files>=1){
 	foreach ($files as $dbFile) {
 		$docDate=new DateTime($dbFile['date_modif']);
 		if($docDate > $deadLine)
@@ -163,7 +110,7 @@ if($files>=1)
 			}
 			else
 			{
-			$fileList[]=$dbFile['type'];
+				$fileList[]=$dbFile['type'];
 			}
 		}
 	}
@@ -207,8 +154,7 @@ if($files>=1)
 /*     recup date, centrale du nom de fichier */
 /*--------------------------------------------*/
 
-function fileInfos($explodedFilename)
-{
+function fileInfos($explodedFilename){
 	$strangeMonth=array('janv'=>1 ,'févr'=>2 ,'mars'=>3 ,'avr'=>4 ,'mai'=>5 ,'juin'=>6 ,'juil'=>7 ,'aout'=>8 ,	'sept'=>9 ,	'oct'=>10,'nov'=>11,'déc'=>12);
 	$dateStr=$explodedFilename[1];
 	$exDate=explode(' ',$dateStr);
@@ -225,13 +171,7 @@ function fileInfos($explodedFilename)
 	$day=1;
 	$dorisDate=new DateTime($year.'-'.$month.'-'.$day);
 	return array($dorisDate,$centrale);
-
 }
-
-
-
-
-
 
 function addDorisToDb($pdoBt,$filename,$dorisDate,$centrale){
 	$req=$pdoBt->prepare('INSERT INTO doris (filename,date_depot,date_extraction,centrale,id_doc_type) VALUES (:filename,:date_depot,:date_extraction,:centrale,:id_doc_type)');
@@ -245,28 +185,21 @@ function addDorisToDb($pdoBt,$filename,$dorisDate,$centrale){
 	return $result;
 }
 
-function dorisAlreadyInDb($pdoBt, $filename)
-{
+function dorisAlreadyInDb($pdoBt, $filename){
 	$req=$pdoBt->prepare("SELECT * FROM doris  WHERE filename= :filename ");
 	$req->execute(array(
 		'filename'	=>$filename
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
-// function dorisAlreadyInDb($pdoBt)
-// {
-// 	$req=$pdoBt->prepare("SELECT max(date_extraction) as last FROM doris ");
-// 	$req->execute();
-// 	return $req->fetch(PDO::FETCH_ASSOC);
-// }
+
 
 
 $dorisDir="D:\btlec\doris";
 $dorisFileList = scandir($dorisDir);
 $newdoris=0;
 // parcours la liste des fichier du répoertoire doris
-foreach ($dorisFileList as $filename)
-{
+foreach ($dorisFileList as $filename){
 
 	// récup la date de dépot du fichier
 	$fileDate=date ('Y-m-d H:i:s', filemtime($dorisDir.'\\'.$filename));
@@ -279,38 +212,27 @@ foreach ($dorisFileList as $filename)
 	$nePasTraiter=dorisAlreadyInDb($pdoBt, $filename);
 
 
-	if(empty($nePasTraiter))
-	{
-		// echo 'à traiter '. $fileDate . ' '. $filename .'<br>';
-
+	if(empty($nePasTraiter)){
 		// découpe du nom de fichier
 		$explodedFilename=explode('-',$filename);
 		// echo count($explodedFilename) .' :  ' .$filename.'<br>';
 		// les doris exploitable ont seulement 2 tirets  donc fichier découpé en 3
-		if(count($explodedFilename)==3 && $explodedFilename[1]!=" ")
-		{
+		if(count($explodedFilename)==3 && $explodedFilename[1]!=" "){
 		// on récupère les infos du fichiers en passant le filename découpé par - à la fonction
 			list($dorisDate,$centrale)=fileInfos($explodedFilename);
 			// echo $filename .'<br>';
 
-			if(!empty($dorisDate) && !empty($centrale))
-			{
-			$dorisDate=$dorisDate->format('Y-m-d');
-			$result=addDorisToDb($pdoBt,$filename,$dorisDate,$centrale);
-			$newdoris++;
-
+			if(!empty($dorisDate) && !empty($centrale)){
+				$dorisDate=$dorisDate->format('Y-m-d');
+				$result=addDorisToDb($pdoBt,$filename,$dorisDate,$centrale);
+				$newdoris++;
 			}
-
 		}
-
 	}
-
-
 }
 
-if($newdoris>0)
-{
-		$fileList[]="les analyses Doris";
+if($newdoris>0){
+	$fileList[]="les analyses Doris";
 }
 
 
@@ -319,13 +241,38 @@ if($newdoris>0)
 //			si list fichiers non vide => envoi mail
 //------------------------------------------------------
 
-if(count($fileList)!=0)
-{
-	$mailingList="valerie.montusclat@btlec.fr";
-	// $mailingList="btlecest.portailweb.gazettes@btlec.fr";
-	mb_internal_encoding('UTF-8');
-	$subject="Portail BTLec Est - vos infos du jour";
-	$subject = mb_encode_mimeheader($subject);
+if(count($fileList)!=0){
 
-	mailUpdateDoc($mailingList,$subject,$fileList, $today);
+	$htmlfileList="<ul>";
+	for ($i=0;$i<count($fileList);$i++) {
+		$htmlfileList.="<li>".$fileList[$i].'</li>';
+	}
+	$htmlfileList.="</ul>";
+		ob_start();
+		include('mail-daily.html');
+		$htmlMail=ob_get_contents();
+		ob_end_clean();
+	// $htmlMail = file_get_contents('mail-daily.html');
+	$htmlMail=str_replace('{TODAY}',$today,$htmlMail);
+	$htmlMail=str_replace('{FILELIST}',$htmlfileList,$htmlMail);
+	$subject='Portail BTLec Est - vos infos du jour';
+
+// ---------------------------------------
+// initialisation de swift
+	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+	$mailer = new Swift_Mailer($transport);
+	$message = (new Swift_Message($subject))
+	->setBody($htmlMail, 'text/html')
+	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+	->setTo($mailingList)
+	->addBcc('valerie.montusclat@btlec.fr');
+
+	if (!$mailer->send($message, $failures)){
+
+	}else{
+		$success[]="mail envoyé avec succés";
+
+
+	}
+
 }

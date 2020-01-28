@@ -49,9 +49,12 @@ if(isset($_POST['connexion']))
 
 	extract($_POST);
 	$err=login($pdoUser, $pdoBt, $pdoSav);
+
+
 	$action="user authentification";
 	$page=basename(__file__);
-	authStat($pdoStat,$page,$action, $err[0]);
+	addRecord($pdoStat,$page,$action, $err[0]);
+
 	if($err[0]=="user authentifié")
 	{
 		// echo $pwd;
@@ -73,6 +76,7 @@ if(isset($_POST['connexion']))
 // 	]);
 
 // }
+
 
 
 
@@ -123,6 +127,7 @@ if(!empty($revRes))
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<link rel="stylesheet" href="public/css/index.css?<?= filemtime('public/css/index.css');?>">
+	<link rel="stylesheet" href="public/css/xmas.css">
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.css">
@@ -133,21 +138,23 @@ if(!empty($revRes))
 	<title>Connexion - portail Btlec Est</title>
 </head>
 <body>
-	<div class="container-fluid text-center">
+	<div class="container-fluid text-center sky">
 
 		<div class="row">
-			<!-- carte centrales -->
+
 			<div class="col-sm-12 col-lg-6">
 				<p class="text-center mt-5"><img id="img-france" src="public/img/index/france-new.png"></p>
-				<h3 class="center">BTLEC, c'est aussi des structures SAV :</h3>
+				<h3 class="center text-white">BTLEC, c'est aussi des structures SAV :</h3>
 				<br>
 				<p class="center"><a href="http://scapsav.fr/"><img class="shadow" src="public/img/logos/sav-logo-200.jpg"></a></p>
 				<p>&nbsp;</p>
 			</div>
+
+
 			<!-- photo bt -->
 			<div class="col-sm-12 col-lg-6">
 				<h1>BTLec Est - Centrale d'Achat</h1>
-				<h3 class="my-4 pb-3">Bazar Technique E.Leclerc </h3>
+				<h3 class="my-4 text-white pb-3">Bazar Technique E.Leclerc </h3>
 				<p><img id="photo-bt" class="boxshadow" src="public/img/index/front-bt-800.jpg"></p>
 				<?php
 				if(!empty($err)){
@@ -158,19 +165,29 @@ if(!empty($revRes))
 				}
 				?>
 				<!-- flashs info -->
-				<div class="row infos mt-5">
+				<div class="row align-items-center infos mt-5">
 					<div class="col">
-						<hr>
+						<!-- <div class="slide"><h1 class="text-white">Le salon BTLec Est 2020 </h1></div> -->
+							<h3  class="text-white">SALON 2020</h3>
+						<p class="text-center"><img class="salon-img"  src="public/img/salon/date_anim.gif"></p>
+						<p class="text-white appear">Cette année, le salon aura lieu  mardi 9 et mercredi 10 juin</p>
+
 					</div>
+
 				</div>
-			<!-- 	<div class="row infos">
+
+				<!-- <div class="row infos">
 					<div class="col-1"></div>
 					<i class="pin"></i>
 					<div class="col px-5 inside-infos">
 						<p class="center-text pt-2"><i class="fa fa-bell fa-lg" aria-hidden="true"></i></p>
-						<h4 class="orange-text text-darken-3 text-center">Date des reversements</h4>
-						<p class="text-center">(à l'attention des services comptabilité)</p>
-						<p class="text-left">Vous pouvez retrouver les dates des virements avec le type de reversement dans le menu : documents/Compta/reversements</p>
+						<h4 class="orange-text text-darken-3 text-center">INFORMATION LIVRAISON - IMPORTANT</h4>
+
+						<p class="text-left">Compte tenu des informations à notre disposition à cet instant, nous vous informons que les commandes 24/48h00 des mercredi  4 et jeudi 5 décembre sont supprimées.
+En fonction de l'évolution de la situation nous vous informerons sur le traitement ou non des commandes du vendredi 6 décembre.
+
+
+Concernant les livraisons hebdomadaires magasins, nous n'avons pas à l'heure actuelle de confirmation de point de blocage. Par conséquent, nous aviserons en fonction des remontées d'information que nous aurons.</p>
 					</div>
 					<div class="col-1"></div>
 				</div> -->
@@ -261,7 +278,17 @@ if(!empty($revRes))
 		// ouverture fenetre modal en auto : dernier modal s'ouvre en 1er
 		$('#connexion').modal();
 		$('#connexion').modal('open');
+
+
+
+
+
+
+
 	});
+
+
+
 </script>
 
 

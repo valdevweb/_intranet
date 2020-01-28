@@ -1,0 +1,68 @@
+.test{
+color:  red;
+}
+
+#hidden-field{
+	display: none !important;
+}
+
+.bggrey{
+    background-color: #ddd;
+
+}
+.bgwhite{
+    background-color: #fff;
+}
+.int-padding{
+    padding: 20px;
+}
+
+tr, td, th{
+	padding : 0 2px !important;
+	/* padding-bottom: 0 !important; */
+	/* color: red !important; */
+}
+
+#tableconnexion td:nth-child(n+4){
+	width:  24px !important;
+	border-left: 1px #ccc solid;
+	border-right: 1px #ccc solid;
+	text-align: center !important;
+
+}
+
+#tableconnexion td:nth-child(1){
+	width:  150px !important;
+
+}
+
+#tableservice td:nth-child(1){
+	width:  90px !important;
+}
+
+
+#tableservice td:nth-child(n+1){
+	width:  8% !important;
+}
+/* .nopadding td{
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	color: red !important;
+}
+
+.nopadding tr{
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	color: red !important;
+}
+ */
+#chartServices-license-text{
+	display: none !important;
+}
+
+
+.bgblue{
+	background-color: #1565c0;
+	padding: 20px;
+}
+

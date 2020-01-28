@@ -17,6 +17,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 require_once '../../vendor/autoload.php';
 require '../../Class/Uploader.php';
 require '../../Class/MagHelpers.php';
+require '../../Class/Helpers.php';
 
 
 //---------------------------------------
@@ -97,13 +98,19 @@ if(isset($_POST['clos'])){
 	$uploader   =   new Uploader();
 	$uploader->setDir('..\..\..\upload\casse\\');
 	$uploader->allowAllFormats();
-	$uploader->setMaxSize(.5);                          //set max file size to be allowed in MB//
+	$uploader->setMaxSize(5);
+	//                      //set max file size to be allowed in MB//
 
 	if($uploader->uploadFile('file')){
 		$file =$uploader->getUploadName();
+
+
 	}
 	else{//upload failed
 		$errors[]=$uploader->getMessage();
+			echo "<pre>";
+			print_r($errors);
+			echo '</pre>';
 	}
 
 	$added=addFacDate($pdoCasse);
@@ -189,7 +196,13 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Clôture de l'expédition n°<?=$_GET['id']?></h1>
+	<div class="row">
+	<div class="col">
+		<h1 class="text-main-blue py-5 ">Clôture de l'expédition n°<?=$_GET['id']?></h1>
+	</div>
+
+		<div class="col"><?=Helpers::returnBtn('bt-casse-dashboard.php')?></div>
+	</div>
 
 	<div class="row">
 		<div class="col-lg-1"></div>

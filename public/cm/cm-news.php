@@ -26,9 +26,7 @@ addRecord($pdoStat,basename(__file__),'consultation', "fil actu chargé de missi
 
 $req=$pdoBt->query("SELECT *, DATE_FORMAT(date_upload, '%d-%m-%Y') as dateupload FROM doc_cm ORDER BY id DESC LIMIT 5");
 $news=$req->fetchAll(PDO::FETCH_ASSOC);
-echo "<pre>";
-print_r($news);
-echo '</pre>';
+
 
 
 

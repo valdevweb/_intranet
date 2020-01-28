@@ -2,7 +2,20 @@
 /* .container a:visited {color: gray !important;} */
 .container a:hover {font-weight: bold !important;}
 
+@keyframes radial-pulse {
+  0% {
+    color: #ef6c00;
+  }
 
+  100% {
+    color: #fff;
+
+  }
+}
+
+.pj{
+    animation: radial-pulse 1s infinite;
+}
 
 .reply{
   border: solid 1px #e0e0e0 ;
@@ -32,7 +45,7 @@
 .frm
 {
 	background-color: #fff;
-  	padding: 40px !important;
+ padding: 40px !important;
 
 }
 
@@ -44,7 +57,7 @@
 }
 
 .fa.fa-hand-o-right {
-    padding-right: 20px;
+  padding-right: 20px;
 }
 
 /* hr {
@@ -52,15 +65,15 @@
     margin: 0.8em auto 1.4em auto !important;
     position: relative !important;
 }
- */
+*/
 hr {
-    width: 50% !important;
-    display: block !important;
-    height: 1px !important;
-    border: 0 !important;
-    border-top: 1px solid #0D47A1 !important;
-    margin: 0.6em 0 0 0 !important;
-    padding: 0 !important;
+  width: 50% !important;
+  display: block !important;
+  height: 1px !important;
+  border: 0 !important;
+  border-top: 1px solid #0D47A1 !important;
+  margin: 0.6em 0 0 0 !important;
+  padding: 0 !important;
 }
 
 
@@ -71,11 +84,11 @@ hr {
   font-weight: 400;
   src: url('../../vendor/fonts/khand-v6-latin-regular.eot'); /* IE9 Compat Modes */
   src: local('Khand Regular'), local('Khand-Regular'),
-       url('../../vendor/fonts/khand-v6-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../../vendor/fonts/khand-v6-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../../vendor/fonts/khand-v6-latin-regular.woff') format('woff'), /* Modern Browsers */
-       url('../../vendor/fonts/khand-v6-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../../vendor/fonts/khand-v6-latin-regular.svg#Khand') format('svg'); /* Legacy iOS */
+  url('../../vendor/fonts/khand-v6-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../../vendor/fonts/khand-v6-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+  url('../../vendor/fonts/khand-v6-latin-regular.woff') format('woff'), /* Modern Browsers */
+  url('../../vendor/fonts/khand-v6-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('../../vendor/fonts/khand-v6-latin-regular.svg#Khand') format('svg'); /* Legacy iOS */
 }
 
 
@@ -104,13 +117,13 @@ textarea{
 
 input[type="checkbox"]
 {
-line-height: inherit !important;
-vertical-align: bottom;
+  line-height: inherit !important;
+  vertical-align: bottom;
 }
 
 
 label {
-    font-size: 1rem !important;
-    color: #000 !important;
+  font-size: 1rem !important;
+  color: #000 !important;
 
 }

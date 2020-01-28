@@ -127,6 +127,14 @@ function getOperateur($pdoLitige){
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
+function getThisAction($pdoLitige){
+	$req=$pdoLitige->prepare("SELECT * FROM action WHERE id_dossier= :id_dossier AND id_contrainte=2");
+	$req->execute([
+		':id_dossier'		=>$_GET['id']
+	]);
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
 // SELECT * FROM (SELECT * FROM action WHERE id_contrainte=2 || id_contrainte=1 ORDER BY id_dossier ASC, id_contrainte ASC) sousreq GROUP BY id_dossier
 
 
@@ -176,6 +184,9 @@ if(isset($_GET['id']))
 	$litige=getlitige($pdoLitige);
 	$analyse=getanalyse($pdoLitige);
 	$infos=getInfos($pdoLitige);
+	$actionList=getThisAction($pdoLitige);
+
+
 }
 $reportAction=$art=$ctrlKo=$ecart=$mvt="";
 
@@ -217,12 +228,16 @@ if(isset($_POST['submit']))
 		$majdetail=updateDetail($pdoLitige, $key, $ctrlKo, $ecart,$mvt);
 		// dans le cas d'un inversion d'article, on fait une 2ème maj avec les données de l'article inversé
 		if(isset($_POST['art-inv'][$key])){
+			$artInv=$_POST['art-inv'][$key];
+
+			$descrInv=$_POST['descr-inv'][$key];
+
 			if($_POST['ctrl-inv'][$key]=="no")
 			{
 				$ctrlKo=1;
-				$ecart=$_POST['ecart-inv'][$art];
-				$mvt=$_POST['mvt-inv'][$art];
-				$reportAction.='- article ' .$art . ' - '.$descr.  ' : ' . $ecart .' pièce(s) - mouvement : '.$mvt .'<br>';
+				$ecart=$_POST['ecart-inv'][$artInv];
+				$mvt=$_POST['mvt-inv'][$artInv];
+				$reportAction.='- article ' .$artInv . ' - '.$descrInv.  ' : ' . $ecart .' pièce(s) - mouvement : '.$mvt .'<br>';
 
 			}
 			else{
@@ -230,7 +245,7 @@ if(isset($_POST['submit']))
 			// 0 pour qu'une mise à jour soit faite sinon la fonction ne renvoie pas 1
 				$ecart=0;
 				$mvt=' ';
-				$reportAction.='- article ' .$art .  ' - '.$descr. ' : contrôle ok<br>';
+				$reportAction.='- article ' .$artInv .  ' - '.$descrInv.  ' : ' . ' : contrôle ok<br>';
 			}
 			$majdetailInv=updateDetailInv($pdoLitige, $key, $ctrlKo, $ecart,$mvt);
 
@@ -263,7 +278,14 @@ if(isset($_POST['submit']))
 		if(empty($operateur)){
 			$operateur['fullname']='operateur inconnu';
 		}
+		if(VERSION=='_'){
+			$dest[]='valerie.montusclat@btlec.fr';
 
+		}
+		else{
+			$dest[]='btlecest.portailweb.logistique@btlec.fr';
+
+		}
 		$htmlMail = file_get_contents('mail-bt-ctrl-stock-ok.php');
 		$htmlMail=str_replace('{DOSSIER}',$litige[0]['dossier'],$htmlMail);
 		$htmlMail=str_replace('{CODEBT}',$litige[0]['btlec'],$htmlMail);
@@ -280,8 +302,7 @@ if(isset($_POST['submit']))
 		->setBody($htmlMail, 'text/html')
 
 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail SAV Leclerc'))
-		->setTo(array('btlecest.portailweb.logistique@btlec.fr'))
-		// ->setTo(array('valerie.montusclat@btlec.fr'))
+		->setTo($dest)
 		// ->addCc($copySender['email'])
 		->addBcc('valerie.montusclat@btlec.fr');
 		// ->attach($attachmentPdf)
@@ -293,15 +314,20 @@ if(isset($_POST['submit']))
 		$delivered=$mailer->send($message);
 		if($delivered !=0)
 		{
-			$success[]="Vos informations ont bien été enregistrées, un mail récapitulatif a été envoyé";
-
+			$success='?id='.$_GET['id'].'&success';
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF'].$success,true,303);
 		}
 
 	}
 
+}
 
+if(isset($_GET['success'])){
+	$success[]="Vos informations ont bien été enregistrées, un mail récapitulatif a été envoyé";
 
 }
+
 
 //------------------------------------------------------
 //			FONCTION
@@ -393,6 +419,9 @@ include('../view/_navbar.php');
 			<div class="col-1"></div>
 			<div class="col">
 				<?php if (isset($litige)): ?>
+					<?php foreach ($actionList as $key => $action): ?>
+						<div class="alert alert-danger"><?=$action['libelle']?></div>
+					<?php endforeach ?>
 
 					<form method="post" action="<?=htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>">
 						<?php foreach ($litige as $key => $prod): ?>
@@ -447,8 +476,10 @@ include('../view/_navbar.php');
 											<input class="form-check-input ctrl-ko-inv" type="radio" name="ctrl-inv[<?=$prod['id_detail']?>]" id="<?=$prod['id_detail']?>" value="no" data="<?=$prod['inv_article']?>" required>
 											<label class="form-check-label text-red" for="ctrl">ko</label>
 										</div>
-										<input type="hidden" name="id_detail_inv[]" value="<?=$prod['id_detail']?>">
+										<input type="hidden" name="id_detail_inv[<?=$prod['id_detail']?>]" value="<?=$prod['id_detail']?>">
 										<input type="hidden" name="art-inv[<?=$prod['id_detail']?>]" value="<?=$prod['inv_article']?>">
+										<input type="hidden" name="descr-inv[<?=$prod['id_detail']?>]" value="<?=$prod['inv_descr']?>">
+
 									</div>
 									<div class="col ctrl-ko-inv-<?=$prod['inv_article']?>"></div>
 								</div>

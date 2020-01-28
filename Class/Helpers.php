@@ -2,23 +2,11 @@
 
 class Helpers{
 
-	/**
-	 * lien btn retour
-	 * @var string
-	 */
+
 	private $page;
-	/**
-	 * couleur btn retour optionnel
-	 * @var string
-	 */
+
 	private $color;
 
-	/**
-	 * création btn retour type
-	 * @param  string $page
-	 * @param  string $color optionnel
-	 * @return string
-	 */
 	public static function returnBtn($page,$color=null)
 	{
 
@@ -35,5 +23,26 @@ class Helpers{
             return $chiffre;
         }
     }
+
+	public static function sanitize($str){
+//convertit les caractères éligible en entités html
+		$str = htmlentities($str);
+//supprime anti-slash
+		$str= stripslashes($str);
+//Supprime les balises HTML et PHP d'une chaîne
+		$str = strip_tags($str);
+//supprime espace deb et fin chaine
+		$str= trim($str);
+		return $str;
+	}
+
+public static function separateurAuto($sep,$array,$lig){
+		if(count($array)==$lig +1){
+			return '';
+		}else{
+			return $sep;
+		}
+	}
+
 
 }

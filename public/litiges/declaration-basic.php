@@ -352,6 +352,9 @@ if(isset($_POST['choose']))
 			$numDossier=9999;
 
 			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId, $idRobbery);
+				echo "<pre>";
+					print_r($lastInsertId);
+					echo '</pre>';
 
 		}
 	// créa du dossier (sans numéro officiel pour l'instant)
@@ -421,6 +424,9 @@ if(isset($_POST['choose']))
 				$pul=null;
 
 			}
+				echo "<pre>";
+				print_r($lastInsertId);
+				echo '</pre>';
 
 			$detail=addDetails($pdoLitige, $lastInsertId,$numDossier,$art['palette'],$art['facture'],$dateFact, $art['article'], $art['gencod'],$art['dossier'], $art['libelle'], $art['qte'],$art['tarif'], $art['fournisseur'], $art['cnuf'],$tete,$detailbox,$puv,$pul );
 			if($detail>0)
@@ -575,7 +581,7 @@ DEBUT CONTENU CONTAINER
 						<?php
 						if(empty($dataSearch))
 						{
-							echo '<p>La palette que vous recherchez n\'a pas été trouvée. Elle ne vous était pas destinée ? Veuillez vous rendre sur <a href="declaration-horsqlik.php">cette page</a></p>';
+							echo '<p>La palette que vous recherchez n\'a pas été trouvée ? Elle ne vous était pas destinée ? Veuillez vous rendre sur <a href="declaration-horsqlik.php">cette page</a></p>';
 						}
 						elseif(!empty($dataSearch))
 						{
@@ -705,7 +711,7 @@ DEBUT CONTENU CONTAINER
 						<div class="col-4">
 							<div class="alert alert-light ">
 								<div class="form-group pt-2">
-									<input type="date" class="form-control" name="date_bt">
+									<input type="date" class="form-control" name="date_bt" value="<?= date('Y-m-d')?>">
 								</div>
 							</div>
 						</div>

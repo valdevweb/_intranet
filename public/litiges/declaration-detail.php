@@ -103,9 +103,9 @@ $fMotif=getReclamation($pdoLitige);
 
 function getProdInversion($pdoQlik,$ean)
 {
-	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges WHERE gencod LIKE :inversion ORDER BY date_mvt DESC");
+	$req=$pdoQlik->prepare("SELECT id,`GESSICA.CodeArticle` as article,`GESSICA.CodeDossier` as dossier,`GESSICA.LibelleArticle` as libelle,`GESSICA.PFNP` AS pfnp,`GESSICA.PCB` as pcb,`GESSICA.NomFournisseur` as fournisseur FROM basearticles WHERE `GESSICA.Gencod` LIKE :inversion ORDER BY `GESSICA.CodeDossier`");
 	$req->execute(array(
-		':inversion'	=>$ean
+		':inversion'	=>'%'.$ean.'%'
 	));
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -183,7 +183,7 @@ if(isset($_POST['submit']))
 		if(count($errors)==0)
 		{
 			// cas d'une inversion de réf
-			if($_POST['form_motif'][$i]==5)
+			if($_POST['form_motif'][$i]==5 || ($_POST['form_motif'][$i]==8 && (!empty($_POST['form_autre_qte'][$i]) && !empty($_POST['form_autre'][$i]))) )
 			{
 				// si formulaire rempli
 				if(!empty($_POST['form_autre_qte'][$i]) && !empty($_POST['form_autre'][$i]))
@@ -191,7 +191,7 @@ if(isset($_POST['submit']))
 					// cas de l'inversion de référence (5)
 					$ean=$_POST['form_autre'][$i];
 					$invQte=$_POST['form_autre_qte'][$i];
-				// recup info du produit reçu à la place
+				// recup info du produit reçu à la place => base statsventelitige !!! or ça devrait être la base article
 					$listProdInv=getProdInversion($pdoQlik,$ean);
 
 				// si on trouve la réf qui a été livrée à la place
@@ -204,11 +204,11 @@ if(isset($_POST['submit']))
 							{
 								$invArticle=$prodInv['article'];
 								$invDescr=$prodInv['libelle'];
-								$invTarif=$prodInv['tarif'];
+								$invTarif=$prodInv['pfnp'];
 								$invFournisseur=$prodInv['fournisseur'];
-								$qt_qlik=$prodInv['qte'];
+								$pcb=$prodInv['pcb'];
 								$invDossier=$prodInv['dossier'];
-								$tarifUv=$invTarif/$qt_qlik;
+								$tarifUv=$invTarif/$pcb;
 								break;
 							}
 						// si trouvé en dehors du 1000
@@ -216,17 +216,17 @@ if(isset($_POST['submit']))
 							{
 								$invArticle=$prodInv['article'];
 								$invDescr=$prodInv['libelle'];
-								$invTarif=$prodInv['tarif'];
+								$invTarif=$prodInv['pfnp'];
 								$invFournisseur=$prodInv['fournisseur'];
-								$qt_qlik=$prodInv['qte'];
+								$pcb=$prodInv['pcb'];
 								$invDossier=$prodInv['dossier'];
-								$tarifUv=$invTarif/$qt_qlik;
+								$tarifUv=$invTarif/$pcb;
 								break;
 							}
 						// si pas trouvé
 							else
 							{
-								$invArticle=$invDescr=$invTarif=$invFournisseur=$qt_qlik=$invDossier=$tarifUv=NULL;
+								$invArticle=$invDescr=$invTarif=$invFournisseur=$pcb=$invDossier=$tarifUv=NULL;
 
 							}
 						}
@@ -236,12 +236,18 @@ if(isset($_POST['submit']))
 					else
 					{
 					// ean non trouvé :
-						$invArticle=$invDescr=$invTarif=$invFournisseur=$qt_qlik=$invDossier=$tarifUv=$valoLig=NULL;
+						$invArticle=$invDescr=$invTarif=$invFournisseur=$pcb=$invDossier=$tarifUv=$valoLig=NULL;
 					}
 
-
+					//maj du 03/12/2019 : mag ne font pas de déclaration d'inversion de réf mais déclarent des manquants et
+					//ajoutent en commentaire la réf en excédent
+					//on ajoute donc les zones de saisies inv de réf pour les manquants
+					//si c'est vide, ça reste un manquant, sinon
+					//on les traite comme des inversion de ref
+					//on force donc l'id motif à inversion de référence
+					$idmotif=5;
 				// article trouvé ou non , on met à jour la db avec des champ null si rien
-					$do=updateDetailInversion($pdoLitige,$_POST['form_motif'][$i], $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur, $invQte, $valoLig);
+					$do=updateDetailInversion($pdoLitige,$idmotif, $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur, $invQte, $valoLig);
 				// echo '1 do '.$do;
 				}
 				else
@@ -408,6 +414,15 @@ DEBUT CONTENU CONTAINER
 							echo '</div>';
 							echo '</div>';
 							echo '</div>';
+							echo '<div class="hidden" id="toggleMissing'.$litige['detail_id'].'">';
+
+							echo '<div class="row">';
+							echo '<div class="col-12 text-reddish pl-3">';
+							echo 'Vous avez reçu un produit non commandé à la place ? Si oui, merci de saisir son EAN et la quantité ci-dessous'	;
+							echo '</div>';
+							echo '</div>';
+							echo '</div>';
+
 							echo '<div class="hidden" id="toggle'.$litige['detail_id'].'">';
 
 							echo '<div class="row">';
@@ -514,16 +529,31 @@ DEBUT CONTENU CONTAINER
         	selectId=selectId.substring(5,sizeStrg);
         	console.log( selectId );
         	var toShow="#toggle"+selectId;
+        	var toShowMissing="#toggleMissing"+selectId;
 				// var centrale = ;
-				if($(this).val()==5)
+				if($(this).val()==5 || $(this).val()==8)
 				{
 					$(toShow).attr('class','show');
+					if($(this).val()==8){
+						$(toShowMissing).attr('class','show');
+					}
 				}
 				else
 				{
 					$(toShow).attr('class','hidden');
+					$(toShowMissing).attr('class','hidden');
+
 
 				}
+
+
+				// if($(this).val()==8){
+				// 	$(toShow).attr('class','show');
+
+				// }else{
+				// 	$(toShow).attr('class','hidden');
+
+				// }
 
   	// 		var toShow='mot'
   			// $("#td_id").toggleClass('change_me newClass');

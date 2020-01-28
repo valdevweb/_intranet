@@ -7,7 +7,7 @@
         <p>La liste des palettes de casse ci-dessous a été contrôlée</span>
             </p>
         <p>&nbsp;</p>
-        <p><span style="color:darkblue;">Expédition {IDEXP} -  magasin {MAG}</span></p>
+        <p><span style="color:darkblue;">Expédition {IDEXP} -  magasin {MAG} - {DENO}</span></p>
         {TABLE}
         <p>&nbsp;</p>
         Cordialement,</p>

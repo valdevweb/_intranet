@@ -188,9 +188,14 @@ function login($pdoUser, $pdoBt,$pdoSav)
 
 		if($_SESSION['type']=='btlec')
 		{
+
+
+
+
 			$_SESSION['id_btlec']=$web_users['id_bt'];
 		//recup info user dans table btlec
 			$btInfo=btInfo($pdoBt);
+
 			$nom=$btInfo['nom'];
 			$prenom=$btInfo['prenom'];
 			$_SESSION['nom'] = $prenom .' ' .$nom;

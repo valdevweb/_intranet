@@ -16,6 +16,7 @@ unset($_SESSION['goto']);
 
 
 require 'echanges.fn.php';
+require('../../Class/UserHelpers.php');
 
 //------------------------------------------------------
 //			INFOS
@@ -104,7 +105,7 @@ $analyse=getAnalyse($pdoLitige);
 
 function getAction($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT libelle, action.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y')as dateFr, concat(prenom, ' ', nom) as name, pj FROM action LEFT JOIN btlec.btlec ON action.id_web_user=btlec.btlec.id_webuser WHERE action.id_dossier= :id ORDER BY date_action");
+	$req=$pdoLitige->prepare("SELECT libelle, id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y')as dateFr,  pj, sav, achats FROM action  WHERE action.id_dossier= :id ORDER BY date_action");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 
@@ -352,10 +353,12 @@ function getPagination($pdoLitige){
 	return $req->fetchAll(PDO::FETCH_COLUMN);
 }
 
+
+
+
+
+
 $pagination=getPagination($pdoLitige);
-
-
-
 $page=array_search($_GET['id'], $pagination);
 $last=$pagination[count($pagination)-1];
 
@@ -374,6 +377,9 @@ else{
 	$prev=0;
 }
 
+	// echo "<pre>";
+	// print_r($fLitige);
+	// echo '</pre>';
 
 
 //------------------------------------------------------
@@ -471,7 +477,7 @@ DEBUT CONTENU CONTAINER
 					<div class="col pl-5">
 						<div class="row">
 							<div class="col">
-								<h4 class="khand pt-2"><?= $fLitige[0]['mag'] .' - '.$fLitige[0]['btlec'].' ('.$fLitige[0]['galec'].')' ?></h4>
+								<h4 class="khand pt-2"><a href="stat-litige-mag.php?galec=<?=$fLitige[0]['galec']?>"><?= $fLitige[0]['mag'] .' - '.$fLitige[0]['btlec'].' ('.$fLitige[0]['galec'].')' ?></a></h4>
 							</div>
 							<div class="col">
 								<h4 class="khand pt-2 text-right pr-3"><?=$fLitige[0]['centrale']?></h4>
@@ -770,6 +776,8 @@ DEBUT CONTENU CONTAINER
 					</thead>
 					<tbody>
 						<?php
+
+
 						if(isset($actionList) && count($actionList)>0)
 						{
 							foreach ($actionList as $action)
@@ -784,7 +792,7 @@ DEBUT CONTENU CONTAINER
 								}
 								echo '<tr>';
 								echo'<td>'.$action['dateFr'].'</td>';
-								echo'<td>'.$action['name'].'</td>';
+								echo'<td>'. UserHelpers::getFullname($pdoUser, $action['id_web_user']) .'</td>';
 
 								echo'<td>'.$action['libelle'].'</td>';
 								echo'<td>'.$pj.'</td>';

@@ -3,7 +3,7 @@
 class MagHelpers{
 
 	public static function magInfo($pdo, $galec){
-		$req=$pdo->prepare("SELECT *,users.id as idwebuser FROM mag LEFT JOIN users ON mag.galec=users.galec WHERE mag.galec= :galec");
+		$req=$pdo->prepare("SELECT *,users.id as idwebuser, mag_attribution.id_web_user as id_cm FROM mag LEFT JOIN users ON mag.galec=users.galec LEFT JOIN mag_attribution ON mag.galec=mag_attribution.galec WHERE mag.galec= :galec");
 		$req->execute([
 			':galec'		=>$galec
 		]);
@@ -16,6 +16,11 @@ class MagHelpers{
 			return $data['deno'];
 		}
 		return false;
+	}
+
+	public static function city($pdo,$galec){
+		$data=self::magInfo($pdo, $galec);
+		return $data['city'];
 	}
 
 	public static function centrale($pdo,$galec){

@@ -26,6 +26,8 @@ function getEtat($pdoLitige)
 function globalSearch($pdoLitige)
 {
 	$strg=empty($_SESSION['form-data']['search_strg']) ? '': $_SESSION['form-data']['search_strg'];
+	$concatField=" concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec, details.article) ";
+
 	if(!empty($_SESSION['form-data']['etat']))
 	{
 		$reqEtat= ' AND id_etat= ' .$_SESSION['form-data']['etat'];
@@ -59,14 +61,24 @@ function globalSearch($pdoLitige)
 		$reqLivraison= ' AND vingtquatre is NOT NULL';
 	}
 
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, valo, etat,ctrl_ok,commission
+	if(isset($_SESSION['form-data']['btlec'])){
+			$concatField=" sca3.btlec " ;
+	}
+
+	if(isset($_SESSION['form-data']['galec'])){
+			$concatField= "dossiers.galec ";
+	}
+
+	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, valo, etat,ctrl_ok,commission, details.article
 		FROM dossiers
+		LEFT JOIN details ON dossiers.id=details.id_dossier
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
 		WHERE
 		date_crea BETWEEN :date_start AND :date_end
-		AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search 		$reqEtat
+		AND $concatField LIKE :search 		$reqEtat
 		$reqCommission $reqLivraison
+		GROUP BY dossiers.id
 		ORDER BY dossiers.dossier DESC");
 
 	$req->execute(array(
@@ -114,10 +126,13 @@ function getSumValo($pdoLitige)
 	else{
 		$reqLivraison= ' AND vingtquatre is NOT NULL';
 	}
-	$req=$pdoLitige->prepare("SELECT  sum(valo) as valo_totale
+	$req=$pdoLitige->prepare("SELECT  sum(dossiers.valo) as valo_totale
 		FROM dossiers
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
-		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search $reqEtat $reqCommission $reqLivraison ");
+		-- LEFT JOIN details ON dossiers.id=details.id_dossier
+
+		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec)
+		LIKE :search $reqEtat $reqCommission $reqLivraison");
 
 
 	$req->execute(array(
@@ -127,7 +142,6 @@ function getSumValo($pdoLitige)
 
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
-	// return $req->errorInfo();
 }
 
 function getSumValoByType($pdoLitige)
@@ -182,17 +196,21 @@ function getSumValoByType($pdoLitige)
 }
 
 
-function updateCommission($pdoLitige,$etat)
+function updateCommission($pdoLitige,$iddossier, $etat)
 {
 	$req=$pdoLitige->prepare("UPDATE dossiers SET commission = :commission, date_commission= :date_commission WHERE id= :id");
 	$req->execute([
 		':commission'	=>$etat,
 		':date_commission'	=>date('Y-m-d H:i:s'),
-		':id'		=>$_POST['iddossier']
+		':id'		=>$iddossier
 
 	]);
 	return $req->rowCount($pdoLitige);
 }
+
+
+
+
 
 function addAction($pdoLitige, $idContrainte){
 	$req=$pdoLitige->prepare("INSERT INTO action (id_dossier, libelle, id_contrainte, id_web_user, date_action) VALUES (:id_dossier, :libelle, :id_contrainte, :id_web_user, :date_action)");
@@ -282,13 +300,14 @@ $valoEtat=getSumValoByType($pdoLitige);
 
 
 
+
 if(isset($_POST['validate'])){
 	if(!empty($_POST['cmt']))
 	{
 
 		$action=addAction($pdoLitige, 3);
 		if($action==1){
-			$result=updateCommission($pdoLitige,1);
+			$result=updateCommission($pdoLitige,$_POST['iddossier'],1);
 		}
 		else{
 			$errors[]="impossible d'ajouter le commentaire";
@@ -306,8 +325,32 @@ if(isset($_POST['validate'])){
 		$errors[]="Veuillez saisir un commentaire";
 	}
 }
+if(isset($_POST['chg_pending'])){
+
+foreach ($_POST as $key => $value) {
+	if($key !='chg_pending'){
+		// recup le nom du champ et le découpe :
+		// pending-box-id-etat
+		$idforcom=explode('-',$key);
+		if($idforcom[2]==1){
+			$etat=0;
+		}else{
+			$etat=1;
+		}
+		$done=updateCommission($pdoLitige,$idforcom[1],$etat);
+		if($done==1){
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF'],true,303);
+		}
+	}
+}
 
 
+}
+
+// etat des cases à cocher
+	$checkedbt=(isset($_SESSION['form-data']['btlec'])) ? " checked " :"";
+	$checkedgalec=(isset($_SESSION['form-data']['galec']))? " checked " :"";
 
 $listEtat=getEtat($pdoLitige);
 //------------------------------------------------------
@@ -323,6 +366,7 @@ DEBUT CONTENU CONTAINER
 	<div class="row pt-5 mb-5">
 		<div class="col">
 			<h1 class="text-main-blue">Listing des dossiers litiges </h1>
+
 
 		</div>
 		<div class="col border p-3">
@@ -407,7 +451,20 @@ DEBUT CONTENU CONTAINER
 					</div>
 					<div class="row">
 						<div class="col">
-							<p class="text-red">Préciser un numéro de litige, un magasin par le nom ou le code galec :</p>
+							<p class="text-red">Préciser un numéro de litige, un code article, un magasin (nom ou panonceau galec) :</p>
+						</div>
+					</div>
+					<div class="row pb-3">
+						<div class="col pl-5">
+							Limiter la recherche au :
+							<div class="form-check form-check-inline pl-5">
+								<input type="checkbox" class="form-check-input" name="btlec" id="btlec" <?=$checkedbt?>>
+								<label for="btlec" class="form-check-label">Code BT</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input type="checkbox" class="form-check-input" name="galec" id="galec" <?= $checkedgalec?>>
+								<label for="galec" class="form-check-label">Panonceau Galec</label>
+							</div>
 						</div>
 					</div>
 					<div class="row">
@@ -452,8 +509,8 @@ DEBUT CONTENU CONTAINER
 				</div>
 			</div>
 			<div class="col-auto text-right">
-				<a href="xl-encours.php" class="btn btn-red"> <i class="fas fa-file-excel pr-3"></i>Exporter</a>
 			</div>
+
 		</div>
 
 
@@ -525,7 +582,10 @@ DEBUT CONTENU CONTAINER
 			</div>
 		</div>
 		<div class="row mt-3">
-			<div class="col">
+
+			<div class="col text-center">
+				<a href="xl-selected.php" class="btn btn-green"> <i class="fas fa-file-excel pr-3"></i>Exporter la sélection</a>
+				<a href="xl-encours.php" class="btn btn-red"> <i class="fas fa-file-excel pr-3"></i>Exporter la base entière</a>
 
 			</div>
 		</div>
@@ -570,6 +630,7 @@ DEBUT CONTENU CONTAINER
 		<!-- start row -->
 		<div class="row">
 			<div class="col">
+				<form method="post" action=<?=$_SERVER['PHP_SELF']?>>
 				<table class="table border" id="dossier">
 					<thead class="thead-dark smaller">
 						<th class="sortable align-top">Dossier</th>
@@ -581,6 +642,8 @@ DEBUT CONTENU CONTAINER
 							<th class="sortable align-top text-right">Valo</th>
 							<th class="sortable text-center align-top">Ctrl Stock</th>
 							<th class="sortable text-center align-top">Statué</th>
+							<th class="sortable text-center align-top"><input type="checkbox" name="title"></th>
+
 							<th class="sortable text-center align-top">24/48h</th>
 
 						</tr>
@@ -656,6 +719,7 @@ DEBUT CONTENU CONTAINER
 								echo '<td class="text-center"><a href="#modal1" data="'.$active['id_main'].'" class="stamps"><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';
 
 							}
+							echo '<td><input type="checkbox" name="pendingbox-'.$active['id_main'].'-'.$active['commission'].'"></td>';
 
 							echo '<td class="text-center">'.$vingtquatre .'</td>';
 							echo '</tr>';
@@ -665,6 +729,19 @@ DEBUT CONTENU CONTAINER
 						?>
 					</tbody>
 				</table>
+
+
+
+				<?php if($_SESSION['id_web_user'] ==959 || $_SESSION['id_web_user'] ==981): ?>
+
+				<div class="row">
+					<div class="col text-right mr-5">
+						<button type="submit"  class="btn btn-red right mb-5" name="chg_pending"><i class="fas fa-user-check pr-3"></i>Statuer</button>
+					</div>
+				</div>
+				<?php endif	?>
+
+				</form>
 			</div>
 
 		</div>

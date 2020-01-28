@@ -1,0 +1,23 @@
+.sub{
+color: #9e9e9e !important;
+/* position: relative; */
+}
+
+.sub:before{
+	content: open-quote;
+	font-weight: bold;
+	font-size:30px;
+
+	color: #f18e0b;
+
+	font-family:Georgia, "Times New Roman", Times, serif;
+	quotes: "\201C""\201D""\2018""\2019";
+}
+.sub:after {
+	content: close-quote;
+	font-weight: bold;
+	font-size:30px;
+	color: #f18e0b;
+	font-family:Georgia, "Times New Roman", Times, serif;
+	quotes: "\201C""\201D""\2018""\2019";
+}

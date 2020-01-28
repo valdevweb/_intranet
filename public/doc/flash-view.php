@@ -3,14 +3,14 @@
 		<?php
 		if(!empty($flash['pj']) && !empty($flash['vignette']))
 		{
-			$link='<a href="'.UPLOAD_DIR.'/flash/'.$flash['pj'].'" target="_blank"><img src="'.UPLOAD_DIR.'/flash/'.$flash['vignette'].'" class="p-5"></a>';
+			$link='<a href="'.UPLOAD_DIR.'/flash/'.$flash['pj'].'" target="_blank"><img src="'.UPLOAD_DIR.'/flash/'.$flash['vignette'].'" ></a>';
 			$vignetteplusdoc='<p class="align-right"><i>Cliquez sur la photo pour afficher le document</i></p>';
 
 
 		}
 		elseif (empty($flash['pj']) && !empty($flash['vignette']))
 		{
-			$link='<img src="'.UPLOAD_DIR.'/flash/'.$flash['vignette'].'" class="p-5">';
+			$link='<img src="'.UPLOAD_DIR.'/flash/'.$flash['vignette'].'" >';
 			$vignetteplusdoc='';
 
 
@@ -28,33 +28,48 @@
 
 		}
 		?>
-		<div class="bg-white row">
-			<div class="col s12">
+		<div class="row my-3">
+			<div class="col"></div>
+			<div class="col-8 shadow">
 				<div class="row no-margin-bottom">
 					<div class="col">
-						<img src="../public/img/documents/flash-400.png">
+						<img src="../img/documents/flash-400.png">
 					</div>
-					<div class="col s6">
-						<h1 class="center blue-text text-darken-4"><?=$flash['title']?></h1>
-					</div>
-				</div>
-				<div class="row p-5">
-					<div class="col s8">
-						<p><?=$flash['content']?></p>
-						<?= $vignetteplusdoc?>
-
-					</div>
-					<div class="col s4 center">
-						<?php
-						echo $link;
-						?>
-
+					<div class="col">
+						<h1 class=" text-main-blue mt-5"><?=$flash['title']?></h1>
 					</div>
 				</div>
+				<div class="row p-5 align-top">
+					<?php if (empty($link)): ?>
+						<div class="col">
+							<p><?=$flash['content']?></p>
+							<?= $vignetteplusdoc?>
+
+						</div>
+						<?php else: ?>
+
+							<div class="col-8">
+								<p><?=$flash['content']?></p>
+								<?= $vignetteplusdoc?>
+
+							</div>
+							<div class="col text-center ">
+								<?php
+								echo $link;
+								?>
+
+							</div>
+						<?php endif ?>
+
+
+
+					</div>
+				</div>
+				<div class="col"></div>
+
 			</div>
-		</div>
-	<?php endforeach ?>
-<?php endif;?>
+		<?php endforeach ?>
+	<?php endif;?>
 
 
 

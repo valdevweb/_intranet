@@ -47,7 +47,6 @@ foreach ($dials as $dial)
 						echo $pj;
 						echo '</div>';
 						echo '</div>';
-
 						echo '</div>';
 						echo '</div>';
 

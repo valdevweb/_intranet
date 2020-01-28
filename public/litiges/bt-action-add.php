@@ -110,8 +110,6 @@ if(isset($_POST['submit']))
 
 // si une action préécrite est choisie, il faut vérifie si elle a des contraintes et si oui, faire l'action nécessaire
 
-
-
 	if(isset($_FILES['incfile']['name'][0]) && empty($_FILES['incfile']['name'][0])){
 		$allfilename="";
 	}
@@ -153,46 +151,36 @@ if(isset($_POST['submit']))
 			}
 		}
 	}
-
+	// menu déroulante avec les actions préexistante et qui peuvant avoir des contrainte et/ou un texte préécrit
 	if(!empty($_POST['pretxt']))
 	{
 		$help=getHelpInfo($pdoLitige);
 	// si l'action pré-écrite à une contrainte, on l'execute
-		if($help['id_contrainte'] ==NULL)
-		{
+		if($help['id_contrainte'] ==NULL){
 			$newAction=addAction($pdoLitige, $allfilename,$contrainte=null);
-
-			if($newAction>0)
-			{
-
+			if($newAction>0){
 				header('Location:bt-action-add.php?id='.$_GET['id']);
-
 			}
-			else
-			{
+			else{
 				$errors[]="Une erreur est survenue, impossible d'enregistrer votre action";
 			}
 		}
 
-
-		else
-		{
-			if($help['id_contrainte'] ==4)
-			{
+	// si contrainte
+	// => pour la contrainte 4 demande d'inter sav, on a besoin de vérifier que le mag a bien un pôle SAV, si ce n'est pas le cas, on bloque le traitement
+	// si pas de bloquage, on ajoute l'action avec son numéro de contrainte et on redirige vers la page contrainte qui fait le traitement approprié
+		else{
+			if($help['id_contrainte'] ==4){
 				$galec=$fLitige['galec'];
 				$sav=getMagSav($pdoSav,$galec);
-
 			}
-
-			if(isset($sav) && empty($sav))
-			{
+			if(isset($sav) && empty($sav)){
 				$errors[]="Vous ne pouvez pas ajouter cette action, aucun pôle SAV n'a été renseigné pour ce magasin";
 			}
 			else
 			{
 				$newAction=addAction($pdoLitige, $allfilename, $help['id_contrainte']);
-				if($newAction>0)
-				{
+				if($newAction>0){
 					header('Location:contrainte.php?contrainte='.$help['id_contrainte'].'&id='.$_GET['id'].'&action='.$newAction) ;
 
 				}

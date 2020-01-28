@@ -39,7 +39,19 @@ $docCode=array(
 	8	=>"point stock MDD"
 );
 
-echo $docCode[3];
+function isUserInGroup($pdoBt,$idWebuser,$groupName)
+{
+
+$req=$pdoBt->prepare("SELECT * FROM groups WHERE id_webuser= :idWebuser AND group_name= :groupName");
+$req->execute(array(
+	":idWebuser" =>$idWebuser,
+	":groupName" =>$groupName
+));
+
+return $req->rowCount();
+}
+
+
 function insertDoc($pdoBt,$type,$file, $code)
 {
 	// $reply=strip_tags($_POST['reply']);

@@ -209,6 +209,36 @@ background: #757687
   margin-right: -15px !important;
 
 }
+
+.no-bg{
+
+  margin-left: -15px !important;
+  margin-right: -15px !important;
+}
+
+
+.full-bg-blue{
+  background-color: #0d47a1;
+  margin-left: -15px !important;
+  margin-right: -15px !important;
+}
+
+
+.bg-separation-blue{
+  background-color: #0d47a1;
+  margin-left: -15px !important;
+  margin-right: -15px !important;
+  height:  5px;
+
+}
+
+.full-border-blue{
+  margin-left: -15px !important;
+  margin-right: -15px !important;
+border: 1px solid #0d47a1;
+}
+
+
 .bg-alert{
    padding: .75rem 1.25rem;
    margin-bottom: 1rem;
@@ -344,6 +374,16 @@ background: #757687
 
 }
 
+
+.bg-verylight-blue{
+    color: #004085;
+    background-color: #eaf4ff;
+}
+
+.bg-verylight-orange{
+  color: #856404;
+  background-color: #fffbf0
+}
  .btn-primary{
   background: #0D47A1 !important;
   border:  #0D47A1 !important;

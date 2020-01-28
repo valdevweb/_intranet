@@ -193,7 +193,7 @@ h2{
 </style>
 <?php
 
-$sumValo=0;
+
 foreach ($litige as $prod)
 {
 	$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
@@ -236,53 +236,76 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 	<div class="spacing-s"></div>
 
 	<h2 class="text-center">Détail du litige</h2>
-
-	<p>Commentaire du magasin : <?= isset($firstCmt['msg']) ? $firstCmt['msg'] : ''?></p>
-
 	<div class="spacing-s"></div>
 	<table class="padding-table border-table-sec">
 		<tr>
-			<td class="sept bg-sec text-white">PALETTE</td>
-			<td class="sept bg-sec text-white">CODE ARTICLE</td>
-			<td class="trois bg-sec text-white">DESIGNATION</td>
-			<td class="dix bg-sec text-white">QTE</td>
-			<td class="sept bg-sec text-white">VALO</td>
-			<td class="sept bg-sec text-white">RECLAMATION</td>
+			<td class="quatre bg-sec text-white">Date prépa</td>
+			<td class="quatre bg-sec text-white">Préparateur</td>
+			<td class="quatre bg-sec text-white">Contrôleur</td>
+			<td class="quatre bg-sec text-white">Chargé par</td>
 		</tr>
-		<?php
-		$sumValo=0;
-		foreach ($litige as $prod)
-		{
-			echo '<tr>';
-			echo'<td>'.$prod['palette'].'</td>';
-			echo'<td>'.$prod['article'].'</td>';
-			echo'<td>'.$prod['descr'].'</td>';
-			echo'<td class="text-right">'.$prod['qte_litige'].'</td>';
-			echo'<td class="text-right">'.number_format((float)$prod['valo_line'],2,'.','').'&euro;</td>';
-			echo'<td>'.$prod['reclamation'].'</td>';
-			echo '</tr>';
-			if($prod['inversion'] !="")
-			{
-				$valoInv=round( $prod['qte_cde']*$prod['inv_tarif'],2);
-				echo '<tr><td colspan="5" class="text-center text-prim heavy">Produit reçu à la place de la référence ci-dessus :</td></tr>';
-				echo '<tr>';
-				echo'<td class="text-prim heavy">'.$prod['inv_article'].'</td>';
-				echo'<td class="text-prim heavy">'.$prod['inv_descr'].'</td>';
-				echo'<td class="text-right text-prim heavy">'.$prod['qte_litige'].'</td>';
-				echo'<td class="text-right text-prim heavy">'.number_format((float)$valoInv,2,'.','').'&euro;</td>';
-				echo'<td class="text-right"></td>';
-				echo '</tr>';
-			}
 
-		}
-
-		?>
+		<tr>
+			<td><?=$infos['dateprepa']?></td>
+			<td><?=$infos['fullprepa']?></td>
+			<td><?=$infos['fullctrl']?></td>
+			<td><?=$infos['fullchg']?></td>
+			<tr>
 
 	</table>
+		<p>Commentaire du magasin : <?= isset($firstCmt['msg']) ? $firstCmt['msg'] : ''?></p>
 
 
-</body>
-</html>
+		<div class="spacing-s"></div>
+
+		<table class="padding-table border-table-sec">
+			<tr>
+				<td class="sept bg-sec text-white">PALETTE</td>
+				<td class="sept bg-sec text-white">CODE ARTICLE</td>
+				<td class="trois bg-sec text-white">DESIGNATION</td>
+				<td class="dix bg-sec text-white">QTE CDE</td>
+				<td class="dix bg-sec text-white">QTE LITIGE</td>
+				<td class="sept bg-sec text-white">VALO</td>
+				<td class="sept bg-sec text-white">RECLAMATION</td>
+			</tr>
+			<?php
+			$sumValo=0;
+			$sumValo=0;
+
+
+			foreach ($litige as $prod)
+			{
+				echo '<tr>';
+				echo'<td>'.$prod['palette'].'</td>';
+				echo'<td>'.$prod['article'].'</td>';
+				echo'<td>'.$prod['descr'].'</td>';
+				echo'<td class="text-right">'.$prod['qte_cde'].'</td>';
+				echo'<td class="text-right">'.$prod['qte_litige'].'</td>';
+				echo'<td class="text-right">'.number_format((float)$prod['valo_line'],2,'.','').'&euro;</td>';
+				echo'<td>'.$prod['reclamation'].'</td>';
+				echo '</tr>';
+				if($prod['inversion'] !="")
+				{
+					$valoInv=round( $prod['qte_cde']*$prod['inv_tarif'],2);
+					echo '<tr><td colspan="7" class="text-center text-prim heavy">Produit reçu à la place de la référence ci-dessus :</td></tr>';
+					echo '<tr>';
+					echo'<td class="text-prim heavy">'.$prod['inv_article'].'</td>';
+					echo'<td class="text-prim heavy">'.$prod['inv_descr'].'</td>';
+					echo'<td class="text-right text-prim heavy">'.$prod['qte_litige'].'</td>';
+					echo'<td class="text-right text-prim heavy">'.number_format((float)$valoInv,2,'.','').'&euro;</td>';
+					echo'<td class="text-right"></td>';
+					echo '</tr>';
+				}
+
+			}
+
+			echo "</table>";
+		?>
+
+
+
+		</body>
+		</html>
 
 
 

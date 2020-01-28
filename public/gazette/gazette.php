@@ -224,25 +224,7 @@ include('../view/_navbar.php');
 					</div>
 					<!-- <div class="col-1"></div> -->
 					<div class="col">
-						<div class="row mb-3 p-3 gaz-list speciale">
-							<div class="col">
-								<img class="d-inline-block align-top" src="../img/gazette/gaz-speciale.png">
-								<div class="d-inline-block pl-3" id="speciale-list">
-									<?php if (!empty($speciale)): ?>
-										<ul>
-											<?php foreach ($speciale as $spe): ?>
-												<?php $fileTitle=explode('.xls', $spe['file']);?>
 
-												<li><a href="<?=UPLOAD_DIR?>/gazette/<?=$spe['file']?>"><?= $spe['title'] ?></a></li>
-
-											<?php endforeach ?>
-										</ul>
-										<?php else: ?>
-											<p>Aucune gazette spéciale</p>
-										<?php endif ?>
-									</div>
-								</div>
-							</div>
 
 						</div>
 					</div>

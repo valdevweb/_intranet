@@ -16,6 +16,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 require_once '../../vendor/autoload.php';
 require ('../../Class/Helpers.php');
+require ('../../Class/MagHelpers.php');
 
 require 'casse-getters.fn.php';
 unset($_SESSION['goto']);
@@ -99,9 +100,10 @@ if(isset($_POST['submit'])){
 			$table.='<tr><td style="border: 1px solid grey;padding:10px;">'.$exp['palette'].'</td><td style="border: 1px solid grey;padding:10px;">'.$exp['contremarque'].'</td><td style="border: 1px solid grey;padding:10px;">'.$exp['cmt_pilote'].'</td></tr>';
 		}
 		$table.='</table>';
-
+		$deno=MagHelpers::deno($pdoUser,$listPalette[0]['galec']);
 		$htmlMail = file_get_contents('mail-pilote-retour.php');
 		$htmlMail=str_replace('{MAG}',$listPalette[0]['btlec'],$htmlMail);
+		$htmlMail=str_replace('{DENO}',$deno,$htmlMail);
 		$htmlMail=str_replace('{IDEXP}',$_GET['id'],$htmlMail);
 		$htmlMail=str_replace('{TABLE}',$table,$htmlMail);
 		$subject='Portail BTLec Est - Casses : retour de contrôle palettes';
@@ -137,6 +139,8 @@ if(isset($_POST['submit'])){
 	}
 
 }
+
+
 
 
 

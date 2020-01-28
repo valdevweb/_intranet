@@ -73,8 +73,26 @@ $link="Cliquez <a href='".SITE_ADDRESS."/index.php?mag/edit-msg.php?msg=".$idMsg
 
 $err=array();
 $service=service($pdoBt,$oneMsg['id_service']);
+$filenameList=array();
+
+
 //test valeur $_FILE, si renvoi true => au moins un fichier à uploader
 $isFileToUpload=isFileToUpload();
+
+function isUserInGroup($pdoBt,$idWebuser,$groupName){
+
+	$req=$pdoBt->prepare("SELECT * FROM groups WHERE id_webuser= :idWebuser AND group_name= :groupName");
+	$req->execute(array(
+		":idWebuser" =>$idWebuser,
+		":groupName" =>$groupName
+	));
+
+	return $req->rowCount();
+}
+
+
+
+
 
 function recPwd($pdoUser, $idWebuser)
 {
@@ -101,7 +119,7 @@ if(isset($_POST['post-reply']))
 		if (!$isFileToUpload)
 		{
 			//pas de pièce jointe
-			$file="";
+			$allfilename="";
 			// ajout mdp dans webuser
 			if(isset($mdp))
 			{
@@ -128,51 +146,111 @@ if(isset($_POST['post-reply']))
 			$authorized=0;
 			//on stocke les extensions de fichiers interdits pour afficher message d'erreur
 			$typeInterdit="";
-			foreach ($_FILES as $fileDetails)
-			{
-				$authorizedFile=isAllowed($fileDetails['tmp_name'], $encoding=true);
-				//tableau de fichier :
-				if($authorizedFile[0]=='interdit')
-				{
-					$authorized++;
-					$typeInterdit.=$authorizedFile[1];
 
+
+			$nbFiles=count($_FILES['incfile']['name']);
+			$totalFileSize=0;
+			for ($f=0; $f <$nbFiles ; $f++){
+				$filename=$_FILES['incfile']['name'][$f];
+				$maxFileSize = 5 * 1024 * 1024; //5MB
+				$totalFileSize+=$_FILES['incfile']['size'][$f];
+
+				if($_FILES['incfile']['size'][$f] > $maxFileSize){
+					$err[] = 'Attention un des fichiers dépasse la taille autorisée de 5 Mo';
 				}
 			}
-			//tous les fichiers sont autorisés
-			if($authorized==0)
-			{
-				$hashedFileName=checkUploadNew($uploadDir, $pdoBt);
-				// conversion en string
-				$file= implode("; ", $hashedFileName);
-				//------------------------------
-				//			msg avec piece jointe
-				//			ajoute le msg dans db et
-				//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
-				//------------------------------
-			}
-			else
-			{
-				array_push($err, "l'envoi de fichiers de type ". $typeInterdit ." est interdit, la réponse n'a pas pu être envoyée");
+			if($totalFileSize>$maxFileSize){
+					$err[] = 'Attention le poids total des pièces jointes dépasse la taille autorisée de 5 Mo';
 
 			}
+			if(count($err)==0){
+				for ($f=0; $f <$nbFiles ; $f++){
+					$authorizedFile=isAllowed($_FILES['incfile']['tmp_name'][$f], $encoding=true);
+					if($authorizedFile[0]=='interdit'){
+						$authorized++;
+						$typeInterdit.=$authorizedFile[1];
+					}
+				}
+			}
+
+			//au moins un fihcier n'est pas autorisé
+			if($authorized!=0){
+				array_push($err, "l'envoi de fichiers de type ". $typeInterdit ." est interdit, la réponse n'a pas pu être envoyée");
+			}
+			//  si tout va bien, on upload
+			if($authorized==0 && count($err)==0){
+				for ($f=0; $f <$nbFiles ; $f++){
+					$filename=$_FILES['incfile']['name'][$f];
+					$ext = pathinfo($filename, PATHINFO_EXTENSION);
+				  // Get filename without extesion
+					$filename_without_ext = basename($filename, '.'.$ext);
+					// Generate new filename => ajout d'un timestamp au nom du fichier
+					$filename = str_replace(' ', '_', $filename_without_ext) . '_' . time() . '.' . $ext;
+					$uploaded=move_uploaded_file($_FILES['incfile']['tmp_name'][$f],$uploadDir.$filename );
+					if($uploaded==false)
+					{
+						$errors[]="impossible de télécharger le fichier";
+					}
+					else{
+						$filenameList[]=$filename;
+					}
+				}
+				$allfilename= implode("; ", $filenameList);
+
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+			// foreach ($_FILES as $fileDetails)
+			// {
+			// 	$authorizedFile=isAllowed($fileDetails['tmp_name'], $encoding=true);
+			// 	//tableau de fichier :
+			// 	if($authorizedFile[0]=='interdit')
+			// 	{
+			// 		$authorized++;
+			// 		$typeInterdit.=$authorizedFile[1];
+
+			// 	}
+			// }
+			// //tous les fichiers sont autorisés
+			// if($authorized==0)
+			// {
+			// 	$hashedFileName=checkUploadNew($uploadDir, $pdoBt);
+			// 	// conversion en string
+			// 	$file= implode("; ", $hashedFileName);
+			// 	//------------------------------
+			// 	//			msg avec piece jointe
+			// 	//			ajoute le msg dans db et
+			// 	//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
+			// 	//------------------------------
+			// }
+			// else
+			// {
+			// 	array_push($err, "l'envoi de fichiers de type ". $typeInterdit ." est interdit, la réponse n'a pas pu être envoyée");
+
+
+			// }
 		}
 		//------------------------------
 		//			TRAITEMENT COMMUN
 		//			ajoute le msg dans db et
 		//			envoi mail au mag
 		//------------------------------
-		if(count($err)>0)
-		{
-			header('Location:'. ROOT_PATH.'/public/btlec/dashboard.php?success=2');
 
-		}
-		else
+		if(count($err)==0)
 		{
-			if(!recordReply($pdoBt,$idMsg,$file))
-			{
+			if(!recordReply($pdoBt,$idMsg,$allfilename)){
 				array_push($err, "votre réponse n'a pas pu être enregistrée (err 01)");
-
 			}
 			else
 			{
@@ -187,13 +265,7 @@ if(isset($_POST['post-reply']))
 				{
 					$mail=sendMail($to,$objet,$tpl,$objetdde,$vide,$link);
 				}
-					// echo "<pre>";
-					// print_r($mail);
-					// echo '</pre>';
 
-					// 	echo "<pre>";
-					// 	print_r($_POST);
-					// 	echo '</pre>';
 
 				if($mail==1)
 				{
@@ -228,7 +300,7 @@ if(isset($_POST['post-reply']))
 		//------------------------------------------
 		//	ajout enreg ection dans stat
 		//-----------------------------------------<
-		if(count($err)>0)
+		if(count($err)==0)
 		{
 			$descr="succès envoi réponse ";
 		}
@@ -306,7 +378,7 @@ include '../view/_navbar.php';
 
 	<div class="row mag">
 		<div class="col l12 reply">
-			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>La demande du magasin :</h4>
+			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Demande n° <?= $oneMsg['id']?> :</h4>
 			<hr>
 			<br><br><br>
 			<div class="inside-mag">
@@ -319,7 +391,7 @@ include '../view/_navbar.php';
 				<?php
 				if(isAttached($oneMsg['inc_file']))
 				{
-					echo '<p><span class="labelFor">Pièce(s) jointe(s)</span>'.isAttached($oneMsg['inc_file']) .'</p>';
+					echo '<p class="pj"><span class="labelFor">Pièce(s) jointe(s)</span>'.isAttached($oneMsg['inc_file']) .'</p>';
 				}
 
 				?>
@@ -406,18 +478,19 @@ include '../view/_navbar.php';
 				?>
 				<br><br>
 				<div id="file-upload">
-					<p>Joindre un document à votre réponse: </p>
+					<p>Joindre un document à votre réponse:
+						<br><i>(pour ajouter plusieurs fichiers, maintenez la touche ctrl pendant que vous sélectionnez les fichiers)</i>
+					</p>
 					<div class="col l12">
-						<p><input type="file" name="file_1" class='input-file'></p>
-						<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Ajouter d'autres fichiers</a></p>
+						<div id="upload-zone">
+
+							<input type='file' class='form-control-file' id='incfile' name='incfile[]' multiple="" >
+
+							<div id="filelist"></div>
+						</div>
 					</div>
 				</div>
-				<!--BOUTONS-->
-				<div class="row">
-					<div class='col l9'>
-						<ul id="file-name"></ul>
-					</div>
-				</div>
+
 
 
 
@@ -481,20 +554,33 @@ if(isUserInGroup($pdoBt,$idUser,"admin"))
 	echo $formCloture;
 }
 
+
+
+
 ?>
+
+
+
 <div class="row mag">
 	<div class="col l12 reply">
 		<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Réaffecter la demande :</h4>
 		<hr>
 		<br><br>
-		<p>La demande ne concerne pas votre service ? <a href="chg.php?msg=<?=$idMsg?>">Cliquez ici pour réaffecter la demande</a></p>
+		<?php if ( $_SESSION['id_service']== 5 || $_SESSION['id_service']== 16 || $_SESSION['id_service'] == 6 ||  $oneMsg['id_service'] == $_SESSION['id_service']): ?>
 
+			<p>La demande ne concerne pas votre service ? <a href="chg.php?msg=<?=$idMsg?>">Cliquez ici pour réaffecter la demande</a></p>
+
+			<?php else: ?>
+				<p>Cette demande ne concerne pas ou plus votre service, vous ne pouvez pas la réaffecter</p>
+			<?php endif ?>
+
+
+		</div>
 	</div>
-</div>
 
 
 
-<!-- affichage des messages d'erreur -->
+	<!-- affichage des messages d'erreur -->
 
 
 </div>
@@ -506,6 +592,57 @@ if(isUserInGroup($pdoBt,$idUser,"admin"))
 		{
 			$("#wait" ).append('<i class="fa fa-spinner" aria-hidden="true"></i>&nbsp;&nbsp;<span class="pl-3">Merci de patienter</span>')
 		});
+		function getReadableFileSizeString(fileSizeInBytes) {
+			var i = -1;
+			var byteUnits = [' ko', ' Mo', ' Go'];
+			do {
+				fileSizeInBytes = fileSizeInBytes / 1024;
+				i++;
+			} while (fileSizeInBytes > 1024);
+
+			return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
+		};
+
+		var fileName='';
+		var fileList='';
+		var fileSize="";
+		var totalFileSize=0;
+		var fileSizeReadable="";
+		var warning="";
+		var resume="";
+		var warningTotal="";
+		$('input[type="file"]').change(function(e){
+
+			$('#filelist').empty();
+			var nbFiles=e.target.files.length;
+			for (var i = 0; i < nbFiles; i++)
+			{
+        		    // var fileName = e.target.files[0].name;
+        		    //5120000 = 5Mo
+        		    fileSizeReadable=getReadableFileSizeString(e.target.files[i].size);
+        		    fileSize=e.target.files[i].size;
+        		    totalFileSize+=e.target.files[i].size;
+        		    if(fileSize>5120000){
+        		    	warning="<span class='warning-msg'>attention ce fichier pèse plus de 5Mo ! vous ne pourrez pas envoyer votre réponse</span>";
+        		    }
+        		    fileName=e.target.files[i].name +" ( " +fileSizeReadable+ ") "+ warning +"<br>";
+        		    fileList += fileName ;
+        		}
+        		if(totalFileSize>5120000){
+        			resume="Poids total des fichiers : "+ getReadableFileSizeString(totalFileSize);
+        			warningTotal="<br><span class='warning-msg'>Attention le poids total des fichiers excède 5Mo, votre réponse ne pourra pas être envoyée</span><br>";
+        		}
+     		   // console.log(fileList);
+     		   titre='<p><span class="boldtxt">Fichier(s) : </span><br>'
+     		   end='</p>';
+     		   all=titre+fileList+warningTotal+resume+end;
+     		   $('#filelist').append(all);
+     		   fileList="";
+     		});
+
+
+
+
 	});
 
 

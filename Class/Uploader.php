@@ -92,7 +92,8 @@ class Uploader
 		else if(empty($name)){
 			$this->setMessage("Vous devez sélectionner un fichier");
 		}else if($size>$this->maxSize){
-			$this->setMessage("Le fichier dépasse la taille autorisée de $this->maxSize !");
+			$MoMaxSize=($this->maxSize)/1024/1024;
+			$this->setMessage("Le fichier dépasse la taille autorisée de $MoMaxSize Mo !");
 		}else if($this->allowAll || (!$this->allowAll && in_array($ext,$this->extensions)))
 		{
 			if(!$this->setSameFileName($this->bool))

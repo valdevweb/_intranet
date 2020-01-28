@@ -1,0 +1,144 @@
+nav {
+	/* display: inline-block; */
+	width: 100%;
+
+}
+
+/* a {
+	color: #40798C;
+	background-color: #0B2027;
+	padding: 0.3em;
+	border-radius: 5px;
+	text-decoration: none;
+} */
+.container-fluid{
+	padding: 0;
+}
+.checkbox-container {
+	display: block;
+	float: left;
+	width: 50px;
+	height: 50px;
+	position: relative;
+	/* background: #182825; */
+	/* background: #f7f7f7; */
+	z-index: 1;
+}
+
+.checkbox-trigger {
+	opacity: 0;
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	left: 0px;
+	cursor: pointer;
+	z-index: 5;
+	/* top: 10px; */
+}
+
+.hamburger-menu, .hamburger-menu::before, .hamburger-menu::after {
+	display: block;
+	position: absolute;
+	background: black;
+	width: 40px;
+	height: 4px;
+	margin: 1.3em 3em;
+	transition: background 0.3s;
+}
+
+.hamburger-menu::before, .hamburger-menu::after {
+	content: '';
+	position: absolute;
+	margin: -0.7em 0 0;
+	transition: width 0.7s ease 0.3s, transform 0.7s ease 0.3s;
+}
+
+.hamburger-menu::after {
+	margin-top: 0.7em;
+}
+
+.hamburger-menu {
+	position: relative;
+	display: block;
+	margin: 0;
+	margin-top: 1.80em;
+	margin-right: 0.35em;
+	margin-left: 0.35em;
+	margin-bottom: 1.45em;
+	transition: width 0.3s ease;
+}
+
+.checkbox-trigger:checked {
+	left: 202px;
+}
+
+.checkbox-trigger:checked + .menu-content .hamburger-menu {
+	width: 2em;
+
+	transition: width 0.7s ease 0.7s;
+}
+
+.checkbox-trigger:checked + .menu-content .hamburger-menu::before {
+	width: 1.2em;
+	transform: rotate(-35deg);
+	margin-top: -0.4em;
+}
+
+.checkbox-trigger:checked + .menu-content .hamburger-menu::after {
+	width: 1.2em;
+	transform: rotate(35deg);
+	margin-top: 0.4em;
+}
+
+.checkbox-trigger:checked + .menu-content ul {
+	width: 200px;
+	height: 100%;
+	transition: width 0.7s ease 0.3s, height 0.3s ease;
+}
+
+.menu-content {
+	z-index: 999;
+		overflow: hidden;
+	display: flex;
+	/* background: #f7f7f7; */
+
+	/* background: #182825; */
+	/* color: white; */
+	color: black;
+
+	float: left;
+}
+
+.menu-content ul {
+	background-color: #31B0D5;
+	display: block;
+	padding-left: 0;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	margin: 0;
+	width: 0px;
+	height: 0px;
+	overflow: hidden;
+	transition: height 0.3s ease 0.7s, width 0.7s ease;
+}
+.menu-content a {
+	color: #fff;
+
+}
+
+.menu-content ul li {
+	list-style: none;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	cursor: pointer;
+	transition: color 0.5s, background 0.5s;
+}
+
+.menu-content ul li:hover {
+	color: #31B0D5;
+	background: #1E332F;
+}
+.iframe{
+	z-index: 0;
+}
+

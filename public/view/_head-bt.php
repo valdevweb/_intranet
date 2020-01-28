@@ -29,9 +29,8 @@
 	?>
 
 	<link rel="stylesheet" href="../../vendor/bootstrap/css/bootstrap.css">
-	<!-- new fontawesome -->
 	<link href="../../vendor/fontawesome5/css/all.css" rel="stylesheet">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+
 	<!--  Scripts-->
 	<!-- on charge jquery dès le début pour pouvoir ajouter dynamiquement des scripts qui utilisent jquery -->
 	<script src="../../vendor/jquery/jquery-3.2.1.min_ex.js"></script>

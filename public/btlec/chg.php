@@ -32,6 +32,14 @@ $services=listServicesNoTest($pdoBt);
 $idMsg=$_GET['msg'];
 $oneMsg=showOneMsg($pdoBt,$idMsg);
 
+if ($_SESSION['id_service']!= 5 && $_SESSION['id_service']!= 16 && $_SESSION['id_service'] != 6 &&  $oneMsg['id_service'] != $_SESSION['id_service']){
+	echo "vous ne pouvez pas réaffecter cette demande, elle n'est plus destinée à votre service";
+
+	exit();
+
+}
+
+
 //compte des ligne pour afficher les checkbox en colonnes
 $nbServices=count($services);
 $nbServicesLine=round($nbServices /4);
@@ -55,8 +63,6 @@ $username=repliedByIntoName($pdoUser,$_SESSION['id_web_user']);
 
 
 
-
-
 $success=[];
 $errors=[];
 
@@ -75,9 +81,14 @@ if(isset($_POST['affect']))
 		if(affectation($pdoBt,$idMsg,$newService))
 		{
 
+			$path=dirname(__FILE__);
+
 			$serviceInfo=service($pdoBt,$newService);
-			// $mailingList=$serviceInfo['mailing'];
-			$mailingList='valerie.montusclat@btlec.fr';
+			if (preg_match('/_btlecest/', $path)){
+				$mailingList='valerie.montusclat@btlec.fr';
+			}else{
+				$mailingList=$serviceInfo['mailing'];
+			}
 			$objet="PORTAIL BTLec - demande magasin réaffectée au service " . $serviceInfo['full_name'];
 			$objet = mb_encode_mimeheader($objet);
 			$done=sendMail($mailingList,$objet,$tplt,$username,$magName,$link);

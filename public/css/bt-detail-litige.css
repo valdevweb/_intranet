@@ -16,6 +16,10 @@ hr {
 	text-align: right;
 
 }
+h4 a{
+color: #004085 !important;
+}
+
 
 .border-blue th{
 	background-color:  #0d47a1;
