@@ -383,7 +383,7 @@ DEBUT CONTENU CONTAINER
 		$('#pretxt').on('change',function(){
 			var txt=$('#pretxt option:selected').text();
 			splittxt=txt.split(' (');
-			console.log();
+			console.log(splittxt);
 			if(splittxt.length>1){
 					var pretxt=splittxt[1].split(')');
 				$('#msg').val(pretxt[0]);
