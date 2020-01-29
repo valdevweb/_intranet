@@ -451,7 +451,7 @@ DEBUT CONTENU CONTAINER
 						</div>
 						<div class="col-2">
 							<div class="form-group">
-								<select name="etat" id="" class="form-control">
+								<select name="etat"  class="form-control">
 									<option value="">Sélectionner</option>
 									<?php
 									foreach ($listEtat as $etat)
@@ -498,16 +498,16 @@ DEBUT CONTENU CONTAINER
 						<div class="col-4">
 
 							<div class="form-group" id="equipe">
-								<input class="form-control mr-5 pr-5" placeholder="n°litige,  magasin, galec" name="search_strg" id="" type="text"  value="<?=isset($_SESSION['form-data']['search_strg'])? $_SESSION['form-data']['search_strg'] : false?>">
+								<input class="form-control mr-5 pr-5" placeholder="n°litige,  magasin, galec" name="search_strg" type="text"  value="<?=isset($_SESSION['form-data']['search_strg'])? $_SESSION['form-data']['search_strg'] : false?>">
 							</div>
 						</div>
 
 						<div class="col text-right">
-							<button class="btn btn-black mr-5" type="submit" id="" name="search_form"><i class="fas fa-search pr-2"></i>Rechercher</button>
+							<button class="btn btn-black mr-5" type="submit"  name="search_form"><i class="fas fa-search pr-2"></i>Rechercher</button>
 						</div>
 						<div class="col-auto text-right">
 
-							<button class="btn btn-red" type="submit" id="" name="clear_form"><i class="fas fa-eraser pr-2"></i>Effacer toutes les sélections</button>
+							<button class="btn btn-red" type="submit" name="clear_form"><i class="fas fa-eraser pr-2"></i>Effacer toutes les sélections</button>
 
 						</div>
 					</div>
