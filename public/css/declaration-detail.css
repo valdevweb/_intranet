@@ -58,11 +58,18 @@ font-weight: bold;
 	background: #43493f;
 }
 
+.hidden-inv{
+    display: none;
+}
+
 .hidden{
 	display: none;
 }
 .show{
 	display: block;
+}
+.show-inv{
+    display: block;
 }
 
 

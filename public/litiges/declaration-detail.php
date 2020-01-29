@@ -346,149 +346,132 @@ DEBUT CONTENU CONTAINER
 						<!-- ./row -->
 						<?php
 						$subForm=1;
-						foreach ($fLitige as $litige)
-						{
-							if($litige['box_tete']==1)
-							{
-								// on nb'affiche pas les tête de box
-							}
-							else
-							{
-
-
-							// info produit
-							echo '<div class="row yellow-box">';
-							echo '<div class="col">';
-							echo '<h5 class="khand heavy spacy  pt-3 ">Produit : '.$litige['descr'].' - Art. : '.$litige['article'].'</h5>';
-							echo '<div class="row no-gutters">';
-							echo '<div class="col ">';
-							echo '<span class="libelle">Fournisseur : </span>';
-							echo '<span> '.$litige['fournisseur'].'</span>';
-							echo '<span class="libelle pl-5"> EAN : </span>';
-							echo '<span>'.$litige['ean'].'</span>';
-							echo '<span class="libelle pl-5"> Dossier : </span>';
-							echo '<span>'.$litige['dossier_gessica'].'</span>';
-							echo '</div>';
-							echo '</div>';
-							// fin de ligne 2
-							echo '<div class="row pb-3">';
-							echo '<div class="col">';
-							echo '<span class="libelle">Quantité : </span>';
-							echo '<span>'.$litige['qte_cde'].'</span>';
-
-							echo '<span class="libelle pl-5">Palette : </span>';
-							echo '<span>'.$litige['palette'].'</span>';
-							echo '<span class="libelle pl-5">Facture : </span>';
-							echo '<span>'.$litige['facture'].'</span>';
-							echo '<span class="libelle pl-5">Date facture : </span>';
-							echo '<span>'.$litige['datefac'].'</span>';
-							echo '</div>';
-							echo '</div>';
-							// fin info article, fin container :
-							echo '</div></div>';
-							// debut form
-							//ajout row pour border
-							echo '<div class="row border pt-3 mb-5">';
-							echo '<div class="col">';
-
-							echo '<div class="row">';
-							echo '<div class="col-4">';
-							echo '<p class="khand heavy">Motif de la réclamation :</p>';
-							echo '<div class="form-group">';
-							echo '<select class="form-control" name="form_motif[]"  id="motif'.$litige['detail_id'].'"required>';
-							echo '<option value="">Sélectionnez</option>';
-							foreach ($fMotif as $motif)
-							{
-								echo '<option value="'.$motif['id'].'">'.$motif['reclamation'].'</option>';
-
-							}
-							echo '</select>';
-							echo '</div>';
-							echo '</div>';
-							echo '<div class="col-3">';
-							echo '<p class="khand heavy">Quantité concernée en UV : ';
-							echo '</p>';
-							echo '<div class="form-group">';
-							echo '<input type="text" class="form-control" pattern="[-+]?[0-9]*[.]?[0-9]+" title="Seuls les chiffres sont autorisés" name="form_qte[]" required>';
-							echo '<input type="hidden" value="'.$litige['detail_id'].'" name="form_id[]">';
-							echo '</div>';
-							echo '</div>';
-							echo '</div>';
-							echo '<div class="hidden" id="toggleMissing'.$litige['detail_id'].'">';
-
-							echo '<div class="row">';
-							echo '<div class="col-12 text-reddish pl-3">';
-							echo 'Vous avez reçu un produit non commandé à la place ? Si oui, merci de saisir son EAN et la quantité ci-dessous'	;
-							echo '</div>';
-							echo '</div>';
-							echo '</div>';
-
-							echo '<div class="hidden" id="toggle'.$litige['detail_id'].'">';
-
-							echo '<div class="row">';
-							echo '<div class="col-4">';
-							echo '<p class="khand heavy">Ean article reçu : ';
-							echo '</p>';
-							echo '<div class="form-group">';
-							echo '<input type="text" class="form-control" name="form_autre[]" pattern="[-+]?[0-9]*[.]?[0-9]+" title="Seuls les chiffres sont autorisés" id="ean-received" >';
-							echo '</div>';
-							echo '</div>';
-							echo '<div class="col-3">';
-							echo '<p class="khand heavy">Quantité UV reçue : ';
-							echo '</p>';
-							echo '<div class="form-group">';
-							echo '<input type="text" class="form-control" name="form_autre_qte[]">';
-							echo '</div>';
-							echo '</div>';
-							echo '<div class="col"></div>';
-							echo'</div>';
-							echo '</div>';
-
-							echo '<p><span class="khand heavy">Photos /vidéos :</span><br>';
-							echo '<span class="circle-icon"><i class="fas fa-lightbulb"></i></span><span class="text-reddish pl-3 heavy tighter">Maintenez la touche CTRL enfoncée pour sélectionner plusieurs fichiers</span></p>';
-							echo '<div class="row">';
-							echo '<div class="col-auto">';
-							echo '<div class="form-group">';
-							echo '<label class="btn btn-upload btn-file text-center"><input name="form_file'.$subForm.'[]" id="form_file'.$litige['detail_id'].'" type="file" multiple="" class="form-control-file"><i class="fas fa-file-image pr-3"></i>Sélectionner</label>';
-							echo '</div>';
-							echo '</div>';
-														// fileanme
-							echo '<div class="col" id="'.$litige['detail_id'].'">';
-
-							echo '</div>';
-							echo '</div>';
-							echo '</div>';
-							echo '</div>';
-
-								}
-						//fin du if  box
-
-
-
-
-							// fin de row et col avec le border
-							// echo '</div>';
-							// echo '</div>';
-							$subForm++;
-						}
 						?>
-						<p class="khand heavy bigger">Commentaires : </p>
+						<?php foreach ($fLitige as $litige): ?>
+							<?php if($litige['box_tete']!=1):?>
+								<!-- info produit -->
+								<div class="row yellow-box">
+									<div class="col">
+										<h5 class="khand heavy spacy  pt-3 ">Produit : <?=$litige['descr'].' - Art. : '.$litige['article']?></h5>
+										<div class="row no-gutters">
+											<div class="col ">
+												<span class="libelle">Fournisseur : </span>
+												<span><?=$litige['fournisseur']?></span>
+												<span class="libelle pl-5"> EAN : </span>
+												<span><?=$litige['ean']?></span>
+												<span class="libelle pl-5"> Dossier : </span>
+												<span><?=$litige['dossier_gessica']?></span>
+											</div>
+										</div>
+										<!-- // fin de ligne 2 -->
+										<div class="row pb-3">
+											<div class="col">
+												<span class="libelle">Quantité : </span>
+												<span><?=$litige['qte_cde']?></span>
 
+												<span class="libelle pl-5">Palette : </span>
+												<span><?=$litige['palette']?></span>
+												<span class="libelle pl-5">Facture : </span>
+												<span><?=$litige['facture']?></span>
+												<span class="libelle pl-5">Date facture : </span>
+												<span><?=$litige['datefac']?></span>
+											</div>
+										</div>
+										<!-- // fin info article, fin container : -->
+									</div>
+								</div>
+								<!-- fin infoi prod dans jaune-->
+								<!-- //ajout row pour border -->
+								<div class="row border pt-3 mb-5">
+									<div class="col">
+										<div class="row">
+											<div class="col-4">
+												<p class="khand heavy">Motif de la réclamation :</p>
+												<div class="form-group">
+													<select class="form-control" name="form_motif[]"  id="motif<?=$litige['detail_id']?>"required>
+														<option value="">Sélectionnez</option>
+														<?php foreach ($fMotif as $motif){
+															echo '<option value="'.$motif['id'].'">'.$motif['reclamation'].'</option>';
+														}
+														?>
+													</select>
+												</div>
+											</div>
+											<div class="col-3">
+												<p class="khand heavy">Quantité concernée en UV :
+												</p>
+												<div class="form-group">
+													<input type="text" class="form-control" pattern="[-+]?[0-9]*[.]?[0-9]+" title="Seuls les chiffres sont autorisés" name="form_qte[]" required>
+													<input type="hidden" value="<?=$litige['detail_id']?>" name="form_id[]">
+												</div>
+											</div>
+										</div>
+										<!-- hidden fields showed only if manquant => 8 -->
+										<div class="hidden" id="toggleMissing<?=$litige['detail_id']?>">
+											<div class="row">
+												<div class="col-12  pl-3">
+													<p class="text-reddish">Avez vous reçu un produit non commandé à la place des produits manquants ?</p>
+													<div class="form-check form-check-inline">
+														<input class="form-check-input" type="radio" value="1" id="radio-inv-oui-<?=$litige['detail_id']?>" name="radio-inv-<?=$litige['detail_id']?>">
+														<label class="form-check-label" for="radio-inv">Oui</label>
+														<input class="form-check-input ml-3" type="radio" value="1" id="radio-inv-non-<?=$litige['detail_id']?>" name="radio-inv-<?=$litige['detail_id']?>">
+														<label class="form-check-label" for="radio-inv-non">Non</label>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="hidden" id="toggleEan<?=$litige['detail_id']?>">
+											<div class="row">
+												<div class="col-4">
+													<p class="khand heavy">Ean article reçu non commandé :
+													</p>
+													<div class="form-group">
+														<input type="text" class="form-control" name="form_autre[]" pattern="[-+]?[0-9]*[.]?[0-9]+" title="Seuls les chiffres sont autorisés" id="ean-received">
+													</div>
+												</div>
+												<div class="col-3">
+													<p class="khand heavy">Quantité UV reçue :
+													</p>
+													<div class="form-group">
+														<input type="text" class="form-control" name="form_autre_qte[]">
+													</div>
+												</div>
+												<div class="col"></div>
+											</div>
+										</div>
+										<!-- fin hidden fields -->
+										<div class="row mt-5">
+											<div class="col">
+												<p><span class="khand heavy">Photos /vidéos :</span><br>
+													<span class="circle-icon"><i class="fas fa-lightbulb"></i></span><span class="text-reddish pl-3 heavy tighter">Maintenez la touche CTRL enfoncée pour sélectionner plusieurs fichiers</span>
+												</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-auto">
+												<div class="form-group">
+													<label class="btn btn-upload btn-file text-center"><input name="form_file<?=$subForm?>[]" id="form_file<?=$litige['detail_id']?>" type="file" multiple="" class="form-control-file"><i class="fas fa-file-image pr-3"></i>Sélectionner</label>
+												</div>
+											</div>
+											<!-- // upload filename -->
+											<div class="col" id="<?=$litige['detail_id']?>"></div>
+										</div>
+									</div>
+								</div>
+							<?php endif ?>
+							<?php $subForm++; ?>
+						<?php endforeach ?>
+						<p class="khand heavy bigger">Commentaires : </p>
 						<div class="form-group">
 							<textarea class="form-control" name="form_com"></textarea>
 						</div>
 					</div>
 				</div>
-
-
 			</div>
 		</div>
 		<p class="pt-5 text-right upper"><button class="btn btn-primary" type="submit" name="submit">Envoyer</button></p>
-
 	</div>
 </div>
-
-
 </form>
 </div>
 <div class="col-lg-1 col-xxl-2"></div>
@@ -528,50 +511,54 @@ DEBUT CONTENU CONTAINER
         	sizeStrg=selectId.length;
         	selectId=selectId.substring(5,sizeStrg);
         	console.log( selectId );
-        	var toShow="#toggle"+selectId;
         	var toShowMissing="#toggleMissing"+selectId;
 				// var centrale = ;
-				if($(this).val()==5 || $(this).val()==8)
+				if($(this).val()==8)
 				{
-					$(toShow).attr('class','show');
-					if($(this).val()==8){
-						$(toShowMissing).attr('class','show');
-					}
+					$(toShowMissing).attr('class','show');
 				}
 				else
 				{
-					$(toShow).attr('class','hidden');
 					$(toShowMissing).attr('class','hidden');
-
-
 				}
+			});
 
+		$('.form-check-input').click(function() {
+			var radioId=this.id;
+			console.log(radioId)
+			splitId=radioId.split("-");
+			var toShowEan="#toggleEan"+splitId[3];
 
-				// if($(this).val()==8){
-				// 	$(toShow).attr('class','show');
+			if(splitId[2]=="oui"){
+				$(toShowEan).attr('class','show');
+			}else{
+				$(toShowEan).attr('class','hidden');
 
-				// }else{
-				// 	$(toShow).attr('class','hidden');
+			}
 
-				// }
+		// $('input:radio[name="+radioName+"]').change(function() {
+		// 	if (this.value == 'allot') {
+		// 		alert("Allot Thai Gayo Bhai");
+		// 	}
+		// 	else if (this.value == 'transfer') {
+		// 		alert("Transfer Thai Gayo");
+		// 	}
+		// });
+		});
 
-  	// 		var toShow='mot'
-  			// $("#td_id").toggleClass('change_me newClass');
-  		});
+		$(function(){
 
-$(function(){
+			$('#ean-received').keyup(function(e) {
+				if(this.value!='-')
+					while(isNaN(this.value))
+						this.value = this.value.split('').reverse().join('').replace(/[\D]/i,'')
+					.split('').reverse().join('');
+				})
+			.on("cut copy paste",function(e){
+				e.preventDefault();
+			});
 
-  $('#ean-received').keyup(function(e) {
-        if(this.value!='-')
-          while(isNaN(this.value))
-            this.value = this.value.split('').reverse().join('').replace(/[\D]/i,'')
-                                   .split('').reverse().join('');
-    })
-    .on("cut copy paste",function(e){
-    	e.preventDefault();
-    });
-
-});
+		});
 
 	});
 

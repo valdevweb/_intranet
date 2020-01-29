@@ -19,27 +19,22 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 On peut avoir plisuers articles dans une seule décalration de litige
 On doit donc faire une boucle pour récupérer tous les articles
 Les champs de formulaires sont donc répétés autant de fois qu'il y a d'article
-Pour parcourir les postes, il suffit 'ajouter un index pour chq ""sous formulaire. on a des resultat du genre :
+Pour parcourir les posts, il suffit 'ajouter un index pour chq ""sous formulaire. on a des resultat du genre :
 POST[champ]	=>[0]
 			=>[1]
 la plupart des champs post ne pouvant pas être vides, on peut les parcourir sans problème. Ce n'est
 pas le cas avec la gloable file car, rien ne force l'utilisateur à mettre une pièce jointe
 Problème : comment relier les fichiers uploadé au produit concerné ?
-Solution : ajout d'un index dans le nom de la varaible file qui s'incrémente à chq boucle
+Solution : ajout d'un index dans le nom de la variable file qui s'incrémente à chq boucle
 On commence à 1 car le 0 n'est pas pris en compte dans le name
  */
-
-
-
-
-
 
 
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-function getLitige($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id,details.id as detail_id,details.dossier,palette,facture, date_facture,DATE_FORMAT(date_facture,'%d-%m-%Y')as datefac,article, ean, dossier_gessica, descr,qte_cde,tarif,fournisseur FROM dossiers LEFT JOIN details ON dossiers.id=details.id_dossier WHERE dossiers.id= :id");
+function getLitigeTemp($pdoLitige){
+	$req=$pdoLitige->prepare("SELECT dossiers_temp.id as id,details_temp.id as detail_id,details_temp.dossier,palette,facture, date_facture,DATE_FORMAT(date_facture,'%d-%m-%Y')as datefac,article, ean, dossier_gessica, descr,qte_cde,tarif, fournisseur,details_temp.box_tete, details_temp.box_art FROM dossiers_temp LEFT JOIN details_temp ON dossiers_temp.id=details_temp.id_dossier WHERE dossiers_temp.id= :id");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 	));
@@ -51,56 +46,102 @@ function getReclamation($pdoLitige){
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
+// pour les vols, il faut ajouter les GESSICA.PoidsBrutUV et GESSICA.PoidsBrutUL
+function updateDetail($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean, $valoLig){
 
-function addDial($pdoLitige,$filename)
+	$req=$pdoLitige->prepare("UPDATE details_temp SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, valo_line= :valo_line WHERE id= :id");
+	$req->execute(array(
+		':reclamation' =>$reclamation,
+		':qte_litige'	=>$qteLitige,
+		':id'			=>$id,
+		':pj'			=>$pj,
+		':ean'			=>$ean,
+		':valo_line'			=>$valoLig,
+	));
+	return $req->rowCount();
+	// return $req->errorInfo();
+}
+function updateDetailInversion($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur, $invQte, $valoLig)
+{
+	$req=$pdoLitige->prepare("UPDATE details_temp SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, inv_article= :inv_article, inv_descr=:inv_descr,inv_tarif=:inv_tarif, inv_fournisseur=:inv_fournisseur, inv_qte=:inv_qte, valo_line= :valo_line   WHERE id= :id");
+	$req->execute(array(
+		':reclamation' =>$reclamation,
+		':qte_litige'	=>$qteLitige,
+		':id'			=>$id,
+		':pj'			=>$pj,
+		':ean'			=>$ean,
+		':inv_article'		=>$invArticle,
+		':inv_descr'		=>$invDescr,
+		':inv_tarif'		=>$tarifUv,
+		':inv_fournisseur'		=>$invFournisseur,
+		':inv_qte'		=>$invQte,
+		':valo_line'			=>$valoLig,
+
+	));
+	return $req->rowCount();
+	// return $req->errorInfo();
+}
+
+// 3 pour 1er commentaire
+function addDial($pdoLitige)
 {
 	$com=strip_tags($_POST['form_com']);
 	$com=nl2br($com);
-	$req=$pdoLitige->prepare("INSERT INTO dial(id_dossier,date_saisie,msg,id_web_user,filename,mag) VALUES (:id_dossier,:date_saisie,:msg,:id_web_user,:filename,:mag)");
+	$req=$pdoLitige->prepare("INSERT INTO dial_temp(id_dossier,date_saisie,msg,id_web_user,mag) VALUES (:id_dossier,:date_saisie,:msg,:id_web_user,:mag)");
 	$req->execute(array(
 		':id_dossier' =>$_GET['id'],
 		':date_saisie' =>date('Y-m-d H:i:s'),
 		':msg' =>$com,
 		':id_web_user' =>$_SESSION['id_web_user'],
-		':filename' =>$filename,
-		':mag' =>1,
+		':mag' =>3,
 
 	));
 	return $req->rowCount();
 }
-
-function majDossier($pdoLitige, $inversion)
-{
-	$req=$pdoLitige->prepare("UPDATE dossiers SET id_reclamation= :id_reclamation, inversion=:inversion WHERE id= :id");
-	$req->execute(array(
-		':id_reclamation'		=>$_POST['form_motif'],
-		':inversion'			=>$inversion,
-		':id'					=>$_GET['id']
-	));
-	return $req->rowCount();
-
-}
-
 
 $fMotif=getReclamation($pdoLitige);
 
-if(isset($_GET['id']))
+function getProdInversion($pdoQlik,$ean)
 {
-	$fLitige=getLitige($pdoLitige);
-
-
+	$req=$pdoQlik->prepare("SELECT id,`GESSICA.CodeArticle` as article,`GESSICA.CodeDossier` as dossier,`GESSICA.LibelleArticle` as libelle,`GESSICA.PFNP` AS pfnp,`GESSICA.PCB` as pcb,`GESSICA.NomFournisseur` as fournisseur FROM basearticles WHERE `GESSICA.Gencod` LIKE :inversion ORDER BY `GESSICA.CodeDossier`");
+	$req->execute(array(
+		':inversion'	=>'%'.$ean.'%'
+	));
+	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
+
+if(isset($_GET['id']))
+{
+	$fLitige=getLitigeTemp($pdoLitige);
+}
+
+
+
+
+$foreachErrors=[];
+$foreachSuccess=[];
 
 $errors=[];
 $success=[];
 $newData=0;
 $uploadDir= '..\..\..\upload\litiges\\';
+$valoTotal=0;
 
 if(isset($_POST['submit']))
 {
+// on récupère le nombre d'article pour pouvoir boucler sur tableau de champ de formulaire
+	$nbArticle=count($_POST['form_id']);
+	for ($i=0; $i <$nbArticle ; $i++)
+	{
+		//------------------------------------------------------
+		//			traitement de chq "sous formulaire
+		//------------------------------------------------------
+		//nom de la clé de la global FILES
+		$fileKey=$i+1;
+		$fileKey="form_file" . $fileKey;
 		// 1- verif si fichier joint (tableau complet pour 1 article)
-		if(empty($_FILES['form_file']['name'][0]))
+		if(isset($_FILES[$fileKey]['name'][0]) && empty($_FILES[$fileKey]['name'][0]))
 		{
 			$allfilename="";
 		}
@@ -108,13 +149,13 @@ if(isset($_POST['submit']))
 		{
 			// fichier => on boucle
 			$allfilename="";
-			$nbFiles=count($_FILES['form_file']['name']);
+			$nbFiles=count($_FILES[$fileKey]['name']);
 			for ($f=0; $f <$nbFiles ; $f++)
 			{
-				$filename=$_FILES['form_file']['name'][$f];
+				$filename=$_FILES[$fileKey]['name'][$f];
 				$maxFileSize = 5 * 1024 * 1024; //5MB
 
-				if($_FILES['form_file']['size'][$f] > $maxFileSize)
+				if($_FILES[$fileKey]['size'][$f] > $maxFileSize)
 				{
 					$errors[] = 'Attention un des fichiers dépasse la taille autorisée de 5 Mo';
 				}
@@ -127,7 +168,7 @@ if(isset($_POST['submit']))
 					$filename_without_ext = basename($filename, '.'.$ext);
   					// Generate new filename => ajout d'un timestamp au nom du fichier
 					$filename = str_replace(' ', '_', $filename_without_ext) . '_' . time() . '.' . $ext;
-					$uploaded=move_uploaded_file($_FILES['form_file']['tmp_name'][$f],$uploadDir.$filename );
+					$uploaded=move_uploaded_file($_FILES[$fileKey]['tmp_name'][$f],$uploadDir.$filename );
 				}
 				if($uploaded==false)
 				{
@@ -139,39 +180,140 @@ if(isset($_POST['submit']))
 				}
 			}
 		}
-
 		if(count($errors)==0)
 		{
-			if(isset($_POST['form_autre']) && !empty($_POST['form_autre']))
+			// cas d'une inversion de réf
+			if($_POST['form_motif'][$i]==5 || ($_POST['form_motif'][$i]==8 && (!empty($_POST['form_autre_qte'][$i]) && !empty($_POST['form_autre'][$i]))) )
 			{
-				$inversion=$_POST['form_autre'];
+				// si formulaire rempli
+				if(!empty($_POST['form_autre_qte'][$i]) && !empty($_POST['form_autre'][$i]))
+				{
+					// cas de l'inversion de référence (5)
+					$ean=$_POST['form_autre'][$i];
+					$invQte=$_POST['form_autre_qte'][$i];
+				// recup info du produit reçu à la place => base statsventelitige !!! or ça devrait être la base article
+					$listProdInv=getProdInversion($pdoQlik,$ean);
+
+				// si on trouve la réf qui a été livrée à la place
+					if(count($listProdInv)>=1)
+					{
+					// on cherche en 1er dans le 1000
+						foreach ($listProdInv as $prodInv)
+						{
+							if($prodInv['dossier']==1000)
+							{
+								$invArticle=$prodInv['article'];
+								$invDescr=$prodInv['libelle'];
+								$invTarif=$prodInv['pfnp'];
+								$invFournisseur=$prodInv['fournisseur'];
+								$pcb=$prodInv['pcb'];
+								$invDossier=$prodInv['dossier'];
+								$tarifUv=$invTarif/$pcb;
+								break;
+							}
+						// si trouvé en dehors du 1000
+							elseif(!empty($prodInv['article']))
+							{
+								$invArticle=$prodInv['article'];
+								$invDescr=$prodInv['libelle'];
+								$invTarif=$prodInv['pfnp'];
+								$invFournisseur=$prodInv['fournisseur'];
+								$pcb=$prodInv['pcb'];
+								$invDossier=$prodInv['dossier'];
+								$tarifUv=$invTarif/$pcb;
+								break;
+							}
+						// si pas trouvé
+							else
+							{
+								$invArticle=$invDescr=$invTarif=$invFournisseur=$pcb=$invDossier=$tarifUv=NULL;
+
+							}
+						}
+						$valoLig=($fLitige[$i]['tarif']/$fLitige[$i]['qte_cde']*$_POST['form_qte'][$i]) - ($tarifUv*$invQte);
+
+					}
+					else
+					{
+					// ean non trouvé :
+						$invArticle=$invDescr=$invTarif=$invFournisseur=$pcb=$invDossier=$tarifUv=$valoLig=NULL;
+					}
+
+					//maj du 03/12/2019 : mag ne font pas de déclaration d'inversion de réf mais déclarent des manquants et
+					//ajoutent en commentaire la réf en excédent
+					//on ajoute donc les zones de saisies inv de réf pour les manquants
+					//si c'est vide, ça reste un manquant, sinon
+					//on les traite comme des inversion de ref
+					//on force donc l'id motif à inversion de référence
+					$idmotif=5;
+				// article trouvé ou non , on met à jour la db avec des champ null si rien
+					$do=updateDetailInversion($pdoLitige,$idmotif, $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean,$invArticle,$invDescr,$tarifUv,$invFournisseur, $invQte, $valoLig);
+				// echo '1 do '.$do;
+				}
+				else
+				{
+					$errors[]='merci de renseigner l\'EAN reçu et la quantité';
+				}
+
 			}
 			else
 			{
-				$inversion="";
-			}
-
-			$updateDossier=majDossier($pdoLitige, $inversion);
 
 
-			if($updateDossier>0)
-			{
-				$doaddDial=addDial($pdoLitige,$allfilename);
-			}
-			if($doaddDial>0)
-			{
-			header('Location:recap-declaration.php?id='.$_GET['id']);
+				// cas général (pas d'inversion de produit)
+				// exéédent :
+				if($_POST['form_motif'][$i]==6)
+				{
 
-			}
-			else
-			{
-				$errors[]="une erreur est survenue pendant l'enregistrement";
+					$valoLig= -(($fLitige[$i]['tarif']/$fLitige[$i]['qte_cde'])*$_POST['form_qte'][$i]);
+				}
+				else{
+					$valoLig=($fLitige[$i]['tarif']/$fLitige[$i]['qte_cde'])*$_POST['form_qte'][$i];
+
+
+				}
+				$ean="";
+				$do=updateDetail($pdoLitige,$_POST['form_motif'][$i], $_POST['form_qte'][$i],$_POST['form_id'][$i],$allfilename,$ean, $valoLig);
+
+
 			}
 
 		}
 
-}
 
+
+		if(isset($do) && $do>0)
+		{
+			$foreachSuccess[]="success";
+
+		}
+		else
+		{
+			$foreachErrors[]="erreurs";
+
+		}
+	}
+
+	if(count($foreachErrors)==0)
+	{
+		$addCom=addDial($pdoLitige);
+		if($addCom>0)
+		{
+			header('Location:declaration-validation.php?id='.$_GET['id']);
+		}
+		else
+		{
+			$errors[]="une erreur est survenue pendant l'enregistrement";
+
+		}
+	}
+	else
+	{
+
+
+		$errors[]="une erreur est survenue pendant l'enregistrement";
+	}
+}
 // on va utiliser l'id pour enregistrer les produits sélectionnés sachant qu'à chaque import de la base, il changera
 
 //------------------------------------------------------
@@ -184,7 +326,7 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Dossier litige n° <?=$fLitige[0]['dossier']?></h1>
+	<h1 class="text-main-blue py-5 ">Déclaration de litige 2/2</h1>
 	<!-- start row -->
 	<div class="row no-gutters">
 		<div class="col-lg-1 col-xxl-2"></div>
@@ -201,179 +343,247 @@ DEBUT CONTENU CONTAINER
 			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" enctype="multipart/form-data" class="light-shadow border-top-big">
 				<div class="row">
 					<div class="col p-5">
-						<h5 class="khand text-center heavy text-red pb-3">Détail des produits : </h5>
-
-
 						<!-- ./row -->
-
 						<?php
 						$subForm=1;
 						foreach ($fLitige as $litige)
 						{
-							// info produit titre
-							echo '<div class="row yellow-box">';
-							echo '<div class="col">';
-							echo'<h5 class="khand heavy spacy  pt-3 ">'.$litige['descr'].' - Art. : '.$litige['article'].'</h5>';
-							echo '</div></div>';
+							if($litige['box_tete']==1)
+							{
+								// on nb'affiche pas les tête de box
+							}
+							else
+							{
 
 
-							echo '<div class="row border">';
-							echo '<div class="col ">';
-							// interieur détail
-							echo '<div class="row no-gutters">';
-							echo '<div class="col ">';
-							echo '<span class="libelle">Fournisseur : </span>';
-							echo '<span> '.$litige['fournisseur'].'</span>';
-							echo '<span class="libelle pl-5"> EAN : </span>';
-							echo '<span>'.$litige['ean'].'</span>';
-							echo '<span class="libelle pl-5"> Dossier : </span>';
-							echo '<span>'.$litige['dossier_gessica'].'</span>';
-							echo '</div>';
-							echo '</div>';
+							// info produit
+								echo '<div class="row yellow-box">';
+								echo '<div class="col">';
+								echo '<h5 class="khand heavy spacy  pt-3 ">Produit : '.$litige['descr'].' - Art. : '.$litige['article'].'</h5>';
+								echo '<div class="row no-gutters">';
+								echo '<div class="col ">';
+								echo '<span class="libelle">Fournisseur : </span>';
+								echo '<span> '.$litige['fournisseur'].'</span>';
+								echo '<span class="libelle pl-5"> EAN : </span>';
+								echo '<span>'.$litige['ean'].'</span>';
+								echo '<span class="libelle pl-5"> Dossier : </span>';
+								echo '<span>'.$litige['dossier_gessica'].'</span>';
+								echo '</div>';
+								echo '</div>';
 							// fin de ligne 2
-							echo '<div class="row pb-3">';
-							echo '<div class="col">';
-							echo '<span class="libelle ">Palette : </span>';
-							echo '<span>'.$litige['palette'].'</span>';
-							echo '<span class="libelle pl-5">Facture : </span>';
-							echo '<span>'.$litige['facture'].'</span>';
-							echo '<span class="libelle pl-5">Date facture : </span>';
-							echo '<span>'.$litige['datefac'].'</span>';
-							echo '</div>';
-							echo '</div>';
-							echo '</div>';
-							echo '</div>';
-							// fin info article, fin yellow :
+								echo '<div class="row pb-3">';
+								echo '<div class="col">';
+								echo '<span class="libelle">Quantité : </span>';
+								echo '<span>'.$litige['qte_cde'].'</span>';
+
+								echo '<span class="libelle pl-5">Palette : </span>';
+								echo '<span>'.$litige['palette'].'</span>';
+								echo '<span class="libelle pl-5">Facture : </span>';
+								echo '<span>'.$litige['facture'].'</span>';
+								echo '<span class="libelle pl-5">Date facture : </span>';
+								echo '<span>'.$litige['datefac'].'</span>';
+								echo '</div>';
+								echo '</div>';
+							// fin info article, fin container :
+								echo '</div></div>';
+							// debut form
+							//ajout row pour border
+								echo '<div class="row border pt-3 mb-5">';
+								echo '<div class="col">';
+
+								echo '<div class="row">';
+								echo '<div class="col-4">';
+								echo '<p class="khand heavy">Motif de la réclamation :</p>';
+								echo '<div class="form-group">';
+								echo '<select class="form-control" name="form_motif[]"  id="motif'.$litige['detail_id'].'"required>';
+								echo '<option value="">Sélectionnez</option>';
+								foreach ($fMotif as $motif)
+								{
+									echo '<option value="'.$motif['id'].'">'.$motif['reclamation'].'</option>';
+
+								}
+								echo '</select>';
+								echo '</div>';
+								echo '</div>';
+								echo '<div class="col-3">';
+								echo '<p class="khand heavy">Quantité concernée en UV : ';
+								echo '</p>';
+								echo '<div class="form-group">';
+								echo '<input type="text" class="form-control" pattern="[-+]?[0-9]*[.]?[0-9]+" title="Seuls les chiffres sont autorisés" name="form_qte[]" required>';
+								echo '<input type="hidden" value="'.$litige['detail_id'].'" name="form_id[]">';
+								echo '</div>';
+								echo '</div>';
+								echo '</div>';
+								echo '<div class="hidden" id="toggleMissing'.$litige['detail_id'].'">';
+								echo '<div class="row">';
+								echo '<div class="col-12  pl-3">';
+								echo '<p class="text-reddish">Avez vous reçu un produit non commandé à la place des produits manquants ?</p>';
+								echo '<div class="form-check form-check-inline">';
+								echo '<input class="form-check-input" type="radio" value="1" id="radio-inv" name="radio-inv">';
+								echo '<label class="form-check-label" for="radio-inv">Oui</label>';
+								echo '<input class="form-check-input ml-3" type="radio" value="1" id="radio-inv-non" name="radio-inv">';
+								echo '<label class="form-check-label" for="radio-inv-non">Non</label>';
+								echo '</div>';
+								echo '</div>';
+								echo '</div>';
+								echo '</div>';
+
+								echo '<div class="hidden" id="toggle'.$litige['detail_id'].'">';
+
+								echo '<div class="row">';
+								echo '<div class="col-4">';
+								echo '<p class="khand heavy">Ean article reçu : ';
+								echo '</p>';
+								echo '<div class="form-group">';
+								echo '<input type="text" class="form-control" name="form_autre[]" pattern="[-+]?[0-9]*[.]?[0-9]+" title="Seuls les chiffres sont autorisés" id="ean-received" >';
+								echo '</div>';
+								echo '</div>';
+								echo '<div class="col-3">';
+								echo '<p class="khand heavy">Quantité UV reçue : ';
+								echo '</p>';
+								echo '<div class="form-group">';
+								echo '<input type="text" class="form-control" name="form_autre_qte[]">';
+								echo '</div>';
+								echo '</div>';
+								echo '<div class="col"></div>';
+								echo'</div>';
+								echo '</div>';
+
+								echo '<p><span class="khand heavy">Photos /vidéos :</span><br>';
+								echo '<span class="circle-icon"><i class="fas fa-lightbulb"></i></span><span class="text-reddish pl-3 heavy tighter">Maintenez la touche CTRL enfoncée pour sélectionner plusieurs fichiers</span></p>';
+								echo '<div class="row">';
+								echo '<div class="col-auto">';
+								echo '<div class="form-group">';
+								echo '<label class="btn btn-upload btn-file text-center"><input name="form_file'.$subForm.'[]" id="form_file'.$litige['detail_id'].'" type="file" multiple="" class="form-control-file"><i class="fas fa-file-image pr-3"></i>Sélectionner</label>';
+								echo '</div>';
+								echo '</div>';
+														// fileanme
+								echo '<div class="col" id="'.$litige['detail_id'].'">';
+
+								echo '</div>';
+								echo '</div>';
+								echo '</div>';
+								echo '</div>';
+
+							}
+						//fin du if  box
 
 
+
+
+							// fin de row et col avec le border
+							// echo '</div>';
+							// echo '</div>';
 							$subForm++;
 						}
 						?>
-						<!-- debut form -->
-						<!-- ajout row pour border -->
-						<div class="row border pt-3 mb-5 mt-3">
-							<div class="col">
-								<h5 class="khand text-center heavy pb-3 text-red">Informations sur le litige</h5>
+						<p class="khand heavy bigger">Commentaires : </p>
 
-								<div class="row">
-									<div class="col-4">
-
-										<p class="khand heavy">Motif de la réclamation :</p>
-										<div class="form-group">
-											<select class="form-control" name="form_motif"  id="motif" required>
-												<option value="">Sélectionnez</option>
-												<?php
-												foreach ($fMotif as $motif)
-												{
-													echo '<option value="'.$motif['id'].'">'.$motif['reclamation'].'</option>';
-
-												}
-												?>
-											</select>
-										</div>
-									</div>
-							<!-- 		<div class="col-3">
-										<p class="khand heavy">Quantité concernée :
-										</p>
-										<div class="form-group">
-											<input type="text" class="form-control" pattern="[-+]?[0-9]*[.]?[0-9]+" title="Seuls les chiffres sont autorisés" name="form_qte" required>
-										</div>
-									</div> -->
-									<div class="col">
-										<div class="hidden" id="toggle">
-											<p class="khand heavy">Ean article reçu :
-											</p>
-											<div class="form-group">
-												<input type="text" class="form-control" name="form_autre">
-											</div>
-										</div>
-									</div>
-									<div class="col-3"></div>
-								</div>
-								<p class="khand heavy">Commentaires : </p>
-								<div class="form-group">
-									<textarea class="form-control" name="form_com" required></textarea>
-								</div>
-								<p><span class="khand heavy">Photos /vidéos :</span><br>
-									<span class="circle-icon"><i class="fas fa-lightbulb"></i></span><span class="text-reddish pl-3 heavy tighter">Maintenez la touche CTRL enfoncée pour sélectionner plusieurs fichiers</span></p>
-									<div class="row">
-										<div class="col-auto">
-											<div class="form-group">
-												<label class="btn btn-upload btn-file text-center"><input name="form_file[]" id="form_file" type="file" multiple="" class="form-control-file"><i class="fas fa-file-image pr-3"></i>Sélectionner</label>
-											</div>
-										</div>
-										<!-- file anme -->
-										<div class="col" id="filelist">
-
-										</div>
-									</div>
-									<!-- fin de row et col avec le border -->
-								</div>
-							</div>
-
-							<p class="pt-5 text-right upper"><button class="btn btn-primary" type="submit" name="submit">Envoyer</button></p>
-
+						<div class="form-group">
+							<textarea class="form-control" name="form_com"></textarea>
 						</div>
 					</div>
+				</div>
 
 
-				</form>
 			</div>
-			<div class="col-lg-1 col-xxl-2"></div>
 		</div>
-		<!-- ./row -->
+		<p class="pt-5 text-right upper"><button class="btn btn-primary" type="submit" name="submit">Envoyer</button></p>
 
 	</div>
-	<script type="text/javascript">
+</div>
+
+
+</form>
+</div>
+<div class="col-lg-1 col-xxl-2"></div>
+</div>
+<!-- ./row -->
+</div>
+<script type="text/javascript">
 	$(document).ready(function(){
-			// ----------------------------------
-			// upload
-			// ----------------------------------
-			var fileName='';
-			var fileList='';
-			$('input[type="file"]').change(function(e){
-				var nbFiles=e.target.files.length;
-				for (var i = 0; i < nbFiles; i++)
-				{
-					fileName=e.target.files[i].name;
-					fileList += fileName + ' - ';
-				}
-				titre='<p><span class="heavy">Fichier(s) : </span>';
-				end='</p>';
-				all=titre+fileList+end;
-				$('#filelist').append(all);
-				fileList="";
-	});
-			// ----------------------------------
-			// select => montre input hidden
-			// ----------------------------------
+		var fileName='';
+		var fileList='';
+		$('input[type="file"]').change(function(e){
+			var nbFiles=e.target.files.length;
+			var inputFileId=e.target.id;
+			lastStrg=inputFileId.length;
+			inputFileId=inputFileId.substring(9,lastStrg);
+			inputFileId="#"+inputFileId;
+			console.log(inputFileId);
+			for (var i = 0; i < nbFiles; i++)
+			{
+            // var fileName = e.target.files[0].name;
+            fileName=e.target.files[i].name;
+            console.log(fileName);
 
-			$('select').on('change',function(e){
-        	// var selectId=e.target.id;
-        	// sizeStrg=selectId.length;
-        	// selectId=selectId.substring(5,sizeStrg);
+            fileList += fileName + ' - ';
+        }
+        // console.log(fileList);
+        titre='<p><span class="text-reddish heavy">Fichier(s) : </span>'
+        end='</p>';
+        all=titre+fileList+end;
+        $(inputFileId).append(all);
+        fileList="";
+    });
 
-        	var toShow="#toggle";
+		$('select').on('change',function(e){
+        // $("select#motif7").change(function(){
+        	var selectId=e.target.id;
+        	sizeStrg=selectId.length;
+        	selectId=selectId.substring(5,sizeStrg);
+        	console.log( selectId );
+        	var toShowMissing="#toggleMissing"+selectId;
 				// var centrale = ;
-				if($(this).val()==5)
+				if($(this).val()==8)
 				{
-					$(toShow).attr('class','show');
+					$(toShowMissing).attr('class','show');
 				}
 				else
 				{
-					$(toShow).attr('class','hidden');
+					$(toShowMissing).attr('class','hidden');
 				}
+
+
+
+
+
+
+				// if($(this).val()==8){
+				// 	$(toShow).attr('class','show');
+
+				// }else{
+				// 	$(toShow).attr('class','hidden');
+
+				// }
+
+  	// 		var toShow='mot'
+  			// $("#td_id").toggleClass('change_me newClass');
   		});
+
+		$(function(){
+
+			$('#ean-received').keyup(function(e) {
+				if(this.value!='-')
+					while(isNaN(this.value))
+						this.value = this.value.split('').reverse().join('').replace(/[\D]/i,'')
+					.split('').reverse().join('');
+				})
+			.on("cut copy paste",function(e){
+				e.preventDefault();
+			});
+
+		});
 
 	});
 
 
 
-		</script>
+</script>
 
 
-		<?php
+<?php
 
-		require '../view/_footer-bt.php';
+require '../view/_footer-bt.php';
 
-		?>
+?>
