@@ -34,7 +34,7 @@ function getLitige($pdoLitige)
 	$req=$pdoLitige->prepare("
 		SELECT
 		dossiers.id as id_main,	dossiers.dossier,dossiers.date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,dossiers.user_crea,dossiers.galec,dossiers.etat_dossier,vingtquatre, dossiers.id_web_user, inversion,inv_article,inv_fournisseur,inv_tarif,inv_descr,nom, valo, flag_valo, id_reclamation,inv_palette,inv_qte,id_robbery, commission, box_tete, box_art,
-		details.id as id_detail,details.ean,details.id_dossier,	details.palette,details.facture,details.article,details.tarif,details.qte_cde, details.qte_litige,details.valo_line,details.dossier_gessica,details.descr,details.fournisseur,details.pj,DATE_FORMAT(details.date_facture, '%d-%m-%Y') as datefacture,
+		details.id as id_detail,details.ean,details.id_dossier,	details.palette,details.facture,details.article,details.tarif,details.qte_cde, details.qte_litige,details.valo_line,details.dossier_gessica,details.descr,details.fournisseur,details.pj,DATE_FORMAT(details.date_facture, '%d-%m-%Y') as datefacture, details.serials,
 		reclamation.reclamation,
 		btlec.sca3.mag, btlec.sca3.centrale, btlec.sca3.btlec,
 		etat.etat
@@ -267,10 +267,7 @@ function addAction($pdoLitige, $idContrainte){
 
 
 
-if(isset($_GET['successpal']))
-{
-	$success[]='la palette a  été trouvée et la base de donnée mise à jour';
-}
+
 
 // $name=getMagName($pdoUser, $dial['id_web_user']);
 $infoMag=getMagName($pdoUser, $fLitige[0]['id_web_user']);
@@ -352,11 +349,49 @@ function getPagination($pdoLitige){
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_COLUMN);
 }
+function addSerials($pdoLitige,$idDetail,$values){
+	$req=$pdoLitige->prepare("UPDATE details SET serials=:serials WHERE id=:id");
+	$req->execute([
+		':id'		=>$idDetail,
+		':serials' => stripslashes($values)
+	]);
+	return $req->rowCount();
+}
 
 
+if(isset($_POST['submit-serials'])){
+	echo "<pre>";
+	print_r($_POST);
+	echo '</pre>';
+	$idDetail="";
+	foreach ($_POST as $key => $value) {
+		if(strpos($key,"iddetail")!==false){
+			echo "true";
+			$idDetail=explode("-",$key)[1];
+			echo $idDetail;
+			$added=addSerials($pdoLitige, $idDetail, $_POST[$key]);
+			if($added>=1){
+				$successStr='success=sn';
+				unset($_POST);
+				header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."&".$successStr,true,303);
+			}
+		}
+	}
+
+}
 
 
+if(isset($_GET['successpal']))
+{
+	$success[]='la palette a  été trouvée et la base de donnée mise à jour';
+}
+if(isset($_GET['success'])){
+		$arrSuccess=[
+				'sn'		=>"Les numéros de séries ont bien été enregistrés"
+		];
+		$success[]=$arrSuccess[$_GET['success']];
 
+}
 
 $pagination=getPagination($pdoLitige);
 $page=array_search($_GET['id'], $pagination);
@@ -396,22 +431,22 @@ DEBUT CONTENU CONTAINER
 		<div class="col">
 			<?php
 			echo '<table class="table text-right table-bordered ">';
-					echo '<tr>';
+			echo '<tr>';
 
-					echo '<td>'.$yearN.'</td>';
-					echo '<td>'.$yearNUn .'</td>';
-					echo '<td>'.$yearNDeux .'</td>';
-					echo '</tr>';
+			echo '<td>'.$yearN.'</td>';
+			echo '<td>'.$yearNUn .'</td>';
+			echo '<td>'.$yearNDeux .'</td>';
+			echo '</tr>';
 
-					echo '<tr>';
+			echo '<tr>';
 
-					echo '<td>'.number_format((float)$financeN['CA_Annuel'],2,'.',' ').'&euro;</td>';
-					echo '<td>'.number_format((float)$financeNUn['CA_Annuel'],2,'.',' ').'&euro;</td>';
-					echo '<td>'.number_format((float)$financeNDeux['CA_Annuel'],2,'.',' ').'&euro;</td>';
-					echo '</tr>';
+			echo '<td>'.number_format((float)$financeN['CA_Annuel'],2,'.',' ').'&euro;</td>';
+			echo '<td>'.number_format((float)$financeNUn['CA_Annuel'],2,'.',' ').'&euro;</td>';
+			echo '<td>'.number_format((float)$financeNDeux['CA_Annuel'],2,'.',' ').'&euro;</td>';
+			echo '</tr>';
 
-					echo '</table>';
-					 ?>
+			echo '</table>';
+			?>
 		</div>
 		<div class="col">
 			<p class="text-right pt-3">
@@ -836,52 +871,119 @@ DEBUT CONTENU CONTAINER
 			</div>
 		</div>
 
+		<?php
+
+
+
+
+		 ?>
+
+
+
+		<!--  -->
+		<!-- MODAL SN -->
+		<div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+
+					<div class="modal-body">
+						<h5 class="text-center text-violet">Numéros de séries :</h5>
+						<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post">
+							<div class="form-group">
+								<textarea class="form-control" name=""></textarea>
+							</div>
+
+							<div class="text-right">
+								<button class="btn btn-primary" name="submit-serials">Enregistrer</button>
+
+							</div>
+
+
+
+						</form>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-violet" data-dismiss="modal">Fermer</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--  -->
+
+
+
+
+
+
 
 
 	</div>
+
+
+
 	<script type="text/javascript">
 
 		$(document).ready(function(){
-			var url = window.location + '';
-			var splited=url.split("?id=");
-			if(splited[1]==undefined)
-			{
-				var line='';
-			}
-			else{
-				var line=splited[1];
-			}
+			$('#largeModal').on('show.bs.modal', function (e) {
+				var rowid = $(e.relatedTarget).data('id');
+				console.log(rowid);
+				$('textarea').attr('name', "iddetail-"+rowid);
+				if(rowid){
+					$.ajax({
+						type:'POST',
+						url:'bt-detail-serial.php',
+						data:'idprod='+rowid,
+						success:function(html){
+							$('textarea').val(html);
+							console.log(html);
+						}
+					});
+				}
 
-			$('.stamps').on('click',function(){
 
-				console.log(line);
-				$('#hiddeninput').val(line);
-				$('#hidden').css("display","block");
+
+			});
+		//
+		var url = window.location + '';
+		var splited=url.split("?id=");
+		if(splited[1]==undefined){
+			var line='';
+		}
+		else{
+			var line=splited[1];
+		}
+
+		$('.stamps').on('click',function(){
+			console.log(line);
+			$('#hiddeninput').val(line);
+			$('#hidden').css("display","block");
 			// $('#modal1').removeAttr('aria-hidden');
 				// $('#modal1').attr('aria-modal', true);
 				$('#cmtarea').focus();
 			// $("tr#"+line).addClass("anim");
 		});
-			$('#annuler').on('click', function(e){
-				e.preventDefault();
-				$('#hidden').css("display","none");
-
-
-			});
-
+		$('#annuler').on('click', function(e){
+			e.preventDefault();
+			$('#hidden').css("display","none");
 
 
 		});
 
 
 
-	</script>
+	});
+
+
+
+</script>
 
 
 
 
-	<?php
+<?php
 
-	require '../view/_footer-bt.php';
+require '../view/_footer-bt.php';
 
-	?>
+?>

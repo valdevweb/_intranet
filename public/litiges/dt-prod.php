@@ -27,11 +27,12 @@
 							<th class="align-top">Fournisseur</th>
 							<th class="align-top">Réclamation</th>
 							<th class="align-top">Qté <br>litige</th>
-							<!-- <th class="align-top text-right">Date déclaration</th> -->
-							<!-- <th class="align-top text-right">Facturé</th> -->
+
 							<th class="align-top text-right">Valo</th>
 							<th class="align-top">PJ</th>
 							<th class="align-top pt-1"><i class="fas fa-tools"></i></th>
+							<th class="align-top pt-1"><img src="../img/litiges/serial-icon-title.png"></th>
+
 						</tr>
 					</thead>
 					<tbody>
@@ -59,9 +60,12 @@
 							}
 							else{
 								$boxIco='';
-
 							}
-
+							if($prod['serials']){
+								$serialIcon="serial-ok.png";
+							}else{
+								$serialIcon="serial-ko.png";
+							}
 
 
 							// cas général = pas d'inversion de produit
@@ -79,6 +83,7 @@
 
 								echo '<td class="text-right">'.$pj.'</td>';
 								echo '<td class="text-center"><a href="edit-detail-litige.php?id='.$prod['id_detail'].'"><i class="fas fa-tools"></i></a></td>';
+								echo '<td><a href="#largeModal" data-toggle="modal" data-id="'.$prod['id_detail'].'"><img src="../img/litiges/'.$serialIcon.'"></a></td>';
 								echo '</tr>';
 							}
 								// si il s'agit d'une inversion de produit, on rajoute une ligne avec le produit inversé
@@ -99,6 +104,7 @@
 
 								echo '<td class="text-right">'.$pj.'</td>';
 								echo '<td class="text-center"><a href="edit-detail-litige.php?id='.$prod['id_detail'].'"><i class="fas fa-tools"></i></a></td>';
+								echo '<td><a href="#largeModal" data-toggle="modal" data-id="'.$prod['id_detail'].'">SN</a></td>';
 
 								echo '</tr>';
 
@@ -159,6 +165,8 @@
 				</table>
 				<p class="text-right heavy bigger mb-3 text-main-blue pr-3">Valorisation magasin : <?= $prod['valo']?> </p>
 				<p><?= $articleAZero?></p>
+
+
 
 			</div>
 		</div>
