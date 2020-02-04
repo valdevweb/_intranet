@@ -154,7 +154,7 @@ if(!empty($revRes))
 			<!-- photo bt -->
 			<div class="col-sm-12 col-lg-6">
 				<h1>BTLec Est - Centrale d'Achat</h1>
-				<h3 class="my-4 text-white pb-3">Bazar Technique E.Leclerc </h3>
+				<h3 class="mb-4 text-white pb-3">Bazar Technique E.Leclerc </h3>
 				<p><img id="photo-bt" class="boxshadow" src="public/img/index/front-bt-800.jpg"></p>
 				<?php
 				if(!empty($err)){
@@ -165,14 +165,24 @@ if(!empty($revRes))
 				}
 				?>
 				<!-- flashs info -->
-				<div class="row align-items-center infos mt-5">
+				<div class="row align-items-center infos mt-2">
 					<div class="col">
 						<!-- <div class="slide"><h1 class="text-white">Le salon BTLec Est 2020 </h1></div> -->
-							<h3  class="text-white">SALON 2020</h3>
-						<p class="text-center"><img class="salon-img"  src="public/img/salon/date_anim.gif"></p>
-						<p class="text-white appear">Cette année, le salon aura lieu  mardi 9 et mercredi 10 juin</p>
+						<div class="row">
+							<div class="col-4"></div>
+							<div class="col">
+										<h3  class="text-white text-center">SALON 2020</h3>
+						<p class="text-white appear text-center">Cette année, le salon aura lieu mardi 9 et mercredi 10 juin</p>
+
+							</div>
+						</div>
 
 					</div>
+
+					<div class="col">
+						<p class="text-center"><img class="salon-img"  src="public/img/salon/date_anim.gif"></p>
+					</div>
+
 
 				</div>
 
