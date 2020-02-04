@@ -130,6 +130,12 @@ $today=new DateTimeImmutable();
 $now=getYesterday();
 // meme jour de la semaine, l'année dernière
 $prev=getLastYearDay($now);
+
+
+if($now->format('n') !=$prev->format('n')){
+	$prev=$prev->modify("-1 day");
+
+}
 $lastDayOfMonth=isLastDayOfMonth($now);
 
 
@@ -173,11 +179,11 @@ $endMonthNow=caMois($pdoQlik, $now->format('n'), $now->format('Y'));
 
 // chiffre d'affaire tatal de meêm mois l'année dernière
 $endMonthPrev=caMois($pdoQlik,$prev->format('n'), $prev->format('Y'));
+
+
 $endMonthNow=round($endMonthNow['CAl']);
 $endMonthPrev=round($endMonthPrev['CAl']);
 $monthNow=$endMonthNow;
-
-
 
 
 //ca année en cours jusqu'à aujourd'hui => on peut prendre le ca du mois en coèurs pour l'année actuelle
