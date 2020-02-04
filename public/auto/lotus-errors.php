@@ -113,6 +113,9 @@ $decompte=1;
 // 5 = renvoie sur une adresse lotus
 // 6 =renvoie sur une ld
 // 9 =renvoie sur une ld
+// 7=renvoie vers une liste de diffus qui n'existe pas
+// 8 renvoie vers une ld vide
+
 $noMatch=getErrorList($pdoUser,2);
 $emptyLd=getErrorList($pdoUser,4);
 $lotusAgain=getErrorList($pdoUser,5);
@@ -128,7 +131,7 @@ foreach ($ldAgain as $key => $ld) {
 		echo $detail;
 	}else{
 		foreach ($linkedLd as $key => $found) {
-					// peut renvoyer plusieur email
+					// peut renvoyer plusieurs email
 			if(trim($found['email'])!=''){
 						// ajout de l'adresse mail :
 				$done[$ld['id']]=addMail($pdoUser, $ld['id_import'],$ld['ld_full'], $ld['ld_short'],$ld['ld_suffixe'],$ld['id_import_ld'], $found['email'],$ld['lotus'], $ld['galec']);

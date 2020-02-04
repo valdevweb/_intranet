@@ -1,6 +1,30 @@
 <?php
+if (preg_match('/_btlecest/', dirname(__FILE__)))
+{
+	define("VERSION",'_');
+}
+else
+{
+	define("VERSION",'');
+}
 
+function connectToDb($dbname) {
+	$host='localhost';
+	$username='sql';
+	$pwd='User19092017+';
+	try {
+		$pdo=new PDO("mysql:host=$host;dbname=$dbname", $username, $pwd);
 
+	}
+	catch(Exception $e)
+	{
+		die('Erreur : '.$e->getMessage());
+	}
+	return  $pdo;
+}
+$dbCm=VERSION."cm";
+$pdoCm=connectToDb($dbCm);
+$pdoUser=connectToDb('web_users');
 /*
 1- recup les id des db old et actuelle
 2- vérifie qu'elle n'ont pas déjà été traitée (présence id dans table histo )
@@ -37,14 +61,15 @@ function noMoreInNew($pdoUser){
 }
 
 
-function addToHisto($pdoUser, $idold,$idnew,$email,$ldFull,$added){
+function addToHisto($pdoUser, $idold,$idnew,$email,$ldFull,$galec,$added){
 
-	$req=$pdoUser->prepare("INSERT INTO lotus_histo (id_old,id_new,email,ld_full, added) VALUES (:id_old, :id_new, :email, :ld_full, :added)");
+	$req=$pdoUser->prepare("INSERT INTO lotus_histo (id_old,id_new,email,ld_full, galec, added) VALUES (:id_old, :id_new, :email, :ld_full, :galec, :added)");
 	$req->execute([
 		':id_old'	=>$idold,
 		':id_new'	=>$idnew,
 		':email'	=>$email,
 		':ld_full'	=>$ldFull,
+		':galec'	=>$galec,
 		':added'	=>$added,
 	]);
 }
@@ -64,16 +89,20 @@ $news=existInNew($pdoUser);
 $deleted=noMoreInNew($pdoUser);
 
 
+
+
 if(!empty($news)){
 	foreach ($news as $new) {
-		addToHisto($pdoUser, $oldId['id_import'],$newId['id_import'],$new['email'],$new['ld_full'],1);
+		addToHisto($pdoUser, $oldId['id_import'],$newId['id_import'],$new['email'],$new['ld_full'], $new['galec'],1);
 
 
 	}
 }
+echo "nouveau ". sizeof($news);
 if(!empty($deleted)){
 		foreach ($deleted as $del) {
- 		addToHisto($pdoUser, $oldId['id_import'],$newId['id_import'],$del['email'],$del['ld_full'],0);
+ 		addToHisto($pdoUser, $oldId['id_import'],$newId['id_import'],$del['email'],$del['ld_full'], $del['galec'],0);
 	}
 }
 
+echo " a supprimer " .sizeof($deleted);

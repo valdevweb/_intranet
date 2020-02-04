@@ -78,26 +78,30 @@ foreach ($lotusFileList as $filename){
 		$fileDate=date ('Y-m-d H:i:s', filemtime($lotusDir.'\\'.$filename));
 		$fileDate=new DateTimeImmutable($fileDate);
 		$today=new DateTime();
+		// if($fileDate->format('Y-m-d') == (new DateTime("2020-01-30"))->format('Y-m-d')){
 		if($fileDate->format('Y-m-d') == $today->format('Y-m-d')){
 			$newFile=$filename;
 		}
 	}
 
 }
+
+
 /*----------------------------------------------------------------------------------------------
 TRAITEMENT NOUVEAU FICHIER
 
 ----------------------------------------------------------------------------------------------- */
 // $newFile="lotus.txt";
+
+
 if(!empty($newFile)){
 	require('lotus-file-import.php');
 	require('lotus-errors.php');
-	require('lotus-compare.php');
-
+	// require('lotus-compare.php');
+// echo $newFile;
 }
 
 
 
 
 
-?>
