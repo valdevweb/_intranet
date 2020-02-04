@@ -348,14 +348,10 @@ DEBUT CONTENU CONTAINER
 						$subForm=1;
 						foreach ($fLitige as $litige)
 						{
-							if($litige['box_tete']==1)
-							{
+							if($litige['box_tete']==1){
 								// on nb'affiche pas les tête de box
 							}
-							else
-							{
-
-
+							else{
 							// info produit
 								echo '<div class="row yellow-box">';
 								echo '<div class="col">';
