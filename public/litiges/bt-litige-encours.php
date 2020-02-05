@@ -50,6 +50,7 @@ function globalSearch($pdoLitige)
 		$reqCommission='';
 	}
 
+
 	if(isset($_SESSION['vingtquatre'])){
 		if($_SESSION['vingtquatre']==1){
 			$reqLivraison= ' AND vingtquatre=1 ';
@@ -63,13 +64,13 @@ function globalSearch($pdoLitige)
 
 	if(isset($_SESSION['esp'])){
 		if($_SESSION['esp']==1){
-			$reqLivraison= ' AND esp=1 ';
+			$reqLivraisonEsp= ' AND esp=1 ';
 		}elseif($_SESSION['esp']==0){
-			$reqLivraison= ' AND esp='.intval(0);
+			$reqLivraisonEsp= ' AND esp='.intval(0);
 		}
 	}
 	else{
-		$reqLivraison= ' AND esp is NOT NULL';
+		$reqLivraisonEsp= ' AND esp is NOT NULL';
 	}
 
 	if(isset($_SESSION['form-data']['btlec'])){
@@ -88,7 +89,7 @@ function globalSearch($pdoLitige)
 		WHERE
 		date_crea BETWEEN :date_start AND :date_end
 		AND $concatField LIKE :search 		$reqEtat
-		$reqCommission $reqLivraison
+		$reqCommission $reqLivraison $reqLivraisonEsp
 		GROUP BY dossiers.id
 		ORDER BY dossiers.dossier DESC");
 
@@ -137,13 +138,25 @@ function getSumValo($pdoLitige)
 	else{
 		$reqLivraison= ' AND vingtquatre is NOT NULL';
 	}
+	if(isset($_SESSION['esp'])){
+		if($_SESSION['esp']==1){
+			$reqLivraisonEsp= ' AND esp=1 ';
+		}elseif($_SESSION['esp']==0){
+			$reqLivraisonEsp= ' AND esp='.intval(0);
+		}
+	}
+	else{
+		$reqLivraisonEsp= ' AND esp is NOT NULL';
+	}
+
+
 	$req=$pdoLitige->prepare("SELECT  sum(dossiers.valo) as valo_totale
 		FROM dossiers
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
 		-- LEFT JOIN details ON dossiers.id=details.id_dossier
 
 		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec)
-		LIKE :search $reqEtat $reqCommission $reqLivraison");
+		LIKE :search $reqEtat $reqCommission $reqLivraison $reqLivraisonEsp");
 
 
 	$req->execute(array(
@@ -190,11 +203,20 @@ function getSumValoByType($pdoLitige)
 	else{
 		$reqLivraison= ' AND vingtquatre is NOT NULL';
 	}
-
+	if(isset($_SESSION['esp'])){
+		if($_SESSION['esp']==1){
+			$reqLivraisonEsp= ' AND esp=1 ';
+		}elseif($_SESSION['esp']==0){
+			$reqLivraisonEsp= ' AND esp='.intval(0);
+		}
+	}
+	else{
+		$reqLivraisonEsp= ' AND esp is NOT NULL';
+	}
 	$req=$pdoLitige->prepare("SELECT  sum(valo) as valo_etat, dossiers.id_etat, etat.etat, count(dossiers.id) as nbEtat FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
-		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search $reqEtat $reqCommission $reqLivraison GROUP BY etat");
+		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search $reqEtat $reqCommission $reqLivraison $reqLivraisonEsp GROUP BY etat");
 	$req->execute(array(
 		':search' =>'%'.$strg.'%',
 		':date_start'=>$_SESSION['form-data']['date_start']. ' 00:00:00',
