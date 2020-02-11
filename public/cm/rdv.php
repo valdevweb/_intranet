@@ -138,11 +138,12 @@ if(isset($_POST['accept']) || isset($_POST['deny'])){
 
 		if(VERSION=='_'){
 			$dest=['valerie.montusclat@btlec.fr'];
-			$bcc=['valerie.montusclat@btlec.fr'];
+			$bcc=[];
 		}else{
 
-			$dest=['valerie.montusclat@btlec.fr'];
-			$bcc=['luc.muller@btlec.fr', 'stephane.wendling@btlec.fr', $cm['email']];
+
+			$dest=['luc.muller@btlec.fr', 'stephane.wendling@btlec.fr', $cm['email']];
+			$bcc=['valerie.montusclat@btlec.fr'];
 		}
 
 
