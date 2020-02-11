@@ -1,0 +1,289 @@
+.container .row {
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+}
+.row {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0px !important;
+    margin-top: 0px !important;
+}
+
+.int-padding{
+    padding: 20px;
+}
+
+
+/* -------------------------------- */
+/*              titre               */
+/* -------------------------------- */
+
+h4{
+   font-family: "Khand", sans-serif !important;
+}
+
+h1{
+    font-family: "Khand", sans-serif !important;
+}
+
+.sub-h1{
+    font-size: 20px;
+}
+
+
+/* -------------------------------- */
+/*              mini nav:           */
+/* -------------------------------- */
+
+
+.mini-nav li a:hover {
+    letter-spacing: 0.3em;
+}
+.mini-nav li a {
+    display: inline-block;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    padding: 4px 18px;
+    color: #0D47A1;
+    font-size: 2em;
+    font-family: "Khand", sans-serif !important;
+}
+
+.mini-nav li + li {
+    border-left: 1px solid #9e9e9e;
+}
+
+.mini-nav li {
+    display: inline !important;
+}
+li {
+    margin: 0.4em 0;
+}
+.mini-nav hr {
+  width: 20% !important;
+  display: block !important;
+  height: 1px !important;
+  border: 0 !important;
+  border-top: 1px solid #9e9e9e !important;
+    margin: auto !important;
+}
+
+.mini-nav li {
+    display: list-item;
+    text-align: -webkit-match-parent;
+}
+
+
+
+/* -------------------------------- */
+/*              galerie               */
+/* -------------------------------- */
+
+.gallery {
+    width: 855px;
+    margin: 0 auto;
+    padding: 5px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,.3);
+}
+
+.gallery > div {
+    position: relative;
+    float: left;
+    padding: 5px;
+}
+
+.gallery > div > img {
+    display: block;
+    width: 200px;
+    transition: .1s transform;
+    transform: translateZ(0);
+}
+
+.gallery > div:hover {
+    z-index: 1;
+}
+
+.gallery > div:hover > img {
+    transform: scale(1.7,1.7);
+    transition: .3s transform;
+}
+
+.cf:before, .cf:after {
+    display: table;
+    content: "";
+    line-height: 0;
+}
+
+.cf:after {
+    clear: both;
+}
+
+.gallery img{
+    margin-bottom: 0 !important;
+}
+
+
+
+
+/* -------------------------------- */
+/*              table             */
+/* -------------------------------- */
+
+
+
+.table-nonfluid {
+   width: auto !important;
+}
+
+  tr, td, th{
+  padding : 0 1rem !important;
+}
+
+a.printer{
+  font-weight: normal;
+  /* color:  red; */
+}
+
+
+/* -------------------------------- */
+/*              form                */
+/* -------------------------------- */
+
+
+#sendpdf input[type=email]{
+    background-color: #fafafa !important;
+    width: 30%;
+    padding: 5px;
+    border: 1px solid #9e9e9e !important    ;
+    border-radius: 2px;
+    height: 3rem;
+    color: #000 !important;
+}
+
+#more input[type=email]{
+    background-color: #fafafa !important;
+    width: 40%;
+    padding: 5px;
+    border: 1px solid #9e9e9e !important    ;
+    border-radius: 2px;
+    height: 2rem;
+    color: #000 !important;
+}
+
+
+
+/* -------------------------------- */
+/*              descr salon         */
+/* -------------------------------- */
+.sub
+{
+  padding:  20px;
+      -moz-box-shadow: 2px 3px 4px rgba(0, 0, 0,0.3);
+      -webkit-box-shadow: 2px 3px 4px rgba(0, 0, 0, .3);
+    box-shadow: 2px 3px 4px rgba(0, 0, 0, .3);
+    background-color: #fafafa;
+}
+/* .sub-title{
+  color: #1976D2 !important;
+    font-weight: bold;
+} */
+
+a.blue-link{
+  color: #007bff !important;
+  /* font-weight: bold; */
+}
+
+a:hover.blue-link{
+    color: #007bff !important;
+    font-weight: bold;
+    /* letter-spacing: 0.2px; */
+    text-decoration: none;
+
+}
+
+a.contact-link{
+  color: #1976D2 !important;
+  /* font-weight: bold; */
+}
+
+a:hover.contact-link{
+    color: #1976D2 !important;
+    /* font-weight: bold; */
+    letter-spacing: 0.2px;
+    text-decoration: underline;
+}
+
+
+
+
+#sendmail{
+  margin-left: 50px;
+}
+.line-height{
+  line-height: 30px;
+}
+.line-height a{
+  color: #1565c0 !important;
+}
+.line-height a:hover{
+  font-weight: bold;
+}
+
+
+
+
+.show{
+  display: block !important;
+}
+.hidden{
+  display: none !important;
+}
+
+.form-control {
+color : #004085 !important;
+border: 1px solid #b8daff !important;
+
+}
+
+::placeholder{
+color : #004085 !important;
+}
+select, option, label{
+color:  #004085 !important
+}
+
+input[type="checkbox"] {
+border: 1px solid #b8daff !important;
+
+
+}
+.form-check-input{
+border: 1px solid #b8daff !important;
+
+}
+
+
+
+
+
+
+@media only screen and (max-width: 1460px){
+
+  select,input{
+  font-size: 9px;
+}
+
+
+}
+
+
+@media only screen and (max-width: 1024px){
+  html,body {
+    font-size: 12px !important;
+  }
+
+}
+
+
+

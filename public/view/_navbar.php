@@ -258,6 +258,7 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 		<?php
 			//ajout menu exploitation salon
 		$exploitHead="<li class='active has-sub'><a href='".ROOT_PATH. "/public/exploit/connexion.php' ><span>Exploit</span></a>";
+		$exploitStat="<ul><li><a href='".ROOT_PATH."/public/salon/stats-salon-2020.php'><span>Stats Salon 2020</span></a></li>";
 		$exploitStat="<ul><li><a href='".ROOT_PATH."/public/salon/stats-salon-2019.php'><span>Stats Salon 2019</span></a></li>";
 		$exploitStat.="<li><a href='".ROOT_PATH."/public/exploit/connexion.php'><span>Suivi magasins</span></a></li>";
 		$exploitStat.="<li><a href='".ROOT_PATH."/public/exploit/ld-exploit.php'><span>Listes de diffu BTLec</span></a></li>";

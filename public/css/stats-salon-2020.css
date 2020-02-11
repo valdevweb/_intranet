@@ -1,0 +1,82 @@
+.repas{
+	background-color: #F7BB6D;
+}
+.present{
+	background-color: #67ACD7;
+}
+.nothing{
+	background-color: #fff;
+}
+
+.text-un{
+  /* font-weight: bold; */
+  color : #BA1200;
+}
+
+.text-deux{
+  /* font-weight: bold; */
+  color : #F7BB6D;
+}
+
+.text-trois{
+  /* font-weight: bold; */
+  color : #67ACD7;
+}
+
+
+
+.scapalsace{
+	background-color:  #75bc00;
+}
+.scapest{
+	background-color:  #6EC8FF;
+}
+.socara{
+	background-color: #040403;
+	color: #fff;
+}
+
+.scapartois{
+	background-color: #A18276;
+}
+.socamil{
+	background-color: #E0BAD7;
+}
+
+.scadif{
+	background-color:#BA1200;
+	color: #fff;
+}
+
+.scapnor{
+	background-color: #F2DC60;
+}
+
+
+
+.scapalsace-txt{
+	color:  #75bc00;
+}
+.scapest-txt{
+	color:  #6EC8FF;
+}
+.socara-txt{
+	color: #040403;
+}
+
+.scapartois-txt{
+	color: #A18276;
+}
+.socamil-txt{
+	color: #E0BAD7;
+}
+
+.scadif-txt{
+	color:#BA1200;
+}
+
+.scapnor-txt{
+	color: #F2DC60;
+}
+
+

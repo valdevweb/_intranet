@@ -4,7 +4,7 @@
     </head>
     <body style="font-family:arial,helvetica, 'sans serif'; color:dimGray;">
         <p>Bonjour,</p>
-        <p>Veuillez trouver ci joint vos invitation pour le salon BTLec Est 2019.</p>
+        <p>Veuillez trouver ci joint vos invitations pour le salon BTLec Est 2020.</p>
 
         <p>Dans l'attente de vous accueillir,<br>
         Cordialement,</p>

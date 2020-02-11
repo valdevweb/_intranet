@@ -34,7 +34,7 @@ require_once '../../vendor/autoload.php';
 
 function getThisInvitation($pdoBt)
 {
-	$req=$pdoBt->prepare("SELECT * FROM salon_2019 LEFT JOIN qrcode ON salon_2019.id=qrcode.id WHERE salon_2019.id= :id");
+	$req=$pdoBt->prepare("SELECT * FROM salon_2020 LEFT JOIN qrcode ON salon_2020.id=qrcode.id WHERE salon_2020.id= :id");
 	$req->execute(array(
 		':id'	=>$_GET['id']
 	));
@@ -42,20 +42,17 @@ function getThisInvitation($pdoBt)
 }
 $invit=getThisInvitation($pdoBt);
 
-	// echo "<pre>";
-	// print_r($invit);
-	// echo '</pre>';
+
 
 
 ob_start();
-include('pdf-invit2019.php');
+include('pdf-invit2020.php');
 $html=ob_get_contents();
 ob_end_clean();
 
 $mpdf = new \Mpdf\Mpdf();
 $mpdf->WriteHTML($html);
 
-		// $pdfContent = $mpdf->Output('', 'S');
 $pdfContent = $mpdf->Output();
 
 //------------------------------------------------------
