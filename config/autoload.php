@@ -11,6 +11,10 @@ if (preg_match('/_btlecest/', $path))
 	define("VERSION",'_');
 	define("PORTAIL","Portail BTlec - dev" );
 	define("UPLOAD_DIR","http://172.30.92.53/_upload" );
+	define("PORTAIL_SAV_HOME","http://172.30.92.53/_sav/scapsav/home.php" );
+	define("PORTAIL_SAV","http://172.30.92.53/_sav/" );
+
+
 }
 else
 {
@@ -21,6 +25,8 @@ else
 	define("PORTAIL","Portail BTlec" );
 	define("VERSION",'');
 	define("UPLOAD_DIR","http://172.30.92.53/upload" );
+	define("PORTAIL_SAV_HOME","http://172.30.92.53/sav/scapsav/home.php" );
+	define("PORTAIL_SAV","http://172.30.92.53/sav/" );
 
 
 }
