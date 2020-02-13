@@ -26,6 +26,7 @@ function connectToDb($dbname) {
 $dbCm=VERSION."cm";
 $pdoCm=connectToDb($dbCm);
 $pdoUser=connectToDb('web_users');
+require_once  'D:\www\\'.VERSION.'btlecest\vendor\autoload.php';
 
 
 function getToImport($pdoUser, $sens){
@@ -77,17 +78,20 @@ function majHisto($pdoUser, $idHisto){
 $toAdd=getToImport($pdoUser,1);
 
 $toDelete=getToImport($pdoUser,0);
-
+$addedStrg="";
+$deletedStrg="";
+$errorStrg="";
 foreach ($toDelete as $key => $value) {
 	$row=deleteEntries($pdoCm, $value['email'], $value['ld_full']);
 
 	if($row==1){
 		majHisto($pdoUser, $value['id']);
 		echo "sup " .$value['email'];
+		$deletedStrg.=$value['ld_full'] . " suppression de " .$value['email']. "<br>";
 
 	}else{
-		echo "impossible de supprimer " .$value['email'];
-		echo "<br>";
+		$errorStrg.=$value['ld_full'] . " impossible de supprimer " .$value['email']. "<br>";
+
 	}
 }
 
@@ -100,10 +104,33 @@ foreach ($toAdd as $key => $value) {
 
 	if($row==1){
 		majHisto($pdoUser, $value['id']);
-		echo "add " .$value['email'];
+		$addedStrg.=$value['ld_full'] . " ajout de " .$value['email']. "<br>";
+
 
 	}else{
-		echo "impossible d'ajouter " .$value['email'];
-		echo "<br>";
+		$errorStrg.=$value['ld_full'] . " impossible d'ajouter " .$value['email']. "<br>";
 	}
+}
+$htmlMail = file_get_contents('mail-lotus-maj.html');
+$htmlMail=str_replace('{ADDED}',$prod,$addedStrg);
+$htmlMail=str_replace('{DELETED}',$prod,$deletedStrg);
+$htmlMail=str_replace('{ERRORS}',$prod,$errorStrg);
+$subject='Admin Web - Lotus - maj des ld ';
+
+// ---------------------------------------
+// initialisation de swift
+$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+$mailer = new Swift_Mailer($transport);
+$message = (new Swift_Message($subject))
+->setBody($htmlMail, 'text/html')
+->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL Admin'))
+->setTo(array('valerie.montusclat@btlec.fr'));
+// ->attach($attachmentPdf)
+// ->attach(Swift_Attachment::fromPath('demande-culturel.xlsx'));
+
+
+if (!$mailer->send($message, $failures)){
+  print_r($failures);
+}else{
+  $success[]="mail envoyé avec succés";
 }
