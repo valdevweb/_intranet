@@ -24,14 +24,16 @@ addRecord($pdoStat,$page,$action, $descr, 101);
 
 
 
-function getParticipant($pdoBt)
-{
-  $req=$pdoBt->prepare("SELECT mag, salon_2020.galec, centrale, nom, prenom, fonction, DATE_FORMAT(date_saisie,'%d-%m-%Y') as datesaisie, mardi, mercredi,repas_mardi, repas_mercredi, date_passage, DATE_FORMAT(date_passage,'%H:%i') as heure, valise FROM salon_2020
-    LEFT JOIN sca3 ON salon_2020.galec=sca3.galec
-    LEFT JOIN salon_fonction ON salon_2020.id_fonction=salon_fonction.id
-    WHERE salon_2020.galec !='' ORDER BY sca3.mag");
-  $req->execute();
-  return $req->fetchAll(PDO::FETCH_ASSOC);
+function getParticipantYear($pdoBt, $year){
+  $table="salon_".$year;
+
+  $req=$pdoBt->prepare("SELECT mag, $table.galec, centrale, nom, prenom, fonction, DATE_FORMAT(date_saisie,'%d-%m-%Y') as datesaisie, mardi, mercredi,repas_mardi, repas_mercredi, date_passage, DATE_FORMAT(date_passage,'%H:%i') as heure FROM $table
+    LEFT JOIN sca3 ON $table.galec=sca3.galec
+    LEFT JOIN salon_fonction ON $table.id_fonction=salon_fonction.id
+    WHERE $table.galec !='' ORDER BY sca3.mag");
+    $req->execute();
+
+ return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getNbMagInscrit($pdoBt,$year){
@@ -84,16 +86,19 @@ function getValise($pdoBt){
 }
 
 
-function nbMagCentrale($pdoBt)
-{
-  $req=$pdoBt->prepare("SELECT count(galec) as nb,centrale FROM (SELECT DISTINCT salon_2020.galec, centrale FROM salon_2020 LEFT JOIN sca3 ON salon_2020.galec=sca3.galec WHERE salon_2020.galec !='' AND mask=0) sousreq GROUP BY centrale");
+function nbMagCentrale($pdoBt,$year){
+  $table="salon_".$year;
+
+  $req=$pdoBt->prepare("SELECT count(galec) as nb,centrale FROM (SELECT DISTINCT {$table}.galec, centrale FROM {$table} LEFT JOIN sca3 ON {$table}.galec=sca3.galec WHERE {$table}.galec !='' AND mask=0) sousreq GROUP BY centrale");
   $req->execute();
   return $req->fetchAll(PDO::FETCH_ASSOC);
 
 }
-function nbInscritFonction($pdoBt)
-{
-  $req=$pdoBt->prepare("SELECT count(salon_2020.id) as nb, fonction, short FROM salon_2020 LEFT JOIN salon_fonction ON id_fonction=salon_fonction.id GROUP BY short ORDER BY fonction");
+function nbInscritFonction($pdoBt, $year){
+  $table="salon_".$year;
+
+
+  $req=$pdoBt->prepare("SELECT count($table.id) as nb, fonction, short FROM {$table} LEFT JOIN salon_fonction ON id_fonction=salon_fonction.id GROUP BY short ORDER BY fonction");
   $req->execute();
   return $req->fetchAll(PDO::FETCH_ASSOC);
 
@@ -122,17 +127,25 @@ $now="2020";
 $prev="2019";
 
 
-$perCentrale=nbMagCentrale($pdoBt);
-$perFonction=nbInscritFonction($pdoBt);
+$perCentrale=nbMagCentrale($pdoBt,$now);
+
+$perFonction=nbInscritFonction($pdoBt,$now);
+$perCentralePrev=nbMagCentrale($pdoBt, $prev);
+$perFonctionPrev=nbInscritFonction($pdoBt,$prev);
+
+
 
 $nbMagInscrit=count(getNbMagInscrit($pdoBt,$now));
 $nbMagPresent=count(getNbMagPresent($pdoBt,$now));
-$nbPart=count(getParticipant($pdoBt,$now));
+$nbPart=count(getParticipantYear($pdoBt,$now));
+
 $nbPres=getNbPresent($pdoBt,$now);
 $nb=getNbPart($pdoBt, $now);
 $magMardi=count(getNbMagInscritMardi($pdoBt,$now));
 $magMercredi =count(getNbMagInscritMercredi($pdoBt, $now));
-$listParticipant=getParticipant($pdoBt);
+$listParticipant=getParticipantYear($pdoBt,$now);
+
+
 $presence=['non','oui'];
 $repas=['',' + <i class="fas fa-utensils"></i>'];
 $class=['nothing','present', 'repas'];
@@ -140,7 +153,9 @@ $class=['nothing','present', 'repas'];
 
 $nbMagInscritPrev=count(getNbMagInscrit($pdoBt,$prev));
 $nbMagPresentPrev=count(getNbMagPresent($pdoBt,$prev));
-$nbPartPrev=count(getParticipant($pdoBt,$prev));
+$nbPartPrev=count(getParticipantYear($pdoBt,$prev));
+
+
 $nbPresPrev=getNbPresent($pdoBt,$prev);
 $nbPrev=getNbPart($pdoBt, $prev);
 $magMardiPrev=count(getNbMagInscritMardi($pdoBt,$prev));
@@ -224,7 +239,7 @@ DEBUT CONTENU CONTAINER
               <?=$nbMagInscrit?>/<?= $nbPart?></td>
             <td class="text-right">
               &nbsp;<br>
-              <?=$nbMagInscritPrev?>/<?= $nbPartPrev?></td>
+              <?=$nbMagInscritPrev?>/<?= $nbPartPrev ?></td>
           </tr>
 
           <tr class="text-deux">

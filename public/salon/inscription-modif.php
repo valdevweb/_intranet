@@ -19,7 +19,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 function deleteInvit($pdoBt)
 {
-	$req=$pdoBt->prepare("DELETE FROM salon_2019 WHERE  id= :id");
+	$req=$pdoBt->prepare("DELETE FROM salon_2020 WHERE  id= :id");
 	$req->execute(array(
 		':id' =>$_GET['id']
 	));
@@ -29,7 +29,7 @@ function deleteInvit($pdoBt)
 $row=deleteInvit($pdoBt);
 if($row==1)
 {
-	header('Location:'. ROOT_PATH.'/public/salon/inscription-2019.php#inscription-lk');
+	header('Location:'. ROOT_PATH.'/public/salon/inscription-2020.php#inscription-lk');
 
 }
 else{

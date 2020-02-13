@@ -324,7 +324,7 @@ require '../view/_navbar.php';
 	<!-- descr salon -->
 	<div class="row">
 		<div class="int-padding">
-			<h4 class="text-main-blue" id="salon-lk"><i class="fas fa-hand-point-right pr-3"></i>LE SALON BTLEC 2019 </h4>
+			<h4 class="text-main-blue" id="salon-lk"><i class="fas fa-hand-point-right pr-3"></i>LE SALON BTLEC 2020 </h4>
 
 
 			<p>Le salon BTlec 2020 se déroulera sur 2 jours, le <strong>9 juin de 9h30 à 17h30</strong> et le <strong>10 juin de 9h00 à 16h00</strong>.<br>
@@ -469,7 +469,7 @@ require '../view/_navbar.php';
 
 
 			<ul class="browser-default">
-				<li>restauration : un petit déjeuner vous sera servi sur le salon et un buffet traiteur vous accueillera le 4 et 5 juin</li>
+				<li>restauration : un petit déjeuner vous sera servi sur le salon et un buffet traiteur vous accueillera le 9 et 10 juin</li>
 				<li>Sociétés de taxi :
 					<ul class="browser-default">
 						<li><strong><a href="http://www.taxi-city-reims.com" target="_blank">taxi city</a></strong> - 06 64 90 93 43</li>
