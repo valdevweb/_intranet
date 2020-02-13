@@ -2,41 +2,65 @@
 // la variable okko permet de verifier si on travaille sur la bonne version avec la bonne connexion à la db
 session_start();
 $path=dirname(__FILE__);
-if (preg_match('/_btlecest/', $path))
-{
-	define("ROOT_PATH","/_btlecest");
-	define("SITE_ADDRESS", "http://172.30.92.53/_btlecest");
-	$pdo_file='_pdo_connect.php';
+if (preg_match('/_btlecest/', $path)){
 	$version='_';
 	define("VERSION",'_');
+	define("ROOT_PATH","/_btlecest");
 	define("PORTAIL","Portail BTlec - dev" );
+
+	// define("SITE_ADDRESS", "http://172.30.92.53/_btlecest");
+	$pdo_file='_pdo_connect.php';
 	define("UPLOAD_DIR","http://172.30.92.53/_upload" );
 	define("PORTAIL_SAV_HOME","http://172.30.92.53/_sav/scapsav/home.php" );
 	define("PORTAIL_SAV","http://172.30.92.53/_sav/" );
 
 
-}
-else
-{
-	define("ROOT_PATH","/btlecest");
-	define("SITE_ADDRESS", "http://172.30.92.53/btlecest");
-	$pdo_file='pdo_connect.php';
+}else{
 	$version='';
-	define("PORTAIL","Portail BTlec" );
 	define("VERSION",'');
-	define("UPLOAD_DIR","http://172.30.92.53/upload" );
-	define("PORTAIL_SAV_HOME","http://172.30.92.53/sav/scapsav/home.php" );
-	define("PORTAIL_SAV","http://172.30.92.53/sav/" );
-
-
+	define("ROOT_PATH","/btlecest");
+	define("PORTAIL","Portail BTlec" );
 }
 
+
+define("SITE_ADDRESS", "http://172.30.92.53/".VERSION."btlecest");
+define("UPLOAD_DIR","http://172.30.92.53/".VERSION."upload" );
+define("PORTAIL_SAV_HOME","http://172.30.92.53/".VERSION."sav/scapsav/home.php" );
+define("PORTAIL_SAV","http://172.30.92.53/".VERSION."sav/" );
+define("DIR_LOGFILES", "D:\btlec\batch_log\\");
 define("PDF_FOOTER", '<table class="padding-table"><tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>');
 define("PDF_FOOTER_PAGE", '<table class="padding-table full-width"><tr><td class="footer ">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td><td>{PAGENO}{nbpg}</td></tr></table>');
+$okko= 'version : ' . ROOT_PATH;
+
+function connectToDb($dbname) {
+	$host='localhost';
+	$username='sql';
+	$pwd='User19092017+';
+	try {
+		$pdo=new PDO("mysql:host=$host;dbname=$dbname", $username, $pwd);
+
+	}
+	catch(Exception $e)
+	{
+		die('Erreur : '.$e->getMessage());
+	}
+	return  $pdo;
+}
+
+// no dev
+$pdoUser=connectToDb('web_users');
+$pdoStat= connectToDb('stats');
+$pdoQlik= connectToDb('qlik');
+$pdoExploit= connectToDb('exploit');
+// dev
+$pdoBt=connectToDb(VERSION.'btlec');
+$pdoSav=connectToDb(VERSION.'sav');
+$pdoLitige=connectToDb(VERSION.'litige');
+$pdoCasse=connectToDb(VERSION.'casse');
+$pdoCm=connectToDb(VERSION.'cm');
 
 
-require_once $pdo_file;
-$okko= 'version : ' . ROOT_PATH  .', db  : '.$pdo_file;
+
 
 
 // css files
