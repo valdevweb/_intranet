@@ -54,7 +54,7 @@ function getAction($pdoLitige){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 function getLitige($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT DATE_FORMAT(date_crea, '%d-%m-%Y') as dateFr, dossiers.id as mainid, dossiers.dossier, btlec.sca3.mag, btlec.sca3.centrale,btlec.sca3.btlec, etat_dossier, details.article,details.descr,details.qte_litige, details.valo_line, reclamation.reclamation, details.inversion,details.qte_cde,details.inv_tarif,details.inv_article,details.inv_descr FROM dossiers LEFT JOIN details ON dossiers.id=details.id_dossier LEFT JOIN reclamation ON details.id_reclamation = reclamation.id LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec WHERE dossiers.id= :id ");
+	$req=$pdoLitige->prepare("SELECT DATE_FORMAT(date_crea, '%d-%m-%Y') as dateFr, dossiers.id as mainid, dossiers.dossier, btlec.sca3.mag, btlec.sca3.centrale,btlec.sca3.btlec, etat_dossier, details.article,details.descr,details.qte_litige, details.valo_line, details.fournisseur, details.inv_fournisseur, reclamation.reclamation, details.inversion,details.qte_cde,details.inv_tarif,details.inv_article,details.inv_descr FROM dossiers LEFT JOIN details ON dossiers.id=details.id_dossier LEFT JOIN reclamation ON details.id_reclamation = reclamation.id LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec WHERE dossiers.id= :id ");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 
@@ -123,7 +123,7 @@ if(isset($_POST['id_dossier'])){
 
 if(isset($_GET['id'])){
 	$listAction=getAction($pdoLitige);
-	$thisLitige=getlitige($pdoLitige);
+	$thisLitige=getLitige($pdoLitige);
 	$dials=getDialog($pdoLitige);
 
 
@@ -290,6 +290,7 @@ DEBUT CONTENU CONTAINER
 				<tr class="table-warning">
 					<th>CODE ARTICLE</th>
 					<th>DESIGNATION</th>
+					<th>MARQUE</th>
 					<th>QUANTITE</th>
 					<th>VALORISATION</th>
 					<th>RECLAMATION</th>
@@ -300,6 +301,7 @@ DEBUT CONTENU CONTAINER
 					echo '<tr>';
 					echo'<td>'.$prod['article'].'</td>';
 					echo'<td>'.$prod['descr'].'</td>';
+					echo'<td>'.$prod['fournisseur'].'</td>';
 					echo'<td class="text-right">'.$prod['qte_litige'].'</td>';
 					echo'<td class="text-right">'.number_format((float)$prod['valo_line'],2,'.','').'&euro;</td>';
 					echo'<td>'.$prod['reclamation'].'</td>';
@@ -311,6 +313,7 @@ DEBUT CONTENU CONTAINER
 						echo '<tr>';
 						echo'<td class="text-prim heavy">'.$prod['inv_article'].'</td>';
 						echo'<td class="text-prim heavy">'.$prod['inv_descr'].'</td>';
+						echo'<td class="text-prim heavy">'.$prod['inv_fournisseur'].'</td>';
 						echo'<td class="text-right text-prim heavy">'.$prod['qte_litige'].'</td>';
 						echo'<td class="text-right text-prim heavy">'.number_format((float)$valoInv,2,'.','').'&euro;</td>';
 						echo'<td class="text-right"></td>';
