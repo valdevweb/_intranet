@@ -2,10 +2,10 @@
 	<div class="col">
 		<div class="d-flex justify-content-between">
 			<div class="align-self-center">
-				<img class="img-fluid max-width height-auto" src="thismonth.png">
+				<img class="img-fluid max-width height-auto" src="year.png">
 			</div>
 			<div class="main-text text-right pr-5">
-				<?=number_format((float)$monthNow,0,'',' ')?><span class="third-text">&euro;</span>
+				<?= number_format((float)$anneeFinCa,0,'',' ') .'<span class="third-text">&euro;</span>'?>
 
 			</div>
 		</div>
@@ -16,10 +16,11 @@
 	<div class="col">
 		<div class="d-flex justify-content-between">
 			<div class="align-self-center">
-				<img src="lastmonth.png">
+				<img src="lastyear.png">
 			</div>
 			<div class="secondary-text text-right pr-5">
-				<?=number_format((float)$monthPrev,0,'',' ')?> <span class="third-text">&euro;</span>
+				<?=number_format((float)$anneeFinLastYearCa,0,'', ' ')?><span class="third-text">&euro;</span>
+
 			</div>
 		</div>
 	</div>

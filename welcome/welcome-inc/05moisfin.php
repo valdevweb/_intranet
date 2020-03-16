@@ -5,7 +5,7 @@
 				<img class="img-fluid max-width height-auto" src="thismonth.png">
 			</div>
 			<div class="main-text text-right pr-5">
-				<?=  number_format((float)$endMonthNow,0,'',' ')?><span class="third-text">&euro;</span>
+				<?=  number_format((float)$moisFinCa,0,'',' ')?><span class="third-text">&euro;</span>
 
 			</div>
 		</div>
@@ -19,7 +19,7 @@
 					<img src="lastmonth.png">
 				</div>
 				<div class="secondary-text text-right pr-5">
-					<?=number_format((float)$endMonthPrev,0,'', ' ')?><span class="third-text">&euro;</span>
+					<?=number_format((float)$moisFinLastYearCa,0,'', ' ')?><span class="third-text">&euro;</span>
 				</div>
 			</div>
 		</div>
