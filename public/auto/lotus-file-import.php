@@ -7,13 +7,13 @@ function getDataFromFile($contents,$searchCriteria){
 	return $matches[0];
 }
 
-function formatArrayNomListe($nomListesDiffu,$pdoUser){
+function formatArrayNomListe($nomListesDiffu,$pdoMag){
 	for($i=0;$i<count($nomListesDiffu);$i++){
 		$nomListesDiffu[$i]=str_replace('ListName:','',$nomListesDiffu[$i]);
 		$ldFull=trim($nomListesDiffu[$i]);
 		$suffixe=substr($ldFull,strlen($ldFull)-4,4);
 		$ldShort=substr($ldFull,0,strlen($ldFull)-4);
-		$galec=getGalec($pdoUser,$ldShort);
+		$galec=getGalec($pdoMag,$ldShort);
 
 		$nomLdClean[$i]['ld_full']=$ldFull;
 		$nomLdClean[$i]['suffixe']=$suffixe;
@@ -39,8 +39,8 @@ function formatArrayContenuListe($contenuListeDiffu){
 	return $contenuLdClean;
 }
 
-function insertEmail($pdoUser, $id_import, $ld_full, $ld_short, $ld_suffixe, $id_import_ld, $email, $lotus, $galec, $errors ){
-	$req=$pdoUser->prepare("INSERT INTO mag_ld (id_import, ld_full, ld_short, ld_suffixe, id_import_ld, email, lotus, galec, errors) VALUES (:id_import, :ld_full, :ld_short, :ld_suffixe, :id_import_ld, :email, :lotus, :galec, :errors)");
+function insertEmail($pdoMag, $id_import, $ld_full, $ld_short, $ld_suffixe, $id_import_ld, $email, $lotus, $galec, $errors ){
+	$req=$pdoMag->prepare("INSERT INTO lotus_ld (id_import, ld_full, ld_short, ld_suffixe, id_import_ld, email, lotus, galec, errors) VALUES (:id_import, :ld_full, :ld_short, :ld_suffixe, :id_import_ld, :email, :lotus, :galec, :errors)");
 	$req->execute([
 		':id_import'		=>$id_import,
 		':ld_full'		=>$ld_full,
@@ -60,33 +60,34 @@ function insertEmail($pdoUser, $id_import, $ld_full, $ld_short, $ld_suffixe, $id
 	return true;
 }
 
-function copyToOld($pdoUser){
-	$req=$pdoUser->query("DELETE FROM mag_ld_old");
-	$req=$pdoUser->query("INSERT INTO mag_ld_old SELECT * FROM mag_ld");
+function copyToOld($pdoMag){
+	$req=$pdoMag->query("DELETE FROM lotus_ld_old");
+	$req=$pdoMag->query("INSERT INTO lotus_ld_old SELECT * FROM lotus_ld");
 
 }
 
-function cleanActual($pdoUser){
-	$req=$pdoUser->query("DELETE FROM mag_ld");
+function cleanActual($pdoMag){
+	$req=$pdoMag->query("DELETE FROM lotus_ld");
 
 }
 
 
 // OUVERTURE FICHIER
-$file=$lotusDir."\\".$newFile;
+$file=DIR_LOTUS_CSV."\\".$newFile;
 $fn = fopen($file,"rw");
 $contents = file_get_contents($file);
 
 // copy de la base ld_mag vers la base ld_mag_old
 if(!$fn){
 	echo "impossible de faire le traitement, le fichier ne peut pas être lu";
-exit();
+	exit();
 }
-copyToOld($pdoUser);
-cleanActual($pdoUser);
+copyToOld($pdoMag);
+cleanActual($pdoMag);
 
 $nomListesDiffu=getDataFromFile($contents,'ListName:');
 $contenuListeDiffu=getDataFromFile($contents,'Members:');
+
 
 if(count($contenuListeDiffu)!=count($nomListesDiffu)){
 	echo "WARNING on ne peut pas traiter, envoyer un mail";
@@ -95,9 +96,11 @@ if(count($contenuListeDiffu)!=count($nomListesDiffu)){
 
 
 
-$lastinsertId=addNewFile($pdoUser, $newFile);
+$lastinsertId=addNewFile($pdoMag, $newFile);
+
+
 // $lastinsertId=99;
-$nomListesDiffu=formatArrayNomListe($nomListesDiffu,$pdoUser);
+$nomListesDiffu=formatArrayNomListe($nomListesDiffu,$pdoMag);
 $contenuListeDiffu=formatArrayContenuListe($contenuListeDiffu);
 
 
@@ -105,7 +108,7 @@ for ($idLd=0; $idLd <count($contenuListeDiffu) ; $idLd++) {
 	// le cas ou la liste est vide
 	if(empty(trim($contenuListeDiffu[$idLd]))){
 		// inserer nom ld avec code erreur vide (4)
-		$one=insertEmail($pdoUser, $lastinsertId, $nomListesDiffu[$idLd]['ld_full'], $nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, '', '', $nomListesDiffu[$idLd]['galec'], 4);
+		$one=insertEmail($pdoMag, $lastinsertId, $nomListesDiffu[$idLd]['ld_full'], $nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, '', '', $nomListesDiffu[$idLd]['galec'], 4);
 	}else{
 		$arrOfMails[$idLd]=explode(',',$contenuListeDiffu[$idLd]);
 	}
@@ -136,11 +139,16 @@ foreach ($arrOfMails as $idLd => $singleMail) {
 // traitement du tableau email valids
 foreach ($validEmail as $idLd => $email) {
 	for ($i=0; $i < count($validEmail[$idLd]); $i++) {
-
+		echo $validEmail[$idLd][$i];
+		echo $nomListesDiffu[$idLd]['ld_short'];
 		$one=insertEmail($pdoUser, $lastinsertId, $nomListesDiffu[$idLd]['ld_full'], $nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, $validEmail[$idLd][$i], '', $nomListesDiffu[$idLd]['galec'],0);
-		if(!$one){
-			$errors[]="erreur à l'insertion de ld avec mail vide";
-		}
+		// if(!$one){
+		// 	$errors[]="erreur à l'insertion de ld avec mail vide";
+		// // }
+		// 	echo "<pre>";
+		// 	print_r($one);
+		// 	echo '</pre>';
+
 	}
 
 
@@ -170,15 +178,24 @@ foreach ($lotusList as $idLd => $lotus) {
 				if(count($anotherLotus)>1){
 					$codeErr=5;
 					$one=insertEmail($pdoUser, $lastinsertId, $nomListesDiffu[$idLd]['ld_full'], $nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, '', $email, $nomListesDiffu[$idLd]['galec'],$codeErr);
+					if(!$one){
+						$taskErrors[]="erreur insertion mail avec code erreur ".$codeErr ." sur liste diffu ".$nomListesDiffu[$idLd]['ld_full'];
+					}
 
 				}else{
 					$codeErr=0;
-					$one=insertEmail($pdoUser, $lastinsertId, $nomListesDiffu[$idLd]['ld_full'], $nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, $email, '', $nomListesDiffu[$idLd]['galec'],$codeErr);
+					$one=insertEmail($pdoMag, $lastinsertId, $nomListesDiffu[$idLd]['ld_full'], $nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, $email, '', $nomListesDiffu[$idLd]['galec'],$codeErr);
+					if(!$one){
+						$taskErrors[]="erreur insertion mail avec code erreur ".$codeErr ." sur liste diffu ".$nomListesDiffu[$idLd]['ld_full'];
+					}
 
 				}
 			}else{
 			// correspondance non trouvée
-				$one=insertEmail($pdoUser, $lastinsertId, $nomListesDiffu[$idLd]['ld_full'], $nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, '', $lotusList[$idLd][$i], $nomListesDiffu[$idLd]['galec'],2);
+				$one=insertEmail($pdoMag, $lastinsertId, $nomListesDiffu[$idLd]['ld_full'], $nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, '', $lotusList[$idLd][$i], $nomListesDiffu[$idLd]['galec'],2);
+				if(!$one){
+					$taskErrors[]="erreur insertion mail avec code erreur ".$codeErr ." sur liste diffu ".$nomListesDiffu[$idLd]['ld_full'];
+				}
 
 
 			}
@@ -187,7 +204,10 @@ foreach ($lotusList as $idLd => $lotus) {
 }
 foreach ($anotherLd as $idLd => $ld) {
 	for ($i=0; $i <count($anotherLd[$idLd]) ; $i++) {
-		$one=insertEmail($pdoUser, $lastinsertId, $nomListesDiffu[$idLd]['ld_full'], $nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd,'' , $anotherLd[$idLd][$i], $nomListesDiffu[$idLd]['galec'],6);
+		$one=insertEmail($pdoMag, $lastinsertId, $nomListesDiffu[$idLd]['ld_full'], $nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd,'' , $anotherLd[$idLd][$i], $nomListesDiffu[$idLd]['galec'],6);
+		if(!$one){
+			$taskErrors[]="erreur insertion mail avec code erreur ".$codeErr ." sur liste diffu ".$nomListesDiffu[$idLd]['ld_full'];
+		}
 
 	}
 }

@@ -1,44 +1,28 @@
 <?php
-
-if (preg_match('/_btlecest/', dirname(__FILE__)))
-{
-	define("VERSION",'_');
+if (preg_match('/_btlecest/', dirname(__FILE__))){
+	set_include_path("D:\www\_intranet\_btlecest\\");
 }
-else
-{
-	define("VERSION",'');
+else{
+	set_include_path("D:\www\intranet\btlecest\\");
 }
 
-function connectToDb($dbname) {
-	$host='localhost';
-	$username='sql';
-	$pwd='User19092017+';
-	try {
-		$pdo=new PDO("mysql:host=$host;dbname=$dbname", $username, $pwd);
-
-	}
-	catch(Exception $e)
-	{
-		die('Erreur : '.$e->getMessage());
-	}
-	return  $pdo;
-}
-$dbCm=VERSION."cm";
-$pdoCm=connectToDb($dbCm);
-$pdoUser=connectToDb('web_users');
-require_once  'D:\www\\'.VERSION.'btlecest\vendor\autoload.php';
+include 'config\config.inc.php';
+include 'functions\tasklog.fn.php';
 
 
-function getToImport($pdoUser, $sens){
-	$req=$pdoUser->prepare("SELECT * FROM lotus_histo WHERE added= :added AND cm=0");
+require_once  'vendor\autoload.php';
+
+
+function getToImport($pdoMag, $sens){
+	$req=$pdoMag->prepare("SELECT * FROM lotus_histo WHERE added= :added AND cm=0");
 	$req->execute([
 		':added'=>$sens
 	]);
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function deleteEntries($pdoCm,$email, $ldFull){
-	$req=$pdoCm->prepare("DELETE FROM mag_email WHERE email= :email AND ld_full = :ld_full");
+function deleteEntries($pdoMag,$email, $ldFull){
+	$req=$pdoMag->prepare("DELETE FROM mag_email WHERE email= :email AND ld_full = :ld_full");
 	$req->execute([
 		':ld_full'	=>$ldFull,
 		':email'	=>$email
@@ -48,12 +32,12 @@ function deleteEntries($pdoCm,$email, $ldFull){
 }
 
 
-function addEntries($pdoCm,$email, $ldFull, $galec){
+function addEntries($pdoMag,$email, $ldFull, $galec){
 
 	$suffixe=substr($ldFull,strlen($ldFull)-4,4);
 	$ldShort=substr($ldFull,0,strlen($ldFull)-4);
 
-	$req=$pdoCm->prepare("INSERT INTO mag_email (ld_full, ld_short, ld_suffixe, email, galec) VALUES (:ld_full, :ld_short, :ld_suffixe, :email, :galec)");
+	$req=$pdoMag->prepare("INSERT INTO mag_email (ld_full, ld_short, ld_suffixe, email, galec) VALUES (:ld_full, :ld_short, :ld_suffixe, :email, :galec)");
 	$req->execute([
 		':ld_full'	=>$ldFull,
 		':ld_short'	=>$ldShort,
@@ -67,25 +51,25 @@ function addEntries($pdoCm,$email, $ldFull, $galec){
 }
 
 
-function majHisto($pdoUser, $idHisto){
-	$req=$pdoUser->prepare("UPDATE lotus_histo SET cm=1 WHERE id= :id");
+function majHisto($pdoMag, $idHisto){
+	$req=$pdoMag->prepare("UPDATE lotus_histo SET cm=1 WHERE id= :id");
 	$req->execute([
 		':id'		=>$idHisto
 	]);
 	return $req->rowCount();
 }
 
-$toAdd=getToImport($pdoUser,1);
+$toAdd=getToImport($pdoMag,1);
 
-$toDelete=getToImport($pdoUser,0);
+$toDelete=getToImport($pdoMag,0);
 $addedStrg="";
 $deletedStrg="";
 $errorStrg="";
 foreach ($toDelete as $key => $value) {
-	$row=deleteEntries($pdoCm, $value['email'], $value['ld_full']);
+	$row=deleteEntries($pdoMag, $value['email'], $value['ld_full']);
 
 	if($row==1){
-		majHisto($pdoUser, $value['id']);
+		majHisto($pdoMag, $value['id']);
 		echo "sup " .$value['email'];
 		$deletedStrg.=$value['ld_full'] . " suppression de " .$value['email']. "<br>";
 
@@ -100,10 +84,10 @@ foreach ($toDelete as $key => $value) {
 
 foreach ($toAdd as $key => $value) {
 
-	$row=addEntries($pdoCm, $value['email'], $value['ld_full'], $value['galec']);
+	$row=addEntries($pdoMag, $value['email'], $value['ld_full'], $value['galec']);
 
 	if($row==1){
-		majHisto($pdoUser, $value['id']);
+		majHisto($pdoMag, $value['id']);
 		$addedStrg.=$value['ld_full'] . " ajout de " .$value['email']. "<br>";
 
 
@@ -112,9 +96,9 @@ foreach ($toAdd as $key => $value) {
 	}
 }
 $htmlMail = file_get_contents('mail-lotus-maj.html');
-$htmlMail=str_replace('{ADDED}',$prod,$addedStrg);
-$htmlMail=str_replace('{DELETED}',$prod,$deletedStrg);
-$htmlMail=str_replace('{ERRORS}',$prod,$errorStrg);
+$htmlMail=str_replace('{ADDED}',$addedStrg,$htmlMail);
+$htmlMail=str_replace('{DELETED}',$deletedStrg, $htmlMail);
+$htmlMail=str_replace('{ERRORS}',$errorStrg, $htmlMail);
 $subject='Admin Web - Lotus - maj des ld ';
 
 // ---------------------------------------

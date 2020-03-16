@@ -2,13 +2,13 @@
 // require('../../config/autoload.php');
 
 
-function getMissingGalec($pdoUser){
-	$req=$pdoUser->query("SELECT * FROM mag_ld WHERE galec='' AND (ld_full NOT LIKE '%PILOTAGE%' AND ld_full NOT LIKE '%VINGT%' AND ld_full NOT LIKE '%CHMOU%' AND ld_full NOT LIKE '%CM-GAILLAC%'  AND ld_full NOT LIKE '%TASKADMIN%')");
+function getMissingGalec($pdoMag){
+	$req=$pdoMag->query("SELECT * FROM lotus_ld WHERE galec='' AND (ld_full NOT LIKE '%PILOTAGE%' AND ld_full NOT LIKE '%VINGT%' AND ld_full NOT LIKE '%CHMOU%' AND ld_full NOT LIKE '%CM-GAILLAC%'  AND ld_full NOT LIKE '%TASKADMIN%')");
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getErrorList($pdoUser,$codeErr){
-	$req=$pdoUser->prepare("SELECT * FROM mag_ld WHERE errors = :errors ORDER BY errors, ld_full");
+function getErrorList($pdoMag,$codeErr){
+	$req=$pdoMag->prepare("SELECT * FROM lotus_ld WHERE errors = :errors ORDER BY errors, ld_full");
 	$req->execute([
 		':errors'		=>$codeErr
 	]);
@@ -16,8 +16,8 @@ function getErrorList($pdoUser,$codeErr){
 
 }
 
-function getIncludedLd($pdoUser,$ldfull){
-	$req=$pdoUser->prepare("SELECT * FROM mag_ld WHERE ld_full= :ld_full");
+function getIncludedLd($pdoMag,$ldfull){
+	$req=$pdoMag->prepare("SELECT * FROM lotus_ld WHERE ld_full= :ld_full");
 	$req->execute([
 		':ld_full'	=>$ldfull
 	]);
@@ -27,8 +27,8 @@ function getIncludedLd($pdoUser,$ldfull){
 	}
 	return $data;
 }
-function addMail($pdoUser, $id_import,$ld_full, $ld_short,$ld_suffixe, $id_import_ld, $email,$lotus, $galec){
-	$req=$pdoUser->prepare("INSERT INTO mag_ld (id_import, ld_full, ld_short, ld_suffixe, id_import_ld, email, lotus, galec, errors) VALUES (:id_import, :ld_full, :ld_short, :ld_suffixe, :id_import_ld, :email, :lotus, :galec, :errors)");
+function addMail($pdoMag, $id_import,$ld_full, $ld_short,$ld_suffixe, $id_import_ld, $email,$lotus, $galec){
+	$req=$pdoMag->prepare("INSERT INTO lotus_ld (id_import, ld_full, ld_short, ld_suffixe, id_import_ld, email, lotus, galec, errors) VALUES (:id_import, :ld_full, :ld_short, :ld_suffixe, :id_import_ld, :email, :lotus, :galec, :errors)");
 	$req->execute([
 		':id_import'	=>$id_import,
 		':ld_full'		=>$ld_full,
@@ -43,16 +43,16 @@ function addMail($pdoUser, $id_import,$ld_full, $ld_short,$ld_suffixe, $id_impor
 	return $req->errorInfo();
 	// return $req->rowCount();
 }
-function deleteLine($pdoUser,$id){
-	$req=$pdoUser->prepare("DELETE FROM mag_ld WHERE id= :id");
+function deleteLine($pdoMag,$id){
+	$req=$pdoMag->prepare("DELETE FROM lotus_ld WHERE id= :id");
 	$req->execute([
 		':id'	=>$id
 	]);
 	return $req->rowCount();
 }
 
-function updateErrorCode($pdoUser,$id, $errCode,$detail){
-	$req=$pdoUser->prepare("UPDATE mag_ld SET errors= :errors, error_detail= :error_detail WHERE id= :id");
+function updateErrorCode($pdoMag,$id, $errCode,$detail){
+	$req=$pdoMag->prepare("UPDATE lotus_ld SET errors= :errors, error_detail= :error_detail WHERE id= :id");
 	$req->execute([
 		':id'			=>$id,
 		':errors'		=>$errCode,
@@ -61,8 +61,8 @@ function updateErrorCode($pdoUser,$id, $errCode,$detail){
 	return $req->rowCount();
 }
 
-function updateMail($pdoUser,$id, $email){
-	$req=$pdoUser->prepare("UPDATE mag_ld SET errors= 0, email= :email WHERE id= :id");
+function updateMail($pdoMag,$id, $email){
+	$req=$pdoMag->prepare("UPDATE lotus_ld SET errors= 0, email= :email WHERE id= :id");
 	$req->execute([
 		':id'			=>$id,
 		':email'		=>$email,
@@ -70,8 +70,8 @@ function updateMail($pdoUser,$id, $email){
 	return $req->rowCount();
 }
 
-function updateErrorCodeAndMail($pdoUser,$id, $errCode,$detail,$lotus){
-	$req=$pdoUser->prepare("UPDATE mag_ld SET errors= :errors, error_detail= :error_detail, email= :email,lotus= :lotus WHERE id= :id");
+function updateErrorCodeAndMail($pdoMag,$id, $errCode,$detail,$lotus){
+	$req=$pdoMag->prepare("UPDATE lotus_ld SET errors= :errors, error_detail= :error_detail, email= :email,lotus= :lotus WHERE id= :id");
 	$req->execute([
 		':id'			=>$id,
 		':email'		=>'',
@@ -83,7 +83,7 @@ function updateErrorCodeAndMail($pdoUser,$id, $errCode,$detail,$lotus){
 }
 
 
-$galecList=getMissingGalec($pdoUser);
+$galecList=getMissingGalec($pdoMag);
 
 
 
@@ -116,25 +116,25 @@ $decompte=1;
 // 7=renvoie vers une liste de diffus qui n'existe pas
 // 8 renvoie vers une ld vide
 
-$noMatch=getErrorList($pdoUser,2);
-$emptyLd=getErrorList($pdoUser,4);
-$lotusAgain=getErrorList($pdoUser,5);
-$ldAgain=getErrorList($pdoUser,6);
+$noMatch=getErrorList($pdoMag,2);
+$emptyLd=getErrorList($pdoMag,4);
+$lotusAgain=getErrorList($pdoMag,5);
+$ldAgain=getErrorList($pdoMag,6);
 
 foreach ($ldAgain as $key => $ld) {
-	$linkedLd=getIncludedLd($pdoUser,trim($ld['lotus']));
+	$linkedLd=getIncludedLd($pdoMag,trim($ld['lotus']));
 	if(!$linkedLd){
 		// faire un code erreur ld inexistante => 7 renvoie vers une ld inexistante
 		echo "ld non trouvée" .$ld['lotus'].'<br><br>';
 		$detail="la liste ".$ld['ld_full'].' renvoie vers la liste '.$ld['lotus'].'.Celle-ci n\'a pas été trouvée ';
-		updateErrorCode($pdoUser,$ld['id'], 7,$detail);
+		updateErrorCode($pdoMag,$ld['id'], 7,$detail);
 		echo $detail;
 	}else{
 		foreach ($linkedLd as $key => $found) {
 					// peut renvoyer plusieurs email
 			if(trim($found['email'])!=''){
 						// ajout de l'adresse mail :
-				$done[$ld['id']]=addMail($pdoUser, $ld['id_import'],$ld['ld_full'], $ld['ld_short'],$ld['ld_suffixe'],$ld['id_import_ld'], $found['email'],$ld['lotus'], $ld['galec']);
+				$done[$ld['id']]=addMail($pdoMag, $ld['id_import'],$ld['ld_full'], $ld['ld_short'],$ld['ld_suffixe'],$ld['id_import_ld'], $found['email'],$ld['lotus'], $ld['galec']);
 				echo $found['email'].' ajouté pour '.$ld['ld_full'].' id '.$ld['id'];
 				echo "<br>";
 
@@ -144,12 +144,12 @@ foreach ($ldAgain as $key => $ld) {
 						//faire un code erreur ld vide
 				echo "autre ld vide" .$ld['lotus'].'<br><br>';
 				$detail="la liste ".$ld['ld_full'].' renvoie vers la liste '.$ld['lotus'].'.Cette liste est vide ';
-				updateErrorCode($pdoUser,$ld['id'], 8,$detail);
+				updateErrorCode($pdoMag,$ld['id'], 8,$detail);
 				echo $detail;
 			}
 		}
 		foreach ($done as $key => $value) {
-			deleteLine($pdoUser,$key);
+			deleteLine($pdoMag,$key);
 			echo $key .'supprimée<br>';
 		}
 
@@ -173,12 +173,12 @@ foreach ($lotusAgain as $key => $lotus) {
 		// correspondace trouvée
 		if(count($data)>1){
 			$email=$data[0]['mail'][0];
-			updateMail($pdoUser,$lotus['id'], $email);
+			updateMail($pdoMag,$lotus['id'], $email);
 			echo "mise à jour de l'id ". $lotus['id'] .' avec l\'adresse '.$email .' a la place de '.$lotus['lotus'];
 		}else{
 			echo "pas de lotus trouvé pour " .$lotus['email'].'<br><br>';
 			$detail='';
-			updateErrorCodeAndMail($pdoUser,$lotus['id'], 2,$detail,$lotus['lotus']);
+			updateErrorCodeAndMail($pdoMag,$lotus['id'], 2,$detail,$lotus['lotus']);
 			// updateErrorCode($pdoUser,$lotus['id'], 9,$detail);
 
 		}

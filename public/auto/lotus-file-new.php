@@ -1,47 +1,33 @@
 <?php
-if (preg_match('/_btlecest/', dirname(__FILE__)))
-{
-	define("VERSION",'_');
+if (preg_match('/_btlecest/', dirname(__FILE__))){
+	set_include_path("D:\www\_intranet\_btlecest\\");
 }
-else
-{
-	define("VERSION",'');
+else{
+	set_include_path("D:\www\intranet\btlecest\\");
 }
 
-function connectToDb($dbname) {
-	$host='localhost';
-	$username='sql';
-	$pwd='User19092017+';
-	try {
-		$pdo=new PDO("mysql:host=$host;dbname=$dbname", $username, $pwd);
+include 'config\config.inc.php';
+include 'functions\tasklog.fn.php';
 
-	}
-	catch(Exception $e)
-	{
-		die('Erreur : '.$e->getMessage());
-	}
-	return  $pdo;
-}
-$dbCm=VERSION."cm";
-$pdoCm=connectToDb($dbCm);
-$pdoUser=connectToDb('web_users');
-function addNewFile($pdoUser, $newFile){
-	$req=$pdoUser->prepare("INSERT INTO lotus_imports (date_import, file) VALUES (:date_import, :file)");
+$taskErrors=[];
+
+function addNewFile($pdoMag, $newFile){
+	$req=$pdoMag->prepare("INSERT INTO lotus_imports (date_import, file) VALUES (:date_import, :file)");
 	$req->execute([
 		':date_import'		=>date('Y-m-d H:i:s'),
 		':file'				=>$newFile,
 
 	]);
 	// return $req->errorInfo();
-	return $pdoUser->lastInsertId();
+	return $pdoMag->lastInsertId();
 
 }
 
 
-function getGalec($pdoUser,$ldName){
-	$req=$pdoUser->prepare("SELECT galec,deno,lotus FROM mag WHERE lotus=:lotus");
+function getGalec($pdoMag,$ldName){
+	$req=$pdoMag->prepare("SELECT galec_sca as galec,deno_sca as deno,racine_list FROM sca3 WHERE racine_list=:racine_list");
 	$req->execute([
-		':lotus'		=>$ldName
+		':racine_list'		=>$ldName
 	]);
 	$data=$req->fetch(PDO::FETCH_ASSOC);
 	if(!empty($data)){
@@ -68,14 +54,14 @@ function getGalec($pdoUser,$ldName){
 FICHIER A TRAITER ? => newFile
 
 ------------------------------------------------------------------------------------------------ */
-$lotusDir="D:\btlec\lotus";
-$lotusFileList = scandir($lotusDir);
+
+$lotusFileList = scandir(DIR_LOTUS_CSV);
 $newFile='';
 // vérif si fichier à la date du jour
 foreach ($lotusFileList as $filename){
 // récup la date de dépot du fichier
 	if($filename!='.' && $filename!='..'){
-		$fileDate=date ('Y-m-d H:i:s', filemtime($lotusDir.'\\'.$filename));
+		$fileDate=date ('Y-m-d H:i:s', filemtime(DIR_LOTUS_CSV.'\\'.$filename));
 		$fileDate=new DateTimeImmutable($fileDate);
 		$today=new DateTime();
 		// if($fileDate->format('Y-m-d') == (new DateTime("2020-01-30"))->format('Y-m-d')){
@@ -95,13 +81,15 @@ TRAITEMENT NOUVEAU FICHIER
 
 
 if(!empty($newFile)){
-	require('lotus-file-import.php');
-	require('lotus-errors.php');
+	require('public\auto\lotus-file-import.php');
+	require('public\auto\lotus-errors.php');
 	// require('lotus-compare.php');
 // echo $newFile;
 }
 
 
+if(http_response_code()==200){
+	insertTaskLog($pdoExploit,6,0 ,"" );
+}
 
-
-
+// var_dump(http_response_code());
