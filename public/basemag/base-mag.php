@@ -172,18 +172,23 @@ if(!isset($_POST['filter'])){
 	$_SESSION['mag_filters']['centraleSelected'][]=1;
 		// uniquement les établissements de type magasin
 	$_SESSION['mag_filters']['typeSelected'][]=1;
+	$_SESSION['mag_filters']['typeSelected'][]=3;
 		// uniquement les magasins  ouverts
 	$_SESSION['mag_filters']['closed'][]=0;
 
-	$req=$pdoMag->query("SELECT * FROM mag WHERE id_type=1 AND closed=0");
+	// $req=$pdoMag->query("SELECT * FROM mag ");
+	$req=$pdoMag->query("SELECT * FROM mag  WHERE (id_type=1 OR id_type=3) AND closed=0");
 	$magList=$req->fetchAll(PDO::FETCH_ASSOC);
 
 }
 
 
 
-	$nbResult=count($magList);
+$nbResult=count($magList);
 
+	// echo "<pre>";
+	// print_r($magList);
+	// echo '</pre>';
 
 
 
@@ -202,30 +207,30 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-<div class="row">
-	<div class="col">
-		<h1 class="text-main-blue py-3 ">Base magasins</h1>
-	</div>
-	<?php
-			include('search-form.php')
-			?></div>
 	<div class="row">
-		<div class="col-lg-1"></div>
 		<div class="col">
-			<?php
-			include('../view/_errors.php');
-			?>
+			<h1 class="text-main-blue py-3 ">Base magasins</h1>
 		</div>
-		<div class="col-lg-1"></div>
-	</div>
+		<?php
+		include('search-form.php')
+		?></div>
+		<div class="row">
+			<div class="col-lg-1"></div>
+			<div class="col">
+				<?php
+				include('../view/_errors.php');
+				?>
+			</div>
+			<div class="col-lg-1"></div>
+		</div>
 
-	<div class="row mx-3">
-		<div class="col">
-			<form action="<?=$_SERVER['PHP_SELF']?>" method="post">
-				<div class="row">
-					<div class="col">
-						<fieldset class="position-relative">
-							<legend><i class="fas fa-filter pr-3"></i> Filtrer par :</legend>
+		<div class="row mx-3">
+			<div class="col">
+				<form action="<?=$_SERVER['PHP_SELF']?>" method="post">
+					<div class="row">
+						<div class="col">
+							<fieldset class="position-relative">
+								<legend><i class="fas fa-filter pr-3"></i> Filtrer par :</legend>
 							<!--
 										FILTRE PAR CENTRALE
 									-->
@@ -322,72 +327,72 @@ DEBUT CONTENU CONTAINER
 
 												</div>
 											</div>
-									<div class="form-row">
-										<div class="col text-right">
-											<button class="btn btn-orange" name="clear_filter">Effacer les filtres</button>
-											<button class="btn btn-primary" name="filter">Filtrer</button>
+											<div class="form-row">
+												<div class="col text-right">
+													<button class="btn btn-orange" name="clear_filter">Effacer les filtres</button>
+													<button class="btn btn-primary" name="filter">Filtrer</button>
 
-										</div>
+												</div>
+											</div>
+										</fieldset>
 									</div>
-								</fieldset>
-							</div>
+								</div>
+
+
+							</form>
+
 						</div>
 
 
-					</form>
+					</div>
 
-				</div>
-
-
-			</div>
-
-			<div class="row">
-				<div class="col">
-					<h5 class="text-main-blue text-center pt-5 pb-3">Nombre de magasins affichés : <?=$nbResult?></h5>
-					<div class="alert alert-primary">Pour obtenir plus d'information sur un magasin, veuillez cliquer sur son nom</div>
-					<table class="table table-sm shadow">
-						<thead class="thead-dark">
-							<tr>
-								<th>Btlec</th>
-								<th>Deno</th>
-								<th>Galec</th>
-								<th>Ville</th>
-								<th>Centrale</th>
-								<th>Chargé de mission</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php if (isset($magList)): ?>
-								<?php foreach ($magList as $key => $mag): ?>
+					<div class="row">
+						<div class="col">
+							<h5 class="text-main-blue text-center pt-5 pb-3">Nombre de magasins affichés : <?=$nbResult?></h5>
+							<div class="alert alert-primary">Pour obtenir plus d'information sur un magasin, veuillez cliquer sur son nom</div>
+							<table class="table table-sm shadow">
+								<thead class="thead-dark">
 									<tr>
-										<td><?=$mag['id']?></td>
-										<td><a href="fiche-mag.php?id=<?=$mag['id']?>"><?=$mag['deno']?></a></td>
-										<td><?=$mag['galec']?></td>
-										<td><?=$mag['cp'] .' '.$mag['ville']?></td>
-										<td><?=isset($centraleName[$mag['centrale']])?$centraleName[$mag['centrale']]:"" ?></td>
-										<td><?= UserHelpers::getFullname($pdoUser, $mag['id_cm_web_user'])?></td>
+										<th>Btlec</th>
+										<th>Deno</th>
+										<th>Galec</th>
+										<th>Ville</th>
+										<th>Centrale</th>
+										<th>Chargé de mission</th>
 									</tr>
-								<?php endforeach ?>
+								</thead>
+								<tbody>
+									<?php if (isset($magList)): ?>
+										<?php foreach ($magList as $key => $mag): ?>
+											<tr>
+												<td><?=$mag['id']?></td>
+												<td><a href="fiche-mag.php?id=<?=$mag['id']?>"><?=$mag['deno']?></a></td>
+												<td><?=$mag['galec']?></td>
+												<td><?=$mag['cp'] .' '.$mag['ville']?></td>
+												<td><?=isset($centraleName[$mag['centrale']])?$centraleName[$mag['centrale']]:"" ?></td>
+												<td><?= UserHelpers::getFullname($pdoUser, $mag['id_cm_web_user'])?></td>
+											</tr>
+										<?php endforeach ?>
 
-							<?php endif ?>
+									<?php endif ?>
 
-						</tbody>
-					</table>
+								</tbody>
+							</table>
 
+						</div>
+					</div>
+
+
+
+
+
+					<!-- ./container -->
 				</div>
-			</div>
-
-
-
-
-
-			<!-- ./container -->
-		</div>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$('#search_term').keyup(function(){
-				var path = window.location.pathname;
-				// var page = path.split("/").pop();
+				<script type="text/javascript">
+					$(document).ready(function(){
+						$('#search_term').keyup(function(){
+							var path = window.location.pathname;
+			// 	// var page = path.split("/").pop();
 				var page = 'fiche-mag.php';
 
 				var query = $(this).val()+"#"+page;
@@ -405,16 +410,15 @@ DEBUT CONTENU CONTAINER
 					});
 				}
 			});
-			$(document).on('click', 'li', function(){
-				$('#search_term').val($(this).text());
-				$('#magList').fadeOut();
-			});
-			// https://github.com/igorescobar/jQuery-Mask-Plugin
+						$(document).on('click', 'li', function(){
+							$('#search_term').val($(this).text());
+							$('#magList').fadeOut();
+						});
 
-		});
+					});
 
 
-</script>
-		<?php
-		require '../view/_footer-bt.php';
-		?>
+				</script>
+				<?php
+				require '../view/_footer-bt.php';
+				?>
