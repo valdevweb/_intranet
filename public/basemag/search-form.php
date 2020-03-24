@@ -8,7 +8,6 @@
 					<button name="clear_form" id="clear"><i class="fas fa-times-circle fa-2x pt-1 pl-2 text-main-blue"></i></button>
 				</div>
 			</form>
-		<div id="magList">
-		</div>
+			<div id="magList"></div>
 		</div>
 
