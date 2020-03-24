@@ -31,6 +31,10 @@ $d_comm=isUserAllowed($pdoUser,$comIds);
 $exploitIds=array(5);
 $d_exploit=isUserAllowed($pdoUser,$exploitIds);
 
+//accès restreint exploit (dsy, cde, luc, moi)
+$strictAdminIds=array(82);
+$d_strictAdmin=isUserAllowed($pdoUser,$strictAdminIds);
+
 // accès exploit stat : admin + chargé de mission
 $exploitStatIds=array(5,78);
 $d_exploitStat=isUserAllowed($pdoUser,$exploitStatIds);
