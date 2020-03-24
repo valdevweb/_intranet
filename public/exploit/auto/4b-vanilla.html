@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Vanilla Javascript Autocomplete Demo
+    </title>
+
+    <!-- (1) AUTOCOMPLETE SCRIPTS -->
+    <link href="3b-autocomplete.css" rel="stylesheet">
+    <script src="3b-autocomplete.js"></script>
+
+    <!-- (2) ATTACH AUTOCOMPLETE ON PAGE LOAD -->
+    <script>
+    // GLOBAL TEMP VAR TO HOLD AUTOCOMPLETE DATA
+    var actemp = null;
+
+    window.addEventListener("load", function(){
+      // NAME AUTO-COMPLETE
+      suggest.attach({
+        target : "user-name",
+        url : "2-search.php",
+        data : { type: "user-a" },
+
+        // MANUAL OVERRIDE FETCH
+        fetch : function (id, data) {
+          // User data to global temp
+          actemp = data;
+
+          // Suggestion draw override
+          for (let uid in data) {
+            suggest.instance[id].box.insertAdjacentHTML("beforeend", "<div onclick=\"suggest.select('" + id + "', this, " + uid + " );\">" + data[uid]['name'] + "</div>");
+          }
+        },
+
+        // Selection draw override
+        select : function (id, el, more) {
+          // Name
+          suggest.instance[id].input.value = el.innerHTML;
+          // Email
+          document.getElementById("user-email").value = actemp[more]['email'];
+          // Phone
+          document.getElementById("user-tel").value = actemp[more]['phone'];
+          // Close suggestions
+          suggest.instance[id].box.innerHTML = "";
+          suggest.instance[id].box.style.display = "none";
+          document.removeEventListener("click", suggest.close);
+        }
+      });
+    });
+    </script>
+  </head>
+  <body>
+    <!-- (3) DUMMY FORM -->
+    Name: <input type="text" id="user-name"/>
+    <br/><br/>
+    Email: <input type="email" id="user-email"/>
+    <br/><br/>
+    Tel: <input type="email" id="user-tel"/>
+  </body>
+</html>

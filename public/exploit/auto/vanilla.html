@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Vanilla Javascript Autocomplete Demo
+    </title>
+
+    <!-- (1) AUTOCOMPLETE SCRIPTS -->
+    <link href="3b-autocomplete.css" rel="stylesheet">
+    <script src="3b-autocomplete.js"></script>
+
+    <!-- (2) ATTACH AUTOCOMPLETE ON PAGE LOAD -->
+    <script>
+    window.addEventListener("load", function(){
+      // NAME AUTO-COMPLETE
+      suggest.attach({
+        // Minimum required
+        target : "user-name",
+        url : "2-search.php",
+        data : { type: "user" }
+      });
+
+      // EMAIL AUTO-COMPLETE
+      suggest.attach({
+        // Minimum required
+        target : "user-email",
+        url : "2-search.php",
+        data : { type: "email" },
+        // Optional
+        delay : 200,
+        min : 3
+      });
+    });
+    </script>
+  </head>
+  <body>
+    <!-- (3) DUMMY FORM -->
+    Name: <input type="text" id="user-name"/>
+    <br/><br/>
+    Email: <input type="email" id="user-email"/>
+  </body>
+</html>

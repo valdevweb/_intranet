@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      jQuery Autocomplete Demo
+    </title>
+
+    <!-- (1) YOU NEED TO LOAD BOTH JQUERY AND JQUERY UI -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <!-- (2) ATTACH AUTOCOMPLETE ON PAGE LOAD -->
+    <script>
+      // GLOBAL TEMP VAR TO HOLD AUTOCOMPLETE DATA
+      var actemp = null;
+
+      // AUTO-COMPLETE SETUP
+      $(function () {
+        $('#user-name').autocomplete({
+          source: function (request, response) {
+            $.ajax({
+              type: "POST",
+              url: "2-search.php",
+              data: {
+                term: request.term,
+                type: "user-all"
+              },
+              success: function(data) {
+                // Details to global temp
+                actemp = data.details;
+
+                // Return display
+                response(data.display);
+              },
+              dataType: 'json',
+              minLength: 2,
+              delay: 100
+            });
+          },
+          select : function(event, ui){
+            // Fill up other fields
+            $('#user-name').val(ui.item.label);
+            $('#user-email').val(actemp[ui.item.value]['email']);
+            $('#user-tel').val(actemp[ui.item.value]['phone']);
+            return false;
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <!-- (3) DUMMY FORM -->
+    Name: <input type="text" id="user-name"/>
+    <br/><br/>
+    Email: <input type="email" id="user-email"/>
+    <br/><br/>
+    Tel: <input type="email" id="user-tel"/>
+  </body>
+</html>
