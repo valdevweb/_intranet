@@ -120,11 +120,20 @@ font-weight: 200;
 .text-light-blue{
   color:  #EBF2FA;
 }
+.text-blue-lighter{
+color:#3d6bb3;
 
+
+}
 
 .text-dark-grey{
   color:#343a40;
 }
+.text-light-grey{
+  color:#a7a7a7;
+
+}
+
 
 .text-red{
 color:#c1292e;
@@ -397,6 +406,23 @@ border: 1px solid #0d47a1;
   color: #fff;
 
 }
+ .btn-orange{
+  background: #f18f0b !important;
+  border: #d88009 !important;
+  box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
+   transition: all 4s ease-in-out;
+  color: #fff;
+
+ }
+.btn-orange:hover{
+   transform: scale(1.01);
+  background: #f3a53b;
+  color: #fff;
+
+}
+
+
+
 
 .btn-red{
     background: #a63446;
