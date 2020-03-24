@@ -165,14 +165,25 @@ if(!empty($revRes))
 				}
 				?>
 				<!-- flashs info -->
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col bg-white text-danger">
+						<h5>INFORMATION LIVRAISONS</h5>
+						<h5> BTlec continue d'assurer les livraisons</h5>
+						<h5><i class="fa fa-exclamation-circle pr-3"></i>Restriction des livraisons 48h TNT dans la région Grand Est <br>(détails sur la page d'accueil)</h5>
+					</div>
+					<div class="col-1"></div>
+
+
+				</div>
 				<div class="row align-items-center infos mt-2">
 					<div class="col">
 						<!-- <div class="slide"><h1 class="text-white">Le salon BTLec Est 2020 </h1></div> -->
 						<div class="row">
 							<div class="col-4"></div>
 							<div class="col">
-										<h3  class="text-white text-center">SALON 2020</h3>
-						<p class="text-white appear text-center">Cette année, le salon aura lieu mardi 9 et mercredi 10 juin</p>
+								<h3  class="text-white text-center">SALON 2020</h3>
+								<p class="text-white appear text-center">Cette année, le salon aura lieu mardi 9 et mercredi 10 juin</p>
 
 							</div>
 						</div>
