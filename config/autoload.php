@@ -7,13 +7,7 @@ if (preg_match('/_btlecest/', $path)){
 	define("VERSION",'_');
 	define("ROOT_PATH","/_btlecest");
 	define("PORTAIL","Portail BTlec - dev" );
-
 	// define("SITE_ADDRESS", "http://172.30.92.53/_btlecest");
-	$pdo_file='_pdo_connect.php';
-	define("UPLOAD_DIR","http://172.30.92.53/_upload" );
-	define("PORTAIL_SAV_HOME","http://172.30.92.53/_sav/scapsav/home.php" );
-	define("PORTAIL_SAV","http://172.30.92.53/_sav/" );
-
 
 }else{
 	$version='';
@@ -27,7 +21,12 @@ define("SITE_ADDRESS", "http://172.30.92.53/".VERSION."btlecest");
 define("UPLOAD_DIR","http://172.30.92.53/".VERSION."upload" );
 define("PORTAIL_SAV_HOME","http://172.30.92.53/".VERSION."sav/scapsav/home.php" );
 define("PORTAIL_SAV","http://172.30.92.53/".VERSION."sav/" );
-define("DIR_LOGFILES", "D:\btlec\batch_log\\");
+define("DIR_LOGFILES", "D:\www\batch_log\\");
+define("DIR_LOGFILES_CONSULT", "http://172.30.92.53/batchlog/");
+
+
+
+
 define("PDF_FOOTER", '<table class="padding-table"><tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>');
 define("PDF_FOOTER_PAGE", '<table class="padding-table full-width"><tr><td class="footer ">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td><td>{PAGENO}{nbpg}</td></tr></table>');
 $okko= 'version : ' . ROOT_PATH;
@@ -52,6 +51,8 @@ $pdoUser=connectToDb('web_users');
 $pdoStat= connectToDb('stats');
 $pdoQlik= connectToDb('qlik');
 $pdoExploit= connectToDb('exploit');
+$pdoMag=connectToDb('magasin');
+
 // dev
 $pdoBt=connectToDb(VERSION.'btlec');
 $pdoSav=connectToDb(VERSION.'sav');
