@@ -11,12 +11,12 @@ include 'functions\tasklog.fn.php';
 include 'batch-mag\utils.fn.php';
 
 function getMagSyno($pdoBt){
-	$req=$pdoBt->query("SELECT * FROM magsyno");
+	$req=$pdoBt->query("SELECT MagasinOld, magsyno.* FROM magsyno");
 	return $req->fetchAll(PDO::FETCH_GROUP);
 }
 
 function alreadyInSyno($pdoMag,$id){
-	$req=$pdoMag->query("SELECT id FROM magsyno WHERE id={$id}");
+	$req=$pdoMag->query("SELECT btlec_old FROM magsyno WHERE btlec_old={$id}");
 	$data=$req->fetch();
 	if(!empty($data)){
 		return true;
@@ -38,6 +38,10 @@ function addMagSyno($pdoMag,$data,$galec){
 }
 
 $magsyno=getMagSyno($pdoBt);
+	// echo "<pre>";
+	// print_r($magsyno);
+	// echo '</pre>';
+echo count($magsyno);
 $listPanoBt=getBtlecGalec($pdoBt);
 
 $synoUpdated=0;
@@ -52,7 +56,9 @@ foreach ($magsyno as $key => $syno) {
 	if(!alreadyInSyno($pdoMag, $key)){
 		$galec=convertBtlec($syno[0]['MagasinActuel'], $listPanoBt);
  		$added=addMagSyno($pdoMag,$syno[0],$galec);
+echo "<br>";
 
+echo $key ."a ajouter" .$syno[0]['MagasinOld'];
  		if($added==1){
  			$synoAdded++;
  		}else{
@@ -61,9 +67,13 @@ foreach ($magsyno as $key => $syno) {
 			$errArr[$row]['msg']="impossible d'ajouter le magasin";
 
  		}
+	}else{
+		echo "<br>";
+
+		echo "deja présent " .$syno[0]['MagasinOld'];
 	}
 }
-echo "mag syno ajoutés ".$synoAdded;
+echo "mag syno ajoutés ". $synoAdded;
 
 if(empty($errArr)){
 	$logfile="";

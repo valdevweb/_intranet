@@ -211,7 +211,7 @@ DEBUT CONTENU CONTAINER
 			</div>
 			<?php
 			include('fiche-mag-commun.php');
-			if($d_exploit){
+			if($d_strictAdmin){
 				include('fiche-mag-exploit.php');
 			}
 			?>
