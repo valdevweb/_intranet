@@ -35,6 +35,7 @@
 	<!-- on charge jquery dès le début pour pouvoir ajouter dynamiquement des scripts qui utilisent jquery -->
 	<script src="../../vendor/jquery/jquery-3.2.1.min_ex.js"></script>
 	<script src="../../vendor/bootstrap/js/bootstrap.js"></script>
+	<script src="../../vendor/igorescobar/jquery-mask-plugin/src/jquery.mask.js"></script>
 
 	<title>Portail BTLec</title>
 </head>
