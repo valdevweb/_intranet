@@ -162,6 +162,9 @@ public function getDateResiliationFr(){
 
 
 public function getGelStr(){
+    if (empty($this->gel)) {
+        return "nc";
+    }
     $arGel=[
         0   =>"en activité",
         1   =>"en phase d'ouverture",
