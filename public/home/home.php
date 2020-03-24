@@ -87,90 +87,90 @@ if(!empty($_SERVER['HTTP_REFERER']))
 {
 	if((parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH) !='/'. VERSION .'btlecest/index.php'))
 	{
-	$action="retour sur la page d'accueil";
+		$action="retour sur la page d'accueil";
 	}
 }
 
 //personnalisation des sessions et récup de données utilisateur
-	if($_SESSION['type']=="mag" || $_SESSION['type']=="centrale")
-	{
+if($_SESSION['type']=="mag" || $_SESSION['type']=="centrale")
+{
 
-		if($_SESSION['type']=='mag')
-		{
-			$typeTitle="Bienvenue Leclerc";
-			$nom=$_SESSION['nom'];
-		}
-		else
-		{
-			$typeTitle="";
-			$nom="Bienvenue " .$_SESSION['nom'].',';
-		}
-		//---------------------------
-		//stats
-		//---------------------------
-		//si action est vide, le user vient de se connecté
-		$action = (empty($action)) ? "connexion mag" : $action;
-		addRecord($pdoStat,$page,$action, $descr);
-	}
-	elseif($_SESSION['type']=='btlec')
+	if($_SESSION['type']=='mag')
 	{
-		$typeTitle="Bienvenue";
-		$nom=$_SESSION['nom_bt'];
-		//---------------------------
-		//stats
-		//---------------------------
-		//si action est vide, le user vient de se connecté
-		$action = (empty($action)) ? "connexion BT" : $action;
-		addRecord($pdoStat,$page,$action, $descr);
-	}
-	elseif ($_SESSION['type']=='scapsav')
-	{
-		$typeTitle="";
-		$nom="Bienvenue,";
-		//---------------------------
-		//stats
-		//---------------------------
-		//si action est vide, le user vient de se connecté
-		$action = (empty($action)) ? "connexion scapsav" : $action;
-		addRecord($pdoStat,$page,$action, $descr);
+		$typeTitle="Bienvenue Leclerc";
+		$nom=$_SESSION['nom'];
 	}
 	else
 	{
-		// si ni de type mag, ni de type bt, ni scapsav
 		$typeTitle="";
-		$nom="Bienvenue,";
+		$nom="Bienvenue " .$_SESSION['nom'].',';
+	}
 		//---------------------------
 		//stats
 		//---------------------------
 		//si action est vide, le user vient de se connecté
-		$action = (empty($action)) ? "connexion non mag - non BT" : $action;
-		addRecord($pdoStat,$page,$action, $descr);
-	}
+	$action = (empty($action)) ? "connexion mag" : $action;
+	addRecord($pdoStat,$page,$action, $descr);
+}
+elseif($_SESSION['type']=='btlec')
+{
+	$typeTitle="Bienvenue";
+	$nom=$_SESSION['nom_bt'];
+		//---------------------------
+		//stats
+		//---------------------------
+		//si action est vide, le user vient de se connecté
+	$action = (empty($action)) ? "connexion BT" : $action;
+	addRecord($pdoStat,$page,$action, $descr);
+}
+elseif ($_SESSION['type']=='scapsav')
+{
+	$typeTitle="";
+	$nom="Bienvenue,";
+		//---------------------------
+		//stats
+		//---------------------------
+		//si action est vide, le user vient de se connecté
+	$action = (empty($action)) ? "connexion scapsav" : $action;
+	addRecord($pdoStat,$page,$action, $descr);
+}
+else
+{
+		// si ni de type mag, ni de type bt, ni scapsav
+	$typeTitle="";
+	$nom="Bienvenue,";
+		//---------------------------
+		//stats
+		//---------------------------
+		//si action est vide, le user vient de se connecté
+	$action = (empty($action)) ? "connexion non mag - non BT" : $action;
+	addRecord($pdoStat,$page,$action, $descr);
+}
 // redirection si besoin
-	if(!empty($_SESSION['goto']))
-	{
+if(!empty($_SESSION['goto']))
+{
 		//si on a une query string, on la découpe et on vérif si la 1er partie est numerique ou pas
 		//si 1ere partie numérique, c'est un vieux lien donc on redirige sur page edit-msg(mag) ou page answer(btlec)
 		//sinon on recupère toute la query string
-		$goto=$_SESSION['goto'];
-		$redir=explode("&",$goto);
-		if(is_numeric($redir[0]))
+	$goto=$_SESSION['goto'];
+	$redir=explode("&",$goto);
+	if(is_numeric($redir[0]))
+	{
+		if($_SESSION['type']=="btlec")
 		{
-			if($_SESSION['type']=="btlec")
-			{
-				header('Location:'. ROOT_PATH. '/public/btlec/answer.php?msg='.$_SESSION['goto']);
-			}
-			else
-			{
-				header('Location:'. ROOT_PATH. '/public/mag/edit-msg.php?msg='.$_SESSION['goto']);
-			}
-		}else
-		{
-				header('Location:' .ROOT_PATH. '/public/' .$goto);
+			header('Location:'. ROOT_PATH. '/public/btlec/answer.php?msg='.$_SESSION['goto']);
 		}
-
-
+		else
+		{
+			header('Location:'. ROOT_PATH. '/public/mag/edit-msg.php?msg='.$_SESSION['goto']);
+		}
+	}else
+	{
+		header('Location:' .ROOT_PATH. '/public/' .$goto);
 	}
+
+
+}
 /*--------------------------------------------------*/
 /*        reversements                              */
 /*            => si info moins de 7 jours afficher*/
@@ -223,6 +223,13 @@ function getFlashNews($pdoBt)
 $flashNews=getFlashNews($pdoBt);
 
 $flashFilesDir='..\..\..\upload\flash\\';
+
+// on réinitialise les filtres mémorisés par la page base mag
+if(isset($_SESSION['mag_filters'])){
+	unset($_SESSION['mag_filters']);
+}
+
+
 
 include('../view/_head-bt.php');
 include ('../view/_navbar.php');
