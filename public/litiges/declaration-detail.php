@@ -208,7 +208,7 @@ if(isset($_POST['submit']))
 								$invFournisseur=$prodInv['fournisseur'];
 								$pcb=$prodInv['pcb'];
 								$invDossier=$prodInv['dossier'];
-								$tarifUv=$invTarif/$pcb;
+								$tarifUv=$invTarif;
 								break;
 							}
 						// si trouvé en dehors du 1000
@@ -220,7 +220,7 @@ if(isset($_POST['submit']))
 								$invFournisseur=$prodInv['fournisseur'];
 								$pcb=$prodInv['pcb'];
 								$invDossier=$prodInv['dossier'];
-								$tarifUv=$invTarif/$pcb;
+								$tarifUv=$invTarif;
 								break;
 							}
 						// si pas trouvé
