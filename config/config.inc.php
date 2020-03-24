@@ -28,7 +28,7 @@ $pdoUser=connectToDb('web_users');
 $pdoQlik=connectToDb('qlik');
 $pdoVal=connectToDb('val');
 $pdoExploit= connectToDb('exploit');
-$pdoMag=connectToDb('magasin');
+$pdoMag=connectToDb(VERSION .'magasin');
 $pdoBt=connectToDb('btlec');
 $pdoSav=connectToDb('sav');
 

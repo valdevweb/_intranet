@@ -51,10 +51,10 @@ $pdoUser=connectToDb('web_users');
 $pdoStat= connectToDb('stats');
 $pdoQlik= connectToDb('qlik');
 $pdoExploit= connectToDb('exploit');
-$pdoMag=connectToDb('magasin');
 
 // dev
 $pdoBt=connectToDb(VERSION.'btlec');
+$pdoMag=connectToDb(VERSION.'magasin');
 $pdoSav=connectToDb(VERSION.'sav');
 $pdoLitige=connectToDb(VERSION.'litige');
 $pdoCasse=connectToDb(VERSION.'casse');
