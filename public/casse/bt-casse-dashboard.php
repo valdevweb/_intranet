@@ -130,6 +130,15 @@ function formatExistingDate($date){
 	}
 	return $date;
 }
+function getAllPalette($pdoCasse){
+	$req=$pdoCasse->query("SELECT id_palette, palettes.palette,contremarque,id_exp,exps.exp,palettes.statut,qlik.palettes4919.NumeroPalette, DATE_FORMAT(date_delivery, '%d/%m/%y') as dateDelivery,sum(valo) as valopalette, btlec, galec, mt_fac FROM palettes
+		LEFT JOIN exps ON palettes.id_exp=exps.id
+		LEFT JOIN casses ON palettes.id=casses.id_palette
+		left JOIN qlik.palettes4919 ON palettes.palette=NumeroPalette  GROUP BY palettes.id ORDER BY palettes.date_crea");
+
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
 
 // echo $_POST['statut'];
@@ -157,6 +166,24 @@ if(isset($_POST['varticle']))
 if(isset($_POST['vpalette'])){
 	extract($_POST);
 	$palettes=searchPalette($pdoCasse);
+	$nbpalette=count($palettes);
+
+
+	foreach ($palettes as $key => $value) {
+		$sumTot+=$value['valopalette'];
+
+		if(isset($arMagSum[$value['galec']])){
+			$arMagSum[$value['galec']]+=$value['valopalette'];
+		}else{
+			$arMagSum[$value['galec']]=$value['valopalette'];
+		}
+	}
+
+
+	$nbMagCol=ceil(count($arMagSum)/2);
+	$lig=1;
+}else{
+	$palettes=getAllPalette($pdoCasse);
 	$nbpalette=count($palettes);
 
 
@@ -507,7 +534,7 @@ DEBUT CONTENU CONTAINER
 
 
 
-	<?php if(isset($_POST['vpalette'])): ?>
+	<?php if(isset($palettes)): ?>
 
 
 
@@ -515,298 +542,298 @@ DEBUT CONTENU CONTAINER
 
 		<div class="result-zone bg-grey px-5 pb-2 pt-2 mb-2">
 
-<div class="row">
-	<div class="col">
-		<?php if (isset($_POST['search_strg']) && !empty($_POST['search_strg'])): ?>
-		<h5 class="text-main-blue pb-3 text-center">Résultat de votre recherche pour : <span class="heavy bg-title patrick-hand px-3"><?=$_POST['search_strg']?></span></h5>
-		<?php else: ?>
-			<h5 class="text-main-blue pb-3 text-center">Résultat de votre recherche  : </h5>
+			<div class="row">
+				<div class="col">
+					<?php if (isset($_POST['search_strg']) && !empty($_POST['search_strg'])): ?>
+					<h5 class="text-main-blue pb-3 text-center">Résultat de votre recherche pour : <span class="heavy bg-title patrick-hand px-3"><?=$_POST['search_strg']?></span></h5>
+					<?php else: ?>
+						<h5 class="text-main-blue pb-3 text-center">Résultat de votre recherche  : </h5>
 
-		<?php endif ?>
-	</div>
-</div>
-<div class="row">
-	<div class="col text-center">
-
-		<h6 class="qtext-center bg-title p-3 d-inline-block rounded-more"><?= $nbpalette ?> palettes pour un montant total de <span class="under"><?= number_format((float)$sumTot,2,'.',' ')?>&euro;</span></h6>
-
-	</div>
-</div>
-<div class="row">
-	<div class="col">
-		<ul class="leaders">
-			<?php $lig=1 ?>
-			<?php foreach ($arMagSum as $galec => $mt): ?>
-				<?php if ($lig<=$nbMagCol): ?>
-
-					<li>
-						<span class="mag-txt heavy"><?= ($galec!="")? MagHelpers::deno($pdoUser,$galec) : "Non positionné" ?></span>
-						<span class="text-right sum-txt font-weight-bold">
-							<?= number_format((float)$mt,2,'.',' ') ?>&euro;</span>						</li>
-
-
-						<?php $lig++?>
-						<?php else: ?>
-							<?php $lig=1?>
-						</ul>
-					</div>
-					<div class="col">
-						<ul class="leaders">
-							<li>
-								<span class="mag-txt heavy"><?=MagHelpers::deno($pdoUser,$galec)?></span>
-
-
-								<span class="text-right sum-txt font-weight-bold">
-									<?= number_format((float)$mt,2,'.',' ') ?>&euro;
-								</span>
-							</li>
-
-
-						<?php endif ?>
-
-					<?php endforeach ?>
-				</ul>
+					<?php endif ?>
+				</div>
 			</div>
-		</div>
-		<div class="row">
-				<div class="col">
-					<div class="legend"><img class="pr-3" src="../img/casse/encours.jpg"> En cours</div>
+			<div class="row">
+				<div class="col text-center">
+
+					<h6 class="qtext-center bg-title p-3 d-inline-block rounded-more"><?= $nbpalette ?> palettes pour un montant total de <span class="under"><?= number_format((float)$sumTot,2,'.',' ')?>&euro;</span></h6>
+
 				</div>
+			</div>
+			<div class="row">
 				<div class="col">
-					<div class="legend"><img class="pr-3" src="../img/casse/livrer.png">A livrer</div>
-				</div>
-				<div class="col">
-					<div class="legend"><img  src="../img/casse/livre.png"><img class="pr-3" src="../img/casse/creditcard.png">Clos - facturé</div>
-				</div>
-				<div class="col">
-					<div class="legend"><img  src="../img/casse/livre.png"><img class="pr-3" src="../img/casse/logo_deee.jpg">Clos - détruit</div>
-				</div>
+					<ul class="leaders">
+						<?php $lig=1 ?>
+						<?php foreach ($arMagSum as $galec => $mt): ?>
+							<?php if ($lig<=$nbMagCol): ?>
+
+								<li>
+									<span class="mag-txt heavy"><?= ($galec!="")? MagHelpers::deno($pdoUser,$galec) : "Non positionné" ?></span>
+									<span class="text-right sum-txt font-weight-bold">
+										<?= number_format((float)$mt,2,'.',' ') ?>&euro;</span>						</li>
+
+
+										<?php $lig++?>
+										<?php else: ?>
+											<?php $lig=1?>
+										</ul>
+									</div>
+									<div class="col">
+										<ul class="leaders">
+											<li>
+												<span class="mag-txt heavy"><?=MagHelpers::deno($pdoUser,$galec)?></span>
+
+
+												<span class="text-right sum-txt font-weight-bold">
+													<?= number_format((float)$mt,2,'.',' ') ?>&euro;
+												</span>
+											</li>
+
+
+										<?php endif ?>
+
+									<?php endforeach ?>
+								</ul>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<div class="legend"><img class="pr-3" src="../img/casse/encours.jpg"> En cours</div>
+							</div>
+							<div class="col">
+								<div class="legend"><img class="pr-3" src="../img/casse/livrer.png">A livrer</div>
+							</div>
+							<div class="col">
+								<div class="legend"><img  src="../img/casse/livre.png"><img class="pr-3" src="../img/casse/creditcard.png">Clos - facturé</div>
+							</div>
+							<div class="col">
+								<div class="legend"><img  src="../img/casse/livre.png"><img class="pr-3" src="../img/casse/logo_deee.jpg">Clos - détruit</div>
+							</div>
 
 
 
-</div>
-	</div>
-	<div class="row mb-3">
-		<div class="col">
-			<table class="table table-sm table-bordered table-striped" id="palettes">
-				<thead class="thead-dark">
-					<tr>
-						<th class="sortable" onclick="sortTable(0);">Exp</th>
-						<th class="sortable" onclick="sortTable(1);">Palette</th>
-						<th class="sortable" onclick="sortTable(2);">Palette<br> contremarque</th>
-						<th class="sortable text-center" onclick="sortTable(3);">Statut</th>
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col">
+							<table class="table table-sm table-bordered table-striped" id="palettes">
+								<thead class="thead-dark">
+									<tr>
+										<th class="sortable" onclick="sortTable(0);">Exp</th>
+										<th class="sortable" onclick="sortTable(1);">Palette</th>
+										<th class="sortable" onclick="sortTable(2);">Palette<br> contremarque</th>
+										<th class="sortable text-center" onclick="sortTable(3);">Statut</th>
 
-						<th class="sortable" onclick="sortTable(4);">Date expé</th>
-						<th class="sortable" onclick="sortTable(5);">Magasin</th>
-						<th class="sortable" onclick="sortTable(6);">Valo<br>palette</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php
-					foreach ($palettes as $palette)
+										<th class="sortable" onclick="sortTable(4);">Date expé</th>
+										<th class="sortable" onclick="sortTable(5);">Magasin</th>
+										<th class="sortable" onclick="sortTable(6);">Valo<br>palette</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+									foreach ($palettes as $palette)
+									{
+										echo '<tr>';
+										echo '<td>'.$palette['id_exp'].'</td>';
+										echo '<td><a href="detail-palette.php?id='.$palette['id_palette'].'">'.$palette['palette'].'</a></td>';
+										echo '<td>'.$palette['contremarque'].'</td>';
+
+
+										if($palette['statut']==0 && $palette['NumeroPalette']==null){
+											$statut='<img src="../img/casse/encours.jpg">';
+										}
+										elseif($palette['statut']==1 || $palette['NumeroPalette']!=null){
+											$statut='<img src="../img/casse/livrer.png">';
+										}elseif ($palette['exp']==1 && $palette['mt_fac']!='') {
+											$statut='<img src="../img/casse/livre.png"><img src="../img/casse/creditcard.png">';
+										}elseif ($palette['exp']==1 && $palette['mt_fac']==null){
+											$statut='<img src="../img/casse/livre.png"><img src="../img/casse/logo_deee.jpg">';
+										}
+										echo '<td class="text-center">'.$statut.'</td>';
+
+
+
+										echo '<td class="text-right">'.$palette['dateDelivery'].'</td>';
+										echo '<td class="text-right">'.$palette['btlec'].'</td>';
+										echo '<td class="text-right">'.$palette['valopalette'].'</td>';
+
+										echo '</tr>';
+									}
+
+									?>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+				<?php endif ?>
+
+
+				<div class="row">
+					<div class="col text-right"><a href="#mini-menu" class="uplink">retour</a></div>
+				</div>
+
+				<div class="bg-separation"></div>
+
+
+
+				<div class="row py-3">
+					<div class="col">
+						<h5 class="text-main-blue" id="stock"><span class="step">3</span>Liste des palettes de casse en stock :</h5>
+
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<p><span class="text-orange"><i class="fas fa-clipboard-check"></i> : palette contremarquée</span><span class="text-green pl-5"><i class="fas fa-paper-plane"></i> : palette expédiée</span><span class="text-red pl-5"><i class="fas fa-info-circle"></i> : palette à traiter </span></p>
+
+					</div>
+				</div>
+
+
+				<div class="row pb-5">
+					<div class="col">
+						<?php
+
+						if($paletteEnStock==false){
+							echo "<p>aucune palette de casse en stock</p>";
+						}
+						else
+						{
+							$nbPalette=count($paletteEnStock);
+							$statut=[0=>'<span class="text-red"><i class="fas fa-info-circle"></i></span>',1=>'<span class="text-orange"><i class="fas fa-clipboard-check"></i></span>', 2=>'<i class="fas fa-paper-plane text-green"></i>'];
+							echo '<ul id="list-palette">';
+							foreach ($paletteEnStock as $palette)
+							{
+								echo '<li><a href="detail-palette.php?id='.$palette['paletteid'].'" class="link-main-blue">'.$palette['palette'].'</a> - '.$statut[$palette['statut']].'</li>';
+							}
+							echo '</ul>';
+
+						}
+						?>
+						<p class="alert alert-primary">Cliquez sur une palette pour en afficher le contenu et la positionner sur une livraison</p>
+
+					</div>
+				</div>
+				<div class="row">
+					<div class="col text-right"><a href="#mini-menu" class="uplink">retour</a></div>
+				</div>
+				<div class="bg-separation"></div>
+				<div class="row py-3">
+					<div class="col">
+						<h5 class="text-main-blue" id="traitement"><span class="step">4</span>Traitement des palettes à livrer :</h5>
+					</div>
+				</div>
+				<?php
+
+				if($existingExp!=false)
+				{
+
+
+					foreach ($existingExp as $exp)
 					{
+						echo '<div class="row pb-5">';
+						echo '<div class="col">';
+						echo '<p class="text-main-blue">Livraison n°'.$exp['id'].' pour le magasin '.$exp['btlec'].'</p>';
+						echo '<table class="table table-sm light-shadow" id="action">';
+						echo '<thead>';
+
 						echo '<tr>';
-						echo '<td>'.$palette['id_exp'].'</td>';
-						echo '<td><a href="detail-palette.php?id='.$palette['id_palette'].'">'.$palette['palette'].'</a></td>';
-						echo '<td>'.$palette['contremarque'].'</td>';
-
-
-						if($palette['statut']==0 && $palette['NumeroPalette']==null){
-							$statut='<img src="../img/casse/encours.jpg">';
-						}
-						elseif($palette['statut']==1 || $palette['NumeroPalette']!=null){
-							$statut='<img src="../img/casse/livrer.png">';
-						}elseif ($palette['exp']==1 && $palette['mt_fac']!='') {
-							$statut='<img src="../img/casse/livre.png"><img src="../img/casse/creditcard.png">';
-						}elseif ($palette['exp']==1 && $palette['mt_fac']==null){
-							$statut='<img src="../img/casse/livre.png"><img src="../img/casse/logo_deee.jpg">';
-						}
-						echo '<td class="text-center">'.$statut.'</td>';
-
-
-
-						echo '<td class="text-right">'.$palette['dateDelivery'].'</td>';
-						echo '<td class="text-right">'.$palette['btlec'].'</td>';
-						echo '<td class="text-right">'.$palette['valopalette'].'</td>';
-
+						echo '<th class="align-top">Palette 4919</th>';
+						echo '<th class="align-top">Palette '.$exp['btlec'].'</th>';
+						echo '<th class="align-top">Mail ctrl <br>palettes</th>';
+						echo '<th class="align-top">Retour ctrl <br>palettes</th>';
+						echo '<th class="align-top">Expédiée le :</th>';
+						echo '<th class="align-top">Mail magasin</th>';
+						echo '<th class="align-top">Facturation</th>';
 						echo '</tr>';
+						echo '</thead>';
+
+						$detailExp=getExpAndPalette($pdoCasse,$exp['id']);
+
+
+						foreach ($detailExp as $detail)
+						{
+							$ddPilote=formatExistingDate($detail['date_dd_pilote']);
+							$retourPilote=formatExistingDate($detail['date_retour_pilote']);
+							$livraison=formatExistingDate($detail['date_delivery']);
+							$mailMag=formatExistingDate($detail['date_info_mag']);
+							$fac=formatExistingDate($detail['date_fac']);
+					// $ddPilote=isset() ? $detail['date_dd_pilote'] : false;
+							echo '<tr>';
+							echo '<td><a href="detail-palette.php?id='.$detail['paletteid'].'">'.$detail['palette'].'</a></td>';
+							echo '<td>'.$detail['contremarque'].'</td>';
+							echo '<td class="text-right">'.$ddPilote.'</td>';
+							echo '<td class="text-right">'.$retourPilote.'</td>';
+							echo '<td class="text-right">'.$livraison.'</td>';
+							echo '<td class="text-right">'.$mailMag.'</td>';
+							echo '<td class="text-right">'.$fac.'</td>';
+							echo '</tr>';
+
+						}
+
+						echo '<tr >';
+						echo '<td colspan="2"><h5 class="text-main-blue py-3 heavy">Traitements :</h5></td>';
+						echo '<td class="text-center py-3"><a href="pilote-dd.php?id='.$exp['id'].'" id="mailpilote"><button class="btn secOne"><i class="far fa-envelope pr-3"></i>Envoyer</button></a></td>';
+						echo '<td class="text-center py-3"><a href="pilote-palette-ok.php?id='.$exp['id'].'"><button class="btn secTwo"><i class="far fa-edit pr-3"></i>Saisir</button></a></td>';
+						echo '<td class="text-center py-3"><a href="delivery-ok.php?id='.$exp['id'].'"><button class="btn secThree"><i class="far fa-edit pr-3"></i>Saisir</button></a></td>';
+						echo '<td class="text-center py-3"><a href="mag-info-casse.php?id='.$exp['id'].'" id="mailMag"><button class="btn secFour"><i class="far fa-envelope pr-3"></i>Envoyer</button></a></td>';
+			//  pas de btn facturer si pôle
+						if($exp['btlec']==2051 || $exp['btlec']==2054 || $exp['btlec']==2069){
+							echo '<td class="text-center py-3">';
+							echo '<a href="casse-clos.php?id='.$exp['id'].'" ><button class="btn btn-primary"><i class="far fa-credit-card pr-3"></i>Clôturer</button></a>';
+
+							echo '</td>';
+						}
+						else{
+							echo '<td class="text-center py-3">';
+							echo '<a href="facturation-casse.php?id='.$exp['id'].'" id="mailMag"><button class="btn secFive"><i class="far fa-credit-card pr-3"></i>Facturer</button></a><br>';
+							echo '<div class="mt-3"><a href="casse-clos.php?id='.$exp['id'].'" ><button class="btn btn-primary"><i class="far fa-credit-card pr-3"></i>Clôturer</button></a></div>';
+							echo '</td>';
+
+						}
+						echo '</tr>';
+						echo '</table>';
+						echo '</div>';
+						echo '</div>';
+						echo '<div class="row">';
+
+
+
+						echo '</div>';
+
+
+
+
 					}
 
-					?>
-				</tbody>
-			</table>
-		</div>
-	</div>
-
-<?php endif ?>
-
-
-<div class="row">
-	<div class="col text-right"><a href="#mini-menu" class="uplink">retour</a></div>
-</div>
-
-<div class="bg-separation"></div>
+				}
+				else{
+					echo "aucune palette n'a été sélectionnée pour une livraison magasin";
+				}
 
 
 
-<div class="row py-3">
-	<div class="col">
-		<h5 class="text-main-blue" id="stock"><span class="step">3</span>Liste des palettes de casse en stock :</h5>
-
-	</div>
-</div>
-<div class="row">
-	<div class="col">
-		<p><span class="text-orange"><i class="fas fa-clipboard-check"></i> : palette contremarquée</span><span class="text-green pl-5"><i class="fas fa-paper-plane"></i> : palette expédiée</span><span class="text-red pl-5"><i class="fas fa-info-circle"></i> : palette à traiter </span></p>
-
-	</div>
-</div>
+				?>
 
 
-<div class="row pb-5">
-	<div class="col">
-		<?php
-
-		if($paletteEnStock==false){
-			echo "<p>aucune palette de casse en stock</p>";
-		}
-		else
-		{
-			$nbPalette=count($paletteEnStock);
-			$statut=[0=>'<span class="text-red"><i class="fas fa-info-circle"></i></span>',1=>'<span class="text-orange"><i class="fas fa-clipboard-check"></i></span>', 2=>'<i class="fas fa-paper-plane text-green"></i>'];
-			echo '<ul id="list-palette">';
-			foreach ($paletteEnStock as $palette)
-			{
-				echo '<li><a href="detail-palette.php?id='.$palette['paletteid'].'" class="link-main-blue">'.$palette['palette'].'</a> - '.$statut[$palette['statut']].'</li>';
-			}
-			echo '</ul>';
-
-		}
-		?>
-		<p class="alert alert-primary">Cliquez sur une palette pour en afficher le contenu et la positionner sur une livraison</p>
-
-	</div>
-</div>
-<div class="row">
-	<div class="col text-right"><a href="#mini-menu" class="uplink">retour</a></div>
-</div>
-<div class="bg-separation"></div>
-<div class="row py-3">
-	<div class="col">
-		<h5 class="text-main-blue" id="traitement"><span class="step">4</span>Traitement des palettes à livrer :</h5>
-	</div>
-</div>
-<?php
-
-if($existingExp!=false)
-{
-
-
-	foreach ($existingExp as $exp)
-	{
-		echo '<div class="row pb-5">';
-		echo '<div class="col">';
-		echo '<p class="text-main-blue">Livraison n°'.$exp['id'].' pour le magasin '.$exp['btlec'].'</p>';
-		echo '<table class="table table-sm light-shadow" id="action">';
-		echo '<thead>';
-
-		echo '<tr>';
-		echo '<th class="align-top">Palette 4919</th>';
-		echo '<th class="align-top">Palette '.$exp['btlec'].'</th>';
-		echo '<th class="align-top">Mail ctrl <br>palettes</th>';
-		echo '<th class="align-top">Retour ctrl <br>palettes</th>';
-		echo '<th class="align-top">Expédiée le :</th>';
-		echo '<th class="align-top">Mail magasin</th>';
-		echo '<th class="align-top">Facturation</th>';
-		echo '</tr>';
-		echo '</thead>';
-
-		$detailExp=getExpAndPalette($pdoCasse,$exp['id']);
-
-
-		foreach ($detailExp as $detail)
-		{
-			$ddPilote=formatExistingDate($detail['date_dd_pilote']);
-			$retourPilote=formatExistingDate($detail['date_retour_pilote']);
-			$livraison=formatExistingDate($detail['date_delivery']);
-			$mailMag=formatExistingDate($detail['date_info_mag']);
-			$fac=formatExistingDate($detail['date_fac']);
-					// $ddPilote=isset() ? $detail['date_dd_pilote'] : false;
-			echo '<tr>';
-			echo '<td><a href="detail-palette.php?id='.$detail['paletteid'].'">'.$detail['palette'].'</a></td>';
-			echo '<td>'.$detail['contremarque'].'</td>';
-			echo '<td class="text-right">'.$ddPilote.'</td>';
-			echo '<td class="text-right">'.$retourPilote.'</td>';
-			echo '<td class="text-right">'.$livraison.'</td>';
-			echo '<td class="text-right">'.$mailMag.'</td>';
-			echo '<td class="text-right">'.$fac.'</td>';
-			echo '</tr>';
-
-		}
-
-		echo '<tr >';
-		echo '<td colspan="2"><h5 class="text-main-blue py-3 heavy">Traitements :</h5></td>';
-		echo '<td class="text-center py-3"><a href="pilote-dd.php?id='.$exp['id'].'" id="mailpilote"><button class="btn secOne"><i class="far fa-envelope pr-3"></i>Envoyer</button></a></td>';
-		echo '<td class="text-center py-3"><a href="pilote-palette-ok.php?id='.$exp['id'].'"><button class="btn secTwo"><i class="far fa-edit pr-3"></i>Saisir</button></a></td>';
-		echo '<td class="text-center py-3"><a href="delivery-ok.php?id='.$exp['id'].'"><button class="btn secThree"><i class="far fa-edit pr-3"></i>Saisir</button></a></td>';
-		echo '<td class="text-center py-3"><a href="mag-info-casse.php?id='.$exp['id'].'" id="mailMag"><button class="btn secFour"><i class="far fa-envelope pr-3"></i>Envoyer</button></a></td>';
-			//  pas de btn facturer si pôle
-		if($exp['btlec']==2051 || $exp['btlec']==2054 || $exp['btlec']==2069){
-			echo '<td class="text-center py-3">';
-			echo '<a href="casse-clos.php?id='.$exp['id'].'" ><button class="btn btn-primary"><i class="far fa-credit-card pr-3"></i>Clôturer</button></a>';
-
-			echo '</td>';
-		}
-		else{
-			echo '<td class="text-center py-3">';
-			echo '<a href="facturation-casse.php?id='.$exp['id'].'" id="mailMag"><button class="btn secFive"><i class="far fa-credit-card pr-3"></i>Facturer</button></a><br>';
-			echo '<div class="mt-3"><a href="casse-clos.php?id='.$exp['id'].'" ><button class="btn btn-primary"><i class="far fa-credit-card pr-3"></i>Clôturer</button></a></div>';
-			echo '</td>';
-
-		}
-		echo '</tr>';
-		echo '</table>';
-		echo '</div>';
-		echo '</div>';
-		echo '<div class="row">';
+				<div class="row">
+					<div class="col text-right"><a href="#mini-menu" class="uplink">retour</a></div>
+				</div>
 
 
 
-		echo '</div>';
+				<!-- ./container -->
+			</div>
+			<script src="../js/sortmultitable.js"></script>
+
+			<script type="text/javascript">
+				function sortTable(n) {
+					sort_table(document.getElementById("palettes"), n);
+				}
 
 
 
-
-	}
-
-}
-else{
-	echo "aucune palette n'a été sélectionnée pour une livraison magasin";
-}
-
-
-
-?>
-
-
-<div class="row">
-	<div class="col text-right"><a href="#mini-menu" class="uplink">retour</a></div>
-</div>
-
-
-
-<!-- ./container -->
-</div>
-<script src="../js/sortmultitable.js"></script>
-
-<script type="text/javascript">
-	function sortTable(n) {
-		sort_table(document.getElementById("palettes"), n);
-	}
-
-
-
-	$(document).ready(function(){
+				$(document).ready(function(){
 	// boite de dialogue confirmation clic sur lien
 	$('.red-link').on('click', function(e){
 		var webid='<?php echo $_SESSION['id_web_user'];?>';
