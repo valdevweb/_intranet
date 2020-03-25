@@ -101,7 +101,11 @@ class MagDbHelper{
 	}
 
 	public function getListType(){
-		return $req=$this->pdo->query("SELECT * FROM type")->fetchAll(PDO::FETCH_ASSOC);
+		return $req=$this->pdo->query("SELECT * FROM type ORDER BY type")->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	public function getListTypePair(){
+		return $req=$this->pdo->query("SELECT id, type FROM type")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 	}
 
@@ -129,9 +133,11 @@ class MagDbHelper{
 	}
 
 
-	public function getListIdType(){
-			$req=$this->pdo->query("SELECT * FROM type ORDER BY type");
-			return $req->fetchAll(PDO::FETCH_ASSOC);
+
+
+	public function getListCodeAcdlec(){
+				$req=$this->pdo->query("SELECT DISTINCT acdlec_code FROM mag ORDER BY acdlec_code");
+				return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 }
