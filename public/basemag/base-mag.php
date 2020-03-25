@@ -18,6 +18,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 require_once '../../Class/MagDbHelper.php';
 require_once '../../Class/Mag.php';
 require_once '../../Class/UserHelpers.php';
+require_once '../../Class/Helpers.php';
 
 
 
@@ -224,7 +225,10 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<?php
 		include('search-form.php')
-		?></div>
+		?>
+
+	</div>
+
 		<div class="row">
 			<div class="col-lg-1"></div>
 			<div class="col">

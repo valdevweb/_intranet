@@ -17,6 +17,8 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 require_once '../../vendor/autoload.php';
 require_once '../../Class/MagDbHelper.php';
 require_once '../../Class/Mag.php';
+require_once '../../Class/Helpers.php';
+
 //---------------------------------------
 //	STRUCTURE PAGE HTML
 //---------------------------------------
@@ -212,6 +214,9 @@ DEBUT CONTENU CONTAINER
 			<?php
 			include('search-form.php')
 			?>
+			<div class="col-auto">
+				<?=Helpers::returnBtn('base-mag.php','btn-black')?>
+			</div>
 			<!-- <div class="col-lg-1"></div> -->
 		</div>
 		<?php else: ?>
@@ -226,6 +231,9 @@ DEBUT CONTENU CONTAINER
 				<?php
 				include('search-form.php')
 				?>
+				<div class="col-auto mt-4 pt-2">
+				<?=Helpers::returnBtn('base-mag.php','btn-black')?>
+			</div>
 				<!-- <div class="col-lg-1"></div> -->
 			</div>
 			<?php
