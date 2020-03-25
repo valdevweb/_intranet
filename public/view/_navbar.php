@@ -264,6 +264,12 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 			<ul>
 				<li><a href="<?= ROOT_PATH?>/public/basemag/base-mag.php">Base magasins</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/basemag/fiche-mag.php"><span>Fiches magasins</span></a></li>
+				<?php if ($d_strictAdmin): ?>
+				<li><a href="">Attention scripts :</a></li>
+
+				<li><a href="<?= ROOT_PATH?>/batch-mag/newmag-import-qlik.php">Qlik vers base mag</a></li>
+
+				<?php endif ?>
 			</ul>
 		</li>
 
