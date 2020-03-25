@@ -106,7 +106,7 @@ if (isset($_GET['id'])){
 	$listCentralesSca=$magDbHelper->getDistinctCentraleSca();
 	$webusers=$magDbHelper->getWebUser($mag->getGalec());
 	$centreRei=$magDbHelper->centreReiToString($mag->getCentreRei());
-	$listTypesMag=$magDbHelper-> getListIdType();
+	$listTypesMag=$magDbHelper-> getListType();
 
 	// ld
 	$ldRbt=$magDbHelper-> getMagLd($mag->getGalec(),'-RBT');

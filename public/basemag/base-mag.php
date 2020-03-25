@@ -1,4 +1,4 @@
-...<?php
+<?php
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
 	echo "pas de variable session";
@@ -38,6 +38,11 @@ $magDbHelper=new MagDbHelper($pdoMag);
 $listCentrale=$magDbHelper->getDistinctCentrale();
 $listType=$magDbHelper->getListType();
 $listCm=UserHelpers::getUserByService($pdoUser,17);
+$listTypePair=$magDbHelper->getListTypePair();
+$listCodeAcdlec=$magDbHelper->getListCodeAcdlec();
+
+
+
 
 
 $iCentrale=0;
@@ -87,7 +92,6 @@ if(isset($_POST['filter'])){
 			$paramCentrale=join(' OR ', array_map(function($value){return 'centrale='.$value;},$_POST['centraleSelected']));
 
 		}
-
 	}else{
 		$_SESSION['mag_filters']['centraleSelected']=[];
 		$paramCentrale='';
@@ -103,6 +107,17 @@ if(isset($_POST['filter'])){
 		$paramType='';
 	}
 	$paramList[]=$paramType;
+
+	if(isset($_POST['acdlecSelected'])){
+		$_SESSION['mag_filters']['acdlecSelected']=$_POST['acdlecSelected'];
+		$paramAcdlec=join(' OR ', array_map(function($value){return 'acdlec_code='.$value;},$_POST['acdlecSelected']));
+
+	}else{
+		$_SESSION['mag_filters']['acdlecSelected']=[];
+		$paramAcdlec='';
+	}
+	$paramList[]=$paramAcdlec;
+
 
 	if(isset($_POST['closed'])){
 		$_SESSION['mag_filters']['closed']=$_POST['closed'];
@@ -154,7 +169,7 @@ if(isset($paramList)){
 	$paramList=array_filter($paramList);
 	$params=join(' AND ',array_map($joinParam,$paramList));
 	$params= "WHERE " .$params;
-	$req=$pdoMag->query("SELECT * FROM mag $params");
+	$req=$pdoMag->query("SELECT * FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca $params");
 	$magList=$req->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -173,11 +188,16 @@ if(!isset($_POST['filter'])){
 		// uniquement les établissements de type magasin
 	$_SESSION['mag_filters']['typeSelected'][]=1;
 	$_SESSION['mag_filters']['typeSelected'][]=3;
+	$_SESSION['mag_filters']['acdlecSelected']=["010","029","070","078","101","102","111","114","116","118","119"];
+	$sessionAcdlec=join(' OR ', array_map(function($value){return 'acdlec_code='.$value;},$_SESSION['mag_filters']['acdlecSelected']));
+	// echo $sessionAcdlec;
+
+
 		// uniquement les magasins  ouverts
 	$_SESSION['mag_filters']['closed'][]=0;
 
 	// $req=$pdoMag->query("SELECT * FROM mag ");
-	$req=$pdoMag->query("SELECT * FROM mag  WHERE (id_type=1 OR id_type=3) AND closed=0");
+	$req=$pdoMag->query("SELECT * FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE (id_type=1 OR id_type=3) AND closed=0 AND {$sessionAcdlec}");
 	$magList=$req->fetchAll(PDO::FETCH_ASSOC);
 
 }
@@ -185,6 +205,7 @@ if(!isset($_POST['filter'])){
 
 
 $nbResult=count($magList);
+$countItem=0;
 
 	// echo "<pre>";
 	// print_r($magList);
@@ -238,7 +259,6 @@ DEBUT CONTENU CONTAINER
 									<?php foreach ($listCentrale as $key => $centrale): ?>
 										<?php if ($iCentrale==0): ?>
 											<div class="form-row">
-
 												<div class="col pl-5">
 													<div class="form-check">
 														<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$centrale['id_centrale']?>" id="centrale-<?=$centrale['id_centrale']?>" <?= checkChecked($centrale['id_centrale'],'centraleSelected')?>>
@@ -286,7 +306,7 @@ DEBUT CONTENU CONTAINER
 											</div>
 											<!--										FILTRE PAR TYPE									-->
 											<div class="form-row my-3">
-												<div class="col">
+												<div class="col-3">
 													<p class="rubrique text-main-blue font-weight-bold">Type d'établissement :</p>
 													<?php foreach ($listType as $key => $type): ?>
 														<div class="form-check pl-5">
@@ -295,8 +315,50 @@ DEBUT CONTENU CONTAINER
 														</div>
 													<?php endforeach ?>
 												</div>
+												<div class="col-6">
+													<p class="rubrique text-main-blue font-weight-bold">Code Acdlec</p>
+													<div class="row">
+
+														<div class="col">
+
+															<div class="form-check pl-5">
+																<input type="radio" class="form-check-input" name="check_code" id="check-all-code">
+																<label class="form-check-label" for="check-all-code">Cocher tout</label>
+															</div>
+														</div>
+														<div class="col">
+															<div class="form-check pl-5">
+																<input type="radio" class="form-check-input" name="check_code" id="uncheck-code">
+																<label class="form-check-label" for="uncheck-code">Décocher tout</label>
+															</div>
+														</div>
+													</div>
+
+													<div class="row">
+														<div class="col">
+
+															<?php foreach ($listCodeAcdlec as $code): ?>
+																<?php if (!empty($code['acdlec_code'])): ?>
+																	<?php
+																	if ($countItem==4){
+																		echo '</div><div class="col">';
+																		$countItem=0;
+																	}
+																	?>
+																	<div class="form-check pl-5">
+																		<input type="checkbox" class="form-check-input acdlec" name="acdlecSelected[]" value="<?=$code['acdlec_code']?>" <?= checkChecked($code['acdlec_code'],'acdlecSelected')?>>
+																		<label class="form-check-label"><?=$code['acdlec_code']?></label>
+																	</div>
+																	<?php $countItem++; ?>
+																<?php endif ?>
+															<?php endforeach ?>
+														</div>
+													</div>
+												</div>
+
+
 												<!--					FILTRE PAR ETAT				-->
-												<div class="col">
+												<div class="col-3">
 													<p class="rubrique text-main-blue font-weight-bold">Ouvert/fermé :</p>
 													<div class="form-check pl-5">
 														<input type="checkbox" class="form-check-input" name="closed[]" value="0" <?= checkChecked(0,'closed')?>>
@@ -307,9 +369,13 @@ DEBUT CONTENU CONTAINER
 														<label class="form-check-label">Fermé</label>
 													</div>
 												</div>
+											</div>
 
 
 
+
+
+											<div class="row">
 												<!--					FILTRE PAR CM				-->
 												<div class="col">
 													<p class="rubrique text-main-blue font-weight-bold">Suivi par :</p>
@@ -323,13 +389,14 @@ DEBUT CONTENU CONTAINER
 														<input type="checkbox" class="form-check-input" name="cmSelected[]" value="NULL" <?= checkChecked('NULL','cmSelected')?>>
 														<label class="form-check-label">Non suivi</label>
 													</div>
-
-
 												</div>
 											</div>
+
+
+
 											<div class="form-row">
 												<div class="col text-right">
-													<button class="btn btn-orange" name="clear_filter">Effacer les filtres</button>
+													<button class="btn btn-orange" name="clear_filter">Réinitialiser les filtres</button>
 													<button class="btn btn-primary" name="filter">Filtrer</button>
 
 												</div>
@@ -357,6 +424,8 @@ DEBUT CONTENU CONTAINER
 										<th>Deno</th>
 										<th>Galec</th>
 										<th>Ville</th>
+										<th>code acdlec</th>
+										<th>Type Ets</th>
 										<th>Centrale</th>
 										<th>Chargé de mission</th>
 									</tr>
@@ -369,6 +438,8 @@ DEBUT CONTENU CONTAINER
 												<td><a href="fiche-mag.php?id=<?=$mag['id']?>"><?=$mag['deno']?></a></td>
 												<td><?=$mag['galec']?></td>
 												<td><?=$mag['cp'] .' '.$mag['ville']?></td>
+												<td><?=$mag['acdlec_code']?></td>
+												<td><?=$listTypePair[$mag['id_type']] ?></td>
 												<td><?=isset($centraleName[$mag['centrale']])?$centraleName[$mag['centrale']]:"" ?></td>
 												<td><?= UserHelpers::getFullname($pdoUser, $mag['id_cm_web_user'])?></td>
 											</tr>
@@ -392,28 +463,40 @@ DEBUT CONTENU CONTAINER
 					$(document).ready(function(){
 						$('#search_term').keyup(function(){
 							var path = window.location.pathname;
-			// 	// var page = path.split("/").pop();
-				var page = 'fiche-mag.php';
 
-				var query = $(this).val()+"#"+page;
-				if(query != '')
-				{
-					$.ajax({
-						url:"ajax-search-mag.php",
-						method:"POST",
-						data:{query:query},
-						success:function(data)
-						{
-							$('#magList').fadeIn();
-							$('#magList').html(data);
-						}
-					});
-				}
-			});
+							var page = 'fiche-mag.php';
+
+							var query = $(this).val()+"#"+page;
+							if(query != '')
+							{
+								$.ajax({
+									url:"ajax-search-mag.php",
+									method:"POST",
+									data:{query:query},
+									success:function(data)
+									{
+										$('#magList').fadeIn();
+										$('#magList').html(data);
+									}
+								});
+							}
+						});
 						$(document).on('click', 'li', function(){
 							$('#search_term').val($(this).text());
 							$('#magList').fadeOut();
 						});
+
+						$("#check-all-code").click(function () {
+							$('.acdlec').prop('checked', this.checked);
+
+						});
+						$("#uncheck-code").click(function () {
+							$('.acdlec').removeAttr('checked');
+
+						});
+
+
+
 
 					});
 
