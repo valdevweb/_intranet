@@ -64,6 +64,10 @@ class Mag{
     private $date_ouv;
     private $date_ferm;
     private $id_type;
+    private $acdlec_activite;
+    private $acdlec_code;
+    private $acdlec_numord;
+    private $acdlec;
 
 
     public function __construct(array $data){
@@ -177,6 +181,14 @@ public function getGelStr(){
 
 }
 
+public function getAcdlec(){
+    return $this->acdlec_activite.'-'.$this->acdlec_code.'-'.$this->acdlec_numord;
+}
+
+
+public function setAcdlec($acdlec_activite, $acdlec_code,$acdlec_numord){
+    $this->acdlec=$acdlec_activite.'-'.$acdlec_code.'-'.$acdlec_numord;
+}
 
 
 public function getId(){
@@ -753,4 +765,31 @@ public function setIdType($id_type){
 
 
 
+
+    public function getAcdlecActivite(){
+    return $this->acdlec_activite;
+    }
+
+    public function setAcdlecActivite($acdlec_activite){
+    $this->acdlec_activite = $acdlec_activite;
+    return $this;
+    }
+
+    public function getAcdlecCode(){
+    return $this->acdlec_code;
+    }
+
+    public function setAcdlecCode($acdlec_code){
+    $this->acdlec_code = $acdlec_code;
+    return $this;
+    }
+
+    public function getAcdlecNumord(){
+    return $this->acdlec_numord;
+    }
+
+    public function setAcdlecNumord($acdlec_numord){
+    $this->acdlec_numord = $acdlec_numord;
+    return $this;
+    }
     }
