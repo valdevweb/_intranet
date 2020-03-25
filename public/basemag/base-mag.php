@@ -24,8 +24,8 @@ require_once '../../Class/UserHelpers.php';
 //---------------------------------------
 //	ajout enreg dans stat
 //---------------------------------------
-// require "../../functions/stats.fn.php";
-// addRecord($pdoStat,basename(__file__),'consultation', "fichiers d'info du service achats", 101);
+require "../../functions/stats.fn.php";
+addRecord($pdoStat,basename(__file__),'consultation', "base magasin", 101);
 
 
  //------------------------------------------------------
