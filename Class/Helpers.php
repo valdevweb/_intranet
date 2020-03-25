@@ -9,20 +9,24 @@ class Helpers{
 
 	public static function returnBtn($page,$color=null)
 	{
-
+		if(!$color){
 			return '<div class="row py-3"><div class="col"><p class="text-right"><a href="'.$page.'" class="btn btn-primary">Retour</a></p></div></div>';
+		}else{
+			return '<div class="row py-3"><div class="col"><p class="text-right"><a href="'.$page.'" class="btn '.$color.'">Retour</a></p></div></div>';
+
+		}
 	}
 
 // exemple
 	// Helpers::returnBtn('bt-casse-dashboard.php');
 
-    public static function withZero($chiffre){
-        if($chiffre < 10){
-            return '0' . $chiffre;
-        }else{
-            return $chiffre;
-        }
-    }
+	public static function withZero($chiffre){
+		if($chiffre < 10){
+			return '0' . $chiffre;
+		}else{
+			return $chiffre;
+		}
+	}
 
 	public static function sanitize($str){
 //convertit les caractères éligible en entités html
@@ -36,7 +40,7 @@ class Helpers{
 		return $str;
 	}
 
-public static function separateurAuto($sep,$array,$lig){
+	public static function separateurAuto($sep,$array,$lig){
 		if(count($array)==$lig +1){
 			return '';
 		}else{
