@@ -128,4 +128,10 @@ class MagDbHelper{
 		return $req->fetch(PDO::FETCH_COLUMN);
 	}
 
+
+	public function getListIdType(){
+			$req=$this->pdo->query("SELECT * FROM type ORDER BY type");
+			return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
 }
