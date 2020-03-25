@@ -320,7 +320,6 @@ DEBUT CONTENU CONTAINER
 													<div class="row">
 
 														<div class="col">
-
 															<div class="form-check pl-5">
 																<input type="radio" class="form-check-input" name="check_code" id="check-all-code">
 																<label class="form-check-label" for="check-all-code">Cocher tout</label>
@@ -459,32 +458,10 @@ DEBUT CONTENU CONTAINER
 
 					<!-- ./container -->
 				</div>
+	<script src="../js/autocomplete-searchmag.js"></script>
+
 				<script type="text/javascript">
 					$(document).ready(function(){
-						$('#search_term').keyup(function(){
-							var path = window.location.pathname;
-
-							var page = 'fiche-mag.php';
-
-							var query = $(this).val()+"#"+page;
-							if(query != '')
-							{
-								$.ajax({
-									url:"ajax-search-mag.php",
-									method:"POST",
-									data:{query:query},
-									success:function(data)
-									{
-										$('#magList').fadeIn();
-										$('#magList').html(data);
-									}
-								});
-							}
-						});
-						$(document).on('click', 'li', function(){
-							$('#search_term').val($(this).text());
-							$('#magList').fadeOut();
-						});
 
 						$("#check-all-code").click(function () {
 							$('.acdlec').prop('checked', this.checked);

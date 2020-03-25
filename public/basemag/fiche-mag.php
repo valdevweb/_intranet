@@ -238,6 +238,7 @@ DEBUT CONTENU CONTAINER
 		<?php endif ?>
 
 	</div>
+	<script src="../js/autocomplete-searchmag.js"></script>
 
 	<script type="text/javascript">
 
@@ -253,39 +254,7 @@ DEBUT CONTENU CONTAINER
 		}
 
 		$(document).ready(function(){
-			$('#search_term').keyup(function(){
-				var path = window.location.pathname;
-				var page = path.split("/").pop();
-				var query = $(this).val()+"#"+page;
-				if(query != '')
-				{
-					$.ajax({
-						url:"ajax-search-mag.php",
-						method:"POST",
-						data:{query:query},
-						success:function(data)
-						{
-							$('#magList').fadeIn();
-							$('#magList').html(data);
-						}
-					});
-				}
-			});
-			$(document).on('click', 'li', function(){
-				$('#search_term').val($(this).text());
-				$('#magList').fadeOut();
-			});
-
-			$(document).on('keypress', '#search_term', function(e){
-				if(e.which == 13){
-					e.preventDefault();
-					var url=$('.result-item').first().attr('href');
-					var goto='http://172.30.92.53/_btlecest/public/basemag/'+url;
-					$(location).attr('href',goto);
-				}
-
-			});
-
+			// masque pour saisie date et etc
 			$('#date_ouverture').mask('00/00/0000');
 			$('#date_fermeture').mask('00/00/0000');
 			$('#date_adhesion').mask('00/00/0000');

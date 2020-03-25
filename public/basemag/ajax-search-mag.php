@@ -7,7 +7,7 @@
 if(isset($_POST["query"]))
 {
 	$response=explode("#",$_POST['query']);
-	$page=$response[1];
+	$page="fiche-mag.php";
 	$searchTerm=$response[0];
 
 	$req=$pdoMag->prepare("SELECT * FROM mag  LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE concat(mag.deno,mag.galec,mag.id,sca3.ville_sca) LIKE :search");
