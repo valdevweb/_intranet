@@ -63,6 +63,7 @@ class Mag{
     private $gel;
     private $date_ouv;
     private $date_ferm;
+    private $id_type;
 
 
     public function __construct(array $data){
@@ -737,4 +738,19 @@ public function setDateFerm($date_ferm){
     $this->gel = $gel;
     return $this;
     }
+
+
+public function getIdType(){
+    return $this->id_type;
+}
+
+public function setIdType($id_type){
+    $this->id_type = $id_type;
+    return $this;
+}
+
+
+
+
+
     }
