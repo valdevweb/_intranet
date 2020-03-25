@@ -207,17 +207,7 @@ if(!isset($_POST['filter'])){
 $nbResult=count($magList);
 $countItem=0;
 
-	// echo "<pre>";
-	// print_r($magList);
-	// echo '</pre>';
 
-
-
-
-
-// echo "<pre>";
-// print_r($_SESSION);
-// echo '</pre>';
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
@@ -403,18 +393,23 @@ DEBUT CONTENU CONTAINER
 										</fieldset>
 									</div>
 								</div>
-
-
 							</form>
-
 						</div>
-
-
+					</div>
+					<div class="row mt-3">
+						<div class="col">
+							<div class="alert border text-center">
+								<span class="pr-5">Code couleur :</span>
+								<span class="text-gessica pr-5"><i class="fas fa-palette pr-3"></i>gessica</span>
+								<span class="text-sca pr-5"><i class="fas fa-palette pr-3"></i>sca3</span>
+								<span class="text-ctbt pr-5"><i class="fas fa-palette pr-3"></i>centrale BT</span>
+							</div>
+						</div>
 					</div>
 
 					<div class="row">
 						<div class="col">
-							<h5 class="text-main-blue text-center pt-5 pb-3">Nombre de magasins affichés : <?=$nbResult?></h5>
+							<h5 class="text-main-blue text-center pt-3 pb-3">Nombre de magasins affichés : <?=$nbResult?></h5>
 							<div class="alert alert-primary">Pour obtenir plus d'information sur un magasin, veuillez cliquer sur son nom</div>
 							<table class="table table-sm shadow">
 								<thead class="thead-dark">
@@ -434,12 +429,12 @@ DEBUT CONTENU CONTAINER
 										<?php foreach ($magList as $key => $mag): ?>
 											<tr>
 												<td><?=$mag['id']?></td>
-												<td><a href="fiche-mag.php?id=<?=$mag['id']?>"><?=$mag['deno']?></a></td>
-												<td><?=$mag['galec']?></td>
-												<td><?=$mag['cp'] .' '.$mag['ville']?></td>
-												<td><?=$mag['acdlec_code']?></td>
+												<td><a class="text-sca" href="fiche-mag.php?id=<?=$mag['id']?>"><?=$mag['deno_sca']?></a></td>
+												<td class="text-sca"><?=$mag['galec_sca']?></td>
+												<td class="text-sca"><?=$mag['cp_sca'] .' '.$mag['ville']?></td>
+												<td class="text-gessica"><?=$mag['acdlec_code']?></td>
 												<td><?=$listTypePair[$mag['id_type']] ?></td>
-												<td><?=isset($centraleName[$mag['centrale']])?$centraleName[$mag['centrale']]:"" ?></td>
+												<td class="text-sca"><?=isset($centraleName[$mag['centrale_sca']])?$centraleName[$mag['centrale_sca']]:"" ?></td>
 												<td><?= UserHelpers::getFullname($pdoUser, $mag['id_cm_web_user'])?></td>
 											</tr>
 										<?php endforeach ?>
@@ -458,7 +453,7 @@ DEBUT CONTENU CONTAINER
 
 					<!-- ./container -->
 				</div>
-	<script src="../js/autocomplete-searchmag.js"></script>
+				<script src="../js/autocomplete-searchmag.js"></script>
 
 				<script type="text/javascript">
 					$(document).ready(function(){
