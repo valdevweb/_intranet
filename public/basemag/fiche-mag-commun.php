@@ -137,7 +137,7 @@
 			<div class="col">
 				<img src="../img/logos/docubase-logo.png" class="pr-3">
 				<div class="text-orange">Docubase :</div>
-						<span class="text-orange pl-3">Login :</span> <?= $mag->getDocubaseLogin()?> <br>
+						<span class="text-orange pl-3" id="docubase">Login :</span> <?= $mag->getDocubaseLogin()?> <br>
 						<span class="text-orange pl-3">Mot de Passe : </span> <?= $mag->getDocubasePwd() ?><br>
 
 			</div>

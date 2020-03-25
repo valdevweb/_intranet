@@ -1,4 +1,4 @@
-<?php
+...<?php
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
 	echo "pas de variable session";

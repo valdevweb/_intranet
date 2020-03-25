@@ -50,14 +50,7 @@ if(isset($_GET['id']) && isset($_GET['field']) && isset($_GET['value'])){
 // 2 => message d'erreur / 1 = code erreur / 0 =sql state
 	if(empty($err[2])){
 		header('Location:fiche-mag.php?id='.$_GET['id'].'#'.$_GET['position']);
-
-		// header('Location:fiche-mag.php?id='.$_GET['id'].'#'.$_GET['field']);
-
 	}
-
-
-
-
 }else{
 	header('Location:fiche-mag.php?id='.$_GET['id'].'err=copy');
 }

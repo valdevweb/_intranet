@@ -18,7 +18,7 @@ if(isset($_POST["query"]))
 	$output = '';
 	$output = '<ul class="results">';
 	foreach ($searchMags as $searchMag){
-		$output .='<li><a href="'.$page.'?id='.$searchMag['id'].'">'.$searchMag['id'].' - '.$searchMag['galec']. ' '.$searchMag['deno'] . ' - '.ucfirst(strtolower($searchMag['ville'])).'</a></li>';
+		$output .='<li><a href="'.$page.'?id='.$searchMag['id'].'" class="result-item">'.$searchMag['id'].' - '.$searchMag['galec']. ' '.$searchMag['deno'] . ' - '.ucfirst(strtolower($searchMag['ville'])).'</a></li>';
 	}
 	$output .= '</ul>';
 	echo $output;

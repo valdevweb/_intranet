@@ -86,7 +86,14 @@ function updateSca($pdoMag){
 	return $req->rowCount();
 }
 
-
+function updateAutre($pdoMag){
+	$req=$pdoMag->prepare("UPDATE mag SET id_type= :id_type WHERE id=id");
+	$req->execute([
+		':id'	=>$_GET['id'],
+		':id_type'		=>$_POST['id_type']
+	]);
+	return $req->rowCount();
+}
 if(isset($_POST['clear_form'])){
 	$_POST=[];
 	header("Location: ".$_SERVER['PHP_SELF']);
@@ -99,9 +106,7 @@ if (isset($_GET['id'])){
 	$listCentralesSca=$magDbHelper->getDistinctCentraleSca();
 	$webusers=$magDbHelper->getWebUser($mag->getGalec());
 	$centreRei=$magDbHelper->centreReiToString($mag->getCentreRei());
-
-
-
+	$listTypesMag=$magDbHelper-> getListIdType();
 
 	// ld
 	$ldRbt=$magDbHelper-> getMagLd($mag->getGalec(),'-RBT');
@@ -152,12 +157,26 @@ if(isset($_POST['maj'])){
 
 }
 
+if(isset($_POST['maj_autre'])){
+	$up=updateAutre($pdoMag);
+	if(count($up)==1){
+		$successQ='success=maj';
+		unset($_POST);
+		header("Location: ".$_SERVER['PHP_SELF'].'?id='.$_GET['id'].'&'.$successQ,true,303);
+	}else{
+		$errors[]="Une erreur est survenue, impossible de mettre  à jour la base de donnée";
+	}
+
+}
+
 if(isset($_GET['success'])){
 	$arrSuccess=[
 		'maj'=>'Magasin mis à jour avec succès',
 	];
 	$success[]=$arrSuccess[$_GET['success']];
 }
+
+if(!isset($_SESSION['']))
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
@@ -169,7 +188,7 @@ if(isset($_GET['success'])){
 
 
 
-include('../view/_head-bt.php');
+	include('../view/_head-bt.php');
 include('../view/_navbar.php');
 ?>
 <!--********************************
@@ -217,42 +236,26 @@ DEBUT CONTENU CONTAINER
 			?>
 
 		<?php endif ?>
-		<form name="postPosition" id="postPosition" action="<?=$_SERVER['PHP_SELF'].'?id='.$mag->getId()?>" method="post">
-			<input name="chart_x" id="chart_x" type="hidden" value="" />
-
-		</form>
 
 	</div>
 
 	<script type="text/javascript">
+
+
+
 		function getScroll() {
-			var x = 0, y = 0;
-			var position = new Object();
-
-			position.y = document.body.scrollTop;
-
 			var position = $( document ).scrollTop();
 			return position;
-		};
-
-		function saveScroll() {
-			var position = getScroll();
-
-			document.getElementById("chart_y").value = position;
-			document.forms["postPosition"].submit();
 		}
 
-		function setScroll() {
-
-			var y = <?php echo json_encode($_SESSION['chart_y']); ?>;
-			if (y)
-				window.scrollTo(0, y);
+		function jsScrollTo(hash) {
+			location.hash = "#" + hash;
 		}
+
 		$(document).ready(function(){
 			$('#search_term').keyup(function(){
 				var path = window.location.pathname;
 				var page = path.split("/").pop();
-
 				var query = $(this).val()+"#"+page;
 				if(query != '')
 				{
@@ -272,7 +275,17 @@ DEBUT CONTENU CONTAINER
 				$('#search_term').val($(this).text());
 				$('#magList').fadeOut();
 			});
-			// https://github.com/igorescobar/jQuery-Mask-Plugin
+
+			$(document).on('keypress', '#search_term', function(e){
+				if(e.which == 13){
+					e.preventDefault();
+					var url=$('.result-item').first().attr('href');
+					var goto='http://172.30.92.53/_btlecest/public/basemag/'+url;
+					$(location).attr('href',goto);
+				}
+
+			});
+
 			$('#date_ouverture').mask('00/00/0000');
 			$('#date_fermeture').mask('00/00/0000');
 			$('#date_adhesion').mask('00/00/0000');
@@ -280,41 +293,29 @@ DEBUT CONTENU CONTAINER
 			$('#date_sortie').mask('00/00/0000');
 			$('#tel_sca').mask('00 00 00 00 00');
 
+			// gestion du scroll qd met à jour sca3 avec une donnée de la base mag
 			$('.btn-ico').on('click',function(){
 				var position=getScroll();
-				var oldUrl = $(this). attr("href"); // Get current url.
-
-					console.log(oldUrl);
-
-				$(this). attr("href", oldUrl+"&position="+position); // Set herf value.
-					// var position = $( document ).scrollTop();
-					// console.log(oldUrl);
-
-					console.log(position);
-
-				});
-
-			  function refreshPage () {
-
-            }
-	window.onload = function () {
-
-		var url = window.location.href;
-url=url.split("#");
+							var oldUrl = $(this). attr("href"); // Get current url.
+							$(this). attr("href", oldUrl+"&position="+position); // Set herf value.
+						});
+			window.onload = function () {
+				var url = window.location.href;
+				url=url.split("#");
 				window.scrollTo(0, url[1]);
-
-			// setTimeout(refreshPage, 35000);
-			// if ( window.location.href.indexOf('page_y') != -1 ) {
-			// 	var match = window.location.href.split('#position')[1].split("&")[0].split("=");
-			// 	$('html, body').scrollTop( match[1] );
-			// }
-		}
-
-
-
-
-
+			}
 		});
+
+		document.onkeyup = function(e) {
+			if (e.ctrlKey && e.altKey  && e.which == 68) {
+				jsScrollTo('docubase');
+
+			}
+		};
+
+
+
+
 
 
 	</script>
