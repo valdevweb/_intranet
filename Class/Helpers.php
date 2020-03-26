@@ -17,15 +17,12 @@ class Helpers{
 		}
 	}
 
-// exemple
-	// Helpers::returnBtn('bt-casse-dashboard.php');
 
-	public static function withZero($chiffre){
-		if($chiffre < 10){
-			return '0' . $chiffre;
-		}else{
-			return $chiffre;
+	public static function arrayFlatten($array,$indexName,$valueName){
+		for ($i=0; $i <count($array) ; $i++) {
+			$newArray[$array[$i][$indexName]]=$array[$i][$valueName];
 		}
+		return $newArray;
 	}
 
 	public static function sanitize($str){
@@ -40,6 +37,18 @@ class Helpers{
 		return $str;
 	}
 
+
+
+	public static function withZero($chiffre){
+		if($chiffre < 10){
+			return '0' . $chiffre;
+		}else{
+			return $chiffre;
+		}
+	}
+
+
+
 	public static function separateurAuto($sep,$array,$lig){
 		if(count($array)==$lig +1){
 			return '';
@@ -47,6 +56,7 @@ class Helpers{
 			return $sep;
 		}
 	}
+
 
 
 }
