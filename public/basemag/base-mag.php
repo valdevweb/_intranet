@@ -42,8 +42,7 @@ $listCm=UserHelpers::getUserByService($pdoUser,17);
 $listTypePair=$magDbHelper->getListTypePair();
 $listCodeAcdlec=$magDbHelper->getListCodeAcdlec();
 $centraleName=Helpers::arrayFlatten($listCentrale,"centrale_doris","centrale");
-
-
+$ets=Helpers::arrayFlatten($listCodeAcdlec,"acdlec_code","nom_ets");
 
 function checkChecked($value,$field){
 	if(isset($_SESSION['mag_filters']) && isset($_SESSION['mag_filters'][$field])){

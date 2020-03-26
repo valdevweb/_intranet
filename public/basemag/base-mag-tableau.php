@@ -9,7 +9,7 @@
 					<th>Deno</th>
 					<th>Galec</th>
 					<th>Ville</th>
-					<th>code acdlec</th>
+					<th>Type Ets</th>
 					<th>Centrale</th>
 					<th>Chargé de mission</th>
 				</tr>
@@ -22,7 +22,7 @@
 							<td><a class="text-sca" href="fiche-mag.php?id=<?=$mag['id']?>"><?=$mag['deno_sca']?></a></td>
 							<td class="text-sca"><?=$mag['galec_sca']?></td>
 							<td class="text-sca"><?=$mag['cp_sca'] .' '.$mag['ville']?></td>
-							<td class="text-gessica"><?=$mag['acdlec_code']?></td>
+							<td class="text-gessica"><?= isset($ets[ $mag['acdlec_code']])?$ets[ $mag['acdlec_code']]:"" ?></td>
 							<td class="text-sca"><?=isset($centraleName[$mag['centrale_doris']])?$centraleName[$mag['centrale_doris']]:"" ?></td>
 							<td><?= UserHelpers::getFullname($pdoUser, $mag['id_cm_web_user'])?></td>
 						</tr>

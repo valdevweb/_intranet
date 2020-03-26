@@ -61,10 +61,13 @@
 								<!--										FILTRE PAR TYPE									-->
 								<div class="form-row my-3">
 
-										<div class="col-6">
-											<p class="rubrique text-main-blue font-weight-bold">Code Acdlec</p>
-											<div class="row justify-content-between">
-												<div class="col mx-4 rounded bg-light-blue">
+										<div class="col-9">
+											<div class="row">
+												<div class="col-auto ">
+													<p class="rubrique text-main-blue font-weight-bold">Code Acdlec :</p>
+												</div>
+												<div class="col-auto ">
+
 													<div class="form-check form-check-inline">
 														<input type="radio" class="form-check-input" name="check_code" id="check-all-code">
 														<label class="form-check-label" for="check-all-code">Cocher tout</label>
@@ -75,7 +78,7 @@
 														<label class="form-check-label" for="uncheck-code">Décocher tout</label>
 													</div>
 												</div>
-												<div class="col-1"></div>
+												<div class="col"></div>
 
 											</div>
 
@@ -91,7 +94,7 @@
 															?>
 															<div class="form-check pl-5">
 																<input type="checkbox" class="form-check-input acdlec" name="acdlecSelected[]" value="<?=$code['acdlec_code']?>" <?= checkChecked($code['acdlec_code'],'acdlecSelected')?>>
-																<label class="form-check-label"><?=$code['acdlec_code']?></label>
+																<label class="form-check-label"><?=$ets[ $code['acdlec_code']].' ('.$code['acdlec_code'].')' ?></label>
 															</div>
 															<?php $countItem++; ?>
 														<?php endif ?>

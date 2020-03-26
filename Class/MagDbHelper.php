@@ -140,7 +140,7 @@ class MagDbHelper{
 
 
 	public function getListCodeAcdlec(){
-				$req=$this->pdo->query("SELECT DISTINCT acdlec_code FROM mag ORDER BY acdlec_code");
+				$req=$this->pdo->query("SELECT acdlec_code, nom_ets  FROM mag LEFT JOIN acdlec ON acdlec_code=acdlec.code WHERE acdlec_code IS NOT NULL AND acdlec_code!='' GROUP BY acdlec_code ORDER BY acdlec_code");
 				return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 
