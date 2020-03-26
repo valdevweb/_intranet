@@ -41,11 +41,7 @@ $listType=$magDbHelper->getListType();
 $listCm=UserHelpers::getUserByService($pdoUser,17);
 $listTypePair=$magDbHelper->getListTypePair();
 $listCodeAcdlec=$magDbHelper->getListCodeAcdlec();
-
-
-
-
-
+$centraleName=Helpers::arrayFlatten($listCentrale,"centrale_sca","centrale");
 
 
 
@@ -229,7 +225,7 @@ DEBUT CONTENU CONTAINER
 
 <script src="../js/autocomplete-searchmag.js"></script>
 <script type="text/javascript">
-<!-- check uncheck all code acdlec -->
+	<!-- check uncheck all code acdlec -->
 	$(document).ready(function(){
 		$("#check-all-code").click(function () {
 			$('.acdlec').prop('checked', this.checked);
