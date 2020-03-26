@@ -23,7 +23,7 @@
 							<td class="text-sca"><?=$mag['galec_sca']?></td>
 							<td class="text-sca"><?=$mag['cp_sca'] .' '.$mag['ville']?></td>
 							<td class="text-gessica"><?=$mag['acdlec_code']?></td>
-							<td class="text-sca"><?=isset($centraleName[$mag['centrale_sca']])?$centraleName[$mag['centrale_sca']]:"" ?></td>
+							<td class="text-sca"><?=isset($centraleName[$mag['centrale_doris']])?$centraleName[$mag['centrale_doris']]:"" ?></td>
 							<td><?= UserHelpers::getFullname($pdoUser, $mag['id_cm_web_user'])?></td>
 						</tr>
 					<?php endforeach ?>

@@ -36,12 +36,12 @@ $errors=[];
 $success=[];
 
 $magDbHelper=new MagDbHelper($pdoMag);
-$listCentrale=$magDbHelper-> getDistinctCentraleSca();
+$listCentrale=$magDbHelper-> getDistinctCentraleDoris();
 $listType=$magDbHelper->getListType();
 $listCm=UserHelpers::getUserByService($pdoUser,17);
 $listTypePair=$magDbHelper->getListTypePair();
 $listCodeAcdlec=$magDbHelper->getListCodeAcdlec();
-$centraleName=Helpers::arrayFlatten($listCentrale,"centrale_sca","centrale");
+$centraleName=Helpers::arrayFlatten($listCentrale,"centrale_doris","centrale");
 
 
 
@@ -78,7 +78,7 @@ if(isset($_POST['filter'])){
 		if(in_array(1,$_POST['centraleSelected'])){
 			$paramCentrale='';
 		}else{
-			$paramCentrale=join(' OR ', array_map(function($value){return 'centrale_sca='.$value;},$_POST['centraleSelected']));
+			$paramCentrale=join(' OR ', array_map(function($value){return 'centrale_doris='.$value;},$_POST['centraleSelected']));
 			echo "apram". $paramCentrale;
 
 

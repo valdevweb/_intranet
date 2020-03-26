@@ -12,8 +12,8 @@
 								<div class="form-row">
 									<div class="col-3">
 										<div class="form-check  pl-5">
-											<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_sca']?>"
-											<?= checkChecked($listCentrale[$i]['centrale_sca'],'centraleSelected')?>>
+											<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_doris']?>"
+											<?= checkChecked($listCentrale[$i]['centrale_doris'],'centraleSelected')?>>
 											<label class="form-check-label"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
 										</div>
 									</div>
@@ -22,8 +22,8 @@
 									<?php elseif ($iCentrale==3): ?>
 										<div class="col-3">
 											<div class="form-check  pl-5">
-												<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_sca']?>"
-												<?= checkChecked($listCentrale[$i]['centrale_sca'],'centraleSelected')?>>
+												<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_doris']?>"
+												<?= checkChecked($listCentrale[$i]['centrale_doris'],'centraleSelected')?>>
 												<label class="form-check-label"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
 											</div>
 										</div>
@@ -32,8 +32,8 @@
 									<?php else: ?>
 										<div class="col-3">
 											<div class="form-check  pl-5">
-												<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_sca']?>"
-												<?= checkChecked($listCentrale[$i]['centrale_sca'],'centraleSelected')?>>
+												<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_doris']?>"
+												<?= checkChecked($listCentrale[$i]['centrale_doris'],'centraleSelected')?>>
 												<label class="form-check-label"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
 											</div>
 										</div>
