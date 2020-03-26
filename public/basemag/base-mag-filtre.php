@@ -108,17 +108,14 @@
 										<div class="col-3">
 											<p class="rubrique text-main-blue font-weight-bold">Ouvert/fermé :</p>
 											<div class="form-check pl-5">
-												<input type="checkbox" class="form-check-input" name="sorti[]" value="0" <?= checkChecked(0,'sorti')?>>
+												<input type="radio" class="form-check-input" name="sorti[]" value="0" <?= checkChecked(0,'sorti')?>>
 												<label class="form-check-label">Ouvert</label>
 											</div>
 											<div class="form-check pl-5">
-												<input type="checkbox" class="form-check-input" name="sorti[]" value="9" <?= checkChecked(9,'sorti')?>>
+												<input type="radio" class="form-check-input" name="sorti[]" value="9" <?= checkChecked(9,'sorti')?>>
 												<label class="form-check-label">Fermé</label>
 											</div>
-											<div class="form-check pl-5">
-												<input type="checkbox" class="form-check-input" name="sorti[]" value="99" <?= checkChecked(99,'sorti')?>>
-												<label class="form-check-label">NC</label>
-											</div>
+
 										</div>
 									</div>
 
