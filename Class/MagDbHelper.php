@@ -99,6 +99,10 @@ class MagDbHelper{
 		// uniquement centrale pour mag de type mag
 		return $req=$this->pdo->query("SELECT DISTINCT centrale_sca, centrale FROM sca3 LEFT JOIN centrales ON  sca3.centrale_sca=centrales.id_ctbt WHERE centrale_sca IS NOT NULL ORDER BY centrale")->fetchAll(PDO::FETCH_ASSOC);
 	}
+	public function getDistinctCentraleDoris(){
+		// uniquement centrale pour mag de type mag
+		return $req=$this->pdo->query("SELECT DISTINCT centrale_doris, centrale FROM sca3 LEFT JOIN centrales ON  sca3.centrale_doris=centrales.id_ctbt WHERE centrale_doris IS NOT NULL ORDER BY centrale")->fetchAll(PDO::FETCH_ASSOC);
+	}
 
 	public function getListType(){
 		return $req=$this->pdo->query("SELECT * FROM type ORDER BY type")->fetchAll(PDO::FETCH_ASSOC);
