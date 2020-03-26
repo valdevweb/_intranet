@@ -94,7 +94,7 @@
 															?>
 															<div class="form-check pl-5">
 																<input type="checkbox" class="form-check-input acdlec" name="acdlecSelected[]" value="<?=$code['acdlec_code']?>" <?= checkChecked($code['acdlec_code'],'acdlecSelected')?>>
-																<label class="form-check-label"><?=$ets[ $code['acdlec_code']].' ('.$code['acdlec_code'].')' ?></label>
+																<label class="form-check-label" ><a href="" title="<?=$code['acdlec_code']?>"><?=$ets[ $code['acdlec_code']] ?></a></label>
 															</div>
 															<?php $countItem++; ?>
 														<?php endif ?>

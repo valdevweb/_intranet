@@ -178,9 +178,9 @@ $errArr=[];
 $rowUp=0;
 $rowIns=0;
 
+
 // insertion ou update de qlik vers magasin mag
 foreach ($listMag as $key => $mag) {
-	$data=alreadyInMag($pdoMag, $mag['id']);
 	if(alreadyInMag($pdoMag, $mag['id'])){
 		$dateOuv=convertToDate($mag['ADH_DATOUV']);
 		$dateFerm=convertToDate($mag['ADH_DATFER']);
@@ -197,6 +197,9 @@ foreach ($listMag as $key => $mag) {
 			$magUpdated++;
 		}
 	}else{
+		// echo 'inser'. $mag['id'];
+		// echo "<br>";
+
 		$dateOuv=convertToDate($mag['ADH_DATOUV']);
 		$dateFerm=convertToDate($mag['ADH_DATFER']);
 		$added=addMag($pdoMag, $dateOuv, $dateFerm, $mag);

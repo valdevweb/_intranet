@@ -118,3 +118,15 @@ button#clear{
   /* text-align: right; */
   float: right;
 }
+
+
+label > a{
+  text-decoration: none;
+  color: #424656 !important;
+  cursor: pointer;
+}
+label > a:hover{
+  text-decoration: none;
+  color: #424656 !important;
+  cursor: pointer;
+}
