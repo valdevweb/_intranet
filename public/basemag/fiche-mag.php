@@ -215,7 +215,7 @@ DEBUT CONTENU CONTAINER
 			include('search-form.php')
 			?>
 			<div class="col-auto">
-				<?=Helpers::returnBtn('base-mag.php','btn-black')?>
+				<?=Helpers::returnBtn('base-mag.php','btn-light-blue')?>
 			</div>
 			<!-- <div class="col-lg-1"></div> -->
 		</div>
@@ -232,7 +232,7 @@ DEBUT CONTENU CONTAINER
 				include('search-form.php')
 				?>
 				<div class="col-auto mt-4 pt-2">
-				<?=Helpers::returnBtn('base-mag.php','btn-black')?>
+				<?=Helpers::returnBtn('base-mag.php','btn-kaki')?>
 			</div>
 				<!-- <div class="col-lg-1"></div> -->
 			</div>
