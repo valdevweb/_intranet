@@ -36,7 +36,7 @@ $errors=[];
 $success=[];
 
 $magDbHelper=new MagDbHelper($pdoMag);
-$listCentrale=$magDbHelper->getDistinctCentrale();
+$listCentrale=$magDbHelper-> getDistinctCentraleSca();
 $listType=$magDbHelper->getListType();
 $listCm=UserHelpers::getUserByService($pdoUser,17);
 $listTypePair=$magDbHelper->getListTypePair();
@@ -60,15 +60,6 @@ function checkChecked($value,$field){
 }
 
 
-function arrayCentrale($listCentrale){
-	foreach ($listCentrale as $key => $value) {
-		$centrale[$value['id_centrale']]=$value['centrale_name'];
-	}
-	$centrale[0]="";
-	return $centrale;
-}
-
-$centraleName=arrayCentrale($listCentrale);
 
 
 //------------------------------------------------------
@@ -86,10 +77,14 @@ if(isset($_POST['filter'])){
 
 	if(isset($_POST['centraleSelected'])){
 		$_SESSION['mag_filters']['centraleSelected']=$_POST['centraleSelected'];
+
+			//si on a coché la case sans filtre centrale, on ne met pas de paramètre centrale
 		if(in_array(1,$_POST['centraleSelected'])){
 			$paramCentrale='';
 		}else{
-			$paramCentrale=join(' OR ', array_map(function($value){return 'centrale='.$value;},$_POST['centraleSelected']));
+			$paramCentrale=join(' OR ', array_map(function($value){return 'centrale_sca='.$value;},$_POST['centraleSelected']));
+			echo "apram". $paramCentrale;
+
 
 		}
 	}else{

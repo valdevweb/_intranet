@@ -7,36 +7,39 @@
 						<legend><i class="fas fa-filter pr-3"></i> Filtrer par :</legend>
 						<!-- FILTRE PAR CENTRALE -->
 						<p class="rubrique text-main-blue font-weight-bold">Centrales :</p>
-						<?php foreach ($listCentrale as $key => $centrale): ?>
+						<?php for ($i=0; $i<count($listCentrale);$i++): ?>
 							<?php if ($iCentrale==0): ?>
 								<div class="form-row">
-									<div class="col">
+									<div class="col-3">
 										<div class="form-check  pl-5">
-											<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$centrale['id_centrale']?>" id="centrale-<?=$centrale['id_centrale']?>" <?= checkChecked($centrale['id_centrale'],'centraleSelected')?>>
-											<label for="centrale-<?=$centrale['id_centrale']?>" class="form-check-label"><?=ucfirst(strtolower($centrale['centrale_name']))?></label>
+											<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_sca']?>"
+											<?= checkChecked($listCentrale[$i]['centrale_sca'],'centraleSelected')?>>
+											<label class="form-check-label"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
 										</div>
 									</div>
 									<?php $iCentrale++ ?>
 
 									<?php elseif ($iCentrale==3): ?>
-										<div class="col">
+										<div class="col-3">
 											<div class="form-check  pl-5">
-												<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$centrale['id_centrale']?>" id="centrale-<?=$centrale['id_centrale']?>"  <?= checkChecked($centrale['id_centrale'],'centraleSelected')?>>
-												<label for="centrale-<?=$centrale['id_centrale']?>" class="form-check-label"><?=ucfirst(strtolower($centrale['centrale_name']))?></label>
+												<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_sca']?>"
+												<?= checkChecked($listCentrale[$i]['centrale_sca'],'centraleSelected')?>>
+												<label class="form-check-label"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
 											</div>
 										</div>
 									</div>
 									<?php $iCentrale=0 ?>
 									<?php else: ?>
-										<div class="col">
+										<div class="col-3">
 											<div class="form-check  pl-5">
-												<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$centrale['id_centrale']?>" id="centrale-<?=$centrale['id_centrale']?>"  <?= checkChecked($centrale['id_centrale'],'centraleSelected')?>>
-												<label for="centrale-<?=$centrale['id_centrale']?>" class="form-check-label"><?=ucfirst(strtolower($centrale['centrale_name']))?></label>
+												<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_sca']?>"
+												<?= checkChecked($listCentrale[$i]['centrale_sca'],'centraleSelected')?>>
+												<label class="form-check-label"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
 											</div>
 										</div>
 										<?php $iCentrale++ ?>
 									<?php endif ?>
-								<?php endforeach ?>
+								<?php endfor ?>
 								<!-- fermeture div quand par col 4 -->
 								<?= ($iCentrale!=0 )? "</div>" : ""?>
 								<div class="form-row">
@@ -48,7 +51,7 @@
 									</div>
 									<div class="col">
 										<div class="form-check  pl-5">
-											<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="1" id="centrale-1?>"  <?= checkChecked(1,'centraleSelected')?>>
+											<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="1" id="centrale-1"  <?= checkChecked(1,'centraleSelected')?>>
 											<label for="centrale-1" class="form-check-label">Sans filtre centrale</label>
 										</div>
 									</div>
