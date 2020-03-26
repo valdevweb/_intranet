@@ -77,11 +77,11 @@ if(isset($_POST['filter'])){
 			//si on a coché la case sans filtre centrale, on ne met pas de paramètre centrale
 		if(in_array(1,$_POST['centraleSelected'])){
 			$paramCentrale='';
-		}else{
+		}elseif(in_array(0,$_POST['centraleSelected'])){
+			$paramCentrale="(centrale_doris IS NULL OR centrale_doris='') ";
+		}
+		else{
 			$paramCentrale=join(' OR ', array_map(function($value){return 'centrale_doris='.$value;},$_POST['centraleSelected']));
-			echo "apram". $paramCentrale;
-
-
 		}
 	}else{
 		$_SESSION['mag_filters']['centraleSelected']=[];
@@ -227,11 +227,30 @@ DEBUT CONTENU CONTAINER
 <script type="text/javascript">
 	<!-- check uncheck all code acdlec -->
 	$(document).ready(function(){
+		// cocher tout decocher tout pour addlec
 		$("#check-all-code").click(function () {
 			$('.acdlec').prop('checked', this.checked);
 		});
 		$("#uncheck-code").click(function () {
 			$('.acdlec').removeAttr('checked');
+		});
+		// décocher tout qd eno-filtre-centrale
+		$('#no-filtre-centrale').click(function(){
+			$('.centrale').removeAttr('checked');
+			$('#no-centrale').removeAttr('checked');
+
+		});
+		// décocher tout qd pas de centrale
+		$('#no-centrale').click(function(){
+			$('.centrale').removeAttr('checked');
+			$('#no-filtre-centrale').removeAttr('checked');
+
+		});
+		// décocher no-filtre-centrale et no-centrale qd class centrale slectionnnée
+		$('.centrale').click(function(){
+			$('#no-filtre-centrale').removeAttr('checked');
+			$('#no-centrale').removeAttr('checked');
+
 		});
 	});
 

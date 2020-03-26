@@ -12,7 +12,7 @@
 								<div class="form-row">
 									<div class="col-3">
 										<div class="form-check  pl-5">
-											<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_doris']?>"
+											<input type="checkbox" class="form-check-input centrale" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_doris']?>"
 											<?= checkChecked($listCentrale[$i]['centrale_doris'],'centraleSelected')?>>
 											<label class="form-check-label"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
 										</div>
@@ -22,7 +22,7 @@
 									<?php elseif ($iCentrale==3): ?>
 										<div class="col-3">
 											<div class="form-check  pl-5">
-												<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_doris']?>"
+												<input type="checkbox" class="form-check-input centrale" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_doris']?>"
 												<?= checkChecked($listCentrale[$i]['centrale_doris'],'centraleSelected')?>>
 												<label class="form-check-label"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
 											</div>
@@ -32,7 +32,7 @@
 									<?php else: ?>
 										<div class="col-3">
 											<div class="form-check  pl-5">
-												<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_doris']?>"
+												<input type="checkbox" class="form-check-input centrale" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_doris']?>"
 												<?= checkChecked($listCentrale[$i]['centrale_doris'],'centraleSelected')?>>
 												<label class="form-check-label"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
 											</div>
@@ -45,13 +45,13 @@
 								<div class="form-row">
 									<div class="col">
 										<div class="form-check  pl-5">
-											<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="0" id="centrale-0?>"  <?= checkChecked(0,'centraleSelected')?>>
+											<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="0" id="no-centrale"  <?= checkChecked(0,'centraleSelected')?>>
 											<label for="centrale-0" class="form-check-label">Pas de centrale </label>
 										</div>
 									</div>
 									<div class="col">
 										<div class="form-check  pl-5">
-											<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="1" id="centrale-1"  <?= checkChecked(1,'centraleSelected')?>>
+											<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="1" id="no-filtre-centrale"  <?= checkChecked(1,'centraleSelected')?>>
 											<label for="centrale-1" class="form-check-label">Sans filtre centrale</label>
 										</div>
 									</div>
