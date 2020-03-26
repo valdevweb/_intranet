@@ -93,15 +93,6 @@ if(isset($_POST['filter'])){
 	}
 	$paramList[]=$paramCentrale;
 
-	if(isset($_POST['typeSelected'])){
-		$_SESSION['mag_filters']['typeSelected']=$_POST['typeSelected'];
-		$paramType=join(' OR ', array_map(function($value){return 'id_type='.$value;},$_POST['typeSelected']));
-
-	}else{
-		$_SESSION['mag_filters']['typeSelected']=[];
-		$paramType='';
-	}
-	$paramList[]=$paramType;
 
 	if(isset($_POST['acdlecSelected'])){
 		$_SESSION['mag_filters']['acdlecSelected']=$_POST['acdlecSelected'];
@@ -183,8 +174,7 @@ if(!isset($_POST['filter'])){
 	// sans filtre centrale
 	$_SESSION['mag_filters']['centraleSelected'][]=1;
 		// uniquement les établissements de type magasin
-	$_SESSION['mag_filters']['typeSelected'][]=1;
-	$_SESSION['mag_filters']['typeSelected'][]=3;
+
 	$_SESSION['mag_filters']['acdlecSelected']=["010","029","070","078","101","102","111","114","116","118","119"];
 	$sessionAcdlec=join(' OR ', array_map(function($value){return 'acdlec_code='.$value;},$_SESSION['mag_filters']['acdlecSelected']));
 	// echo $sessionAcdlec;
@@ -192,7 +182,7 @@ if(!isset($_POST['filter'])){
 
 		// uniquement les magasins  ouverts
 	$_SESSION['mag_filters']['sorti'][]=0;
-	$query="SELECT * FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE (id_type=1 OR id_type=3) AND (sorti=0) AND ({$sessionAcdlec})";
+	$query="SELECT * FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE (sorti=0) AND ({$sessionAcdlec})";
 	// echo $query;
 	// $req=$pdoMag->query("SELECT * FROM mag ");
 	$req=$pdoMag->query($query);

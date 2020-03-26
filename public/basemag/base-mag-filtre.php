@@ -60,16 +60,7 @@
 								</div>
 								<!--										FILTRE PAR TYPE									-->
 								<div class="form-row my-3">
-									<div class="col-3">
-										<p class="rubrique text-main-blue font-weight-bold">Type d'établissement :</p>
-										<?php foreach ($listType as $key => $type): ?>
-											<div class="form-check pl-5">
-												<input type="checkbox" class="form-check-input" name="typeSelected[]" value="<?=$type['id']?>" <?= checkChecked($type['id'],'typeSelected')?>>
-												<label class="form-check-label"><?=$type['type']?></label>
-											</div>
-										<?php endforeach ?>
-									</div>
-									<?php if ($d_strictAdmin): ?>
+
 										<div class="col-6">
 											<p class="rubrique text-main-blue font-weight-bold">Code Acdlec</p>
 											<div class="row justify-content-between">
@@ -121,7 +112,6 @@
 
 										</div>
 									</div>
-
 									<div class="row">
 										<!--					FILTRE PAR CM				-->
 										<div class="col">
@@ -138,39 +128,7 @@
 											</div>
 										</div>
 									</div>
-									<?php else: ?>
-										<div class="col-3">
-											<p class="rubrique text-main-blue font-weight-bold">Ouvert/fermé :</p>
-											<div class="form-check pl-5">
-												<input type="checkbox" class="form-check-input" name="sorti[]" value="0" <?= checkChecked(0,'sorti')?>>
-												<label class="form-check-label">Ouvert</label>
-											</div>
-											<div class="form-check pl-5">
-												<input type="checkbox" class="form-check-input" name="sorti[]" value="9" <?= checkChecked(9,'sorti')?>>
-												<label class="form-check-label">Fermé</label>
-											</div>
-											<div class="form-check pl-5">
-												<input type="checkbox" class="form-check-input" name="sorti[]" value="99" <?= checkChecked(99,'sorti')?>>
-												<label class="form-check-label">NC</label>
-											</div>
-										</div>
-										<!--					FILTRE PAR CM				-->
-										<div class="col">
-											<p class="rubrique text-main-blue font-weight-bold">Suivi par :</p>
-											<?php foreach ($listCm as $key => $cm): ?>
-												<div class="form-check pl-5">
-													<input type="checkbox" class="form-check-input" name="cmSelected[]" value="<?=$cm['id_web_user']?>" <?= checkChecked($cm['id_web_user'],'cmSelected')?>>
-													<label class="form-check-label"><?=$cm['fullname']?></label>
-												</div>
-											<?php endforeach ?>
-											<div class="form-check pl-5">
-												<input type="checkbox" class="form-check-input" name="cmSelected[]" value="NULL" <?= checkChecked('NULL','cmSelected')?>>
-												<label class="form-check-label">Non suivi</label>
-											</div>
-										</div>
-									</div>
 
-								<?php endif ?>
 
 								<!--					FILTRE PAR ETAT				-->
 
