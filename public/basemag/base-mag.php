@@ -170,8 +170,8 @@ if(isset($paramList)){
 	$params=join(' AND ',array_map($joinParam,$paramList));
 	$params= "WHERE " .$params;
 	$query="SELECT * FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca $params";
-	echo "post ".$query;
-	$req=$pdoMag->query("SELECT * FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca $params");
+
+	$req=$pdoMag->query($query);
 	$magList=$req->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -197,10 +197,10 @@ if(!isset($_POST['filter'])){
 
 		// uniquement les magasins  ouverts
 	$_SESSION['mag_filters']['sorti'][]=0;
-	$query="SELECT * FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE (id_type=1 OR id_type=3) AND sorti=0 AND {$sessionAcdlec}";
-	echo $query;
+	$query="SELECT * FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE (id_type=1 OR id_type=3) AND (sorti=0) AND ({$sessionAcdlec})";
+	// echo $query;
 	// $req=$pdoMag->query("SELECT * FROM mag ");
-	$req=$pdoMag->query("SELECT * FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE (id_type=1 OR id_type=3)  AND ({$sessionAcdlec}) AND (sorti=0)");
+	$req=$pdoMag->query($query);
 	$magList=$req->fetchAll(PDO::FETCH_ASSOC);
 
 }
