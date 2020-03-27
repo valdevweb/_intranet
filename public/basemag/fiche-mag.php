@@ -123,7 +123,7 @@ if (isset($_GET['id'])){
 	$ldAdh=$magDbHelper-> getMagLd($mag->getGalec(),'-ADH');
 	$ldAdhName=(!empty($ldAdh))? $ldAdh[0]['ld_full']:  "Liste adhérent :";
 	$ldAdh=convertArray($ldAdh,'email','<br>');
-	$ldAdh=(!empty($ldAdh))? $ldDir: "Aucune adresse adhérent";
+	$ldAdh=(!empty($ldAdh))? $ldAdh: "Aucune adresse adhérent";
 
 
 
