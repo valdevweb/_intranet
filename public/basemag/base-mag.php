@@ -212,9 +212,9 @@ $newRowCentrale=3;
 $nbResult=count($magList);
 $countItem=0;
 
-	// echo "<pre>";
-	// print_r($magList);
-	// echo '</pre>';
+	echo "<pre>";
+	print_r($magList);
+	echo '</pre>';
 
 
 //------------------------------------------------------
