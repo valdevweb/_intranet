@@ -136,13 +136,13 @@ label > a:hover{
   color:  #c1292e;
   font-size: 0.9rem;
 }
-a.all-btn, a.hide-btn{
+a.show-btn, a.hide-btn{
   background-color: #e1e1e1;
   border-radius: 5px;
   padding: 5px;
   color: #0D47A1;
 }
 
-a:hover.all-btn, a:hover.hide-btn{
+a:hover.show-btn, a:hover.hide-btn{
 text-decoration: none !important;
 }
