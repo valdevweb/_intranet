@@ -212,11 +212,35 @@ $newRowCentrale=3;
 $nbResult=count($magList);
 $countItem=0;
 
-	echo "<pre>";
-	print_r($magList);
-	echo '</pre>';
 
+function compareMag($fieldGessica, $fieldSca, $key, $magList){
+	$gessica = str_replace(' ', '', $magList[$key][$fieldGessica]);
+	$sca = str_replace(' ', '', $magList[$key][$fieldSca]);
+	if(strtoupper($gessica) !=strtoupper($sca)){
+		$magList[$key]['diff']=1;
+		// echo "DIFF " . $mag['deno'].$mag['deno_sca']."<br>";
+		if(!isset($magList[$key]['diff-field'])){
+			$magList[$key]['diff-field']=$fieldGessica.",";
+		}else{
+			$magList[$key]['diff-field'].=$fieldGessica.",";
+		}
+	}
+	return $magList;
 
+}
+
+foreach ($magList as $key => $mag) {
+	$magList=compareMag('deno', 'deno_sca', $key, $magList);
+	$magList=compareMag('cp', 'cp_sca', $key, $magList);
+	$magList=compareMag('galec', 'galec_sca', $key, $magList);
+	$magList=compareMag('ville', 'ville_sca', $key, $magList);
+	$magList=compareMag('gel', 'sorti', $key, $magList);
+}
+if(array_column($magList, 'diff')){
+	$diff=array_count_values(array_column($magList, 'diff'))[1]; // outputs: 2
+}else{
+	$diff=0;
+}
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
@@ -277,6 +301,13 @@ DEBUT CONTENU CONTAINER
 			$('#no-centrale').removeAttr('checked');
 
 		});
+		$('.hide-btn').on("click",function(){
+			$( "tr.ok" ).hide();
+		});
+		$('.show-btn').on("click",function(){
+			$( "tr.ok" ).show();
+		});
+
 	});
 
 
