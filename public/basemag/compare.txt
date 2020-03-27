@@ -1,0 +1,29 @@
+compare :
+galec
+deno
+cp
+ville
+état
+
+
+
+
+//tél
+//adhérent
+//surface
+//date ouverture
+//date fermeture
+
+
+
+voir export
+//aime distrib
+//lunadis
+
+
+
+//backoffice
+
+
+SELECT *  FROM `stats_logs` WHERE `page` LIKE 'base-mag.php'  or `page` LIKE 'fiche-mag.php'
+ORDER BY `stats_logs`.`id_log`  DESC
