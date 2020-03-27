@@ -110,6 +110,27 @@ if(isset($_POST['filter'])){
 	}
 	$paramList[]=$paramClosed;
 
+	if(isset($_POST['no-docubase'])){
+		$_SESSION['mag_filters']['no-docubase']=$_POST['no-docubase'];
+		$paramDocubase=" docubase_login IS NULL OR docubase_login='' ";
+	}else{
+		$_SESSION['mag_filters']['no-docubase']=[];
+		$paramDocubase="";
+
+	}
+	$paramList[]=$paramDocubase;
+
+	if(isset($_POST['no-portail'])){
+		$_SESSION['mag_filters']['no-portail']=$_POST['no-portail'];
+		$paramPortail=" login IS NULL OR login='' ";
+	}else{
+		$_SESSION['mag_filters']['no-portail']=[];
+		$paramPortail="";
+
+	}
+	$paramList[]=$paramPortail;
+
+
 	if(isset($_POST['cmSelected'])){
 		$_SESSION['mag_filters']['cmSelected']=$_POST['cmSelected'];
 		$paramCm=join(' OR ', array_map(function($value){
@@ -150,15 +171,13 @@ if(isset($paramList)){
 	$paramList=array_filter($paramList);
 	$params=join(' AND ',array_map($joinParam,$paramList));
 	$params= "WHERE " .$params;
-	$query="SELECT * FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca $params";
-
+	$query="SELECT mag.*,sca3.*,web_users.users.login FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec $params GROUP BY mag.id";
+// echo $query;
 	$req=$pdoMag->query($query);
 	$magList=$req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// echo "<pre>";
-// print_r($magList);
-// echo '</pre>';
+
 
 if(!isset($_POST['filter'])){
 	if(isset($_SESSION['mag_filters'])){
@@ -173,11 +192,13 @@ if(!isset($_POST['filter'])){
 	$_SESSION['mag_filters']['acdlecSelected']=["010","029","070","078","101","102","111","114","116","118","119"];
 	$sessionAcdlec=join(' OR ', array_map(function($value){return 'acdlec_code='.$value;},$_SESSION['mag_filters']['acdlecSelected']));
 	// echo $sessionAcdlec;
-
+	$_SESSION['mag_filters']['no-docubase'][]="";
+	$_SESSION['mag_filters']['no-portail'][]="";
 
 		// uniquement les magasins  ouverts
 	$_SESSION['mag_filters']['sorti'][]=0;
-	$query="SELECT * FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE (sorti=0) AND ({$sessionAcdlec})";
+	$query="SELECT mag.*,sca3.*,web_users.users.login FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec WHERE (sorti=0) AND ({$sessionAcdlec}) GROUP BY mag.id";
+
 	// echo $query;
 	// $req=$pdoMag->query("SELECT * FROM mag ");
 	$req=$pdoMag->query($query);
@@ -190,6 +211,11 @@ $newRowCentrale=3;
 
 $nbResult=count($magList);
 $countItem=0;
+
+	// echo "<pre>";
+	// print_r($magList);
+	// echo '</pre>';
+
 
 //------------------------------------------------------
 //			VIEW
