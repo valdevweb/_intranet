@@ -14,7 +14,7 @@ include 'functions\tasklog.fn.php';
 
 function getQlik($pdoQlik){
 	$req=$pdoQlik->query("SELECT mag_gessica.id as id, mag_ctbt_param.id  as ctbtparam_id, mag_ctbt.id as ctbt_id, ADH_RS, ADH_PANBT, ADH_VALCOD, ADH_ADR1, ADH_ADR2, ADH_CP,ADH_ADR3, ADH_TEL, ADH_TLC,ADH_SURF,ADH_NOMADH, ADH_NOMCHEF,		DIC_GEL, ADH_DATOUV, ADH_DATFER, ADH_NUMACT, AAC_COD, ADH_NUMORD, ADH_EAN, ADH_CSIRET, ADH_IBAN, ADH_BIC, ADH_RUM, ADH_ADHPYR, BCG_ADH,
-		PID_CRE, PID_RAD
+		PID_CRE, PID_RAD, PID_GESRES, MAG_MAI, MAG_TYPINF
 		FROM mag_gessica LEFT JOIN mag_ctbt ON mag_gessica.id= mag_ctbt.id LEFT JOIN mag_ctbt_param ON mag_gessica.id= mag_ctbt_param.id  WHERE (mag_gessica.id >2 AND mag_gessica.id <1000) OR (mag_gessica.id >3000 AND mag_gessica.id <5000) OR  (mag_gessica.id >5999 AND mag_gessica.id <7999)");
 
 	// return $req->errorInfo();
@@ -38,8 +38,10 @@ function addMag($pdoMag,$dateOuv, $dateFerm, $mag){
 
 	$req=$pdoMag->prepare("INSERT INTO mag(id,deno, galec, centrale, ad1, ad2, cp, ville, tel, fax, surface, adherent, directeur,pole_sav_gessica,closed,
 		gel, date_ouv, date_ferm, acdlec_activite, acdlec_code, acdlec_numord, ean, siret , tva, centre_rei, rei, iban, bic, rum, adh_payeur,
+		reservable, backoffice, pole_sav_ctbt,
 		date_insert) VALUES (:id, :deno, :galec, :centrale, :ad1, :ad2, :cp, :ville, :tel, :fax, :surface, :adherent, :directeur, :pole_sav_gessica,:closed,
 		:gel, :date_ouv, :date_ferm, :acdlec_activite, :acdlec_code, :acdlec_numord, :ean, :siret , :tva, :centre_rei, :rei, :iban, :bic, :rum, :adh_payeur,
+		:reservable, :backoffice, :pole_sav_ctbt,
 		:date_insert)");
 	$req->execute([
 		':id'			=>$mag['id'] ,
@@ -72,6 +74,9 @@ function addMag($pdoMag,$dateOuv, $dateFerm, $mag){
 		':bic'	=>$mag['ADH_BIC'],
 		':rum'	=>$mag['ADH_RUM'],
 		':adh_payeur'	=>$mag['ADH_ADHPYR'],
+		':reservable'			=>$mag['PID_GESRES'],
+		':backoffice'			=>$mag['MAG_TYPINF'],
+		':pole_sav_ctbt'			=>$mag['MAG_MAI'],
 		':date_insert'				=>date('Y-m-d H:i:s')
 
 	]);
@@ -90,14 +95,49 @@ function updateMag($pdoMag,$dateOuv, $dateFerm, $mag){
 	$poleSav=$valcod[2];
 	$idCentrale=$valcod[3];
 	$firstLetter=substr($mag['ADH_RS'],0,1);
-		$centreRei=(empty($mag['PID_CRE'])) ? NULL : $mag['PID_CRE'];
+	$centreRei=(empty($mag['PID_CRE'])) ? NULL : $mag['PID_CRE'];
 	$rei=(empty($mag['PID_RAD'])) ? NULL : $mag['PID_RAD'];
 
 	if($firstLetter =="*" ||$firstLetter=="x"){
 		$closed=1;
 	}
-	$req=$pdoMag->prepare("UPDATE mag SET deno= :deno, galec= :galec, centrale= :centrale, ad1= :ad1, ad2= :ad2, cp= :cp , ville= :ville, tel= :tel, fax= :fax, surface= :surface, adherent= :adherent, directeur= :directeur, pole_sav_gessica= :pole_sav_gessica,closed= :closed,
-		gel= :gel, date_ouv= :date_ouv, date_ferm= :date_ferm, acdlec_activite= :acdlec_activite, acdlec_code= :acdlec_code, acdlec_numord= :acdlec_numord, ean= :ean, siret= :siret , tva= :tva, centre_rei= :centre_rei, rei= :rei, iban= :iban, bic= :bic, rum= :rum, adh_payeur= :adh_payeur, date_update= :date_update WHERE id= :id");
+	$req=$pdoMag->prepare("UPDATE mag SET
+		 deno=						 :deno,
+		 galec=						 :galec,
+		 centrale=					 :centrale,
+		 ad1=						 :ad1,
+		 ad2=						 :ad2,
+		 cp=						 :cp,
+		 ville=						 :ville,
+		 tel=						 :tel,
+		 fax=						 :fax,
+		 surface=					 :surface,
+		 adherent=					 :adherent,
+		 directeur=					 :directeur,
+		 pole_sav_gessica=			 :pole_sav_gessica,
+		 closed=					 :closed,
+	     gel=						 :gel,
+		 date_ouv=					 :date_ouv,
+		 date_ferm=					 :date_ferm,
+		 acdlec_activite=			 :acdlec_activite,
+		 acdlec_code=				 :acdlec_code,
+		 acdlec_numord=				 :acdlec_numord,
+		 ean=						 :ean,
+		 siret=						 :siret,
+		 tva=						 :tva,
+		 centre_rei=				 :centre_rei,
+		 rei=						 :rei,
+		 iban=						 :iban,
+		 bic=						 :bic,
+		 rum=						 :rum,
+		 adh_payeur=				 :adh_payeur,
+		 reservable=				 :reservable,
+		 backoffice=				 :backoffice,
+		 pole_sav_ctbt=				 :pole_sav_ctbt,
+		 date_update=				 :date_update
+
+		 WHERE
+		 id= :id");
 	$sql=$req->execute([
 		':id'				=>$mag['id'] ,
 		':deno'				=>$mag['ADH_RS'],
@@ -129,15 +169,18 @@ function updateMag($pdoMag,$dateOuv, $dateFerm, $mag){
 		':bic'				=>$mag['ADH_BIC'],
 		':rum'				=>$mag['ADH_RUM'],
 		':adh_payeur'		=>$mag['ADH_ADHPYR'],
+		':reservable'			=>$mag['PID_GESRES'],
+		':backoffice'			=>$mag['MAG_TYPINF'],
+		':pole_sav_ctbt'			=>$mag['MAG_MAI'],
 		':date_update'		=>date('Y-m-d H:i:s')
 	]);
 	// return $req->errorInfo();
 
 	$err=$req->errorInfo();
 	if(!empty($err[2])){
-			// echo "<pre>";
-			// print_r($sql);
-			// echo '</pre>';
+			echo "<pre>";
+			print_r($sql);
+			echo '</pre>';
 
 		return $err[2];
 	}
