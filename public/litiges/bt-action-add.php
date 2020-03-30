@@ -194,7 +194,7 @@ if(isset($_POST['submit']))
 	}
 	else
 	{
-		$newAction=addAction($pdoLitige, $allfilename);
+		$newAction=addAction($pdoLitige, $allfilename,$contrainte=null);
 
 		if($newAction>0)
 		{
