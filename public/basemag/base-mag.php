@@ -44,6 +44,8 @@ $listCodeAcdlec=$magDbHelper->getListCodeAcdlec();
 $centraleName=Helpers::arrayFlatten($listCentrale,"centrale_doris","centrale");
 $ets=Helpers::arrayFlatten($listCodeAcdlec,"acdlec_code","nom_ets");
 
+
+
 function checkChecked($value,$field){
 	if(isset($_SESSION['mag_filters']) && isset($_SESSION['mag_filters'][$field])){
 		if(in_array($value,$_SESSION['mag_filters'][$field])){
@@ -171,7 +173,9 @@ if(isset($paramList)){
 	$paramList=array_filter($paramList);
 	$params=join(' AND ',array_map($joinParam,$paramList));
 	$params= "WHERE " .$params;
-	$query="SELECT mag.*,sca3.*,web_users.users.login FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec $params GROUP BY mag.id";
+	$query="SELECT mag.*,sca3.*,web_users.users.login, web_users.users.nohash_pwd  FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec $params GROUP BY mag.id";
+	$_SESSION['mag_filters']['query']=$query;
+
 // echo $query;
 	$req=$pdoMag->query($query);
 	$magList=$req->fetchAll(PDO::FETCH_ASSOC);
@@ -197,7 +201,8 @@ if(!isset($_POST['filter'])){
 
 		// uniquement les magasins  ouverts
 	$_SESSION['mag_filters']['sorti'][]=0;
-	$query="SELECT mag.*,sca3.*,web_users.users.login FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec WHERE (sorti=0) AND ({$sessionAcdlec}) GROUP BY mag.id";
+	$query="SELECT mag.*,sca3.*,web_users.users.login, web_users.users.nohash_pwd FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec WHERE (sorti=0) AND ({$sessionAcdlec}) GROUP BY mag.id";
+	$_SESSION['mag_filters']['query']=$query;
 
 	// echo $query;
 	// $req=$pdoMag->query("SELECT * FROM mag ");
@@ -268,6 +273,7 @@ DEBUT CONTENU CONTAINER
 	</div>
 
 	<?php include 'base-mag-filtre.php' ?>
+
 	<?php include 'base-mag-tableau.php' ?>
 	<!-- ./container -->
 </div>

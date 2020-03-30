@@ -22,6 +22,16 @@ class UserHelpers{
 		$data=$req->fetchAll(PDO::FETCH_ASSOC);
 		return $data;
 	}
+	public static function getListUserByService($pdoUser,$idService){
+		$req=$pdoUser->prepare("SELECT id_web_user, prenom FROM intern_users WHERE id_service= :id_service  ORDER BY prenom");
+		$req->execute([
+			':id_service'	=>$idService
+		]);
+		$data=$req->fetchAll(PDO::FETCH_KEY_PAIR);
+		return $data;
+	}
+
+
 
 	public static function getManyUser($pdoUser,$ids){
 		$arData=[];

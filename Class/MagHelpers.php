@@ -61,4 +61,11 @@ class MagHelpers{
 
 		return $address;
 	}
+	public static function getListCentrale($pdoMag){
+		// uniquement centrale pour mag de type mag
+		return $req=$pdoMag->query("SELECT id_ctbt,centrale  FROM centrales ORDER BY centrales.centrale")->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+	public static function getListBackOffice($pdoMag){
+		return $req=$pdoMag->query("SELECT id,backoffice  FROM backoffice ")->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
 }
