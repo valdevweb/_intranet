@@ -27,6 +27,11 @@ $d_rev=isUserAllowed($pdoUser,$revIds);
 // accès comm : admin, comm
 $comIds=array(5,6);
 $d_comm=isUserAllowed($pdoUser,$comIds);
+
+$btlecIds=array(4);
+$d_btlec=isUserAllowed($pdoUser,$btlecIds);
+
+
 // accès exploit + : admin
 $exploitIds=array(5);
 $d_exploit=isUserAllowed($pdoUser,$exploitIds);
@@ -259,20 +264,18 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 
 			</ul>
 		</li>
+		<?php if ($d_btlec): ?>
 
-		<li  class='active has-sub'><a href="#" >Magasins</a>
-			<ul>
-				<li><a href="<?= ROOT_PATH?>/public/basemag/base-mag.php">Base magasins</a></li>
-				<li><a href="<?= ROOT_PATH?>/public/basemag/fiche-mag.php"><span>Fiches magasins</span></a></li>
-				<?php if ($d_strictAdmin): ?>
-				<li><a href="">Attention scripts :</a></li>
+			<li  class='active has-sub'><a href="#" >Magasins</a>
+				<ul>
+					<li><a href="<?= ROOT_PATH?>/public/basemag/base-mag.php">Base magasins</a></li>
+					<li><a href="<?= ROOT_PATH?>/public/basemag/fiche-mag.php"><span>Fiches magasins</span></a></li>
 
-				<li><a href="<?= ROOT_PATH?>/batch-mag/newmag-import-qlik.php">Qlik vers base mag</a></li>
 
-				<?php endif ?>
-			</ul>
-		</li>
+				</ul>
+			</li>
 
+		<?php endif ?>
 
 
 		<?php
