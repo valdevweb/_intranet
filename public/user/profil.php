@@ -89,7 +89,7 @@ if(isset($_SESSION['id_galec']))
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
-include('../view/_head-mig.php');
+include('../view/_head-bt.php');
 include('../view/_navbar.php');
 ?>
 <div class="container">
@@ -135,5 +135,4 @@ include('../view/_navbar.php');
 </div><!-- fin de container -->
 
 
-<?php
-include('../view/_footer.php');
+<?php require '../view/_footer-bt.php'; ?>
