@@ -150,13 +150,6 @@ if(isset($_POST['filter'])){
 	$paramList[]=$paramCm;
 }
 
-// if(isset($_POST['clear_form'])){
-// 	$_POST=[];
-// 	header("Location: ".$_SERVER['PHP_SELF']);
-
-// }
-
-
 
 if(isset($_POST['clear_filter'])){
 	unset($_SESSION['mag_filters']);
