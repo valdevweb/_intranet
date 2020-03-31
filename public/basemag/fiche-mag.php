@@ -191,77 +191,85 @@ if(!isset($_SESSION['']))
 
 
 	include('../view/_head-bt.php');
-include('../view/_navbar.php');
+
 ?>
 <!--********************************
 DEBUT CONTENU CONTAINER
 *********************************-->
-<div class="container">
-	<div class="row">
-		<div class="col-lg-1"></div>
-		<div class="col">
-			<?php
-			include('../view/_errors.php');
-			?>
-		</div>
-		<div class="col-lg-1"></div>
-	</div>
-	<?php if (!isset($mag)): ?>
-		<div class="row  pb-3 ">
+
+<section class="info-main fixed-top">
+	<?php include('../view/_navbar.php');?>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-1"></div>
 			<div class="col">
-				<h1 class="text-main-blue pt-5 ">F</span>iche magasin</h1>
+				<?php
+				include('../view/_errors.php');
+				?>
 			</div>
-			<?php
-			include('search-form.php')
-			?>
-			<div class="col-auto">
-				<?=Helpers::returnBtn('base-mag.php','btn-light-blue')?>
-			</div>
-			<!-- <div class="col-lg-1"></div> -->
+			<div class="col-lg-1"></div>
 		</div>
-		<?php else: ?>
+
+
+		<?php if (!isset($mag)): ?>
 			<div class="row  pb-3 ">
 				<div class="col">
-					<h1 class="text-main-blue pt-5 ">
-						<?= (isset($mag))? 'Leclerc '.$mag->getDeno(): "Fiche magasin" ?>
-					</h1>
-					<h5 class="yanone">Code BTLec : <span class="text-orange" ><?= $mag->getId() .'</span><span class="pl-5">Panonceau Galec : <span class="text-orange">'.$mag->getGalec().'</span>'?></h5>
-
+					<h1 class="text-main-blue pt-5 ">F</span>iche magasin</h1>
 				</div>
 				<?php
 				include('search-form.php')
 				?>
-				<div class="col-auto mt-4 pt-2">
-				<?=Helpers::returnBtn('base-mag.php','btn-kaki')?>
-			</div>
+				<div class="col-auto">
+					<?=Helpers::returnBtn('base-mag.php','btn-light-blue')?>
+				</div>
 				<!-- <div class="col-lg-1"></div> -->
 			</div>
+			<?php else: ?>
+				<div class="row  pb-3 ">
+					<div class="col">
+						<h1 class="text-main-blue pt-5 ">
+							<?= (isset($mag))? 'Leclerc '.$mag->getDeno(): "Fiche magasin" ?>
+						</h1>
+						<h5 class="yanone">Code BTLec : <span class="text-orange" ><?= $mag->getId() .'</span><span class="pl-5">Panonceau Galec : <span class="text-orange">'.$mag->getGalec().'</span>'?></h5>
+
+					</div>
+					<?php
+					include('search-form.php')
+					?>
+					<div class="col-auto mt-4 pt-2">
+						<?=Helpers::returnBtn('base-mag.php','btn-kaki')?>
+					</div>
+					<!-- <div class="col-lg-1"></div> -->
+				</div>
+			<?php endif?>
 			<?php
-			include('fiche-mag-commun.php');
-			if($d_strictAdmin){
-				include('fiche-mag-exploit.php');
+			if (isset($mag)){
+				include('fiche-mag-commun.php');
+				if($d_strictAdmin){
+					include('fiche-mag-exploit.php');
+				}
+
 			}
 			?>
 
-		<?php endif ?>
+		</div>
+		<script src="../js/autocomplete-searchmag.js"></script>
 
-	</div>
-	<script src="../js/autocomplete-searchmag.js"></script>
-
-	<script type="text/javascript">
+		<script type="text/javascript">
 
 
 
-		function getScroll() {
-			var position = $( document ).scrollTop();
-			return position;
-		}
+			function getScroll() {
+				var position = $( document ).scrollTop();
+				return position;
+			}
 
-		function jsScrollTo(hash) {
-			location.hash = "#" + hash;
-		}
+			function jsScrollTo(hash) {
+				location.hash = "#" + hash;
+			}
 
-		$(document).ready(function(){
+			$(document).ready(function(){
 			// masque pour saisie date et etc
 			$('#date_ouverture').mask('00/00/0000');
 			$('#date_fermeture').mask('00/00/0000');
@@ -283,20 +291,20 @@ DEBUT CONTENU CONTAINER
 			}
 		});
 
-		document.onkeyup = function(e) {
-			if (e.ctrlKey && e.altKey  && e.which == 68) {
-				jsScrollTo('docubase');
+			document.onkeyup = function(e) {
+				if (e.ctrlKey && e.altKey  && e.which == 68) {
+					jsScrollTo('docubase');
 
-			}
-		};
-
-
+				}
+			};
 
 
 
 
-	</script>
 
-	<?php
-	require '../view/_footer-bt.php';
-	?>
+
+		</script>
+
+		<?php
+		require '../view/_footer-bt.php';
+		?>

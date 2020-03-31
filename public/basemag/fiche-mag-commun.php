@@ -20,8 +20,6 @@
 
 				<i class="fas fa-user pr-3 text-orange "></i>
 				<?= $mag->getAdherent()?><br>
-				<i class="fas fa-user-friends pr-3 text-orange"></i>
-				<?= $mag->getDirecteur()?>
 
 				<br><br>
 				<i class="fas fa-phone pr-3 text-orange"></i>
@@ -31,11 +29,15 @@
 				<br><br><br>
 				<span class="border-left-dashed-simple"></span><i class="fas fa-fax pr-3 text-orange"></i>
 				<?= $mag->getFax()?>
-				<!-- <div class="text-center pr-5"><img src="../img/logos/leclerc-rond-50.jpg"></div> -->
-
 			</div>
-
 		</div>
+	</div>
+</section>
+
+<div class="container">
+	<section class="second-container">
+		<h5 class="text-center font-weight-bold  mag-title sub-title">Informations Complémentaires</h5>
+
 		<div class="row py-3">
 			<div class="col py-3 light-shadow-round">
 
@@ -137,8 +139,8 @@
 			<div class="col">
 				<img src="../img/logos/docubase-logo.png" class="pr-3">
 				<div class="text-orange">Docubase :</div>
-						<span class="text-orange pl-3" id="docubase">Login :</span> <?= $mag->getDocubaseLogin()?> <br>
-						<span class="text-orange pl-3">Mot de Passe : </span> <?= $mag->getDocubasePwd() ?><br>
+				<span class="text-orange pl-3" id="docubase">Login :</span> <?= $mag->getDocubaseLogin()?> <br>
+				<span class="text-orange pl-3">Mot de Passe : </span> <?= $mag->getDocubasePwd() ?><br>
 
 			</div>
 			<div class="col">
