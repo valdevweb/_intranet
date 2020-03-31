@@ -150,11 +150,11 @@ if(isset($_POST['filter'])){
 	$paramList[]=$paramCm;
 }
 
-if(isset($_POST['clear_form'])){
-	$_POST=[];
-	header("Location: ".$_SERVER['PHP_SELF']);
+// if(isset($_POST['clear_form'])){
+// 	$_POST=[];
+// 	header("Location: ".$_SERVER['PHP_SELF']);
 
-}
+// }
 
 
 
@@ -242,10 +242,14 @@ foreach ($magList as $key => $mag) {
 	$magList=compareMag('gel', 'sorti', $key, $magList);
 }
 if(array_column($magList, 'diff')){
-	$diff=array_count_values(array_column($magList, 'diff'))[1]; // outputs: 2
+	$diff=array_count_values(array_column($magList, 'diff'))[1]; //nb de fois ou la clé diff apparaît égale à 1
 }else{
 	$diff=0;
 }
+
+
+
+
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
@@ -273,6 +277,8 @@ DEBUT CONTENU CONTAINER
 	</div>
 
 	<?php include 'base-mag-filtre.php' ?>
+
+	<?php include 'base-mag-export.php' ?>
 
 	<?php include 'base-mag-tableau.php' ?>
 	<!-- ./container -->
