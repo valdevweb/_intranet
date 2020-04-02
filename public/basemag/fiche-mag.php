@@ -19,17 +19,6 @@ require_once '../../Class/MagDbHelper.php';
 require_once '../../Class/Mag.php';
 require_once '../../Class/Helpers.php';
 
-//---------------------------------------
-//	STRUCTURE PAGE HTML
-//---------------------------------------
-/*
-
-
-
-
-
- */
-
 
 //---------------------------------------
 //	ajout enreg dans stat
@@ -46,11 +35,19 @@ $success=[];
 // $searchResults=false;
 function convertArray($data, $field,$separator){
 	if(!empty($data)){
-		$rValue='';
-		foreach ($data as $key => $value) {
-			$rValue.=$value[$field].$separator;
+		if (preg_match('</a>', $separator)){
+			$rValue='';
+			foreach ($data as $key => $value) {
+				$rValue.='<a class="text-norm" href="mailto:'.$value[$field].'">'.$value[$field].$separator;
+			}
+			return $rValue;
+		}else{
+			$rValue='';
+			foreach ($data as $key => $value) {
+				$rValue.=$value[$field].$separator;
+			}
+			return $rValue;
 		}
-		return $rValue;
 	}
 	return '';
 }
@@ -88,14 +85,18 @@ function updateSca($pdoMag){
 	return $req->rowCount();
 }
 
-function updateAutre($pdoMag){
-	$req=$pdoMag->prepare("UPDATE mag SET id_type= :id_type WHERE id=id");
+function updateDocubase($pdoMag){
+	$req=$pdoMag->prepare("UPDATE sca3 SET docubase_login= :docubase_login, docubase_pwd= :docubase_pwd WHERE btlec_sca= :id");
 	$req->execute([
 		':id'	=>$_GET['id'],
-		':id_type'		=>$_POST['id_type']
+		':docubase_login'		=>$_POST['docubase_login'],
+		':docubase_pwd'		=>$_POST['docubase_pwd']
 	]);
 	return $req->rowCount();
 }
+
+
+
 if(isset($_POST['clear_form'])){
 	$_POST=[];
 	header("Location: ".$_SERVER['PHP_SELF']);
@@ -112,19 +113,24 @@ if (isset($_GET['id'])){
 
 	// ld
 	$ldRbt=$magDbHelper-> getMagLd($mag->getGalec(),'-RBT');
-	$ldRbtName=(!empty($ldRbt))? $ldRbt[0]['ld_full']:  "Liste RBT :";
-	$ldRbt=convertArray($ldRbt,'email','<br>');
-	$ldRbt=(!empty($ldRbt))? $ldRbt:  "Aucune adresse RBT";
+	$ldRbtName=(!empty($ldRbt))? '<a class="text-orange" href="mailto:'.$ldRbt[0]['ld_full'].'">'.$ldRbt[0]['ld_full'].'</a>':  $mag->getRacineList()."-RBT";
+	$ldRbtLink=convertArray($ldRbt,'email','</a><br>');
+	$ldRbtExist=(!empty($ldRbt))? true:  false;
+	$ldRbtLink=(!empty($ldRbtLink))? $ldRbtLink:  "Aucune adresse RBT";
+
 	$ldDir=$magDbHelper-> getMagLd($mag->getGalec(),'-DIR');
-	$ldDirName=(!empty($ldDir))? $ldDir[0]['ld_full']:  "Liste directeur :";
-	$ldDir=convertArray($ldDir,'email','<br>');
-	$ldDir=(!empty($ldDir))? $ldDir : "Aucune adresse directeur";
+	$ldDirName=(!empty($ldDir))? '<a class="text-orange" href="mailto:'.$ldDir[0]['ld_full'].'">'.$ldDir[0]['ld_full'].'</a>':  $mag->getRacineList()."-DIR";
+	$ldDirLink=convertArray($ldDir,'email','</a><br>');
+	$ldDirExist=(!empty($ldDir))? true:  false;
+	$ldDirLink=(!empty($ldDirLink))? $ldDirLink : "Aucune adresse directeur";
 
 	$ldAdh=$magDbHelper-> getMagLd($mag->getGalec(),'-ADH');
-	$ldAdhName=(!empty($ldAdh))? $ldAdh[0]['ld_full']:  "Liste adhérent :";
-	$ldAdh=convertArray($ldAdh,'email','<br>');
-	$ldAdh=(!empty($ldAdh))? $ldAdh: "Aucune adresse adhérent";
+	$ldAdhName=(!empty($ldAdh))? '<a class="text-orange" href="mailto:'.$ldAdh[0]['ld_full'].'">'.$ldAdh[0]['ld_full'].'</a>':  $mag->getRacineList()."-ADH :";
+	$ldAdhLink=convertArray($ldAdh,'email','</a><br>');
+	$ldAdhExist=(!empty($ldAdh))? true:  false;
+	$ldAdhLink=(!empty($ldAdhLink))? $ldAdhLink: "Aucune adresse adhérent dans ";
 
+	$docubaseLink="http://172.30.101.66/rheaweb/controler?cmd=home&baseid=1&view=1&j_username=".$mag->getDocubaseLogin() ."&j_password=".$mag->getDocubasePwd();
 
 
 	if(!empty($mag->getCentrale())){
@@ -133,7 +139,12 @@ if (isset($_GET['id'])){
 	}else{
 		$centraleGessica="Pas de centrale renseignée";
 	}
-
+	if(!empty($mag->getCentraleSca())){
+		// $centraleGessica=$mag->getCentrale();
+		$centraleSca=$magDbHelper->centraleToString($mag->getCentraleSca());
+	}else{
+		$centraleSca="Pas de centrale renseignée";
+	}
 
 	$ad2=!empty($mag->getAd2()) ? $mag->getAd2().'<br>' :'';
 
@@ -155,30 +166,89 @@ if(isset($_POST['maj'])){
 	}else{
 		$errors[]="Une erreur est survenue, impossible de mettre  à jour la base de donnée";
 	}
-
-
 }
+if(isset($_POST['submitdocubase'])){
 
-if(isset($_POST['maj_autre'])){
-	$up=updateAutre($pdoMag);
-	if(count($up)==1){
-		$successQ='success=maj';
-		unset($_POST);
-		header("Location: ".$_SERVER['PHP_SELF'].'?id='.$_GET['id'].'&'.$successQ,true,303);
+	// maj db dans tous les cas
+	$upDocubase=updateDocubase($pdoMag);
+	// on envoie un mail avec les codes si dest n'est pas vide, sinon juste maj db
+	$dest=[];
+	if($upDocubase==1){
+		if(isset($_POST['ldadh'])){
+			foreach ($ldAdh as $key => $mail) {
+				$dest[]=$mail['email'];
+			}
+		}
+		if(isset($_POST['lddir'])){
+			foreach ($ldDir as $key => $mail) {
+				$dest[]=$mail['email'];
+			}
+		}
+		if(isset($_POST['ldrbt'])){
+			foreach ($ldRbt as $key => $mail) {
+				$dest[]=$mail['email'];
+			}
+		}
+		if(isset($_POST['emails']) && !empty($_POST['emails'])){
+			$arrEmail=explode(',', $_POST['emails']);
+			for ($i=0; $i < sizeof($arrEmail) ; $i++) {
+				$dest[]=trim($arrEmail[$i]);
+			}
+		}
 	}else{
-		$errors[]="Une erreur est survenue, impossible de mettre  à jour la base de donnée";
+		$errors[]="Une erreur est survenue, impossible de mettre à jour la base de donnée avec les codes docubase";
+	}
+	if(!empty($dest)){
+
+		$cc=['clement.delahoche@bltec.fr', 'david.syllebranque@btlec.fr','valerie.montusclat@btlec.fr'];
+
+		if(VERSION=="_"){
+			$dest=['valerie.montusclat@btlec.fr'];
+			$cc=[];
+		}
+
+		// gestion du template
+		$htmlMail = file_get_contents('mail-codes-docubase.html');
+		$htmlMail=str_replace('{LOGIN}',$_POST['docubase_login'],$htmlMail);
+		$htmlMail=str_replace('{PWD}',$_POST['docubase_pwd'],$htmlMail);
+		$subject='Portail BTLec Est - Codes docubase - Magasin '.$mag->getDeno();
+
+		// ---------------------------------------
+		// initialisation de swift
+		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$mailer = new Swift_Mailer($transport);
+		$message = (new Swift_Message($subject))
+		->setBody($htmlMail, 'text/html')
+		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+		->setTo($dest)
+		->setCc($cc);
+		// ---------------------------------------
+		if (!$mailer->send($message, $failures)){
+			print_r($failures);
+		}else{
+			$successQ='?id='.$_GET['id'].'&success=udocmail';
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+		}
+	}elseif (empty($dest) && $upDocubase==1) {
+		$successQ='?id='.$_GET['id'].'&success=udoc';
+		unset($_POST);
+		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 	}
 
 }
 
+
 if(isset($_GET['success'])){
 	$arrSuccess=[
 		'maj'=>'Magasin mis à jour avec succès',
+		'udocmail'=>'Mise à jour des codes docubases et envoi du mail effectués avec succès',
+		'udoc'=>'Mise à jour des codes docubases effectuée avec succès',
 	];
 	$success[]=$arrSuccess[$_GET['success']];
 }
 
-if(!isset($_SESSION['']))
+
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
@@ -190,49 +260,33 @@ if(!isset($_SESSION['']))
 
 
 
-	include('../view/_head-bt.php');
+include('../view/_head-bt.php');
 
 ?>
 <!--********************************
 DEBUT CONTENU CONTAINER
 *********************************-->
 
-<section class="info-main fixed-top">
-	<?php include('../view/_navbar.php');?>
+<!-- <section class="info-main pb-5 "> -->
+	<section class="info-main fixed-top pb-5 ">
+		<?php include('../view/_navbar.php');?>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-lg-1"></div>
-			<div class="col">
-				<?php
-				include('../view/_errors.php');
-				?>
-			</div>
-			<div class="col-lg-1"></div>
-		</div>
-
-
-		<?php if (!isset($mag)): ?>
-			<div class="row  pb-3 ">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-1"></div>
 				<div class="col">
-					<h1 class="text-main-blue pt-5 ">F</span>iche magasin</h1>
+					<?php
+					include('../view/_errors.php');
+					?>
 				</div>
-				<?php
-				include('search-form.php')
-				?>
-				<div class="col-auto">
-					<?=Helpers::returnBtn('base-mag.php','btn-light-blue')?>
-				</div>
-				<!-- <div class="col-lg-1"></div> -->
+				<div class="col-lg-1"></div>
 			</div>
-			<?php else: ?>
+
+
+			<?php if (!isset($mag)): ?>
 				<div class="row  pb-3 ">
 					<div class="col">
-						<h1 class="text-main-blue pt-5 ">
-							<?= (isset($mag))? 'Leclerc '.$mag->getDeno(): "Fiche magasin" ?>
-						</h1>
-						<h5 class="yanone">Code BTLec : <span class="text-orange" ><?= $mag->getId() .'</span><span class="pl-5">Panonceau Galec : <span class="text-orange">'.$mag->getGalec().'</span>'?></h5>
-
+						<h1 class="text-main-blue pt-5 ">F</span>iche magasin</h1>
 					</div>
 					<?php
 					include('search-form.php')
@@ -242,34 +296,56 @@ DEBUT CONTENU CONTAINER
 					</div>
 					<!-- <div class="col-lg-1"></div> -->
 				</div>
-			<?php endif?>
-			<?php
-			if (isset($mag)){
-				include('fiche-mag-commun.php');
-				if($d_strictAdmin){
-					include('fiche-mag-exploit.php');
+				<!-- ajout zone vide pour ne pas avoir le pied de page qui monte si pas de données -->
+				<div class="force-height"></div>
+				<?php else: ?>
+					<div class="row pb-3 ">
+						<div class="col">
+							<h1 class="text-main-blue pt-5 ">
+								<?= (isset($mag))? 'Leclerc '.$mag->getDeno(): "Fiche magasin" ?>
+							</h1>
+
+							<h5 class="yanone">Code BTLec : <span class="text-orange" ><?= $mag->getId() .'</span><span class="pl-5">Panonceau Galec : <span class="text-orange">'.$mag->getGalec().'</span>'?> <span class="text-orange pl-5">Centrale : </span><?=$centraleSca?></h5>
+
+						</div>
+						<?php
+						include('search-form.php')
+						?>
+						<div class="col-auto mt-3  pt-2">
+							<?=Helpers::returnBtn('base-mag.php','btn-kaki')?>
+						</div>
+						<!-- <div class="col-lg-1"></div> -->
+					</div>
+				<?php endif?>
+				<?php
+				if (isset($mag)){
+					include('fiche-mag-commun.php');
+					if($d_strictAdmin){
+						include('fiche-mag-exploit.php');
+					}
+
+				}
+				?>
+
+			</div>
+			<script src="../js/autocomplete-searchmag.js"></script>
+
+			<script type="text/javascript">
+
+
+
+				function getScroll() {
+					var position = $( document ).scrollTop();
+					return position;
 				}
 
-			}
-			?>
-
-		</div>
-		<script src="../js/autocomplete-searchmag.js"></script>
-
-		<script type="text/javascript">
+				function jsScrollTo(hash) {
+					location.hash = "#" + hash;
+				}
 
 
 
-			function getScroll() {
-				var position = $( document ).scrollTop();
-				return position;
-			}
-
-			function jsScrollTo(hash) {
-				location.hash = "#" + hash;
-			}
-
-			$(document).ready(function(){
+				$(document).ready(function(){
 			// masque pour saisie date et etc
 			$('#date_ouverture').mask('00/00/0000');
 			$('#date_fermeture').mask('00/00/0000');
@@ -289,7 +365,21 @@ DEBUT CONTENU CONTAINER
 				url=url.split("#");
 				window.scrollTo(0, url[1]);
 			}
-		});
+
+			$("#email").keyup(function(){
+
+				var email = $("#email").val();
+				var filter = /^(([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)(\s*(;|,)\s*|\s*$))*$/;
+				if (!filter.test(email)) {
+      			 //alert('Please provide a valid email address');
+      			 $("#error_email").text(email+" is not a valid email");
+      			 $("#error_email").addClass('text-alert');
+      			 email.focus;
+      			} else {
+      				$("#error_email").text("");
+      				$("#error_email").removeClass('text-alert');
+      			}
+      		});
 
 			document.onkeyup = function(e) {
 				if (e.ctrlKey && e.altKey  && e.which == 68) {
@@ -299,12 +389,13 @@ DEBUT CONTENU CONTAINER
 			};
 
 
+		});
 
 
 
 
-		</script>
+	</script>
 
-		<?php
-		require '../view/_footer-bt.php';
-		?>
+	<?php
+	require '../view/_footer-bt.php';
+	?>
