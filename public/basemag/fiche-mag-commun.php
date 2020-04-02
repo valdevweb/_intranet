@@ -49,7 +49,7 @@
 		<div class="row">
 			<div class="col">
 				<!-- <div class="sub-title-ico  pt-3"><i class="fas fa-user-lock text-light-grey "></i></div> -->
-				<h5 class="text-center font-weight-bold  sub-title">Identifiants</h5>
+				<h5 class="text-center font-weight-bold  sub-title" id="identifiants">Identifiants</h5>
 			</div>
 		</div>
 		<div class="row yanone light-shadow-round py-3 mb-3">
@@ -57,7 +57,7 @@
 				<div class="text-orange"> <img src="../img/logos/docubase-logo.png" class="float-left pr-3"> Docubase :</div>
 			</div>
 			<div class="col">
-				<span class="text-orange pl-3" id="docubase">Login :</span> <?= $mag->getDocubaseLogin()?><a href="<?=$docubaseLink?>" target="_blank"><i class="fas fa-external-link-alt pl-5 fa-sm"></i></a> <br>
+				<span class="text-orange pl-3" >Login :</span> <?= $mag->getDocubaseLogin()?><a href="<?=$docubaseLink?>" target="_blank"><i class="fas fa-external-link-alt pl-5 fa-sm"></i></a> <br>
 				<span class="text-orange pl-3">Mot de Passe : </span> <?= $mag->getDocubasePwd() ?><br>
 
 			</div>
@@ -154,7 +154,7 @@
 			<div class="row">
 				<div class="col"></div>
 				<div class="col">
-					<h5 class="text-center font-weight-bold  sub-title ">Listes de diffusion</h5>
+					<h5 class="text-center font-weight-bold  sub-title" id="ld">Listes de diffusion</h5>
 				</div>
 				<div class="col">
 					<div class="alert alert-warning">

@@ -327,75 +327,93 @@ DEBUT CONTENU CONTAINER
 				}
 				?>
 
+				<div class="fixed-zone">
+					<div class="text-center font-weight-bold">
+						<i class="fas fa-clipboard pr-2"></i>Aller à : Ctrl + Alt +
+					</div>
+					<div class="fixed-zone-row">
+						<div class="fixed-zone-col">
+							<span class="font-weight-bold"><u>d</u></span>ocubase edit<br>
+							<span class="font-weight-bold"><u>e</u></span>xploitation<br>
+						</div>
+						<div class="fixed-zone-col">
+							<span class="font-weight-bold"><u>i</u></span>dentifiants<br>
+							<span class="font-weight-bold"><u>l</u></span>istes de diffusion<br>
+
+						</div>
+					</div>
+
+				</div>
+
+
 			</div>
+
+
 			<script src="../js/autocomplete-searchmag.js"></script>
 
 			<script type="text/javascript">
-
-
 
 				function getScroll() {
 					var position = $( document ).scrollTop();
 					return position;
 				}
 
-				function jsScrollTo(hash) {
-					location.hash = "#" + hash;
-				}
-
-
-
 				$(document).ready(function(){
-			// masque pour saisie date et etc
-			$('#date_ouverture').mask('00/00/0000');
-			$('#date_fermeture').mask('00/00/0000');
-			$('#date_adhesion').mask('00/00/0000');
-			$('#date_resiliation').mask('00/00/0000');
-			$('#date_sortie').mask('00/00/0000');
-			$('#tel_sca').mask('00 00 00 00 00');
+	// masque pour saisie date et etc
+	$('#date_ouverture').mask('00/00/0000');
+	$('#date_fermeture').mask('00/00/0000');
+	$('#date_adhesion').mask('00/00/0000');
+	$('#date_resiliation').mask('00/00/0000');
+	$('#date_sortie').mask('00/00/0000');
+	$('#tel_sca').mask('00 00 00 00 00');
 
-			// gestion du scroll qd met à jour sca3 avec une donnée de la base mag
-			$('.btn-ico').on('click',function(){
-				var position=getScroll();
-							var oldUrl = $(this). attr("href"); // Get current url.
-							$(this). attr("href", oldUrl+"&position="+position); // Set herf value.
-						});
-			window.onload = function () {
-				var url = window.location.href;
-				url=url.split("#");
-				window.scrollTo(0, url[1]);
+	// gestion du scroll qd met à jour sca3 avec une donnée de la base mag
+	$('.btn-ico').on('click',function(){
+		var position=getScroll();
+					var oldUrl = $(this). attr("href"); // Get current url.
+					$(this). attr("href", oldUrl+"&position="+position); // Set herf value.
+				});
+	window.onload = function () {
+		var url = window.location.href;
+		url=url.split("#");
+		window.scrollTo(0, url[1]);
+	}
+
+	$("#email").keyup(function(){
+
+		var email = $("#email").val();
+		var filter = /^(([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)(\s*(;|,)\s*|\s*$))*$/;
+		if (!filter.test(email)) {
+			 //alert('Please provide a valid email address');
+			 $("#error_email").text(email+" is not a valid email");
+			 $("#error_email").addClass('text-alert');
+			 email.focus;
+			} else {
+				$("#error_email").text("");
+				$("#error_email").removeClass('text-alert');
 			}
-
-			$("#email").keyup(function(){
-
-				var email = $("#email").val();
-				var filter = /^(([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)(\s*(;|,)\s*|\s*$))*$/;
-				if (!filter.test(email)) {
-      			 //alert('Please provide a valid email address');
-      			 $("#error_email").text(email+" is not a valid email");
-      			 $("#error_email").addClass('text-alert');
-      			 email.focus;
-      			} else {
-      				$("#error_email").text("");
-      				$("#error_email").removeClass('text-alert');
-      			}
-      		});
-
-			document.onkeyup = function(e) {
-				if (e.ctrlKey && e.altKey  && e.which == 68) {
-					jsScrollTo('docubase');
-
-				}
-			};
-
-
 		});
 
+	document.onkeyup = function(e) {
+		if (e.ctrlKey && e.altKey  && e.which == 68) {
+			$('html, body').animate({scrollTop: $('#docubase').offset().top -360 }, 'slow');
+		}else if(e.ctrlKey && e.altKey  && e.which == 69){
+			$('html, body').animate({scrollTop: $('#exploit').offset().top -360 }, 'slow');
+		}else if (e.ctrlKey && e.altKey  && e.which == 73) {
+			$('html, body').animate({scrollTop: $('#identifiants').offset().top -360 }, 'slow');
+		}else if (e.ctrlKey && e.altKey  && e.which == 76) {
+			$('html, body').animate({scrollTop: $('#ld').offset().top -360 }, 'slow');
+		}
+	};
+
+
+});
 
 
 
-	</script>
 
-	<?php
-	require '../view/_footer-bt.php';
-	?>
+</script>
+
+<?php
+require '../view/_footer-bt.php';
+?>
