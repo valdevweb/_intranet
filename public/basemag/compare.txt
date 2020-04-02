@@ -25,6 +25,5 @@ voir export
 //backoffice
 
 
-SELECT *  FROM `stats_logs` WHERE `page` LIKE 'base-mag.php'  or `page` LIKE 'fiche-mag.php'
+SELECT *  FROM `stats_logs` WHERE (`page` LIKE 'base-mag.php'  or `page` LIKE 'fiche-mag.php') AND id_user !="user"
 ORDER BY `stats_logs`.`id_log`  DESC
-SELECT `PID_RAISOC`,`PID_TRFBO`,`PID_TRFSAV`,`PID_GESRES` FROM `mag_ctbt_param` WHERE 1
