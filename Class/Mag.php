@@ -64,10 +64,14 @@ class Mag{
     private $date_ouv;
     private $date_ferm;
     private $id_type;
+    private $acdlec_pano;
     private $acdlec_activite;
     private $acdlec_code;
     private $acdlec_numord;
     private $acdlec;
+    private $pole_sav_ctbt;
+    private $reservable;
+    private $backoffice;
 
 
     public function __construct(array $data){
@@ -110,7 +114,7 @@ class Mag{
     }
 
     public function getDateOuvertureFr(){
-     if(!empty($this->date_ouverture)){
+       if(!empty($this->date_ouverture)){
         $dateOuv=new DateTime($this->date_ouverture);
         return $dateOuv->format('d/m/Y');
     }
@@ -118,22 +122,22 @@ class Mag{
 
 }
 
-    public function getDateOuvFr(){
-     if(!empty($this->date_ouv)){
-        $dateOuv=new DateTime($this->date_ouv);
-        return $dateOuv->format('d/m/Y');
-    }
-    return $this->date_ouv;
+public function getDateOuvFr(){
+   if(!empty($this->date_ouv)){
+    $dateOuv=new DateTime($this->date_ouv);
+    return $dateOuv->format('d/m/Y');
+}
+return $this->date_ouv;
 
 }
 
 
-    public function getDateFermFr(){
-     if(!empty($this->date_ferm)){
-        $dateFerm=new DateTime($this->date_ferm);
-        return $dateFerm->format('d/m/Y');
-    }
-    return $this->date_ferm;
+public function getDateFermFr(){
+   if(!empty($this->date_ferm)){
+    $dateFerm=new DateTime($this->date_ferm);
+    return $dateFerm->format('d/m/Y');
+}
+return $this->date_ferm;
 
 }
 
@@ -177,17 +181,40 @@ public function getGelStr(){
         99 =>"nc",
     ];
 
-        return $arGel[$this->gel];
+    return $arGel[$this->gel];
 
 }
 
 public function getAcdlec(){
-    return $this->acdlec_activite.'-'.$this->acdlec_code.'-'.$this->acdlec_numord;
+    $cactivite = str_pad($this->acdlec_activite, 6, '0', STR_PAD_LEFT);
+    $nordre = str_pad($this->acdlec_numord, 5, '0', STR_PAD_LEFT);
+    return $this->acdlec_pano.'-'.$cactivite.'-'.$this->acdlec_code.'-'.$nordre;
 }
 
 
 public function setAcdlec($acdlec_activite, $acdlec_code,$acdlec_numord){
-    $this->acdlec=$acdlec_activite.'-'.$acdlec_code.'-'.$acdlec_numord;
+    $this->acdlec=$acdlec_pano.'-'.$acdlec_activite.'-'.$acdlec_code.'-'.$acdlec_numord;
+}
+
+public function getReservableStr(){
+    if($this->reservable==0){
+        return "non";
+    }elseif($this->reservable==1){
+        return "oui";
+    }
+    return "";
+}
+
+public function getBackofficeStr(){
+    $bo=[
+        2   =>"betti",
+        3   =>"aladin",
+        9   =>"abaco"
+    ];
+    if(isset($bo[$this->backoffice])){
+        return $bo[$this->backoffice];
+    }
+    return "non précisé";
 }
 
 
@@ -742,14 +769,14 @@ public function setDateFerm($date_ferm){
     return $this;
 }
 
-    public function getGel(){
+public function getGel(){
     return $this->gel;
-    }
+}
 
-    public function setGel($gel){
+public function setGel($gel){
     $this->gel = $gel;
     return $this;
-    }
+}
 
 
 public function getIdType(){
@@ -766,30 +793,66 @@ public function setIdType($id_type){
 
 
 
-    public function getAcdlecActivite(){
+public function getAcdlecActivite(){
     return $this->acdlec_activite;
-    }
+}
 
-    public function setAcdlecActivite($acdlec_activite){
+public function setAcdlecActivite($acdlec_activite){
     $this->acdlec_activite = $acdlec_activite;
     return $this;
-    }
+}
 
-    public function getAcdlecCode(){
+public function getAcdlecCode(){
     return $this->acdlec_code;
-    }
+}
 
-    public function setAcdlecCode($acdlec_code){
+public function setAcdlecCode($acdlec_code){
     $this->acdlec_code = $acdlec_code;
     return $this;
-    }
+}
 
-    public function getAcdlecNumord(){
+public function getAcdlecNumord(){
     return $this->acdlec_numord;
-    }
+}
 
-    public function setAcdlecNumord($acdlec_numord){
+public function setAcdlecNumord($acdlec_numord){
     $this->acdlec_numord = $acdlec_numord;
     return $this;
-    }
-    }
+}
+
+public function getAcdlecPano(){
+    return $this->acdlec_pano;
+}
+
+public function setAcdlecPano($acdlec_pano){
+    $this->acdlec_pano = $acdlec_pano;
+    return $this;
+}
+
+public function getPoleSavCtbt(){
+    return $this->pole_sav_ctbt;
+}
+
+public function setPoleSavCtbt($pole_sav_ctbt){
+    $this->pole_sav_ctbt = $pole_sav_ctbt;
+    return $this;
+}
+
+public function getReservable(){
+    return $this->reservable;
+}
+
+public function setReservable($reservable){
+    $this->reservable = $reservable;
+    return $this;
+}
+
+public function getBackoffice(){
+    return $this->backoffice;
+}
+
+public function setBackoffice($backoffice){
+    $this->backoffice = $backoffice;
+    return $this;
+}
+}
