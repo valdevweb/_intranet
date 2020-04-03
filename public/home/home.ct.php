@@ -33,40 +33,10 @@
 	<div class="row">
 
 		<div class="col  py-3">
-			<h4 class="text-center text-danger font-weight-bold">BTLec EST continue de travailler et d'assurer les livraisons</h4>
+			<h4 class="text-center text-danger font-weight-bold">Reprise des livraisons 48h TNT dans la région Grand Est :<br> redémarrage du service lundi 6 avril</h4>
 			<br><br>
-			<h4 class="text-center text-danger font-weight-bold">Restrictions livraisons 48h TNT - Région Grand Est</h4>
 
-				<div class="row">
-					<div class="col-lg-2"></div>
-					<div class="col border p-3">
-						Aux vues des circonstances actuelles exceptionnelles, TNT est contraint de restreindre ses services, avec effet immédiat, dans la région grand Est.<br>
-
-						En conséquence, à compter du 19 mars 2020 et jusqu’à nouvel ordre, <strong>TNT suspend ses services de ramassage et livraison, dans les sites et départements suivants, pour tous clients n’appartenant pas aux secteurs Santé et Alimentaire :</strong><br>
-						<span class="pl-5 ml-5">- Bas-Rhin (67)<br></span>
-						<span class="pl-5 ml-5">- Côte-d’Or (21)<br></span>
-						<span class="pl-5 ml-5">- Doubs (25)<br></span>
-						<span class="pl-5 ml-5">- Jura (39)<br></span>
-						<span class="pl-5 ml-5">- Haute-Marne (52)<br></span>
-						<span class="pl-5 ml-5">- Haut-Rhin (68)<br></span>
-						<span class="pl-5 ml-5">- Haute-Saône (70)<br></span>
-						<span class="pl-5 ml-5">- Meuse (55)<br></span>
-						<span class="pl-5 ml-5">- Moselle (57)<br></span>
-						<span class="pl-5 ml-5">- Saône-et-Loire (71)<br></span>
-						<span class="pl-5 ml-5">- Territoire de Belfort (90)<br></span>
-
-						Par conséquent toutes les livraisons 48h00 sur les départements ci-dessus sont suspendues.<br>
-
-						Si toutefois nous recevons une commande 48h00 celle-ci sera rajoutée à votre prochaine livraison de permanent.<br>
-
-						Nous vous informons également pour les autres départements que si un colis n'est pas réceptionné à la 1ière présentation de TNT, celui-ci revient désormais d'office sur BTLec et sera rajouté à votre prochaine livraison de permanent. Il n'y a plus aucun 2ième présentation.<br>
-					</div>
-					<div class="col-lg-2"></div>
-
-				</div>
-
-
-
+			<h4 class="text-center text-danger font-weight-bold">BTLec EST continue de travailler et d'assurer les livraisons</h4>
 
 		</div>
 	</div>
