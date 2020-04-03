@@ -112,9 +112,9 @@ if(isset($_POST['filter'])){
 
 		}else{
 			echo "la";
-				echo "<pre>";
-				print_r($_POST['date_fermeture']);
-				echo '</pre>';
+			echo "<pre>";
+			print_r($_POST['date_fermeture']);
+			echo '</pre>';
 
 			$_SESSION['mag_filters']['date_fermeture_deb']=$_POST['date_fermeture'][0];
 			$_SESSION['mag_filters']['date_fermeture_fin']=$_POST['date_fermeture'][1];
@@ -343,12 +343,22 @@ DEBUT CONTENU CONTAINER
 		$("#radio-fermeture").change(function(){
 			if($(this).prop("checked")) {
 				$('#fermeture-option').attr('class','show');
+				$('.acdlec').prop('checked', this.checked);
+				$('#no-filtre-centrale').prop('checked', this.checked);
+				$('.centrale').removeAttr('checked');
+
+
 			}
 		});
 
 		if($("#radio-fermeture").prop("checked")) {
 			$('#fermeture-option').attr('class','show');
 		}
+
+		// if($("#radio-fermeture").click(function ()) {
+		// 	$('.centrale').removeAttr('checked');
+		// 	$('.acdlec').prop('checked', this.checked);
+		// });
 
 
 		$("#radio-ouverture").change(function(){
