@@ -14,7 +14,7 @@
 										<div class="form-check  pl-5">
 											<input type="checkbox" class="form-check-input centrale" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_doris']?>"
 											<?= checkChecked($listCentrale[$i]['centrale_doris'],'centraleSelected')?>>
-											<label class="form-check-label"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
+											<label class="form-check-label  <?= in_array($listCentrale[$i]['centrale_doris'],$mainCentraleIds)? 'font-weight-bold' :""?>"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
 										</div>
 									</div>
 									<?php $iCentrale++ ?>
@@ -24,7 +24,7 @@
 											<div class="form-check  pl-5">
 												<input type="checkbox" class="form-check-input centrale" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_doris']?>"
 												<?= checkChecked($listCentrale[$i]['centrale_doris'],'centraleSelected')?>>
-												<label class="form-check-label"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
+												<label class="form-check-label <?= in_array($listCentrale[$i]['centrale_doris'],$mainCentraleIds)? 'font-weight-bold' :""?>"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
 											</div>
 										</div>
 									</div>
@@ -34,7 +34,7 @@
 											<div class="form-check  pl-5">
 												<input type="checkbox" class="form-check-input centrale" name="centraleSelected[]" value="<?=$listCentrale[$i]['centrale_doris']?>"
 												<?= checkChecked($listCentrale[$i]['centrale_doris'],'centraleSelected')?>>
-												<label class="form-check-label"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
+												<label class="form-check-label <?= in_array($listCentrale[$i]['centrale_doris'],$mainCentraleIds)? 'font-weight-bold' :""?>"><?=ucfirst(strtolower($listCentrale[$i]['centrale']))?></label>
 											</div>
 										</div>
 										<?php $iCentrale++ ?>
@@ -102,22 +102,21 @@
 											</div>
 										</div>
 									</div>
-									<div class="col-3">
-										<p class="rubrique text-main-blue font-weight-bold">Ouvert/fermé :</p>
+									<div class="col">
+										<p class="rubrique text-main-blue font-weight-bold">Données manquantes :</p>
 										<div class="form-check pl-5">
-											<input type="radio" class="form-check-input" name="sorti[]" value="0" <?= checkChecked(0,'sorti')?>>
-											<label class="form-check-label">Ouvert</label>
+											<input type="checkbox" class="form-check-input" name="no-docubase[]" value="1" <?= checkChecked(1,'no-docubase')?>>
+											<label class="form-check-label">Codes docubase</label>
 										</div>
-										<div class="form-check pl-5">
-											<input type="radio" class="form-check-input" name="sorti[]" value="9" <?= checkChecked(9,'sorti')?>>
-											<label class="form-check-label">Fermé</label>
+										<div class="form-check  pl-5">
+											<input type="checkbox" class="form-check-input" name="no-portail[]" value="1" <?= checkChecked(1,'no-portail')?>>
+											<label class="form-check-label">Compte portail</label>
 										</div>
-
 									</div>
 								</div>
 								<div class="row">
 									<!--					FILTRE PAR CM				-->
-									<div class="col">
+									<div class="col-3">
 										<p class="rubrique text-main-blue font-weight-bold">Suivi par :</p>
 										<?php foreach ($listCm as $key => $cm): ?>
 											<div class="form-check pl-5">
@@ -130,17 +129,44 @@
 											<label class="form-check-label">Non suivi</label>
 										</div>
 									</div>
-									<div class="col">
-										<p class="rubrique text-main-blue font-weight-bold">Données manquantes :</p>
-										<div class="form-check form-check-inline pl-5">
-											<input type="checkbox" class="form-check-input" name="no-docubase[]" value="1" <?= checkChecked(1,'no-docubase')?>>
-											<label class="form-check-label">Codes docubase</label>
+									<div class="col-3">
+										<p class="rubrique text-main-blue font-weight-bold">Ouvert/fermé :</p>
+										<div class="form-check pl-5">
+											<input type="radio" class="form-check-input" name="sorti[]" id="radio-ouverture" value="0" <?= checkChecked(0,'sorti')?>>
+											<label class="form-check-label">Ouvert</label>
 										</div>
-										<div class="form-check form-check-inline pl-5">
-											<input type="checkbox" class="form-check-input" name="no-portail[]" value="1" <?= checkChecked(1,'no-portail')?>>
-											<label class="form-check-label">Compte portail</label>
+										<div class="form-check pl-5">
+											<input type="radio" class="form-check-input" name="sorti[]" id="radio-fermeture" value="9" <?= checkChecked(9,'sorti')?>>
+											<label class="form-check-label">Fermé</label>
 										</div>
 									</div>
+									<div class="col">
+										<!-- ./ début fermeture option -->
+										<div id="fermeture-option" class="hide">
+											<div class="row">
+												<div class="col">
+													<div class="rubrique text-main-blue font-weight-bold">Date de fermeture comprise entre :</div>
+
+												</div>
+											</div>
+											<div class="row">
+												<div class="col">
+													<div class="form-group">
+														<label for="date_fermeture_deb">Début de periode : </label>
+														<input type="date" class="form-control" name="date_fermeture[]" value="<?= isset($_SESSION['mag_filters']['date_fermeture_deb'])? $_SESSION['mag_filters']['date_fermeture_deb'] :"" ?>" id="date_fermeture_deb">
+													</div>
+												</div>
+												<div class="col">
+													<div class="form-group">
+														<label for="date_fermeture_fin">Fin de période :</label>
+														<input type="date" class="form-control" name="date_fermeture[]" value="<?= isset($_SESSION['mag_filters']['date_fermeture_fin'])? $_SESSION['mag_filters']['date_fermeture_fin'] :"" ?>"  id="date_fermeture_fin">
+													</div>
+												</div>
+											</div>
+										</div>
+										<!-- ./ fin fermeture option -->
+									</div>
+
 								</div>
 
 

@@ -17,6 +17,7 @@
 					<th>Ville</th>
 					<th>Type Ets</th>
 					<th>Centrale</th>
+					<th>Date fermeture</th>
 					<th>Chargé de mission</th>
 				</tr>
 			</thead>
@@ -31,6 +32,7 @@
 							<td class="text-sca"><?=$mag['cp_sca'] .' '.$mag['ville']?></td>
 							<td class="text-gessica"><?= isset($ets[ $mag['acdlec_code']])?$ets[ $mag['acdlec_code']]:"" ?></td>
 							<td class="text-sca"><?=isset($centraleName[$mag['centrale_doris']])?$centraleName[$mag['centrale_doris']]:"" ?></td>
+							<td class="text-sca"><?= !empty($mag['date_fermeture'])? (new DateTime($mag['date_fermeture']))->format('d-m-Y'):"" ?></td>
 							<td><?= UserHelpers::getFullname($pdoUser, $mag['id_cm_web_user'])?></td>
 						</tr>
 					<?php endforeach ?>

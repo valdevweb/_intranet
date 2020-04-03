@@ -44,7 +44,7 @@ $listCodeAcdlec=$magDbHelper->getListCodeAcdlec();
 $centraleName=Helpers::arrayFlatten($listCentrale,"centrale_doris","centrale");
 $ets=Helpers::arrayFlatten($listCodeAcdlec,"acdlec_code","nom_ets");
 
-
+$mainCentraleIds=[20,10,30,50,90,100,110,120,160,170,250,210];
 
 function checkChecked($value,$field){
 	if(isset($_SESSION['mag_filters']) && isset($_SESSION['mag_filters'][$field])){
@@ -102,13 +102,39 @@ if(isset($_POST['filter'])){
 	$paramList[]=$paramAcdlec;
 
 
-	if(isset($_POST['sorti'])){
+	if(isset($_POST['sorti']) && $_POST['sorti'][0]==9){
 		$_SESSION['mag_filters']['sorti']=$_POST['sorti'];
-		$paramClosed=join(' OR ', array_map(function($value){return 'sorti='.$value;},$_POST['sorti']));
+		if(empty($_POST['date_fermeture'][0])){
+			echo "ici";
+			$_SESSION['mag_filters']['date_fermeture_deb']="2000-12-31";
+			$_SESSION['mag_filters']['date_fermeture_fin']=date('Y-m-d');
+			$paramClosed=join(' OR ', array_map(function($value){return 'sorti='.$value;},$_POST['sorti']));
 
+		}else{
+			echo "la";
+				echo "<pre>";
+				print_r($_POST['date_fermeture']);
+				echo '</pre>';
+
+			$_SESSION['mag_filters']['date_fermeture_deb']=$_POST['date_fermeture'][0];
+			$_SESSION['mag_filters']['date_fermeture_fin']=$_POST['date_fermeture'][1];
+			$paramClosed=join(' OR ', array_map(function($value){return 'sorti='.$value;},$_POST['sorti']));
+			$paramClosed.=" AND ( date_fermeture BETWEEN '" .$_SESSION['mag_filters']['date_fermeture_deb'] ."' AND '".$_SESSION['mag_filters']['date_fermeture_fin'] ."')";
+		}
+
+
+	}elseif(isset($_POST['sorti']) && $_POST['sorti'][0]==0){
+
+		$_SESSION['mag_filters']['sorti']=[];
+		unset($_SESSION['mag_filters']['date_fermeture_deb']);
+		unset($_SESSION['mag_filters']['date_fermeture_fin']);
+		$paramClosed='';
 	}else{
 		$_SESSION['mag_filters']['sorti']=[];
+		unset($_SESSION['mag_filters']['date_fermeture_deb']);
+		unset($_SESSION['mag_filters']['date_fermeture_fin']);
 		$paramClosed='';
+
 	}
 	$paramList[]=$paramClosed;
 
@@ -157,6 +183,7 @@ if(isset($_POST['clear_filter'])){
 }
 
 
+
 $joinParam=function($value){
 	if(!empty($value)){
 		return '('.$value.')';
@@ -169,7 +196,7 @@ if(isset($paramList)){
 	$query="SELECT mag.*,sca3.*,web_users.users.login, web_users.users.nohash_pwd  FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec $params GROUP BY mag.id";
 	$_SESSION['mag_filters']['query']=$query;
 
-// echo $query;
+
 	$req=$pdoMag->query($query);
 	$magList=$req->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -179,11 +206,12 @@ if(isset($paramList)){
 if(!isset($_POST['filter'])){
 	if(isset($_SESSION['mag_filters'])){
 		unset($_SESSION['mag_filters']);
-
 	}
 
 	// sans filtre centrale
-	$_SESSION['mag_filters']['centraleSelected'][]=1;
+	$_SESSION['mag_filters']['centraleSelected']=$mainCentraleIds;
+	$sessionCentrale=join(' OR ', array_map(function($value){return 'centrale_doris='.$value;},$_SESSION['mag_filters']['centraleSelected']));
+
 		// uniquement les établissements de type magasin
 
 	$_SESSION['mag_filters']['acdlecSelected']=["010","029","070","078","101","102","111","114","116","118","119"];
@@ -194,7 +222,7 @@ if(!isset($_POST['filter'])){
 
 		// uniquement les magasins  ouverts
 	$_SESSION['mag_filters']['sorti'][]=0;
-	$query="SELECT mag.*,sca3.*,web_users.users.login, web_users.users.nohash_pwd FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec WHERE (sorti=0) AND ({$sessionAcdlec}) GROUP BY mag.id";
+	$query="SELECT mag.*,sca3.*,web_users.users.login, web_users.users.nohash_pwd FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec WHERE (sorti=0) AND ({$sessionAcdlec}) AND ({$sessionCentrale}) GROUP BY mag.id";
 	$_SESSION['mag_filters']['query']=$query;
 
 	// echo $query;
@@ -210,7 +238,7 @@ $newRowCentrale=3;
 $nbResult=count($magList);
 $countItem=0;
 
-
+// 1ere date de fermeture 2000-12-31
 function compareMag($fieldGessica, $fieldSca, $key, $magList){
 	$gessica = str_replace(' ', '', $magList[$key][$fieldGessica]);
 	$sca = str_replace(' ', '', $magList[$key][$fieldSca]);
@@ -312,6 +340,24 @@ DEBUT CONTENU CONTAINER
 		$('.show-btn').on("click",function(){
 			$( "tr.ok" ).show();
 		});
+		$("#radio-fermeture").change(function(){
+			if($(this).prop("checked")) {
+				$('#fermeture-option').attr('class','show');
+			}
+		});
+
+		if($("#radio-fermeture").prop("checked")) {
+			$('#fermeture-option').attr('class','show');
+		}
+
+
+		$("#radio-ouverture").change(function(){
+			if($(this).prop("checked")){
+				$('#fermeture-option').attr('class','hide');
+
+			}
+		});
+
 
 	});
 

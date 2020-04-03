@@ -305,7 +305,7 @@ DEBUT CONTENU CONTAINER
 								<?= (isset($mag))? 'Leclerc '.$mag->getDeno(): "Fiche magasin" ?>
 							</h1>
 
-							<h5 class="yanone">Code BTLec : <span class="text-orange" ><?= $mag->getId() .'</span><span class="pl-5">Panonceau Galec : <span class="text-orange">'.$mag->getGalec().'</span>'?> <span class="text-orange pl-5">Centrale : </span><?=$centraleSca?></h5>
+							<h5 class="yanone">Code BTLec : <span class="text-orange" ><?= $mag->getId() .'</span><span class="pl-5">Panonceau Galec : <span class="text-orange">'.$mag->getGalec().'</span>'?> <span class="text-orange pl-5">Centrale : </span><?=$centraleSca?> </h5>
 
 						</div>
 						<?php

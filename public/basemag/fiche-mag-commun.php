@@ -7,6 +7,7 @@
 					<i class="fas fa-map-marked pr-3"></i>
 					<?= 'Leclerc '.$mag->getDeno()?>
 				</span>
+				<?= !empty($mag->getDateFermeture())? '<span class="text-orange pl-5">Fermé le : </span>' .$mag->getDateFermetureFr() :''?>
 			</div>
 
 		</div>
