@@ -12,21 +12,23 @@ function pwdHash($pwd){
 
 function btInfo($pdoBt)
 {
-	$req=$pdoBt->prepare("SELECT * FROM btlec WHERE id= :btlec");
+	$req=$pdoBt->prepare("SELECT * FROM btlec WHERE id_webuser= :id_webuser");
 	$req->execute(array(
-		':btlec'		=>$_SESSION['id_btlec']
+		':id_webuser'		=>$_SESSION['id_web_user']
 	));
-
-	return $req->fetch(PDO::FETCH_ASSOC);
+	$data=$req->fetch(PDO::FETCH_ASSOC);
+	if(!empty($data)){
+		return $data;
+	}
+	return "";
 }
 // info mlag table sca3
-function magInfo($pdoBt){
+function magInfo($pdoMag){
 
-	$req=$pdoBt->prepare("SELECT * FROM sca3 WHERE galec= :galec");
+	$req=$pdoMag->prepare("SELECT * FROM mag WHERE galec= :galec");
 	$req->execute(array(
 		':galec'		=>$_SESSION['id_galec']
 	));
-
 	return $req->fetch(PDO::FETCH_ASSOC);
 	// return $req->errorInfo();
 }
@@ -56,7 +58,7 @@ function getDateMajNohash($pdoUser){
 		':id_web_user'		=>$_SESSION['id_web_user']
 
 	]
-	);
+);
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
@@ -72,157 +74,124 @@ function updateNoHash($pdoUser){
 	]);
 	return $req->rowCount();
 }
+function updatePwd($pdoUser){
+	$req=$pdoUser->prepare('UPDATE users SET pwd=:convertedPwd, old_pwd=:old_pwd  WHERE login= :postLogin');
+	$req->execute(array(
+		':convertedPwd'		=> $convertedPwd,
+		':old_pwd'			=>"",
+		':postLogin'		=> $_POST['login']
 
+	));
+	return $req->rowCount();
+
+}
 /*_____________________________________________________________
 *
 * 							login
 _______________________________________________________________*/
 
-function login($pdoUser, $pdoBt,$pdoSav)
-{
-	//ETAPE 1 on récupère les infos du user grace au login
+
+
+function loginExist($pdoUser){
 	$req=$pdoUser->prepare("SELECT * FROM users WHERE login= :postLogin");
 	$req->execute(array(
 		':postLogin'	=> $_POST['login']
 	));
-	//initialisation du message d'erreur
-	$errors=[];
-//	1 LOGIN existe ??
-	if(!$web_users=$req->fetch(PDO::FETCH_ASSOC))
-		{
-			$errors[]= "le login n'existe pas";
-		}
-		else
-		{
-		// on vérifie si on a tj un vieux mot de passe
-			if (empty($web_users['old_pwd']))
-			{
-			// cas 1 : MOT DE PASSE DEJA CONVERTI
-				if(!password_verify($_POST['pwd'], $web_users['pwd']))
-				{
-					$errors[] = "le mot de passe est erroné";
-				}
-
-			}
-		//cas 2 : VIEUX MDP
-			else
-			{
-			// vérifie que le vieux mot de passe correspond au login
-				if(sha1($_POST['pwd'])==$web_users['old_pwd'])
-				{
-					// convertion
-					$convertedPwd=pwdHash($_POST['pwd']);
-					// maj la db : sup old pwd et update pwd
-					$req=$pdoUser->prepare('UPDATE users SET pwd=:convertedPwd, old_pwd=:old_pwd  WHERE login= :postLogin');
-					$result=$req->execute(array(
-						':convertedPwd'		=> $convertedPwd,
-						':old_pwd'			=>"",
-						':postLogin'		=> $_POST['login']
-
-					));
-				}
-				else
-				{
-					$errors[]= "mot de passe erroné -2";
-				}
-		} //fin traitement vieux mot de passe
+	$data=$req->fetch(PDO::FETCH_ASSOC);
+	if(!empty($data)){
+		return $data;
 	}
-	if (count($errors) == 0)
-	{
+	return false;
+}
+// function login($pdoUser, $pdoBt,$pdoSav)
+
+
+
+
+// 2 vérifie correspondance mot de passe saisi et mot de passe db identique
+// + converti mdp si tj sha1
+
+// cas 1 : MOT DE PASSE DEJA CONVERTI
+function checkPwd($webUser,$pdoMag){
+	if (empty($webUser['old_pwd']) && !password_verify($_POST['pwd'], $webUser['pwd'])){
+		$errors[] = "mot de passe incorrect";
+	}elseif(empty($webUser['old_pwd']) && password_verify($_POST['pwd'], $webUser['pwd'])){
+		return true;
+	}elseif(!empty($webUser['old_pwd'])){
+		if(sha1($_POST['pwd'])!=$webUser['old_pwd']){
+			return $errors[]= "mot de passe incorrect";
+
+		}else{
+
+			$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
+			$salt = base64_encode($salt);
+			$options = ['salt' => $salt];
+			$pwdHash = password_hash($pwd, PASSWORD_BCRYPT, $options);
+			$req=$pdoUser->prepare('UPDATE users SET pwd=:convertedPwd, old_pwd=:old_pwd  WHERE login= :postLogin');
+			$result=$req->execute(array(
+				':convertedPwd'		=> $convertedPwd,
+				':old_pwd'			=>"",
+				':postLogin'		=> $_POST['login']
+
+			));
+
+			return true;
+
+		}
+	}
+
+}
+
+
+
+function initSession($pdoBt, $pdoSav, $pdoMag, $webUser){
 		//commun
-		$_SESSION['id']=$web_users['id'];
-		$_SESSION['id_web_user']=$web_users['id'];
-		$_SESSION['user']=$_POST['login'];
-		$_SESSION['type']=$web_users['type'];
-		if(isset($_POST['goto']))
-		{
-			$_SESSION['goto']=$_POST['goto'];
-		}
+	$_SESSION['id']=$webUser['id'];
+	$_SESSION['id_web_user']=$webUser['id'];
+	$_SESSION['user']=$_POST['login'];
+	$_SESSION['type']=$webUser['type'];
 
-		// cas spécifique pour salon pour luc puissse saisir invitation
-		if($_SESSION['user']=="MULLER" || $_SESSION['user']=="user")
-		{
-			// recup info mag auquel le user bt est rattaché
-			$_SESSION['id_galec']=$web_users['galec'];
-			$scatrois=magInfo($pdoBt);
-			$_SESSION['nom']=$scatrois['mag'];
-			$_SESSION['city']=$scatrois['city'];
-			$_SESSION['code_bt']=$scatrois['btlec'];
-			$_SESSION['id_btlec']=$web_users['id_bt'];
-			$btInfo=btInfo($pdoBt);
-			$nom=$btInfo['nom'];
-			$prenom=$btInfo['prenom'];
-			$_SESSION['nom_bt'] = $prenom .' ' .$nom;
-			$_SESSION['id_service']=$btInfo['id_service'];
-			$_SESSION['spe']="yes";
-		}
-
-		if($_SESSION['type']=="mag" || $_SESSION['type']=="bbj" || $_SESSION['type']=="centrale" || $_SESSION['type']=='adh')
-		{
-			$_SESSION['id_galec']=$web_users['galec'];
-
-
-		//recup info mag dans sca3
-			$scatrois=magInfo($pdoBt);
-			$_SESSION['nom']=$scatrois['mag'];
-			$_SESSION['centrale']=$scatrois['centrale'];
-			$_SESSION['city']=$scatrois['city'];
-			$_SESSION['code_bt']=$scatrois['btlec'];
-			// $_SESSION['id_btlec']=$web_users['id_bt'];
-		}
-		if( $_SESSION['type']=="mag" || $_SESSION['type']=="bbj")
-		{
-			$magSav=getSav($pdoSav);
-			$_SESSION['sav']=$magSav['sav'];
-
-		}
-		if($_SESSION['type']=='scapsav')
-		{
-			$savInfo=getUserSavInfo($pdoSav);
-			$prenom=$savInfo['prenom'];
-			$nom=$savInfo['nom'];
-			$_SESSION['nom'] = $prenom .' ' .$nom;
+	if(isset($_POST['goto'])){
+		$_SESSION['goto']=$_POST['goto'];
+	}
+	if($_SESSION['type']=='scapsav'){
+		$savInfo=getUserSavInfo($pdoSav);
+		if(!empty($savInfo)){
+			$_SESSION['nom'] = $savInfo['prenom'] .' ' .$savInfo['nom'];
 			$_SESSION['sav']=$savInfo['sav'];
-
 		}
+	}
 
-		if($_SESSION['type']=='btlec')
-		{
-
-
-
-
-			$_SESSION['id_btlec']=$web_users['id_bt'];
-		//recup info user dans table btlec
-			$btInfo=btInfo($pdoBt);
-
+	if($_SESSION['type']=='btlec' || $_SESSION['type']=="autre" || $_SESSION['type']=="mask"){
+		$btInfo=btInfo($pdoBt);
+		if(!empty($btInfo)){
 			$nom=$btInfo['nom'];
 			$prenom=$btInfo['prenom'];
-			$_SESSION['nom'] = $prenom .' ' .$nom;
-			// test
-			$_SESSION['nom_bt'] = $prenom .' ' .$nom;
+			$_SESSION['nom_bt']= $btInfo['prenom'] .' ' .$btInfo['nom'];
+			$_SESSION['nom'] = $btInfo['prenom'] .' ' .$btInfo['nom'];
 			$_SESSION['id_service']=$btInfo['id_service'];
-
-		}
-		if($_SESSION['type']=="autre" ||$_SESSION['type']=="inconnu")
-		{
+			$_SESSION['id_btlec']=$webUser['id_bt'];
+		}else{
 			$_SESSION['nom'] = "";
 			$_SESSION['nom_bt'] = "";
+			$_SESSION['id_service']="";
+			$_SESSION['id_btlec']="";
 		}
-
-		//----------------------------------------------------
-		//  tout est ok, on redirige
-		//----------------------------------------------------
-		$success[]="user authentifié";
-		return $success;
-
-
-
 	}
-	else
-	{
-		return $errors;
 
+	if($_SESSION['type']=="mag" || $_SESSION['type']=="bbj" || $_SESSION['type']=="centrale" || $_SESSION['type']=='adh'){
+		$_SESSION['id_galec']=$webUser['galec'];
+		$scatrois=magInfo($pdoMag);
+		$magSav=getSav($pdoSav);
+		if(!empty($scatrois)){
+			$_SESSION['nom']=$scatrois['deno'];
+			$_SESSION['centrale']=$scatrois['centrale'];
+			$_SESSION['city']=$scatrois['ville'];
+			$_SESSION['code_bt']=$scatrois['id'];
+		}
+		if(!empty($magSav)){
+			$_SESSION['sav']=$magSav['sav'];
+		}
 	}
 }
 
