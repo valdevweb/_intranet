@@ -5,7 +5,7 @@ require 'functions/stats.fn.php';
 
 // on connecte l'utilisateur et recup $_SESSION['id']=$id (id web_user) et $_SESSION['user']=$_POST['login'];
 require('functions/login.fn.php');
-$err='';
+
 /*---------------------------------------------------------------------*/
 /* 						détection navigateur     							*/
 /*---------------------------------------------------------------------*/
@@ -37,34 +37,38 @@ elseif($pos2 !==false)
 
 
 
-if(!empty( $_SERVER['QUERY_STRING']))
-{
+if(!empty( $_SERVER['QUERY_STRING'])){
 		//on met le goto dans champ cahcé du formulaire et la fonction de login recupère la valeur $_POST['goto'] pour la mettre dans session
 	$gotoMsg=$_SERVER['QUERY_STRING'];
-
 }
 // stats
-if(isset($_POST['connexion']))
-{
+if(isset($_POST['connexion'])){
+	$loginExist=loginExist($pdoUser);
+	if($loginExist){
+		checkPwd()
+		$msg=initSession($pdoBt, $pdoSav, $pdoMag);
+		if(isset($_SESSION['id_web_user']) && !isset($_SESSION['id_web_user'])){
+			$action="user authentification";
+			$page=basename(__file__);
+			addRecord($pdoStat,$page,$action, $msg[0]);
 
-	extract($_POST);
-	$err=login($pdoUser, $pdoBt, $pdoSav);
+			if($msg[0]=="user authentifié")	{
 
-
-	$action="user authentification";
-	$page=basename(__file__);
-	addRecord($pdoStat,$page,$action, $err[0]);
-
-	if($err[0]=="user authentifié")
-	{
-		// echo $pwd;
-		$dateMajPwd=getDateMajNohash($pdoUser);
-		if($dateMajPwd['date_maj_nohash']==null)
-		{
-			updateNoHash($pdoUser);
+				$dateMajPwd=getDateMajNohash($pdoUser);
+				if($dateMajPwd['date_maj_nohash']==null){
+					updateNoHash($pdoUser);
+				}
+				header('Location:'. ROOT_PATH. '/public/home/home.php');
+			}
+		}else{
+			$msg[]="une erreur est survenue. Merci de contacter le service développement";
 		}
-		header('Location:'. ROOT_PATH. '/public/home/home.php');
+
+	}else{
+		$msg[]="le login n'existe pas";
 	}
+
+
 }
 
 // if(isset($_GET['deco'])){
@@ -157,10 +161,10 @@ if(!empty($revRes))
 				<h3 class="mb-4 text-white pb-3">Bazar Technique E.Leclerc </h3>
 				<p><img id="photo-bt" class="boxshadow" src="public/img/index/front-bt-800.jpg"></p>
 				<?php
-				if(!empty($err)){
-					foreach ($err as $errStrg)
+				if(!empty($msg)){
+					foreach ($msg as $msgStrg)
 					{
-						echo "<p class='w3-red'>" . $errStrg ."</p>";
+						echo "<p class='w3-red'>" . $msgStrg ."</p>";
 					}
 				}
 				?>
