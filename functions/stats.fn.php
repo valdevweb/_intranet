@@ -1,32 +1,6 @@
 <?php
-// function addRecord($pdoStat,$page,$action, $descr)
-// {
-// 	global $version;
-// 	if($version=="_"){
-// 		$typeLog="dev";
-// 	}
-// 	else
-// 	{
-// 		$typeLog="prod";
-// 	}
-// 	$date=new DateTime();
-// 	$date=$date->format('Y-m-d H:i:s');
-// 	$req=$pdoStat->prepare('INSERT INTO stats_logs (type_log,id_user,site,date_heure,page,action,description)
-// 		VALUE(:type_log,:id_user,:site,:date_heure,:page,:action,:description)');
-// 	$req->execute(array(
-// 		':type_log'=>$typeLog,
-// 		':id_user'=>$_SESSION['user'],
-// 		':site'	=>'portail BT',
-// 		':date_heure'=>$date,
-// 		':page'		=>$page,
-// 		':action'	=>$action,
-// 		':description'=>$descr
-// 	));
-// 	return $req->fetch(PDO::FETCH_ASSOC);
-// }
 
-function addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
-{
+function addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null){
 
 	if(VERSION=="_"){
 		$typeLog="dev";
