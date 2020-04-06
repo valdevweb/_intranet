@@ -18,6 +18,7 @@ require_once '../../vendor/autoload.php';
 require_once '../../Class/MagDbHelper.php';
 require_once '../../Class/Mag.php';
 require_once '../../Class/Helpers.php';
+require_once '../../Class/UserHelpers.php';
 
 
 //---------------------------------------
@@ -110,6 +111,7 @@ if (isset($_GET['id'])){
 	$webusers=$magDbHelper->getWebUser($mag->getGalec());
 	$centreRei=$magDbHelper->centreReiToString($mag->getCentreRei());
 	$listTypesMag=$magDbHelper-> getListType();
+	$listCm=UserHelpers::getUserByService($pdoUser, 17);
 
 	// ld
 	$ldRbt=$magDbHelper-> getMagLd($mag->getGalec(),'-RBT');
@@ -167,6 +169,48 @@ if(isset($_POST['maj'])){
 		$errors[]="Une erreur est survenue, impossible de mettre  à jour la base de donnée";
 	}
 }
+
+if(isset($_POST['submit_acdlec'])){
+	$req=$pdoMag->prepare("INSERT INTO acdlec (code, nom_ets) VALUES(:code, :nom_ets)");
+	$req->execute([
+		':code'	=>$_POST['code'],
+		':nom_ets'	=>$_POST['nom']
+	]);
+	$added=$req->rowCount();
+	if($added==1){
+		$successQ='success=majacdlec';
+		unset($_POST);
+		header("Location: ".$_SERVER['PHP_SELF'].'?id='.$_GET['id'].'&'.$successQ,true,303);
+	}else{
+		$error=$req->errorInfo();
+		$errors[]="impossible d'ajouter le code : ".$error[2];
+	}
+}
+
+if(isset($_POST['submit_cm'])){
+	if(!empty($_POST['cmSelected'])){
+		//  vérifier si adéja attribution
+		$req=$pdoMag->prepare("UPDATE mag SET id_cm_web_user= :id_cm_web_user, date_update= :date_update WHERE id= :id");
+		$req->execute([
+			':id'		=>$_GET['id'],
+			':id_cm_web_user'	=>$_POST['cmSelected'],
+			':date_update'	=>date('Y-m-d H:i:s')
+		]);
+		$updated=$req->rowCount();
+
+
+		if($updated==1){
+			$successQ='success=majcm';
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF'].'?id='.$_GET['id'].'&'.$successQ,true,303);
+		}else{
+			$error=$req->errorInfo();
+
+			$errors[]="impossible de mettre à jour la base de donnée : " . $error[2];
+		}
+	}
+}
+
 if(isset($_POST['submitdocubase'])){
 
 	// maj db dans tous les cas
@@ -244,6 +288,8 @@ if(isset($_GET['success'])){
 		'maj'=>'Magasin mis à jour avec succès',
 		'udocmail'=>'Mise à jour des codes docubases et envoi du mail effectués avec succès',
 		'udoc'=>'Mise à jour des codes docubases effectuée avec succès',
+		'majcm'=>'Attribution effectuée avec succès',
+		'majacdlec'=>'Code ajouté avec succès',
 	];
 	$success[]=$arrSuccess[$_GET['success']];
 }

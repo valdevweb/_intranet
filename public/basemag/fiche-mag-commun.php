@@ -146,6 +146,11 @@
 							<span class="text-orange">Backoffice :</span>
 							<?= $mag->getBackofficeStr()?>
 						</div>
+						<div class="col-3">
+							<span class="text-orange">Chargé de mission :</span>
+
+							<?= UserHelpers::getFullname($pdoUser, $mag->getIdCmWebUser())?>
+						</div>
 					</div>
 				</div>
 

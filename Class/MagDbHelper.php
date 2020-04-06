@@ -135,9 +135,14 @@ class MagDbHelper{
 
 
 
+	public function getListCodeAcdlecUtilise(){
+		$req=$this->pdo->query("SELECT acdlec_code, nom_ets  FROM mag LEFT JOIN acdlec ON acdlec_code=acdlec.code WHERE acdlec_code IS NOT NULL AND acdlec_code!='' GROUP BY acdlec_code ORDER BY acdlec_code");
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
 	public function getListCodeAcdlec(){
-				$req=$this->pdo->query("SELECT acdlec_code, nom_ets  FROM mag LEFT JOIN acdlec ON acdlec_code=acdlec.code WHERE acdlec_code IS NOT NULL AND acdlec_code!='' GROUP BY acdlec_code ORDER BY acdlec_code");
-				return $req->fetchAll(PDO::FETCH_ASSOC);
+		$req=$this->pdo->query("SELECT * FROM acdlec ORDER BY code");
+		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 }
