@@ -213,7 +213,7 @@ if(isset($_POST['submit_cm'])){
 
 if(isset($_POST['submit_crea'])){
 
-	$req=$pdoMag->prepare("INSERT INTO sca3 (btlec_sca, galec_sca, deno_sca, ad1_sca, ad2_sca, cp_sca, ville_sca, tel_sca, fax_sca, centrale_sca, surface_sca, date_ouverture, pole_sav_sca) VALUES (:btlec_sca, :galec_sca, :deno_sca, :ad1_sca, :ad2_sca, :cp_sca, :ville_sca , :tel_sca, :fax_sca, :centrale_sca, :surface_sca, :date_ouverture, :pole_sav_sca)");
+	$req=$pdoMag->prepare("INSERT INTO sca3 (btlec_sca, galec_sca, deno_sca, ad1_sca, ad2_sca, cp_sca, ville_sca, tel_sca, fax_sca, centrale_sca, surface_sca, date_ouverture, pole_sav_sca, adherent_sca, sorti) VALUES (:btlec_sca, :galec_sca, :deno_sca, :ad1_sca, :ad2_sca, :cp_sca, :ville_sca , :tel_sca, :fax_sca, :centrale_sca, :surface_sca, :date_ouverture, :pole_sav_sca, :adherent_sca, :sorti)");
 	$req->execute([
 		':btlec_sca'			=>$mag->getId(),
 		':galec_sca'			=>$mag->getGalec(),
@@ -227,7 +227,9 @@ if(isset($_POST['submit_crea'])){
 		':centrale_sca'			=>$mag->getCentrale(),
 		':surface_sca'			=>$mag->getSurface(),
 		':date_ouverture'		=>$mag->getDateOuv(),
-		':pole_sav_sca'			=>$mag->getPoleSavGessica()
+		':pole_sav_sca'			=>$mag->getPoleSavGessica(),
+		':adherent_sca'			=>$mag->getAdherent(),
+		':sorti'				=>$mag->getGel(),
 	]);
 
 
