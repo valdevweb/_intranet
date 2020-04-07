@@ -10,7 +10,7 @@ if(isset($_POST["query"]))
 	$page="fiche-mag.php";
 	$searchTerm=$response[0];
 
-	$req=$pdoMag->prepare("SELECT * FROM mag  LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE concat(mag.deno,mag.galec,mag.id,sca3.ville_sca,mag.adherent) LIKE :search");
+	$req=$pdoMag->prepare("SELECT * FROM mag  LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE concat(mag.deno,mag.galec,mag.id,mag.ville,mag.adherent) LIKE :search");
 	$req->execute([
 		':search' =>'%'.$searchTerm .'%'
 	]);
