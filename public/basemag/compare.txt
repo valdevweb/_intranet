@@ -27,3 +27,11 @@ voir export
 
 SELECT *  FROM `stats_logs` WHERE (`page` LIKE 'base-mag.php'  or `page` LIKE 'fiche-mag.php') AND id_user !="user"
 ORDER BY `stats_logs`.`id_log`  DESC
+
+
+
+SELECT *  FROM `stats_logs` WHERE `page` LIKE 'profil.php' AND id_user!="_mag" 
+ORDER BY `stats_logs`.`date_heure` DESC
+
+06/04 :3
+07/04 :3 
