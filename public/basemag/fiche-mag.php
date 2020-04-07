@@ -211,6 +211,41 @@ if(isset($_POST['submit_cm'])){
 	}
 }
 
+if(isset($_POST['submit_crea'])){
+
+	$req=$pdoMag->prepare("INSERT INTO sca3 (btlec_sca, galec_sca, deno_sca, ad1_sca, ad2_sca, cp_sca, ville_sca, tel_sca, fax_sca, centrale_sca, surface_sca, date_ouverture, pole_sav_sca) VALUES (:btlec_sca, :galec_sca, :deno_sca, :ad1_sca, :ad2_sca, :cp_sca, :ville_sca , :tel_sca, :fax_sca, :centrale_sca, :surface_sca, :date_ouverture, :pole_sav_sca)");
+	$req->execute([
+		':btlec_sca'			=>$mag->getId(),
+		':galec_sca'			=>$mag->getGalec(),
+		':deno_sca'				=>$mag->getDeno(),
+		':ad1_sca'				=>$mag->getAd1(),
+		':ad2_sca'				=>$mag->getAd2(),
+		':cp_sca'				=>$mag->getCp(),
+		':ville_sca'			=>$mag->getVille(),
+		':tel_sca'				=>$mag->getTel(),
+		':fax_sca'				=>$mag->getFax(),
+		':centrale_sca'			=>$mag->getCentrale(),
+		':surface_sca'			=>$mag->getSurface(),
+		':date_ouverture'		=>$mag->getDateOuv(),
+		':pole_sav_sca'			=>$mag->getPoleSavGessica()
+	]);
+
+
+	$inserted=$req->rowCount();
+	if($inserted==1){
+		$successQ='success=ajoutmag';
+		unset($_POST);
+		header("Location: ".$_SERVER['PHP_SELF'].'?id='.$_GET['id'].'&'.$successQ,true,303);
+	}else{
+		$error=$req->errorInfo();
+		echo "<pre>";
+		print_r($error);
+		echo '</pre>';
+
+		$errors[]="impossible d'ajouter le magasin : ".$error[2];
+	}
+}
+
 if(isset($_POST['submitdocubase'])){
 
 	// maj db dans tous les cas
@@ -290,6 +325,7 @@ if(isset($_GET['success'])){
 		'udoc'=>'Mise à jour des codes docubases effectuée avec succès',
 		'majcm'=>'Attribution effectuée avec succès',
 		'majacdlec'=>'Code ajouté avec succès',
+		'ajoutmag'=>'infos magasin recopiée avec succès dans la table sca3'
 	];
 	$success[]=$arrSuccess[$_GET['success']];
 }
