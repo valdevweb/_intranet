@@ -105,17 +105,11 @@ if(isset($_POST['filter'])){
 	if(isset($_POST['sorti']) && $_POST['sorti'][0]==9){
 		$_SESSION['mag_filters']['sorti']=$_POST['sorti'];
 		if(empty($_POST['date_fermeture'][0])){
-			echo "ici";
 			$_SESSION['mag_filters']['date_fermeture_deb']="2000-12-31";
 			$_SESSION['mag_filters']['date_fermeture_fin']=date('Y-m-d');
 			$paramClosed=join(' OR ', array_map(function($value){return 'sorti='.$value;},$_POST['sorti']));
 
 		}else{
-			echo "la";
-			echo "<pre>";
-			print_r($_POST['date_fermeture']);
-			echo '</pre>';
-
 			$_SESSION['mag_filters']['date_fermeture_deb']=$_POST['date_fermeture'][0];
 			$_SESSION['mag_filters']['date_fermeture_fin']=$_POST['date_fermeture'][1];
 			$paramClosed=join(' OR ', array_map(function($value){return 'sorti='.$value;},$_POST['sorti']));
