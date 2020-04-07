@@ -54,7 +54,7 @@ if(isset($_POST['connexion'])){
 		if(isset($_SESSION['id_web_user']) && !empty($_SESSION['id_web_user'])){
 			$action="user authentification";
 			$page=basename(__file__);
-			addRecord($pdoStat,$page,$action, $msg[0]);
+			addRecord($pdoStat,$page,$action, "user authentifié");
 			// maj mdp nohash si vide
 			$dateMajPwd=getDateMajNohash($pdoUser);
 			if($dateMajPwd['date_maj_nohash']==null){
