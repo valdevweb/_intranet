@@ -45,7 +45,7 @@ if(!empty( $_SERVER['QUERY_STRING'])){
 if(isset($_POST['connexion'])){
 	$loginExist=loginExist($pdoUser);
 	if($loginExist){
-		$pwdOk=checkPwd($loginExist,$pdoMag);
+		$pwdOk=checkPwd($loginExist,$pdoMag, $pdoUser);
 	}else{
 		$msg[]="le login n'existe pas";
 	}

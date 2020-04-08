@@ -112,7 +112,7 @@ function loginExist($pdoUser){
 // + converti mdp si tj sha1
 
 // cas 1 : MOT DE PASSE DEJA CONVERTI
-function checkPwd($webUser,$pdoMag){
+function checkPwd($webUser,$pdoMag,$pdoUser){
 	if (empty($webUser['old_pwd']) && !password_verify($_POST['pwd'], $webUser['pwd'])){
 		$errors[] = "mot de passe incorrect";
 	}elseif(empty($webUser['old_pwd']) && password_verify($_POST['pwd'], $webUser['pwd'])){
@@ -126,10 +126,10 @@ function checkPwd($webUser,$pdoMag){
 			$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
 			$salt = base64_encode($salt);
 			$options = ['salt' => $salt];
-			$pwdHash = password_hash($pwd, PASSWORD_BCRYPT, $options);
+			$pwdHash = password_hash($_POST['pwd'], PASSWORD_BCRYPT, $options);
 			$req=$pdoUser->prepare('UPDATE users SET pwd=:convertedPwd, old_pwd=:old_pwd  WHERE login= :postLogin');
 			$result=$req->execute(array(
-				':convertedPwd'		=> $convertedPwd,
+				':convertedPwd'		=> $pwdHash,
 				':old_pwd'			=>"",
 				':postLogin'		=> $_POST['login']
 
