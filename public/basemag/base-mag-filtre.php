@@ -168,7 +168,22 @@
 									</div>
 
 								</div>
+								<div class="form-row my-3">
+									<div class="col">
+										<div class="rubrique text-main-blue font-weight-bold">Magasins ayant un CA nul ou inférieur à 100 &euro; (N-1) :</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input " type="radio" value="0" id="no-filtre-ca" name="caSelected[]" <?= checkChecked(0,'caSelected')?>>
+											<label class="form-check-label" for="ca">Afficher</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input " type="radio" value="1"  id="filtre-ca" name="caSelected[]" <?= checkChecked(1,'caSelected')?>>
+											<label class="form-check-label" for="model">Masquer</label>
+										</div>
 
+
+
+									</div>
+								</div>
 
 								<!--					FILTRE PAR ETAT				-->
 

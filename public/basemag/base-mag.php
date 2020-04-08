@@ -43,6 +43,8 @@ $listTypePair=$magDbHelper->getListTypePair();
 $listCodeAcdlec=$magDbHelper->getListCodeAcdlecUtilise();
 $centraleName=Helpers::arrayFlatten($listCentrale,"centrale_doris","centrale");
 $ets=Helpers::arrayFlatten($listCodeAcdlec,"acdlec_code","nom_ets");
+$nMoinsUn=((new DateTime())->modify("- 1 year"))->format('Y');
+
 
 $mainCentraleIds=[20,10,30,50,90,100,110,120,160,170,250,210];
 
@@ -71,7 +73,10 @@ function checkChecked($value,$field){
 
 
 if(isset($_POST['filter'])){
-
+	unset($_SESSION['mag_filters']);
+	/*-----------------------------
+	* 		filtre centrale
+	 ------------------------------*/
 	if(isset($_POST['centraleSelected'])){
 		$_SESSION['mag_filters']['centraleSelected']=$_POST['centraleSelected'];
 
@@ -85,52 +90,91 @@ if(isset($_POST['filter'])){
 			$paramCentrale=join(' OR ', array_map(function($value){return 'centrale_doris='.$value;},$_POST['centraleSelected']));
 		}
 	}else{
-		$_SESSION['mag_filters']['centraleSelected']=[];
+		// $_SESSION['mag_filters']['centraleSelected']=[];
 		$paramCentrale='';
 	}
+
 	$paramList[]=$paramCentrale;
 
+	/*-----------------------------
+	* 		filtre acdlec
+	 ------------------------------*/
 
 	if(isset($_POST['acdlecSelected'])){
 		$_SESSION['mag_filters']['acdlecSelected']=$_POST['acdlecSelected'];
 		$paramAcdlec=join(' OR ', array_map(function($value){return 'acdlec_code='.$value;},$_POST['acdlecSelected']));
 
 	}else{
-		$_SESSION['mag_filters']['acdlecSelected']=[];
+		// $_SESSION['mag_filters']['acdlecSelected']=[];
 		$paramAcdlec='';
 	}
 	$paramList[]=$paramAcdlec;
 
-
+	/*-----------------------------
+	* 		filtre ouvert/fermé
+	 ------------------------------*/
 	if(isset($_POST['sorti']) && $_POST['sorti'][0]==9){
+		// affichage des magasins sortis
 		$_SESSION['mag_filters']['sorti']=$_POST['sorti'];
 		if(empty($_POST['date_fermeture'][0])){
+			//  sans selection de date
 			$_SESSION['mag_filters']['date_fermeture_deb']="2000-12-31";
 			$_SESSION['mag_filters']['date_fermeture_fin']=date('Y-m-d');
 			$paramClosed=join(' OR ', array_map(function($value){return 'sorti='.$value;},$_POST['sorti']));
 
 		}else{
+			// avec slection de date
 			$_SESSION['mag_filters']['date_fermeture_deb']=$_POST['date_fermeture'][0];
 			$_SESSION['mag_filters']['date_fermeture_fin']=$_POST['date_fermeture'][1];
 			$paramClosed=join(' OR ', array_map(function($value){return 'sorti='.$value;},$_POST['sorti']));
 			$paramClosed.=" AND ( date_fermeture BETWEEN '" .$_SESSION['mag_filters']['date_fermeture_deb'] ."' AND '".$_SESSION['mag_filters']['date_fermeture_fin'] ."')";
 		}
-
-
 	}elseif(isset($_POST['sorti']) && $_POST['sorti'][0]==0){
-
-		$_SESSION['mag_filters']['sorti']=[];
-		unset($_SESSION['mag_filters']['date_fermeture_deb']);
-		unset($_SESSION['mag_filters']['date_fermeture_fin']);
+		// affichage des magasins ouvert
+		// unset($_SESSION['mag_filters']['sorti']);
+		$_SESSION['mag_filters']['sorti'][]=0;
+		// unset($_SESSION['mag_filters']['date_fermeture_deb']);
+		// unset($_SESSION['mag_filters']['date_fermeture_fin']);
 		$paramClosed='';
 	}else{
-		$_SESSION['mag_filters']['sorti']=[];
-		unset($_SESSION['mag_filters']['date_fermeture_deb']);
-		unset($_SESSION['mag_filters']['date_fermeture_fin']);
+		// unset($_SESSION['mag_filters']['sorti']);
+		$_SESSION['mag_filters']['sorti'][]=0;
+		// unset($_SESSION['mag_filters']['date_fermeture_deb']);
+		// unset($_SESSION['mag_filters']['date_fermeture_fin']);
 		$paramClosed='';
-
 	}
 	$paramList[]=$paramClosed;
+
+	if(isset($_POST['caSelected']) && ($_POST['caSelected'][0]==1)){
+		// echo " 1 => on masque les petits ca";
+		$_SESSION['mag_filters']['caSelected']=$_POST['caSelected'];
+		$paramCa=" qlik.statsventesadh.AnneeCA={$nMoinsUn} AND qlik.statsventesadh.CA_Annuel>100 ";
+	}elseif(isset($_POST['caSelected']) &&($_POST['caSelected'][0]==0)){
+		// echo " 0 on affiche tout";
+		$_SESSION['mag_filters']['caSelected']=$_POST['caSelected'];
+		$paramCa='';
+	}
+	$paramList[]=$paramCa;
+
+	if(isset($_POST['cmSelected'])){
+		$_SESSION['mag_filters']['cmSelected']=$_POST['cmSelected'];
+		$paramCm=join(' OR ', array_map(function($value){
+			if($value=='NULL'){
+				return 'id_cm_web_user IS '.$value;
+			}
+			return 'id_cm_web_user='.$value;
+		},$_POST['cmSelected']));
+
+	}else{
+		$_SESSION['mag_filters']['cmSelected']=[];
+		$paramCm='';
+
+	}
+	$paramList[]=$paramCm;
+
+	/*-----------------------------
+	* 		filtre on of pour docubase et code portail
+	 ------------------------------*/
 
 	if(isset($_POST['no-docubase'])){
 		$_SESSION['mag_filters']['no-docubase']=$_POST['no-docubase'];
@@ -151,30 +195,8 @@ if(isset($_POST['filter'])){
 
 	}
 	$paramList[]=$paramPortail;
-
-
-	if(isset($_POST['cmSelected'])){
-		$_SESSION['mag_filters']['cmSelected']=$_POST['cmSelected'];
-		$paramCm=join(' OR ', array_map(function($value){
-			if($value=='NULL'){
-				return 'id_cm_web_user IS '.$value;
-			}
-			return 'id_cm_web_user='.$value;
-		},$_POST['cmSelected']));
-
-	}else{
-		$_SESSION['mag_filters']['cmSelected']=[];
-		$paramCm='';
-
-	}
-	$paramList[]=$paramCm;
 }
 
-
-if(isset($_POST['clear_filter'])){
-	unset($_SESSION['mag_filters']);
-	header('Location:'.$_SERVER['PHP_SELF']);
-}
 
 
 
@@ -187,7 +209,7 @@ if(isset($paramList)){
 	$paramList=array_filter($paramList);
 	$params=join(' AND ',array_map($joinParam,$paramList));
 	$params= "WHERE " .$params;
-	$query="SELECT mag.*,sca3.*,web_users.users.login, web_users.users.nohash_pwd  FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec $params GROUP BY mag.id";
+	$query="SELECT mag.*,sca3.*,web_users.users.login, web_users.users.nohash_pwd, qlik.statsventesadh.CA_Annuel  FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec LEFT JOIN qlik.statsventesadh ON mag.id=qlik.statsventesadh.CodeBtlec $params  GROUP BY mag.id";
 	$_SESSION['mag_filters']['query']=$query;
 
 
@@ -197,30 +219,39 @@ if(isset($paramList)){
 
 
 
-if(!isset($_POST['filter'])){
+if(!isset($_POST['filter']) || isset($_POST['clear_filter'])){
 	if(isset($_SESSION['mag_filters'])){
 		unset($_SESSION['mag_filters']);
 	}
 
-	// sans filtre centrale
+	// liste des filtre existants
+// $_SESSION['mag_filters']['centraleSelected'] => on sélectionne par défaut les centrale principales
+// $_SESSION['mag_filters']['acdlecSelected']	=> on sélectionner tous les code acdlec sauf 000
+// $_SESSION['mag_filters']['sorti']		=> uniquement les magsins ouverts
+// $_SESSION['mag_filters']['date_fermeture_deb'] 	=>unset
+// $_SESSION['mag_filters']['date_fermeture_fin']	=>unset
+// $_SESSION['mag_filters']['caSelected']			=>masque les ca inexistants = 1
+// $_SESSION['mag_filters']['cmSelected']			=>unset
+// $_SESSION['mag_filters']['no-docubase']			=>unset
+// $_SESSION['mag_filters']['no-portail']			=>unset
+
 	$_SESSION['mag_filters']['centraleSelected']=$mainCentraleIds;
 	$sessionCentrale=join(' OR ', array_map(function($value){return 'centrale_doris='.$value;},$_SESSION['mag_filters']['centraleSelected']));
 
-		// uniquement les établissements de type magasin
 
 	$_SESSION['mag_filters']['acdlecSelected']=["010","029","070","078","101","102","111","114","116","118","119"];
 	$sessionAcdlec=join(' OR ', array_map(function($value){return 'acdlec_code='.$value;},$_SESSION['mag_filters']['acdlecSelected']));
-	// echo $sessionAcdlec;
+
 	$_SESSION['mag_filters']['no-docubase'][]="";
 	$_SESSION['mag_filters']['no-portail'][]="";
+	$_SESSION['mag_filters']['caSelected'][]=1;
 
-		// uniquement les magasins  ouverts
 	$_SESSION['mag_filters']['sorti'][]=0;
-	$query="SELECT mag.*,sca3.*,web_users.users.login, web_users.users.nohash_pwd FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec WHERE (sorti=0) AND ({$sessionAcdlec}) AND ({$sessionCentrale}) GROUP BY mag.id";
-	$_SESSION['mag_filters']['query']=$query;
 
+
+	$query="SELECT mag.*,sca3.*,web_users.users.login, web_users.users.nohash_pwd, qlik.statsventesadh.CA_Annuel  FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec LEFT JOIN qlik.statsventesadh ON mag.id=qlik.statsventesadh.CodeBtlec WHERE (sorti=0) AND ({$sessionAcdlec}) AND ({$sessionCentrale})  AND qlik.statsventesadh.AnneeCA={$nMoinsUn} AND qlik.statsventesadh.CA_Annuel>100 GROUP BY mag.id";
+	$_SESSION['mag_filters']['query']=$query;
 	// echo $query;
-	// $req=$pdoMag->query("SELECT * FROM mag ");
 	$req=$pdoMag->query($query);
 	$magList=$req->fetchAll(PDO::FETCH_ASSOC);
 
@@ -299,9 +330,14 @@ DEBUT CONTENU CONTAINER
 </div>
 
 <script src="../js/autocomplete-searchmag.js"></script>
+<script src="../js/sorttable.js"></script>
 <script type="text/javascript">
 	<!-- check uncheck all code acdlec -->
 	$(document).ready(function(){
+
+		/*-----------------------------------
+		*	CASES A COCHER ACDLEC
+		 ------------------------------------*/
 		// cocher tout decocher tout pour addlec
 		$("#check-all-code").click(function () {
 			$('.acdlec').prop('checked', this.checked);
@@ -309,56 +345,76 @@ DEBUT CONTENU CONTAINER
 		$("#uncheck-code").click(function () {
 			$('.acdlec').removeAttr('checked');
 		});
-		// décocher tout qd eno-filtre-centrale
+		/*-----------------------------------
+		*	CASES A COCHER CENTRALES
+		 ------------------------------------*/
+		// PAS DE FILTRE CENTRALE :  décocher toutes les centrales
 		$('#no-filtre-centrale').click(function(){
 			$('.centrale').removeAttr('checked');
 			$('#no-centrale').removeAttr('checked');
-
 		});
-		// décocher tout qd pas de centrale
+		// PAS DE CENTRALE : décocher toutes les centrales
 		$('#no-centrale').click(function(){
 			$('.centrale').removeAttr('checked');
 			$('#no-filtre-centrale').removeAttr('checked');
-
 		});
-		// décocher no-filtre-centrale et no-centrale qd class centrale slectionnnée
+		// AU MOINS UNE CENTRALE / décocher no-filtre-centrale et no-centrale
 		$('.centrale').click(function(){
 			$('#no-filtre-centrale').removeAttr('checked');
 			$('#no-centrale').removeAttr('checked');
-
 		});
-		$('.hide-btn').on("click",function(){
-			$( "tr.ok" ).hide();
-		});
-		$('.show-btn').on("click",function(){
-			$( "tr.ok" ).show();
-		});
+		/*-----------------------------------
+		*	RADIO BTN OUVERT FERME
+		 ------------------------------------*/
+		// FERME : montre les selecteurs de date
+		// + coche "cocher tout" pour acdlec
+		// + coche " pas de filtre centrale"
+		// + retire les centrales cochées
+		// + coche ca afficher tout
 		$("#radio-fermeture").change(function(){
 			if($(this).prop("checked")) {
 				$('#fermeture-option').attr('class','show');
 				$('.acdlec').prop('checked', this.checked);
 				$('#no-filtre-centrale').prop('checked', this.checked);
 				$('.centrale').removeAttr('checked');
-
-
+				$('#no-filtre-ca').prop('checked', this.checked);
 			}
 		});
 
-		if($("#radio-fermeture").prop("checked")) {
-			$('#fermeture-option').attr('class','show');
-		}
-
-		// if($("#radio-fermeture").click(function ()) {
-		// 	$('.centrale').removeAttr('checked');
-		// 	$('.acdlec').prop('checked', this.checked);
-		// });
-
-
+		// OUVERT : masque filtres date
 		$("#radio-ouverture").change(function(){
 			if($(this).prop("checked")){
 				$('#fermeture-option').attr('class','hide');
 
 			}
+		});
+
+		// FERME APRES RECHARGEMENT PAGE : on affiche tj les champs date
+		if($("#radio-fermeture").prop("checked")) {
+			$('#fermeture-option').attr('class','show');
+		}
+		/*-----------------------------------
+		*	TABLEAU : affiche ou non la colonne ca
+		 ------------------------------------*/
+
+		$('.switch-input').on("click", function(){
+			if ( $('.switch-input').prop("checked") ){
+				$('td:nth-child(10),th:nth-child(10)').show();
+			}else{
+				$('td:nth-child(10),th:nth-child(10)').hide();
+			}
+		});
+
+		/*-----------------------------------
+		*	TABLEAU : affiche uniquement
+		*	champs différents/ affiche tout
+		 ------------------------------------*/
+
+		$('.hide-btn').on("click",function(){
+			$( "tr.ok" ).hide();
+		});
+		$('.show-btn').on("click",function(){
+			$( "tr.ok" ).show();
 		});
 
 
