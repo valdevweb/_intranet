@@ -47,6 +47,10 @@ class UserHelpers{
 		return $data['fullname'];
 	}
 
+	public static function getPrenom($pdoUser,$id){
+		$data=self::getUser($pdoUser,$id);
+		return $data['prenom'];
+	}
 	public static function getIdService($pdoUser,$id){
 		$data=self::getUser($pdoUser,$id);
 		return $data['id_service'];
