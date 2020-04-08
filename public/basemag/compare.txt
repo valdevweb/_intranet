@@ -44,8 +44,12 @@ ORDER BY `stats_logs`.`id_user` ASC
 user authentification
 
 
+<<<<<<< HEAD
 user authentifié
 
 
-12345
+
 678910
+=======
+user authentifié
+>>>>>>> parent of 6946917... 12345
