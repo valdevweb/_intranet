@@ -41,7 +41,7 @@
 
 
 
-		<div class="modal fade" id="modal-new-cmt" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+	<div class="modal fade" id="modal-new-cmt" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
 
@@ -53,6 +53,13 @@
 								<div class="form-group">
 									<label>Observations : </label>
 									<textarea class="form-control" name="cmt-mod" id="cmt-mod"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<div class="form-group">
+									<p><input type="file" name="files[]" class='form-control-file' multiple=""></p>
 								</div>
 							</div>
 						</div>
