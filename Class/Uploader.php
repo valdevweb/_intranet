@@ -13,25 +13,29 @@ class Uploader
 	private $seqnence;
 	public $name;
 	public $useTable    =false;
+	protected $multiSize;
+	protected $multiName;
+	protected $multiExt;
 
-	function setDir($path){
+
+	public function setDir($path){
 		$this->destinationPath  =   $path;
 		$this->allowAll =   false;
 	}
 
-	function allowAllFormats(){
+	public function allowAllFormats(){
 		$this->allowAll =   true;
 	}
 
-	function setMaxSize($sizeMB){
+	public function setMaxSize($sizeMB){
 		$this->maxSize  =   $sizeMB * (1024*1024);
 	}
 
-	function setExtensions($options){
+	public function setExtensions($options){
 		$this->extensions   =   $options;
 	}
 
-	function setSameFileName($bool=null){
+	public function setSameFileName($bool=null){
 			if($bool===null){
 				$this->bool=false;
 				return false;
@@ -43,7 +47,7 @@ class Uploader
 
 			}
 		}
-	function getExtension($string){
+	public function getExtension($string){
 		$ext    =   "";
 		try{
 			$parts  =   explode(".",$string);
@@ -54,28 +58,28 @@ class Uploader
 		return $ext;
 	}
 
-	function setMessage($message){
+	public function setMessage($message){
 		$this->errorMessage =   $message;
 	}
 
-	function getMessage(){
+	public function getMessage(){
 		return $this->errorMessage;
 	}
 
-	function getUploadName(){
+	public function getUploadName(){
 		return $this->uploadName;
 	}
-	function setSequence($seq){
+	public function setSequence($seq){
 		$this->imageSeq =   $seq;
 	}
 
-	function getRandom(){
+	public function getRandom(){
 		return strtotime(date('Y-m-d H:i:s')).rand(1111,9999).rand(11,99).rand(111,999);
 	}
-	function sameName($true){
+	public function sameName($true){
 		$this->sameName =   $true;
 	}
-	function uploadFile($fileBrowse){
+	public function uploadFile($fileBrowse){
 		$result =   false;
 		$size   =   $_FILES[$fileBrowse]["size"];
 		$name   =   $_FILES[$fileBrowse]["name"];
@@ -114,7 +118,7 @@ class Uploader
 		return $result;
 	}
 
-	function deleteUploaded(){
+	public function deleteUploaded(){
 		unlink($this->destinationPath.$this->uploadName);
 	}
 
