@@ -138,9 +138,8 @@ class MagDbHelper{
 			return $datas;
 		}
 		return "";
-
-
 	}
+
 
 	public function getListCodeAcdlecUtilise(){
 		$req=$this->pdo->query("SELECT acdlec_code, nom_ets  FROM mag LEFT JOIN acdlec ON acdlec_code=acdlec.code WHERE acdlec_code IS NOT NULL AND acdlec_code!='' GROUP BY acdlec_code ORDER BY acdlec_code");
