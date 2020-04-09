@@ -19,18 +19,20 @@
 							</div>
 						</div>
 						<div class="row">
+							<div class="col">
+								<div class="form-group">
+									<p><input type="file" name="files[]" class='form-control-file' multiple=""></p>
+								</div>
+							</div>
+						</div>
+						<div class="row">
 							<div class="col text-right">
 								<input type="hidden" class="form-control" id="cmt-id" name="cmt-id">
 								<button class="btn btn-primary" name="submit-mod-cmt">Modifier</button>
 
 							</div>
 						</div>
-
-
-
 					</form>
-
-
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>

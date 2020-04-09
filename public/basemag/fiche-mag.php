@@ -21,6 +21,7 @@ require_once '../../Class/Helpers.php';
 require_once '../../Class/UserHelpers.php';
 
 
+
 //---------------------------------------
 //	ajout enreg dans stat
 //---------------------------------------
@@ -95,8 +96,17 @@ function updateDocubase($pdoMag){
 	]);
 	return $req->rowCount();
 }
-
-
+function getCmtFiles($pdoMag,$idcmt){
+	$req=$pdoMag->prepare("SELECT * FROM cmt_file WHERE id_cmt= :id_cmt ORDER BY filename");
+	$req->execute([
+		':id_cmt'		=>$idcmt
+	]);
+	$datas=$req->fetchAll(PDO::FETCH_ASSOC);
+	if(!empty($datas)){
+		return $datas;
+	}
+	return "";
+}
 
 if(isset($_POST['clear_form'])){
 	$_POST=[];
@@ -337,18 +347,67 @@ if(isset($_POST['submit-mod-cmt'])){
 			$err=$req->errorInfo();
 			$errors[]="impossible de mettre à jour l'observation : ".$err[2];
 		}else{
+			$lastInsertId=$_POST['cmt-id'];
+		}
+		if(isset($_FILES['files']) && !empty($_FILES['files']['name'][0]) ){
+			$uploadDir=DIR_UPLOAD."xploit-mag\\";
+
+
+			if(!is_dir($uploadDir)){
+				$errors[]="Le répertoire de destination n'existe pas ";
+			}
+			if(!is_writable($uploadDir)){
+				$errors[]="Le répertoire de destination n'autorise pas l'upload de fichiers !";
+			}
+			// 10mo
+			$maxFileSize = 10 * 1024 * 1024;
+			$totalSize=0;
+			for($i=0;$i<sizeof($_FILES['files']['size']);$i++){
+				$totalSize=$totalSize + $_FILES['files']['size'][$i];
+			}
+
+			if($totalSize > $maxFileSize){
+				$errors[] = 'Attention la somme totale des fichiers dépasse la taille autorisée de 10Mo';
+
+			}else{
+				for($i=0;$i<sizeof($_FILES['files']['size']);$i++){
+					$filename=$_FILES['files']['name'][$i];
+					$ext = pathinfo($filename, PATHINFO_EXTENSION);
+					$filenameNoExt = basename($filename, '.'.$ext);
+					$filenameNew=$filenameNoExt.'-'.date('YmdHis').'.'.$ext;
+
+					$uploaded=move_uploaded_file($_FILES['files']['tmp_name'][$i],$uploadDir.$filenameNew );
+					if($uploaded==false){
+						$errors[]="Impossible d'uploader votre fichier ";
+					}else{
+						$req=$pdoMag->prepare("INSERT INTO cmt_file (id_cmt, filename, created_by, date_insert) VALUES (:id_cmt, :filename, :created_by, :date_insert)");
+						$req->execute([
+							':id_cmt' =>$lastInsertId,
+							':filename' =>$filenameNew,
+							':created_by'	=>$_SESSION['id_web_user'],
+							':date_insert'=>date("Y-m-d H:i:s")
+						]);
+						if($req->rowCount()!=1){
+							$err=$req->errorInfo();
+							$errors[]="impossible d'ajouter la pièce jointe : ".$err[2];
+						}
+					}
+				}
+			}
+		}
+
+		if(empty($errors)){
 			$successQ='?id='.$_GET['id'].'&success=upnote';
 			unset($_POST);
 			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+		}else{
+			$errors[]="le champs observation ne peut être vide";
 		}
-
-	}else{
-		$errors[]="le champs observation ne peut être vide";
 	}
-
 }
 if(isset($_POST['submit-mod-add'])){
 
+	// print_r(ini_get('post_max_size'));
 	if(!empty($_POST['cmt-mod'])){
 		$req=$pdoMag->prepare("INSERT INTO cmt_mag (btlec, cmt, created_by, date_insert) VALUES (:btlec, :cmt, :created_by, :date_insert)");
 		$req->execute([
@@ -361,15 +420,69 @@ if(isset($_POST['submit-mod-add'])){
 			$err=$req->errorInfo();
 			$errors[]="impossible d'ajouter l'observation : ".$err[2];
 		}else{
+			$lastInsertId=$pdoMag->lastInsertId();
+
+		}
+		if(isset($_FILES['files']) && !empty($_FILES['files']['name'][0]) ){
+			$uploadDir=DIR_UPLOAD."xploit-mag\\";
+
+
+			if(!is_dir($uploadDir)){
+				$errors[]="Le répertoire de destination n'existe pas ";
+			}
+			if(!is_writable($uploadDir)){
+				$errors[]="Le répertoire de destination n'autorise pas l'upload de fichiers !";
+			}
+			// 10mo
+			$maxFileSize = 10 * 1024 * 1024;
+			$totalSize=0;
+			for($i=0;$i<sizeof($_FILES['files']['size']);$i++){
+				$totalSize=$totalSize + $_FILES['files']['size'][$i];
+			}
+
+			if($totalSize > $maxFileSize){
+				$errors[] = 'Attention la somme totale des fichiers dépasse la taille autorisée de 10Mo';
+
+			}else{
+				for($i=0;$i<sizeof($_FILES['files']['size']);$i++){
+					$filename=$_FILES['files']['name'][$i];
+					$ext = pathinfo($filename, PATHINFO_EXTENSION);
+					$filenameNoExt = basename($filename, '.'.$ext);
+					$filenameNew=$filenameNoExt.'-'.date('YmdHis').'.'.$ext;
+
+					$uploaded=move_uploaded_file($_FILES['files']['tmp_name'][$i],$uploadDir.$filenameNew );
+					if($uploaded==false){
+						$errors[]="Impossible d'uploader votre fichier ";
+					}else{
+						$req=$pdoMag->prepare("INSERT INTO cmt_file (id_cmt, filename, created_by, date_insert) VALUES (:id_cmt, :filename, :created_by, :date_insert)");
+						$req->execute([
+							':id_cmt' =>$lastInsertId,
+							':filename' =>$filenameNew,
+							':created_by'	=>$_SESSION['id_web_user'],
+							':date_insert'=>date("Y-m-d H:i:s")
+						]);
+						if($req->rowCount()!=1){
+							$err=$req->errorInfo();
+							$errors[]="impossible d'ajouter la pièce jointe : ".$err[2];
+						}
+					}
+				}
+			}
+		}
+		if(empty($errors)){
 			$successQ='?id='.$_GET['id'].'&success=insertnote';
 			unset($_POST);
 			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+
 		}
+
+
+
+
 
 	}else{
 		$errors[]="le champs observation ne peut être vide";
 	}
-
 
 }
 
@@ -455,6 +568,8 @@ DEBUT CONTENU CONTAINER
 					<!-- <div class="col-lg-1"></div> -->
 				</div>
 			<?php endif?>
+
+
 			<?php
 			if (isset($mag)){
 				include('fiche-mag-commun.php');
