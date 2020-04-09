@@ -156,6 +156,9 @@ if (isset($_GET['id'])){
 if(isset($_GET['id'])){
 	$magDbHelper=new MagDbHelper($pdoMag);
 	$mag=$magDbHelper->getMagBt($_GET['id']);
+	$cmtList=$magDbHelper->getCmt($_GET['id']);
+
+
 
 }
 
@@ -320,6 +323,56 @@ if(isset($_POST['submitdocubase'])){
 }
 
 
+
+if(isset($_POST['submit-mod-cmt'])){
+	if(!empty($_POST['cmt-mod'])){
+		$req=$pdoMag->prepare("UPDATE cmt_mag SET cmt= :cmt, created_by= :created_by, date_update= :date_update WHERE id = :id");
+		$req->execute([
+			':id'			=>$_POST['cmt-id'],
+			':cmt'			=>$_POST['cmt-mod'],
+			':created_by'	=>$_SESSION['id_web_user'],
+			':date_update'	=>date('Y-m-d H:i:s')
+		]);
+		if($req->rowCount()!=1){
+			$err=$req->errorInfo();
+			$errors[]="impossible de mettre à jour l'observation : ".$err[2];
+		}else{
+			$successQ='?id='.$_GET['id'].'&success=upnote';
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+		}
+
+	}else{
+		$errors[]="le champs observation ne peut être vide";
+	}
+
+}
+if(isset($_POST['submit-mod-add'])){
+
+	if(!empty($_POST['cmt-mod'])){
+		$req=$pdoMag->prepare("INSERT INTO cmt_mag (btlec, cmt, created_by, date_insert) VALUES (:btlec, :cmt, :created_by, :date_insert)");
+		$req->execute([
+			':btlec'		=>$_GET['id'],
+			':cmt'			=>$_POST['cmt-mod'],
+			':created_by'	=>$_SESSION['id_web_user'],
+			':date_insert'	=>date('Y-m-d H:i:s')
+		]);
+		if($req->rowCount()!=1){
+			$err=$req->errorInfo();
+			$errors[]="impossible d'ajouter l'observation : ".$err[2];
+		}else{
+			$successQ='?id='.$_GET['id'].'&success=insertnote';
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+		}
+
+	}else{
+		$errors[]="le champs observation ne peut être vide";
+	}
+
+
+}
+
 if(isset($_GET['success'])){
 	$arrSuccess=[
 		'maj'=>'Magasin mis à jour avec succès',
@@ -327,11 +380,12 @@ if(isset($_GET['success'])){
 		'udoc'=>'Mise à jour des codes docubases effectuée avec succès',
 		'majcm'=>'Attribution effectuée avec succès',
 		'majacdlec'=>'Code ajouté avec succès',
-		'ajoutmag'=>'infos magasin recopiée avec succès dans la table sca3'
+		'ajoutmag'=>'infos magasin recopiée avec succès dans la table sca3',
+		'upnote' =>'Mise à jour de l\'observation faite avec succès',
+		'insertnote' =>'Ajout de l\'observation faite avec succès'
 	];
 	$success[]=$arrSuccess[$_GET['success']];
 }
-
 
 //------------------------------------------------------
 //			FONCTION
@@ -344,160 +398,168 @@ if(isset($_GET['success'])){
 
 
 
+
 include('../view/_head-bt.php');
 
 ?>
 <!--********************************
 DEBUT CONTENU CONTAINER
 *********************************-->
+<section class="info-main fixed-top pb-5 ">
+	<?php include('../view/_navbar.php');?>
 
-<!-- <section class="info-main pb-5 "> -->
-	<section class="info-main fixed-top pb-5 ">
-		<?php include('../view/_navbar.php');?>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-1"></div>
+			<div class="col">
+				<?php
+				include('../view/_errors.php');
 
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-1"></div>
-				<div class="col">
-					<?php
-					include('../view/_errors.php');
-					?>
-				</div>
-				<div class="col-lg-1"></div>
+
+				?>
 			</div>
+			<div class="col-lg-1"></div>
+		</div>
 
-
-			<?php if (!isset($mag)): ?>
-				<div class="row  pb-3 ">
+		<?php if (!isset($mag)): ?>
+			<div class="row  pb-3 ">
+				<div class="col">
+					<h1 class="text-main-blue pt-5 ">F</span>iche magasin</h1>
+				</div>
+				<?php
+				include('search-form.php')
+				?>
+				<div class="col-auto mt-4 pt-2">
+					<?=Helpers::returnBtn('base-mag.php','btn-kaki')?>
+				</div>
+				<!-- <div class="col-lg-1"></div> -->
+			</div>
+			<!-- ajout zone vide pour ne pas avoir le pied de page qui monte si pas de données -->
+			<div class="force-height"></div>
+			<?php else: ?>
+				<div class="row pb-3 ">
 					<div class="col">
-						<h1 class="text-main-blue pt-5 ">F</span>iche magasin</h1>
+						<h1 class="text-main-blue pt-5 ">
+							<?= (isset($mag))? 'Leclerc '.$mag->getDeno(): "Fiche magasin" ?>
+						</h1>
+
+						<h5 class="yanone">Code BTLec : <span class="text-orange" ><?= $mag->getId() .'</span><span class="pl-5">Panonceau Galec : <span class="text-orange">'.$mag->getGalec().'</span>'?> <span class="text-orange pl-5">Centrale : </span><?=$centraleSca?> </h5>
+
 					</div>
 					<?php
 					include('search-form.php')
 					?>
-					<div class="col-auto mt-4 pt-2">
+					<div class="col-auto mt-3  pt-2">
 						<?=Helpers::returnBtn('base-mag.php','btn-kaki')?>
 					</div>
 					<!-- <div class="col-lg-1"></div> -->
 				</div>
-				<!-- ajout zone vide pour ne pas avoir le pied de page qui monte si pas de données -->
-				<div class="force-height"></div>
-				<?php else: ?>
-					<div class="row pb-3 ">
-						<div class="col">
-							<h1 class="text-main-blue pt-5 ">
-								<?= (isset($mag))? 'Leclerc '.$mag->getDeno(): "Fiche magasin" ?>
-							</h1>
-
-							<h5 class="yanone">Code BTLec : <span class="text-orange" ><?= $mag->getId() .'</span><span class="pl-5">Panonceau Galec : <span class="text-orange">'.$mag->getGalec().'</span>'?> <span class="text-orange pl-5">Centrale : </span><?=$centraleSca?> </h5>
-
-						</div>
-						<?php
-						include('search-form.php')
-						?>
-						<div class="col-auto mt-3  pt-2">
-							<?=Helpers::returnBtn('base-mag.php','btn-kaki')?>
-						</div>
-						<!-- <div class="col-lg-1"></div> -->
-					</div>
-				<?php endif?>
-				<?php
-				if (isset($mag)){
-					include('fiche-mag-commun.php');
-					if($d_strictAdmin){
-						include('fiche-mag-exploit.php');
-					}
-
+			<?php endif?>
+			<?php
+			if (isset($mag)){
+				include('fiche-mag-commun.php');
+				if($d_strictAdmin){
+					include('fiche-mag-exploit.php');
 				}
-				?>
+				include('fiche-mag-modal.php');
 
-				<div class="fixed-zone">
-					<div class="text-center font-weight-bold">
-						<i class="fas fa-clipboard pr-2"></i>Aller à : Ctrl + Alt +
+			}
+			?>
+
+			<div class="fixed-zone">
+				<div class="text-center font-weight-bold">
+					<i class="fas fa-clipboard pr-2"></i>Aller à : Ctrl + Alt +
+				</div>
+				<div class="fixed-zone-row">
+					<div class="fixed-zone-col">
+						<span class="font-weight-bold"><u>d</u></span>ocubase edit<br>
+						<span class="font-weight-bold"><u>e</u></span>xploitation<br>
 					</div>
-					<div class="fixed-zone-row">
-						<div class="fixed-zone-col">
-							<span class="font-weight-bold"><u>d</u></span>ocubase edit<br>
-							<span class="font-weight-bold"><u>e</u></span>xploitation<br>
-						</div>
-						<div class="fixed-zone-col">
-							<span class="font-weight-bold"><u>i</u></span>dentifiants<br>
-							<span class="font-weight-bold"><u>l</u></span>istes de diffusion<br>
+					<div class="fixed-zone-col">
+						<span class="font-weight-bold"><u>i</u></span>dentifiants<br>
+						<span class="font-weight-bold"><u>l</u></span>istes de diffusion<br>
 
-						</div>
 					</div>
-
 				</div>
 
-
 			</div>
+			<!-- ./container -->
+		</div>
 
 
-			<script src="../js/autocomplete-searchmag.js"></script>
+		<script src="../js/autocomplete-searchmag.js"></script>
 
-			<script type="text/javascript">
+		<script type="text/javascript">
 
-				function getScroll() {
-					var position = $( document ).scrollTop();
-					return position;
+			function getScroll() {
+				var position = $( document ).scrollTop();
+				return position;
+			}
+
+			$(document).ready(function(){
+			// masque pour saisie date et etc
+			$('#date_ouverture').mask('00/00/0000');
+			$('#date_fermeture').mask('00/00/0000');
+			$('#date_adhesion').mask('00/00/0000');
+			$('#date_resiliation').mask('00/00/0000');
+			$('#date_sortie').mask('00/00/0000');
+			$('#tel_sca').mask('00 00 00 00 00');
+
+			// gestion du scroll qd met à jour sca3 avec une donnée de la base mag
+			$('.btn-ico').on('click',function(){
+				var position=getScroll();
+							var oldUrl = $(this). attr("href"); // Get current url.
+							$(this). attr("href", oldUrl+"&position="+position); // Set herf value.
+						});
+			window.onload = function () {
+				var url = window.location.href;
+				url=url.split("#");
+				window.scrollTo(0, url[1]);
+			}
+
+			$("#email").keyup(function(){
+
+				var email = $("#email").val();
+				var filter = /^(([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)(\s*(;|,)\s*|\s*$))*$/;
+				if (!filter.test(email)) {
+					 //alert('Please provide a valid email address');
+					 $("#error_email").text(email+" is not a valid email");
+					 $("#error_email").addClass('text-alert');
+					 email.focus;
+					} else {
+						$("#error_email").text("");
+						$("#error_email").removeClass('text-alert');
+					}
+				});
+
+			document.onkeyup = function(e) {
+				if (e.ctrlKey && e.altKey  && e.which == 68) {
+					$('html, body').animate({scrollTop: $('#docubase').offset().top -360 }, 'slow');
+				}else if(e.ctrlKey && e.altKey  && e.which == 69){
+					$('html, body').animate({scrollTop: $('#exploit').offset().top -360 }, 'slow');
+				}else if (e.ctrlKey && e.altKey  && e.which == 73) {
+					$('html, body').animate({scrollTop: $('#identifiants').offset().top -360 }, 'slow');
+				}else if (e.ctrlKey && e.altKey  && e.which == 76) {
+					$('html, body').animate({scrollTop: $('#ld').offset().top -360 }, 'slow');
+				}
+			};
+			$('.modal-target').click(function(){
+				var target=$(this).attr('data-target');
+				if(target=="#largeModal"){
+					var id=$(this).attr('data-id');
+					var idTextZone='#cmt-'+id;
+					var textToCopy=$(idTextZone).text();
+
+					$("textarea#cmt-mod").val(textToCopy);
+					$("input#cmt-id").val(id);
 				}
 
-				$(document).ready(function(){
-	// masque pour saisie date et etc
-	$('#date_ouverture').mask('00/00/0000');
-	$('#date_fermeture').mask('00/00/0000');
-	$('#date_adhesion').mask('00/00/0000');
-	$('#date_resiliation').mask('00/00/0000');
-	$('#date_sortie').mask('00/00/0000');
-	$('#tel_sca').mask('00 00 00 00 00');
 
-	// gestion du scroll qd met à jour sca3 avec une donnée de la base mag
-	$('.btn-ico').on('click',function(){
-		var position=getScroll();
-					var oldUrl = $(this). attr("href"); // Get current url.
-					$(this). attr("href", oldUrl+"&position="+position); // Set herf value.
-				});
-	window.onload = function () {
-		var url = window.location.href;
-		url=url.split("#");
-		window.scrollTo(0, url[1]);
-	}
+			});
 
-	$("#email").keyup(function(){
-
-		var email = $("#email").val();
-		var filter = /^(([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)(\s*(;|,)\s*|\s*$))*$/;
-		if (!filter.test(email)) {
-			 //alert('Please provide a valid email address');
-			 $("#error_email").text(email+" is not a valid email");
-			 $("#error_email").addClass('text-alert');
-			 email.focus;
-			} else {
-				$("#error_email").text("");
-				$("#error_email").removeClass('text-alert');
-			}
 		});
+	</script>
 
-	document.onkeyup = function(e) {
-		if (e.ctrlKey && e.altKey  && e.which == 68) {
-			$('html, body').animate({scrollTop: $('#docubase').offset().top -360 }, 'slow');
-		}else if(e.ctrlKey && e.altKey  && e.which == 69){
-			$('html, body').animate({scrollTop: $('#exploit').offset().top -360 }, 'slow');
-		}else if (e.ctrlKey && e.altKey  && e.which == 73) {
-			$('html, body').animate({scrollTop: $('#identifiants').offset().top -360 }, 'slow');
-		}else if (e.ctrlKey && e.altKey  && e.which == 76) {
-			$('html, body').animate({scrollTop: $('#ld').offset().top -360 }, 'slow');
-		}
-	};
-
-
-});
-
-
-
-
-</script>
-
-<?php
-require '../view/_footer-bt.php';
-?>
+	<?php
+	require '../view/_footer-bt.php';
+	?>

@@ -38,11 +38,8 @@ class MagDbHelper{
 		$data=$req->fetch(PDO::FETCH_ASSOC);
 
 		if(!empty($data)){
-
 			return new Mag($data);
 		}
-
-
 		return false;
 	}
 
@@ -131,9 +128,19 @@ class MagDbHelper{
 		]);
 		return $req->fetch(PDO::FETCH_COLUMN);
 	}
+	public function getCmt($btlec){
+		$req=$this->pdo->prepare("SELECT *, cmt_mag.id as idcmt, DATE_FORMAT(date_insert, '%d-%m-%Y') as dateinsert, concat(prenom, ' ',nom ) as fullname FROM cmt_mag LEFT JOIN web_users.intern_users ON created_by = web_users.intern_users.id_web_user WHERE btlec= :btlec ORDER BY date_insert DESC");
+			$req->execute([
+			':btlec'		=>$btlec
+		]);
+		$datas=$req->fetchAll(PDO::FETCH_ASSOC);
+		if(!empty($datas)){
+			return $datas;
+		}
+		return "";
 
 
-
+	}
 
 	public function getListCodeAcdlecUtilise(){
 		$req=$this->pdo->query("SELECT acdlec_code, nom_ets  FROM mag LEFT JOIN acdlec ON acdlec_code=acdlec.code WHERE acdlec_code IS NOT NULL AND acdlec_code!='' GROUP BY acdlec_code ORDER BY acdlec_code");
