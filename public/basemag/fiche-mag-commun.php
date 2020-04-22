@@ -1,5 +1,5 @@
 <!-- suite partie fixe -->
-<div class="row yanone pb-3 mb-3 ">
+<div class="row yanone-replace pb-3 mb-3 ">
 	<div class="col">
 		<div class="row">
 			<div class="col">
@@ -53,7 +53,7 @@
 				<h5 class="text-center font-weight-bold  sub-title" id="identifiants">Identifiants</h5>
 			</div>
 		</div>
-		<div class="row yanone light-shadow-round py-3 mb-3">
+		<div class="row yanone-replace light-shadow-round py-3 mb-3">
 			<div class="col-auto">
 				<div class="text-orange"> <img src="../img/logos/docubase-logo.png" class="float-left pr-3"> Docubase :</div>
 			</div>
@@ -92,7 +92,7 @@
 			<div class="row pb-3">
 				<div class="col py-3 light-shadow-round">
 
-					<div class="row yanone ">
+					<div class="row yanone-replace ">
 						<div class="col-3">
 							<span class="text-orange">Acdlec : </span>
 							<?= $mag->getAcdlec();?>
@@ -116,7 +116,7 @@
 						</div>
 
 					</div>
-					<div class="row yanone">
+					<div class="row yanone-replace">
 						<div class="col-3">
 							<span class="text-orange">TVA : </span>
 							<?= $mag->getTva();?>
@@ -137,7 +137,7 @@
 
 						</div>
 					</div>
-					<div class="row yanone">
+					<div class="row yanone-replace">
 						<div class="col-3">
 							<span class="text-orange">Gestion du réservable :</span>
 							<?= $mag->getReservableStr()?>
@@ -172,12 +172,12 @@
 			</div>
 			<div class="row py-3">
 				<div class="col light-shadow-round">
-					<div class="row yanone pt-3">
+					<div class="row yanone-replace pt-3">
 						<div class="col text-orange"><?=$ldAdhName?></div>
 						<div class="col text-orange"><?=$ldDirName?></div>
 						<div class="col text-orange"><?=$ldRbtName?></div>
 					</div>
-					<div class="row yanone pb-3">
+					<div class="row yanone-replace pb-3">
 						<div class="col"><div class="pl-2 border-left"><?=$ldAdhLink?></div></div>
 						<div class="col"><div class="pl-2 border-left"><?=$ldDirLink?></div> </div>
 						<div class="col"><div class="pl-2 border-left"><?=$ldRbtLink?></div></div>
@@ -191,14 +191,14 @@
 			<h5 class="text-center font-weight-bold  sub-title">Historique magasin</h5>
 
 			<div class="row light-shadow-round py-3 mb-3">
-				<div class="col yanone">
+				<div class="col yanone-replace">
 					<div class="font-weight-bold"><i class="far fa-calendar pr-3 text-orange"></i> de <?=$mag->getDateOuvertureFr()?> à aujourd'hui :</div>
 					<div class="pl-5"><?=$mag->getId() .' - '. $mag->getDeno()?></div>
 
 					<?php if (!empty($histo)): ?>
 						<?php foreach ($histo as $key => $prevMag): ?>
 
-							<?= ($key+1==ceil((count($histo)+1)/2))? "</div><div class='col yanone'>" :'' ?>
+							<?= ($key+1==ceil((count($histo)+1)/2))? "</div><div class='col yanone-replace'>" :'' ?>
 
 							<div class="font-weight-bold"><i class="far fa-calendar pr-3 text-orange"></i><?=$prevMag['dateOuv'] .'<i class="fas fa-long-arrow-alt-right px-3"></i> '.$prevMag['dateFerm']?> :</div>
 							<div class="pl-5"><?=$prevMag['btlec_old'] .' - '.$prevMag['deno_sca']?></div>
