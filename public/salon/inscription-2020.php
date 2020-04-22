@@ -271,7 +271,7 @@ require '../view/_navbar.php';
 	<div class="row pt-5">
 		<div class="col">
 			<h1 class="text-main-blue">SALON TECHNIQUE BTLEC Est 2020<br>
-				<span class="sub-h1"><i class="far fa-calendar-alt pr-3" aria-hidden="true"></i> du 09/06/2020 au 10/06/2020</span>
+				<span class="sub-h1"><i class="far fa-calendar-alt pr-3" aria-hidden="true"></i> du 22/09/2020 au 23/09/2020</span>
 			</h1>
 
 		</div>
@@ -327,7 +327,7 @@ require '../view/_navbar.php';
 			<h4 class="text-main-blue" id="salon-lk"><i class="fas fa-hand-point-right pr-3"></i>LE SALON BTLEC 2020 </h4>
 
 
-			<p>Le salon BTlec 2020 se déroulera sur 2 jours, le <strong>9 juin de 9h30 à 17h30</strong> et le <strong>10 juin de 9h00 à 16h00</strong>.<br>
+			<p>Le salon BTlec 2020 se déroulera sur 2 jours, le <strong>22 septembre de 9h30 à 17h30</strong> et le <strong>23 septembre de 9h00 à 16h00</strong>.<br>
 			Nous vous proposons, d'assister à des présentations faites directement par GFK. Elles se dérouleront sur 2 sessions de 45 minutes.</p>
 			<p>
 				<ul class="browser-default">
@@ -469,7 +469,7 @@ require '../view/_navbar.php';
 
 
 			<ul class="browser-default">
-				<li>restauration : un petit déjeuner vous sera servi sur le salon et un buffet traiteur vous accueillera le 9 et 10 juin</li>
+				<li>restauration : un petit déjeuner vous sera servi sur le salon et un buffet traiteur vous accueillera le 22 et 23 septembre</li>
 				<li>Sociétés de taxi :
 					<ul class="browser-default">
 						<li><strong><a href="http://www.taxi-city-reims.com" target="_blank">taxi city</a></strong> - 06 64 90 93 43</li>
