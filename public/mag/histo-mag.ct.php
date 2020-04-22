@@ -25,17 +25,7 @@
 <br>
 
 	<div class="row">
-	<?php
-	$allMsg=listAllMsg($pdoBt);
-	//tri le tableau en fonction des id réponse et date msg
-	if($allMsg)
-	{
-		$allMsg = array_msort($allMsg, array('reply_id'=>'SORT_DESC','date_msg'=>'SORT_DESC'));
-	}
 
-
-
-	?>
 
 		<div class="col-12">
 			<p class="alert alert-primary mb-5"><i class="fa fa-exclamation-triangle fa-lg  pr-4" aria-hidden="true"></i>Vous pouvez désormais rouvrir une demande en cliquant sur le cadenas <i class='fa fa-lock px-1' aria-hidden='true' ></i> de la colonne statut</p>
@@ -61,10 +51,10 @@
 				</td>
 				<td>
 					<?php
-					$service=service($pdoBt,$value['id_service']);
-					$service=$service['full_name'];
+					$service=$userManager->getService($pdoBt,$value['id_service']);
+
 					?>
-					<?= $service ?>
+					<?= $service['service'] ?>
 
 				</td>
 				<td>

@@ -8,13 +8,13 @@ if(!isset($_SESSION['id'])){
 unset($_SESSION['goto']);
 
 
-require '../../functions/form.bt.fn.php';
+
 require '../../functions/upload.fn.php';
 require '../../functions/mail.fn.php';
-//affichage de l'historique des réponses
-require '../../functions/form.fn.php';
 require "../../functions/stats.fn.php";
 
+require "../../Class/BtUserManager.php";
+require "../../Class/MsgManager.php";
 
 //----------------------------------------------
 // css dynamique
@@ -36,49 +36,22 @@ $page=basename(__file__);
 $action="consultation";
 addRecord($pdoStat,$page,$action, $descr);
 
-//------------------------------>
-
-
-
 //------------------------------------------------------------
-//				affiche lien vers piec jointe si existe
+//				INITIALISATION
 //------------------------------------------------------------
 
-
-// pour affichage contenu msg
-$idMsg=$_GET['msg'];
-$oneMsg=showOneMsg($pdoBt,$idMsg);
-//nom du magasin
-$panoGalec=getPanoGalec($pdoUser,$oneMsg['id_mag']);
-$magInfo=getMag($pdoBt,$panoGalec['galec']);
-//contenu histo des reponses
-$replies=showReplies($pdoBt, $idMsg);
-
-//template html et données pour envoi mail
-$tpl="../mail/new_reply_from_bt.tpl.html";
-$tplpwd="../mail/identifiant.tpl.html";
-$objet="PORTAIL BTLec - réponse à votre demande";
-mb_internal_encoding('UTF-8');
-$objet = mb_encode_mimeheader($objet);
-
-$objetdde=$oneMsg['objet'];
-$to = $oneMsg['email'];
-$etat="";
-$vide="";
-$link="Cliquez <a href='".SITE_ADDRESS."/index.php?mag/edit-msg.php?msg=".$idMsg."'>ici pour revoir votre demande</a>";
-
-// $link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter votre réponse</a>";
-	// if(sendMail($to,$objet,$tpl,$objetdde,$vide,$link))
-
+$msgManager=new MsgManager();
+$oneMsg=$msgManager->getDemande($pdoBt,$_GET['msg']);
+$replies=$msgManager->getListReplies($pdoBt, $_GET['msg']);
 
 $err=array();
-$service=service($pdoBt,$oneMsg['id_service']);
 $filenameList=array();
 
 
 //test valeur $_FILE, si renvoi true => au moins un fichier à uploader
 $isFileToUpload=isFileToUpload();
 
+// verif si le user a le droit de cloturer la demande sans répondre
 function isUserInGroup($pdoBt,$idWebuser,$groupName){
 
 	$req=$pdoBt->prepare("SELECT * FROM groups WHERE id_webuser= :idWebuser AND group_name= :groupName");
@@ -90,12 +63,31 @@ function isUserInGroup($pdoBt,$idWebuser,$groupName){
 	return $req->rowCount();
 }
 
+function recordReply($pdoBt,$idMsg,$file){
 
+	$reply=strip_tags($_POST['reply']);
+	$reply=nl2br($reply);
+	$insert=$pdoBt->prepare('INSERT INTO replies (id_msg, reply, replied_by, date_reply,inc_file) VALUES (:id_msg, :reply, :replied_by, :date_reply, :inc_file)');
+	$result=$insert->execute(array(
+		':reply'		=> $reply,
+		':date_reply'	=> date('Y-m-d H:i:s'),
+		':id_msg'		=> $idMsg,
+		':replied_by'	=>$_SESSION['id'],
+		':inc_file'		=> $file
+	));
+	return $result;
+}
 
+function majEtat($pdoBt,$idMsg,$etat){
+	$update=$pdoBt->prepare('UPDATE msg SET etat= :etat  WHERE id= :id');
+	$result=$update->execute(array(
+		':etat'		=> $etat,
+		':id'		=>$idMsg
+	));
+	return $result;
+}
 
-
-function recPwd($pdoUser, $idWebuser)
-{
+function recPwd($pdoUser, $idWebuser){
 	$req=$pdoUser->prepare("UPDATE users SET nohash_pwd= :pwd WHERE id= :id");
 	$req->execute(array(
 		":pwd"	=>$_POST['mdp'],
@@ -103,37 +95,44 @@ function recPwd($pdoUser, $idWebuser)
 	));
 }
 
+function formatPJ($incFileStrg){
+	$href="";
+	if(!empty($incFileStrg)){
+		// on transforme la chaine de carctère avec tous les liens (séparateur : ; ) en tableau
+		$incFileStrg=explode( '; ', $incFileStrg );
+		for ($i=0;$i<count($incFileStrg);$i++){
+			$ico="<i class='fa fa-paperclip fa-lg pl-5 pr-3 hvr-pop' aria-hidden='true'  ></i>";
+			$href.= "<a class='pj' href='http://172.30.92.53/".VERSION ."upload/mag/" . $incFileStrg[$i] . "' target='blank'>" .$ico ."ouvrir</a>";
+		}
+		$href="<p>".$href."</p>";
+
+	}
+	return $href;
+}
+
+
+
 // id du message auquel bt répond donc $_GET['msg']
 
-if(isset($_POST['post-reply']))
-{
-	if((empty($_POST['reply'])))
-	{
+if(isset($_POST['post-reply'])){
+	if((empty($_POST['reply']))){
 		echo "merci de remplir tous les champs";
 	}
-
-	else
-	{
+	else{
 		extract($_POST);
 		//si pas de fichier joint
-		if (!$isFileToUpload)
-		{
+		if (!$isFileToUpload){
 			//pas de pièce jointe
 			$allfilename="";
 			// ajout mdp dans webuser
-			if(isset($mdp))
-			{
+			if(isset($mdp)){
 				recPwd($pdoUser, $oneMsg['id_mag']);
 			}
-
-
 		}
-		else
-		// fichier joint
-		{
+		else{
+			// fichier joint
 			// ajout mdp dans webuser
-			if(isset($mdp))
-			{
+			if(isset($mdp)){
 				recPwd($pdoUser, $oneMsg['id_mag']);
 			}
 
@@ -160,8 +159,7 @@ if(isset($_POST['post-reply']))
 				}
 			}
 			if($totalFileSize>$maxFileSize){
-					$err[] = 'Attention le poids total des pièces jointes dépasse la taille autorisée de 5 Mo';
-
+				$err[] = 'Attention le poids total des pièces jointes dépasse la taille autorisée de 5 Mo';
 			}
 			if(count($err)==0){
 				for ($f=0; $f <$nbFiles ; $f++){
@@ -199,67 +197,40 @@ if(isset($_POST['post-reply']))
 
 			}
 
-
-
-
-
-
-
-
-
-
-
-
-
-			// foreach ($_FILES as $fileDetails)
-			// {
-			// 	$authorizedFile=isAllowed($fileDetails['tmp_name'], $encoding=true);
-			// 	//tableau de fichier :
-			// 	if($authorizedFile[0]=='interdit')
-			// 	{
-			// 		$authorized++;
-			// 		$typeInterdit.=$authorizedFile[1];
-
-			// 	}
-			// }
-			// //tous les fichiers sont autorisés
-			// if($authorized==0)
-			// {
-			// 	$hashedFileName=checkUploadNew($uploadDir, $pdoBt);
-			// 	// conversion en string
-			// 	$file= implode("; ", $hashedFileName);
-			// 	//------------------------------
-			// 	//			msg avec piece jointe
-			// 	//			ajoute le msg dans db et
-			// 	//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
-			// 	//------------------------------
-			// }
-			// else
-			// {
-			// 	array_push($err, "l'envoi de fichiers de type ". $typeInterdit ." est interdit, la réponse n'a pas pu être envoyée");
-
-
-			// }
 		}
 		//------------------------------
-		//			TRAITEMENT COMMUN
-		//			ajoute le msg dans db et
-		//			envoi mail au mag
+		//			TRAITEMENT COMMUN : ajoute le msg dans db et envoi mail au mag
 		//------------------------------
 
 		if(count($err)==0)
 		{
-			if(!recordReply($pdoBt,$idMsg,$allfilename)){
+			if(!recordReply($pdoBt,$_GET['msg'],$allfilename)){
 				array_push($err, "votre réponse n'a pas pu être enregistrée (err 01)");
 			}
-			else
-			{
-						//-----------------------------------------
-						//				envoi du mail
-						//-----------------------------------------
+			else{
+				//-----------------------------------------
+				//				envoi du mail
+				//-----------------------------------------
+				$tpl="../mail/new_reply_from_bt.tpl.html";
+				$tplpwd="../mail/identifiant.tpl.html";
+				$objet="PORTAIL BTLec - réponse à votre demande";
+				mb_internal_encoding('UTF-8');
+				$objet = mb_encode_mimeheader($objet);
+
+				$objetdde=$oneMsg['objet'];
+				if(VERSION!="_"){
+					$to = $oneMsg['email'];
+				}else{
+					$to = "valerie.montusclat@btlec.fr";
+
+				}
+				$etat="";
+				$vide="";
+				$link="Cliquez <a href='".SITE_ADDRESS."/index.php?mag/edit-msg.php?msg=".$_GET['msg']."'>ici pour revoir votre demande</a>";
+
 				if(!empty($_POST['mdp']))
 				{
-					$mail=sendMail($to,$objet,$tplpwd,$panoGalec['login'],$mdp,$link);
+					$mail=sendMail($to,$objet,$tplpwd,$oneMsg['deno'],$mdp,$link);
 				}
 				else
 				{
@@ -289,7 +260,7 @@ if(isset($_POST['post-reply']))
 				$etat="en cours";
 			}
 
-			if(!majEtat($pdoBt,$idMsg, $etat))
+			if(!majEtat($pdoBt,$_GET['msg'], $etat))
 			{
 				array_push($err, "votre réponse n'a pas pu être enregistrée (err 02)");
 			}
@@ -334,7 +305,7 @@ if(isset($_POST['closing'])){
 	if(isset($_POST['close-no-msg']))
 	{
 		$etat="clos";
-		if(!majEtat($pdoBt,$idMsg, $etat))
+		if(!majEtat($pdoBt,$_GET['msg'], $etat))
 		{
 			$err="impossible de clore le dossier";
 			die;
@@ -361,7 +332,7 @@ include '../view/_navbar.php';
 	</div>
 
 
-	<h1 class="blue-text text-darken-4">Service <?=$service['full_name']?></h1>
+	<h1 class="blue-text text-darken-4">Service <?=$oneMsg['service']?></h1>
 	<br><br>
 	<div class='row' id='erreur'>
 		<p class="red">
@@ -378,20 +349,20 @@ include '../view/_navbar.php';
 
 	<div class="row mag">
 		<div class="col l12 reply">
-			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Demande n° <?= $oneMsg['id']?> :</h4>
+			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Demande n° <?= $oneMsg['idMsg']. ' : '. $oneMsg['objet']?></h4>
 			<hr>
 			<br><br><br>
 			<div class="inside-mag">
-				<h5>Magasin : <?= $magInfo['mag'] .' - ' .$magInfo['galec']  ?></h5>
+				<h5>Magasin : <?= $oneMsg['deno'] .' - ' .$oneMsg['galec']  ?></h5>
 				<p><span class="labelFor">Objet : </span><?=$oneMsg['objet'] ?></p>
 				<p><span class="labelFor">Interlocuteur : </span><?=$oneMsg['who'] ?></p>
 				<p><span class="labelFor">Date : </span><?= date('d-m-Y à H:i', strtotime($oneMsg['date_msg'])); ?></p>
 				<p><span class="labelFor">Message : </span><br><?=$oneMsg['msg'] ?></p>
 
 				<?php
-				if(isAttached($oneMsg['inc_file']))
+				if(formatPJ($oneMsg['inc_file']))
 				{
-					echo '<p class="pj"><span class="labelFor">Pièce(s) jointe(s)</span>'.isAttached($oneMsg['inc_file']) .'</p>';
+					echo '<p class="pj"><span class="labelFor">Pièce(s) jointe(s)</span>'.formatPJ($oneMsg['inc_file']) .'</p>';
 				}
 
 				?>
@@ -402,23 +373,21 @@ include '../view/_navbar.php';
 	<?php foreach($replies as $reply): ?>
 		<?php
 	//reponse mag ou bt
-		if($who=repliedByIntoName($pdoUser,$reply['replied_by']))
-		{
-
+		if(empty($reply['fullname'])){
 			$magOrBt='mag';
+			$who= $oneMsg['who'];
 		}
-		else
-		{
-			$who=$oneMsg['who'];
+		else{
+			$who=$reply['fullname'];
 			$magOrBt='bt';
 		}
-		$when = ' le '. date('d-m-Y à H:i', strtotime($reply['date_reply']));
+
 
 		?>
 		<!-- affichage des échanges -->
 		<div class="row <?=$magOrBt?>">
 			<div class="col l12">
-				<h5 class="white-text">Réponse de <?= $who .' '.$when ?></h5>
+				<h5 class="white-text">Réponse de <?= $who . ' le '. date('d-m-Y à H:i', strtotime($reply['date_reply'])) ?></h5>
 			</div>
 		</div>
 		<div class="row reply">
@@ -427,10 +396,9 @@ include '../view/_navbar.php';
 			</div>
 			<?php
 		// pièces jointes
-			if(isAttached($reply['inc_file']))
-			{
+			if(formatPJ($reply['inc_file'])){
 				echo '<div class="col l12">';
-				echo '<p><span class="labelFor">Pièce(s) jointe(s)</span>'.isAttached($reply['inc_file']) .'</p>';
+				echo '<p><span class="labelFor">Pièce(s) jointe(s)</span>'.formatPJ($reply['inc_file']) .'</p>';
 				echo '</div>';
 			}
 			?>
@@ -448,7 +416,7 @@ include '../view/_navbar.php';
 	<div class="col l12 m12 frm"> -->
 
 		<div class="inside-mag">
-			<form action="answer.php?msg=<?=$idMsg ?>" method="post" enctype="multipart/form-data" id="answer">
+			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?msg='.$_GET['msg'] ?>" method="post" enctype="multipart/form-data" id="answer">
 				<!--MESSAGE-->
 
 				<div class="input-field white">
@@ -471,8 +439,7 @@ include '../view/_navbar.php';
 				// ajout champ mdp quand demande d'identifiants
 				$identif=ob_get_contents();
 				ob_end_clean();
-				if($oneMsg['objet']=="demande d'identifiants")
-				{
+				if($oneMsg['objet']=="demande d'identifiants"){
 					echo $identif;
 				}
 				?>
@@ -490,12 +457,9 @@ include '../view/_navbar.php';
 						</div>
 					</div>
 				</div>
-
-
-
-
 				<div class="row">
 					<div class='col l3'></div>
+
 					<div class='col l3' id="wait">
 
 					</div>
@@ -527,7 +491,7 @@ ob_start();
 		<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Clôturer la demande sans envoyer de réponse :</h4>
 		<hr>
 		<br><br>
-		<form action="answer.php?msg=<?=$idMsg ?>" method="post" >
+		<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?msg='.$_GET['msg'] ?>" method="post" >
 			<div class="row">
 				<div class='col l9'>
 					<p>
@@ -549,14 +513,9 @@ ob_start();
 $formCloture=ob_get_contents();
 ob_end_clean();
 $idUser=$_SESSION['id'];
-if(isUserInGroup($pdoBt,$idUser,"admin"))
-{
+if(isUserInGroup($pdoBt,$idUser,"admin")){
 	echo $formCloture;
 }
-
-
-
-
 ?>
 
 
@@ -568,7 +527,7 @@ if(isUserInGroup($pdoBt,$idUser,"admin"))
 		<br><br>
 		<?php if ( $_SESSION['id_service']== 5 || $_SESSION['id_service']== 16 || $_SESSION['id_service'] == 6 ||  $oneMsg['id_service'] == $_SESSION['id_service']): ?>
 
-			<p>La demande ne concerne pas votre service ? <a href="chg.php?msg=<?=$idMsg?>">Cliquez ici pour réaffecter la demande</a></p>
+			<p>La demande ne concerne pas votre service ? <a href="chg.php?msg=<?=$_GET['msg']?>">Cliquez ici pour réaffecter la demande</a></p>
 
 			<?php else: ?>
 				<p>Cette demande ne concerne pas ou plus votre service, vous ne pouvez pas la réaffecter</p>
@@ -639,9 +598,6 @@ if(isUserInGroup($pdoBt,$idUser,"admin"))
      		   $('#filelist').append(all);
      		   fileList="";
      		});
-
-
-
 
 	});
 

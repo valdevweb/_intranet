@@ -1,21 +1,23 @@
 <div class="container">
 	<div class="row">
 		<div class="col">
-			<h1 class="blue-text text-darken-4">Réouverture de la demande<br><span class="sub-h1">N° <?= $infoMsg['id_msg'] .' - '. $infoMsg['objet'] ?></span></h1>
+			<h1 class="blue-text text-darken-4">Réouverture de la demande<br><span class="sub-h1">N° <?= $_GET['id_msg'] .' - '. $msg['objet'] ?></span></h1>
 		</div>
 	</div>
 	<!-- formulaire -->
 	<div class="row ">
 		<div class="col bg-white p-5">
-			<form method="post" enctype="multipart/form-data">
+			<form action="<?=htmlspecialchars($_SERVER['PHP_SELF']).'?id_msg='.$_GET['id_msg'] ?>"  method="post" enctype="multipart/form-data">
 				<p>Motif de la demande de réouverture</p>
 				<div class="form-group">
 					<label for="reply"></label>
 					<textarea class="form-control" id="reply" name="reply" rows="3" placeholder="votre message" required="require"></textarea>
 				</div>
-				<label for='incfile'>Ajouter une pièce jointe : </label><input type='file' class='form-control-file' id='incfile' name='incfile' >
-				<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Envoyer d'autres fichiers</a></p>
-
+				<div class="pt-5 pb-2" id="file-upload">
+					<p class="blue-text text-darken-4 pb-2"><i class="fa fa-download pr-3 fa-lg" aria-hidden="true"></i>Envoyer des pièces jointes</p>
+					<p><input type="file" name="file[]"  class='form-control-file' ></p>
+					<p class="pr-1 pt-2 blue-text text-darken-4" id="p-add-more"><a id="addmore" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Ajouter un fichier supplémentaire</a></p>
+				</div>
 				<p class="text-right"><button type="submit" id="submit" class="btn btn-primary" name="submit">Envoyer</button></p>
 				<?php include ('../view/_errors.php');?>
 
@@ -49,25 +51,18 @@
 		</div>
 	</div>
 
-<?php foreach($replies as $reply): ?>
+	<?php foreach($replies as $reply): ?>
 		<?php
-	//nom de la personne qui a répondu si bt
-		$by=repliedByIntoName($pdoUser,$reply['replied_by']);
-		if(is_null($by))
-		{
+		if(is_null($reply['fullname'])){
 			$by="";
-			$side='mag';;
+			$side='mag';
 			$logo="../img/logos/leclerc-rond-50.jpg";
 
-		}
-		else
-		{
+		}else{
 			$color="orange-text";
-			$by="<p class='nom'>" .$by ."</p>";
+			$by="<p class='nom'>" .$reply['fullname'] ."</p>";
 			$side='bt';
 			$logo="../img/logos/bt-rond-50.jpg";
-
-
 		}
 		?>
 		<?= $by ?>
@@ -94,3 +89,11 @@
 
 	<!--fin container  -->
 </div>
+<script type="text/javascript">
+	$(document).ready(function (){
+		$('#addmore').click(function(){
+			$('#p-add-more').prepend('<p><input type="file" name="file[]"></p>');
+			$('input[type="file"]').val();
+		});
+	});
+</script>

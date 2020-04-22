@@ -11,10 +11,13 @@ $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
+require('../../Class/MsgManager.php');
+
+$msgManager=new MsgManager();
 
 
-function search($pdoUser){
-	$req=$pdoUser->prepare("SELECT * FROM mag WHERE concat(deno, btlec, galec, city) LIKE :search ORDER BY deno");
+function search($pdoMag){
+	$req=$pdoMag->prepare("SELECT * FROM mag WHERE concat(deno, id, galec, ville) LIKE :search ORDER BY deno");
 	$req->execute([
 		':search' =>'%'.$_POST['search_strg'] .'%'
 	]);
@@ -52,71 +55,16 @@ function getMyService($pdoBt){
 
 if(isset($_GET['galec'])){
 
-	$histoMag=histoMagFn($pdoBt);
+	$histoMag=$msgManager->getListDemandeByGalec($pdoBt,$_GET['galec']);
+
 
 }
 
 if(isset($_POST['search'])){
-	$magList=search($pdoUser);
-
-
+	$magList=search($pdoMag);
 }
 
-// if($d_searchMag)
-// {
-// 	$listMag=listMagFn($pdoBt);
-// 	$infoService='';
-// }
-// else{
 
-// 	$listMag=listMagServiceFn($pdoBt);
-// 	$infoService=getMyService($pdoBt);
-// 	$infoService= ' - service ' . $infoService['full_name'];
-// }
-
-// if(isset($_POST['search']))
-// {
-// 	if($d_searchMag)
-// 	{
-// 		$histoMag=histoMagFn($pdoBt);
-// 	}
-// 	else
-// 	{
-// 		$histoMag=histoMagServiceFn($pdoBt);
-// 	}
-// }
-
-//------------------------------------------------------
-//			REQUIRES
-//------------------------------------------------------
-// require_once '../../vendor/autoload.php';
-
-
-
-//---------------------------------------
-//	ajout enreg dans stat
-//---------------------------------------
-// require "../../functions/stats.fn.php";
-// addRecord($pdoStat,basename(__file__),'consultation', "fichiers d'info du service achats", 101);
-
-
- //------------------------------------------------------
-//			DECLARATIONS
-//------------------------------------------------------
-
-
-
-
-
-
-//------------------------------------------------------
-//			FONCTION
-//------------------------------------------------------
-
-
-//------------------------------------------------------
-//			VIEW
-//------------------------------------------------------
 include('../view/_head-bt.php');
 include('../view/_navbar.php');
 
@@ -156,7 +104,7 @@ include('../view/_navbar.php');
 			<div class="col">
 				<ul>
 					<?php foreach ($magList as $mag): ?>
-						<li><a href="search.php?galec=<?=$mag['galec']?>"><?=$mag['galec'].'/'.$mag['btlec'] .' - '.$mag['deno'] .' ('.$mag['city']?>)</a></li>
+						<li><a href="search.php?galec=<?=$mag['galec']?>"><?=$mag['galec'].'/'.$mag['id'] .' - '.$mag['deno'] .' ('.$mag['ville']?>)</a></li>
 					<?php endforeach ?>
 				</ul>
 			</div>
@@ -164,48 +112,56 @@ include('../view/_navbar.php');
 
 	<?php endif ?>
 
-	<?php if (isset($histoMag)): ?>
-		<div class="row">
-			<div class="col">
-				<div class="int-padding text-center pb-3 text-main-blue">
-					<h5 class="d-inline">Demandes du magasin de <?=$histoMag[0]['deno']?></h5>
-				</div>
+	<?php if (isset($histoMag) && !empty($histoMag)): ?>
+
+	<div class="row">
+		<div class="col">
+			<div class="int-padding text-center pb-3 text-main-blue">
+				<h5 class="d-inline">Demandes du magasin de <?=$histoMag[0]['deno']?></h5>
 			</div>
 		</div>
-	<?php endif ?>
+	</div>
 	<div class="row">
-		<div class="int-padding">
-			<table class="striped responsive-table">
-				<tr>
-					<th>DEMANDE</th>
-					<th>DATE</th>
-					<th>SERVICE</th>
-					<th>ETAT</th>
-					<th>DETAIL</th>
-				</tr>
-
-				<?php if(isset($histoMag)): ?>
+		<div class="col">
+			<table class="table">
+				<thead class="thead-dark">
+					<tr>
+						<th>Objet de la demande</th>
+						<th>Date</th>
+						<th>Service</th>
+						<th>état</th>
+						<th>afficher</th>
+					</tr>
+				</thead>
+				<tbody>
 					<?php foreach ($histoMag as $msg) : ?>
 						<tr>
 							<td><?=$msg['objet']?></td>
 							<td><?= date('d-m-Y',strtotime($msg['date_msg']))?></td>
 							<td><?= $msg['real_service']?></td>
 							<td><?= $msg['etat']?></td>
-							<td><a href="answer.php?msg=<?=$msg['id_detail']?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+							<td><a href="answer.php?msg=<?=$msg['idMsg']?>" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
 						</tr>
 					<?php endforeach ?>
-					<?php else: ?>
-						<tr>
-							<td colspan="5">Aucun magasin sélectionné</td>
-						</tr>
-					<?php endif; ?>
-				</table>
-			</div>
+				</tbody>
+			</table>
 		</div>
 
-
-
-
-
 	</div>
-	<?php require '../view/_footer-bt.php'; ?>
+	<?php elseif(isset($histoMag) && empty($histoMag)): ?>
+	<div class="row">
+		<div class="col">
+			<div class="alert alert-info">Ce magasin n'a fait aucune demande</div>
+		</div>
+	</div>
+
+
+<?php endif ?>
+
+
+
+
+
+
+</div>
+<?php require '../view/_footer-bt.php'; ?>

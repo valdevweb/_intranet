@@ -8,12 +8,15 @@ if(!isset($_SESSION['id'])){
 
 
 
-require '../../functions/form.bt.fn.php';
-require '../../functions/upload.fn.php';
+
+// require '../../functions/upload.fn.php';
 require '../../functions/mail.fn.php';
 //affichage de l'historique des réponses
-require '../../functions/form.fn.php';
 require "../../functions/stats.fn.php";
+require('../../Class/BtUserManager.php');
+require('../../Class/MsgManager.php');
+require('../../Class/MagHelpers.php');
+require('../../Class/UserHelpers.php');
 
 
 //----------------------------------------------
@@ -24,13 +27,19 @@ $page=explode(".php",$page);
 $page=$page[0];
 $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 
+
 //-----------------------------------------------
 //				affichage
 //-----------------------------------------------
 //liste des services qui s'affichent dans les checkbox
-$services=listServicesNoTest($pdoBt);
+$userManager=new BtUserManager();
+$msgManager=new MsgManager();
+$listServicesContact=$userManager->listServicesContact($pdoBt);
+
+
 $idMsg=$_GET['msg'];
-$oneMsg=showOneMsg($pdoBt,$idMsg);
+$oneMsg=$msgManager->getDemande($pdoBt,$_GET['msg']);
+
 
 if ($_SESSION['id_service']!= 5 && $_SESSION['id_service']!= 16 && $_SESSION['id_service'] != 6 &&  $oneMsg['id_service'] != $_SESSION['id_service']){
 	echo "vous ne pouvez pas réaffecter cette demande, elle n'est plus destinée à votre service";
@@ -41,7 +50,7 @@ if ($_SESSION['id_service']!= 5 && $_SESSION['id_service']!= 16 && $_SESSION['id
 
 
 //compte des ligne pour afficher les checkbox en colonnes
-$nbServices=count($services);
+$nbServices=count($listServicesContact);
 $nbServicesLine=round($nbServices /4);
 $lig=0;
 
@@ -52,14 +61,6 @@ $link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$i
 $tplt="../mail/reaffectation.html";
 mb_internal_encoding('UTF-8');
 
-$name=$oneMsg['who'];
-
-//récup pano galec puis nom du mag
-$mag=getPanoGalec($pdoUser,$oneMsg['id_mag']);
-
-$magSca3=getMag($pdoBt,$mag['galec']);
-$magName=$magSca3['mag'];
-$username=repliedByIntoName($pdoUser,$_SESSION['id_web_user']);
 
 
 
@@ -75,41 +76,35 @@ if(isset($_POST['affect']))
 	}
 	else
 	{
-		$newService=$_POST['service'][0];
-		//info service coché
 
-		if(affectation($pdoBt,$idMsg,$newService))
-		{
+		$newServiceInfo=$userManager-> getServiceById($pdoBt,$_POST['service'][0]);
+		$msgManager->affectation($pdoBt,$idMsg,$_POST['service'][0]);
+		$username=UserHelpers::getFullname($pdoUser,$_SESSION['id_web_user']);
 
-			$path=dirname(__FILE__);
 
-			$serviceInfo=service($pdoBt,$newService);
-			if (preg_match('/_btlecest/', $path)){
-				$mailingList='valerie.montusclat@btlec.fr';
-			}else{
-				$mailingList=$serviceInfo['mailing'];
-			}
-			$objet="PORTAIL BTLec - demande magasin réaffectée au service " . $serviceInfo['full_name'];
-			$objet = mb_encode_mimeheader($objet);
-			$done=sendMail($mailingList,$objet,$tplt,$username,$magName,$link);
+
+		if (VERSION =="_"){
+			$mailingList='valerie.montusclat@btlec.fr';
+		}else{
+			$mailingList=$newServiceInfo['mailing'];
+		}
+		$objet="PORTAIL BTLec - demande magasin réaffectée au service " . $newServiceInfo['service'];
+		$objet = mb_encode_mimeheader($objet);
+		$done=sendMail($mailingList,$objet,$tplt,$username,$oneMsg['deno'],$link);
 
 
 
 			// $msg ="demande réaffectée au service " . $serviceInfo['full_name'];
-			$success[] ="demande réaffectée au service " . $serviceInfo['full_name'];
+		$success[] ="demande réaffectée au service " . $newServiceInfo['mailing'];
 			//------------------------------
 			//	ajout enreg dans stat
 			//------------------------------<
-			$descr="reaffectation d'une demande à " .$serviceInfo['full_name'];
-			$page=basename(__file__);
-			$action="consultation";
-			addRecord($pdoStat,$page,$action, $descr);
+		$descr="reaffectation d'une demande à " .$newServiceInfo['mailing'];
+		$page=basename(__file__);
+		$action="consultation";
+		addRecord($pdoStat,$page,$action, $descr);
 			//------------------------------>
-		}
-		else
-		{
-			$errors[]="erreur de traitement";
-		}
+
 	}
 }
 
@@ -125,21 +120,21 @@ include '../view/_navbar.php';
 			<h1>Réaffectation d'une demande</h1>
 
 
-			<h4 id="modalite-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i> Demande n °: <?= $oneMsg['id'] .' '.$oneMsg['objet']?></h4>
+			<h4 id="modalite-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i> Demande n °: <?= $oneMsg['idMsg'] .' '.$oneMsg['objet']?></h4>
 			<hr>
 			<br><br>
 			<form action="chg.php?msg=<?=$idMsg ?>" method="post" id="chg">
 				<div class="row">
 					<div class="col-3">
 						<?php
-						foreach ($services as $key => $service)
+						foreach ($listServicesContact as $key => $service)
 						{
 							if($lig < $nbServicesLine)
 							{
 
 								echo '<div class="form-group form-check">';
 								echo "<input type='checkbox' class='form-check-input' id='".$service['id']."' name='service[]' value= '".$service['id']."' />";
-								echo "<label class='form-check-label' for='".$service['id']."'>".$service['full_name']."</label>";
+								echo "<label class='form-check-label' for='".$service['id']."'>".$service['service']."</label>";
 								echo "</div>";
 								$lig++;
 							}
@@ -149,7 +144,7 @@ include '../view/_navbar.php';
 								echo '</div><div class="col-3">';
 								echo '<div class="form-group form-check">';
 								echo "<input type='checkbox' class='form-check-input' id='".$service['id']."' name='service[]' value= '".$service['id']."' />";
-								echo "<label class='form-check-label' for='".$service['id']."'>".$service['full_name']."</label>";
+								echo "<label class='form-check-label' for='".$service['id']."'>".$service['service']."</label>";
 								echo "</div>";
 								$lig++;
 

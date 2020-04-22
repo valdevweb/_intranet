@@ -43,6 +43,20 @@ class MagDbHelper{
 		return false;
 	}
 
+
+	public function getMagGalec($galec){
+		$req=$this->pdo->prepare("SELECT * FROM mag  LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE mag.galec= :galec");
+		$req->execute([
+			':galec' =>$galec
+		]);
+		$data=$req->fetch(PDO::FETCH_ASSOC);
+
+		if(!empty($data)){
+			return new Mag($data);
+		}
+		return false;
+	}
+
 	public function centraleToString($idCtbt){
 		$req=$this->pdo->prepare("SELECT id_ctbt, centrale FROM centrales WHERE id_ctbt= :id_ctbt");
 		$req->execute([

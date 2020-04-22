@@ -91,19 +91,19 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 		<li class='active has-sub'><a href='#'><span>Contacter nos services</span></a>
 			<ul>
 				<!-- sous menu niv 1 -->
-				<li data-module="7"><a href="<?= $contact?>gt=brun ">achats brun</a></li>
-				<li data-module="8"><a href="<?= $contact?>gt=gris ">achats gris</a></li>
-				<li data-module="9"><a href="<?= $contact?>gt=pemgem ">achats PEM/GEM</a></li>
-				<li data-module="16"><a href="<?= $contact?>gt=compta ">comptabilité</a></li>
-				<li data-module="10"><a href="<?= $contact?>gt=comm ">communication</a></li>
-				<li data-module="10"><a href="<?= $contact?>gt=cm ">contre-marque</a></li>
-				<li data-module="10"><a href="<?= $contact?>gt=ctrl_gestion">contrôle de gestion</a></li>
-				<li data-module="11"><a href="<?= $contact?>gt=dir ">direction</a></li>
-				<li data-module="12"><a href="<?= $contact?>gt=dircom ">direction commerciale</a></li>
-				<li data-module="13"><a href="<?= $contact?>gt=informatique ">exploitation informatique</a></li>
-				<li data-module="14"><a href="<?= $contact?>gt=logistique ">logistique</a></li>
-				<li data-module="15"><a href="<?= $contact?>gt=rh">social</a></li>
-				<li data-module="17"><a href="<?= $contact?>gt=qual">qualité</a></li>
+				<li data-module="7"><a href="<?= $contact?>id=1 ">achats brun</a></li>
+				<li data-module="8"><a href="<?= $contact?>id=2 ">achats gris</a></li>
+				<li data-module="9"><a href="<?= $contact?>id=3 ">achats PEM/GEM</a></li>
+				<li data-module="16"><a href="<?= $contact?>id=10 ">comptabilité</a></li>
+				<li data-module="10"><a href="<?= $contact?>id=4 ">communication</a></li>
+				<li data-module="10"><a href="<?= $contact?>id=14 ">contre-marque</a></li>
+				<li data-module="10"><a href="<?= $contact?>id=13">contrôle de gestion</a></li>
+				<li data-module="11"><a href="<?= $contact?>id=5 ">direction</a></li>
+				<li data-module="12"><a href="<?= $contact?>id=6 ">direction commerciale</a></li>
+				<li data-module="13"><a href="<?= $contact?>id=7">exploitation informatique</a></li>
+				<li data-module="14"><a href="<?= $contact?>id=8">logistique</a></li>
+				<li data-module="15"><a href="<?= $contact?>id=9">social</a></li>
+				<li data-module="17"><a href="<?= $contact?>id=11">qualité</a></li>
 			</ul>
 		</li>
 
