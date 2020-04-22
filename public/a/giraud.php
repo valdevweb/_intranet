@@ -33,13 +33,9 @@ $errors=[];
 $success=[];
 
 // instanciation
-$pierre=new Utilisateur();
-$pierre->username="pierre";
-$pierre->pwd="123";
-
-$matt=new Utilisateur();
-$matt->username="ùatt";
-$matt->pwd="456";
+$pierre=new Utilisateur("pierre","123");
+$matt=new Utilisateur("matt","46");
+echo $matt->getUsername();
 	echo "<pre>";
 	print_r($matt);
 	print_r($pierre);
