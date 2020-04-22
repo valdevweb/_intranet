@@ -30,31 +30,21 @@
 	<?php
 	include('../doc/flash-view.php');
 	?>
-	<div class="row">
-
+<!-- 	<div class="row">
 		<div class="col  py-3">
-			<h4 class="text-center text-danger font-weight-bold">Reprise des livraisons 48h TNT dans la région Grand Est :<br> redémarrage du service lundi 6 avril</h4>
-			<br><br>
-
 			<h4 class="text-center text-danger font-weight-bold">BTLec EST continue de travailler et d'assurer les livraisons</h4>
-
 		</div>
-	</div>
-	<div class="row">
-		<div class="col">
-		</div>
-	</div>
-
+	</div> -->
 	<div class="row pb-5 align-items-center">
 		<div class="col-lg-1"></div>
 		<div class="col  py-3 text-center  ">
-			<img class="border border-secondary" src="../img/salon/salon2020.jpg">
+			<img class="border border-secondary" src="../img/salon/salon-2020.jpg">
 		</div>
 		<div class="col text-main-blue">
 			<?php if($_SESSION['id_web_user']==1102): ?>
 				<h1 class="text-main-blue">
 				SALON 2020</h1>
-				<h4>Le salon bazar Technique BTLec Est aura lieu les 22 et 23 septembre 2020.</h4>
+				<h4  class="text-center">Nouvelles dates pour le salon bazar Technique BTLec Est :<br> <span class="text-orange"> 22 et 23 septembre 2020</span></h4>
 				<h4 class="text-center">Les inscriptions sont ouvertes !!</h4>
 				<div class="text-center" ><a href="../salon/inscription-2020.php"><button class="btn btn-orange" >S'INSCRIRE AU SALON</button></a></div>
 				<?php else: ?>
@@ -71,7 +61,7 @@
 						<span>2</span>
 						<span>0</span>
 					</h1>
-					<h4>Le salon bazar Technique BTLec Est aura lieu les 22 et 23 septembre 2020</h4>
+					<h4  class="text-center">Nouvelles dates pour le salon bazar Technique BTLec Est :<br> <span class="text-orange"> 22 et 23 septembre 2020</span></h4>
 					<h4 class="text-center">Les inscriptions sont ouvertes !!</h4>
 					<div class="text-center" ><a href="../salon/inscription-2020.php"><button class="glow-on-hover" >S'INSCRIRE AU SALON</button></a></div>
 				<?php endif ?>
