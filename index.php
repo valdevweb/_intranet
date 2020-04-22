@@ -169,23 +169,21 @@ if(!empty($revRes))
 
 
 				</div>
-				<div class="row align-items-center infos mt-2">
+				<div class="row  infos mt-2">
 					<div class="col">
 						<!-- <div class="slide"><h1 class="text-white">Le salon BTLec Est 2020 </h1></div> -->
 						<div class="row">
-							<div class="col-4"></div>
+							<div class="col-3"></div>
 							<div class="col">
 								<h3  class="text-white text-center">SALON 2020</h3>
-								<p class="text-white appear text-center">Cette année, le salon aura lieu mardi 9 et mercredi 10 juin</p>
+								<p class="text-white appear text-center">Cette année, le salon aura lieu mardi 22 et mercredi 23 septembre</p>
 
 							</div>
 						</div>
 
 					</div>
+					<div class="col-2"></div>
 
-					<div class="col">
-						<p class="text-center"><img class="salon-img"  src="public/img/salon/date_anim.gif"></p>
-					</div>
 
 
 				</div>

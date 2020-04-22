@@ -54,7 +54,7 @@
 			<?php if($_SESSION['id_web_user']==1102): ?>
 				<h1 class="text-main-blue">
 				SALON 2020</h1>
-				<h4>Le salon bazar Technique BTLec Est aura lieu les 9 et 10 juin 2020.</h4>
+				<h4>Le salon bazar Technique BTLec Est aura lieu les 22 et 23 septembre 2020.</h4>
 				<h4 class="text-center">Les inscriptions sont ouvertes !!</h4>
 				<div class="text-center" ><a href="../salon/inscription-2020.php"><button class="btn btn-orange" >S'INSCRIRE AU SALON</button></a></div>
 				<?php else: ?>
@@ -71,7 +71,7 @@
 						<span>2</span>
 						<span>0</span>
 					</h1>
-					<h4>Le salon bazar Technique BTLec Est aura lieu les 9 et 10 juin 2020.</h4>
+					<h4>Le salon bazar Technique BTLec Est aura lieu les 22 et 23 septembre 2020</h4>
 					<h4 class="text-center">Les inscriptions sont ouvertes !!</h4>
 					<div class="text-center" ><a href="../salon/inscription-2020.php"><button class="glow-on-hover" >S'INSCRIRE AU SALON</button></a></div>
 				<?php endif ?>
