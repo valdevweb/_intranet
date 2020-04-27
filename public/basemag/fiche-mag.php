@@ -131,6 +131,10 @@ if (isset($_GET['id'])){
 	$ldRbtLink=(!empty($ldRbtLink))? $ldRbtLink:  "Aucune adresse RBT";
 
 	$ldDir=$magDbHelper-> getMagLd($mag->getGalec(),'-DIR');
+		echo "<pre>";
+		print_r($mag->getGalec());
+		echo '</pre>';
+
 	$ldDirName=(!empty($ldDir))? '<a class="text-orange" href="mailto:'.$ldDir[0]['ld_full'].'">'.$ldDir[0]['ld_full'].'</a>':  $mag->getRacineList()."-DIR";
 	$ldDirLink=convertArray($ldDir,'email','</a><br>');
 	$ldDirExist=(!empty($ldDir))? true:  false;
@@ -140,7 +144,7 @@ if (isset($_GET['id'])){
 	$ldAdhName=(!empty($ldAdh))? '<a class="text-orange" href="mailto:'.$ldAdh[0]['ld_full'].'">'.$ldAdh[0]['ld_full'].'</a>':  $mag->getRacineList()."-ADH :";
 	$ldAdhLink=convertArray($ldAdh,'email','</a><br>');
 	$ldAdhExist=(!empty($ldAdh))? true:  false;
-	$ldAdhLink=(!empty($ldAdhLink))? $ldAdhLink: "Aucune adresse adhérent dans ";
+	$ldAdhLink=(!empty($ldAdhLink))? $ldAdhLink: "Aucune adresse adhérent ";
 
 	$docubaseLink="http://172.30.101.66/rheaweb/controler?cmd=home&baseid=1&view=1&j_username=".$mag->getDocubaseLogin() ."&j_password=".$mag->getDocubasePwd();
 
