@@ -73,7 +73,7 @@
 								<span class="text-orange pl-3">Login :</span> <?= $webuser['login']?> <br>
 								<span class="text-orange pl-3">Mot de Passe : </span> <?= $webuser['nohash_pwd']?><br>
 							</div>
-							<div class="col">
+							<div class="col-auto">
 								<span class="text-orange pl-3">Ident : </span><?= $webuser['id_web_user']?><br>
 							</div>
 						</div>
@@ -102,7 +102,7 @@
 							<?= $mag->getSurfaceStrg();?>
 						</div>
 						<div class="col-3">
-							<span class="text-orange">Pôle SAV Gessica : </span>
+							<span class="text-orange">SAV Gessica : </span>
 
 							<?= $mag->getPoleSavSca()?>
 							<span class="text-orange pl-3">CTBT : </span>
