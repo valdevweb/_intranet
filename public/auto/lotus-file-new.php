@@ -64,15 +64,15 @@ foreach ($lotusFileList as $filename){
 		$fileDate=date ('Y-m-d H:i:s', filemtime(DIR_LOTUS_CSV.'\\'.$filename));
 		$fileDate=new DateTimeImmutable($fileDate);
 		$today=new DateTime();
-		// if($fileDate->format('Y-m-d') == (new DateTime("2020-01-30"))->format('Y-m-d')){
-		if($fileDate->format('Y-m-d') == $today->format('Y-m-d')){
-			$newFile=$filename;
+		if($fileDate->format('Y-m-d') == (new DateTime("2020-01-30"))->format('Y-m-d')){
+			if($fileDate->format('Y-m-d') == $today->format('Y-m-d')){
+				$newFile=$filename;
+			}
 		}
+
 	}
 
 }
-
-
 /*----------------------------------------------------------------------------------------------
 TRAITEMENT NOUVEAU FICHIER
 

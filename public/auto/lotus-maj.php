@@ -14,7 +14,7 @@ require_once  'vendor\autoload.php';
 
 
 function getToImport($pdoMag, $sens){
-	$req=$pdoMag->prepare("SELECT * FROM lotus_histo WHERE added= :added AND cm=0");
+	$req=$pdoMag->prepare("SELECT * FROM lotus_histo WHERE added= :added AND processed= 0");
 	$req->execute([
 		':added'=>$sens
 	]);
@@ -52,7 +52,7 @@ function addEntries($pdoMag,$email, $ldFull, $galec){
 
 
 function majHisto($pdoMag, $idHisto){
-	$req=$pdoMag->prepare("UPDATE lotus_histo SET cm=1 WHERE id= :id");
+	$req=$pdoMag->prepare("UPDATE lotus_histo SET processed=1 WHERE id= :id");
 	$req->execute([
 		':id'		=>$idHisto
 	]);
@@ -62,6 +62,11 @@ function majHisto($pdoMag, $idHisto){
 $toAdd=getToImport($pdoMag,1);
 
 $toDelete=getToImport($pdoMag,0);
+
+
+
+
+
 $addedStrg="";
 $deletedStrg="";
 $errorStrg="";

@@ -1,5 +1,4 @@
 <?php
-// require('../../config/autoload.php');
 
 
 function getMissingGalec($pdoMag){
@@ -121,40 +120,43 @@ $emptyLd=getErrorList($pdoMag,4);
 $lotusAgain=getErrorList($pdoMag,5);
 $ldAgain=getErrorList($pdoMag,6);
 
-foreach ($ldAgain as $key => $ld) {
-	$linkedLd=getIncludedLd($pdoMag,trim($ld['lotus']));
-	if(!$linkedLd){
-		// faire un code erreur ld inexistante => 7 renvoie vers une ld inexistante
-		echo "ld non trouvée" .$ld['lotus'].'<br><br>';
-		$detail="la liste ".$ld['ld_full'].' renvoie vers la liste '.$ld['lotus'].'.Celle-ci n\'a pas été trouvée ';
-		updateErrorCode($pdoMag,$ld['id'], 7,$detail);
-		echo $detail;
-	}else{
-		foreach ($linkedLd as $key => $found) {
-					// peut renvoyer plusieurs email
-			if(trim($found['email'])!=''){
-						// ajout de l'adresse mail :
-				$done[$ld['id']]=addMail($pdoMag, $ld['id_import'],$ld['ld_full'], $ld['ld_short'],$ld['ld_suffixe'],$ld['id_import_ld'], $found['email'],$ld['lotus'], $ld['galec']);
-				echo $found['email'].' ajouté pour '.$ld['ld_full'].' id '.$ld['id'];
-				echo "<br>";
 
-							// delete l'actuelle ligne
-			}else{
-						//renvoie vers une ld vide
-						//faire un code erreur ld vide
-				echo "autre ld vide" .$ld['lotus'].'<br><br>';
-				$detail="la liste ".$ld['ld_full'].' renvoie vers la liste '.$ld['lotus'].'.Cette liste est vide ';
-				updateErrorCode($pdoMag,$ld['id'], 8,$detail);
-				echo $detail;
-			}
-		}
-		foreach ($done as $key => $value) {
-			deleteLine($pdoMag,$key);
-			echo $key .'supprimée<br>';
-		}
 
-	}
-}
+// on ne recherche plus les ld qui renvoient sur une ld => instable
+// foreach ($ldAgain as $key => $ld) {
+// 	$linkedLd=getIncludedLd($pdoMag,trim($ld['lotus']));
+// 	if(!$linkedLd){
+// 		// faire un code erreur ld inexistante => 7 renvoie vers une ld inexistante
+// 		echo "ld non trouvée" .$ld['lotus'].'<br><br>';
+// 		$detail="la liste ".$ld['ld_full'].' renvoie vers la liste '.$ld['lotus'].'.Celle-ci n\'a pas été trouvée ';
+// 		updateErrorCode($pdoMag,$ld['id'], 7,$detail);
+// 		echo $detail;
+// 	}else{
+// 		foreach ($linkedLd as $key => $found) {
+// 					// peut renvoyer plusieurs email
+// 			if(trim($found['email'])!=''){
+// 						// ajout de l'adresse mail :
+// 				$done[$ld['id']]=addMail($pdoMag, $ld['id_import'],$ld['ld_full'], $ld['ld_short'],$ld['ld_suffixe'],$ld['id_import_ld'], $found['email'],$ld['lotus'], $ld['galec']);
+// 				echo $found['email'].' ajouté pour '.$ld['ld_full'].' id '.$ld['id'];
+// 				echo "<br>";
+
+// 							// delete l'actuelle ligne
+// 			}else{
+// 						//renvoie vers une ld vide
+// 						//faire un code erreur ld vide
+// 				echo "autre ld vide" .$ld['lotus'].'<br><br>';
+// 				$detail="la liste ".$ld['ld_full'].' renvoie vers la liste '.$ld['lotus'].'.Cette liste est vide ';
+// 				updateErrorCode($pdoMag,$ld['id'], 8,$detail);
+// 				echo $detail;
+// 			}
+// 		}
+// 		foreach ($done as $key => $value) {
+// 			deleteLine($pdoMag,$key);
+// 			echo $key .'supprimée<br>';
+// 		}
+
+// 	}
+// }
 
 
 foreach ($lotusAgain as $key => $lotus) {

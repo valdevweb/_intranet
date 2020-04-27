@@ -89,3 +89,7 @@ if(!empty($deleted)){
 }
 
 echo " a supprimer " .sizeof($deleted);
+echo " a ajouter " .sizeof($news);
+	echo "<pre>";
+	print_r($news);
+	echo '</pre>';
