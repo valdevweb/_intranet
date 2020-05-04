@@ -34,6 +34,7 @@ class Mag{
     private $fax_sca;
     private $surface_sca;
     private $adherent_sca;
+    private $directeur_sca;
     private $nom_gesap;
     private $lotus_rbt;
     private $obs;
@@ -114,7 +115,7 @@ class Mag{
     }
 
     public function getDateOuvertureFr(){
-       if(!empty($this->date_ouverture)){
+     if(!empty($this->date_ouverture)){
         $dateOuv=new DateTime($this->date_ouverture);
         return $dateOuv->format('d/m/Y');
     }
@@ -123,7 +124,7 @@ class Mag{
 }
 
 public function getDateOuvFr(){
-   if(!empty($this->date_ouv)){
+ if(!empty($this->date_ouv)){
     $dateOuv=new DateTime($this->date_ouv);
     return $dateOuv->format('d/m/Y');
 }
@@ -133,7 +134,7 @@ return $this->date_ouv;
 
 
 public function getDateFermFr(){
-   if(!empty($this->date_ferm)){
+ if(!empty($this->date_ferm)){
     $dateFerm=new DateTime($this->date_ferm);
     return $dateFerm->format('d/m/Y');
 }
@@ -853,6 +854,15 @@ public function getBackoffice(){
 
 public function setBackoffice($backoffice){
     $this->backoffice = $backoffice;
+    return $this;
+}
+
+public function getDirecteurSca(){
+    return $this->directeur_sca;
+}
+
+public function setDirecteurSca($directeur_sca){
+    $this->directeur_sca = $directeur_sca;
     return $this;
 }
 }

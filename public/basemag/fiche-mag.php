@@ -55,7 +55,7 @@ function convertArray($data, $field,$separator){
 }
 
 function updateSca($pdoMag){
-	$req=$pdoMag->prepare("UPDATE sca3 SET galec_sca= :galec_sca, deno_sca= :deno_sca, ad1_sca= :ad1_sca, ad2_sca= :ad2_sca, ad3= :ad3_sca, cp_sca= :cp_sca, ville_sca= :ville_sca, tel_sca= :tel_sca, fax_sca= :fax_sca, adherent_sca= :adh_sca, centrale_sca= :centrale_sca, centrale_doris= :centrale_doris, centrale_smiley= :centrale_smiley, surface_sca= :surface_sca, sorti= :sorti, date_ouverture= :date_ouverture, date_adhesion= :date_adhesion, date_fermeture= :date_fermeture, date_resiliation= :date_resiliation, date_sortie= :date_sortie, pole_sav_sca= :pole_sav_sca, nom_gesap= :gesap, affilie= :affilie, date_update= :date_update WHERE btlec_sca= :btlec_sca");
+	$req=$pdoMag->prepare("UPDATE sca3 SET galec_sca= :galec_sca, deno_sca= :deno_sca, ad1_sca= :ad1_sca, ad2_sca= :ad2_sca, ad3= :ad3_sca, cp_sca= :cp_sca, ville_sca= :ville_sca, tel_sca= :tel_sca, fax_sca= :fax_sca, adherent_sca= :adh_sca, directeur_sca= :dir_sca, centrale_sca= :centrale_sca, centrale_doris= :centrale_doris, centrale_smiley= :centrale_smiley, surface_sca= :surface_sca, sorti= :sorti, date_ouverture= :date_ouverture, date_adhesion= :date_adhesion, date_fermeture= :date_fermeture, date_resiliation= :date_resiliation, date_sortie= :date_sortie, pole_sav_sca= :pole_sav_sca, nom_gesap= :gesap, affilie= :affilie, date_update= :date_update WHERE btlec_sca= :btlec_sca");
 
 	$req->execute([
 		':btlec_sca'		=>$_GET['id'],
@@ -69,6 +69,7 @@ function updateSca($pdoMag){
 		':tel_sca'		=>$_POST['tel_sca'],
 		':fax_sca'		=>$_POST['fax_sca'],
 		':adh_sca'		=>$_POST['adh_sca'],
+		':dir_sca'		=>$_POST['dir_sca'],
 		':centrale_sca'		=>(empty($_POST['centrale_sca']))? NULL:$_POST['centrale_sca'] ,
 		':centrale_doris'		=>(empty($_POST['centrale_doris']))? NULL :$_POST['centrale_doris'],
 		':centrale_smiley'		=>(empty($_POST['centrale_smiley']))? NULL :$_POST['centrale_smiley'],
@@ -116,6 +117,7 @@ if(isset($_POST['clear_form'])){
 if (isset($_GET['id'])){
 	$magDbHelper=new MagDbHelper($pdoMag);
 	$mag=$magDbHelper->getMagBt($_GET['id']);
+
 	$histo= $magDbHelper->getHisto($mag->getGalec());
 	$listCentralesSca=$magDbHelper->getDistinctCentraleSca();
 	$webusers=$magDbHelper->getWebUser($mag->getGalec());
@@ -560,7 +562,7 @@ DEBUT CONTENU CONTAINER
 							<?= (isset($mag))? 'Leclerc '.$mag->getDeno(): "Fiche magasin" ?>
 						</h1>
 
-						<h5 class="yanone">Code BTLec : <span class="text-orange" ><?= $mag->getId() .'</span><span class="pl-5">Panonceau Galec : <span class="text-orange">'.$mag->getGalec().'</span>'?> <span class="text-orange pl-5">Centrale : </span><?=$centraleSca?> </h5>
+						<h5 class="yanone">Code BTLec : <span class="text-orange" ><?= $mag->getId() .'</span><span class="pl-5">Panonceau Galec : <span class="text-orange">'.$mag->getGalec().'</span>'?> <span class="pl-5">Centrale : </span><span class="text-orange"><?=$centraleSca?></span> </h5>
 
 					</div>
 					<?php

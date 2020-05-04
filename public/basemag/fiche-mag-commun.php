@@ -34,7 +34,9 @@
 		<?= $mag->getTel();?>
 	</div>
 	<div class="col-3">
-		<br><br>
+		<i class="fas fa-user-friends pr-3 text-orange"></i>
+		<?= $mag->getDirecteurSca()?><br>
+		<br>
 		<span class="border-left-dashed-simple"></span><i class="fas fa-fax pr-3 text-orange"></i>
 		<?= $mag->getFax()?>
 	</div>
