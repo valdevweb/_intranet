@@ -70,6 +70,10 @@ $d_litigeBt=isUserAllowed($pdoUser,$litigeBtIds);
 $missionIds=array(78,5);
 $d_mission=isUserAllowed($pdoUser, $missionIds);
 
+$gtOccBtIds=array(83);
+$d_occBt=isUserAllowed($pdoUser,$gtOccBtIds);
+$gtOccMagIds=array(84);
+$d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 
 
 
@@ -158,6 +162,26 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 			// si pas de type, on a une erreur donc on log
 			errorlog($pdoUser);
 		}
+		?>
+		<?php if ($d_occBt): ?>
+
+		<li class='active has-sub'><a href="<?= ROOT_PATH?>/public/gtocc/occ-dashboard-bt.php"><span>GT occasion</span></a>
+			<!-- <ul>
+				<li><a href="/public/btlec/dashboard.php">accueil GT occasion</a></li>
+				</ul> -->
+			</li>
+		<?php endif ?>
+		<?php if ($d_occMag): ?>
+
+		<li class='active has-sub'><a href="<?= ROOT_PATH?>/public/gtocc/occ-dashboard-mag.php"><span>GT occasion</span></a>
+			<!-- <ul>
+				<li><a href="/public/btlec/dashboard.php">accueil GT occasion</a></li>
+				</ul> -->
+			</li>
+		<?php endif ?>
+
+
+		<?php
 		ob_start();
 		?>
 		<li class='has-sub'><a href="#"><span>Litiges</span></a>
@@ -197,7 +221,6 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 
 
 		<!-- section sans sous menu -->
-		<li><a href="<?= ROOT_PATH. '/public/entrepot/discover.php'?>"><span>Entrepôt</span></a></li>
 
 		<li><a href="<?= ROOT_PATH. '/public/gazette/gazette.php'?>" >Les gazettes</a></li>
 		<li  class='active has-sub'><a href="#" >documents</a>
@@ -348,6 +371,8 @@ $d_mission=isUserAllowed($pdoUser, $missionIds);
 		<?php if ($d_mag): ?>
 			<li><a href="<?= ROOT_PATH ?>/public/user/profil.php" class="tooltipped" data-position="bottom" data-tooltip="Votre compte"><span>Votre magasin<i class="fa fa-user pl-3"></i></span></a></li>
 		<?php endif ?>
+
+
 		<li><a href="<?= ROOT_PATH ?>/public/logoff.php" class="tooltipped" data-position="bottom" data-tooltip="se déconnecter"><span><i class="fa fa-power-off"></i></span></a></li>
 	</ul>
 </div>
