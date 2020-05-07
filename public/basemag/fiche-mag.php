@@ -126,13 +126,13 @@ if (isset($_GET['id'])){
 	$listCm=UserHelpers::getUserByService($pdoUser, 17);
 
 	// ld
-	$ldRbt=$magDbHelper-> getMagLd($mag->getGalec(),'-RBT');
+	$ldRbt=$magDbHelper-> getMagLd($mag->getId(),'-RBT');
 	$ldRbtName=(!empty($ldRbt))? '<a class="text-orange" href="mailto:'.$ldRbt[0]['ld_full'].'">'.$ldRbt[0]['ld_full'].'</a>':  $mag->getRacineList()."-RBT";
 	$ldRbtLink=convertArray($ldRbt,'email','</a><br>');
 	$ldRbtExist=(!empty($ldRbt))? true:  false;
 	$ldRbtLink=(!empty($ldRbtLink))? $ldRbtLink:  "Aucune adresse RBT";
 
-	$ldDir=$magDbHelper-> getMagLd($mag->getGalec(),'-DIR');
+	$ldDir=$magDbHelper-> getMagLd($mag->getId(),'-DIR');
 		echo "<pre>";
 		print_r($mag->getGalec());
 		echo '</pre>';
@@ -142,7 +142,7 @@ if (isset($_GET['id'])){
 	$ldDirExist=(!empty($ldDir))? true:  false;
 	$ldDirLink=(!empty($ldDirLink))? $ldDirLink : "Aucune adresse directeur";
 
-	$ldAdh=$magDbHelper-> getMagLd($mag->getGalec(),'-ADH');
+	$ldAdh=$magDbHelper-> getMagLd($mag->getId(),'-ADH');
 	$ldAdhName=(!empty($ldAdh))? '<a class="text-orange" href="mailto:'.$ldAdh[0]['ld_full'].'">'.$ldAdh[0]['ld_full'].'</a>':  $mag->getRacineList()."-ADH :";
 	$ldAdhLink=convertArray($ldAdh,'email','</a><br>');
 	$ldAdhExist=(!empty($ldAdh))? true:  false;
