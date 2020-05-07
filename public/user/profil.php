@@ -52,19 +52,19 @@ if(isset($_SESSION['code_bt'])){
 	$ad2=!empty($mag->getAd2()) ? $mag->getAd2().'<br>' :'';
 
 	// // ld
-	$ldRbt=$magDbHelper-> getMagLd($mag->getGalec(),'-RBT');
+	$ldRbt=$magDbHelper-> getMagLd($mag->getId(),'-RBT');
 	$ldRbtName=(!empty($ldRbt))? '<a class="text-orange" href="mailto:'.$ldRbt[0]['ld_full'].'">'.$ldRbt[0]['ld_full'].'</a>':  $mag->getRacineList()."-RBT";
 	$ldRbtLink=convertArray($ldRbt,'email','</a><br>');
 	$ldRbtExist=(!empty($ldRbt))? true:  false;
 	$ldRbtLink=(!empty($ldRbtLink))? $ldRbtLink:  "Aucune adresse RBT";
 
-	$ldDir=$magDbHelper-> getMagLd($mag->getGalec(),'-DIR');
+	$ldDir=$magDbHelper-> getMagLd($mag->getId(),'-DIR');
 	$ldDirName=(!empty($ldDir))? '<a class="text-orange" href="mailto:'.$ldDir[0]['ld_full'].'">'.$ldDir[0]['ld_full'].'</a>':  $mag->getRacineList()."-DIR";
 	$ldDirLink=convertArray($ldDir,'email','</a><br>');
 	$ldDirExist=(!empty($ldDir))? true:  false;
 	$ldDirLink=(!empty($ldDirLink))? $ldDirLink : "Aucune adresse directeur";
 
-	$ldAdh=$magDbHelper-> getMagLd($mag->getGalec(),'-ADH');
+	$ldAdh=$magDbHelper-> getMagLd($mag->getId(),'-ADH');
 	$ldAdhName=(!empty($ldAdh))? '<a class="text-orange" href="mailto:'.$ldAdh[0]['ld_full'].'">'.$ldAdh[0]['ld_full'].'</a>':  $mag->getRacineList()."-ADH :";
 	$ldAdhLink=convertArray($ldAdh,'email','</a><br>');
 	$ldAdhExist=(!empty($ldAdh))? true:  false;
