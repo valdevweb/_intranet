@@ -228,8 +228,9 @@ if(isset($_POST['submit']))
 {
 	$i=1;
 	$arrI=[];
-	$dataSearch=search($pdoQlik);
 	$searchStr=$_POST['search_strg'];
+
+	$dataSearch=search($pdoQlik);
 	// on récupère les tete de box et contenu de box dans ces tableaux pour plus tard dans l'insertion de donnée pourvoir préciser si box
 	$boxTete=[];
 	$boxDetail=[];
@@ -298,9 +299,8 @@ $success=[];
 //
 if(isset($_POST['choose']))
 {
-//  on ne veut récuperer que les id donc on supprime les valeurs des champ submit, date, etc
-	foreach ($_POST as $key => $value)
-	{
+//  on ne veut récuperer que les id (ce sont les ids des articles dans la table statsventeslitiges) donc on supprime les valeurs des champ submit, date, etc
+	foreach ($_POST as $key => $value){
 		if($key!='choose' && $key!='selectAll'  && $key !='nom' && $key !='date_bt' && $key != 'num_dossier_form' && $key != 'palette_complete')
 		{
 			$ids[]=$key;
@@ -335,28 +335,14 @@ if(isset($_POST['choose']))
 			$idRobbery=null;
 		}
 
-		// soit le numéro de dossier a été saisi, on écrit dans la table finale => c'est un utilisateur btlec donc il est censé terminer sa déclaration
-		// soit il n'a pas été saisi, on
-		if(!empty($_POST['num_dossier_form']))
-		{
-			// le numéro de dossier sera ecrasé au moment de la recopie de la table temporaire vers la table active
-			// on mémorise donc le numéro de dossier dans une variable session
+		// si le numéro de dossier a été saisi, on le mémorise dans $_SESSION['dossier_litige']
+		if(!empty($_POST['num_dossier_form'])){
 			$_SESSION['dossier_litige']=$_POST['num_dossier_form'];
-			$numDossier=9999;
-			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId, $idRobbery);
 		}
-		else
-		{
+		// le numéro de dossier sera ecrasé au moment de la recopie de la table temporaire vers la table active
+		$numDossier=9999;
+		$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId, $idRobbery);
 
-			// si pas de numéro de dossier imposé, on prend le der num et on ajoute 1
-			$numDossier=9999;
-
-			$lastInsertId=insertDossier($pdoLitige,$numDossier, $magId, $idRobbery);
-				echo "<pre>";
-					print_r($lastInsertId);
-					echo '</pre>';
-
-		}
 	// créa du dossier (sans numéro officiel pour l'instant)
 		if($lastInsertId>0){
 			$sucess[]="ajout du dossier réussie";
@@ -424,13 +410,10 @@ if(isset($_POST['choose']))
 				$pul=null;
 
 			}
-				echo "<pre>";
-				print_r($lastInsertId);
-				echo '</pre>';
+
 
 			$detail=addDetails($pdoLitige, $lastInsertId,$numDossier,$art['palette'],$art['facture'],$dateFact, $art['article'], $art['gencod'],$art['dossier'], $art['libelle'], $art['qte'],$art['tarif'], $art['fournisseur'], $art['cnuf'],$tete,$detailbox,$puv,$pul );
-			if($detail>0)
-			{
+			if($detail>0){
 				$added++;
 			}
 			else{
@@ -691,84 +674,84 @@ DEBUT CONTENU CONTAINER
 
 
 				</div>
-					<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">2</span>Nom de l'interlocuteur</p>
-					<div class="form-group">
-						<input type="text" class="form-control"  name="nom" required>
-					</div>
+				<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">2</span>Nom de l'interlocuteur</p>
+				<div class="form-group">
+					<input type="text" class="form-control"  name="nom" required>
+				</div>
 
-					<?php
-					ob_start();
-					?>
-					<div class="row">
-						<div class="col">
-							<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">3</span>Date de déclaration</p>
-						</div>
-						<div class="col">
-							<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">4</span>Numéro de dossier : </p>
-						</div>
+				<?php
+				ob_start();
+				?>
+				<div class="row">
+					<div class="col">
+						<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">3</span>Date de déclaration</p>
 					</div>
-					<div class="row">
-						<div class="col-4">
-							<div class="alert alert-light ">
-								<div class="form-group pt-2">
-									<input type="date" class="form-control" name="date_bt" value="<?= date('Y-m-d')?>">
-								</div>
+					<div class="col">
+						<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">4</span>Numéro de dossier : </p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-4">
+						<div class="alert alert-light ">
+							<div class="form-group pt-2">
+								<input type="date" class="form-control" name="date_bt" value="<?= date('Y-m-d')?>">
 							</div>
 						</div>
-						<div class="col-2"></div>
-						<div class="col-4">
-							<div class="alert alert-light ">
-								<div class="form-group pt-2">
-									<input type="text" class="form-control" name="num_dossier_form">
-								</div>
-							</div>
-
-						</div>
 					</div>
+					<div class="col-2"></div>
+					<div class="col-4">
+						<div class="alert alert-light ">
+							<div class="form-group pt-2">
+								<input type="text" class="form-control" name="num_dossier_form">
+							</div>
+						</div>
+
+					</div>
+				</div>
 
 
-					<?php
-					$datebtform=ob_get_contents();
-					ob_end_clean();
-					if($_SESSION['type']=="btlec")
-					{
-						echo $datebtform;
-					}
+				<?php
+				$datebtform=ob_get_contents();
+				ob_end_clean();
+				if($_SESSION['type']=="btlec")
+				{
+					echo $datebtform;
+				}
 
-					?>
+				?>
 
-					<p class="text-right"><button class="btn btn-primary" type="submit" name="choose" id="choose">Valider</button></p>
+				<p class="text-right"><button class="btn btn-primary" type="submit" name="choose" id="choose">Valider</button></p>
 
 
-				</form>
-			</div>
-			<div class="col-lg-1 col-xxl-2"></div>
+			</form>
 		</div>
-		<?php
-		$dataMag=ob_get_contents();
-		ob_end_clean();
-		if(isset($_POST['submit'])){
-			echo $dataMag;
-		}
-
-
-		?>
-		<!-- ./row -->
+		<div class="col-lg-1 col-xxl-2"></div>
 	</div>
-	<script src="../js/sorttable.js"></script>
-	<script type="text/javascript">
+	<?php
+	$dataMag=ob_get_contents();
+	ob_end_clean();
+	if(isset($_POST['submit'])){
+		echo $dataMag;
+	}
 
-		$("#checkAll").click(function () {
-			$('.article input:checkbox').not(this).prop('checked', this.checked);
+
+	?>
+	<!-- ./row -->
+</div>
+<script src="../js/sorttable.js"></script>
+<script type="text/javascript">
+
+	$("#checkAll").click(function () {
+		$('.article input:checkbox').not(this).prop('checked', this.checked);
 			// $('input:checkbox').(#checkpalette).prop('unchecked', this.checked);
 		});
-		$("#checkpalette").click(function () {
-			$('input:checkbox').not(this).prop('checked', this.checked);
-		});
+	$("#checkpalette").click(function () {
+		$('input:checkbox').not(this).prop('checked', this.checked);
+	});
 
 
-		$(".vol-list-palette").click(function(){
-			var palette=$(this).attr('id');
+	$(".vol-list-palette").click(function(){
+		var palette=$(this).attr('id');
 				// var thisclass='.'+palette;
 				$('.'+ palette).prop('checked', this.checked);
 
@@ -777,120 +760,120 @@ DEBUT CONTENU CONTAINER
 			});
 
 
-		$("#search").submit(function( event )
-		{
-			$("#waitun" ).append('<i class="fas fa-spinner fa-spin"></i><span class="pl-3">Merci de patienter pendant la recherche</span>')
-		});
+	$("#search").submit(function( event )
+	{
+		$("#waitun" ).append('<i class="fas fa-spinner fa-spin"></i><span class="pl-3">Merci de patienter pendant la recherche</span>')
+	});
 
-		$("#submit").submit(function( event )
-		{
-			$("#waitdeux" ).append('<i class="fas fa-spinner fa-spin"></i><span class="pl-3">Merci de patienter</span>')
+	$("#submit").submit(function( event )
+	{
+		$("#waitdeux" ).append('<i class="fas fa-spinner fa-spin"></i><span class="pl-3">Merci de patienter</span>')
 
-		});
+	});
 
-		$('.checkarticle').click(function(e)
-		{
-			var test=$(e.target).closest('tr');
+	$('.checkarticle').click(function(e)
+	{
+		var test=$(e.target).closest('tr');
 			// console.log(test);
 		});
-		var boxText='<tr><td class="heavy text-red"colspan="7"><i class="fas fa-exclamation-triangle pr-3"></i>Vous avez sélectionné un BOX, veuillez cocher parmi les articles du box (en bleu),ceux sur lesquels vous avez un litige </td>/<tr>';
-		$('.1').hide()
-		$('#1').change(function(){
-			if($(this).is(":checked")) {
-				$('#1').closest('tr').after(boxText);
-				$('.1').show();
-				$('.1').addClass('text-blue');
-			}
-			else
-			{
-				$('.1').hide();
-				var thistr=$('#1').closest('tr');
-				thistr.next().remove();
-			}
-		});
+	var boxText='<tr><td class="heavy text-red"colspan="7"><i class="fas fa-exclamation-triangle pr-3"></i>Vous avez sélectionné un BOX, veuillez cocher parmi les articles du box (en bleu),ceux sur lesquels vous avez un litige </td>/<tr>';
+	$('.1').hide()
+	$('#1').change(function(){
+		if($(this).is(":checked")) {
+			$('#1').closest('tr').after(boxText);
+			$('.1').show();
+			$('.1').addClass('text-blue');
+		}
+		else
+		{
+			$('.1').hide();
+			var thistr=$('#1').closest('tr');
+			thistr.next().remove();
+		}
+	});
 
 
-		$('.2').hide()
-		$('#2').change(function(){
-			if($(this).is(":checked")) {
-				$('#2').closest('tr').after(boxText);
-				$('.2').show();
-				$('.2').addClass('text-blue');
-			}
-			else
-			{
-				$('.2').hide();
-				var thistr=$('#2').closest('tr');
-				thistr.next().remove();
-			}
-		});
+	$('.2').hide()
+	$('#2').change(function(){
+		if($(this).is(":checked")) {
+			$('#2').closest('tr').after(boxText);
+			$('.2').show();
+			$('.2').addClass('text-blue');
+		}
+		else
+		{
+			$('.2').hide();
+			var thistr=$('#2').closest('tr');
+			thistr.next().remove();
+		}
+	});
 
-		$('.3').hide()
-		$('#3').change(function(){
-			if($(this).is(":checked")) {
-				$('#3').closest('tr').after(boxText);
-				$('.3').show();
-				$('.3').addClass('text-blue');
-			}
-			else
-			{
-				$('.3').hide();
-				var thistr=$('#3').closest('tr');
-				thistr.next().remove();
-			}
-		});
+	$('.3').hide()
+	$('#3').change(function(){
+		if($(this).is(":checked")) {
+			$('#3').closest('tr').after(boxText);
+			$('.3').show();
+			$('.3').addClass('text-blue');
+		}
+		else
+		{
+			$('.3').hide();
+			var thistr=$('#3').closest('tr');
+			thistr.next().remove();
+		}
+	});
 
-		$('.4').hide()
-		$('#4').change(function(){
-			if($(this).is(":checked")) {
-				$('#4').closest('tr').after(boxText);
-				$('.4').show();
-				$('.4').addClass('text-blue');
-			}
-			else
-			{
-				$('.4').hide();
-				var thistr=$('#4').closest('tr');
-				thistr.next().remove();
-			}
-		});
-
-
-		$('.5').hide()
-		$('#5').change(function(){
-			if($(this).is(":checked")) {
-				$('#5').closest('tr').after(boxText);
-				$('.5').show();
-				$('.5').addClass('text-blue');
-			}
-			else
-			{
-				$('.5').hide();
-				var thistr=$('#5').closest('tr');
-				thistr.next().remove();
-			}
-		});
+	$('.4').hide()
+	$('#4').change(function(){
+		if($(this).is(":checked")) {
+			$('#4').closest('tr').after(boxText);
+			$('.4').show();
+			$('.4').addClass('text-blue');
+		}
+		else
+		{
+			$('.4').hide();
+			var thistr=$('#4').closest('tr');
+			thistr.next().remove();
+		}
+	});
 
 
-		$('.6').hide()
-		$('#6').change(function(){
-			if($(this).is(":checked")) {
-				$('#6').closest('tr').after(boxText);
-				$('.6').show();
-				$('.6').addClass('text-blue');
-			}
-			else
-			{
-				$('.6').hide();
-				var thistr=$('#6').closest('tr');
-				thistr.next().remove();
-			}
-		});
-	</script>
+	$('.5').hide()
+	$('#5').change(function(){
+		if($(this).is(":checked")) {
+			$('#5').closest('tr').after(boxText);
+			$('.5').show();
+			$('.5').addClass('text-blue');
+		}
+		else
+		{
+			$('.5').hide();
+			var thistr=$('#5').closest('tr');
+			thistr.next().remove();
+		}
+	});
 
 
-	<?php
+	$('.6').hide()
+	$('#6').change(function(){
+		if($(this).is(":checked")) {
+			$('#6').closest('tr').after(boxText);
+			$('.6').show();
+			$('.6').addClass('text-blue');
+		}
+		else
+		{
+			$('.6').hide();
+			var thistr=$('#6').closest('tr');
+			thistr.next().remove();
+		}
+	});
+</script>
 
-	require '../view/_footer-bt.php';
 
-	?>
+<?php
+
+require '../view/_footer-bt.php';
+
+?>

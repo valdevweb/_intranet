@@ -180,8 +180,7 @@ if(isset($_POST['submit']))
 				}
 			}
 		}
-		if(count($errors)==0)
-		{
+		if(count($errors)==0){
 			// cas d'une inversion de réf
 			if($_POST['form_motif'][$i]==5 || ($_POST['form_motif'][$i]==8 && (!empty($_POST['form_autre_qte'][$i]) && !empty($_POST['form_autre'][$i]))) )
 			{
@@ -256,8 +255,7 @@ if(isset($_POST['submit']))
 				}
 
 			}
-			else
-			{
+			else{
 
 
 				// cas général (pas d'inversion de produit)
