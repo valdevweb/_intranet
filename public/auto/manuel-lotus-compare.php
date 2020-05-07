@@ -15,7 +15,6 @@ include 'functions\tasklog.fn.php';
 4- si non requetes et ajout à la db
 */
 
-
 function getOldDbImportId($pdoMag){
 	$req=$pdoMag->query("SELECT id_import FROM lotus_ld_old LIMIT 1");
 	return $req->fetch(PDO::FETCH_ASSOC);
@@ -93,17 +92,16 @@ function inOld($pdoMag, $ldFull,$email, $galec){
 	return true;
 
 }
-
 $oldId=getOldDbImportId($pdoMag);
-echo $oldId['id_import'];
 $newId=getNewDbImportId($pdoMag);
-echo $newId['id_import'];
 $histoId=getIdNewHisto($pdoMag);
-echo $histoId['id_new'];
-if($newId['id_import']==$histoId['id_new']){
-	echo "le traitement a déjà été fait";
-	exit();
-}
+
+
+// if($newId['id_import']==$histoId['id_new']){
+// 	echo "le traitement a déjà été fait";
+// 	exit();
+// }
+
 
 $newTable=newTable($pdoMag);
 $oldTable=oldTable($pdoMag);

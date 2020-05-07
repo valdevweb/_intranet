@@ -1,14 +1,12 @@
 <?php
-/* type de données
-0=>'lotus',
-	1=>'email',
-	2=>'ld'
+if (preg_match('/_btlecest/', dirname(__FILE__))){
+	set_include_path("D:\www\_intranet\_btlecest\\");
+}
+else{
+	set_include_path("D:\www\intranet\btlecest\\");
+}
 
-
- */
-
-
-
+include 'config\config.inc.php';
 	function getDataFromFile($contents,$searchCriteria){
 		$pattern = preg_quote($searchCriteria, '/');
 		$pattern = "/^.*$pattern.*\$/m";
@@ -92,7 +90,7 @@
 
 		]);
 	}
-
+$newFile="LOTUS_20200505.txt";
 
 // OUVERTURE FICHIER
 	$file=DIR_LOTUS_CSV."\\".$newFile;
@@ -115,10 +113,10 @@
 		exit();
 	}
 
-	copyToOld($pdoMag);
-	cleanActual($pdoMag);
+	// copyToOld($pdoMag);
+	// cleanActual($pdoMag);
 
-	$lastinsertId=addNewFile($pdoMag, $newFile);
+	// $lastinsertId=addNewFile($pdoMag, $newFile);
 
 
 // $lastinsertId=99;
@@ -129,10 +127,13 @@
 	for ($idLd=0; $idLd <count($contenuListeDiffu) ; $idLd++) {
 	// le cas ou la liste est vide
 		if(empty(trim($contenuListeDiffu[$idLd]))){
+
 		// inserer nom ld avec code erreur vide (4)
-			$one=insertEmail($pdoMag, $lastinsertId, $nomListesDiffu[$idLd]['ld_full'], $nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, '', '', $nomListesDiffu[$idLd]['galec'], 4);
+			// $one=insertEmail($pdoMag, $lastinsertId, $nomListesDiffu[$idLd]['ld_full'], $nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, '', '', $nomListesDiffu[$idLd]['galec'], 4);
 		}else{
 			$arrOfMails[$idLd]=explode(',',$contenuListeDiffu[$idLd]);
+			// addToExtraction($pdoMag,$idLd,$i,trim($singleMail[$i]),$nomListesDiffu[$idLd]['ld_full'],0);
+
 		}
 	}
 
@@ -157,7 +158,7 @@
 	}
 
 
-
+exit;
 
 	$lotusCon=ldap_connect('217.0.222.26',389);
 	$ldaptree    = "OU=galec,o=e-leclerc,c=fr";
