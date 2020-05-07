@@ -37,7 +37,7 @@ $magInfo=MagHelpers::magInfo($pdoUser, $_SESSION['id_galec']);
 $deno=MagHelpers::deno($pdoUser, $_SESSION['id_galec']);
 $city=MagHelpers::city($pdoUser, $_SESSION['id_galec']);
 
-$cm=UserHelpers::getUser($pdoUser, $magInfo['id_cm']);
+$cm=UserHelpers::getInternUser($pdoUser, $magInfo['id_cm']);
 
 
 $jours=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
