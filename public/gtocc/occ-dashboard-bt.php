@@ -15,7 +15,8 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //			REQUIRES
 //------------------------------------------------------
 // require_once '../../vendor/autoload.php';
-
+require('../../Class/OccMsgManager.php');
+require('../../Class/UserHelpers.php');
 
 
 //---------------------------------------
@@ -30,8 +31,22 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 $errors=[];
 $success=[];
+$msgManager=new OccMsgManager($pdoBt);
+$listMsg=$msgManager->getListMsg(['statut=0']);
 
+	echo "<pre>";
+	print_r($listMsg);
+	echo '</pre>';
 
+foreach ($listMsg as $key => $msg) {
+
+$galec= UserHelpers::getMagInfo($pdoUser, $pdoMag, $msg['id_web_user'],'deno_sca');
+	echo "<pre>";
+	print_r($galec);
+	echo '</pre>';
+
+	# code...
+}
 
 
 //------------------------------------------------------

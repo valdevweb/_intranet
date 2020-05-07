@@ -3,7 +3,17 @@
 
 class OccMsgManager{
 
-	public function getListMsg($pdoBt,$params){
+	private $pdo;
+
+	public function __construct($pdo){
+		$this->setPdo($pdo);
+	}
+		public function setPdo($pdo){
+		$this->pdo=$pdo;
+		return $pdo;
+	}
+
+	public function getListMsg($params=null){
 		// exemple :
 		// $piloteManager->getListPilotes(['authorized=0','console="ps4"']);
 		$paramStr="";
@@ -21,7 +31,7 @@ class OccMsgManager{
 	}
 
 
-	public function getMsg($pdoBt,$id){
+	public function getMsg($id){
 
 	}
 	public function getListRep($pdoBt,$idMsg){
