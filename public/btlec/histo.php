@@ -40,7 +40,7 @@ $userServiceList=[];
 $userServiceList=$userManager->getUserServiceContact($pdoBt,$_SESSION['id_web_user']);
 
 
-function checkSelected($idService){
+function checkSelectedHisto($idService){
 	if(isset($_POST['services'])){
 		if($_POST['services']==$idService){
 			return " selected ";
