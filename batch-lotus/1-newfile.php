@@ -47,8 +47,8 @@ function cleanActual($pdoMag){
 
 }
 
-function getBtlec($pdoMag,$ldName){
-	$req=$pdoMag->prepare("SELECT btlec_sca as btlec, deno_sca as deno, racine_list FROM sca3 WHERE racine_list=:racine_list");
+function getBtlecAndGalec($pdoMag,$ldName){
+	$req=$pdoMag->prepare("SELECT btlec_sca as btlec, deno_sca as deno, racine_list, galec_sca as galec FROM sca3 WHERE racine_list=:racine_list");
 	$req->execute([
 		':racine_list'		=>$ldName
 	]);
@@ -66,15 +66,17 @@ function formatArrayNomListe($nomListesDiffu,$pdoMag){
 		$ldFull=trim($nomListesDiffu[$i]);
 		$suffixe=substr($ldFull,strlen($ldFull)-4,4);
 		$ldShort=substr($ldFull,0,strlen($ldFull)-4);
-		$btlec=getBtlec($pdoMag,$ldShort);
+		$btlec=getBtlecAndGalec($pdoMag,$ldShort);
 
 		$nomLdClean[$i]['ld_full']=$ldFull;
 		$nomLdClean[$i]['suffixe']=$suffixe;
 		$nomLdClean[$i]['ld_short']=$ldShort;
 		if($btlec){
 			$nomLdClean[$i]['btlec']=$btlec['btlec'];
+			$nomLdClean[$i]['galec']=$btlec['galec'];
 		}else{
 			$nomLdClean[$i]['btlec']='';
+			$nomLdClean[$i]['galec']='';
 		}
 	}
 	return $nomLdClean;
@@ -92,8 +94,8 @@ function formatArrayContenuListe($contenuListeDiffu){
 	return $contenuLdClean;
 }
 
-function addToExtraction($pdoMag,$idImport, $ldFull, $ldShort,$suffixe, $idLd,$i,$contenu, $btlec, $type){
-	$req=$pdoMag->prepare("INSERT INTO lotus_extraction (id_import, ld_full, ld_short, suffixe, ld_id, array_i, contenu, btlec, type) VALUES (:id_import, :ld_full, :ld_short, :suffixe, :ld_id, :array_i, :contenu, :btlec, :type)");
+function addToExtraction($pdoMag,$idImport, $ldFull, $ldShort,$suffixe, $idLd,$i,$contenu, $btlec, $galec, $type){
+	$req=$pdoMag->prepare("INSERT INTO lotus_extraction (id_import, ld_full, ld_short, suffixe, ld_id, array_i, contenu, btlec, galec, type) VALUES (:id_import, :ld_full, :ld_short, :suffixe, :ld_id, :array_i, :contenu, :btlec, :galec, :type)");
 	$req->execute([
 		':id_import' => $idImport,
 		':ld_full'	=> $ldFull,
@@ -103,6 +105,7 @@ function addToExtraction($pdoMag,$idImport, $ldFull, $ldShort,$suffixe, $idLd,$i
 		':array_i'		=>$i,
 		':contenu'		=>$contenu,
 		':btlec'		=>$btlec,
+		':galec'		=>$galec,
 		':type'		=>$type
 
 	]);
@@ -189,10 +192,7 @@ $nomListesDiffu=formatArrayNomListe($nomListesDiffu,$pdoMag);
 $contenuListeDiffu=formatArrayContenuListe($contenuListeDiffu);
    // [16] =>   Directeur VIRYDIS/virydis/scadif/btlec/e-leclerc/fr
     // [17] =>   Thierry JODET/virydis/scadif/btlec/e-leclerc/fr
-echo "<pre>";
-print_r($nomListesDiffu);
 
-echo '</pre>';
 
 
 
@@ -205,7 +205,7 @@ for ($idLd=0; $idLd <count($contenuListeDiffu) ; $idLd++) {
 	if(empty(trim($contenuListeDiffu[$idLd]))){
 		// inserer nom ld avec code erreur vide (4)
 		$type="vide";
-		$videExt=addToExtraction($pdoMag,$lastinsertId,$nomListesDiffu[$idLd]['ld_full'],$nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, 1,'', $nomListesDiffu[$idLd]['btlec'], $type);
+		$videExt=addToExtraction($pdoMag,$lastinsertId,$nomListesDiffu[$idLd]['ld_full'],$nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, 1,'', $nomListesDiffu[$idLd]['btlec'], $nomListesDiffu[$idLd]['galec'], $type);
 			if(!$videExt){
 				$taskErrors[][$idLd]['type']="lotus";
 				$taskErrors[][$idLd]['ld_full']=$nomListesDiffu[$idLd]['ld_full'];
@@ -226,7 +226,7 @@ foreach ($arrOfMails as $idLd => $singleMail) {
 		// si on a une /, on a forcement une adresse lotus
 		if(strpos($singleMail[$i],'/')){
 			$type="lotus";
-			$lotusExt=addToExtraction($pdoMag,$lastinsertId,$nomListesDiffu[$idLd]['ld_full'],$nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, $i,trim($singleMail[$i]), $nomListesDiffu[$idLd]['btlec'], $type);
+			$lotusExt=addToExtraction($pdoMag,$lastinsertId,$nomListesDiffu[$idLd]['ld_full'],$nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, $i,trim($singleMail[$i]), $nomListesDiffu[$idLd]['btlec'],$nomListesDiffu[$idLd]['galec'], $type);
 			if(!$lotusExt){
 				$taskErrors[$i][$idLd]['type']="lotus";
 				$taskErrors[$i][$idLd]['ld_full']=$nomListesDiffu[$idLd]['ld_full'];
@@ -235,7 +235,7 @@ foreach ($arrOfMails as $idLd => $singleMail) {
 			// echo $idLd.' LOTUS ' . trim($singleMail[$i]) .'<br>';
 		}elseif(strpos($singleMail[$i],'@')){
 			$type="email";
-			$emailExt=addToExtraction($pdoMag,$lastinsertId,$nomListesDiffu[$idLd]['ld_full'],$nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, $i,trim($singleMail[$i]), $nomListesDiffu[$idLd]['btlec'], $type);
+			$emailExt=addToExtraction($pdoMag,$lastinsertId,$nomListesDiffu[$idLd]['ld_full'],$nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, $i,trim($singleMail[$i]), $nomListesDiffu[$idLd]['btlec'],$nomListesDiffu[$idLd]['galec'], $type);
 			if(!$emailExt){
 				$taskErrors[$i][$idLd]['type']="lotus";
 				$taskErrors[$i][$idLd]['ld_full']=$nomListesDiffu[$idLd]['ld_full'];
@@ -245,7 +245,7 @@ foreach ($arrOfMails as $idLd => $singleMail) {
 
 		}else{
 			$type='ld';
-			$ldExt=addToExtraction($pdoMag,$lastinsertId,$nomListesDiffu[$idLd]['ld_full'],$nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, $i,trim($singleMail[$i]), $nomListesDiffu[$idLd]['btlec'], $type);
+			$ldExt=addToExtraction($pdoMag,$lastinsertId,$nomListesDiffu[$idLd]['ld_full'],$nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, $i,trim($singleMail[$i]), $nomListesDiffu[$idLd]['btlec'],$nomListesDiffu[$idLd]['galec'], $type);
 			if(!$ldExt){
 				$taskErrors[$i][$idLd]['type']="lotus";
 				$taskErrors[$i][$idLd]['ld_full']=$nomListesDiffu[$idLd]['ld_full'];

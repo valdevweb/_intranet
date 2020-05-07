@@ -43,8 +43,8 @@ function eraseLdLotus($pdoMag){
 	$req=$pdoMag->query("DELETE FROM lotus_ld");
 }
 
-function insertEmail($pdoMag, $id_import, $ld_full, $ld_short, $ld_suffixe, $id_import_ld, $email, $lotus, $btlec, $errors ){
-	$req=$pdoMag->prepare("INSERT INTO lotus_ld (id_import, ld_full, ld_short, ld_suffixe, id_import_ld, email, lotus, btlec, errors) VALUES (:id_import, :ld_full, :ld_short, :ld_suffixe, :id_import_ld, :email, :lotus, :btlec, :errors)");
+function insertEmail($pdoMag, $id_import, $ld_full, $ld_short, $ld_suffixe, $id_import_ld, $email, $lotus, $btlec,$galec, $errors ){
+	$req=$pdoMag->prepare("INSERT INTO lotus_ld (id_import, ld_full, ld_short, ld_suffixe, id_import_ld, email, lotus, btlec, galec, errors) VALUES (:id_import, :ld_full, :ld_short, :ld_suffixe, :id_import_ld, :email, :lotus, :btlec, :galec, :errors)");
 	$req->execute([
 		':id_import'		=>$id_import,
 		':ld_full'		=>$ld_full,
@@ -54,6 +54,7 @@ function insertEmail($pdoMag, $id_import, $ld_full, $ld_short, $ld_suffixe, $id_
 		':email'		=>$email,
 		':lotus'		=>$lotus,
 		':btlec'		=>$btlec,
+		':galec'		=>$galec,
 		':errors'		=>$errors,
 
 	]);
@@ -98,7 +99,7 @@ eraseLdLotus($pdoMag);
 if(!empty($empty)){
 	foreach ($empty as $key => $extraction) {
 		$codeErr=4;
-		$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], '', '', $extraction['btlec'], $codeErr);
+		$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], '', '', $extraction['btlec'], $extraction['galec'], $codeErr);
 		if($one){
 			$added++;
 		}else{
@@ -122,7 +123,7 @@ if(!empty($lotus)){
 			$anotherLotus=explode('/',$email);
 			if(count($anotherLotus)>1){
 				$codeErr=5;
-				$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], '', $email, $extraction['btlec'], $codeErr);
+				$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], '', $email, $extraction['btlec'], $extraction['galec'], $codeErr);
 				if($one){
 					$added++;
 				}else{
@@ -133,7 +134,7 @@ if(!empty($lotus)){
 				}
 			}else{
 				$codeErr=0;
-				$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], $email,'', $extraction['btlec'], $codeErr);
+				$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], $email,'', $extraction['btlec'], $extraction['galec'], $codeErr);
 				if($one){
 					$added++;
 				}else{
@@ -146,7 +147,7 @@ if(!empty($lotus)){
 		}else{
 			// correspondance non trouvée
 			$codeErr=2;
-			$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], '', $email, $extraction['btlec'], $codeErr);
+			$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], '', $email, $extraction['btlec'],$extraction['galec'], $codeErr);
 			if($one){
 				$added++;
 			}else{
@@ -174,7 +175,7 @@ if(!empty($emailDb)){
 		if(count($data)>1){
 			$codeErr=0;
 			$email=$data[0]['mail'][0];
-			$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], $email,'', $extraction['btlec'], $codeErr);
+			$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], $email,'', $extraction['btlec'],$extraction['galec'], $codeErr);
 			if($one){
 				$added++;
 			}else{
@@ -187,7 +188,7 @@ if(!empty($emailDb)){
 		}else{
 			// adresse mail non trouvée
 			$codeErr=9;
-			$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], '', $extraction['contenu'], $extraction['btlec'], $codeErr);
+			$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], '', $extraction['contenu'], $extraction['btlec'], $extraction['galec'], $codeErr);
 			if($one){
 				$added++;
 			}else{
@@ -202,7 +203,7 @@ if(!empty($emailDb)){
 if(!empty($ld)){
 	foreach ($ld as $key => $extraction) {
 		$codeErr=9;
-		$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], '', $extraction['contenu'], $extraction['btlec'], $codeErr);
+		$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], '', $extraction['contenu'], $extraction['btlec'], $extraction['galec'], $codeErr);
 		if($one){
 			$added++;
 		}else{
