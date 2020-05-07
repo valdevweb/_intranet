@@ -66,16 +66,16 @@ class MagDbHelper{
 		return $data['centrale'];
 	}
 
-	public function getMagLd($galec,$suffixe=null){
+	public function getMagLd($btlec,$suffixe=null){
 		if($suffixe==null){
-			$req=$this->pdo->prepare("SELECT * FROM mag_email WHERE galec= :galec ORDER BY suffixe, email");
+			$req=$this->pdo->prepare("SELECT * FROM lotus_ld WHERE btlec= :btlec ORDER BY suffixe, email");
 			$req->execute([
-				':galec'		=>$galec
+				':btlec'		=>$btlec
 			]);
 		}else{
-			$req=$this->pdo->prepare("SELECT * FROM mag_email WHERE galec= :galec AND ld_suffixe= :ld_suffixe ORDER BY email");
+			$req=$this->pdo->prepare("SELECT * FROM lotus_ld WHERE btlec= :btlec AND ld_suffixe= :ld_suffixe ORDER BY email");
 			$req->execute([
-				':galec'		=>$galec,
+				':btlec'		=>$btlec,
 				':ld_suffixe'	=>$suffixe
 			]);
 		}
