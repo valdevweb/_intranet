@@ -43,3 +43,5 @@ define("DIR_LOGFILES_CONSULT", "http://172.30.92.53/batchlog/");
 define("DIR_LOTUS_CSV", "D:\btlec\\".VERSION."lotus");
 
 define("DIR_EXPORT_CSV", "D:\btlec\csv");
+
+define("UPLOAD_DIR","http://172.30.92.53/".VERSION."upload" );
