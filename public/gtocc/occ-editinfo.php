@@ -31,22 +31,7 @@ require('../../Class/UserHelpers.php');
 //------------------------------------------------------
 $errors=[];
 $success=[];
-$msgManager=new OccMsgManager($pdoBt);
-$listMsg=$msgManager->getListMsg(['statut=0']);
 
-// echo "<pre>";
-// print_r($listMsg);
-// echo '</pre>';
-
-foreach ($listMsg as $key => $msg) {
-
-	$galec= UserHelpers::getMagInfo($pdoUser, $pdoMag, $msg['id_web_user'],'deno_sca');
-	// echo "<pre>";
-	// print_r($galec);
-	// echo '</pre>';
-
-	# code...
-}
 
 
 
@@ -66,7 +51,7 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue py-5 ">GT Occasion - accueil</h1>
+	<h1 class="text-main-blue py-5 ">Leclerc Occasion - saisie info magasin</h1>
 
 	<div class="row">
 		<div class="col-lg-1"></div>
@@ -80,47 +65,40 @@ DEBUT CONTENU CONTAINER
 
 	<div class="row">
 		<div class="col">
-			<h2 class="text-main-blue"> Demandes magasins en cours</h2>
+			<h2 class="text-main-blue">Module de saisie libre</h2>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col">
+		<h5 class="text-main-blue">Galerie d'images</h5>
+		</div>
+	</div>
+	<div class="alert alert-primary">
+		Pour ajouter une des images de la galerie :<br>
+		1- cliquer sur l'image que vous souhaitez ajouter<br>
+		3- cliquez sur l'icône <i class="fas fa-file-image"></i><br>
+		4- dans la boite de dialogue qui s'affiche, faites CTRL + V<br>
+		Ajouter ici les images que vous souhaitez insérer dans votre texte.
+	</div>
+	<div class="row" id="galerie">
 
-			<table class="table">
-				<thead class="thead-dark">
-					<tr>
-						<th>#</th>
-						<th>Magasin</th>
-						<th>Objet</th>
-						<th>Date</th>
-						<th>Nb de messages</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td></td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col">
-			Images Disponibles :<br>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col" id="msg">
 
-		</div>
 	</div>
+		<div class="row">
+			<div class="col">
+				Vous pouvez ajouter des images à la galerie. Attention, ces images ne sont pas enregistrées de manière définitive, si vous quittez la page, vous ne les retrouverez pas
+			</div>
+		</div>
 	<div class="row">
-		<div class="col">
+
+		<div class="col button-wrapper">
+			<span class="label">
+				Ajouter une image
+			</span>
 			<input type="file" name="image" id="img" >
 		</div>
 	</div>
-	<div class="row" id="galerie">
-	</div>
+
 	<div class="row">
 		<div class="col">
 			<button onClick="execCmd('bold')"><i class="fas fa-bold"></i></button>
@@ -147,7 +125,7 @@ DEBUT CONTENU CONTAINER
 				<option value="H6">Titre 6</option>
 			</select>
 			<button onClick="execCmd('insertHorizontalRule')">HR</button>
-			<button onClick="execCommandWithArg('createLink',prompt('Copiez l'adresse de l'image précédemment sélectionnée','' ))"><i class="fas fa-link"></i></button>
+			<button onClick="execCommandWithArg('createLink',prompt('Copiez le lien','' ))"><i class="fas fa-link"></i></button>
 			<button onClick="execCmd('unlink')"><i class="fas fa-unlink"></i></button>
 			<button onClick="toggleSource()"><i class="fas fa-code"></i></button>
 			<button onClick="toggleEdit()">Tester</button>
@@ -163,7 +141,7 @@ DEBUT CONTENU CONTAINER
 			Fond <input type="color" name="" onchange="execCommandWithArg('hiliteColor',this.value);">
 
 
-			<button onClick="execCommandWithArg('insertImage',prompt('Entrer l adresse de l\'image','http://'))"><i class="fas fa-file-image"></i></button>
+			<button onClick="execCommandWithArg('insertImage',prompt('Entrer l adresse de l\'image',''))"><i class="fas fa-file-image"></i></button>
 			<button onClick="execCmd('selectAll')">Select all</button>
 
 
@@ -172,7 +150,7 @@ DEBUT CONTENU CONTAINER
 
 	<div class="row">
 		<div class="col">
-			<iframe name="richText" style="width: 1000px; height:500px"></iframe>
+			<iframe name="richText" style="width: 1000px; height:300px; font-family:Arial;"></iframe>
 		</div>
 	</div>
 	<div class="row">
@@ -192,6 +170,7 @@ DEBUT CONTENU CONTAINER
 	var iframeCopy=document.getElementById('iframe-copy');
 	window.onload = function() {
 		richText.document.designMode='on';
+		document.richText.document.body.style.fontFamily = "Arial";
 
 	};
 	function execCmd(command){
@@ -223,22 +202,7 @@ DEBUT CONTENU CONTAINER
 	}
 
 
-
-
-
-
-
-
-
 	$(document).ready(function(){
-
-
-		// if ($('#galerie').text().length == 0 ) {
-		// 	$('#msg').append("<div class='alert alert-danger'>Vous n'avez ajouté aucune image</div>");
-		// }else{
-		// 	$('#msg').append("<div class='alert alert-danger'>Vous n'avez ajouté aucune image</div>");
-
-		// }
 
 
 		$( "#galerie" ).click(function( event ) {
@@ -255,6 +219,7 @@ DEBUT CONTENU CONTAINER
 			var file=document.getElementById("img").files[0];
 			var fd = new FormData();
 			var ext = filename.split('.').pop().toLowerCase();
+
 			if(jQuery.inArray(ext, ['gif','png','jpg','jpeg']) == -1)
 			{
 				alert("Type de fichier non supporté");
@@ -289,13 +254,15 @@ DEBUT CONTENU CONTAINER
         					console.log(data);
         					if(data.success){
                             //Successfully uploaded
-                            var img = document.createElement("img");
-                            console.log(data);
-                            img.setAttribute("src", data.path);
-                            console.log(data.path);
+                            // var img = document.createElement("img");
+                            // img.setAttribute("src", data.path);
+                            var colStart="<div class='col-3 galerie-col'>"
+                            var colEnd='</div>';
+                            var img = colStart+"<img src='" + data.path + "'>"+ colEnd;
 
 
                             $("#galerie").append(img);
+
                         }
                     }
                 });
