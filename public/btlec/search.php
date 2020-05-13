@@ -62,6 +62,8 @@ if(isset($_GET['galec'])){
 
 if(isset($_POST['search'])){
 	$magList=search($pdoMag);
+
+
 }
 
 
