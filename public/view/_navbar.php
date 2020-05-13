@@ -165,18 +165,36 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 		?>
 		<?php if ($d_occBt): ?>
 
-		<li class='active has-sub'><a href="<?= ROOT_PATH?>/public/gtocc/occ-dashboard-bt.php"><span>GT occasion</span></a>
-			<!-- <ul>
-				<li><a href="/public/btlec/dashboard.php">accueil GT occasion</a></li>
-				</ul> -->
+			<li class='active has-sub'><a href="<?= ROOT_PATH?>/public/gtocc/occ-dashboard-bt.php"><span>Leclerc occasion</span></a>
+				<ul>
+					<li><a href="/public/#">Informations générales</a>
+						<ul>
+							<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-editinfo.php'?>">Editeur d'info</a></li>
+						</ul>
+					</li>
+					<li><a href="/public/#">Offres produits</a>
+						<ul>
+							<li><a href="<?= ROOT_PATH. '/public/'?>">Assortiment</a></li>
+							<li><a href="<?= ROOT_PATH. '/public/'?>">Detail palette</a></li>
+						</ul>
+					</li>
+					<li><a href="/public/#">Demandes magasins</a></li>
+				</ul>
 			</li>
 		<?php endif ?>
 		<?php if ($d_occMag): ?>
 
-		<li class='active has-sub'><a href="<?= ROOT_PATH?>/public/gtocc/occ-dashboard-mag.php"><span>GT occasion</span></a>
-			<!-- <ul>
-				<li><a href="/public/btlec/dashboard.php">accueil GT occasion</a></li>
-				</ul> -->
+			<li class='active has-sub'><a href="<?= ROOT_PATH?>/public/gtocc/#"><span>Leclerc occasion</span></a>
+				<ul>
+					<li><a href="/public/#">Informations générales</a></li>
+					<li><a href="/public/#">Offres produits</a>
+						<ul>
+							<li><a href="<?= ROOT_PATH. '/public/'?>">Assortiment</a></li>
+							<li><a href="<?= ROOT_PATH. '/public/'?>">Detail palette</a></li>
+						</ul>
+					</li>
+					<li><a href="/public/#">Vos demandes</a></li>
+				</ul>
 			</li>
 		<?php endif ?>
 
