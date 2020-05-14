@@ -116,7 +116,19 @@ if(isset($_GET['id']))
 	$fLitige=getLitigeTemp($pdoLitige);
 }
 
+// si on vient de la page bt-ouv-saisie, la var de $_SESSION['dd_ouv'] conteint le numéro de la demande d'ouverture temporaire
+// on récupère alors le 1er message envoyé par la mag pour la demande d'ouverture, cad le message de la table ouv (l'id "dossier" est celui de la table ouv,
+// les autres échanges sont dans la table ouv_rep)
+// on l'insere alors dans le commentaire
+if(isset($_SESSION['dd_ouv'])){
+	$req=$pdoLitige->prepare("SELECT * FROM ouv WHERE id= :id");
+	$req->execute([
+		':id'		=>$_SESSION['dd_ouv']
+	]);
+	$cmt=$req->fetch(PDO::FETCH_ASSOC);
+	$cmt=$cmt['msg'];
 
+}
 
 
 $foreachErrors=[];
@@ -461,7 +473,7 @@ DEBUT CONTENU CONTAINER
 						<?php endforeach ?>
 						<p class="khand heavy bigger">Commentaires : </p>
 						<div class="form-group">
-							<textarea class="form-control" name="form_com"></textarea>
+							<textarea class="form-control" name="form_com"><?= isset($cmt)? str_replace('<br />', "\n",'Demande d\'origine du magasin : <br />' .$cmt):''?></textarea>
 						</div>
 					</div>
 				</div>
@@ -542,7 +554,7 @@ DEBUT CONTENU CONTAINER
 		// 		alert("Transfer Thai Gayo");
 		// 	}
 		// });
-		});
+	});
 
 		$(function(){
 

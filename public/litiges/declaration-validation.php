@@ -205,7 +205,33 @@ function updateOuv($pdoLitige,$lastInsertId,$numdossier, $idOuv)
 	return $req->rowCount();
 
 }
+function getOuvRep($pdoLitige,$idOuv){
+	$req=$pdoLitige->prepare("SELECT * FROM ouv_rep WHERE id_ouv= :id_ouv");
+	$req->execute([
+		':id_ouv'	=>$idOuv
+	]);
+	$result=$req->fetchAll(PDO::FETCH_ASSOC);
+	if(!empty($result)){
+		return $result;
+	}
+	else{
+		return false;
+	}
+}
 
+
+function insertToDial($pdoLitige,$idDossier,$numDossier, $msg, $idwebuser, $date, $pj, $mag){
+	$req=$pdoLitige->prepare("INSERT INTO dial ( id_dossier, date_saisie, msg, id_web_user, filename, mag) VALUES ( :id_dossier, :date_saisie, :msg, :id_web_user, :filename, :mag) ");
+	$req->execute([
+		':id_dossier'		=>$idDossier,
+		 ':date_saisie'		=>$date,
+		 ':msg'				=>$msg,
+		 ':id_web_user'		=>$idwebuser,
+		 ':filename'		=>$pj,
+		 ':mag'				=>$mag
+	]);
+	return $req->rowCount();
+}
 
 function isPaletteInv($pdoLitige){
 	$req=$pdoLitige->prepare("SELECT * FROM palette_inv_temp WHERE id_dossier= :id_dossier");
@@ -272,17 +298,34 @@ if(isset($_GET['id']))
 
 // exit();
 
-// si dial
+// si dial cad un commentaire saisi sur la page declaration-detail
 	$isDial=isDial($pdoLitige);
+	if($idOuv){
+	// on ajoute le numéro de dossier et son id pour pouvoir l'afficher dans le tableau des demandes d'ouvertures
+	// mais on ne se sert pas de cette table pour afficher le 1er commentaire magasin
+	// on le recupère tj de la table dial (pour rappel, sur la page delcaration-detail, on affiche dans le textarea
+	// le message d'origine du mag de  cette table ouv pour pouvoir le récupérer dans dial_temp)
+		updateOuv($pdoLitige,$idDossier,$numDossier, $idOuv);
+		// on copie les autres echanges (table ouv_rep dans la table dial non temporaire)
+		// donc recup dans ouv_rep, les id_ouv
+		// le pousse dans dial avec nouveau num dossier
+		$echangeOuv=getOuvRep($pdoLitige,$idOuv);
+
+		if($echangeOuv){
+			foreach ($echangeOuv as $key => $value) {
+				insertToDial($pdoLitige,$idDossier,$numDossier, $value['msg'], $value['id_web_user'], $value['date_saisie'], $value['pj'], $value['mag']);
+			}
+		}
+
+	}
 	if($isDial){
+
 		$upTempDial=updateTempDial($pdoLitige,$idDossier);
 		$copyDial=copyDial($pdoLitige, $idDossier);
 		// delte temp dial
-		 deleteTempDial($pdoLitige,$idDossier);
+		deleteTempDial($pdoLitige,$idDossier);
 	}
-	if($idOuv){
-		updateOuv($pdoLitige,$idDossier,$numDossier, $idOuv);
-	}
+
 
 	$invPalette=isPaletteInv($pdoLitige);
 	if($invPalette){
