@@ -84,13 +84,13 @@ DEBUT CONTENU CONTAINER
 						foreach ($mags as $mag)
 						{
 							echo '<tr>';
-							echo'<td>'.$mag['btlec'].'</td>';
-							echo'<td>'.$mag['galec'].'</td>';
-							echo'<td>'.$mag['mag'].'</td>';
-							echo'<td>'.$mag['city'].'</td>';
-							echo'<td>'.$mag['centrale'].'</td>';
-							echo'<td class="text-center"><a href="hidden-session.php?galec='.$mag['galec'].'"><i class="fas fa-hand-pointer"></i></td>';
-							echo'<td class="text-center"><a href="bt-ouv-saisie.php?galec='.$mag['galec'].'"><i class="fas fa-hand-pointer"></i></td>';
+							echo '<td>'.$mag['btlec'].'</td>';
+							echo '<td>'.$mag['galec'].'</td>';
+							echo '<td>'.$mag['mag'].'</td>';
+							echo '<td>'.$mag['city'].'</td>';
+							echo '<td>'.$mag['centrale'].'</td>';
+							echo '<td class="text-center"><a href="hidden-session.php?galec='.$mag['galec'].'"><i class="fas fa-hand-pointer"></i></td>';
+							echo '<td class="text-center"><a href="bt-ouv-saisie.php?galec='.$mag['galec'].'"><i class="fas fa-hand-pointer"></i></td>';
 							echo '</tr>';
 
 						}
