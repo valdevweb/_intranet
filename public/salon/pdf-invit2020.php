@@ -223,7 +223,7 @@
 		<tr><td>&nbsp;</td></tr>
 		<tr>
 			<td class="bigger text-center text-prim text-date">
-				Mardi 9 juin 2020 : 9h30 - 17h30 et Mercredi 10 juin 2020 : 9h00 - 16h30</td>
+				Mardi 22 septembre 2020 : 9h30 - 17h30 et Mercredi 23 septembre 2020 : 9h00 - 16h30</td>
 		</tr>
 	</table>
 <div class="spacing-l"></div>
@@ -239,7 +239,7 @@
 	<tr>
 		<td class="six"></td>
 		<td class="autre padding-table">
-			<p class="normal"><strong>Mardi 9 juin :</strong><br>
+			<p class="normal"><strong>Mardi 22 septembre :</strong><br>
 				- 11h30 : Conférence GFK Maison (Petit et Gros Electroménager)<br>
 				- 14h30 : Conférence GFK Multimédia (Informatique, TV-Vidéo...) </p>
 
@@ -255,7 +255,7 @@
 		<td class="quatre"></td>
 		<td class="deux padding-table">
 
-			<p class="normal"><strong>Mercredi 10 juin :</strong><br>
+			<p class="normal"><strong>Mercredi 23 septembre :</strong><br>
 				- 9h30 : Convention</p>
 		</td>
 		<td class="quatre"></td>
