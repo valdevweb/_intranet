@@ -25,6 +25,8 @@ function connectToDb($dbname) {
 
 $pdoCm=connectToDb('cm');
 $pdoUser=connectToDb('web_users');
+$pdoStat= connectToDb('stats');
+
 $pdoQlik=connectToDb('qlik');
 $pdoVal=connectToDb('val');
 $pdoExploit= connectToDb('exploit');
@@ -45,3 +47,5 @@ define("DIR_LOTUS_CSV", "D:\btlec\\".VERSION."lotus");
 define("DIR_EXPORT_CSV", "D:\btlec\csv");
 
 define("UPLOAD_DIR","http://172.30.92.53/".VERSION."upload" );
+
+define("SITE_ADDRESS", "http://172.30.92.53/".VERSION."btlecest");
