@@ -11,6 +11,7 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require('../../Class/Helpers.php');
+require('../../functions/form.fn.php');
 
 //------------------------------------------------------
 //			REQUIRES
@@ -42,9 +43,10 @@ function getDetailArt($pdoLitige)
 {
 	$req=$pdoLitige->prepare("
 		SELECT
-		dossiers.id as id_main,	dossiers.dossier,dossiers.date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,dossiers.user_crea,dossiers.galec,dossiers.etat_dossier,vingtquatre, dossiers.id_web_user, inversion,inv_article,inv_fournisseur,inv_tarif,inv_descr,nom, valo, flag_valo, id_reclamation,inv_palette,inv_qte,id_robbery, commission, box_tete, box_art,
+		dossiers.id as id_main,	dossiers.dossier,dossiers.date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,dossiers.user_crea,dossiers.galec,dossiers.etat_dossier,vingtquatre, dossiers.id_web_user, inversion,inv_article,inv_fournisseur,inv_tarif,inv_descr,nom, valo, flag_valo, id_reclamation, inv_palette,inv_qte,id_robbery, commission, box_tete, box_art,
 		details.id as id_detail,details.ean,details.id_dossier,	details.palette,details.facture,details.article,details.tarif,details.qte_cde, details.qte_litige,details.valo_line,details.dossier_gessica,details.descr,details.fournisseur,details.pj,DATE_FORMAT(details.date_facture, '%d-%m-%Y') as datefacture,
 		reclamation.reclamation,
+
 		btlec.sca3.mag, btlec.sca3.centrale, btlec.sca3.btlec
 
 		FROM details
@@ -73,12 +75,46 @@ function searchDbArt($pdoQlik){
 	return $data;
 }
 
+function getSumLitige($pdoLitige, $idLitige){
+	$req=$pdoLitige->prepare("SELECT sum(valo_line) as sumValo, dossiers.valo, id_reclamation FROM details LEFT JOIN dossiers ON details.id_dossier= dossiers.id WHERE details.id_dossier= :id");
+	$req->execute([
+		':id'		=>$idLitige
+	]);
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+function getSumPaletteRecu($pdoLitige,$idLitige){
+	$req=$pdoLitige->prepare("SELECT sum(tarif) as sumValo FROM palette_inv  WHERE palette_inv.id_dossier= :id");
+	$req->execute([
+		':id'		=>$idLitige
+	]);
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
+function getListReclamation($pdoLitige){
+	$req=$pdoLitige->query("SELECT * FROM reclamation WHERE mask=0 OR id=5 ORDER BY reclamation");
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+function copyActualDetail($pdoLitige){
+	$req=$pdoLitige->prepare("INSERT INTO details_modif (id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj) SELECT id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj FROM details WHERE details.id= :id");
+	$req->execute([
+		':id'		=>$_GET['id']
+	]);
+
+	return $req->rowCount();
+
+}
 
 function majDetailInv($pdoLitige){
 	$valo=($_POST['tarif']/$_POST['qte_cde']*$_POST['qte_litige'])-$_POST['pu']*$_POST['inv_qte'];
 
-	$req=$pdoLitige->prepare("UPDATE details SET inv_qte= :inv_qte, qte_litige= :qte_litige, valo_line= :valo_line WHERE id= :id");
+	$req=$pdoLitige->prepare("UPDATE details SET qte_cde= :qte_cde, tarif= :tarif, id_reclamation= :id_reclamation, qte_litige= :qte_litige, valo_line= :valo_line, inv_qte= :inv_qte, qte_litige= :qte_litige, valo_line= :valo_line WHERE id= :id");
 	$req->execute([
+		':qte_cde'		=>$_POST['qte_cde'],
+		':tarif'		=>$_POST['tarif'],
+		':id_reclamation'	=>$_POST['id_reclamation'],
 		':inv_qte'		=>$_POST['inv_qte'],
 		':qte_litige'	=>$_POST['qte_litige'],
 		':valo_line'	=>$valo,
@@ -89,8 +125,11 @@ function majDetailInv($pdoLitige){
 function majDetailNorm($pdoLitige){
 	$valo=$_POST['tarif']/$_POST['qte_cde']*$_POST['qte_litige'];
 
-	$req=$pdoLitige->prepare("UPDATE details SET qte_litige= :qte_litige, valo_line= :valo_line WHERE id= :id");
+	$req=$pdoLitige->prepare("UPDATE details SET qte_cde= :qte_cde, tarif= :tarif, id_reclamation= :id_reclamation, qte_litige= :qte_litige, valo_line= :valo_line WHERE id= :id");
 	$req->execute([
+		':qte_cde'		=>$_POST['qte_cde'],
+		':tarif'		=>$_POST['tarif'],
+		':id_reclamation'	=>$_POST['id_reclamation'],
 		':qte_litige'	=>$_POST['qte_litige'],
 		':valo_line'	=>$valo,
 		':id'			=>$_GET['id']
@@ -98,23 +137,23 @@ function majDetailNorm($pdoLitige){
 	return $req->rowCount();
 }
 
-function getSumLitige($pdoLitige, $idLitige){
-	$req=$pdoLitige->prepare("SELECT sum(valo_line) as sumValo, dossiers.valo, id_reclamation FROM details LEFT JOIN dossiers ON details.id_dossier= dossiers.id WHERE details.id_dossier= :id");
+function copyModif($pdoLitige){
+	$req=$pdoLitige->prepare("INSERT INTO details_modif (id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj) SELECT id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj FROM details WHERE details.id= :id");
 	$req->execute([
-		':id'		=>$idLitige
-	]
-
-);
-	return $req->fetch(PDO::FETCH_ASSOC);
+		':id'			=>$_GET['id']
+	]);
+	return $pdoLitige->lastInsertId();
 }
-function getSumPaletteRecu($pdoLitige,$idLitige){
-	$req=$pdoLitige->prepare("SELECT sum(tarif) as sumValo FROM palette_inv  WHERE palette_inv.id_dossier= :id");
-	$req->execute([
-		':id'		=>$idLitige
-	]
 
-);
-	return $req->fetch(PDO::FETCH_ASSOC);
+
+function updateModif($pdoLitige, $lastinsertid){
+	$req=$pdoLitige->prepare("UPDATE details_modif SET modif= :modif, updated_by= :updated_by, updated_on= :updated_on WHERE id= :id");
+	$req->execute([
+		':modif'		=>1,
+		':updated_by'	=>$_SESSION['id_web_user'],
+		':updated_on'	=>date('Y-m-d H:i:s'),
+		':id'			=>$lastinsertid
+	]);
 }
 function updateValoDossier($pdoLitige,$sumValo,$idLitige){
 	$req=$pdoLitige->prepare("UPDATE dossiers SET valo= :valo WHERE id= :id");
@@ -125,8 +164,12 @@ function updateValoDossier($pdoLitige,$sumValo,$idLitige){
 	return $req->rowCount();
 }
 
-$article=getDetailArt($pdoLitige,$_GET['id']);
 
+
+
+
+$article=getDetailArt($pdoLitige,$_GET['id']);
+$listReclamation=getListReclamation($pdoLitige);
 if(isset($_POST['search'])){
 
 
@@ -138,15 +181,33 @@ if(isset($_POST['search'])){
 
 if(isset($_POST['maj'])){
 
-	if(isset($_POST['inv_qte'])){
-		// maj dans le cas d'une inversion de produit
-		$done=majDetailInv($pdoLitige);
-
-	}else{
-		// maj dans tout les autres cas => juste valo et qte
-		$done=majDetailNorm($pdoLitige);
+		// sauvegarde de l'état précédent la modif
+	$save=copyActualDetail($pdoLitige);
+	if($save!=1){
+		$errors[]= "impossible de recupérer l'historique";
 	}
-	if($done==1){
+
+
+
+	if(empty($errors)){
+		if(isset($_POST['inv_qte'])){
+			// maj dans le cas d'une inversion de produit
+			$done=majDetailInv($pdoLitige);
+			$lastinsertid=copyModif($pdoLitige);
+			updateModif($pdoLitige, $lastinsertid);
+
+		}else{
+			// maj dans detail
+			$done=majDetailNorm($pdoLitige);
+			$lastinsertid=copyModif($pdoLitige);
+			updateModif($pdoLitige, $lastinsertid);
+
+		}
+
+	}
+
+
+	if(isset($done) && $done==1){
 
 		$sumLitige=getSumLitige($pdoLitige, $article['id_main']);
 
@@ -165,10 +226,6 @@ if(isset($_POST['maj'])){
 		else{
 			$sumValo=$sumLitige['sumValo'];
 
-			echo $sumValo;
-			echo "<br>";
-
-			echo $article['id_main'];
 			$update=updateValoDossier($pdoLitige,$sumValo, $article['id_main']);
 			$redir='?id='.$_GET['id'].'&success';
 			unset($_POST);
@@ -176,11 +233,13 @@ if(isset($_POST['maj'])){
 		}
 
 
-
-
 	}
 
 }
+
+
+
+
 
 if(isset($_GET['success'])){
 	$success[]="Mise à jour effectuée";
@@ -227,31 +286,43 @@ DEBUT CONTENU CONTAINER
 				<div class="col">
 					<div class="form-group">
 						<label for="article">Code article :</label>
-						<input type="text" class="form-control" name="article" id="article"  value="<?=$article['article']?>" disabled>
+						<input type="text" class="form-control" name="article" id="article"  value="<?=$article['article']?>"  readonly>
 					</div>
 				</div>
 				<div class="col">
 					<div class="form-group">
 						<label for="dossier">Code dossier :</label>
-						<input type="text" class="form-control" name="dossier" id="dossier"  value="<?=$article['dossier_gessica']?>" disabled>
+						<input type="text" class="form-control" name="dossier" id="dossier"  value="<?=$article['dossier_gessica']?>" readonly>
 					</div>
 				</div>
 
 				<div class="col">
 					<div class="form-group">
 						<label for="qte_cde">Quantité commandée :</label>
-						<input type="text" class="form-control" name="qte_cde" id="qte_cde" value="<?=$article['qte_cde']?>"  readonly>
+						<input type="text" class="form-control" name="qte_cde" id="qte_cde" value="<?=$article['qte_cde']?>"  >
 					</div>
 				</div>
 				<div class="col">
 					<div class="form-group">
 						<label for="tarif">Tarif :</label>
-						<input type="text" class="form-control" name="tarif" id="tarif" value="<?=$article['tarif']?>"  readonly>
+						<input type="text" class="form-control" name="tarif" id="tarif" value="<?=$article['tarif']?>"  >
 					</div>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col"></div>
+				<div class="col">
+					<div class="form-group">
+						<label for="reclamation">Reclamation</label>
+						<select class="form-control" name="id_reclamation" id="reclamation">
+							<?php foreach ($listReclamation as $reclamation): ?>
+								<option value="<?=$reclamation['id']?>" <?= ($article['id_reclamation']==$reclamation['id'])?' selected ': '' ?>><?=$reclamation['reclamation']?></option>
+
+							<?php endforeach ?>
+						</select>
+					</div>
+
+
+				</div>
 				<div class="col"></div>
 
 				<div class="col">
@@ -264,13 +335,10 @@ DEBUT CONTENU CONTAINER
 					<?php if ($article['inversion']==""): ?>
 						<div class="form-group">
 							<label for="valo">Valo :</label>
-							<input type="text" class="form-control" name="valo"  value="<?=$article['valo_line']?>" id="valo"  disabled>
+							<input type="text" class="form-control" name="valo"  value="<?=$article['valo_line']?>" id="valo"  >
 						</div>
 					<?php endif ?>
-
 				</div>
-
-
 			</div>
 
 			<?php if ($article['inversion']!="" && $article['inv_qte']!=""): ?>
@@ -338,13 +406,13 @@ DEBUT CONTENU CONTAINER
 								<div class="col">
 									<div class="form-group">
 										<label for="inv_article">Article reçu en inversion :</label>
-										<input type="text" class="form-control" name="inv_article"  value="<?=$article['inv_article']?>" id="inv_article" disabled>
+										<input type="text" class="form-control" name="inv_article"  value="<?=$article['inv_article']?>" id="inv_article" >
 									</div>
 								</div>
 								<div class="col">
 									<div class="form-group">
 										<label for="pu">Prix unitaire :</label>
-										<input type="text" class="form-control" name="pu"  value="<?=$article['inv_tarif']?>" id="pu" readonly>
+										<input type="text" class="form-control" name="pu"  value="<?=$article['inv_tarif']?>" id="pu" >
 									</div>
 								</div>
 								<div class="col">
@@ -356,7 +424,7 @@ DEBUT CONTENU CONTAINER
 								<div class="col">
 									<div class="form-group">
 										<label for="inv_somme">Soit une valeur de  :</label>
-										<input type="text" class="form-control" name="inv_somme"  value="<?=$article['inv_qte'] * $article['inv_tarif']?>" id="inv_somme" disabled>
+										<input type="text" class="form-control" name="inv_somme"  value="<?=$article['inv_qte'] * $article['inv_tarif']?>" id="inv_somme" >
 									</div>
 								</div>
 							</div>
@@ -366,8 +434,8 @@ DEBUT CONTENU CONTAINER
 						<div class="col"></div>
 						<div class="col-3">
 							<div class="form-group">
-								<label for="valo">Valo :</label>
-								<input type="text" class="form-control" name="valo"  value="<?=$article['valo_line']?>" id="valo"  disabled>
+								<label for="valo">Valo dossier :</label>
+								<input type="text" class="form-control" name="valo"  value="<?=$article['valo_line']?>" id="valo"  >
 							</div>
 						</div>
 					</div>
