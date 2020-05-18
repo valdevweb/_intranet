@@ -1,4 +1,4 @@
-<div class="row mt-3 mb-3">
+<div class="row mt-3">
 	<div class="col">
 		<div class="row">
 			<div class="col">
@@ -147,8 +147,9 @@
 									echo '<td class="text-center"></td>';
 									echo '</tr>';
 									echo '<tr class="text-center bg-reddish text-white">';
-									echo '<td colspan="9" class="text-right">'.number_format((float)$prod['valo_line'],2,'.','').'&euro;</td>';
-									echo '<td></td>';
+									echo '<td colspan="8" class="text-right">'.number_format((float)$prod['valo_line'],2,'.','').'&euro;</td>';
+									echo '<td colspan="3"></td>';
+
 									echo '</tr>';
 									echo '<tr>';
 									echo '<td colspan="11" class="text-right">&nbsp;</td>';
