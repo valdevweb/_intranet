@@ -411,9 +411,7 @@ function addSerials($pdoLitige,$idDetail,$values){
 
 
 if(isset($_POST['submit-serials'])){
-	echo "<pre>";
-	print_r($_POST);
-	echo '</pre>';
+
 	$idDetail="";
 	foreach ($_POST as $key => $value) {
 		if(strpos($key,"iddetail")!==false){
