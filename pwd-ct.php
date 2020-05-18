@@ -57,18 +57,11 @@ if(isset($_GET['error']))
 						<label for="centrale">Votre centrale</label>
 						<select class="form-control" id="centrale" name="centrale" required>
 							<option value="">Sélectionnez votre centrale</option>
-							<option value="BTLEC">BTLEC</option>
-							<option value="LECASUD">LECASUD</option>
-							<option value="PORTUGAL">PORTUGAL</option>
-							<option value="SCACENTRE">SCACENTRE</option>
-							<option value="SCAPALSACE">SCAPALSACE</option>
-							<option value="SCAPARTOIS">SCAPARTOIS</option>
-							<option value="SCAPEST">SCAPEST</option>
-							<option value="SCADIF">SCADIF</option>
-							<option value="SCAPNOR">SCAPNOR</option>
-							<option value="SOCAMIL">SOCAMIL</option>
-							<option value="SOCARA">SOCARA</option>
-							<option value="SLOVENIE">SLOVENIE</option>
+
+							<?php foreach ($centraleList as $centrale): ?>
+								<option value="<?=$centrale['id_centrale']?>"><?=$centrale['centrale']?></option>
+							<?php endforeach ?>
+
 						</select>
 					</div>
 					<div class="form-group">
@@ -145,6 +138,6 @@ if(isset($_GET['error']))
 				}
 			});
 		});
-</script>
+	</script>
 </body>
 </html>
