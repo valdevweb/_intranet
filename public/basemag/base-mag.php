@@ -244,7 +244,7 @@ if(!isset($_POST['filter']) || isset($_POST['clear_filter'])){
 
 	$_SESSION['mag_filters']['no-docubase'][]="";
 	$_SESSION['mag_filters']['no-portail'][]="";
-	$_SESSION['mag_filters']['caSelected'][]=1;
+	$_SESSION['mag_filters']['caSelected'][]=0;
 
 	$_SESSION['mag_filters']['sorti'][]=0;
 
