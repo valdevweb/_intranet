@@ -50,7 +50,7 @@ include('../view/_navbar.php');
 <!--********************************
 DEBUT CONTENU CONTAINER
 *********************************-->
-<div class="container">
+<div class="container-fluid bg-light">
 	<h1 class="text-main-blue py-5 ">Leclerc Occasion - saisie info magasin</h1>
 
 	<div class="row">
@@ -63,189 +63,224 @@ DEBUT CONTENU CONTAINER
 		<div class="col-lg-1"></div>
 	</div>
 
-	<div class="row">
-		<div class="col">
-			<h2 class="text-main-blue">Module de saisie libre</h2>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col">
-		<h5 class="text-main-blue">Galerie d'images</h5>
-		</div>
-	</div>
-	<div class="alert alert-primary">
-		Pour ajouter une des images de la galerie :<br>
-		1- cliquer sur l'image que vous souhaitez ajouter<br>
-		3- cliquez sur l'icône <i class="fas fa-file-image"></i><br>
-		4- dans la boite de dialogue qui s'affiche, faites CTRL + V<br>
-		Ajouter ici les images que vous souhaitez insérer dans votre texte.
-	</div>
-	<div class="row" id="galerie">
 
 
-	</div>
-		<div class="row">
-			<div class="col">
-				Vous pouvez ajouter des images à la galerie. Attention, ces images ne sont pas enregistrées de manière définitive, si vous quittez la page, vous ne les retrouverez pas
+	<div class="row justify-content-center ">
+		<!-- <div class="col-md-1"></div> -->
+		<div class="col-auto border rounded-lg px-5 py-5">
+		<!-- 	<div class="row bartitle mb-3">
+				<div class="col"><i class="fas fa-ellipsis-v pr-2"></i> Saisie libre</div>
+			</div> -->
+			<section >
+
+				<div class="row">
+
+					<div class="col-auto pr-2">
+						<button class="btn btn-light" onClick="execCmd('bold')"><i class="fas fa-bold"></i></button>
+						<button class="btn btn-light" onClick="execCmd('italic')"><i class="fas fa-italic"></i></button>
+						<button class="btn btn-light" onClick="execCmd('underline')"><i class="fas fa-underline"></i></button>
+					</div>
+					<div class="col-auto ">
+						<select  class="form-control" onchange="execCommandWithArg('fontSize',this.value);">
+							<option value="3">Taille par défaut</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+						</select>
+					</div>
+					<div class="col-auto pr-2">
+
+						<select class="form-control" onchange="execCommandWithArg('formatBlock',this.value);">
+							<option value="">Titres</option>
+
+							<option value="H1">Titre 1</option>
+							<option value="H2">Titre 2</option>
+							<option value="H3">Titre 3</option>
+							<option value="H4">Titre 4</option>
+							<option value="H5">Titre 5</option>
+							<option value="H6">Titre 6</option>
+						</select>
+					</div>
+					<div class="col-auto pr-2">
+						<button class="btn btn-light" onClick="execCmd('justifyLeft')"><i class="fas fa-align-left"></i></button>
+						<button class="btn btn-light" onClick="execCmd('justifyCenter')"><i class="fas fa-align-center"></i></button>
+						<button class="btn btn-light" onClick="execCmd('justifyRight')"><i class="fas fa-align-right"></i></button>
+						<button class="btn btn-light" onClick="execCmd('justifyFull')"><i class="fas fa-align-justify"></i></button>
+
+					</div>
+
+					<div class="col-auto pr-2">
+						<button class="btn btn-light" onClick="execCmd('insertUnorderedList')"><i class="fas fa-list-ul"></i></button>
+						<button class="btn btn-light" onClick="execCmd('insertOrderedList')"><i class="fas fa-list-ol"></i></button>
+					</div>
+
+
+					<div class="col-auto pr-2">
+						<button class="btn btn-light" onClick="execCmd('indent')"><i class="fas fa-indent"></i></button>
+						<button class="btn btn-light" onClick="execCmd('oudent')"><i class="fas fa-outdent"></i></button>
+					</div>
+
+					<div class="col-auto pr-2">
+						<label class="btn btn-light">
+							<i class="fas fa-file-image fa-lg"></i><input type="file" name="image" id="img" hidden>
+						</label>
+					</div>
+
+					<div class="col-auto">
+
+						<button class="btn btn-light" onClick="execCommandWithArg('createLink',prompt('Copiez le lien','lien' ))"><i class="fas fa-link"></i></button>
+						<button class="btn btn-light" onClick="execCmd('unlink')"><i class="fas fa-unlink"></i></button>
+					</div>
+						<!-- <button class="btn btn-light" onClick="toggleSource()"><i class="fas fa-code"></i></button>
+							<button class="btn btn-light" onClick="toggleEdit()">Tester</button> -->
+
+
+
+
+
+						</div>
+
+						<div class="row mt-3 mb-5">
+
+							<div class="col">
+								<div class="color-picker-text color-block">
+									<i class="fas fa-font pl-1 pr-3"></i>
+									<div class="circle" style="background : #f8f9fa; border: 2px solid #0d47a1" onclick="execCommandWithArg('foreColor','rgba(13,71,161,1)')"></div>
+									<div class="circle" style="background : #f8f9fa; border: 2px solid #f18f0b" onclick="execCommandWithArg('foreColor','rgba(241,143,11,1)')"></div>
+									<div class="circle" style="background : #f8f9fa; border: 2px solid black" onclick="execCommandWithArg('foreColor','rgba(0,0,0,1)')"></div>
+									<div class="circle" style="background : #fff; border: 2px solid #fff;" onclick="execCommandWithArg('foreColor','rgba(255,255,255,1)')"></div>
+									<div class="circle" style="background : #f8f9fa; border: 2px solid red" onclick="execCommandWithArg('foreColor','rgba(255,0,0,1)')"></div>
+									<div class="circle" style="background : #f8f9fa; border: 2px solid green" onclick="execCommandWithArg('foreColor','rgba(0,128,0,1)')"></div>
+									<div class="circle" style="background : #f8f9fa; border: 2px solid grey"  onclick="execCommandWithArg('foreColor','rgba(128,128,128,1)')"></div>
+
+								</div>
+								<!-- <div class="color-block"> -->
+									<div class="color-block color-picker-bg">
+										<i class="fas fa-fill pl-1 pr-3"></i>
+
+										<div class="circle" style="background: #0d47a1" onclick="execCommandWithArg('hiliteColor','rgba(13,71,161,1)')"></div>
+										<div class="circle" style="background: #f18f0b" onclick="execCommandWithArg('hiliteColor','rgba(241,143,11,1)')"></div>
+										<div class="circle" style="background: black" onclick="execCommandWithArg('hiliteColor','rgba(0,0,0,1)')"></div>
+										<div class="circle" style="background: white; border:1px solid #999" onclick="execCommandWithArg('hiliteColor','rgba(255,255,255,1)')"></div>
+										<div class="circle" style="background: red" onclick="execCommandWithArg('hiliteColor','rgba(255,0,0,1)')"></div>
+										<div class="circle" style="background: green" onclick="execCommandWithArg('hiliteColor','rgba(0,128,0,1)')"></div>
+										<div class="circle" style="background: grey"  onclick="execCommandWithArg('hiliteColor','rgba(128,128,128,1)')"></div>
+									</div>
+									<!-- </div> -->
+								</div>
+								<div class="col">
+
+									<div class="upload-btn-wrapper">
+										<button class="btn-upload">Ajouter un fichier</button>
+										<input type="file" name="myfile" />
+									</div>
+
+								</div>
+
+							</div>
+							<div class="row">
+								<div class="col">
+									<iframe name="richText" style="width: 1200px; height:300px; font-family:Arial;" id="richText"></iframe>
+								</div>
+							</div>
+							<div class="row justify-content-end">
+								<div class="col-auto">
+									<button class="btn btn-primary" name="save" id="save">Enregistrer</button>
+								</div>
+								<div class="col-auto">
+									<div id="preview"></div>
+								</div>
+								<div class="col-auto">
+
+									<button class="btn btn-primary">Publier</button>
+								</div>
+							</div>
+
+						</div>
+					</section>
+				</div>
+				<!-- <div class="col-md-1"></div> -->
+
 			</div>
+
+
+
+			<!-- ./container -->
 		</div>
-	<div class="row">
 
-		<div class="col button-wrapper">
-			<span class="label">
-				Ajouter une image
-			</span>
-			<input type="file" name="image" id="img" >
-		</div>
-	</div>
+		<script type="text/javascript">
+			var showingSourceCode=false;
+			var isInEditMode=true;
+			var iframeCopy=document.getElementById('iframe-copy');
+			window.onload = function() {
+				richText.document.designMode='on';
+				document.richText.document.body.style.fontFamily = "Arial";
 
-	<div class="row">
-		<div class="col">
-			<button onClick="execCmd('bold')"><i class="fas fa-bold"></i></button>
-			<button onClick="execCmd('italic')"><i class="fas fa-italic"></i></button>
-			<button onClick="execCmd('underline')"><i class="fas fa-underline"></i></button>
+			};
+			function execCmd(command){
+				richText.document.execCommand(command, false, null);
+			}
+			function execCommandWithArg(command, arg){
+				richText.document.execCommand(command, false, arg);
+			}
+			function toggleSource(){
+				if(showingSourceCode){
+					richText.document.getElementsByTagName('body')[0].innerHTML=richText.document.getElementsByTagName('body')[0].textContent;
+					showingSourceCode=false;
+				}else{
+					richText.document.getElementsByTagName('body')[0].textContent=richText.document.getElementsByTagName('body')[0].innerHTML;
 
-			<button onClick="execCmd('justifyLeft')"><i class="fas fa-align-left"></i></button>
-			<button onClick="execCmd('justifyCenter')"><i class="fas fa-align-center"></i></button>
-			<button onClick="execCmd('justifyRight')"><i class="fas fa-align-right"></i></button>
-			<button onClick="execCmd('justifyFull')"><i class="fas fa-align-justify"></i></button>
-			<button onClick="execCmd('indent')"><i class="fas fa-indent"></i></button>
-			<button onClick="execCmd('oudent')"><i class="fas fa-outdent"></i></button>
-			<button onClick="execCmd('undo')"><i class="fas fa-undo"></i></button>
-			<button onClick="execCmd('redo')"><i class="fas fa-redo"></i></button>
-			<button onClick="execCmd('insertUnorderedList')"><i class="fas fa-list-ul"></i></button>
-			<button onClick="execCmd('insertOrderedList')"><i class="fas fa-list-ol"></i></button>
+					showingSourceCode=true;
+				}
+			}
+			function toggleEdit(){
+				if(isInEditMode){
+					richText.document.designMode='off';
+					isInEditMode=false;
+				}else{
+					richText.document.designMode='on';
 
-			<select onchange="execCommandWithArg('formatBlock',this.value);">
-				<option value="H1">Titre 1</option>
-				<option value="H2">Titre 2</option>
-				<option value="H3">Titre 3</option>
-				<option value="H4">Titre 4</option>
-				<option value="H5">Titre 5</option>
-				<option value="H6">Titre 6</option>
-			</select>
-			<button onClick="execCmd('insertHorizontalRule')">HR</button>
-			<button onClick="execCommandWithArg('createLink',prompt('Copiez le lien','' ))"><i class="fas fa-link"></i></button>
-			<button onClick="execCmd('unlink')"><i class="fas fa-unlink"></i></button>
-			<button onClick="toggleSource()"><i class="fas fa-code"></i></button>
-			<button onClick="toggleEdit()">Tester</button>
-			<select onchange="execCommandWithArg('fontSize',this.value);">
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">Défaut</option>
-				<option value="4">4</option>
-				<option value="5">5</option>
-				<option value="6">6</option>
-			</select>
-			Texte : <input type="color" name="" onchange="execCommandWithArg('foreColor',this.value);">
-			Fond <input type="color" name="" onchange="execCommandWithArg('hiliteColor',this.value);">
+					isInEditMode=true;
 
-
-			<button onClick="execCommandWithArg('insertImage',prompt('Entrer l adresse de l\'image',''))"><i class="fas fa-file-image"></i></button>
-			<button onClick="execCmd('selectAll')">Select all</button>
-
-
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col">
-			<iframe name="richText" style="width: 1000px; height:300px; font-family:Arial;"></iframe>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col">
-			<button class="btn btn-orange" name="save" id="save">Save</button>
-		</div>
-	</div>
-
-	<div class="hide"></div>
-
-	<!-- ./container -->
-</div>
-
-<script type="text/javascript">
-	var showingSourceCode=false;
-	var isInEditMode=true;
-	var iframeCopy=document.getElementById('iframe-copy');
-	window.onload = function() {
-		richText.document.designMode='on';
-		document.richText.document.body.style.fontFamily = "Arial";
-
-	};
-	function execCmd(command){
-		richText.document.execCommand(command, false, null);
-	}
-	function execCommandWithArg(command, arg){
-		richText.document.execCommand(command, false, arg);
-	}
-	function toggleSource(){
-		if(showingSourceCode){
-			richText.document.getElementsByTagName('body')[0].innerHTML=richText.document.getElementsByTagName('body')[0].textContent;
-			showingSourceCode=false;
-		}else{
-			richText.document.getElementsByTagName('body')[0].textContent=richText.document.getElementsByTagName('body')[0].innerHTML;
-
-			showingSourceCode=true;
-		}
-	}
-	function toggleEdit(){
-		if(isInEditMode){
-			richText.document.designMode='off';
-			isInEditMode=false;
-		}else{
-			richText.document.designMode='on';
-
-			isInEditMode=true;
-
-		}
-	}
-
-
-	$(document).ready(function(){
-
-
-		$( "#galerie" ).click(function( event ) {
-
-			imageAdress=event.target.src;
-			var dummy = $('<input>').val(imageAdress).appendTo('.hide').select()
-			document.execCommand("copy");
-        	// $( "#log" ).html( "clicked: " + event.target.nodeName );
-        });
-
-
-		$(document).on("change", "#img", function(){
-			var filename = document.getElementById("img").files[0].name;
-			var file=document.getElementById("img").files[0];
-			var fd = new FormData();
-			var ext = filename.split('.').pop().toLowerCase();
-
-			if(jQuery.inArray(ext, ['gif','png','jpg','jpeg']) == -1)
-			{
-				alert("Type de fichier non supporté");
+				}
 			}
 
-			var oFReader = new FileReader();
-			oFReader.readAsDataURL(file);
 
-			var fsize = file.size||file.fileSize;
-			if(fsize > 2000000){
-				alert("Fichier trop lourd");
-			}
-			else
-			{
+			$(document).ready(function(){
 
-				fd.append("file", file);
+				$(document).on("change", "#img", function(){
+					var filename = document.getElementById("img").files[0].name;
+					var file=document.getElementById("img").files[0];
+					var fd = new FormData();
+					var ext = filename.split('.').pop().toLowerCase();
 
-				fd.append("submit", true);
 
-				$.ajax({
-					url:"ajax-upload-img.php",
-					type:"POST",
-					data: fd,
-					contentType: false,
-					processData: false,
-					dataType:"JSON",
+					if(jQuery.inArray(ext, ['gif','png','jpg','jpeg']) == -1)
+					{
+						alert("Type de fichier non supporté");
+					}
+
+					var oFReader = new FileReader();
+					oFReader.readAsDataURL(file);
+
+					var fsize = file.size||file.fileSize;
+					if(fsize > 2000000){
+						alert("Fichier trop lourd");
+					}
+					else
+					{
+
+						fd.append("file", file);
+
+						fd.append("submit", true);
+
+						$.ajax({
+							url:"ajax-upload-img.php",
+							type:"POST",
+							data: fd,
+							contentType: false,
+							processData: false,
+							dataType:"JSON",
         				// beforeSend:function(data){
         				// 	$('#galerie').html("<label class='text-success'>Upload en cours...</label>");
         				// },
@@ -258,35 +293,47 @@ DEBUT CONTENU CONTAINER
                             // img.setAttribute("src", data.path);
                             var colStart="<div class='col-3 galerie-col'>"
                             var colEnd='</div>';
-                            var img = colStart+"<img src='" + data.path + "'>"+ colEnd;
+                            var img = "<img src='" + data.path + "'>";
 
 
-                            $("#galerie").append(img);
+
+                            $('#richText').contents().find('body').append($("<img/>").attr("src", data.path).attr("title", "sometitle"));
+        					// execCommandWithArg('insertImage',data.path );
+							// myFrame.execCommand('insertImage', false, data.path);
+                            // richText.document.getElementsByTagName('body')[0].append(img);
 
                         }
                     }
                 });
-			}
+					}
+				});
+
+
+				$('#save').on('click',function(){
+
+					var iframeContent = richText.document.getElementsByTagName('body')[0].innerHTML;
+					iframeContent=iframeContent.replace(/&nbsp;/gi,'');
+					console.log(iframeContent);
+					if(iframeContent){
+						$.ajax({
+							type:'POST',
+							dataType : 'html',
+							url:'ajax-saveas-html.php',
+							data:'iframe='+iframeContent,
+							success:function(html){
+								$('#preview').empty();
+								$('#preview').append('<a class="btn btn-orange" href="preview.php?file='+html+'" target="_blank" id="previewlink">previsualiser</a>');
+							}
+						});
+					}
+
+				});
+
+		// on fait disparaitre le btn preview dès que l'utilisateur retourne dans le iframe pour le forcer à enregistrer avant la previsualisation
+		var frameBody = $("#richText").contents().find("body");
+		frameBody.focus(function(e){
+			$('#preview').empty();
 		});
-
-
-		$('#save').on('click',function(){
-
-			var iframeContent = richText.document.getElementsByTagName('body')[0].innerHTML;
-			console.log(iframeContent);
-			if(iframeContent){
-				$.ajax({
-					type:'POST',
-					url:'ajax-saveas-html.php',
-					data:'iframe='+iframeContent,
-					success:function(html){
-					// $('#mag').append(html);
-				}
-			});
-			}
-
-		});
-
 
 	});
 
