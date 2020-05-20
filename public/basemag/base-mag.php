@@ -76,7 +76,7 @@ if(isset($_POST['filter'])){
 	unset($_SESSION['mag_filters']);
 	/*-----------------------------
 	* 		filtre centrale
-	 ------------------------------*/
+	------------------------------*/
 	if(isset($_POST['centraleSelected'])){
 		$_SESSION['mag_filters']['centraleSelected']=$_POST['centraleSelected'];
 
@@ -98,7 +98,7 @@ if(isset($_POST['filter'])){
 
 	/*-----------------------------
 	* 		filtre acdlec
-	 ------------------------------*/
+	------------------------------*/
 
 	if(isset($_POST['acdlecSelected'])){
 		$_SESSION['mag_filters']['acdlecSelected']=$_POST['acdlecSelected'];
@@ -112,7 +112,7 @@ if(isset($_POST['filter'])){
 
 	/*-----------------------------
 	* 		filtre ouvert/fermé
-	 ------------------------------*/
+	------------------------------*/
 	if(isset($_POST['sorti']) && $_POST['sorti'][0]==9){
 		// affichage des magasins sortis
 		$_SESSION['mag_filters']['sorti']=$_POST['sorti'];
@@ -174,7 +174,7 @@ if(isset($_POST['filter'])){
 
 	/*-----------------------------
 	* 		filtre on of pour docubase et code portail
-	 ------------------------------*/
+	------------------------------*/
 
 	if(isset($_POST['no-docubase'])){
 		$_SESSION['mag_filters']['no-docubase']=$_POST['no-docubase'];
@@ -337,7 +337,7 @@ DEBUT CONTENU CONTAINER
 
 		/*-----------------------------------
 		*	CASES A COCHER ACDLEC
-		 ------------------------------------*/
+		------------------------------------*/
 		// cocher tout decocher tout pour addlec
 		$("#check-all-code").click(function () {
 			$('.acdlec').prop('checked', this.checked);
@@ -347,10 +347,12 @@ DEBUT CONTENU CONTAINER
 		});
 		/*-----------------------------------
 		*	CASES A COCHER CENTRALES
-		 ------------------------------------*/
+		------------------------------------*/
 		// PAS DE FILTRE CENTRALE :  décocher toutes les centrales
 		$('#no-filtre-centrale').click(function(){
-			$('.centrale').removeAttr('checked');
+			$('.centrale').prop('checked', this.checked);
+
+			// $('.centrale').removeAttr('checked');
 			$('#no-centrale').removeAttr('checked');
 		});
 		// PAS DE CENTRALE : décocher toutes les centrales
@@ -363,9 +365,22 @@ DEBUT CONTENU CONTAINER
 			$('#no-filtre-centrale').removeAttr('checked');
 			$('#no-centrale').removeAttr('checked');
 		});
+
+		$('#general').change(function(){
+			if($(this).prop("checked")) {
+				$('#no-filtre-centrale').prop('checked', this.checked);
+				$('.centrale').prop('checked', this.checked);
+				$('.acdlec').prop('checked', this.checked);
+				$("#check-all-code").prop('checked', this.checked);
+				$('#filtre-ca').removeAttr('checked');
+				$("#no-filtre-ca").prop('checked', this.checked);
+
+			}
+		});
+
 		/*-----------------------------------
 		*	RADIO BTN OUVERT FERME
-		 ------------------------------------*/
+		------------------------------------*/
 		// FERME : montre les selecteurs de date
 		// + coche "cocher tout" pour acdlec
 		// + coche " pas de filtre centrale"
@@ -395,7 +410,7 @@ DEBUT CONTENU CONTAINER
 		}
 		/*-----------------------------------
 		*	TABLEAU : affiche ou non la colonne ca
-		 ------------------------------------*/
+		------------------------------------*/
 
 		$('.switch-input').on("click", function(){
 			if ( $('.switch-input').prop("checked") ){
@@ -408,7 +423,7 @@ DEBUT CONTENU CONTAINER
 		/*-----------------------------------
 		*	TABLEAU : affiche uniquement
 		*	champs différents/ affiche tout
-		 ------------------------------------*/
+		------------------------------------*/
 
 		$('.hide-btn').on("click",function(){
 			$( "tr.ok" ).hide();

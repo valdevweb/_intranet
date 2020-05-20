@@ -52,7 +52,7 @@
 									<div class="col">
 										<div class="form-check  pl-5">
 											<input type="checkbox" class="form-check-input" name="centraleSelected[]" value="1" id="no-filtre-centrale"  <?= checkChecked(1,'centraleSelected')?>>
-											<label for="centrale-1" class="form-check-label">Sans filtre centrale</label>
+											<label for="centrale-1" class="form-check-label">Toutes les centrales</label>
 										</div>
 									</div>
 									<div class="col"></div>
@@ -190,6 +190,14 @@
 								<!-- btn validation -->
 								<div class="form-row">
 									<div class="col text-right">
+										<div class="form-check">
+											<input class="form-check-input" type="checkbox" value="" id="general" name="general">
+											<label class="form-check-label" for="general">Cocher Tout</label>
+										</div>
+									</div>
+									<div class="col text-right">
+
+
 										<button class="btn btn-orange" name="clear_filter">Réinitialiser les filtres</button>
 										<button class="btn btn-primary" name="filter">Filtrer</button>
 
