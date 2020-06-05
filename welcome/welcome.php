@@ -335,7 +335,7 @@ $nineteen=['2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05', '2019-01-06',
 			</head>
 			<body>
 				<div class="container-fluid">
-					<?php if (VERSION=='_'): ?>
+					<?php if (VERSION=='c'): ?>
 
 						<div class="row">
 							<div class="col">
@@ -391,7 +391,19 @@ $nineteen=['2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05', '2019-01-06',
 						</div>
 					<?php endif ?>
 
+					<div class="row mb-1">
+						<div class="col-auto my-auto">
+							<h1 class="open">N'oubliez pas  </h1>
+						</div>
+						<div class="col ">
+							<img class="" src="covid.png">
+						</div>
+					</div>
+
 					<!-- 1 LIGNE COMPLETE **********************************************************************************************************************************************************-->
+
+
+
 					<div class="row mb-1">
 						<div class="col align-self-center text-center">
 							<img class="" src="../public/img/logo_bt/bt300.jpg">

@@ -35,8 +35,9 @@
   font-family:Mali, sans-serif;
 }
 
-
-
+.open{
+  font-family:  -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
 
 
  .mois .row .col .row .tagging, .year .row .col .row .tagging{
@@ -139,6 +140,15 @@ color :#cddc39;
 
 .norm-text{
   font-size: 1vw;
+}
+
+.norm-text-abs{
+  font-size: 1vw;
+   position: absolute;
+  left: 150px;
+  top: 80px;
+  display: none;
+
 }
 
 .norm-text-plus{
