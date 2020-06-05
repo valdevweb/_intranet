@@ -6,6 +6,8 @@
 			</div>
 			<div class="main-text text-right pr-5">
 				<?=number_format((float)$anneeEnCoursCa,0,'',' ')?><span class="third-text">&euro;</span></div>
+				<br><span class="norm-text-abs">pour  XX palettes et xxx colis</span>
+
 			</div>
 		</div>
 	</div>
