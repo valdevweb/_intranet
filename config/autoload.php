@@ -60,6 +60,7 @@ $pdoSav=connectToDb(VERSION.'sav');
 $pdoLitige=connectToDb(VERSION.'litige');
 $pdoCasse=connectToDb(VERSION.'casse');
 $pdoCm=connectToDb(VERSION.'cm');
+$pdoEvo=connectToDb(VERSION.'evo');
 
 
 

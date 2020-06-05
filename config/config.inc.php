@@ -33,6 +33,7 @@ $pdoExploit= connectToDb('exploit');
 $pdoMag=connectToDb(VERSION .'magasin');
 $pdoBt=connectToDb('btlec');
 $pdoSav=connectToDb('sav');
+$pdoEvo=connectToDb(VERSION.'evo');
 
 
 // emplacement fichier csv gessica et ctbt

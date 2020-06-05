@@ -147,3 +147,19 @@ td:nth-child(7){
 	60%{background :#eefbee;}
 	100%{background :#fff;}
 }
+
+.btn-hit{
+    border-radius:  5px;
+    padding: 10px 20px;
+    background:  #ffc107;
+    transition: all 4s ease-in-out;
+    box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
+}
+.btn-hit a{
+      color: white;
+}
+.btn-hit a:hover, .btn-hit:hover{
+    color: white;
+    text-decoration: none;
+    transform: scale(1.05);
+}

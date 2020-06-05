@@ -306,7 +306,13 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 			</ul>
 		</li>
 		<?php if ($d_btlec): ?>
+			<li  class='active has-sub'><a href="#" >Evolutions</a>
+				<ul>
+					<li><a href="<?= ROOT_PATH?>/public/evo/dde-evo.php">Demande d'évo</a></li>
 
+
+				</ul>
+			</li>
 			<li  class='active has-sub'><a href="#" >Magasins</a>
 				<ul>
 					<li><a href="<?= ROOT_PATH?>/public/basemag/base-mag.php">Base magasins</a></li>

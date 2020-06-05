@@ -414,7 +414,19 @@ DEBUT CONTENU CONTAINER
 <div class="container">
 	<div class="row pt-5 mb-5">
 		<div class="col">
-			<h1 class="text-main-blue">Listing des dossiers litiges </h1>
+
+			<div class="row">
+				<div class="col">
+					<h1 class="text-main-blue">Listing des dossiers litiges </h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<div class="btn btn-hit">
+						<a href="pdf-hitparade-litige.php" class=""><i class="fas fa-chart-bar pr-3"></i>HIT PARADE</a>
+					</div>
+				</div>
+			</div>
 
 
 		</div>

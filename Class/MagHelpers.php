@@ -3,7 +3,7 @@
 class MagHelpers{
 
 	public static function magInfo($pdo, $galec){
-		$req=$pdo->prepare("SELECT *,users.id as idwebuser, mag_attribution.id_web_user as id_cm FROM mag LEFT JOIN users ON mag.galec=users.galec LEFT JOIN mag_attribution ON mag.galec=mag_attribution.galec WHERE mag.galec= :galec");
+		$req=$pdo->prepare("SELECT *,users.id as idwebuser FROM mag LEFT JOIN web_users.users ON mag.galec=web_users.users.galec  WHERE mag.galec= :galec");
 		$req->execute([
 			':galec'		=>$galec
 		]);
