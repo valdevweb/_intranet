@@ -6,7 +6,8 @@
 			</div>
 			<div class="main-text text-right pr-5">
 				<?=number_format((float)$moisEnCoursCa,0,'',' ')?><span class="third-text">&euro;</span>
-				<br><span class="norm-text-abs">pour  XX palettes et xxx colis</span>
+				<br><span class="norm-text-abs"><?=$moisEnCoursPalette?> palettes  pour <?=$moisEnCoursLastYearColis?> colis</span>
+
 
 			</div>
 		</div>
@@ -21,6 +22,8 @@
 			</div>
 			<div class="secondary-text text-right pr-5">
 				<?=number_format((float)$moisEnCoursLastYearCa,0,'',' ')?> <span class="third-text">&euro;</span>
+				<br><span class="norm-text-abs"><?=$moisEnCoursLastYearPalette?> palettes  pour <?=$moisEnCoursLastYearColis?> colis</span>
+
 			</div>
 		</div>
 	</div>

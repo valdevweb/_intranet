@@ -6,7 +6,8 @@
 			</div>
 			<div class="main-text text-right pr-5">
 				<?=number_format((float)$jMoinsUnCa,0,'',' ')?><span class="third-text">&euro;</span>
-				<br><span class="norm-text-abs">pour  XX palettes et xxx colis</span>
+				<br><span class="norm-text-abs"><?=number_format((float)$jMoinsUnPalettes,0,'', ' ')?> palettes  pour <?=number_format((float)$jMoinsUnColis,0,'', ' ')?> colis</span>
+
 			</div>
 
 		</div>
@@ -21,6 +22,8 @@
 			</div>
 			<div class="secondary-text text-right pr-5">
 				<?=number_format((float)$jMoinsUnLastYearCa,0,'',' ')?> <span class="third-text">&euro;</span>
+				<br><span class="norm-text-abs"><?=number_format((float)$jMoinsUnLastYearPalettes,0,'', ' ')?> palettes  pour <?=number_format((float)$jMoinsUnLastYearColis,0,'', ' ')?> colis</span>
+
 			</div>
 		</div>
 	</div>

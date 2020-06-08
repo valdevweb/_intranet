@@ -14,14 +14,14 @@ $nineteen=['2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05', '2019-01-06',
 			---------------------------------------------------------------------*/
 
 			function caJour($pdoQlik,$date){
-				$req=$pdoQlik->prepare("SELECT * FROM statscajour WHERE DateCA= :DateCA");
+				$req=$pdoQlik->prepare("SELECT  sum(CAl) as somme, sum(Colis1) as colis, sum(Palettes1) as palettes FROM statscajour WHERE DateCA= :DateCA");
 				$req->execute([
-					':DateCA'			=>$date->format('Y-m-d')
+					':DateCA'=>$date->format('Y-m-d')
 
 				]);
 				$data=$req->fetch(PDO::FETCH_ASSOC);
 				if(!empty($data)){
-					return 	$data['CAl'];
+					return 	$data;
 				}
 				return 0;
 			}
@@ -30,32 +30,38 @@ $nineteen=['2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05', '2019-01-06',
 			}
 
 			function sommeCaJour($pdoQlik,$start,$end){
-				$req=$pdoQlik->prepare("SELECT sum(CAl) as somme FROM statscajour WHERE DateCA BETWEEN :start AND :end");
+				$req=$pdoQlik->prepare("SELECT sum(CAl) as somme, sum(Colis1) as colis, sum(Palettes1) as palettes FROM statscajour WHERE DateCA BETWEEN :start AND :end");
 				$req->execute([
 					':start'			=>$start->format('Y-m-d'),
 					':end'				=>$end->format('Y-m-d')
 				]);
 				$data=$req->fetch(PDO::FETCH_ASSOC);
 				if(!empty($data)){
-					return 	$data['somme'];
+					return 	$data;
 				}
 				return 0;
 			}
 			function caMois($pdoQlik,$month,$year){
-				$req=$pdoQlik->prepare("SELECT * FROM statscamois WHERE AnneeCA= :AnneeCA AND MoisCA= :MoisCA");
+				$req=$pdoQlik->prepare("SELECT CAl as somme, Colisl as colis, Palettesl as palettes FROM statscamois WHERE AnneeCA= :AnneeCA AND MoisCA= :MoisCA");
 				$req->execute([
 					':AnneeCA'			=>$year,
 					':MoisCA'			=>$month
 
 				]);
 				$data=$req->fetch(PDO::FETCH_ASSOC);
-				if(!empty($data)){
-					return 	$data['CAl'];
-				}
-				return 0;
+
+				return 	$data;
+
+
 			}
+
+
+
+
+
+
 			function caAnnee($pdoQlik,$lastMonth,$year){
-				$req=$pdoQlik->prepare("SELECT sum(CAl) as somme FROM statscamois WHERE AnneeCA= :AnneeCA AND (MoisCA>= 1 AND MoisCA<=:MoisCA)");
+				$req=$pdoQlik->prepare("SELECT sum(CAl) as somme, sum(Colisl) as colis, sum(Palettesl) as palettes FROM statscamois WHERE AnneeCA= :AnneeCA AND (MoisCA>= 1 AND MoisCA<=:MoisCA)");
 				$req->execute([
 					':AnneeCA'			=>$year,
 					':MoisCA'			=>$lastMonth
@@ -63,7 +69,7 @@ $nineteen=['2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05', '2019-01-06',
 				]);
 				$data=$req->fetch(PDO::FETCH_ASSOC);
 				if(!empty($data)){
-					return 	$data['somme'];
+					return 	$data;
 				}
 				return 0;
 			}
@@ -195,23 +201,36 @@ $nineteen=['2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05', '2019-01-06',
 			$premierJourMois=$premierJourMois->modify('first day of this month');
 			// si pas de jour l'année dernière, on met le ca à 0 et on calcul les autres dates à partir d'un fake
 			if($jMoinsUnLastYear!="NULL"){
-				$jMoinsUnLastYearCa=caJour($pdoQlik, $jMoinsUnLastYear);
+				$jMoinsUnLastYearAll=caJour($pdoQlik, $jMoinsUnLastYear);
+				$jMoinsUnLastYearCa=$jMoinsUnLastYearAll['somme'];
+				$jMoinsUnLastYearPalettes=$jMoinsUnLastYearAll['palette'];
+				$jMoinsUnLastYearColis=$jMoinsUnLastYearAll['colis'];
 				$anneeLastYear=$jMoinsUnLastYear->format('Y');
 				$moisLastYear=$jMoinsUnLastYear->format('n');
 				$premierJourMoisLastYear=clone $jMoinsUnLastYear;
 				$premierJourMoisLastYear=$premierJourMoisLastYear->modify('first day of this month');
-				$moisEnCoursLastYearCa=sommeCaJour($pdoQlik,$premierJourMoisLastYear,$jMoinsUnLastYear);
+				$moisEnCoursLastYearAll=sommeCaJour($pdoQlik,$premierJourMoisLastYear,$jMoinsUnLastYear);
+				$moisEnCoursLastYearCa=$moisEnCoursLastYearAll['somme'];
+				$moisEnCoursLastYearPalette=$moisEnCoursLastYearAll['palette'];
+				$moisEnCoursLastYearColis=$moisEnCoursLastYearAll['colis'];
+
 
 
 
 			}else{
 				$jMoinsUnLastYearCa=0;
+				$jMoinsUnLastYearPalettes=0;
+				$jMoinsUnLastYearColis=0;
 				$fakeJMoinsUnLastYear=getJourLastYearFake(clone $jMoinsUn);
 				$anneeLastYear=$fakeJMoinsUnLastYear->format('Y');
 				$moisLastYear=$fakeJMoinsUnLastYear->format('n');
 				$premierJourMoisLastYear=clone $fakeJMoinsUnLastYear;
 				$premierJourMoisLastYear=$premierJourMoisLastYear->modify('first day of this month');
+				$moisEnCoursLastYearAll=0;
 				$moisEnCoursLastYearCa=0;
+				$moisEnCoursLastYearPalette=0;
+				$moisEnCoursLastYearColis=0;
+
 
 
 			}
@@ -222,34 +241,63 @@ $nineteen=['2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05', '2019-01-06',
 
 
 
-			$jMoinsUnCa=caJour($pdoQlik, $jMoinsUn);
+			$jMoinsUnAll=caJour($pdoQlik, $jMoinsUn);
+			$jMoinsUnCa=$jMoinsUnAll['somme'];
+			$jMoinsUnPalettes=$jMoinsUnAll['palettes'];
+			$jMoinsUnColis=$jMoinsUnAll['colis'];
+			// $jMoinsUnColis=$jMoinsUnAll['Colisl'];
+			// $jMoinsUnPalette=$jMoinsUnAll['Palettesl'];
+
 			$jMoinsUnDiff= $jMoinsUnCa-$jMoinsUnLastYearCa;
 			$jMoinsUnPourcent=pourcentage($jMoinsUnCa,$jMoinsUnLastYearCa,$jMoinsUnDiff);
 
 
 
-			$moisEnCoursCa=sommeCaJour($pdoQlik,$premierJourMois,$jMoinsUn);
-
+			$moisEnCoursAll=sommeCaJour($pdoQlik,$premierJourMois,$jMoinsUn);
+			$moisEnCoursCa=$moisEnCoursAll['somme'];
+			$moisEnCoursPalette=$moisEnCoursAll['palettes'];
+			$moisEnCoursColis=$moisEnCoursAll['colis'];
 			$moisEnCoursDiff=$moisEnCoursCa-$moisEnCoursLastYearCa;
 			$moisEnCoursPourcent=pourcentage($moisEnCoursCa,$moisEnCoursLastYearCa,$moisEnCoursDiff);
 
 			// rapelle => le ca mois est un cumul donc on cherche juste le ca du mois
-			$moisFinCa=caMois($pdoQlik, $moisActuel, $annee);
-			$moisFinLastYearCa=caMois($pdoQlik, $moisLastYear, $anneeLastYear);
+			$moisFinAll=caMois($pdoQlik, $moisActuel, $annee);
+			$moisFinCa=$moisFinAll['somme'];
+			$moisFinColis=$moisFinAll['colis'];
+			$moisFinPalettes=$moisFinAll['palettes'];
 
-
+			$moisFinLastYearAll=caMois($pdoQlik, $moisLastYear, $anneeLastYear);
+			$moisFinLastYearCa=$moisFinLastYearAll['somme'];
+			$moisFinLastYearColis=$moisFinLastYearAll['colis'];
+			$moisFinLastYearPalettes=$moisFinLastYearAll['palettes'];
 			$moisFinDiff=$moisFinCa-$moisFinLastYearCa;
 			$moisFinPourcent=pourcentage($moisFinCa,$moisFinLastYearCa,$moisFinDiff);
 
-			$anneeEnCoursCa=caAnnee($pdoQlik,$moisActuel, $annee);
-			$anneeEnCoursLastYearCa=caAnnee($pdoQlik,$moisLastYear, $anneeLastYear);
+			$anneeEnCoursAll=caAnnee($pdoQlik,$moisActuel, $annee);
+			$anneeEnCoursCa=$anneeEnCoursAll['somme'];
+			$anneeEnCoursPalettes=$anneeEnCoursAll['palettes'];
+			$anneeEnCoursColis=$anneeEnCoursAll['colis'];
+
+
+			$anneeEnCoursLastYearAll=caAnnee($pdoQlik,$moisLastYear, $anneeLastYear);
+			$anneeEnCoursLastYearCa=$anneeEnCoursLastYearAll['somme'];
+			$anneeEnCoursLastYearPalettes=$anneeEnCoursLastYearAll['palettes'];
+			$anneeEnCoursLastYearColis=$anneeEnCoursLastYearAll['colis'];
 			$anneeEnCoursDiff=$anneeEnCoursCa-$anneeEnCoursLastYearCa;
 			$anneeEnCoursPourcent=pourcentage($anneeEnCoursCa,$anneeEnCoursLastYearCa,$anneeEnCoursDiff);
 
 
 
-			$anneeFinCa=caAnnee($pdoQlik,12, $annee);
-			$anneeFinLastYearCa=caAnnee($pdoQlik,12, $anneeLastYear);
+			$anneeFinAll=caAnnee($pdoQlik,12, $annee);
+			$anneeFinCa=$anneeFinAll['somme'];
+			$anneeFinPalettes=$anneeFinAll['palettes'];
+			$anneeFinColis=$anneeFinAll['colis'];
+
+
+			$anneeFinLastYearAll=caAnnee($pdoQlik,12, $anneeLastYear);
+			$anneeFinLastYearCa=$anneeFinLastYearAll['somme'];
+			$anneeFinLastYearPalettes=$anneeFinLastYearAll['palettes'];
+			$anneeFinLastYearColis=$anneeFinLastYearAll['colis'];
 			$anneeFinDiff=$anneeFinCa-$anneeFinLastYearCa;
 			$anneeFinPourcent=pourcentage($anneeFinCa,$anneeFinLastYearCa,$anneeFinDiff);
 
