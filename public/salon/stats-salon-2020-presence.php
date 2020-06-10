@@ -2,7 +2,7 @@
     <div class="col">
       <h5 class="text-main-blue heavy"> Présence :</h5>
       <p>Nombre de magasins présents : <?= $nbMagPresent?></p>
-      <p>Nombre de personnes présentes : <?= $nbPres['nb'].' ('.  $nbValise['nb']?> valises)</p>
+      <p>Nombre de personnes présentes : <?= $nbPres['nb']?></p>
     </div>
   </div>
 
@@ -86,14 +86,14 @@
           <th class="sortable" onclick="sortTable(4);">Prénom</th>
           <th class="sortable" onclick="sortTable(5);">Jour</th>
           <th class="sortable" onclick="sortTable(5);">Heure</th>
-          <th class="sortable" onclick="sortTable(6);">Valise</th>
+
         </tr>
       </thead>
       <tbody>
         <?php
         foreach ($listParticipant as $part)
         {
-          $valise = ($part['valise']==1) ? '<i class="fas fa-suitcase text-trois"></i>' : '' ;
+
           if($part['date_passage'] !=''){
             $jour=date('w',strtotime($part['date_passage']));
             $jourStr = ($jour==2) ? 'mardi' : 'mercredi' ;
@@ -110,7 +110,7 @@
           echo '<td>'.$part['prenom'].'</td>';
           echo '<td>'.$jourStr.'</td>';
           echo '<td>'.$part['heure'].'</td>';
-          echo '<td class="text-center">'.$valise.'</td>';
+
           echo '</tr>';
 
         }

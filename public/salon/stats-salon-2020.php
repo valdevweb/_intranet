@@ -78,12 +78,7 @@ function getNbMagInscritMercredi($pdoBt, $year){
   return $req->fetchAll();
 }
 
-function getValise($pdoBt){
-  $req=$pdoBt->prepare("SELECT count(id) as nb FROM salon_2020 WHERE valise=1");
-  $req->execute();
-  return $req->fetch();
 
-}
 
 
 function nbMagCentrale($pdoBt,$year){
@@ -113,7 +108,6 @@ $statHeureMercredi=getByHeure($pdoBt, 5);
 
 $statHeureMardi=getByHeure($pdoBt, 4);
 
-$nbValise=getValise($pdoBt);
 
 
 
@@ -330,10 +324,10 @@ DEBUT CONTENU CONTAINER
   </div>
 
   <?php
-  if(new DateTime()>=new DateTime("2020-06-09")){
-    include('stats-salon-2020-presence.php');
+  // if(new DateTime()>=new DateTime("2020-06-09")){
+  //   include('stats-salon-2020-presence.php');
 
-  }
+  // }
 
   ?>
 
