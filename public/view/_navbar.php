@@ -165,7 +165,7 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 		?>
 		<?php if ($d_occBt): ?>
 
-			<li class='active has-sub'><a href="<?= ROOT_PATH?>/public/gtocc/occ-dashboard-bt.php"><span>Leclerc occasion</span></a>
+			<li class='active has-sub'><a href="#"><span>Leclerc occasion</span></a>
 				<ul>
 					<li><a href="/public/#">Informations générales</a>
 						<ul>

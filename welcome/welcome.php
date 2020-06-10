@@ -203,7 +203,7 @@ $nineteen=['2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05', '2019-01-06',
 			if($jMoinsUnLastYear!="NULL"){
 				$jMoinsUnLastYearAll=caJour($pdoQlik, $jMoinsUnLastYear);
 				$jMoinsUnLastYearCa=$jMoinsUnLastYearAll['somme'];
-				$jMoinsUnLastYearPalettes=$jMoinsUnLastYearAll['palette'];
+				$jMoinsUnLastYearPalettes=$jMoinsUnLastYearAll['palettes'];
 				$jMoinsUnLastYearColis=$jMoinsUnLastYearAll['colis'];
 				$anneeLastYear=$jMoinsUnLastYear->format('Y');
 				$moisLastYear=$jMoinsUnLastYear->format('n');
@@ -211,7 +211,7 @@ $nineteen=['2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05', '2019-01-06',
 				$premierJourMoisLastYear=$premierJourMoisLastYear->modify('first day of this month');
 				$moisEnCoursLastYearAll=sommeCaJour($pdoQlik,$premierJourMoisLastYear,$jMoinsUnLastYear);
 				$moisEnCoursLastYearCa=$moisEnCoursLastYearAll['somme'];
-				$moisEnCoursLastYearPalette=$moisEnCoursLastYearAll['palette'];
+				$moisEnCoursLastYearPalette=$moisEnCoursLastYearAll['palettes'];
 				$moisEnCoursLastYearColis=$moisEnCoursLastYearAll['colis'];
 
 

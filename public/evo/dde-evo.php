@@ -17,6 +17,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 // require_once '../../vendor/autoload.php';
 
 require "../../Class/EvoManager.php";
+require "../../Class/EvoHelpers.php";
 
 //---------------------------------------
 //	ajout enreg dans stat
@@ -29,20 +30,29 @@ require "../../Class/EvoManager.php";
 //------------------------------------------------------
 
 function insertEvo($pdoEvo){
-$req=$pdoEvo->prepare("INSERT INTO evo (id_from, objet, evo, id_etat, date_dde, id_prio, id_plateforme, id_outils, id_module)
-	VALUES (:id_from, :objet, :evo, :id_etat, :date_dde, :id_prio, :id_plateforme, :id_outils, :id_module)");
+	$arrOutilsRespId=EvoHelpers::arrayOutilsRespId($pdoEvo);
+
+	$req=$pdoEvo->prepare("INSERT INTO evos (id_from, id_resp, objet, evo, id_etat, date_dde, id_prio, id_plateforme, id_outils, id_module)
+		VALUES (:id_from, :id_resp, :objet, :evo, :id_etat, :date_dde, :id_prio, :id_plateforme, :id_outils, :id_module)");
 	$req->execute([
 		':id_from'		=>$_SESSION['id_web_user'],
-		 ':objet'		=>$_POST['objet'],
-		 ':evo'		=>$_POST['evo'],
-		 ':id_etat'		=>0,
-		 ':date_dde'		=>date('Y-m-d H:i:s'),
-		 ':id_prio'		=>$_POST['prio'],
-		 ':id_plateforme'		=>$_POST['pf'],
-		 ':id_outils'		=>$_POST[''],
-		 ':id_module'		=>$_POST['']
+		':id_resp'		=>$arrOutilsRespId[$_POST['outils']],
+		':objet'		=>$_POST['objet'],
+		':evo'		=>$_POST['evo'],
+		':id_etat'		=>0,
+		':date_dde'		=>date('Y-m-d H:i:s'),
+		':id_prio'		=>$_POST['prio'],
+		':id_plateforme'		=>$_POST['pf'],
+		':id_outils'		=>$_POST['outils'],
+		':id_module'		=>empty($_POST['module'])? 0: $_POST['module']
 
 	]);
+	$err=$req->errorInfo();
+	if(empty($err[2])){
+		return false;
+	}else{
+		return $err[2];
+	}
 
 }
 
@@ -53,11 +63,17 @@ $errors=[];
 $success=[];
 
 $evoMgr=new EvoManager($pdoEvo);
-$listPF=$evoMgr->getListPlateforme($pdoEvo);
+$listPF=$evoMgr->getListPlateforme();
 
 if(isset($_POST['submit'])){
+	$err=insertEvo($pdoEvo);
+	if(!$err){
+		$success[]="Votre demande a été envoyée et est en attente de validation";
+	}
 
-
+	else{
+		$errors[]=$err;
+	}
 }
 
 
@@ -117,8 +133,8 @@ DEBUT CONTENU CONTAINER
 							</div>
 							<div class="col-md-4">
 								<div class="form-group">
-									<label for="outil"></label>
-									<select class="form-control" name="outil" id="outil">
+									<label for="outils"></label>
+									<select class="form-control" name="outils" id="outils">
 										<option value="">Sélectionner</option>
 									</select>
 								</div>
@@ -202,38 +218,27 @@ $("input:radio[name='pf']").click(function () {
 				url:'ajax-get-outil.php',
 				data:{id_plateforme:plateforme},
 				success: function(html){
-					$("#outil").html(html)
+					$("#outils").html(html)
 				}
 			});
 		});
 
 
 
-$('#outil').on("change",function(){
-	var outil=$('#outil').val();
-	console.log("outil" + outil);
+$('#outils').on("change",function(){
+	var outils=$('#outils').val();
+	console.log("outils" + outils);
 	$.ajax({
 		type:'POST',
 		url:'ajax-get-outil.php',
-		data:{id_outil:outil},
+		data:{id_outils:outils},
 		success: function(html){
 			$("#module").html(html)
 		}
 	});
 });
 
-
-
-
-
-
 });
-
-
-
-
-
-
 
 
 </script>
