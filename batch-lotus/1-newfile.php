@@ -143,7 +143,7 @@ if(empty($newFile)){
 	echo 'rien';
 	exit;
 }elseif($manuel){
-	$newFile='LOTUS_20200505.txt';
+	$newFile='LOTUS_20200609.txt';
 }else{
 	echo $newFile;
 }
@@ -173,7 +173,9 @@ if(count($contenuListeDiffu)!=count($nomListesDiffu)){
 	exit();
 }
 if($manuel){
-	$lastinsertId=51;
+	$lastinsertId=addNewFile($pdoMag, $newFile);
+
+
 }else{
 	$lastinsertId=addNewFile($pdoMag, $newFile);
 }

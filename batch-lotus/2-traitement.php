@@ -165,7 +165,7 @@ if(!empty($emailDb)){
 	foreach ($emailDb as $key => $extraction) {
 		$name=explode('@',$extraction['contenu']);
 		$name=trim($name[0]);
-		$result=ldap_search($lotusCon, $ldaptree, "(mail=*".$name."*)",$justThese);
+		$result=ldap_search($lotusCon, $ldaptree, "(mail=".$name."*)",$justThese);
 		$data = ldap_get_entries($lotusCon, $result);
 			// echo "<pre>";
 			// print_r($data);
