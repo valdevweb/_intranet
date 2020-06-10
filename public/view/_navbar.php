@@ -174,8 +174,8 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 					</li>
 					<li><a href="/public/#">Offres produits</a>
 						<ul>
-							<li><a href="<?= ROOT_PATH. '/public/'?>">Assortiment</a></li>
-							<li><a href="<?= ROOT_PATH. '/public/'?>">Detail palette</a></li>
+							<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-assortiment.php'?>">Assortiment</a></li>
+							<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-palette.php'?>">Detail palette</a></li>
 						</ul>
 					</li>
 					<li><a href="/public/#">Demandes magasins</a></li>
@@ -189,8 +189,8 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 					<li><a href="/public/#">Informations générales</a></li>
 					<li><a href="/public/#">Offres produits</a>
 						<ul>
-							<li><a href="<?= ROOT_PATH. '/public/'?>">Assortiment</a></li>
-							<li><a href="<?= ROOT_PATH. '/public/'?>">Detail palette</a></li>
+							<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-assortiment.php'?>">Assortiment</a></li>
+							<li><a href="<?= ROOT_PATH. '/public/occ-palette.php'?>">Detail palette</a></li>
 						</ul>
 					</li>
 					<li><a href="/public/#">Vos demandes</a></li>
