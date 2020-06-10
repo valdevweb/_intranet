@@ -118,7 +118,16 @@ if(isset($_POST['clos'])){
 	$closeExp=closeExp($pdoCasse,$isFac['mt_fac'], $isFac['mt_blanc'],$isFac['mt_brun'], $isFac['mt_gris'],$file);
 
 	if($added>0 && $closeExp >0){
+		if(VERSION=='_'){
+			$to=['valerie.montusclat@btlec.fr']	;
+			$cc=[];
+			$bcc='';
+		}else{
+		$to=['isabelle.richard@btlec.fr','clement.anciaux@btlec.fr', 'sandie.lejeune@btlec.fr']	;
+			$cc=['christelle.trousset@btlec.fr','nathalie.pazik@btlec.fr','luc.muller@btlec.fr'];
+			$bcc='valerie.montusclat@btlec.fr';
 
+		}
 		$htmlMail = file_get_contents('mail-compta.html');
 		$htmlMail=str_replace('{MAG}',$mag,$htmlMail);
 		$htmlMail=str_replace('{FAC}',$isFac['mt_fac'],$htmlMail);
@@ -133,9 +142,9 @@ if(isset($_POST['clos'])){
 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
 		// ->setTo(['valerie.montusclat@btlec.fr'])
 
-		->setTo(['isabelle.richard@btlec.fr','clement.anciaux@btlec.fr'])
-		->setCc(['christelle.trousset@btlec.fr','nathalie.pazik@btlec.fr','luc.muller@btlec.fr'])
-		->addBcc('valerie.montusclat@btlec.fr')
+		->setTo($to)
+		->setCc($cc)
+		->addBcc($bcc)
 		->attach(Swift_Attachment::fromPath('..\..\..\upload\casse\\'.$file));
 		if (!$mailer->send($message, $failures)){
 			print_r($failures);
