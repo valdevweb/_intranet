@@ -320,7 +320,7 @@ DEBUT CONTENU CONTAINER
 		<?php endif ?>
 		<!-- fin partie réservée bt -->
 
-		<!--  -->
+		<!-- panier -->
 		<div class="row">
 			<div class="col">
 				<h2 class="text-main-blue">Palettes disponibles à la commande</h2>
