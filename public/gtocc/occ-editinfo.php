@@ -64,7 +64,6 @@ DEBUT CONTENU CONTAINER
 	</div>
 
 
-
 	<div class="row justify-content-center ">
 		<!-- <div class="col-md-1"></div> -->
 		<div class="col-auto border rounded-lg px-5 py-5">
@@ -170,11 +169,13 @@ DEBUT CONTENU CONTAINER
 								</div>
 								<div class="col">
 
-									<div class="upload-btn-wrapper">
+									<label class="btn btn-upload btn-file text-center">
+										<input name="upload" id="" type="file" multiple="" class="form-control-file">
+										<i class="fas fa-file-image pr-3"></i>Ajouter des fichiers</label>
+									<!-- <div class="upload-btn-wrapper">
 										<button class="btn-upload">Ajouter un fichier</button>
 										<input type="file" name="myfile" />
-									</div>
-
+									</div> -->
 								</div>
 
 							</div>
@@ -185,14 +186,10 @@ DEBUT CONTENU CONTAINER
 							</div>
 							<div class="row justify-content-end">
 								<div class="col-auto">
-									<button class="btn btn-primary" name="save" id="save">Enregistrer</button>
-								</div>
-								<div class="col-auto">
 									<div id="preview"></div>
 								</div>
 								<div class="col-auto">
-
-									<button class="btn btn-primary">Publier</button>
+									<button class="btn btn-primary" name="save" id="save">Enregistrer</button>
 								</div>
 							</div>
 
@@ -202,8 +199,11 @@ DEBUT CONTENU CONTAINER
 				<!-- <div class="col-md-1"></div> -->
 
 			</div>
+			<!-- div caché poour date parce que trop chiant en js -->
+			<div class="hidden" id="phpdate"><?=date('YmdHis')?></div>
 
-
+			<!-- input caché pour nom fichier -->
+			<div class="hidden" id="filename"></div>
 
 			<!-- ./container -->
 		</div>
@@ -313,13 +313,21 @@ DEBUT CONTENU CONTAINER
 
 					var iframeContent = richText.document.getElementsByTagName('body')[0].innerHTML;
 					iframeContent=iframeContent.replace(/&nbsp;/gi,'');
-					console.log(iframeContent);
+					var filename="";
+					var savedFilename=$('#filename').text();
+					if(savedFilename==""){
+						filename=$('#phpdate').text();
+						$('#filename').text(filename)
+					}else{
+						filename=savedFilename;
+					}
+					console.log(filename);
 					if(iframeContent){
 						$.ajax({
 							type:'POST',
 							dataType : 'html',
 							url:'ajax-saveas-html.php',
-							data:'iframe='+iframeContent,
+							data:'iframe='+iframeContent+'&filename='+filename,
 							success:function(html){
 								$('#preview').empty();
 								$('#preview').append('<a class="btn btn-orange" href="preview.php?file='+html+'" target="_blank" id="previewlink">previsualiser</a>');

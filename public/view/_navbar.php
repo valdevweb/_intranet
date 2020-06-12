@@ -167,7 +167,7 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 
 			<li class='active has-sub'><a href="#"><span>Leclerc occasion</span></a>
 				<ul>
-					<li><a href="/public/#">Informations générales</a>
+					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-news.php'?>">Informations générales</a>
 						<ul>
 							<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-editinfo.php'?>">Editeur d'info</a></li>
 						</ul>
@@ -178,6 +178,8 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 							<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-palette.php'?>">Detail palette</a></li>
 						</ul>
 					</li>
+					<li><a href="/public/#">Palettes expédiées</a></li>
+
 					<li><a href="/public/#">Demandes magasins</a></li>
 				</ul>
 			</li>

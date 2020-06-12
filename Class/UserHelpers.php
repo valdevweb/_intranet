@@ -13,19 +13,27 @@ class UserHelpers{
 	}
 
 
-	public static function getMagInfo($pdoUser, $pdoMag, $id, $field=null){
+	public static function getMagInfoByIdWebUser($pdoUser, $pdoMag, $idwebuser,$field=null){
+// prend id_web_user pour interroger table user et recup code galec
+// interroge table sca3 avec code galec
+// renvoie soit tableau complet soit juste champ demandé
+		$data=self::getUser($pdoUser,$idwebuser);
 
-		$data=self::getInternUser($pdoUser,$id);
-		$req=$pdoMag->prepare("SELECT * FROM sca3 WHERE galec_sca= :galec");
-		$req->execute([
-			':galec'	=>$data['galec']
-		]);
-		$data=$req->fetch(PDO::FETCH_ASSOC);
+		if(!empty($data['galec'])){
+			$req=$pdoMag->prepare("SELECT * FROM sca3 WHERE galec_sca= :galec");
+			$req->execute([
+				':galec'	=>$data['galec']
+			]);
+			$data=$req->fetch(PDO::FETCH_ASSOC);
 
-		if(!isset($field)){
-			return $data;
+			if(!isset($field)){
+				return $data;
+			}
+			return $data[$field];
+		}else{
+			return "";
 		}
-		return $data[$field];
+
 
 	}
 

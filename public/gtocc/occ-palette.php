@@ -17,6 +17,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 // require_once '../../vendor/autoload.php';
 require_once '../../Class/OccPaletteMgr.php';
+require '../../Class/UserHelpers.php';
 
 
 
@@ -138,6 +139,8 @@ $displayCart=false;
 $paletteMgr=new OccPaletteMgr($pdoBt);
 $paletteCommandable=$paletteMgr->getListPaletteDetailByStatut(1);
 $paletteEnPrepa=$paletteMgr->getListPaletteDetailByStatut(0);
+$paletteCommandees=$paletteMgr-> getListPaletteByCde(2);
+$paletteExpediees=$paletteMgr-> getListPaletteByCde(3);
 $paletteDansPanierMag=getListPanier($pdoBt);
 
 if(!empty($paletteDansPanierMag)){
@@ -198,7 +201,7 @@ if(isset($_POST['checkout'])){
 			$cdeOk=addToCmd($pdoBt,$paletteReserve['id_palette']);
 			if($cdeOk){
 				$statut=2;
-				$upPalette=updatePalette($pdoBt,$paletteReserve['id_palette'],$statut);
+				$upPalette=$paletteMgr->updatePaletteStatut($pdoBt,$paletteReserve['id_palette'],$statut);
 			}else{
 				$errors[]="Une erreur est survenue avec la palette ".$paletteReserve['palette'];
 			}
@@ -217,17 +220,29 @@ if(isset($_POST['checkout'])){
 }
 
 
-if(isset($_GET['success'])){
-	$arrSuccess=[
-		'cart'=>'Palette ajoutée à votre panier.<br> Attention, pensez à validez votre panier rapidement, si un autre magasin a commandé la palette avant vous, elle disparaîtra automatiquement de votre panier',
 
-		'cde'	=>"Votre commande a bien été envoyée"
-	];
-	$success[]=$arrSuccess[$_GET['success']];
+
+if(isset($_GET['expedier'])){
+	$upPalette=$paletteMgr->updatePaletteStatut($pdoBt,$_GET['expedier'],3);
+	if($upPalette){
+		header("Location:occ-palette.php?success=expedie");
+	}else{
+		$errors[]="une erreur est survenue, impossible de mettre la palette à jour";
+
+	}
 }
 
 
 
+if(isset($_GET['success'])){
+	$arrSuccess=[
+		'cart'=>'Palette ajoutée à votre panier.<br> Attention, pensez à validez votre panier rapidement, si un autre magasin a commandé la palette avant vous, elle disparaîtra automatiquement de votre panier',
+
+		'cde'	=>"Votre commande a bien été envoyée",
+		'expedie'	=>"la palette a bien été passée en statut expédiée",
+	];
+	$success[]=$arrSuccess[$_GET['success']];
+}
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
@@ -239,7 +254,7 @@ DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
 
-	<h1 class="text-main-blue py-5 ">Palettes de produits d'occasion</h1>
+	<h1 class="text-main-blue pt-5 pb-2">Palettes de produits d'occasion</h1>
 
 
 
@@ -258,9 +273,32 @@ DEBUT CONTENU CONTAINER
 
 	<?php if ($_SESSION['type']=='btlec'): ?>
 
+		<div class="row justify-content-center mb-2">
+			<div class="col-md-6 border rounded py-3">
+				<div class="row">
+					<div class="col text-center text-main-blue">
+						Voir les palettes :
+					</div>
+				</div>
+				<div class="row ">
+					<div class="col ">
+						<nav class="text-center nav-planning">
+							<a href="#prepa" class="nav-elt">En prépa</a>
+							<a href="#over" class="nav-elt">Terminées</a>
+							<a href="#cde" class="nav-elt">Commandées</a>
+							<a href="#exp" class="nav-elt">Expédiées</a>
+						</nav>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div class="bg-separation"></div>
+
 		<div class="row">
 			<div class="col">
-				<h2 class="text-main-blue">Palettes en cours de préparation</h2>
+				<h3 class="text-main-blue text-center pt-4" id="prepa">Palettes en cours de préparation</h3>
 
 			</div>
 		</div>
@@ -321,9 +359,10 @@ DEBUT CONTENU CONTAINER
 		<!-- fin partie réservée bt -->
 
 		<!-- panier -->
+		<div class="bg-separation"></div>
 		<div class="row">
 			<div class="col">
-				<h2 class="text-main-blue">Palettes disponibles à la commande</h2>
+				<h3 class="text-main-blue text-center pt-4 pb-2" id="over">Palettes disponibles à la commande</h3>
 			</div>
 		</div>
 		<?php if (!empty($paletteDansPanierMag)): ?>
@@ -451,17 +490,128 @@ DEBUT CONTENU CONTAINER
 
 			<?php endif ?>
 
-			<!-- ./container -->
-		</div>
-		<script type="text/javascript">
-			(function(){
-				$("#cart").on("click", function() {
-					$(".shopping-cart").toggleClass("hidden shown");
-				});
+
+			<?php if ($_SESSION['type']=='btlec'): ?>
+				<div class="bg-separation"></div>
+				<div class="row">
+					<div class="col">
+						<h3 class="text-main-blue text-center pt-4 pb-2" id="cde">Palettes commandées</h3>
+					</div>
+				</div>
 
 
-			})();
-		</script>
-		<?php
-		require '../view/_footer-bt.php';
-		?>
+				<?php if (!empty($paletteCommandees)): ?>
+					<div class="row pb-2">
+						<div class="col">
+							<table class="table table-sm shadow">
+								<thead class="thead-dark">
+									<tr>
+										<th>Cde n°</th>
+										<th>Palette</th>
+										<th>Magasin</th>
+										<th>Date commande</th>
+										<th>Modifier</th>
+
+									</tr>
+								</thead>
+								<tbody>
+									<?php foreach ($paletteCommandees as $key => $palette): ?>
+										<tr>
+											<td><?=$palette['id_cde']?></td>
+											<td><?=$palette['palette']?></td>
+											<td><?= UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $palette['id_web_user'], 'deno_sca')  ?></td>
+											<td><?=$palette['date_cde']?></td>
+											<td><a href="<?=$_SERVER['PHP_SELF'].'?expedier='.$palette['id_palette']?>" class="btn btn-primary">Expédier</a></td>
+										</tr>
+									<?php endforeach ?>
+								</tbody>
+							</table>
+
+						</div>
+					</div>
+
+
+					<?php else: ?>
+
+						<div class="row">
+							<div class="col">
+								<div class="alert alert-primary">
+									Aucune palette en commande
+								</div>
+							</div>
+						</div>
+
+
+					<?php endif ?>
+
+					<div class="bg-separation"></div>
+					<div class="row">
+						<div class="col">
+							<h3 class="text-main-blue text-center pt-4 pb-2" id="exp">Palettes Expédiées</h3>
+						</div>
+					</div>
+
+					<?php if (!empty($paletteExpediees)): ?>
+						<div class="row pb-2">
+							<div class="col">
+								<table class="table table-sm shadow">
+									<thead class="thead-dark">
+										<tr>
+											<th>Cde n°</th>
+											<th>Palette</th>
+											<th>Magasin</th>
+											<th>Date commande</th>
+
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach ($paletteExpediees as $key => $palette): ?>
+											<tr>
+												<td><?=$palette['id_cde']?></td>
+												<td><?=$palette['palette']?></td>
+												<td><?= UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $palette['id_web_user'], 'deno_sca')  ?></td>
+												<td><?=$palette['date_cde']?></td>
+
+											</tr>
+										<?php endforeach ?>
+									</tbody>
+								</table>
+
+							</div>
+						</div>
+
+
+						<?php else: ?>
+
+							<div class="row">
+								<div class="col">
+									<div class="alert alert-primary">
+										Aucune palette en commande
+									</div>
+								</div>
+							</div>
+
+
+						<?php endif ?>
+
+
+
+
+
+						<!-- fin partie bt -->
+					<?php endif ?>
+
+					<!-- ./container -->
+				</div>
+				<script type="text/javascript">
+					(function(){
+						$("#cart").on("click", function() {
+							$(".shopping-cart").toggleClass("hidden shown");
+						});
+
+
+					})();
+				</script>
+				<?php
+				require '../view/_footer-bt.php';
+				?>

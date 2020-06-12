@@ -28,12 +28,12 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //			FONCTION
 //------------------------------------------------------
 
-function getFileNews($pdoBt){
-	$req=$pdoBt->prepare("SELECT html_file, id FROM occ_news WHERE html_file LIKE :html_file");
+function getFileNews($pdoBt,$onoff){
+	$req=$pdoBt->prepare("SELECT html_file, id FROM occ_news WHERE onoff= :onoff");
 	$req->execute([
-		':html_file'	=>$_GET['file']
+		':onoff'	=>$onoff
 	]);
-	$data=$req->fetch(PDO::FETCH_ASSOC);
+	$data=$req->fetchAll(PDO::FETCH_ASSOC);
 
 	if(!empty($data)){
 		return $data;
@@ -60,16 +60,7 @@ $errors=[];
 $success=[];
 $target_dir = "D:\\www\\_intranet\\upload\\flash\\";
 $pjDir=UPLOAD_DIR.'\\flash\\';
-$data=getFileNews($pdoBt);
-	echo "<pre>";
-	print_r($data);
-	echo '</pre>';
-
-
-if($data){
-	$htmlfile=$target_dir.$data['html_file'].'.html';
-	$listPj=getPj($pdoBt,$data['id']);
-}
+$listNews=getFileNews($pdoBt,1);
 
 
 
@@ -87,28 +78,51 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-
-	<div class="row">
-		<div class="col-lg-1"></div>
-		<div class="col">
-			<?php include $htmlfile ?>
-		</div>
-		<div class="col-lg-1"></div>
-	</div>
-
 	<div class="row">
 		<div class="col">
-			<?php if (!empty($listPj)): ?>
-				<?php foreach ($listPj as $key => $pj): ?>
-					<a href="<?=$pjDir.$pj['pj']?>" class="pr-3" target="_blank"><?= $pj['pj']?></a>
-				<?php endforeach ?>
-
-			<?php endif ?>
-		</div>
+		<h1>Les news Leclerc occasion</h1>
 	</div>
-	<!-- ./container -->
-</div>
+	</div>
 
-<?php
-require '../view/_footer-bt.php';
-?>
+	<div class="row pt-5">
+		<div class="col">
+
+			<?php if (!empty($listNews)): ?>
+				<?php foreach ($listNews as $key => $news): ?>
+					<div class="row pb-5">
+						<div class="col onenews">
+							<div class="row">
+								<div class="col">
+									<?php
+									$theNews=$target_dir.$news['html_file'].'.html';
+
+									 include  $theNews;
+									 ?>
+
+								</div>
+							</div>
+							<?php $listPj=getPj($pdoBt,$news['id']);?>
+							<?php if (!empty($listPj)): ?>
+								<?php foreach ($listPj as $key => $pj): ?>
+									<div class="row">
+										<div class="col">
+											<a href="<?=$pjDir.$pj['pj']?>" class="pr-3" target="_blank"><?= $pj['pj']?></a>
+										</div>
+									</div>
+								<?php endforeach ?>
+
+								<?php endif ?></div>
+							</div>
+							<div class="bg-separation"></div>
+						<?php endforeach ?>
+
+					<?php endif ?>
+
+				</div>
+			</div>
+			<!-- ./container -->
+		</div>
+
+		<?php
+		require '../view/_footer-bt.php';
+		?>
