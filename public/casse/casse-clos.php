@@ -89,7 +89,7 @@ $success=[];
 
 
 $isFac=checkFac($pdoCasse);
-$mag=MagHelpers::deno($pdoUser,$isFac['galec']);
+$mag=MagHelpers::deno($pdoMag,$isFac['galec']);
 
 
 if(isset($_POST['clos'])){

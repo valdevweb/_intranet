@@ -23,16 +23,16 @@ function connectToDb($dbname) {
 	return  $pdo;
 }
 
-$pdoCm=connectToDb('cm');
+$pdoCm=connectToDb(VERSION .'cm');
 $pdoUser=connectToDb('web_users');
 $pdoStat= connectToDb('stats');
 
 $pdoQlik=connectToDb('qlik');
-$pdoVal=connectToDb('val');
+
 $pdoExploit= connectToDb('exploit');
 $pdoMag=connectToDb(VERSION .'magasin');
-$pdoBt=connectToDb('btlec');
-$pdoSav=connectToDb('sav');
+$pdoBt=connectToDb(VERSION .'btlec');
+$pdoSav=connectToDb(VERSION .'sav');
 $pdoEvo=connectToDb(VERSION.'evo');
 
 

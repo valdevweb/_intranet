@@ -1,8 +1,9 @@
 <?php
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
-	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
+	echo "pas de variable session";
+
 }
 //			css dynamique
 //----------------------------------------------------------------
@@ -18,7 +19,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require "../../Class/EvoManager.php";
 require "../../Class/EvoHelpers.php";
-
+require "../../functions/form.fn.php";
 //---------------------------------------
 //	ajout enreg dans stat
 //---------------------------------------
@@ -30,20 +31,20 @@ require "../../Class/EvoHelpers.php";
 //------------------------------------------------------
 
 function insertEvo($pdoEvo){
-	$arrOutilsRespId=EvoHelpers::arrayOutilsRespId($pdoEvo);
+	$arrAppliRespId=EvoHelpers::arrayAppliRespId($pdoEvo);
 
-	$req=$pdoEvo->prepare("INSERT INTO evos (id_from, id_resp, objet, evo, id_etat, date_dde, id_prio, id_plateforme, id_outils, id_module)
-		VALUES (:id_from, :id_resp, :objet, :evo, :id_etat, :date_dde, :id_prio, :id_plateforme, :id_outils, :id_module)");
+	$req=$pdoEvo->prepare("INSERT INTO evos (id_from, id_resp, objet, evo, id_etat, date_dde, id_prio, id_plateforme, id_appli, id_module)
+		VALUES (:id_from, :id_resp, :objet, :evo, :id_etat, :date_dde, :id_prio, :id_plateforme, :id_appli, :id_module)");
 	$req->execute([
 		':id_from'		=>$_SESSION['id_web_user'],
-		':id_resp'		=>$arrOutilsRespId[$_POST['outils']],
+		':id_resp'		=>$arrAppliRespId[$_POST['appli']],
 		':objet'		=>$_POST['objet'],
 		':evo'		=>$_POST['evo'],
 		':id_etat'		=>0,
 		':date_dde'		=>date('Y-m-d H:i:s'),
 		':id_prio'		=>$_POST['prio'],
 		':id_plateforme'		=>$_POST['pf'],
-		':id_outils'		=>$_POST['outils'],
+		':id_appli'		=>$_POST['appli'],
 		':id_module'		=>empty($_POST['module'])? 0: $_POST['module']
 
 	]);
@@ -65,6 +66,8 @@ $success=[];
 $evoMgr=new EvoManager($pdoEvo);
 $listPF=$evoMgr->getListPlateforme();
 
+
+
 if(isset($_POST['submit'])){
 	$err=insertEvo($pdoEvo);
 	if(!$err){
@@ -75,8 +78,6 @@ if(isset($_POST['submit'])){
 		$errors[]=$err;
 	}
 }
-
-
 
 
 
@@ -118,7 +119,7 @@ DEBUT CONTENU CONTAINER
 								<?php foreach ($listPF as $key => $pf): ?>
 
 									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="radio" value="<?=$pf['id']?>" id="pf" name="pf">
+										<input class="form-check-input" required type="radio" value="<?=$pf['id']?>" <?=checkChecked($pf['id'],'pf')?> id="pf" name="pf">
 										<label class="form-check-label pr-5" for="pf"><?=$pf['plateforme']?></label>
 									</div>
 
@@ -129,13 +130,14 @@ DEBUT CONTENU CONTAINER
 
 						<div class="row ">
 							<div class="col-md-4 mt-3 pt-2 text-main-blue">
-								Sélectionnez un outil :
+								Sélectionnez une application :
 							</div>
 							<div class="col-md-4">
 								<div class="form-group">
-									<label for="outils"></label>
-									<select class="form-control" name="outils" id="outils">
+									<label for="appli"></label>
+									<select class="form-control" name="appli" id="appli" required>
 										<option value="">Sélectionner</option>
+										<option value="">commencez par choisir une plateforme</option>
 									</select>
 								</div>
 
@@ -148,8 +150,9 @@ DEBUT CONTENU CONTAINER
 							<div class="col-md-4">
 								<div class="form-group">
 									<label for="module"></label>
-									<select class="form-control" name="module" id="module">
+									<select class="form-control" name="module" id="module" required>
 										<option value="">Sélectionner</option>
+										<option value="">Commencez par choisir une application</option>
 									</select>
 								</div>
 
@@ -162,7 +165,7 @@ DEBUT CONTENU CONTAINER
 							</div>
 							<div class="col">
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" value="1" id="urgent" name="prio">
+									<input class="form-check-input" type="radio" value="1" id="urgent" name="prio" required>
 									<label class="form-check-label pr-5 text-red" for="urgent"><b>urgent</b></label>
 								</div>
 								<div class="form-check form-check-inline">
@@ -181,7 +184,7 @@ DEBUT CONTENU CONTAINER
 					<div class="col">
 						<div class="form-group">
 							<label for="objet" class="text-main-blue">Objet de votre demande</label>
-							<input type="text" class="form-control" name="objet" id="objet">
+							<input type="text" class="form-control" name="objet" id="objet" required>
 						</div>
 					</div>
 				</div>
@@ -189,7 +192,7 @@ DEBUT CONTENU CONTAINER
 					<div class="col">
 						<div class="form-group">
 							<label for="evo" class="text-main-blue">Votre demande :</label>
-							<textarea name="evo" id="" cols="30" rows="5" class="form-control"></textarea>
+							<textarea name="evo" id="" cols="30" rows="5" class="form-control" required></textarea>
 						</div>
 					</div>
 				</div>
@@ -215,23 +218,23 @@ $("input:radio[name='pf']").click(function () {
 
 			$.ajax({
 				type:'POST',
-				url:'ajax-get-outil.php',
+				url:'ajax-get-appli.php',
 				data:{id_plateforme:plateforme},
 				success: function(html){
-					$("#outils").html(html)
+					$("#appli").html(html)
 				}
 			});
 		});
 
 
 
-$('#outils').on("change",function(){
-	var outils=$('#outils').val();
-	console.log("outils" + outils);
+$('#appli').on("change",function(){
+	var appli=$('#appli').val();
+	console.log("appli" + appli);
 	$.ajax({
 		type:'POST',
-		url:'ajax-get-outil.php',
-		data:{id_outils:outils},
+		url:'ajax-get-appli.php',
+		data:{id_appli:appli},
 		success: function(html){
 			$("#module").html(html)
 		}

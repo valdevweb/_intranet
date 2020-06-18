@@ -33,17 +33,17 @@ require_once '../../Class/OccHelpers.php';
 //------------------------------------------------------
 
 
-function getAssortiment($pdoQlik){
-	$version=VERSION;
-	$req=$pdoQlik->query("
-		SELECT basearticles.id as idqlik, `GESSICA.CodeArticle`as article_qlik,`GESSICA.CodeDossier`as dossier_qlik,`GESSICA.PANF` as panf_qlik,`GESSICA.D3E`as deee_qlik,`GESSICA.SORECOP` as sorecop,`GESSICA.LibelleArticle`as design_qlik, `GESSICA.PCB`as pcb_qlik, `GESSICA.NomFournisseur` as fournisseur_qlik, `GESSICA.Gencod` as ean_qlik
+// function getAssortiment($pdoQlik){
+// 	$version=VERSION;
+// 	$req=$pdoQlik->query("
+// 		SELECT basearticles.id as idqlik, `GESSICA.CodeArticle`as article_qlik,`GESSICA.CodeDossier`as dossier_qlik,`GESSICA.PANF` as panf_qlik,`GESSICA.D3E`as deee_qlik,`GESSICA.SORECOP` as sorecop,`GESSICA.LibelleArticle`as design_qlik, `GESSICA.PCB`as pcb_qlik, `GESSICA.NomFournisseur` as fournisseur_qlik, `GESSICA.Gencod` as ean_qlik
 
-		FROM `basearticles`
+// 		FROM `basearticles`
 
-		WHERE `GESSICA.GT` LIKE '13' ORDER BY article_qlik
-		");
-	return $req->fetchAll();
-}
+// 		WHERE `GESSICA.GT` LIKE '13' ORDER BY article_qlik
+// 		");
+// 	return $req->fetchAll();
+// }
 
 
 function onPaletteOccas($pdoBt, $article){

@@ -58,12 +58,15 @@ function getPj($pdoBt,$idNews){
 //------------------------------------------------------
 $errors=[];
 $success=[];
-$target_dir = "D:\\www\\_intranet\\upload\\flash\\";
+
+if(VERSION=="_"){
+	$target_dir = "D:\\www\\_intranet\\upload\\flash\\";
+}else{
+	$target_dir = "D:\\www\\intranet\\upload\\flash\\";
+}
+
 $pjDir=UPLOAD_DIR.'\\flash\\';
 $data=getFileNews($pdoBt);
-	echo "<pre>";
-	print_r($data);
-	echo '</pre>';
 
 
 if($data){

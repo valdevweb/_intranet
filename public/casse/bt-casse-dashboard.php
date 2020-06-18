@@ -567,7 +567,7 @@ DEBUT CONTENU CONTAINER
 							<?php if ($lig<=$nbMagCol): ?>
 
 								<li>
-									<span class="mag-txt heavy"><?= ($galec!="")? MagHelpers::deno($pdoUser,$galec) : "Non positionné" ?></span>
+									<span class="mag-txt heavy"><?= ($galec!="")? MagHelpers::deno($pdoMag,$galec) : "Non positionné" ?></span>
 									<span class="text-right sum-txt font-weight-bold">
 										<?= number_format((float)$mt,2,'.',' ') ?>&euro;</span>						</li>
 
@@ -580,7 +580,7 @@ DEBUT CONTENU CONTAINER
 									<div class="col">
 										<ul class="leaders">
 											<li>
-												<span class="mag-txt heavy"><?=MagHelpers::deno($pdoUser,$galec)?></span>
+												<span class="mag-txt heavy"><?=MagHelpers::deno($pdoMag,$galec)?></span>
 
 
 												<span class="text-right sum-txt font-weight-bold">

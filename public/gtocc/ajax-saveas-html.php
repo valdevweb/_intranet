@@ -7,9 +7,15 @@ if(isset($_POST['iframe'])){
 	// $file = 'info'.date('YmdHis').'.html';
 	// param $_GET['file'] utilisé pour lien prévisualisation
 	$filenoext=$_POST['filename'];
+
+
 	$file = $_POST['filename'].'.html';
 
+if(VERSION=="_"){
 	$target_dir = "D:\\www\\_intranet\\upload\\flash\\";
+}else{
+	$target_dir = "D:\\www\\intranet\\upload\\flash\\";
+}
 	file_put_contents($target_dir.$file, $_POST['iframe']);
 	function alreadyInDb($pdoBt){
 		$req=$pdoBt->prepare("SELECT html_file FROM occ_news WHERE html_file LIKE :html_file");
@@ -32,6 +38,8 @@ if(isset($_POST['iframe'])){
 		]);
 		$data=$req->errorInfo();
 	}
+
+
 
 	echo $filenoext;
 

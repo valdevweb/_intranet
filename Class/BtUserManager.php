@@ -58,6 +58,15 @@ class BtUserManager{
 
 	}
 
+	public function getUserAttribution($pdoUser,$idwebuser){
+
+		$req=$pdoUser->prepare("SELECT * FROM attributions WHERE id_user= :id_user ORDER BY id");
+		$req->execute([
+			':id_user' =>$idwebuser
+		]);
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
 }
 
 

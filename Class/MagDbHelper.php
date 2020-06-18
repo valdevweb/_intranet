@@ -5,6 +5,8 @@ class MagDbHelper{
 	private $galec;
 
 
+
+
 	public function __construct($pdo){
 		$this->setPdo($pdo);
 	}

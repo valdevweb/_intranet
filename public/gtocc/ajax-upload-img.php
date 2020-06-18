@@ -3,7 +3,11 @@ include('../../config/config.inc.php');
 $response = ["success"=>false, "message"=>"Bad request"];
 if(isset($_POST["submit"])) {
     $response["message"] ="Unknown error occurred";
-    $target_dir = "D:\\www\\_intranet\\upload\\flash\\";
+    if(VERSION=="_"){
+        $target_dir = "D:\\www\\_intranet\\upload\\flash\\";
+    }else{
+        $target_dir = "D:\\www\\intranet\\upload\\flash\\";
+    }
 
 
     $temp = explode(".", $_FILES["file"]["name"]);
@@ -49,11 +53,11 @@ if ($uploadOk == 0) {
 } else {
     if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
         $response["message"] = "The file ". $filename. " has been uploaded.";
-$response["success"] = true;
-$response["path"] = $webdir;
-} else {
-    $response["message"] = "Sorry, there was an error uploading your file.";
-}
+        $response["success"] = true;
+        $response["path"] = $webdir;
+    } else {
+        $response["message"] = "Sorry, there was an error uploading your file.";
+    }
 }
 }
 echo json_encode($response);

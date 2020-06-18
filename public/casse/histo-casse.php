@@ -164,7 +164,7 @@ DEBUT CONTENU CONTAINER
 						<?php foreach ($arMagFac as $galec => $mt): ?>
 							<?php if ($lig<=$nbMagCol): ?>
 								<li>
-									<span class="text-main-blue heavy"><?=MagHelpers::deno($pdoUser,$galec)?></span>
+									<span class="text-main-blue heavy"><?=MagHelpers::deno($pdoMag,$galec)?></span>
 									<span class="text-right text-fac font-weight-bold"><?= number_format((float)$mt,2,'.',' ') ?>&euro;</span>
 								</li>
 
@@ -176,7 +176,7 @@ DEBUT CONTENU CONTAINER
 							<div class="col">
 								<ul class="leaders">
 									<li>
-										<span class="text-main-blue heavy"><?=MagHelpers::deno($pdoUser,$galec)?></span>
+										<span class="text-main-blue heavy"><?=MagHelpers::deno($pdoMag,$galec)?></span>
 										<span class="text-right text-fac font-weight-bold"><?= number_format((float)$mt,2,'.',' ') ?>&euro;</span>
 									</li>
 								<?php endif ?>

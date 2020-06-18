@@ -32,7 +32,7 @@ function getListModuleByRights($pdoEvo, $idAppli, $userAccess){
 
 	foreach ($userAccess as $key => $access) {
 		echo $access['id_droit'];
-			$req=$pdoEvo->prepare("SELECT * FROM modules WHERE id_appli= :id_appli AND id_droit= :id_droit ORDER BY module");
+		$req=$pdoEvo->prepare("SELECT * FROM modules WHERE id_appli= :id_appli AND id_droit= :id_droit ORDER BY module");
 		$req->execute([
 			':id_appli'	=>$idAppli,
 			':id_droit'	=>$access['id_droit']
@@ -43,16 +43,20 @@ function getListModuleByRights($pdoEvo, $idAppli, $userAccess){
 			$i++;
 		}
 
-		return $listModule;
 	}
 
-
-		// return $listModule;
+	return $listModule;
 }
+function sortFunction( $a, $b ) {
+	return ($a['module'] < $b['module']) ? -1 : 1;
+}
+
 if(isset($_POST["id_appli"]) && !empty($_POST["id_appli"])){
 
 	// $datas=$evoMgr->getListModuleByRights($_POST["id_appli"], $userAccess);
 	$datas=getListModuleByRights($pdoEvo,$_POST["id_appli"], $userAccess);
+$sortedData=usort($datas, "sortFunction");
+
 	if(!empty($datas)){
 		echo '<option value="">Sélectionner un module</option>';
 		foreach ($datas as $key => $data) {

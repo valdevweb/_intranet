@@ -209,7 +209,10 @@ if(isset($paramList)){
 	$paramList=array_filter($paramList);
 	$params=join(' AND ',array_map($joinParam,$paramList));
 	$params= "WHERE " .$params;
-	$query="SELECT mag.*,sca3.*,web_users.users.login, web_users.users.nohash_pwd, qlik.statsventesadh.CA_Annuel  FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec LEFT JOIN qlik.statsventesadh ON mag.id=qlik.statsventesadh.CodeBtlec $params  GROUP BY mag.id";
+	$query="SELECT mag.*,sca3.*,web_users.users.login, web_users.users.nohash_pwd, qlik.statsventesadh.CA_Annuel  FROM mag
+	LEFT JOIN sca3 ON mag.id=sca3.btlec_sca
+	LEFT JOIN web_users.users ON mag.galec=web_users.users.galec
+	LEFT JOIN qlik.statsventesadh ON mag.id=qlik.statsventesadh.CodeBtlec $params  GROUP BY mag.id";
 	$_SESSION['mag_filters']['query']=$query;
 
 
@@ -292,6 +295,7 @@ if(array_column($magList, 'diff')){
 }else{
 	$diff=0;
 }
+
 
 
 

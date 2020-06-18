@@ -33,11 +33,12 @@ function getLastPendingRdv($pdoCm){
 }
 $pendingRdv=getLastPendingRdv($pdoCm);
 
-$magInfo=MagHelpers::magInfo($pdoUser, $_SESSION['id_galec']);
-$deno=MagHelpers::deno($pdoUser, $_SESSION['id_galec']);
-$city=MagHelpers::city($pdoUser, $_SESSION['id_galec']);
+$magInfo=MagHelpers::magInfo($pdoMag, $_SESSION['id_galec']);
+$deno=MagHelpers::deno($pdoMag, $_SESSION['id_galec']);
+$city=MagHelpers::ville($pdoMag, $_SESSION['id_galec']);
 
-$cm=UserHelpers::getInternUser($pdoUser, $magInfo['id_cm']);
+$cm=UserHelpers::getInternUser($pdoUser, $magInfo['id_cm_web_user']);
+
 
 
 $jours=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];

@@ -174,3 +174,27 @@ a .fa-ban{
 a .fa-ban:hover{
   color: red !important;
 }
+
+.mini-input{
+  padding: 5px !important;
+  text-align: right;
+  height: 2rem !important;
+  width:50px !important;
+    position: relative;
+  display: inline-block;
+}
+td:nth-child(10){
+  width:50px !important;
+  text-align: right;
+
+}
+
+.btn-no-style{
+  height: 2rem !important;
+  background-color: #fff;
+  color: #0d47a1;
+  border: 0;
+  /* padding: 0; */
+}
+
+

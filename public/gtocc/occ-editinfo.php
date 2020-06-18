@@ -200,7 +200,7 @@ DEBUT CONTENU CONTAINER
 
 			</div>
 			<!-- div caché poour date parce que trop chiant en js -->
-			<div class="hidden" id="phpdate"><?=date('YmdHis')?></div>
+			<div class="hidden" id="phpdate" value="<?=date('YmdHis')?>"?></div>
 
 			<!-- input caché pour nom fichier -->
 			<div class="hidden" id="filename"></div>
