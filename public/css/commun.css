@@ -255,7 +255,11 @@ background: #757687
   margin-right: -15px !important;
 }
 
+.bg-main-blue{
 
+  background-color: #0d47a1;
+
+}
 .full-bg-blue{
   background-color: #0d47a1;
   margin-left: -15px !important;

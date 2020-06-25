@@ -55,7 +55,7 @@ class EvoManager{
 			$params=implode(' AND ',$paramList);
 			$params= " WHERE " .$params;
 		}
-		$query="SELECT evos.*, plateforme, module, appli, id_web_user, CONCAT(prenom, ' ', nom) as ddeur FROM evos
+		$query="SELECT evos.*, plateforme, module, appli, id_web_user, CONCAT(prenom, ' ', nom) as ddeur,  responsables.email as dev_mail, web_users.intern_users.email as dd_mail  FROM evos
 		LEFT JOIN web_users.intern_users ON id_from= web_users.intern_users.id_web_user
 		LEFT JOIN plateformes ON evos.id_plateforme=plateformes.id
 		LEFT JOIN modules ON evos.id_module=modules.id
@@ -73,7 +73,7 @@ class EvoManager{
 	public function getListModule($idAppli){
 		$req=$this->pdoEvo->prepare("SELECT * FROM modules WHERE id_appli= :id_appli ORDER BY module");
 		$req->execute([
-			':id_apple'	=>$idAppli
+			':id_appli'	=>$idAppli
 		]);
 
 		$data=$req->fetchAll(PDO::FETCH_ASSOC);
@@ -83,29 +83,17 @@ class EvoManager{
 		return $data;
 	}
 
-	// public function getListModuleByRights($idAppli, $userAccess){
-	// 	$listModule=[];
-	// 	foreach ($userAccess as $key => $access) {
-	// 		echo $access['id_droit'];
-	// 		$req=$this->pdoEvo->prepare("SELECT * FROM modules WHERE id_appli= :id_appli AND id_droit= :id_droit AND id_ORDER BY module");
-	// 		$req->execute([
-	// 			':id_appli'	=>$idAppli,
-	// 			':id_droit'	=>$access['id_droit']
-	// 		]);
+	public function getThisEvo($idEvo){
+		$req=$this->pdoEvo->prepare("SELECT * FROM evos WHERE evos.id= :id ");
+		$req->execute([
+			':id'		=>$idEvo
+		]);
+		return $req->fetch(PDO::FETCH_ASSOC);
 
-	// 		$data=$req->fetchAll(PDO::FETCH_ASSOC);
-	// 	}
-
-	// 	if(empty($data)){
-	// 		$listModule	=array_merge($listModule,$data);
-	// 	}
-	// 	// return $data;
-	// }
-
-
+	}
 
 	public function getListAppli($idPlateforme){
-		$req=$this->pdoEvo->prepare("SELECT * FROM appli WHERE id_plateforme= :id_plateforme ORDER BY appli");
+		$req=$this->pdoEvo->prepare("SELECT * FROM appli  WHERE id_plateforme= :id_plateforme ORDER BY appli");
 		$req->execute([
 			':id_plateforme'	=>$idPlateforme
 		]);
@@ -118,7 +106,10 @@ class EvoManager{
 	}
 
 	public function getListAppliResp($idResp){
-		$req=$this->pdoEvo->prepare("SELECT appli.*, plateforme FROM appli LEFT JOIN plateformes ON id_plateforme=plateformes.id WHERE appli.id_resp= :id_resp ORDER BY plateforme, appli");
+		$req=$this->pdoEvo->prepare("SELECT appli.*, plateforme FROM appli
+			LEFT JOIN plateformes ON id_plateforme=plateformes.id
+
+			WHERE appli.id_resp= :id_resp ORDER BY plateforme, appli");
 		$req->execute([
 			':id_resp'	=>$idResp
 		]);
@@ -129,5 +120,15 @@ class EvoManager{
 		}
 		return $data;
 	}
+
+
+	public function getListEtat(){
+		$req=$this->pdoEvo->query("SELECT * FROM etats");
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+
+
+
 
 }

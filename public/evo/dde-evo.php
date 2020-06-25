@@ -40,7 +40,7 @@ function insertEvo($pdoEvo){
 		':id_resp'		=>$arrAppliRespId[$_POST['appli']],
 		':objet'		=>$_POST['objet'],
 		':evo'		=>$_POST['evo'],
-		':id_etat'		=>0,
+		':id_etat'		=>1,
 		':date_dde'		=>date('Y-m-d H:i:s'),
 		':id_prio'		=>$_POST['prio'],
 		':id_plateforme'		=>$_POST['pf'],
@@ -71,12 +71,21 @@ $listPF=$evoMgr->getListPlateforme();
 if(isset($_POST['submit'])){
 	$err=insertEvo($pdoEvo);
 	if(!$err){
-		$success[]="Votre demande a été envoyée et est en attente de validation";
+		$successQ='?success=cree';
+		unset($_POST);
+		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 	}
 
 	else{
 		$errors[]=$err;
 	}
+}
+
+if(isset($_GET['success'])){
+	$arrSuccess=[
+		'cree'=>'Votre demande d\'évo a bien été envoyée',
+	];
+	$success[]=$arrSuccess[$_GET['success']];
 }
 
 
@@ -126,8 +135,6 @@ DEBUT CONTENU CONTAINER
 								<?php endforeach ?>
 							</div>
 						</div>
-
-
 						<div class="row ">
 							<div class="col-md-4 mt-3 pt-2 text-main-blue">
 								Sélectionnez une application :
@@ -150,9 +157,8 @@ DEBUT CONTENU CONTAINER
 							<div class="col-md-4">
 								<div class="form-group">
 									<label for="module"></label>
-									<select class="form-control" name="module" id="module" required>
+									<select class="form-control" name="module" id="module">
 										<option value="">Sélectionner</option>
-										<option value="">Commencez par choisir une application</option>
 									</select>
 								</div>
 
@@ -197,7 +203,11 @@ DEBUT CONTENU CONTAINER
 					</div>
 				</div>
 
-				<button class="btn btn-black" name="submit">Valider</button>
+				<div class="row pb-5">
+					<div class="col text-right">
+						<button class="btn btn-black" name="submit">Valider</button>
+					</div>
+				</div>
 			</form>
 		</div>
 	</div>
@@ -206,41 +216,30 @@ DEBUT CONTENU CONTAINER
 	<!-- ./container -->
 </div>
 <script type="text/javascript">
-	$(document).ready(function() {
-// http://www.lisenme.com/dynamic-dependent-select-box-using-jquery-ajax-php/
-//
-$("input:radio[name='pf']").click(function () {
-			// $("#outil").empty();
-
-
-			var plateforme=$('input[name="pf"]:checked').val();
-			console.log("plateforme" + plateforme);
-
-			$.ajax({
-				type:'POST',
-				url:'ajax-get-appli.php',
-				data:{id_plateforme:plateforme},
-				success: function(html){
-					$("#appli").html(html)
-				}
-			});
+$(document).ready(function() {
+	$("input:radio[name='pf']").click(function () {
+		var plateforme=$('input[name="pf"]:checked').val();
+		$.ajax({
+			type:'POST',
+			url:'ajax-get-appli.php',
+			data:{id_plateforme:plateforme},
+			success: function(html){
+				$("#appli").html(html)
+			}
 		});
-
-
-
-$('#appli').on("change",function(){
-	var appli=$('#appli').val();
-	console.log("appli" + appli);
-	$.ajax({
-		type:'POST',
-		url:'ajax-get-appli.php',
-		data:{id_appli:appli},
-		success: function(html){
-			$("#module").html(html)
-		}
 	});
-});
-
+	$('#appli').on("change",function(){
+		var appli=$('#appli').val();
+		console.log("appli" + appli);
+		$.ajax({
+			type:'POST',
+			url:'ajax-get-appli.php',
+			data:{id_appli:appli},
+			success: function(html){
+				$("#module").html(html)
+			}
+		});
+	});
 });
 
 

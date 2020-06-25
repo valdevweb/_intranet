@@ -44,6 +44,7 @@ $listCodeAcdlec=$magDbHelper->getListCodeAcdlecUtilise();
 $centraleName=Helpers::arrayFlatten($listCentrale,"centrale_doris","centrale");
 $ets=Helpers::arrayFlatten($listCodeAcdlec,"acdlec_code","nom_ets");
 $nMoinsUn=((new DateTime())->modify("- 1 year"))->format('Y');
+$nUn=((new DateTime())->format('Y'));
 
 
 $mainCentraleIds=[20,10,30,50,90,100,110,120,160,170,250,210];
@@ -56,6 +57,18 @@ function checkChecked($value,$field){
 	}
 
 	return "";
+}
+
+
+function getCaThisYear($pdoQlik,$annee, $codebt){
+	$req=$pdoQlik->prepare("SELECT * FROM statsventesadh WHERE AnneeCA = :annee AND CodeBtlec= :codebt  ");
+	$req->execute([
+		':annee'		=>$annee,
+		':codebt'		=>$codebt
+
+	]);
+	// return $req->errorInfo();
+	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
 
@@ -298,7 +311,6 @@ if(array_column($magList, 'diff')){
 
 
 
-
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
@@ -419,8 +431,10 @@ DEBUT CONTENU CONTAINER
 		$('.switch-input').on("click", function(){
 			if ( $('.switch-input').prop("checked") ){
 				$('td:nth-child(10),th:nth-child(10)').show();
+				$('td:nth-child(11),th:nth-child(11)').show();
 			}else{
 				$('td:nth-child(10),th:nth-child(10)').hide();
+				$('td:nth-child(11),th:nth-child(11)').hide();
 			}
 		});
 

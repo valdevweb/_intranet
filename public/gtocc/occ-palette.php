@@ -15,9 +15,11 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 //			REQUIRES
 //------------------------------------------------------
-// require_once '../../vendor/autoload.php';
+require_once '../../vendor/autoload.php';
 require_once '../../Class/OccPaletteMgr.php';
 require '../../Class/UserHelpers.php';
+require '../../Class/OccHelpers.php';
+
 
 
 
@@ -127,10 +129,11 @@ function updatePalette($pdoBt,$idPalette,$statut){
 	return true;
 }
 
-function addToCmd($pdoBt,$idPalette, $article, $panf, $deee, $sorecop, $design, $fournisseur, $ean, $qte){
-	$req=$pdoBt->prepare("INSERT INTO occ_cdes (id_web_user, id_palette, article_occ, panf_occ, deee_occ, sorecop_occ, design_occ, fournisseur_occ, ean_occ, qte_cde, date_insert) VALUES (:id_web_user, :id_palette, :article_occ, :panf_occ, :deee_occ, :sorecop_occ, :design_occ, :fournisseur_occ, :ean_occ, :qte_cde, :date_insert) ");
+function addToCmd($pdoBt,$idPalette,$idCde, $article, $panf, $deee, $sorecop, $design, $fournisseur, $ean, $qte){
+	$req=$pdoBt->prepare("INSERT INTO occ_cdes (id_web_user, id_palette, id_cde, article_occ, panf_occ, deee_occ, sorecop_occ, design_occ, fournisseur_occ, ean_occ, qte_cde, date_insert) VALUES (:id_web_user, :id_palette, :id_cde, :article_occ, :panf_occ, :deee_occ, :sorecop_occ, :design_occ, :fournisseur_occ, :ean_occ, :qte_cde, :date_insert) ");
 	$req->execute([
 		':id_web_user'		=>$_SESSION['id_web_user'],
+		':id_cde'		=>$idCde,
 		':article_occ'		=>$article,
 		':panf_occ'		=>$panf,
 		':deee_occ'		=>$deee,
@@ -250,6 +253,7 @@ $paletteExpediees=$paletteMgr-> getListPaletteByCde(3);
 $paletteDansPanierMag=getListPanier($pdoBt);
 
 $listAssortiment=getAssortiment($pdoBt);
+$arrayListPalette=OccHelpers::arrayPalette($pdoBt);
 
 
 
@@ -266,9 +270,7 @@ if(isset($_POST['addtocart'])){
 		// echo "<pre>";
 		// print_r($displayCart);
 		// echo '</pre>';
-
 	if($displayCart){
-
 		$successQ='?success=cart';
 		unset($_POST);
 		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
@@ -276,107 +278,19 @@ if(isset($_POST['addtocart'])){
 	}else{
 		$errors[]="erreur";
 	}
-
 }
+// lien supprimerune palette du cart
 
 if(isset($_GET['idTempDel'])){
 	delTempCde($pdoBt);
 	header("Location:occ-palette.php");
-
-}
-// echo "<pre>";
-// print_r($paletteDansPanierMag);
-// echo '</pre>';
-
-
-if(isset($_POST['checkout'])){
-
-	foreach ($paletteDansPanierMag as $key => $itemReserve) {
-		// cas palette
-		if(!empty($itemReserve['id_palette'])){
-		//  on vérifie l'état des palettes si commandé ou expédié entre temps, on suppprile de temp et on averti le mag
-			$paletteStatut = getPaletteStatut($pdoBt,$itemReserve['id_palette']);
-
-			//  palette plus dispo
-			if($paletteStatut['statut'] !=1){
-				$errors[]="la palette ".$paletteStatut['palette'].' a été commandée entre temps par un autre magasin. Veuillez la supprimer';
-			}
-		}
-
-	}
-		//  sinon commande et met à jour
-//  le statu de la palette en commandé
-//  la table temporaire pourretirer toutes les palettes de cette commande
-	if(empty($errors)){
-
-		foreach ($paletteDansPanierMag as $key => $itemReserve) {
-			if(!empty($itemReserve['id_palette'])){
-
-				$cdeOk=addToCmd($pdoBt,$itemReserve['id_palette'], $itemReserve['article_occ'], $itemReserve['panf_occ'], $itemReserve['deee_occ'], $itemReserve['sorecop_occ'], $itemReserve['design_occ'], $itemReserve['fournisseur_occ'], $itemReserve['ean_occ'], $itemReserve['qte_cde']);
-				if($cdeOk){
-					$statut=2;
-					$upPalette=$paletteMgr->updatePaletteStatut($pdoBt,$itemReserve['id_palette'],$statut);
-				}else{
-					$errors[]="Une erreur est survenue avec la palette ".$itemReserve['palette'];
-				}
-				if($upPalette){
-					$deleteTemRow=deleteTempCmd($pdoBt,$itemReserve['id']);
-				}
-
-			}else{
-				$cdeOk=addToCmd($pdoBt,$itemReserve['id_palette'], $itemReserve['article_occ'], $itemReserve['panf_occ'], $itemReserve['deee_occ'], $itemReserve['sorecop_occ'], $itemReserve['design_occ'], $itemReserve['fournisseur_occ'], $itemReserve['ean_occ'], $itemReserve['qte_cde']);
-				if($cdeOk){
-					// on supprime la ligne temporaire
-					$deleteTemRow=deleteTempCmd($pdoBt,$itemReserve['id']);
-					// on met à jour les quantité de la table cde
-					// donc on récupère la qte actuelle
-					$qteStock=getQteArticleQlik($pdoBt, $itemReserve['article_occ']);
-					$qte=$qteStock - $itemReserve['qte_cde'];
-					$ok=updateQteArticle($pdoBt,$itemReserve['article_occ'], $qte);
-					if(!$ok){
-						$errors[]="une erreur est survenue, impossible de passer votre commande";
-					}
-				}else{
-					$errors[]="une erreur est survenue, impossible de passer votre commande";
-				}
-			}
-		}
-
-		if(empty($errors)){
-			header("Location:occ-palette.php?success=cde");
-		}
-
-	}
-
 }
 
-if(isset($_POST['add-article'])){
-	// on vérifie que le magasin n'a pas ocmmandé un quantité supérieur à celle du stock
 
 
-	if($_POST['qte_cde']>$_POST['qte_qlik']){
-		$errors[]="Impossible d'ajouter la quantité, elle est supérieure au stock de l'article " .$_POST['article_qlik'];
-	}
-	if(empty($errors)){
+include 'occ-palette-checkout.php';
 
-		// on regarde si l'article est dans la table de commande temparaire
-	// on fait un update sauf si quantité est à 0, là on supprime
-		$inTemp=isMagArticleInTemp($pdoBt,$_POST['article_qlik']);
-		if(empty($inTemp) && $_POST['qte_cde']!=0 ){
-			$added=addToTempArt($pdoBt);
-			unset($_POST);
-			header("Location: ".$_SERVER['PHP_SELF'],true,303);
-		}elseif(!empty($inTemp) && $_POST['qte_cde']==0) {
-		// on supprimer
-			delLine($pdoBt,$inTemp['id']);
-		}else{
-		// on update
-			updateTempArt($pdoBt,$inTemp['id']);
-
-		}
-	}
-
-}
+include 'occ-palette-addarticle.php';
 
 
 
@@ -389,7 +303,6 @@ if(isset($_GET['expedier'])){
 
 	}
 }
-
 
 
 if(isset($_GET['success'])){
@@ -406,6 +319,14 @@ if(isset($_GET['success'])){
 //------------------------------------------------------
 include('../view/_head-bt.php');
 include('../view/_navbar.php');
+
+
+		$infoMag=UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $_SESSION['id_web_user']);
+
+
+
+
+
 ?>
 <!--********************************
 DEBUT CONTENU CONTAINER
@@ -452,350 +373,47 @@ DEBUT CONTENU CONTAINER
 				</div>
 			</div>
 		</div>
+	<?php endif ?>
 
-		<?php if (!empty($paletteDansPanierMag)){include 'occ-palette-cart.php';}?>
 
-		<div class="row">
-			<div class="col">
-				<h3 class="text-main-blue text-center pt-4" id="article">Articles d'occasion</h3>
+	<?php
+	// affichage du panier si article en commande
+	if (!empty($paletteDansPanierMag)){
+		include 'occ-palette-cart.php';
+	}
+	// affichage de la liste des articles gt13 commandables
+	include 'occ-palette-artlist.php';
+	// affich&age palettes en prepa pour bt
+	if ($_SESSION['type']=='btlec'){
+		include 'occ-palette-prepa.php';
+	}
+	// affichage palette terminées pour tout le monde
+	include 'occ-palette-dispo.php';
+	// affichage palettes commandéew et expédiées
+	if ($_SESSION['type']=='btlec'){
+		include 'occ-palette-cdes.php';
+		include 'occ-palette-exp.php';
+	}
 
-			</div>
+	?>
+
+
+
+
+
+
+
+
+
+
+
+			<!-- ./container -->
 		</div>
-
-		<div class="row ">
-			<div class="col">
-
-				<table class="table table-sm">
-					<thead class="thead-dark">
-						<tr>
-							<th>Code article</th>
-							<th>Code Dossier</th>
-							<th>Désignation</th>
-							<th>Fournisseur</th>
-							<th>EAN</th>
-							<th>PANF</th>
-							<th>DEEE</th>
-							<th>SORECOP</th>
-							<th class="text-right">Qté à dispo</th>
-							<th colspan="2" class="text-center">Ajouter</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php foreach ($listAssortiment as $assor): ?>
-							<?php
-							$artInTemp=isMagArticleInTemp($pdoBt, $assor['article_qlik']);
-							?>
-							<tr>
-								<td id="<?=$assor['article_qlik']?>"><?=$assor['article_qlik']?></td>
-								<td><?=$assor['dossier_qlik']?></td>
-								<td><?=$assor['design_qlik']?></td>
-								<td><?=$assor['fournisseur_qlik']?></td>
-								<td><?=$assor['ean_qlik']?></td>
-								<td><?=$assor['panf_qlik']?></td>
-								<td><?=$assor['deee_qlik']?></td>
-								<td><?=$assor['sorecop']?></td>
-								<td class="text-right"><?=$assor['qte_qlik']?></td>
-								<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
-
-									<td class="text-right">
-										<input type="text" data-input="<?=$assor['article_qlik']?>" name="qte_cde" class="form-control mini-input" value="<?=!empty($artInTemp)? $artInTemp['qte_cde']:""?>">
-
-									</td>
-									<td>
-										<div class="hidden" data-btn="<?=$assor['article_qlik']?>">
-											<button class="btn btn-primary" name="add-article"><i class="fa fa-shopping-cart"></i></button>
-										</div>
-
-									</td>
-									<input type="hidden" name="article_qlik" value="<?=$assor['article_qlik']?>">
-									<input type="hidden" name="design_qlik" value="<?=$assor['design_qlik']?>">
-									<input type="hidden" name="fournisseur_qlik" value="<?=$assor['fournisseur_qlik']?>">
-									<input type="hidden" name="ean_qlik" value="<?=$assor['ean_qlik']?>">
-									<input type="hidden" name="panf_qlik" value="<?=$assor['panf_qlik']?>">
-									<input type="hidden" name="deee_qlik" value="<?=$assor['deee_qlik']?>">
-									<input type="hidden" name="sorecop" value="<?=$assor['sorecop']?>">
-									<input type="hidden" name="qte_qlik" value="<?=$assor['qte_qlik']?>">
-								</form>
-
-
-							</tr>
-						<?php endforeach ?>
-
-					</tbody>
-				</table>
-
-			</div>
-		</div>
-
-		<div class="row pb-3">
-			<div class="col text-right">
-			</div>
-		</div>
-
-		<div class="bg-separation"></div>
-		<!-- modal -->
-
-
-		<div class="row">
-			<div class="col">
-				<h3 class="text-main-blue text-center pt-4" id="prepa">Palettes en cours de préparation</h3>
-
-			</div>
-		</div>
-		<?php if (!empty($paletteEnPrepa)): ?>
-			<?php foreach ($paletteEnPrepa as $key => $palette): ?>
-
-				<div class="row my-3" id="detailPalette">
-					<div class="col">
-						<h5 class="text-main-blue text-center">Palette <?=$palette[0]['palette'] ?> (en préparation)</h5>
-					</div>
-				</div>
-
-				<div class="row pb-5">
-					<div class="col">
-						<table class="table table-sm shadow">
-							<thead class="thead-dark">
-								<tr>
-									<th>Code article</th>
-									<th>Code Dossier</th>
-									<th>Désignation</th>
-									<th>EAN</th>
-
-								</tr>
-							</thead>
-							<tbody>
-								<?php foreach ($palette as $key => $article): ?>
-
-									<tr>
-										<td><?=$article['code_article']?></td>
-										<td><?=$article['code_dossier']?></td>
-										<td><?=$article['designation']?></td>
-										<td><?=$article['ean']?></td>
-
-									</tr>
-								<?php endforeach ?>
-
-
-							</tbody>
-						</table>
-
-					</div>
-				</div>
-			<?php endforeach ?>
-			<?php else: ?>
-
-				<div class="row pb-5">
-					<div class="col">
-						<div class="alert alert-primary">
-							Pas de palette en cours de préparation
-						</div>
-					</div>
-				</div>
-			<?php endif ?>
-			<!-- titre uniquement pour bt -->
-
-
-		<?php endif ?>
-		<!-- fin partie réservée bt -->
-
-		<!-- panier -->
-		<div class="bg-separation"></div>
-		<div class="row">
-			<div class="col">
-				<h3 class="text-main-blue text-center pt-4 pb-2" id="over">Palettes disponibles à la commande</h3>
-			</div>
-		</div>
-
-
-
-
-
-
-		<?php if (!empty($paletteCommandable)): ?>
-
-			<?php foreach ($paletteCommandable as $key => $palette): ?>
-
-				<div class="row my-3" id="detailPalette">
-					<div class="col">
-						<h5 class="text-main-blue text-center">Palette <?=$palette[0]['palette'] ?></h5>
-					</div>
-				</div>
-
-				<div class="row pb-2">
-					<div class="col">
-						<table class="table table-sm shadow">
-							<thead class="thead-dark">
-								<tr>
-									<th>Code article</th>
-									<th>Code Dossier</th>
-									<th>Désignation</th>
-									<th>EAN</th>
-
-								</tr>
-							</thead>
-							<tbody>
-								<?php foreach ($palette as $key => $article): ?>
-
-									<tr>
-										<td><?=$article['code_article']?></td>
-										<td><?=$article['code_dossier']?></td>
-										<td><?=$article['designation'] . $article['id_palette']?></td>
-										<td><?=$article['ean']?></td>
-
-									</tr>
-								<?php endforeach ?>
-
-
-							</tbody>
-						</table>
-
-					</div>
-				</div>
-				<div class="row pb-2">
-					<div class="col">
-						<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'#cart-count'?>" method="post">
-							<input type="hidden" name="id_palette" value="<?=$article['id_palette']?>">
-							<div class="row">
-								<div class="col text-right">
-									<button class="btn btn-primary" name="addtocart"><i class="fas fa-cart-plus pr-3"></i>Ajouter</button>
-								</div>
-							</div>
-						</form>
-					</div>
-				</div>
-
-			<?php endforeach ?>
-			<?php else: ?>
-
-				<div class="row">
-					<div class="col">
-						<div class="alert alert-primary">
-							Aucune palette occasion disponible pour l'instant
-						</div>
-					</div>
-				</div>
-
-
-			<?php endif ?>
-
-
-			<?php if ($_SESSION['type']=='btlec'): ?>
-				<div class="bg-separation"></div>
-				<div class="row">
-					<div class="col">
-						<h3 class="text-main-blue text-center pt-4 pb-2" id="cde">Palettes commandées</h3>
-					</div>
-				</div>
-
-
-				<?php if (!empty($paletteCommandees)): ?>
-					<div class="row pb-2">
-						<div class="col">
-							<table class="table table-sm shadow">
-								<thead class="thead-dark">
-									<tr>
-										<th>Cde n°</th>
-										<th>Palette</th>
-										<th>Magasin</th>
-										<th>Date commande</th>
-										<th>Modifier</th>
-
-									</tr>
-								</thead>
-								<tbody>
-									<?php foreach ($paletteCommandees as $key => $palette): ?>
-										<tr>
-											<td><?=$palette['id_cde']?></td>
-											<td><?=$palette['palette']?></td>
-											<td><?= UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $palette['id_web_user'], 'deno_sca')  ?></td>
-											<td><?=$palette['date_cde']?></td>
-											<td><a href="<?=$_SERVER['PHP_SELF'].'?expedier='.$palette['id_palette']?>" class="btn btn-primary">Expédier</a></td>
-										</tr>
-									<?php endforeach ?>
-								</tbody>
-							</table>
-
-						</div>
-					</div>
-
-
-					<?php else: ?>
-
-						<div class="row">
-							<div class="col">
-								<div class="alert alert-primary">
-									Aucune palette en commande
-								</div>
-							</div>
-						</div>
-
-
-					<?php endif ?>
-
-					<div class="bg-separation"></div>
-					<div class="row">
-						<div class="col">
-							<h3 class="text-main-blue text-center pt-4 pb-2" id="exp">Palettes Expédiées</h3>
-						</div>
-					</div>
-
-					<?php if (!empty($paletteExpediees)): ?>
-						<div class="row pb-2">
-							<div class="col">
-								<table class="table table-sm shadow">
-									<thead class="thead-dark">
-										<tr>
-											<th>Cde n°</th>
-											<th>Palette</th>
-											<th>Magasin</th>
-											<th>Date commande</th>
-
-										</tr>
-									</thead>
-									<tbody>
-										<?php foreach ($paletteExpediees as $key => $palette): ?>
-											<tr>
-												<td><?=$palette['id_cde']?></td>
-												<td><?=$palette['palette']?></td>
-												<td><?= UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $palette['id_web_user'], 'deno_sca')  ?></td>
-												<td><?=$palette['date_cde']?></td>
-
-											</tr>
-										<?php endforeach ?>
-									</tbody>
-								</table>
-
-							</div>
-						</div>
-
-
-						<?php else: ?>
-
-							<div class="row">
-								<div class="col">
-									<div class="alert alert-primary">
-										Aucune palette en commande
-									</div>
-								</div>
-							</div>
-
-
-						<?php endif ?>
-
-
-
-
-
-						<!-- fin partie bt -->
-					<?php endif ?>
-
-					<!-- ./container -->
-				</div>
-				<script type="text/javascript">
-					$( document ).ready(function() {
-						$("#cart").on("click", function() {
-							$(".shopping-cart").toggleClass("hidden shown");
-						});
+		<script type="text/javascript">
+			$( document ).ready(function() {
+				$("#cart").on("click", function() {
+					$(".shopping-cart").toggleClass("hidden shown");
+				});
 						// $("input.mini-input").focus(function(){
 						// 	var inputFocused=$(this).attr("data-input");
 						// 	var btn=$("div").find(`[data-btn='${inputFocused}']`);

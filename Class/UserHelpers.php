@@ -20,7 +20,7 @@ class UserHelpers{
 		$data=self::getUser($pdoUser,$idwebuser);
 
 		if(!empty($data['galec'])){
-			$req=$pdoMag->prepare("SELECT * FROM sca3 WHERE galec_sca= :galec");
+			$req=$pdoMag->prepare("SELECT * FROM sca3 LEFT JOIN mag ON btlec_sca=mag.id WHERE galec_sca= :galec");
 			$req->execute([
 				':galec'	=>$data['galec']
 			]);

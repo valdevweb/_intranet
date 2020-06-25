@@ -75,7 +75,7 @@
 								echo '<td>'.$prod['article'].'</td>';
 								echo '<td>'.$prod['dossier_gessica'].'</td>';
 								echo '<td>'.$prod['palette'].'</td>';
-								echo '<td>'.$boxIco.$prod['descr'].'</td>';
+								echo '<td>'.$boxIco.$prod['descr'].'<br>Ean : '.$prod['ean'].'</td>';
 								echo '<td>'.$prod['fournisseur'].'</td>';
 								echo '<td>'.$prod['reclamation'].'</td>';
 								echo '<td class="text-right">'.$prod['qte_litige'].'</td>';
@@ -96,7 +96,7 @@
 								echo '<td>'.$prod['article'].'</td>';
 								echo '<td>'.$prod['dossier_gessica'].'</td>';
 								echo '<td>'.$prod['palette'].'</td>';
-								echo '<td>'.$prod['descr'].'</td>';
+								echo '<td>'.$prod['descr'].'<br>Ean : '.$prod['ean'].'</td>';
 								echo '<td>'.$prod['fournisseur'].'</td>';
 								echo '<td>'.$prod['reclamation'].'</td>';
 								echo '<td class="text-right">'.$prod['qte_litige'].'</td>';

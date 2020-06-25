@@ -46,12 +46,16 @@
 					<th class="sortable">Centrale</th>
 					<th class="sortable">Date fermeture</th>
 					<th class="sortable">Chargé de mission</th>
-					<th class="sortable">CA</th>
+					<th class="sortable">CA <?=$nMoinsUn?></th>
+					<th class="sortable">CA <?=$nUn?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php if (isset($magList)): ?>
 					<?php foreach ($magList as $key => $mag): ?>
+						<?php
+						$ca=getCaThisYear($pdoQlik, $nUn, $mag['id']);
+						 ?>
 						<tr class="<?=isset($mag['diff'])?'ko':"ok"?>">
 							<td><?=$mag['id']?></td>
 							<td><a class="text-sca" href="fiche-mag.php?id=<?=$mag['id']?>"><?=$mag['deno_sca']?></a></td>
@@ -63,6 +67,8 @@
 							<td class="text-sca"><?= !empty($mag['date_fermeture'])? (new DateTime($mag['date_fermeture']))->format('d-m-Y'):"" ?></td>
 							<td><?= UserHelpers::getPrenom($pdoUser, $mag['id_cm_web_user'])?></td>
 							<td class="text-right"><nobr><?= number_format((float)$mag['CA_Annuel'],0,'',' ') ?></nobr></td>
+							<td class="text-right"><nobr><?= number_format((float)$ca['CA_Annuel'],0,'',' ') ?></nobr></td>
+
 						</tr>
 					<?php endforeach ?>
 

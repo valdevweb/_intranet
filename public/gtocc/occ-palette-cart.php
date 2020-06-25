@@ -35,9 +35,6 @@
 											x <?= $tempPalette['qte_cde']?>
 										</div>
 										<div class="col-auto">
-											<a href="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?idTempDel='.$tempPalette['id']?>">
-												<i class="fas fa-ban"></i>
-											</a>
 										</div>
 									</div>
 									<?php else: ?>
