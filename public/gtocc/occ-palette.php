@@ -286,7 +286,10 @@ if(isset($_GET['idTempDel'])){
 	header("Location:occ-palette.php");
 }
 
-
+if(isset($_GET['idTempDelArticle'])){
+	delLine($pdoBt,$_GET['idTempDelArticle']);
+	header("Location:occ-palette.php");
+}
 
 include 'occ-palette-checkout.php';
 
