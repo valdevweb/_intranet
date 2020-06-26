@@ -50,8 +50,8 @@ if(isset($_POST['checkout'])){
  // la table temporaire pourretirer toutes les palettes de cette commande
 	if(empty($errors)){
 			// on créé le numéro de commande statut 2 = comandé comme pour les palettes
-			$req=$pdoBt->query("INSERT INTO occ_cdes_numero (statut) VALUES (2)");
-			$lastinsertid=$pdoBt->lastInsertId();
+		$req=$pdoBt->query("INSERT INTO occ_cdes_numero (statut) VALUES (2)");
+		$lastinsertid=$pdoBt->lastInsertId();
 		foreach ($paletteDansPanierMag as $key => $itemReserve) {
 
 			// palette
@@ -128,6 +128,8 @@ if(isset($_POST['checkout'])){
 		$sheet->setCellValue('E1', 'Désignation');
 		$sheet->setCellValue('F1', 'EAN');
 		$sheet->setCellValue('G1', 'Quantité');
+		$sheet->setCellValue('H1', 'Prix d\'achat');
+		$sheet->setCellValue('I1', 'PVC');
 		$row=2;
 
 		$infoCde=getFullCde($pdoBt,$lastinsertid);
@@ -151,11 +153,18 @@ if(isset($_POST['checkout'])){
 
 			$sheet->setCellValue('A'.$row, $infoMag['btlec_sca']);
 			$sheet->setCellValue('B'.$row, $infoMag['deno']);
-			$sheet->setCellValue('C'.$row, "" );
+			$sheet->setCellValue('C'.$row, $palette );
 			$sheet->setCellValue('D'.$row, $article);
 			$sheet->setCellValue('E'.$row, $designation);
 			$sheet->setCellValue('F'.$row, $ean);
 			$sheet->setCellValue('G'.$row, $qte);
+			$sheet->setCellValue('H'.$row, ($cde['pa']!=null)?$cde['pa']:'');
+			$sheet->setCellValue('I'.$row, ($cde['pvc']!=null)?$cde['pvc']:'');
+			$sheet->getStyle('F'.$row)
+			->getNumberFormat()
+			->setFormatCode(
+				'0000000000000'
+			);
 			$row++;
 		}
 // dimensionnement des colonnes
@@ -163,7 +172,10 @@ if(isset($_POST['checkout'])){
 		for ($i=0; $i < sizeof($cols) ; $i++)
 		{
 			$sheet->getColumnDimension($cols[$i])->setAutoSize(true);
+
 		}
+
+
 		$sheet->setTitle('commande Leclerc Occasion');
 
 
@@ -186,12 +198,14 @@ if(isset($_POST['checkout'])){
 		->setCc($cc)
 		->setBcc($hidden)
 		->attach(Swift_Attachment::fromPath($pathXl.$filename));
-		;
+
 
 		if (!$mailer->send($message, $failures)){
 			print_r($failures);
 		}else{
-			$success[]="mail envoyé avec succés";
+			$successQ='?success=cdeok';
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 		}
 
 

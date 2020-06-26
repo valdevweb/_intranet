@@ -44,6 +44,9 @@
 			</div>
 		</div>
 	<?php endforeach ?>
+	<div class="row">
+		<div class="col text-right"><a href="#top">Haut</a></div>
+	</div>
 	<?php else: ?>
 
 		<div class="row pb-5">
@@ -53,5 +56,9 @@
 				</div>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col text-right"><a href="#top">Haut</a></div>
+		</div>
 	<?php endif ?>
+
 	<!-- titre uniquement pour bt -->

@@ -35,7 +35,9 @@
 
 		</div>
 	</div>
-
+	<div class="row">
+		<div class="col text-right"><a href="#top">Haut</a></div>
+	</div>
 
 	<?php else: ?>
 
@@ -46,6 +48,8 @@
 				</div>
 			</div>
 		</div>
-
+		<div class="row">
+			<div class="col text-right"><a href="#top">Haut</a></div>
+		</div>
 
 		<?php endif ?>

@@ -12,14 +12,21 @@ if(isset($_POST['add-article'])){
 		$inTemp=isMagArticleInTemp($pdoBt,$_POST['article_qlik']);
 		if(empty($inTemp) && $_POST['qte_cde']!=0 ){
 			$added=addToTempArt($pdoBt);
+			$successQ='?success=article-add';
 			unset($_POST);
-			header("Location: ".$_SERVER['PHP_SELF'],true,303);
+			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 		}elseif(!empty($inTemp) && $_POST['qte_cde']==0) {
 		// on supprimer
 			delLine($pdoBt,$inTemp['id']);
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF'],true,303);
+
 		}else{
 		// on update
 			updateTempArt($pdoBt,$inTemp['id']);
+				$successQ='?success=mod';
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 		}
 	}
 

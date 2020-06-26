@@ -123,7 +123,7 @@ if(isset($_POST['send']))
 					'palette'	=>$palette,
 					'pa'		=>$pa,
 					'pvc'		=>$pvc,
-					'taux'		=>$taux
+					'taux'		=>round(($taux*100),2)
 				];
 
 

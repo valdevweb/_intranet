@@ -84,7 +84,11 @@ class EvoManager{
 	}
 
 	public function getThisEvo($idEvo){
-		$req=$this->pdoEvo->prepare("SELECT * FROM evos WHERE evos.id= :id ");
+		$req=$this->pdoEvo->prepare("SELECT evos.*, plateformes.plateforme, modules.module, appli.appli, DATE_FORMAT(deadline, '%d-%M-%Y') deadlinefr FROM evos
+			LEFT JOIN plateformes on evos.id_plateforme=plateformes.id
+			LEFT JOIN appli  on evos.id_appli= appli.id
+			LEFT JOIN modules on evos.id_module=modules.id
+			WHERE evos.id= :id ");
 		$req->execute([
 			':id'		=>$idEvo
 		]);
@@ -127,7 +131,13 @@ class EvoManager{
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-
+	public function updateEtat($idEvo,$etat){
+			$req=$this->pdoEvo->prepare("UPDATE evos SET id_etat= :id_etat WHERE id= :id");
+		$req->execute([
+			':id'	=>$idEvo,
+			':id_etat' => $etat
+		]);
+	}
 
 
 

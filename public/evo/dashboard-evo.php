@@ -161,59 +161,29 @@ $req=$pdoEvo->query($query);
 $listEvo=$req->fetchAll(PDO::FETCH_ASSOC);
 
 if(isset($_POST['statuer'])){
-	$err=statuer($pdoEvo);
-	//besoin de récupérer les infos de la demande d'évo
-	$idEvo=$_POST['id_evo'];
-	$thisEvo=$evoMgr->getThisEvo($idEvo);
-	//  envoi mail dev et demandeur
-	if(VERSION=="_"){
-		$destDev=['valerie.montusclat@btlec.fr'];
-		$destDd=['valerie.montusclat@btlec.fr'];
-		$cc=[];
-		$hidden=[];
-	}else{
-		$destDev[]=$thisEvo['dev_mail'];
-		$destDd[]=$thisEvo['dev_dd'];
-		$cc=[];
-		$hidden=['valerie.montusclat@btlec.fr'];
-	}
-	$arrDecision=[2 =>"validée", 5=>"refusée"];
-	$decision=$arrDecision[$_POST['statut']];
+	include('dashboard-post-statuer.php');
+}
 
-// ---------------------------------------
-		// MAIL  developpeur
-
-// ---------------------------------------
-	$htmlMail = file_get_contents('mail-decision-dev.html');
-	$htmlMail=str_replace('{OBJET}',$thisEvo['objet'],$htmlMail);
-	$htmlMail=str_replace('{DECISION}',$decision,$htmlMail);
-	$htmlMail=str_replace('{CMTDEV}',$thisEvo['cmt_dev'],$htmlMail);
-	$htmlMail=str_replace('{EVO}',$thisEvo['evo'],$htmlMail);
-	$subject="Portail SAV Leclerc - Demandes d'évo " ;
-
-// ---------------------------------------
-	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
-	$mailer = new Swift_Mailer($transport);
-	$message = (new Swift_Message($subject))
-	->setBody($htmlMail, 'text/html')
-	->setFrom(array('ne_pas_repondre@btlec.fr' => 'EXPEDITEUR NAME'))
-	->setTo($destDev)
-	->setCc($cc)
-	->setBcc($hidden);
-
-	if (!$mailer->send($message, $failures)){
-		print_r($failures);
-	}else{
-		$success[]="mail envoyé avec succés";
-	}
-
-
-
-
-
+if(isset($_POST['cloturer'])){
+	include('dashboard-post-statuer.php');
 }
 
 
+if(isset($_GET['start'])){
+	$up=$evoMgr->updateEtat($_GET['start'],3);
+
+	header("Location: ".$_SERVER['PHP_SELF'],true,303);
+}
+
+
+
+
+if(isset($_GET['success'])){
+	$arrSuccess=[
+		'decision'=>'Envoi de la décision au demandeur et au développeur fait avec succès',
+	];
+	$success[]=$arrSuccess[$_GET['success']];
+}
 
 
 
@@ -343,6 +313,16 @@ include('../view/_navbar.php');
 		<div class="col-xl-1"></div>
 
 	</div>
+	<div class="row mt-5">
+		<div class="col-lg-1"></div>
+		<div class="col">
+			<?php
+			include('../view/_errors.php');
+			?>
+		</div>
+		<div class="col-lg-1"></div>
+	</div>
+
 	<div class="row mb-3">
 		<div class="col-lg-1"></div>
 		<div class="col sub">
@@ -387,7 +367,6 @@ include('../view/_navbar.php');
 								<?=$evo['evo']?>
 								<div class="text-right hide-btn" data-btn-id="<?=$evo['id']?>">
 									<?php if (!empty($evo['cmt_dd']) || !empty($evo['cmt_dev'])): ?>
-
 									<i class="fas fa-angle-double-down pr-2 align-text-bottom"></i>afficher/masquer les commentaires
 								<?php endif ?>
 
@@ -397,144 +376,52 @@ include('../view/_navbar.php');
 						<td><?=$evo['ddeur']?></td>
 						<td class="text-center">
 							<?php if ($evo['id_etat']==1): ?>
-
 								<a href="#modal-statuer" data-toggle="modal" data-prio="<?=$evo['id_prio']?>" data-id="<?=$evo['id']?>">
 									<button class="btn btn-primary">Statuer</button>
 								</a>
+								<?php elseif($evo['id_etat']==2):?>
+									<a href="?start=<?=$evo['id']?>" >
+										<button class="btn btn-primary">Démarrer</button>
+									</a>
+									<?php elseif($evo['id_etat']==3):?>
+										<a href="#modal-cloturer" data-toggle="modal" data-prio="<?=$evo['id_prio']?>" data-id="<?=$evo['id']?>">
+									<button class="btn btn-primary">Cloturer</button>
+								</a>
+									<?php endif ?>
+
+								</td>
+							</tr>
+							<?php if (!empty($evo['cmt_dd'])): ?>
+								<tr class="bg-verylight-blue cmt" data-cmt-id="<?=$evo['id']?>">
+									<td  colspan="4">Commentaire à l'intention du demandeur : </td>
+									<td><?=$evo['cmt_dd']?></td>
+									<td colspan="3"></td>
+								</tr>
 							<?php endif ?>
 
-						</td>
-					</tr>
-					<?php if (!empty($evo['cmt_dd'])): ?>
-						<tr class="bg-verylight-blue cmt" data-cmt-id="<?=$evo['id']?>">
-							<td  colspan="4">Commentaire à l'intention du demandeur : </td>
-							<td><?=$evo['cmt_dd']?></td>
-							<td colspan="3"></td>
-						</tr>
-					<?php endif ?>
+							<?php if (!empty($evo['cmt_dev'])): ?>
+								<tr class="bg-verylight-blue cmt" data-cmt-id="<?=$evo['id']?>">
+									<td colspan="4" >Commentaires à l'intension du développeur : </td>
+									<td><?=$evo['cmt_dev']?></td>
+									<td colspan="3"></td>
+								</tr>
+							<?php endif ?>
+						<?php endforeach?>
 
-					<?php if (!empty($evo['cmt_dev'])): ?>
-						<tr class="bg-verylight-orange cmt" data-cmt-id="<?=$evo['id']?>">
-							<td colspan="4" >Commentaires à l'intension du développeur : </td>
-							<td><?=$evo['cmt_dev']?></td>
-							<td colspan="3"></td>
-						</tr>
-					<?php endif ?>
-				<?php endforeach?>
+						<!-- $currentEvo=getCurrentEvo($pdoSav); -->
+						<!-- $todoEvo=getTodoEvo($pdoSav); -->
 
-				<!-- $currentEvo=getCurrentEvo($pdoSav); -->
-				<!-- $todoEvo=getTodoEvo($pdoSav); -->
-
-			</tbody>
-		</table>
-		<!-- ./evo en cours -->
-	</div>
-	<div class="col-lg-1"></div>
-</div>
-
-<!-- ./row -->
-<div class="modal fade" id="modal-statuer" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header bg-main-blue">
-				<h5 class="modal-title text-white" id="myModalLabel">Objet : <span id="objet"></span></h5>
-				<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
+					</tbody>
+				</table>
+				<!-- ./evo en cours -->
 			</div>
-			<div class="modal-body">
-				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
-					<input type="hidden" name="id_evo" id="id_evo" >
-					<div class="row">
-						<div class="col">
-
-						</div>
-					</div>
-					<div class="row">
-						<div class="col">
-							Accepter ou réfuser la demande :
-						</div>
-					</div>
-					<div class="row py-3">
-						<div class="col">
-							<div class="form-check form-check-inline">
-								<input class="form-check-input faible" type="radio" value="2" id="statut" name="statut">
-								<label class="form-check-label font-weight-bold text-green" for="statut">Valider</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input urgent" type="radio" value="5" id="statut" name="statut">
-								<label class="form-check-label font-weight-bold text-red" for="statut">Refuser</label>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col">
-							<div class="form-group">
-								<label for="cmt_dd">Commentaires pour le demandeur : </label>
-								<textarea class="form-control" name="cmt_dd" id="cmt_dd" row="3"></textarea>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col">
-							<div class="form-group">
-								<label for="cmt_dev">Commentaires pour le développeur :</label>
-								<textarea class="form-control" name="cmt_dev" id="cmt_dev" row="3"></textarea>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col">
-							Modification de la priorité :
-						</div>
-					</div>
-					<div class="row mb-3">
-						<div class="col">
-							<div class="form-check form-check-inline">
-								<input class="form-check-input urgent" type="radio" value="1"  name="prio" required>
-								<label class="form-check-label pr-5 text-red" for="urgent"><b>urgent</b></label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input normal" type="radio" value="2"  name="prio">
-								<label class="form-check-label pr-5 text-main-blue" for="normal"><b>normal</b></label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input faible" type="radio" value="3"  name="prio">
-								<label class="form-check-label pr-5 text-green" for="faible"><b>faible</b></label>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-
-					</div>
-					<div class="row">
-						<div class="col-auto">
-							Imposer une deadline :
-
-						</div>
-						<div class="col-md-6 col-xl-3">
-
-							<div class="form-group">
-								<input type="date" class="form-control" name="deadline" id="deadline">
-							</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col text-right">
-							<button class="btn btn-primary" name="statuer">Envoyer</button>
-						</div>
-					</div>
-				</form>
-
-
-			</div>
-				<!-- <div class="modal-footer">
-					<button type="button" class="btn btn-black" data-dismiss="modal">Fermer</button>
-				</div> -->
-			</div>
+			<div class="col-lg-1"></div>
 		</div>
-	</div>
+
+		<?php
+		include('dashboard-modal-statuer.php');
+		include('dashboard-modal-cloturer.php');
+		 ?>
 
 	<!-- fin container -->
 </div>

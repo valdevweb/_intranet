@@ -197,7 +197,6 @@ td:nth-child(10){
   /* padding: 0; */
 }
 
-/*
-#1a192b
-
-#613783 */
+.btn-strange{
+  background-color: #fff;
+}

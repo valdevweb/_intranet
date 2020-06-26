@@ -14,7 +14,7 @@ class OccPaletteMgr{
 	}
 
 	public function getListPaletteDetailByStatut($statut){
-		$req=$this->pdoBt->prepare("SELECT occ_palettes.id as idpalette, occ_palettes.palette, occ_articles.*  FROM occ_palettes LEFT JOIN occ_articles ON occ_palettes.id=occ_articles.id_palette WHERE statut=:statut");
+		$req=$this->pdoBt->prepare("SELECT occ_palettes.id as idpalette, occ_palettes.palette, occ_articles.*  FROM occ_palettes LEFT JOIN occ_articles ON occ_palettes.id=occ_articles.id_palette WHERE statut=:statut ORDER BY palette");
 		$req->execute([
 			':statut'		=>$statut
 		]);

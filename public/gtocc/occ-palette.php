@@ -167,7 +167,7 @@ function deleteTempCmd($pdoBt,$id){
 
 function getAssortiment($pdoBt){
 
-	$req=$pdoBt->query(" SELECT *	FROM occ_article_qlik ORDER BY article_qlik");
+	$req=$pdoBt->query(" SELECT *	FROM occ_article_qlik WHERE qte_qlik !=0 ORDER BY article_qlik");
 	return $req->fetchAll();
 }
 
@@ -307,10 +307,13 @@ if(isset($_GET['expedier'])){
 
 if(isset($_GET['success'])){
 	$arrSuccess=[
-		'cart'=>'Palette ajoutée à votre panier.<br> Attention, pensez à validez votre panier rapidement, si un autre magasin a commandé la palette avant vous, elle disparaîtra automatiquement de votre panier',
+		'cart'=>'Palette ajoutée à votre panier.<br> Attention, pensez à validez votre panier rapidement, si un autre magasin a validé la palette avant vous, elle disparaîtra automatiquement de votre panier',
+		'article-add'=>'Article ajouté à votre panier.<br> Attention, pensez à validez votre panier rapdidement, si un autre magasin passé commande sur ce produit avant vous, les stocks ne seront peut être plus suffisant',
 
 		'cde'	=>"Votre commande a bien été envoyée",
+		'cdeok'	=>"Un mail de confirmation de commande vient de vous être envoyé",
 		'expedie'	=>"la palette a bien été passée en statut expédiée",
+		'mod'	=>"Quantité modifiée",
 	];
 	$success[]=$arrSuccess[$_GET['success']];
 }
@@ -332,6 +335,7 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
+	<div id="top"></div>
 
 	<h1 class="text-main-blue pt-5 pb-2">Produits d'occasion</h1>
 
@@ -374,7 +378,6 @@ DEBUT CONTENU CONTAINER
 			</div>
 		</div>
 	<?php endif ?>
-
 
 	<?php
 	// affichage du panier si article en commande
