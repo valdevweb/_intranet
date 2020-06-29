@@ -298,8 +298,18 @@ include 'occ-palette-addarticle.php';
 
 
 if(isset($_GET['expedier'])){
-	$upPalette=$paletteMgr->updatePaletteStatut($pdoBt,$_GET['expedier'],3);
-	if($upPalette){
+	// mettre à jour len uméro de commande
+	$req=$pdoBt->prepare("UPDATE occ_cdes_numero SET statut=3 WHERE id= :id");
+	$req->execute([
+		':id'		=>$_GET['expedier']
+	]);
+	// mettre à jour la palette
+	$upPalette=$paletteMgr->updatePaletteCdeStatut($pdoBt,$_GET['expedier'],3);
+	// echo "<pre>";
+	// print_r($upPalette);
+	// echo '</pre>';
+
+	if($upPalette>=1){
 		header("Location:occ-palette.php?success=expedie");
 	}else{
 		$errors[]="une erreur est survenue, impossible de mettre la palette à jour";
@@ -310,12 +320,12 @@ if(isset($_GET['expedier'])){
 
 if(isset($_GET['success'])){
 	$arrSuccess=[
-		'cart'=>'Palette ajoutée à votre panier.<br> Attention, pensez à validez votre panier rapidement, si un autre magasin a validé la palette avant vous, elle disparaîtra automatiquement de votre panier',
-		'article-add'=>'Article ajouté à votre panier.<br> Attention, pensez à validez votre panier rapdidement, si un autre magasin passé commande sur ce produit avant vous, les stocks ne seront peut être plus suffisant',
+		'cart'=>'Palette ajoutée à votre panier.<br> Attention, si un autre magasin valide sa commande sur ces palettes,  les stocks ne seront peut être plus suffisant',
+		'article-add'=>'Article ajouté à votre panier.<br> Attention, si un autre magasin valide sa commande sur ces produits, les stocks ne seront peut être plus suffisant',
 
 		'cde'	=>"Votre commande a bien été envoyée",
 		'cdeok'	=>"Un mail de confirmation de commande vient de vous être envoyé",
-		'expedie'	=>"la palette a bien été passée en statut expédiée",
+		'expedie'	=>"la commande a bien été passée en statut expédiée",
 		'mod'	=>"Quantité modifiée",
 	];
 	$success[]=$arrSuccess[$_GET['success']];
@@ -327,7 +337,7 @@ include('../view/_head-bt.php');
 include('../view/_navbar.php');
 
 
-		$infoMag=UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $_SESSION['id_web_user']);
+$infoMag=UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $_SESSION['id_web_user']);
 
 
 
@@ -413,29 +423,32 @@ DEBUT CONTENU CONTAINER
 
 
 
-			<!-- ./container -->
-		</div>
-		<script type="text/javascript">
-			$( document ).ready(function() {
-				$("#cart").on("click", function() {
-					$(".shopping-cart").toggleClass("hidden shown");
-				});
-						// $("input.mini-input").focus(function(){
-						// 	var inputFocused=$(this).attr("data-input");
-						// 	var btn=$("div").find(`[data-btn='${inputFocused}']`);
-						// 	btn.toggleClass("hidden shown");
+	<!-- ./container -->
+</div>
+<script type="text/javascript">
+	$( document ).ready(function() {
+		$("#cart").on("click", function() {
+			$(".shopping-cart").toggleClass("hidden shown");
+		});
+		$("input.mini-input").focus(function(){
+			console.log("panier");
+			var inputFocused=$(this).attr("data-input");
+			var btn=$("div").find(`[data-btn='${inputFocused}']`);
 
-						// 	// $(this).data("id")
-						// });
-						// $("input.mini-input").focusout(function(){
-						// 	var inputFocused=$(this).attr("data-input");
-						// 	var btn=$("div").find(`[data-btn='${inputFocused}']`);
-						// 	btn.toggleClass("hidden shown");
+			btn.removeClass("btn-strange")
+			btn.addClass("btn-primary");
+		});
+		$("input.mini-input").focusout(function(){
+			console.log("panier");
+			var inputFocused=$(this).attr("data-input");
+			var btn=$("div").find(`[data-btn='${inputFocused}']`);
 
-						// });
-					});
+			btn.removeClass("btn-primary")
+			btn.addClass("btn-strange");
+		});
+	});
 
-				</script>
-				<?php
-				require '../view/_footer-bt.php';
-				?>
+</script>
+<?php
+require '../view/_footer-bt.php';
+?>

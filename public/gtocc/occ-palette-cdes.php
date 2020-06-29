@@ -27,7 +27,30 @@
 							<td><?=$palette['palette']?></td>
 							<td><?= UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $palette['id_web_user'], 'deno_sca')  ?></td>
 							<td><?=$palette['date_cde']?></td>
-							<td><a href="<?=$_SERVER['PHP_SELF'].'?expedier='.$palette['id_palette']?>" class="btn btn-primary">Expédier</a></td>
+							<td><a href="<?=$_SERVER['PHP_SELF'].'?expedier='.$palette['id_cde']?>" class="btn btn-primary">Expédier</a></td>
+						</tr>
+						<tr>
+							<td colspan="5">Détail de la commande :</td>
+						</tr>
+						<tr>
+
+							<td colspan="5">
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Palette</th>
+											<th>Ean</th>
+											<th>Désignation</th>
+											<th>Quantité</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td></td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
 						</tr>
 					<?php endforeach ?>
 				</tbody>

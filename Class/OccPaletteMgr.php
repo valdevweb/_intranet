@@ -43,4 +43,17 @@ class OccPaletteMgr{
 		return true;
 	}
 
+	public function updatePaletteCdeStatut($pdoBt,$idCde,$statut){
+		$req=$pdoBt->prepare("UPDATE occ_palettes LEFT JOIN occ_cdes ON occ_palettes.id=occ_cdes.id_palette SET statut= :statut WHERE id_cde= :id_cde");
+		$req->execute([
+			':id_cde'		=>$idCde,
+			':statut'	=>$statut
+		]);
+		return $req->rowCount();
+	}
+
+
+
 }
+
+

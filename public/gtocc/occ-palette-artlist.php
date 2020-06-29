@@ -48,9 +48,9 @@
 
 								</td>
 								<td>
-									<div  data-btn="<?=$assor['article_qlik']?>">
-										<button class="btn btn-primary btn-strange" name="add-article"><i class="fa fa-shopping-cart"></i></button>
-									</div>
+
+										<button data-btn="<?=$assor['article_qlik']?>" class="btn  btn-strange" name="add-article"><i class="fa fa-shopping-cart"></i></button>
+
 
 								</td>
 								<input type="hidden" name="article_qlik" value="<?=$assor['article_qlik']?>">

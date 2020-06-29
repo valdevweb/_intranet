@@ -27,6 +27,8 @@
 							<td><?=$palette['date_cde']?></td>
 
 						</tr>
+
+
 					<?php endforeach ?>
 				</tbody>
 			</table>
