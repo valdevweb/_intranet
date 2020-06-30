@@ -83,8 +83,19 @@
 #cssmenu {
   width: auto;
   font-family: Roboto, 'Open Sans', Helvetica, sans-serif;
+  /* background: #00bcd4; */
   background: #0d47a1;
 }
+
+#cssmenu > ul > li:hover > a,
+#cssmenu > ul > li > a:hover,
+#cssmenu > ul > li.active > a {
+  color: #ffffff;
+  /* background:#00bcd4; */
+  background: #0d47a1;
+}
+
+
 #cssmenu img{
   border: 0 !important;
   margin: 0 !important;
@@ -119,12 +130,7 @@
 
 
 }
-#cssmenu > ul > li:hover > a,
-#cssmenu > ul > li > a:hover,
-#cssmenu > ul > li.active > a {
-  color: #ffffff;
-  background: #0d47a1;
-}
+
 
 
 
@@ -148,8 +154,7 @@
 #cssmenu ul ul {
   position: absolute;
   left: -9999px;
-  /* vv */
-  /* padding-top: 6px; */
+
   top: 20px;
   font-size: 13px;
   opacity: 0;
@@ -292,30 +297,45 @@
     border-left-color: transparent;
   }
   @media all and (max-width: 1580px){
-     #cssmenu ul li {
-      margin-top: -5px;
-    }
-    #cssmenu {
-      font-size : 10px;
-    }
-#cssmenu ul ul{
-      font-size : 11px;
-
-}
-    #cssmenu  > ul > li > a,  #cssmenu >ul >li >a{
-      font-size : 10px;
-    }
-
-    #cssmenu > ul > li > a {
-      padding: 18px 10px 18px 6px;
-      border-right: 0;
-    }
-    #cssmenu ul ul {
-      top:-160px;
-    }
+   #cssmenu ul li {
+    margin-top: -5px;
+  }
+  #cssmenu {
+    font-size : 10px;
+  }
+  #cssmenu ul ul{
+    font-size : 11px;
 
   }
+  #cssmenu  > ul > li > a,  #cssmenu >ul >li >a{
+    font-size : 10px;
+  }
 
+  #cssmenu > ul > li > a {
+    padding: 18px 10px 18px 6px;
+    border-right: 0;
+  }
+  #cssmenu ul ul {
+    top:-160px;
+  }
+
+}
+#cssmenu > ul > li.red-nav > a {
+  color: #ffffff;
+  background-color: red;
+
+}
+#cssmenu ul ul li a.red-nav {
+  background-color: red;
+
+}
+
+
+
+#cssmenu ul ul li:hover > a.red-nav,
+#cssmenu ul ul li.active > a.red-nav {
+  background-color: #ff4c4c;
+}
 /*
 
   @media all and (max-width: 800px), only screen and (-webkit-min-device-pixel-ratio: 2) and (max-width: 1024px), only screen and (min--moz-device-pixel-ratio: 2) and (max-width: 1024px), only screen and (-o-min-device-pixel-ratio: 2/1) and (max-width: 1024px), only screen and (min-device-pixel-ratio: 2) and (max-width: 1024px), only screen and (min-resolution: 192dpi) and (max-width: 1024px), only screen and (min-resolution: 2dppx) and (max-width: 1024px) {

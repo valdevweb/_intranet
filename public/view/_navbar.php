@@ -40,6 +40,10 @@ $d_exploit=isUserAllowed($pdoUser,$exploitIds);
 $strictAdminIds=array(82);
 $d_strictAdmin=isUserAllowed($pdoUser,$strictAdminIds);
 
+//accès restreint exploit (dsy, cde, luc, moi)
+$restraintAdminIds=array(87);
+$d_restraintAdmin=isUserAllowed($pdoUser,$restraintAdminIds);
+
 // accès exploit stat : admin + chargé de mission
 $exploitStatIds=array(5,78);
 $d_exploitStat=isUserAllowed($pdoUser,$exploitStatIds);
@@ -299,18 +303,6 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 			</ul>
 		</li>
 		<?php if ($d_btlec): ?>
-			<li  class='active has-sub'><a href="#" >Evolutions</a>
-				<ul>
-					<li><a href="<?= ROOT_PATH?>/public/evo/dde-evo.php">Demande d'évo</a></li>
-					<li><a href="<?= ROOT_PATH?>/public/evo/vosdemandes-evo.php">Vos demandes</a></li>
-					<?php if ($d_strictAdmin): ?>
-
-					<li><a href="<?= ROOT_PATH?>/public/evo/dashboard-evo.php">Supervision</a></li>
-					<?php endif ?>
-
-
-				</ul>
-			</li>
 			<li  class='active has-sub'><a href="#" >Magasins</a>
 				<ul>
 					<li><a href="<?= ROOT_PATH?>/public/basemag/base-mag.php">Base magasins</a></li>
@@ -390,6 +382,19 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 
 		?>
 		<li><a href="http://172.30.92.53/<?=$version?>sav/scapsav/home.php" class="tooltipped" data-position="bottom" data-tooltip="site du portail SAV">Portail SAV</a></li>
+		<?php if ($d_restraintAdmin): ?>
+
+			<li  class='active has-sub red-nav'><a href="#" >Evolutions</a>
+				<ul>
+					<li><a href="<?= ROOT_PATH?>/public/evo/dde-evo.php" class="red-nav">Demande d'évo</a></li>
+					<li><a href="<?= ROOT_PATH?>/public/evo/dashboard-evo.php" class="red-nav">Supervision</a></li>
+					<li><a href="<?= ROOT_PATH?>/public/evo/vosdemandes-evo.php" class="red-nav">Vos demandes</a></li>
+
+
+				</ul>
+			</li>
+		<?php endif ?>
+
 		<?php if ($d_mag): ?>
 			<li><a href="<?= ROOT_PATH ?>/public/user/profil.php" class="tooltipped" data-position="bottom" data-tooltip="Votre compte"><span>Votre magasin<i class="fa fa-user pl-3"></i></span></a></li>
 		<?php endif ?>
