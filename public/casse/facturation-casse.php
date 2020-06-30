@@ -70,6 +70,7 @@ $articles=getExpPaletteCasse($pdoCasse,$idExp);
 $numPalette=getPaletteList($pdoCasse,$idExp);
 $numPalette=implode(', ',$numPalette);
 
+
 //----------------------------------------------
 //  		FACTURE
 //----------------------------------------------
@@ -97,12 +98,12 @@ $sheet->setCellValue('A11', 'Total MT');
 $column=2;
 $i=0;
 // si plus de 99 colonne, il faut faire un nouveau fichier facture
-$maxcol=29;
+$maxcol=99;
 $uploadDir= '..\..\..\upload\casse\\';
 $nbFac=$nbAvoir=0;
 
 for($i=0;$i<count($articles);$i++){
-	if($column==$maxcol){
+	if($column==$maxcol-1){
 		// ajout dernière données sur cette feuille
 		$prixFac=$articles[$i]['pfnp'];
 		$mtFac=$mtFac+($prixFac*$articles[$i]['uvc']);
