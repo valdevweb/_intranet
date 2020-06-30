@@ -6,6 +6,18 @@ class EvoHelpers{
 		$req=$pdoEvo->query("SELECT id, resp FROM appli ORDER BY id");
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
+	public static function arrayAppliName($pdoEvo){
+		$req=$pdoEvo->query("SELECT id, appli FROM appli ORDER BY id");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+	public static function arrayPlateformeName($pdoEvo){
+		$req=$pdoEvo->query("SELECT id, plateforme FROM plateformes ORDER BY id");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+	public static function arrayModuleName($pdoEvo){
+		$req=$pdoEvo->query("SELECT id, module FROM modules ORDER BY id");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
 
 	public static function arrayAppliRespEmail($pdoEvo){
 		$req=$pdoEvo->query("SELECT id, email FROM appli ORDER BY id");
