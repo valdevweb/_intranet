@@ -238,6 +238,15 @@ function getQteArticleQlik($pdoBt, $article){
 	return $data['qte_qlik'];
 }
 
+function getFullCde($pdoBt,$idCde){
+	$req=$pdoBt->prepare("SELECT * FROM occ_cdes LEFT JOIN occ_articles ON occ_cdes.id_palette = occ_articles.id_palette WHERE  id_cde= :id_cde ORDER BY occ_cdes.id_palette");
+	$req->execute([
+		':id_cde'	=>$idCde
+
+	]);
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
 //------------------------------------------------------
 //			DECLARATIONS
 //------------------------------------------------------
@@ -248,7 +257,7 @@ $displayCart=false;
 $paletteMgr=new OccPaletteMgr($pdoBt);
 $paletteCommandable=$paletteMgr->getListPaletteDetailByStatut(1);
 $paletteEnPrepa=$paletteMgr->getListPaletteDetailByStatut(0);
-$paletteCommandees=$paletteMgr-> getListPaletteByCde(2);
+$paletteCommandees=$paletteMgr->getListCommandeByStatut(2);
 $paletteExpediees=$paletteMgr-> getListPaletteByCde(3);
 $paletteDansPanierMag=getListPanier($pdoBt);
 
@@ -446,6 +455,20 @@ DEBUT CONTENU CONTAINER
 			btn.removeClass("btn-primary")
 			btn.addClass("btn-strange");
 		});
+		$('table.more').hide();
+		$('.detail-btn').on("click", function(){
+			var id= $(this).data("btn-id");
+			console.log(id);
+			if($('table[data-table-id="'+id+'"]').is(":visible")){
+				$('table[data-table-id="'+id+'"]').hide();
+
+			}else{
+				$('table[data-table-id="'+id+'"]').show();
+			}
+		});
+
+
+
 	});
 
 </script>

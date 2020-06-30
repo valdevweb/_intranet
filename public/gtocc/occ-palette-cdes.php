@@ -9,13 +9,14 @@
 <?php if (!empty($paletteCommandees)): ?>
 	<div class="row pb-2">
 		<div class="col">
-			<table class="table table-sm shadow">
+			<table class="table table-sm shadow table-striped borderless">
 				<thead class="thead-dark">
 					<tr>
 						<th>Cde n°</th>
-						<th>Palette</th>
+
 						<th>Magasin</th>
 						<th>Date commande</th>
+						<th>Détail</th>
 						<th>Modifier</th>
 
 					</tr>
@@ -24,30 +25,59 @@
 					<?php foreach ($paletteCommandees as $key => $palette): ?>
 						<tr>
 							<td><?=$palette['id_cde']?></td>
-							<td><?=$palette['palette']?></td>
+
 							<td><?= UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $palette['id_web_user'], 'deno_sca')  ?></td>
-							<td><?=$palette['date_cde']?></td>
+							<td><?=$palette['date_insert']?></td>
+							<td><div class="btn btn-primary detail-btn" data-btn-id="<?=$palette['id_cde']?>">Voir le détail</div></td>
 							<td><a href="<?=$_SERVER['PHP_SELF'].'?expedier='.$palette['id_cde']?>" class="btn btn-primary">Expédier</a></td>
 						</tr>
-						<tr>
-							<td colspan="5">Détail de la commande :</td>
-						</tr>
-						<tr>
 
-							<td colspan="5">
-								<table class="table">
-									<thead>
+						<tr class="borderless">
+							<td colspan="6">
+								<?php
+
+								$infoCde=getFullCde($pdoBt,$palette['id_cde']);
+
+								?>
+
+								<table class="table more" data-table-id="<?=$palette['id_cde']?>">
+
+
 										<tr>
 											<th>Palette</th>
-											<th>Ean</th>
+											<th>EAN</th>
 											<th>Désignation</th>
 											<th>Quantité</th>
 										</tr>
-									</thead>
+
+
 									<tbody>
-										<tr>
-											<td></td>
-										</tr>
+										<?php foreach ($infoCde as $key => $cde): ?>
+											<?php
+											if(!empty($cde['id_palette'])){
+												$article=$cde['code_article'];
+												$designation=$cde['designation'];
+												$ean=$cde['ean'];
+												$qte=$cde['quantite'];
+												$palette=$arrayListPalette[$cde['id_palette']];
+											}else{
+												$article=$cde['article_occ'];
+												$designation=$cde['design_occ'];
+												$ean=$cde['ean_occ'];
+												$qte=$cde['qte_cde'];
+												$palette="";
+
+											}
+
+											?>
+
+											<tr>
+												<td><?=$palette?></td>
+												<td><?=$ean?></td>
+												<td><?=$designation?></td>
+												<td><?=$qte?></td>
+											</tr>
+										<?php endforeach ?>
 									</tbody>
 								</table>
 							</td>

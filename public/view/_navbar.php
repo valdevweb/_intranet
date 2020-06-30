@@ -249,7 +249,7 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 
 					<ul>
 						<li><a href="<?= ROOT_PATH. '/public/doc/plancom2020.php'?>">Plan de Comm OP BTLec 2020</a></li>
-						<li><a href="<?= ROOT_PATH. '/public/doc/plancom2019.php'?>">Plan de Comm OP BTLec 2019</a></li>
+						<li><a href="<?= ROOT_PATH. '/public/doc/plancom2021.php'?>">Plan de Comm OP BTLec 2021</a></li>
 						<li><a href="<?= ROOT_PATH. '/public/doc/kitaffiche.php'?>">Kit affiches OP BTLec</a></li>
 						<?php
 						$exceptSocara="<li><a href='".ROOT_PATH ."/public/infos/twentyfour.php#plv'>PLV 48h</a></li>";
@@ -302,6 +302,7 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 			<li  class='active has-sub'><a href="#" >Evolutions</a>
 				<ul>
 					<li><a href="<?= ROOT_PATH?>/public/evo/dde-evo.php">Demande d'évo</a></li>
+					<li><a href="<?= ROOT_PATH?>/public/evo/vosdemandes-evo.php">Vos demandes</a></li>
 					<?php if ($d_strictAdmin): ?>
 
 					<li><a href="<?= ROOT_PATH?>/public/evo/dashboard-evo.php">Supervision</a></li>

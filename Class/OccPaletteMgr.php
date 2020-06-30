@@ -52,7 +52,14 @@ class OccPaletteMgr{
 		return $req->rowCount();
 	}
 
+	public function getListCommandeByStatut($statut){
+		$req=$this->pdoBt->prepare("SELECT * FROM occ_cdes_numero LEFT JOIN occ_cdes ON occ_cdes_numero.id=occ_cdes.id_cde WHERE statut= :statut GROUP BY id_cde");
+		$req->execute([
+			':statut'	=>$statut
+		]);
+		return $req->fetchAll(PDO::FETCH_ASSOC);
 
+	}
 
 }
 

@@ -95,6 +95,8 @@ function statuer($pdoEvo){
 $evoMgr=new EvoManager($pdoEvo);
 $listResp=$evoMgr->getListResp();
 $listEtat=$evoMgr-> getListEtat();
+$arrDevMail=EvoHelpers::arrayAppliRespEmail($pdoEvo);
+
 
 $paramList=[];
 if(isset($_POST['etat'])  && !empty($_POST['etat'])){
@@ -165,12 +167,12 @@ if(isset($_POST['statuer'])){
 }
 
 if(isset($_POST['cloturer'])){
-	include('dashboard-post-statuer.php');
+	include('dashboard-post-cloturer.php');
 }
 
 
 if(isset($_GET['start'])){
-	$up=$evoMgr->updateEtat($_GET['start'],3);
+	$up=$evoMgr->startEvo($_GET['start'],3);
 
 	header("Location: ".$_SERVER['PHP_SELF'],true,303);
 }
@@ -181,6 +183,7 @@ if(isset($_GET['start'])){
 if(isset($_GET['success'])){
 	$arrSuccess=[
 		'decision'=>'Envoi de la décision au demandeur et au développeur fait avec succès',
+		'over'=>'Demande clôturée',
 	];
 	$success[]=$arrSuccess[$_GET['success']];
 }
@@ -347,9 +350,9 @@ include('../view/_navbar.php');
 						<th>Appli</th>
 						<th>Module</th>
 						<th>Objet</th>
+						<th>Détail</th>
 						<th>Date demande</th>
 						<th>Demandeur</th>
-						<th>Détail</th>
 						<th class="text-center">Action</th>
 					</tr>
 				</thead>
@@ -385,8 +388,8 @@ include('../view/_navbar.php');
 									</a>
 									<?php elseif($evo['id_etat']==3):?>
 										<a href="#modal-cloturer" data-toggle="modal" data-prio="<?=$evo['id_prio']?>" data-id="<?=$evo['id']?>">
-									<button class="btn btn-primary">Cloturer</button>
-								</a>
+											<button class="btn btn-primary">Cloturer</button>
+										</a>
 									<?php endif ?>
 
 								</td>
@@ -421,48 +424,63 @@ include('../view/_navbar.php');
 		<?php
 		include('dashboard-modal-statuer.php');
 		include('dashboard-modal-cloturer.php');
-		 ?>
+		?>
 
-	<!-- fin container -->
-</div>
+		<!-- fin container -->
+	</div>
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		$('#appli').on("change",function(){
-			$(this).closest("form").submit();
-		});
-		$('#module').on("change",function(){
-			$(this).closest("form").submit();
-		});
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#appli').on("change",function(){
+				$(this).closest("form").submit();
+			});
+			$('#module').on("change",function(){
+				$(this).closest("form").submit();
+			});
 
 		// $('input[type=radio]').on('change', function() {
 			$('input[name=etat]').on('change', function() {
 				$(this).closest("form").submit();
 			});
+
 			$('input[name=resp]').on('change', function() {
 				$(this).closest("form").submit();
 			});
+
 			$('#modal-statuer').on('show.bs.modal', function (e) {
 				var idevo = $(e.relatedTarget).data('id');
 				var prio = $(e.relatedTarget).data('prio');
-
-
 				$("input[name=prio][value=" + prio + "]").attr('checked', 'checked');
-
-			// (){
-			// 	$('.acdlec').prop('checked', this.checked);
-			// }
-			var hiddenidevo=$('#id_evo');
-			hiddenidevo.val(idevo)
-			$.ajax({
-				type:'POST',
-				url:'ajax-getthis-evo.php',
-				data:{id_evo:idevo},
-				success: function(html){
-					$("#objet").html(html)
-				}
+				var hiddenidevo=$('#id_evo');
+				hiddenidevo.val(idevo)
+				$.ajax({
+					type:'POST',
+					url:'ajax-getthis-evo.php',
+					data:{id_evo:idevo},
+					success: function(html){
+						$("#objet").html(html)
+					}
+				});
 			});
-		});
+
+
+			$('#modal-cloturer').on('show.bs.modal', function (e) {
+				var idevo = $(e.relatedTarget).data('id');
+				var hiddenidevo=$('#id_evo_cloture');
+
+				hiddenidevo.val(idevo)
+				$.ajax({
+					type:'POST',
+					url:'ajax-getthis-evo.php',
+					data:{id_evo:idevo},
+					success: function(html){
+						$("#objet_cloture").html(html)
+					}
+				});
+			});
+
+
+
 			$('tr.cmt').hide();
 			$('.hide-btn').on("click", function(){
 				var id= $(this).data("btn-id");

@@ -15,10 +15,11 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 //			REQUIRES
 //------------------------------------------------------
-// require_once '../../vendor/autoload.php';
+require_once '../../vendor/autoload.php';
 
 require "../../Class/EvoManager.php";
 require "../../Class/EvoHelpers.php";
+require "../../Class/UserHelpers.php";
 require "../../functions/form.fn.php";
 //---------------------------------------
 //	ajout enreg dans stat
@@ -30,14 +31,13 @@ require "../../functions/form.fn.php";
 //			FONCTION
 //------------------------------------------------------
 
-function insertEvo($pdoEvo){
-	$arrAppliRespId=EvoHelpers::arrayAppliRespId($pdoEvo);
+function insertEvo($pdoEvo, $resp){
 
 	$req=$pdoEvo->prepare("INSERT INTO evos (id_from, id_resp, objet, evo, id_etat, date_dde, id_prio, id_plateforme, id_appli, id_module)
 		VALUES (:id_from, :id_resp, :objet, :evo, :id_etat, :date_dde, :id_prio, :id_plateforme, :id_appli, :id_module)");
 	$req->execute([
 		':id_from'		=>$_SESSION['id_web_user'],
-		':id_resp'		=>$arrAppliRespId[$_POST['appli']],
+		':id_resp'		=>$resp,
 		':objet'		=>$_POST['objet'],
 		':evo'		=>$_POST['evo'],
 		':id_etat'		=>1,
@@ -45,7 +45,7 @@ function insertEvo($pdoEvo){
 		':id_prio'		=>$_POST['prio'],
 		':id_plateforme'		=>$_POST['pf'],
 		':id_appli'		=>$_POST['appli'],
-		':id_module'		=>empty($_POST['module'])? 0: $_POST['module']
+		':id_module'		=>empty($_POST['module'])? null: $_POST['module']
 
 	]);
 	$err=$req->errorInfo();
@@ -65,19 +65,66 @@ $success=[];
 
 $evoMgr=new EvoManager($pdoEvo);
 $listPF=$evoMgr->getListPlateforme();
-
-
+$arrPf=EvoHelpers::arrayPlateformeName($pdoEvo);
+$arrAppli=EvoHelpers::arrayAppliName($pdoEvo);
+$arrModule=EvoHelpers::arrayModuleName($pdoEvo);
+$arrDevMail=EvoHelpers::arrayAppliRespEmail($pdoEvo);
 
 if(isset($_POST['submit'])){
-	$err=insertEvo($pdoEvo);
+	$arrAppliRespId=EvoHelpers::arrayAppliRespId($pdoEvo);
+	$idResp=$arrAppliRespId[$_POST['appli']];
+	$err=insertEvo($pdoEvo,$idResp);
 	if(!$err){
-		$successQ='?success=cree';
-		unset($_POST);
-		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
-	}
+		if(VERSION!="_"){
+			$dest=['valerie.montusclat@btlec.fr'];
+			$cc=[];
+			$hidden=[];
+		}else{
+			$devMail=$arrDevMail[$idResp];
+			$dest=[$devMail, 'luc.muller@btlec.fr', 'david.syllebranque@btlec.fr'];
+			$dest=array_unique($dest);
+			$cc=[];
+			$hidden=['valerie.montusclat@btlec.fr'];
+		}
+		$htmlMail = file_get_contents('mail-new-dd.html');
+		$htmlMail=str_replace('{OBJET}',$_POST['objet'],$htmlMail);
+		if(isset($_POST['module']) && !empty($_POST['module'])){
+			$module=' - '.$arrModule[$_POST['module']];
+		}else{
+			$module="";
+		}
+		$demandeur=UserHelpers::getFullname($pdoUser, $_SESSION['id_web_user']);
+		$htmlMail=str_replace('{WHAT}',$arrPf[$_POST['pf']]. ' - ' .$arrAppli[$_POST['appli']].$module,$htmlMail);
+		$htmlMail=str_replace('{EVO}',$_POST['evo'],$htmlMail);
+		$htmlMail=str_replace('{OBJET}',$_POST['objet'],$htmlMail);
+		$htmlMail=str_replace('{DDEUR}',$demandeur,$htmlMail);
+		$subject="Portail BTLec Est - Demandes d'évo - nouvelle demande" ;
 
-	else{
+// ---------------------------------------
+		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$mailer = new Swift_Mailer($transport);
+		$message = (new Swift_Message($subject))
+		->setBody($htmlMail, 'text/html')
+		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+		->setTo($dest)
+		->setCc($cc)
+		->setBcc($hidden);
+
+		if (!$mailer->send($message, $failures)){
+			print_r($failures);
+			$errors[]="erreur envoi mail";
+		}else{
+			$successQ='?success=cree';
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+		}
+
+
+
+	}else{
+
 		$errors[]=$err;
+
 	}
 }
 
@@ -216,31 +263,31 @@ DEBUT CONTENU CONTAINER
 	<!-- ./container -->
 </div>
 <script type="text/javascript">
-$(document).ready(function() {
-	$("input:radio[name='pf']").click(function () {
-		var plateforme=$('input[name="pf"]:checked').val();
-		$.ajax({
-			type:'POST',
-			url:'ajax-get-appli.php',
-			data:{id_plateforme:plateforme},
-			success: function(html){
-				$("#appli").html(html)
-			}
+	$(document).ready(function() {
+		$("input:radio[name='pf']").click(function () {
+			var plateforme=$('input[name="pf"]:checked').val();
+			$.ajax({
+				type:'POST',
+				url:'ajax-get-appli.php',
+				data:{id_plateforme:plateforme},
+				success: function(html){
+					$("#appli").html(html)
+				}
+			});
+		});
+		$('#appli').on("change",function(){
+			var appli=$('#appli').val();
+			console.log("appli" + appli);
+			$.ajax({
+				type:'POST',
+				url:'ajax-get-appli.php',
+				data:{id_appli:appli},
+				success: function(html){
+					$("#module").html(html)
+				}
+			});
 		});
 	});
-	$('#appli').on("change",function(){
-		var appli=$('#appli').val();
-		console.log("appli" + appli);
-		$.ajax({
-			type:'POST',
-			url:'ajax-get-appli.php',
-			data:{id_appli:appli},
-			success: function(html){
-				$("#module").html(html)
-			}
-		});
-	});
-});
 
 
 </script>

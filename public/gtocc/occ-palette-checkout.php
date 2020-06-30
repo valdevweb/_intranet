@@ -8,14 +8,7 @@ function getQuantiteActuelle($pdoBt,$article){
 	return $req->fetch(PDO::FETCH_ASSOC);
 
 }
-function getFullCde($pdoBt,$idCde){
-	$req=$pdoBt->prepare("SELECT * FROM occ_cdes LEFT JOIN occ_articles ON occ_cdes.id_palette = occ_articles.id_palette WHERE  id_cde= :id_cde");
-	$req->execute([
-		':id_cde'	=>$idCde
 
-	]);
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 if(isset($_POST['checkout'])){

@@ -84,10 +84,11 @@ class EvoManager{
 	}
 
 	public function getThisEvo($idEvo){
-		$req=$this->pdoEvo->prepare("SELECT evos.*, plateformes.plateforme, modules.module, appli.appli, DATE_FORMAT(deadline, '%d-%M-%Y') deadlinefr FROM evos
+		$req=$this->pdoEvo->prepare("SELECT evos.*, plateformes.plateforme, modules.module, appli.appli, DATE_FORMAT(deadline, '%d-%M-%Y') deadlinefr, web_users.intern_users.email as mail_dd FROM evos
 			LEFT JOIN plateformes on evos.id_plateforme=plateformes.id
 			LEFT JOIN appli  on evos.id_appli= appli.id
 			LEFT JOIN modules on evos.id_module=modules.id
+			LEFT JOIN web_users.intern_users on id_from=web_users.intern_users.id_web_user
 			WHERE evos.id= :id ");
 		$req->execute([
 			':id'		=>$idEvo
@@ -138,7 +139,35 @@ class EvoManager{
 			':id_etat' => $etat
 		]);
 	}
+	public function startEvo($idEvo,$etat){
+			$req=$this->pdoEvo->prepare("UPDATE evos SET id_etat= :id_etat, date_start= :date_start WHERE id= :id");
+		$req->execute([
+			':id'	=>$idEvo,
+			':id_etat' => $etat,
+			':date_start' => date('Y-m-d H:i:s')
+		]);
+	}
 
 
+	public function getListEvoDdeur($idFrom){
+
+		$query="SELECT evos.*, plateforme, module, appli, resp  FROM evos
+		LEFT JOIN web_users.intern_users ON id_from= web_users.intern_users.id_web_user
+		LEFT JOIN plateformes ON evos.id_plateforme=plateformes.id
+		LEFT JOIN modules ON evos.id_module=modules.id
+		LEFT JOIN appli ON evos.id_appli=appli.id
+		WHERE id_from = :id_from
+		ORDER BY date_dde DESC";
+		$req=$this->pdoEvo->prepare($query);
+		$req->execute([
+			':id_from'		=>$idFrom
+		]);
+
+
+		// $data=$req->errorInfo();
+		$data=$req->fetchAll(PDO::FETCH_ASSOC);
+
+		return	$data;
+	}
 
 }

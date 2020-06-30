@@ -3,18 +3,18 @@
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<div class="modal-header bg-main-blue">
-						<h5 class="modal-title text-white" id="myModalLabel">Objet : <span id="objet"></span></h5>
+						<h5 class="modal-title text-white" id="myModalLabel">Objet : <span id="objet_cloture"></span></h5>
 						<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
 					<div class="modal-body">
 						<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
-							<input type="hidden" name="id_evo" id="id_evo" >
+							<input type="hidden" name="id_evo" id="id_evo_cloture" >
 							<div class="row">
 								<div class="col">
 									<div class="form-group">
-										<label for="cmt_dd">Commentaires pour les responsables : </label>
+										<label for="cmt_resp">Commentaires pour les responsables : </label>
 										<textarea class="form-control" name="cmt_resp"  row="3"></textarea>
 									</div>
 								</div>
@@ -22,7 +22,7 @@
 							<div class="row">
 								<div class="col">
 									<div class="form-group">
-										<label for="cmt_dev">Commentaires pour le demandeur :</label>
+										<label for="cmt_dd">Commentaires pour le demandeur :</label>
 										<textarea class="form-control" name="cmt_dd"  row="3"></textarea>
 									</div>
 								</div>
