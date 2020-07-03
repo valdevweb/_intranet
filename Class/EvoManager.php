@@ -84,7 +84,7 @@ class EvoManager{
 	}
 
 	public function getThisEvo($idEvo){
-		$req=$this->pdoEvo->prepare("SELECT evos.*, plateformes.plateforme, modules.module, appli.appli, DATE_FORMAT(deadline, '%d-%M-%Y') deadlinefr, web_users.intern_users.email as mail_dd FROM evos
+		$req=$this->pdoEvo->prepare("SELECT evos.*, plateformes.plateforme, modules.module, appli.appli, DATE_FORMAT(deadline, '%d-%M-%Y') deadlinefr, web_users.intern_users.email as mail_dd, web_users.intern_users.nom as nom_dd, web_users.intern_users.prenom as prenom_dd, web_users.intern_users.fullname as fullname_dd  FROM evos
 			LEFT JOIN plateformes on evos.id_plateforme=plateformes.id
 			LEFT JOIN appli  on evos.id_appli= appli.id
 			LEFT JOIN modules on evos.id_module=modules.id

@@ -30,6 +30,7 @@ $htmlMail=str_replace('{OBJET}',$thisEvo['objet'],$htmlMail);
 $htmlMail=str_replace('{DECISION}',$decision,$htmlMail);
 $htmlMail=str_replace('{CMTDEV}',$thisEvo['cmt_dev'],$htmlMail);
 $htmlMail=str_replace('{DEADLINE}',$thisEvo['deadlinefr'],$htmlMail);
+$htmlMail=str_replace('{DDEUR}',$thisEvo['fullname_dd'],$htmlMail);
 $htmlMail=str_replace('{WHAT}',$thisEvo['plateforme']. ' - ' .$thisEvo['appli'].' - ' .$thisEvo['module'],$htmlMail);
 $htmlMail=str_replace('{EVO}',$thisEvo['evo'],$htmlMail);
 $subject="Portail BTLec Est - Demandes d'évo " ;

@@ -19,9 +19,9 @@ require_once '../../Class/EvoManager.php';
 
 $evoMgr=new EvoManager($pdoEvo);
 $listEvo=$evoMgr->getListEvoDdeur($_SESSION['id_web_user']);
-	echo "<pre>";
-	print_r($listEvo);
-	echo '</pre>';
+	// echo "<pre>";
+	// print_r($listEvo);
+	// echo '</pre>';
 
 
 
@@ -74,6 +74,14 @@ DEBUT CONTENU CONTAINER
 	</div>
 	<div class="row">
 		<div class="col">
+			<div class="alert alert-danger">
+				EN COURS DE DEVELOPPEMENT
+
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
 
 				<table class="table">
 					<thead class="thead-dark">
@@ -82,7 +90,7 @@ DEBUT CONTENU CONTAINER
 							<th>Objet</th>
 							<th>Date</th>
 							<th>Etat</th>
-							<th>Commantaire valideur</th>
+							<th>Commentaire valideur</th>
 						</tr>
 					</thead>
 					<tbody>
