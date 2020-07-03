@@ -160,7 +160,6 @@ if(isset($_POST['checkout'])){
 			);
 			$row++;
 		}
-// dimensionnement des colonnes
 		$cols=['A','B','C','D','E','F','G'];
 		for ($i=0; $i < sizeof($cols) ; $i++)
 		{
@@ -176,6 +175,28 @@ if(isset($_POST['checkout'])){
 		$writer = new Xlsx($spreadsheet);
 		$writer->save($pathXl.$filename);
 
+		// génération du pdf
+		$totalPa=0;
+		$totalQte=0;
+
+
+		// génération du pdf
+		$mpdf = new \Mpdf\Mpdf();
+		ob_start();
+		include('pdf-cmd-mag.php');
+		$html=ob_get_contents();
+		ob_end_clean();
+
+
+		$mpdf->WriteHTML($html);
+		// $mpdf->Output('test.pdf',\Mpdf\Output\Destination::DOWNLOAD);
+		$pdfName='BL - cde Leclerc Occasion n.'.$lastinsertid .'.pdf';
+
+
+		$pdfContent = $mpdf->Output('', 'S');
+
+
+
 // ---------------------------------------
 		$htmlMail = file_get_contents('mail-cmd-mag.html');
 		$htmlMail=str_replace('{MAG}',$infoMag['deno'],$htmlMail);
@@ -184,12 +205,15 @@ if(isset($_POST['checkout'])){
 // ---------------------------------------
 		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
 		$mailer = new Swift_Mailer($transport);
+		$attachmentPdf = new Swift_Attachment($pdfContent, $pdfName, 'application/pdf');
+
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
 		->setTo($dest)
 		->setCc($cc)
 		->setBcc($hidden)
+		->attach($attachmentPdf)
 		->attach(Swift_Attachment::fromPath($pathXl.$filename));
 
 
