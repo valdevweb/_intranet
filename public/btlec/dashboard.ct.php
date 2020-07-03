@@ -63,6 +63,8 @@
 
 						$magInfo=$magManager->getMagGalec($value['id_galec']);
 
+
+
 						?>
 						<div class="col l3">
 							<p class="boldtxt">N° dossier :
