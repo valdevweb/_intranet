@@ -33,24 +33,23 @@
 						</tr>
 
 						<tr class="borderless">
-							<td colspan="6">
+
+							<td colspan="6" class="mx-auto text-center">
 								<?php
 
-								$infoCde=getFullCde($pdoBt,$palette['id_cde']);
+								$infoCde=$paletteMgr->getCdeByIdCde($palette['id_cde']);
 
 								?>
-
-								<table class="table more" data-table-id="<?=$palette['id_cde']?>">
-
-
+								<table class="table more w-auto ml-5" data-table-id="<?=$palette['id_cde']?>">
+									<tr>
+										<td colspan="4" class="font-weight-bold">Détail de la commande : </td>
+									</tr>
 										<tr>
 											<th>Palette</th>
 											<th>EAN</th>
 											<th>Désignation</th>
-											<th>Quantité</th>
+											<th class="text-right">Quantité</th>
 										</tr>
-
-
 									<tbody>
 										<?php foreach ($infoCde as $key => $cde): ?>
 											<?php
@@ -71,11 +70,11 @@
 
 											?>
 
-											<tr>
-												<td><?=$palette?></td>
-												<td><?=$ean?></td>
-												<td><?=$designation?></td>
-												<td><?=$qte?></td>
+											<tr >
+												<td ><?=$palette?></td>
+												<td ><?=$ean?></td>
+												<td ><?=$designation?></td>
+												<td class="text-right"><?=$qte?></td>
 											</tr>
 										<?php endforeach ?>
 									</tbody>

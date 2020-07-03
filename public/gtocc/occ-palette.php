@@ -238,14 +238,7 @@ function getQteArticleQlik($pdoBt, $article){
 	return $data['qte_qlik'];
 }
 
-function getFullCde($pdoBt,$idCde){
-	$req=$pdoBt->prepare("SELECT * FROM occ_cdes LEFT JOIN occ_articles ON occ_cdes.id_palette = occ_articles.id_palette WHERE  id_cde= :id_cde ORDER BY occ_cdes.id_palette");
-	$req->execute([
-		':id_cde'	=>$idCde
 
-	]);
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
 
 //------------------------------------------------------
 //			DECLARATIONS
@@ -258,7 +251,6 @@ $paletteMgr=new OccPaletteMgr($pdoBt);
 $paletteCommandable=$paletteMgr->getListPaletteDetailByStatut(1);
 $paletteEnPrepa=$paletteMgr->getListPaletteDetailByStatut(0);
 $paletteCommandees=$paletteMgr->getListCommandeByStatut(2);
-$paletteExpediees=$paletteMgr-> getListPaletteByCde(3);
 $paletteDansPanierMag=getListPanier($pdoBt);
 
 $listAssortiment=getAssortiment($pdoBt);
@@ -307,22 +299,36 @@ include 'occ-palette-addarticle.php';
 
 
 if(isset($_GET['expedier'])){
+	$majStatutPalette=false;
 	// mettre à jour len uméro de commande
 	$req=$pdoBt->prepare("UPDATE occ_cdes_numero SET statut=3 WHERE id= :id");
 	$req->execute([
 		':id'		=>$_GET['expedier']
 	]);
-	// mettre à jour la palette
-	$upPalette=$paletteMgr->updatePaletteCdeStatut($pdoBt,$_GET['expedier'],3);
-	// echo "<pre>";
-	// print_r($upPalette);
-	// echo '</pre>';
+	// // mettre à jour les palette si palette !!!
+	$detailCde=$paletteMgr->getCdeByIdCde($_GET['expedier']);
+	foreach ($detailCde as $detail) {
+		// on met les id palette à mettre à jour dans un tableau
+		// pour les produits unitaird par de mise à jour à faire
+		if(!empty($detail['id_palette'])){
+			$majStatutPalette=true;
+		}
+	}
+	// si on a des palettes à mettre à jour
+	if($majStatutPalette){
 
-	if($upPalette>=1){
-		header("Location:occ-palette.php?success=expedie");
+		// on n'utilise pas le nuémro de palette pour mettre à jour mais le numéro de commande mais
+		$upPalette=$paletteMgr->updatePaletteCdeStatut($pdoBt,$_GET['expedier'],3);
+
+		if($upPalette>=1){
+			header("Location:occ-palette.php?success=expedie");
+		}else{
+			$errors[]="une erreur est survenue, impossible de mettre la palette à jour";
+
+		}
+
 	}else{
-		$errors[]="une erreur est survenue, impossible de mettre la palette à jour";
-
+		header("Location:occ-palette.php?success=expedie");
 	}
 }
 
@@ -391,7 +397,7 @@ DEBUT CONTENU CONTAINER
 							<a href="#prepa" class="nav-elt">En prépa</a>
 							<a href="#over" class="nav-elt">Terminées</a>
 							<a href="#cde" class="nav-elt">Commandées</a>
-							<a href="#exp" class="nav-elt">Expédiées</a>
+							<a href="occ-expedie.php" class="nav-elt">Expédiées</a>
 						</nav>
 
 					</div>
@@ -417,7 +423,7 @@ DEBUT CONTENU CONTAINER
 	// affichage palettes commandéew et expédiées
 	if ($_SESSION['type']=='btlec'){
 		include 'occ-palette-cdes.php';
-		include 'occ-palette-exp.php';
+
 	}
 
 	?>

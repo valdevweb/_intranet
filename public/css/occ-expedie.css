@@ -1,0 +1,17 @@
+
+.table.more th{
+
+  background-color: #f2f2f2;
+}
+
+.table.more td{
+
+  background-color: #f2f2f2;
+}
+
+
+ td.fit,
+ th.fit {
+    white-space: nowrap;
+    width: 1% !important;
+}

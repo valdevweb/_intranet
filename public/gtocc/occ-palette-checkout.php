@@ -125,7 +125,7 @@ if(isset($_POST['checkout'])){
 		$sheet->setCellValue('I1', 'PVC');
 		$row=2;
 
-		$infoCde=getFullCde($pdoBt,$lastinsertid);
+		$infoCde=$paletteMgr->getCdeByIdCde($lastinsertid);
 
 		foreach ($infoCde as $key => $cde)
 		{

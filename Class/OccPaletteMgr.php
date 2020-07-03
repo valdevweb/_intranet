@@ -60,6 +60,14 @@ class OccPaletteMgr{
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 
 	}
+	public function getCdeByIdCde($idCde){
+	$req=$this->pdoBt->prepare("SELECT * FROM occ_cdes LEFT JOIN occ_articles ON occ_cdes.id_palette = occ_articles.id_palette WHERE  id_cde= :id_cde ORDER BY occ_cdes.id_palette");
+	$req->execute([
+		':id_cde'	=>$idCde
+
+	]);
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
 
 }
 
