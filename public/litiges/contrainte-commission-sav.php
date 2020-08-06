@@ -7,7 +7,7 @@ if(VERSION=='_'){
 }
 else{
 	$dest=['robert.dalla-sega@btlec.fr','luc.muller@btlec.fr', ];
-	$cci=['valerie.montusclat@btlec.fr', 'nathalie.pazik@btlec.fr'];
+	$cci=['valerie.montusclat@btlec.fr', 'nathalie.pazik@btlec.fr', 'jonathan.domange@btlec.fr'];
 
 
 }

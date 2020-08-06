@@ -784,3 +784,10 @@ span.step {
  .light-shadow {
     box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.15) !important;
 }
+
+.table .thead-orange th {
+  color: #212529;
+  background-color: #f57c00;
+  border: #212529;
+
+}

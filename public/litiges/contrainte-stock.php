@@ -17,9 +17,6 @@ $pdfContent = $mpdf->Output('', 'S');
 	// $pdfContent = $mpdf->Output();
 $filename='litige '.$litige[0]['dossier'].'- fiche pilotage.pdf';
 $msg=getActionMsg($pdoLitige);
-	echo "<pre>";
-	print_r($msg);
-	echo '</pre>';
 
 	// $pdfContent = $mpdf->Output();
 $transport = (new Swift_SmtpTransport('217.0.222.26', 25));

@@ -125,6 +125,16 @@ if (isset($_GET['id'])){
 	$listTypesMag=$magDbHelper-> getListType();
 	$listCm=UserHelpers::getUserByService($pdoUser, 17);
 
+	$yearN=date('Y');
+	$yearNUn= date("Y",strtotime("-1 year"));
+	$yearNDeux= date("Y",strtotime("-2 year"));
+
+	$financeN=$magDbHelper->getMagCaByYear($pdoQlik,$_GET['id'],$yearN);
+	$financeNUn=$magDbHelper->getMagCaByYear($pdoQlik,$_GET['id'],$yearNUn);
+	$financeNDeux=$magDbHelper->getMagCaByYear($pdoQlik,$_GET['id'],$yearNDeux);
+
+
+
 	// ld
 	$ldRbt=$magDbHelper-> getMagLd($mag->getId(),'-RBT');
 	$ldRbtName=(!empty($ldRbt))? '<a class="text-orange" href="mailto:'.$ldRbt[0]['ld_full'].'">'.$ldRbt[0]['ld_full'].'</a>':  $mag->getRacineList()."-RBT";
@@ -133,9 +143,9 @@ if (isset($_GET['id'])){
 	$ldRbtLink=(!empty($ldRbtLink))? $ldRbtLink:  "Aucune adresse RBT";
 
 	$ldDir=$magDbHelper-> getMagLd($mag->getId(),'-DIR');
-		echo "<pre>";
-		print_r($mag->getGalec());
-		echo '</pre>';
+	echo "<pre>";
+	print_r($mag->getGalec());
+	echo '</pre>';
 
 	$ldDirName=(!empty($ldDir))? '<a class="text-orange" href="mailto:'.$ldDir[0]['ld_full'].'">'.$ldDir[0]['ld_full'].'</a>':  $mag->getRacineList()."-DIR";
 	$ldDirLink=convertArray($ldDir,'email','</a><br>');

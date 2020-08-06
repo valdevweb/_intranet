@@ -9,7 +9,7 @@ else{
 	$ldSav=getLdSav($pdoSav, $sav['sav'], 'litige');
 	foreach ($ldSav as $ld) {
 		$savDest[]=$ld['email'];
-		$copy=['btlecest.portailweb.logistique@btlec.fr','valerie.montusclat@btlec.fr'];
+		$copy=['btlecest.portailweb.logistique@btlec.fr','valerie.montusclat@btlec.fr','jonathan.domange@btlec.fr'];
 	}
 }
 

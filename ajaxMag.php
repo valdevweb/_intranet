@@ -7,7 +7,7 @@ if(!empty($_POST['centrale'])){
 	// echo $_POST['centrale'];
 	// $req=$pdoBt->query("SELECT * FROM sca3 WHERE centrale=" . $_POST['centrale'] ."");
 	// $req=$pdoBt->prepare("SELECT* FROM sca3 where centrale= :centrale AND mag NOT LIKE '*%' ORDER BY mag");
-	$req=$pdoMag->prepare("SELECT * FROM mag where centrale= :centrale  ORDER BY deno ");
+	$req=$pdoMag->prepare("SELECT * FROM mag where centrale= :centrale  AND  gel!=9 ORDER BY deno ");
 	$req->execute(array(
 		'centrale' => $_POST['centrale']
 	));
@@ -17,7 +17,7 @@ if(!empty($_POST['centrale'])){
 	if($results){
 		foreach ($results as $mag)
 		{
-			echo '<option value="'.$mag['id'].'">'. $mag['deno'] .'</option>';
+			echo '<option value="'.$mag['galec'].'">'. $mag['deno'] .'</option>';
 		}
 	}
 	else

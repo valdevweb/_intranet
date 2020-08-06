@@ -3,7 +3,6 @@
  // require('../../config/pdo_connect.php');
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
-	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
 }
 //			css dynamique
@@ -14,6 +13,8 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
+require ('../../Class/MagHelpers.php');
+
 
 function getEtat($pdoLitige)
 {
@@ -23,10 +24,9 @@ function getEtat($pdoLitige)
 }
 
 
-function globalSearch($pdoLitige)
-{
+function globalSearch($pdoLitige){
 	$strg=empty($_SESSION['form-data']['search_strg']) ? '': $_SESSION['form-data']['search_strg'];
-	$concatField=" concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec, details.article) ";
+	$concatField=" concat(dossiers.dossier,magasin.mag.deno,dossiers.galec,magasin.mag.id, details.article) ";
 
 	if(!empty($_SESSION['form-data']['etat']))
 	{
@@ -74,18 +74,19 @@ function globalSearch($pdoLitige)
 	}
 
 	if(isset($_SESSION['form-data']['btlec'])){
-		$concatField=" sca3.btlec " ;
+		$concatField=" magasin.mag.id" ;
 	}
 
 	if(isset($_SESSION['form-data']['galec'])){
 		$concatField= "dossiers.galec ";
 	}
 
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, esp, sca3.btlec,vingtquatre, valo, etat,ctrl_ok,commission, details.article
+
+	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main, dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, deno as mag, centrale, esp, mag.id as btlec, vingtquatre, valo, etat,ctrl_ok,commission, details.article
 		FROM dossiers
 		LEFT JOIN details ON dossiers.id=details.id_dossier
 		LEFT JOIN etat ON id_etat=etat.id
-		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
+		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec
 		WHERE
 		date_crea BETWEEN :date_start AND :date_end
 		AND $concatField LIKE :search 		$reqEtat
@@ -99,6 +100,7 @@ function globalSearch($pdoLitige)
 		':date_end'	=>$_SESSION['form-data']['date_end'].' 23:59:59',
 
 	));
+	// return $req->errorInfo();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -168,8 +170,7 @@ function getSumValo($pdoLitige)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-function getSumValoByType($pdoLitige)
-{
+function getSumValoByType($pdoLitige){
 	$strg=empty($_SESSION['form-data']['search_strg']) ? '': $_SESSION['form-data']['search_strg'];
 
 	if(!empty($_SESSION['form-data']['etat']))
@@ -215,8 +216,8 @@ function getSumValoByType($pdoLitige)
 	}
 	$req=$pdoLitige->prepare("SELECT  sum(valo) as valo_etat, dossiers.id_etat, etat.etat, count(dossiers.id) as nbEtat FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
-		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
-		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search $reqEtat $reqCommission $reqLivraison $reqLivraisonEsp GROUP BY etat");
+		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec
+		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,deno,dossiers.galec,magasin.mag.id) LIKE :search $reqEtat $reqCommission $reqLivraison $reqLivraisonEsp GROUP BY etat");
 	$req->execute(array(
 		':search' =>'%'.$strg.'%',
 		':date_start'=>$_SESSION['form-data']['date_start']. ' 00:00:00',
@@ -243,8 +244,6 @@ function updateCommission($pdoLitige,$iddossier, $etat)
 
 
 
-
-
 function addAction($pdoLitige, $idContrainte){
 	$req=$pdoLitige->prepare("INSERT INTO action (id_dossier, libelle, id_contrainte, id_web_user, date_action) VALUES (:id_dossier, :libelle, :id_contrainte, :id_web_user, :date_action)");
 	$req->execute([
@@ -258,13 +257,30 @@ function addAction($pdoLitige, $idContrainte){
 }
 
 
+function isAction($pdoLitige,$idLitige,$idContrainte){
+	$req=$pdoLitige->prepare("SELECT * FROM action WHERE id_dossier= :id_dossier AND id_contrainte= :id_contrainte");
+	$req->execute([
+		':id_dossier' => $idLitige,
+		':id_contrainte' =>$idContrainte
+	]);
+	$data=$req->fetch();
+
+
+	if(empty($data)){
+		return false;
+	}
+	return true;
+}
+
+
 if(isset($_GET['notallowed'])){
 	$errors[]="Vous n'êtes pas autorisé à modifier le statut 'validé en commission'";
 }
 
 // initialisation
-if(empty($_SESSION['form-data']['date_start'])){
-	$_SESSION['form-data']['date_start']='2019-01-01';
+if(!isset($_SESSION['form-data']['date_start']) || empty($_SESSION['form-data']['date_start'])){
+	$_SESSION['form-data']['date_start']=((new DateTime())->modify('first day of january this year'))->format('Y-m-d');
+
 }
 
 if(empty($_SESSION['form-data']['date_end'])){
@@ -282,11 +298,9 @@ if(isset($_POST['search_form'])){
 	}
 }
 
-
-if(isset($_POST['clear_form']))
-{
+if(isset($_POST['clear_form'])){
 	unset($_SESSION['form-data']);
-	$_SESSION['form-data']['date_start']=$_POST['date_start']='2019-01-01';
+	$_SESSION['form-data']['date_start']=$_POST['date_start']=((new DateTime())->modify('first day of january this year'))->format('Y-m-d');
 	$_SESSION['form-data']['date_end']=$_POST['date_end']=date('Y-m-d');
 
 }
@@ -342,6 +356,7 @@ if(isset($_POST['reset-esp'])){
 	unset($_SESSION['esp-ico']);
 }
 $fAllActive=globalSearch($pdoLitige);
+
 $nbLitiges=count($fAllActive);
 $valoTotal=getSumValo($pdoLitige);
 $valoEtat=getSumValoByType($pdoLitige);
@@ -402,6 +417,8 @@ $checkedbt=(isset($_SESSION['form-data']['btlec'])) ? " checked " :"";
 $checkedgalec=(isset($_SESSION['form-data']['galec']))? " checked " :"";
 
 $listEtat=getEtat($pdoLitige);
+
+$arrCentrale=magHelpers::getListCentrale($pdoMag);
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
@@ -465,7 +482,7 @@ DEBUT CONTENU CONTAINER
 					</div>
 					<div class="col-auto">
 						<div class="form-group">
-							<input type="date" class="form-control" min="2019-01-01" value="<?= isset($_SESSION['form-data']['date_start']) ? $_SESSION['form-data']['date_start'] :'' ?>" name="date_start">
+							<input type="date" class="form-control" value="<?= isset($_SESSION['form-data']['date_start']) ? $_SESSION['form-data']['date_start'] :'' ?>" name="date_start">
 						</div>
 
 					</div>
@@ -774,11 +791,11 @@ DEBUT CONTENU CONTAINER
 									$ctrl='';
 								}
 								elseif($active['ctrl_ok']==1){
-									$ctrl= '<i class="fas fa-boxes text-green"></i>';
+									$ctrl= '<i class="fas fa-boxes pl-3 text-green"></i>';
 								}
 								elseif($active['ctrl_ok']==2)
 								{
-									$ctrl='<i class="fas fa-hourglass-end text-red"></i>';
+									$ctrl='<i class="fas fa-hourglass-end pl-3 text-red"></i>';
 								}
 
 
@@ -790,14 +807,23 @@ DEBUT CONTENU CONTAINER
 								else{
 									$class='validated';
 								}
-	// <div class="row">
-	// 	<div class="col">
-	// 		<div class="text-center"><i class="fas fa-user-check stamp pending"></i></div><br>
-	// 		<div class="text-center"><i class="fas fa-user-check circle-icon validated"></i></div>
 
-	// 	</div>
-	// </div>
 
+
+								if(isAction($pdoLitige,$active['id_main'],7)){
+									$icoDemandeVideo='<i class="fas fa-video text-green pl-3"></i>';
+								}else{
+									if(isAction($pdoLitige,$active['id_main'],6)){
+										$icoDemandeVideo='<i class="fas fa-video text-red pl-3"></i>';
+									}else{
+										$icoDemandeVideo="";
+									}
+								}
+								if($active['centrale']!=0){
+									$centrale=$arrCentrale[$active['centrale']];
+								}else{
+									$centrale="";
+								}
 
 
 								echo '<tr class="'.$active['etat_dossier'].'" id="'.$active['id_main'].'">';
@@ -805,11 +831,10 @@ DEBUT CONTENU CONTAINER
 								echo'<td>'.$active['datecrea'].'</td>';
 								echo'<td><a href="stat-litige-mag.php?galec='.$active['galec'].'">'.$active['mag'].'</a></td>';
 								echo'<td>'.$active['btlec'].'</td>';
-								echo'<td>'.$active['centrale'].'</td>';
+								echo'<td>'.$centrale.'</td>';
 								echo'<td class="'.$etat.'">'.$active['etat'].'</td>';
 								echo'<td class="text-right">'.number_format((float)$active['valo'],2,'.',' ').'&euro;</td>';
-								echo '<td class="text-center">'.$ctrl .'</td>';
-							// echo '<td class="text-center"><a href="commission-traitement.php?id='.$active['id_main'].'&etat='.$class.'" class="stamps"><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';
+								echo '<td class="text-center">'.$ctrl .$icoDemandeVideo.'</td>';
 								if($class=='validated'){
 
 									echo '<td class="text-center"><a href="commission-traitement.php?id='.$active['id_main'].'&etat='.$class.'" class="unvalidate"><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';

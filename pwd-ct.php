@@ -66,8 +66,8 @@ if(isset($_GET['error']))
 					</div>
 					<div class="form-group">
 
-						<label for="mag">Votre magasin</label>
-						<select class="form-control" id="mag" name="mag" required>
+						<label for="galec">Votre magasin</label>
+						<select class="form-control" id="galec" name="galec" required>
 							<option value="">Sélectionnez votre magasin</option>
 						</select>
 						<br><br>

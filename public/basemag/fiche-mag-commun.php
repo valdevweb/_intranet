@@ -157,6 +157,39 @@
 				</div>
 
 			</div>
+
+
+			<div class="bg-separation-small"></div>
+			<h5 class="text-center font-weight-bold  mag-title sub-title">Chiffre d'affaire</h5>
+
+
+			<div class="row  pb-3 justify-item-center">
+				<div class="col"></div>
+				<div class="col-auto">
+					<table class="table table-sm w-auto table-bordered">
+						<thead class="thead-orange">
+							<tr>
+								<th class="text-center"><?=$yearN?></th>
+								<th class="text-center"><?=$yearNUn?></th>
+								<th class="text-center"><?=$yearNDeux?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td class="text-right px-3"><?=number_format((float)$financeN['CA_Annuel'],2,'.',' ')?>&euro;</td>
+								<td class="text-right px-3"><?=number_format((float)$financeNUn['CA_Annuel'],2,'.',' ')?>&euro;</td>
+								<td class="text-right px-3"><?=number_format((float)$financeNDeux['CA_Annuel'],2,'.',' ')?>&euro;</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col"></div>
+
+			</div>
+
+
+
+
 			<div class="bg-separation-small"></div>
 			<!-- <div class="sub-title-ico pt-3"><i class="fas fa-at text-light-grey"></i></div> -->
 			<div class="row">

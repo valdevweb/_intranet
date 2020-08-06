@@ -101,7 +101,14 @@ class MagDbHelper{
 		return '';
 
 	}
-
+	public function getMagCaByYear($pdoQlik,$btlec,$year){
+		$req=$pdoQlik->prepare("SELECT CA_Annuel FROM statsventesadh WHERE CodeBtlec= :btlec AND AnneeCA= :year");
+		$req->execute(array(
+			':btlec' =>$btlec,
+			':year'	=>$year
+		));
+		return $req->fetch(PDO::FETCH_ASSOC);
+	}
 
 
 	public function getDistinctCentraleSca(){
@@ -151,7 +158,7 @@ class MagDbHelper{
 	}
 	public function getCmt($btlec){
 		$req=$this->pdo->prepare("SELECT *, cmt_mag.id as idcmt, DATE_FORMAT(date_insert, '%d-%m-%Y') as dateinsert, concat(prenom, ' ',nom ) as fullname FROM cmt_mag LEFT JOIN web_users.intern_users ON created_by = web_users.intern_users.id_web_user WHERE btlec= :btlec ORDER BY date_insert DESC");
-			$req->execute([
+		$req->execute([
 			':btlec'		=>$btlec
 		]);
 		$datas=$req->fetchAll(PDO::FETCH_ASSOC);
