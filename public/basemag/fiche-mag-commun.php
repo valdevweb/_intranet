@@ -176,9 +176,9 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td class="text-right px-3"><?=number_format((float)$financeN['CA_Annuel'],2,'.',' ')?>&euro;</td>
-								<td class="text-right px-3"><?=number_format((float)$financeNUn['CA_Annuel'],2,'.',' ')?>&euro;</td>
-								<td class="text-right px-3"><?=number_format((float)$financeNDeux['CA_Annuel'],2,'.',' ')?>&euro;</td>
+								<td class="text-right px-3"><?=number_format((float)$financeN['CA_Annuel'],0,'',' ')?>&euro;</td>
+								<td class="text-right px-3"><?=number_format((float)$financeNUn['CA_Annuel'],0,'',' ')?>&euro;</td>
+								<td class="text-right px-3"><?=number_format((float)$financeNDeux['CA_Annuel'],0,'',' ')?>&euro;</td>
 							</tr>
 						</tbody>
 					</table>
