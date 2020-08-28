@@ -3,11 +3,12 @@ if(isset($_GET['success']))
 {
 	if($_GET['success']==1)
 	{
-		$success[]="votre demande à bien été prise en compte, les codes ont été envoyés aux personnes qui figurent dans la liste RBT de votre magasin";
+		$success[]="votre demande à bien été prise en compte, les codes ont été envoyés aux personnes qui figurent dans la liste de diffusion RBT de votre magasin";
 	}
-	else
-	{
-		$success[]="Une demande a été automatiquement envoyée au service informatique pour que votre mot de passe soit communiqué aux personnes qui figurent dans la liste RBT de votre magasin";
+	elseif($_GET['success']==2){
+		$success[]="Une demande a été automatiquement envoyée au service informatique pour que votre mot de passe soit communiqué aux personnes qui figurent dans la liste de diffusion RBT de votre magasin";
+	}elseif ($_GET['success']==3) {
+		$success[]="Vous n'avez pas encore de login pour accéder au portail, une création de compte va être faite et toutes les informations seront envoyées par mail aux personnes qui figurent dans la liste de diffusion RBT de votre magasin";
 	}
 }
 
@@ -120,7 +121,8 @@ if(isset($_GET['error']))
 	<script type="text/javascript">
 		$(document).ready(function(){
 			$('#centrale').on('change',function(){
-				$('#mag').html('<option value="">Sélectionnez votre magasin</option>');
+				$('#galec').empty();
+				$('#galec').html('<option value="">Sélectionnez votre magasin</option>');
 				var centrale = $(this).val();
 				if(centrale){
 					$.ajax({
@@ -128,13 +130,12 @@ if(isset($_GET['error']))
 						url:'ajaxMag.php',
 						data:'centrale='+centrale,
 						success:function(html){
-							$('#mag').append(html);
+							$('#galec').append(html);
 						}
 					});
 				}
-				else
-				{
-					$('#mag').html('<option value="">Sélectionnez votre magasin</option>');
+				else{
+					$('#galec').html('<option value="">Sélectionnez votre magasin</option>');
 				}
 			});
 		});

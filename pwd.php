@@ -10,10 +10,10 @@ require "config/config.inc.php";
 //----------------------------------------------------
 // INCLUDES
 //----------------------------------------------------
-require 'functions/mail.fn.php';
+// require 'functions/mail.fn.php';
 require 'functions/stats.fn.php';
 include 'Class/MagDbHelper.php';
-
+require 'vendor/autoload.php';
 //----------------------------------------------------
 // STATS
 //----------------------------------------------------
@@ -27,27 +27,28 @@ $centraleList=$magDbHelper->getDistinctCentraleMag();
 //----------------------------------------------------
 // DATA
 //----------------------------------------------------
-function addMsg($pdoBt,$id,$rbt,$mag){
+function addMsg($pdoBt,$idwebuser,$mail,$deno,$btlec){
 	$inc_file="";
-	$req=$pdoBt->prepare('INSERT INTO msg (objet, msg, id_mag, id_service, date_msg, etat,inc_file,who,email)
-		VALUE(:objet, :msg, :id_mag, :id_service, :date_msg, :etat, :inc_file, :who, :email)');
+	$req=$pdoBt->prepare('INSERT INTO msg (objet, msg, id_mag, id_service, date_msg, etat, who, email, id_galec, code_bt)
+		VALUE(:objet, :msg, :id_mag, :id_service, :date_msg, :etat, :who, :email,  :id_galec, :code_bt)');
 	$req->execute(array(
 		':objet'		=> "demande d'identifiants",
 		':msg'			=> "demande d'identifiants de connexion au portail BTLec",
-		':id_mag'		=> $id,
+		':id_mag'		=> $idwebuser,
 		':id_service'	=> 7,
 		':date_msg'		=>date('Y-m-d H:i:s'),
 		':etat'			=> "en attente de réponse",
-		':inc_file'		=>$inc_file,
-		':who'			=>$mag,
-		':email'		=>$rbt,
+		':who'			=>$deno,
+		':email'		=>$mail,
+		':id_galec'		=>$_POST['galec'],
+		':code_bt'		=>$btlec
 	));
 	$req->fetch(PDO::FETCH_ASSOC);
 	return $pdoBt->lastInsertId();
 }
 
 
-function findUser($pdoUser,$galec){
+function findUser($pdoUser){
 	$req=$pdoUser->prepare("SELECT * FROM users WHERE galec= :galec AND (type='mag' OR type ='centrale')");
 	$req->execute(array(
 		":galec"	=>$_POST['galec'],
@@ -57,10 +58,10 @@ function findUser($pdoUser,$galec){
 
 }
 
-function getMagInfo($pdoMag,$id){
-	$req=$pdoMag->prepare("SELECT * FROM mag WHERE id= :id");
+function getMagInfo($pdoMag){
+	$req=$pdoMag->prepare("SELECT * FROM mag WHERE galec LIKE :galec");
 	$req->execute(array(
-		":id" =>$id
+		":galec" =>$_POST['galec']
 	));
 
 		//si pano galec trouvé, le recherche dans table users
@@ -70,105 +71,115 @@ function getMagInfo($pdoMag,$id){
 $redir="";
 $errors=[];
 $success=[];
+//  récup les infos des tables web_users/users et magasin/mag
 if(isset($_POST['galec'])){
-		//form complet : on récupère le pano galec du mag grace au nom du mag dans la table sca3 =>
+	$magInfo=getMagInfo($pdoMag);
 	$webuser=findUser($pdoUser);
-	if(empty($webuser)){
-		$errors[]="le magasin n'a pas de compte utilisateur sur le portail. Il faut lui en crée un";
-		exit();
-	}
 }
-if(isset($_POST['galec']) && empty($errors))
+// cas 1 : le magasin n'a pas de compte sur le portail : envoi mail à moi même, copie Clément et David
+if(isset($_POST['galec']) && empty($webuser)){
 
-	$magInfo=getMagInfo($pdoMag,$id);
-		//si pano galec trouvé, le recherche dans table users
-	if(!empty($magInfo)){
+	$dest=['valerie.montusclat@btlec.fr'];
+	$htmlMail = file_get_contents('public/mail/create-mag-login.html');
+	$htmlMail=str_replace('{GALEC}',$magInfo['galec'],$htmlMail);
+	$htmlMail=str_replace('{DENO}',$magInfo['deno'],$htmlMail);
+	$subject="PORTAIL BTLEC Est - Création de compte magasin";
+	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+	$mailer = new Swift_Mailer($transport);
+	$message = (new Swift_Message($subject))
+	->setBody($htmlMail, 'text/html')
+	->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec Est'))
+	->setTo($dest);
 
+	if (!$mailer->send($message, $failures)){
+		print_r($failures);
+		$redir="pwd.php?error=1";
 
-
-
-
-		if(VERSION=='_'){
-			$rbt='valerie.montusclat@btlec.fr';
-		}else{
-			$rbt=$magInfo['id']."-RBT@btlec.fr";
-		}
-				// $rbt="valerie.montusclat@btlec.fr";
-
-
-				// ----------------------------------------
-				// si le mot de passe en clair existe déjà
-				// ---------------------------------------
-		if($webuser['nohash_pwd'] !="")
-		{
-		 	// echo "envoi email avec mdp " . $result['nohash_pwd'];
-			$link="";
-			$tplIdent='public/mail/envoi_identifiant.tpl.html';
-			$subject="PORTAIL BTLEC Est - Vos identifiants de connexion";
-
-
-			if(sendMail($rbt,$subject,$tplIdent,$webuser['login'],$webuser['nohash_pwd'], $link))
-			{
-				$redir="pwd.php?success=1";
-				$descr="envoi identifiants par mail";
-				pwdStat($pdoStat,$webuser['login'],$page, $action, $descr,VERSION);
-				header('Location:'.$redir);
-
-			}
-			else
-			{
-						//err mail
-				$redir="pwd.php?error=1";
-						// header('Location:'.$redir);
-
-
-			}
-		}
-		else
-		{
-			$id=$webuser['id'];
-			$idMsg=addMsg($pdoBt,$id,$rbt,$mag);
-			if(VERSION=='_'){
-				$mailtoInfo="valerie.montusclat@btlec.fr";
-
-			}else{
-				$mailtoInfo="btlecest.portailweb.informatique@btlec.fr";
-
-			}
-
-			$subject="PORTAIL BTLEC Est - demande d'identifiants - magasin " . $mag;
-			$tplIdent='public/mail/demande_identifiants.tpl.html';
-			$content="";
-			$link="Cliquez <a href='" .SITE_ADDRESS."/index.php?btlec/answer.php?msg=".$idMsg."'>ici pour consulter la demande</a>";
-
-			if(sendMail($mailtoInfo,$subject,$tplIdent,$mag,$content, $link))
-			{
-				$descr="création d'une demande identifiants sur le portail";
-				pwdStat($pdoStat,$webuser['login'],$page, $action, $descr, $version);
-				$redir="pwd.php?success=2";
-				header('Location:'.$redir);
-
-			}
-			else
-			{
-						//err mail
-				$redir="pwd.php?error=1";
-				header('Location:'.$redir);
-			}
-
-		}
-
-
-	}
-	else
-	{
-		$redir="pwd.php?error=2";
+	}else{
+		$redir="pwd.php?success=3";
 		header('Location:'.$redir);
 	}
 
 
 
 
+}
+// cas 2 : le mag a un compte
+if(isset($_POST['galec']) && !empty($webuser)){
+
+	if(VERSION=='_'){
+		$ldRbt='valerie.montusclat@btlec.fr';
+		$hiddenAr=[];
+	}else{
+		$ldRbt=$magInfo['id']."-RBT@btlec.fr";
+		$hiddenAr=['valerie.montusclat@btlec.fr'];
+
+	}
+	// si le mot de passe en clair existe
+	if($webuser['nohash_pwd'] !=""){
+
+
+		$htmlMail = file_get_contents('public/mail/envoi_identifiant.tpl.html');
+		$htmlMail=str_replace('{LOGIN}',$webuser['login'],$htmlMail);
+		$htmlMail=str_replace('{PWD}',$webuser['nohash_pwd'],$htmlMail);
+		$subject="PORTAIL BTLEC Est - Vos identifiants de connexion";
+		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$mailer = new Swift_Mailer($transport);
+		$message = (new Swift_Message($subject))
+		->setBody($htmlMail, 'text/html')
+		->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec Est'))
+		->setTo($ldRbt)
+		->setBcc($hiddenAr);
+
+		if (!$mailer->send($message, $failures)){
+			print_r($failures);
+			$redir="pwd.php?error=1";
+
+		}else{
+			$redir="pwd.php?success=1";
+			$descr="envoi identifiants par mail";
+			pwdStat($pdoStat,$webuser['login'],$page, $action, $descr,VERSION);
+			header('Location:'.$redir);
+		}
+	}
+	else{
+		if(VERSION=='_'){
+			$mailtoInfo="valerie.montusclat@btlec.fr";
+
+		}else{
+			$mailtoInfo="btlecest.portailweb.informatique@btlec.fr";
+
+		}
+		// création d'une demande sur le portail
+		$idMsg=addMsg($pdoBt,$webuser['id'],$ldRbt,$magInfo['deno'], $magInfo['id']);
+		$link="Cliquez <a href='" .SITE_ADDRESS."/index.php?btlec/answer.php?msg=".$idMsg."'>ici pour consulter la demande</a>";
+
+		$htmlMail = file_get_contents('public/mail/demande_identifiants.tpl.html');
+		$htmlMail=str_replace('{DENO}',$magInfo['deno'],$htmlMail);
+		$htmlMail=str_replace('{LINK}',$link,$htmlMail);
+
+		$subject="PORTAIL BTLEC Est - demande d'identifiants - magasin " . $magInfo['deno'];
+
+
+		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$mailer = new Swift_Mailer($transport);
+		$message = (new Swift_Message($subject))
+		->setBody($htmlMail, 'text/html')
+		->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec Est'))
+		->setTo($mailtoInfo);
+
+		if (!$mailer->send($message, $failures)){
+			print_r($failures);
+			$redir="pwd.php?error=1";
+			header('Location:'.$redir);
+
+		}else{
+			$descr="création d'une demande identifiants sur le portail";
+			pwdStat($pdoStat,$webuser['login'],$page, $action, $descr, $version);
+			$redir="pwd.php?success=2";
+			header('Location:'.$redir);
+		}
+	}
 
 }
 
