@@ -62,6 +62,12 @@ function insertArticle($pdoBt, $idPalette, $idImport, $designation,$ean, $qte, $
 	return $pdoBt->lastInsertId();
 }
 
+
+function getAssortiment($pdoBt){
+	$req=$pdoBt->query(" SELECT occ_article_qlik.*, cmt	FROM occ_article_qlik LEFT JOIN occ_article_qlik_cmt ON occ_article_qlik.article_qlik= occ_article_qlik_cmt.article WHERE qte_qlik !=0 ORDER BY article_qlik");
+	return $req->fetchAll();
+}
+
  //------------------------------------------------------
 //			DECLARATIONS
 //------------------------------------------------------
@@ -70,14 +76,17 @@ $success=[];
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+
+$listAssortiment=getAssortiment($pdoBt);
+
+
+
 // import des connées excel :
 // table occ_import excel => recup id
 // table palette => 1 pour import
 // table occ_article => recup les id palette.....
 
-//------------------------------------------------------
-//			FONCTION
-//------------------------------------------------------
+
 if(isset($_POST['send']))
 {
 	if($_FILES['file']['error']===0)
@@ -166,7 +175,7 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Importation de fichiers </h1>
+	<h1 class="text-main-blue py-3">Gestion GT occasion </h1>
 
 	<div class="row">
 		<div class="col-lg-1"></div>
@@ -177,37 +186,122 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
+	<div class="bg-separation mb-3"></div>
 
-	<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post" enctype="multipart/form-data">
+
+	<div class="row">
+		<div class="col">
+			<h4 class="text-main-blue">Ajout de commentaires </h4>
+
+			<div class="alert alert-primary">
+				Veuillez saisir les commentaires directement dans le tableau. Ils s'enregistrent au fur et à mesure de la saisie
+			</div>
+		</div>
+	</div>
 
 
-		<div class="row">
-			<div class="col">
-				<div id="file-upload">
-					<fieldset>
-						<p class="pt-2">Document :</p>
-						<div class="form-group">
-							<p><input type="file" name="file" class='form-control-file'></p>
+	<div class="row ">
+		<div class="col">
+
+			<table class="table table-sm">
+				<thead class="thead-dark">
+					<tr>
+						<th>Article</th>
+
+						<th>Désignation</th>
+						<th>Fournisseur</th>
+						<th>EAN</th>
+						<th class="text-center">Commentaires</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($listAssortiment as $assor): ?>
+
+
+						<tr>
+							<td ><?=$assor['article_qlik']?></td>
+
+							<td><?=$assor['design_qlik']?></td>
+							<td><?=$assor['fournisseur_qlik']?></td>
+							<td><?=$assor['ean_qlik']?></td>
+							<td contenteditable="true" class="cmt" id="<?=$assor['article_qlik']?>"><?=$assor['cmt']?></td>
+						</tr>
+
+
+					<?php endforeach ?>
+
+				</tbody>
+			</table>
+
+		</div>
+	</div>
+	<div class="bg-separation mb-3"></div>
+	<div class="row">
+		<div class="col">
+			<h4 class="text-main-blue">Import fichiers palettes GT occasion</h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post" enctype="multipart/form-data">
+				<div class="row">
+					<div class="col">
+						<div id="file-upload">
+							<fieldset>
+								<p class="pt-2">Document :</p>
+								<div class="form-group">
+									<p><input type="file" name="file" class='form-control-file'></p>
+								</div>
+							</fieldset>
 						</div>
-					</fieldset>
+					</div>
+					<!-- <div class="col"></div> -->
 				</div>
-			</div>
-			<!-- <div class="col"></div> -->
-		</div>
-		<div class="row pt-4">
-			<div class="col">
-				<p class="text-right">
-					<button type="submit" id="submit" class="btn btn-primary" name="send">Envoyer</button>
-				</p>
-			</div>
-			<!-- <div class="col"></div> -->
+				<div class="row pt-4">
+					<div class="col">
+						<p class="text-right">
+							<button type="submit" id="submit" class="btn btn-primary" name="send">Envoyer</button>
+						</p>
+					</div>
+					<!-- <div class="col"></div> -->
 
-		</div>
+				</div>
 
-	</form>
+			</form>
+		</div>
+	</div>
 
 	<!-- ./container -->
 </div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		 $('.cmt').click(function(){
+		 	$(this).addClass('edit-mode');
+		 });
+		 $(".cmt").focusout(function(){
+		 	console.log("edit");
+		 	$(this).removeClass("edit-mode");
+		 	var id = this.id;
+		 	var value = $(this).text();
+
+		 	$.ajax({
+		 		url: 'ajax-cmt-article.php',
+		 		type: 'post',
+		 		data: { value:value, id:id },
+		 		success:function(response){
+		 			console.log('Save successfully');
+		 		}
+		 	});
+
+		 });
+
+});
+
+</script>
+
+
 
 <?php
 require '../view/_footer-bt.php';
