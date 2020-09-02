@@ -126,8 +126,6 @@ font-weight: 200;
 }
 .text-blue-lighter{
 color:#3d6bb3;
-
-
 }
 
 .text-dark-grey{
@@ -136,6 +134,10 @@ color:#3d6bb3;
 .text-light-grey{
   color:#a7a7a7;
 
+}
+
+.text-small{
+  font-size: 0.8rem;
 }
 
 
