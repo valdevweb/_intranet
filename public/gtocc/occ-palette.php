@@ -166,8 +166,7 @@ function deleteTempCmd($pdoBt,$id){
 }
 
 function getAssortiment($pdoBt){
-
-	$req=$pdoBt->query(" SELECT *	FROM occ_article_qlik WHERE qte_qlik !=0 ORDER BY article_qlik");
+	$req=$pdoBt->query(" SELECT occ_article_qlik.*, cmt	FROM occ_article_qlik LEFT JOIN occ_article_qlik_cmt ON occ_article_qlik.article_qlik= occ_article_qlik_cmt.article WHERE qte_qlik !=0 ORDER BY article_qlik");
 	return $req->fetchAll();
 }
 

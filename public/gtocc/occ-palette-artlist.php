@@ -9,18 +9,18 @@
 <div class="row ">
 	<div class="col">
 
-		<table class="table table-sm">
+		<table class="table table-sm ">
 			<thead class="thead-dark">
 				<tr>
-					<th>Code article</th>
-					<th>Code Dossier</th>
+					<th>Article</th>
 					<th>Désignation</th>
 					<th>Fournisseur</th>
 					<th>EAN</th>
-					<th>PANF</th>
-					<th>DEEE</th>
-					<th>SORECOP</th>
-					<th class="text-right">Qté à dispo</th>
+					<th class="text-right">PANF</th>
+					<th class="text-right">DEEE</th>
+					<th class="text-right">SORECOP</th>
+					<th>Infos</th>
+					<th class="text-right">Dispo</th>
 					<th colspan="2" class="text-center">Ajouter</th>
 				</tr>
 			</thead>
@@ -33,13 +33,15 @@
 
 						<tr>
 							<td id="<?=$assor['article_qlik']?>"><?=$assor['article_qlik']?></td>
-							<td><?=$assor['dossier_qlik']?></td>
+
 							<td><?=$assor['design_qlik']?></td>
-							<td><?=$assor['fournisseur_qlik']?></td>
-							<td><?=$assor['ean_qlik']?></td>
-							<td><?=$assor['panf_qlik']?></td>
-							<td><?=$assor['deee_qlik']?></td>
-							<td><?=$assor['sorecop']?></td>
+							<td class="text-small"><?=$assor['fournisseur_qlik']?></td>
+							<td class="text-small"><?=$assor['ean_qlik']?></td>
+							<td class="text-right"><?=$assor['panf_qlik']?></td>
+							<td class="text-right"><?=$assor['deee_qlik']?></td>
+							<td class="text-right"><?=$assor['sorecop']?></td>
+							<td class="text-danger"><?=$assor['cmt']?></td>
+
 							<td class="text-right"><?=$assor['qte_qlik']?></td>
 							<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
 
