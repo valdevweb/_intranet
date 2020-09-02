@@ -177,7 +177,7 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 						</ul>
 					</li>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-palette.php'?>">Offres produits</a></li>
-					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-import-palette.php'?>">Import palette occasion</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-import-palette.php'?>">Gestion GT Occasion</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-expedie.php'?>">Palettes expédiées</a></li>
 
 					<li><a href="/public/#">Demandes magasins</a></li>
