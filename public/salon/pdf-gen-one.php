@@ -46,7 +46,8 @@ $invit=getThisInvitation($pdoBt);
 
 
 ob_start();
-include('pdf-invit2020.php');
+// include('pdf-invit2020.php');
+include('badge.php');
 $html=ob_get_contents();
 ob_end_clean();
 
