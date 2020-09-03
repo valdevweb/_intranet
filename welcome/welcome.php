@@ -216,14 +216,13 @@ $nineteen=['2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05', '2019-01-06',
 
 
 
-
 			}else{
 				$jMoinsUnLastYearCa=0;
 				$jMoinsUnLastYearPalettes=0;
 				$jMoinsUnLastYearColis=0;
 				$fakeJMoinsUnLastYear=getJourLastYearFake(clone $jMoinsUn);
 				$anneeLastYear=$fakeJMoinsUnLastYear->format('Y');
-				$moisLastYear=$fakeJMoinsUnLastYear->format('n');
+				$moisLastYear=$moisActuel;
 				$premierJourMoisLastYear=clone $fakeJMoinsUnLastYear;
 				$premierJourMoisLastYear=$premierJourMoisLastYear->modify('first day of this month');
 				$moisEnCoursLastYearAll=0;
@@ -234,9 +233,6 @@ $nineteen=['2019-01-02', '2019-01-03', '2019-01-04', '2019-01-05', '2019-01-06',
 
 
 			}
-
-
-
 
 
 
