@@ -36,6 +36,14 @@ class MagHelpers{
 		return $data['centrale'];
 	}
 
+	public static function centraleName($pdo,$galec){
+		$data=self::magInfo($pdo, $galec);
+		$req=$pdo->query("SELECT id_ctbt, centrale FROM centrales ORDER BY id_ctbt");
+		$centraleList=$req->fetchAll(PDO::FETCH_KEY_PAIR);
+
+		return $centraleList[$data['centrale']];
+	}
+
 	public static function btlec($pdo,$galec){
 		$data=self::magInfo($pdo, $galec);
 		return $data['btlec'];
