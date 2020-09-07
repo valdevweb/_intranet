@@ -264,8 +264,13 @@ border: 1px solid #b8daff !important;
 }
 
 
+.nb-input{
+  width: 50px !important;
+}
 
-
+.email-input{
+  width: 300px !important;
+}
 
 
 @media only screen and (max-width: 1460px){
