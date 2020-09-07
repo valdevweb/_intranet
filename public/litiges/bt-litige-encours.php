@@ -3,6 +3,7 @@
  // require('../../config/pdo_connect.php');
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
+	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
 }
 //			css dynamique
@@ -13,8 +14,6 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-require ('../../Class/MagHelpers.php');
-
 
 function getEtat($pdoLitige)
 {
@@ -24,9 +23,10 @@ function getEtat($pdoLitige)
 }
 
 
-function globalSearch($pdoLitige){
+function globalSearch($pdoLitige)
+{
 	$strg=empty($_SESSION['form-data']['search_strg']) ? '': $_SESSION['form-data']['search_strg'];
-	$concatField=" concat(dossiers.dossier,magasin.mag.deno,dossiers.galec,magasin.mag.id, details.article) ";
+	$concatField=" concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec, details.article) ";
 
 	if(!empty($_SESSION['form-data']['etat']))
 	{
@@ -74,19 +74,18 @@ function globalSearch($pdoLitige){
 	}
 
 	if(isset($_SESSION['form-data']['btlec'])){
-		$concatField=" magasin.mag.id" ;
+		$concatField=" sca3.btlec " ;
 	}
 
 	if(isset($_SESSION['form-data']['galec'])){
 		$concatField= "dossiers.galec ";
 	}
 
-
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main, dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, deno as mag, centrale, esp, mag.id as btlec, vingtquatre, valo, etat,ctrl_ok,commission, details.article
+	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main,dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,user_crea,dossiers.galec,etat_dossier, mag, centrale, esp, sca3.btlec,vingtquatre, valo, etat,ctrl_ok,commission, details.article
 		FROM dossiers
 		LEFT JOIN details ON dossiers.id=details.id_dossier
 		LEFT JOIN etat ON id_etat=etat.id
-		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec
+		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
 		WHERE
 		date_crea BETWEEN :date_start AND :date_end
 		AND $concatField LIKE :search 		$reqEtat
@@ -100,7 +99,6 @@ function globalSearch($pdoLitige){
 		':date_end'	=>$_SESSION['form-data']['date_end'].' 23:59:59',
 
 	));
-	// return $req->errorInfo();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -170,7 +168,8 @@ function getSumValo($pdoLitige)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-function getSumValoByType($pdoLitige){
+function getSumValoByType($pdoLitige)
+{
 	$strg=empty($_SESSION['form-data']['search_strg']) ? '': $_SESSION['form-data']['search_strg'];
 
 	if(!empty($_SESSION['form-data']['etat']))
@@ -216,8 +215,8 @@ function getSumValoByType($pdoLitige){
 	}
 	$req=$pdoLitige->prepare("SELECT  sum(valo) as valo_etat, dossiers.id_etat, etat.etat, count(dossiers.id) as nbEtat FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
-		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec
-		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,deno,dossiers.galec,magasin.mag.id) LIKE :search $reqEtat $reqCommission $reqLivraison $reqLivraisonEsp GROUP BY etat");
+		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
+		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search $reqEtat $reqCommission $reqLivraison $reqLivraisonEsp GROUP BY etat");
 	$req->execute(array(
 		':search' =>'%'.$strg.'%',
 		':date_start'=>$_SESSION['form-data']['date_start']. ' 00:00:00',
@@ -279,7 +278,7 @@ if(isset($_GET['notallowed'])){
 
 // initialisation
 if(!isset($_SESSION['form-data']['date_start']) || empty($_SESSION['form-data']['date_start'])){
-	$_SESSION['form-data']['date_start']=((new DateTime())->modify('first day of january this year'))->format('Y-m-d');
+	$_SESSION['form-data']['date_start']=((new DateTime())->modify('-90 days'))->format('Y-m-d');
 
 }
 
@@ -300,7 +299,7 @@ if(isset($_POST['search_form'])){
 
 if(isset($_POST['clear_form'])){
 	unset($_SESSION['form-data']);
-	$_SESSION['form-data']['date_start']=$_POST['date_start']=((new DateTime())->modify('first day of january this year'))->format('Y-m-d');
+	$_SESSION['form-data']['date_start']=$_POST['date_start']=((new DateTime())->modify('- 90 days'))->format('Y-m-d');
 	$_SESSION['form-data']['date_end']=$_POST['date_end']=date('Y-m-d');
 
 }
@@ -356,7 +355,6 @@ if(isset($_POST['reset-esp'])){
 	unset($_SESSION['esp-ico']);
 }
 $fAllActive=globalSearch($pdoLitige);
-
 $nbLitiges=count($fAllActive);
 $valoTotal=getSumValo($pdoLitige);
 $valoEtat=getSumValoByType($pdoLitige);
@@ -417,8 +415,6 @@ $checkedbt=(isset($_SESSION['form-data']['btlec'])) ? " checked " :"";
 $checkedgalec=(isset($_SESSION['form-data']['galec']))? " checked " :"";
 
 $listEtat=getEtat($pdoLitige);
-
-$arrCentrale=magHelpers::getListCentrale($pdoMag);
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
@@ -819,11 +815,7 @@ DEBUT CONTENU CONTAINER
 										$icoDemandeVideo="";
 									}
 								}
-								if($active['centrale']!=0){
-									$centrale=$arrCentrale[$active['centrale']];
-								}else{
-									$centrale="";
-								}
+
 
 
 								echo '<tr class="'.$active['etat_dossier'].'" id="'.$active['id_main'].'">';
@@ -831,7 +823,7 @@ DEBUT CONTENU CONTAINER
 								echo'<td>'.$active['datecrea'].'</td>';
 								echo'<td><a href="stat-litige-mag.php?galec='.$active['galec'].'">'.$active['mag'].'</a></td>';
 								echo'<td>'.$active['btlec'].'</td>';
-								echo'<td>'.$centrale.'</td>';
+								echo'<td>'.$active['centrale'].'</td>';
 								echo'<td class="'.$etat.'">'.$active['etat'].'</td>';
 								echo'<td class="text-right">'.number_format((float)$active['valo'],2,'.',' ').'&euro;</td>';
 								echo '<td class="text-center">'.$ctrl .$icoDemandeVideo.'</td>';
