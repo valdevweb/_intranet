@@ -15,6 +15,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 
 require_once '../../vendor/autoload.php';
+require_once '../../Class/MagHelpers.php';
 
 //---------------------------------------
 //	ajout enreg dans stat
@@ -34,7 +35,7 @@ require_once '../../vendor/autoload.php';
 
 function getThisInvitation($pdoBt)
 {
-	$req=$pdoBt->prepare("SELECT * FROM salon_2020 LEFT JOIN qrcode ON salon_2020.id=qrcode.id WHERE salon_2020.id= :id");
+	$req=$pdoBt->prepare("SELECT * FROM salon_2020 LEFT JOIN qrcode ON salon_2020.id=qrcode.id LEFT JOIN salon_fonction ON id_fonction= salon_fonction.id WHERE salon_2020.id= :id");
 	$req->execute(array(
 		':id'	=>$_GET['id']
 	));
@@ -47,13 +48,13 @@ $invit=getThisInvitation($pdoBt);
 
 ob_start();
 // include('pdf-invit2020.php');
-include('badge.php');
+include('badge-single.php');
 $html=ob_get_contents();
 ob_end_clean();
+$mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4']);
 
-$mpdf = new \Mpdf\Mpdf();
+// $mpdf = new \Mpdf\Mpdf();
 $mpdf->WriteHTML($html);
-
 $pdfContent = $mpdf->Output();
 
 //------------------------------------------------------
