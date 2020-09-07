@@ -17,6 +17,9 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require_once '../../vendor/autoload.php';
+require_once '../../Class/MagHelpers.php';
+require_once '../../Class/FormationDAO.php';
+require_once '../../Class/FormHelpers.php';
 
 
 // <---------------------------------------------------
@@ -80,6 +83,10 @@ if(isset($_SESSION['id_galec'])){
 	$participantList=getParticipant($pdoBt);
 }
 
+$formationDOA=new FormationDAO($pdoBt);
+$listCreneau=$formationDOA->getCreneaux($pdoBt);
+
+
 //------------------------------------------------------
 //			TRAITEMeNT
 //------------------------------------------------------
@@ -132,8 +139,8 @@ if(isset($_POST['submit']))
 		$row=addParticipant($pdoBt,$mobile);
 		if($row==1)
 		{
-				$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?success-inscr=ok#inscription-lk';
-				header($loc);
+			$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?success-inscr=ok#inscription-lk';
+			header($loc);
 
 		}
 		else
@@ -149,7 +156,7 @@ else
 
 if(isset($_GET['success-inscr']))
 {
-			$success[]="Votre inscription a bien été prise en compte";
+	$success[]="Votre inscription a bien été prise en compte";
 
 }
 
@@ -181,9 +188,9 @@ if(isset($_POST['more-info']))
     	//envoi mail
 		$to="salonbtlecest@btlec.fr";
 
-    	if(VERSION=="_"){
-    		$to="valerie.montusclat@btlec.fr";
-    	}
+		if(VERSION=="_"){
+			$to="valerie.montusclat@btlec.fr";
+		}
 
 
 		$subject="Portail BTLec - Salon 2020 - demande de renseignement - " .$_SESSION['nom'];
@@ -209,7 +216,7 @@ if( isset($_POST['send']))
 	foreach ($participantList as $invit)
 	{
 		ob_start();
-		include('pdf-invit2020.php');
+		include('badge-multiple.php');
 		$html=ob_get_contents();
 		ob_end_clean();
 
@@ -220,10 +227,10 @@ if( isset($_POST['send']))
 
 	$pdfContent = $mpdf->Output('', 'S');
 	// $pdfContent = $mpdf->Output();
-	$pdfname='salon BTLec Est 2020 - invitations.pdf';
+	$pdfname='salon BTLec Est 2020 - badges.pdf';
 
 	$htmlMail = file_get_contents('mail_invitation.php');
-	$subject='Portail BTLec EST - Salon 2020 - Vos invitations';
+	$subject='Portail BTLec EST - Salon 2020 - Vos badges';
 
 
 
@@ -246,18 +253,39 @@ if( isset($_POST['send']))
 	$delivered=$mailer->send($message);
 	if($delivered !=0)
 	{
-		$success[]='Vos invitations ont été envoyées';
+		$success[]='Vos badges ont été envoyées';
 	}
 	else{
 		$errors[]='impossible d\'envoyer les invitations';
 	}
-
-
-
-
-
 }
 
+
+if(isset($_POST['add-formation-google'])){
+	if(empty($_POST['email'])){
+		$errors[]="Merci de renseigner une adresse email";
+	}
+	if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
+		$errors[]="L'adresse mail ". $_POST['email']. " n'est pas valide";
+	}
+
+	if(empty($errors)){
+		$updated=$formationDOA->addFormation($pdoBt, 1);
+		if($updated==1){
+			$successQ='?success=2';
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+		}
+
+	}
+}
+
+if(isset($_GET['success'])){
+    $arrSuccess=[
+        2=>'Choix de formation ajouté',
+    ];
+    $success[]=$arrSuccess[$_GET['success']];
+}
 
 //----------------------------------------------------
 // VIEW - HEADER
@@ -290,7 +318,8 @@ require '../view/_navbar.php';
 			<div class="mini-nav text-center">
 				<ul>
 					<li><a href="#salon-lk">Salon 2020</a></li>
-					<li><a href="#inscription-lk">Inscriptions</a></li>
+					<li><a href="#inscription-lk">Badges</a></li>
+					<li><a href="#formation-lk">Formations</a></li>
 					<li><a href="#modalite-lk">Modalités</a></li>
 				</ul>
 				<div class="text-secondary"><i class="fab fa-ravelry"></i><i class="fab fa-ravelry"></i><i class="fab fa-ravelry"></i></div>
@@ -348,8 +377,8 @@ require '../view/_navbar.php';
 	<!-- form inscription -->
 	<div class="row mt-5">
 		<div class="col">
-			<h4 class="text-main-blue"><i class="fas fa-hand-point-right pr-3" id="inscription-lk"></i>VOS INVITATIONS</h4>
-			<p class="pb-3">Lors de votre venue au salon, vous devrez <span class="text-blue">présenter votre invitation</span> à l'accueil pour obtenir votre badge.</p>
+			<h4 class="text-main-blue"><i class="fas fa-hand-point-right pr-3" id="inscription-lk"></i>VOS BADGES</h4>
+			<p class="pb-3">Lors de votre venue au salon, vous devrez <span class="text-blue">Scanner votre badge</span> à l'accueil.</p>
 
 		</div>
 	</div>
@@ -413,6 +442,15 @@ require '../view/_navbar.php';
 		<div class="col"></div>
 	</div>
 	<div class="row mt-3">
+		<div class="col">
+			<div class="alert alert-primary">
+				Votre badge n'est pas à la bonne taille ?<br>
+				La taille des badges à l'impression devrait être de 9cm x 5.4cm, si ce n'est pas le cas, vérifiez vos paramètres d'impression. Dans les paramètres avancés, modifiez la mise à l'échelle pour qu'elle soit sur la valeur "défaut"
+			</div>
+
+		</div>
+	</div>
+	<div class="row mt-3">
 		<div class="col">Si vous préférez recevoir toutes vos invitations par mail, merci de renseigner votre adresse et de cliquer sur envoyer</div>
 	</div>
 	<div class="row mt-3">
@@ -459,6 +497,27 @@ require '../view/_navbar.php';
 			<p class="text-right"><a href="#up" class="blue-link">retour</a></p>
 		</div>
 	</div>
+	<div class="bg-separation"></div>
+	<div class="row">
+		<div class="col">
+			<div class="row mt-5">
+				<div class="col">
+					<h4 class="text-main-blue"><i class="fas fa-hand-point-right pr-3"  id="formation-lk"></i>INSCRIPTION AUX FORMATIONS</h4>
+				</div>
+			</div>
+			<?php
+			if($_SESSION['type']=='mag'  || $_SESSION['user']=="user" ||  $_SESSION['type']=='centrale' ){
+				include('formation-google-2020.php');
+			}
+			else{
+				echo "<div class='alert alert-danger'>L'inscription est réservée aux magasins</div>";
+			}
+
+			?>
+		</div>
+	</div>
+
+
 	<!-- fin zone inscription -->
 	<div class="bg-separation"></div>
 
@@ -550,6 +609,26 @@ require '../view/_navbar.php';
 				$('#repas-mercredi').attr('class', 'hidden');
 			}
 		});
+
+		$('#show-google').on("click",function(){
+			$('#google').attr('class','show');
+		});
+		$("#email").keyup(function(){
+
+			var email = $("#email").val();
+			var filter = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+			if (!filter.test(email)) {
+             //alert('Please provide a valid email address');
+             $("#error_email").text(email+" n'est pas une adresse mail valide");
+             $("#error_email").addClass('alert alert-danger');
+             email.focus;
+         } else {
+         	$("#error_email").text("");
+         	$("#error_email").removeClass('alert alert-danger');
+         	$("#error_email").text(email+' : adresse valide');
+         	$("#error_email").addClass('alert alert-success');
+         }
+     });
 
 	});
 
