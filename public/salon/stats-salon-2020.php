@@ -31,9 +31,9 @@ function getParticipantYear($pdoBt, $year){
     LEFT JOIN sca3 ON $table.galec=sca3.galec
     LEFT JOIN salon_fonction ON $table.id_fonction=salon_fonction.id
     WHERE $table.galec !='' ORDER BY sca3.mag");
-    $req->execute();
+  $req->execute();
 
- return $req->fetchAll(PDO::FETCH_ASSOC);
+  return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function getNbMagInscrit($pdoBt,$year){
@@ -104,6 +104,26 @@ function getByHeure($pdoBt, $day){
   // return $req->rowCount();
   return $req->fetchAll(PDO::FETCH_ASSOC);
 }
+
+function getListFournisseur($pdoBt){
+  $req=$pdoBt->query("SELECT * FROM salon_fournisseurs");
+  return $req->fetchAll(PDO::FETCH_ASSOC);
+
+}
+
+function getFournisseurParticipants($pdoBt, $idFournisseur){
+  $req=$pdoBt->prepare("SELECT * FROM salon_fournisseurs_presence WHERE id_fournisseur = :id_fournisseur");
+  $req->execute([
+    ':id_fournisseur' =>$idFournisseur
+  ]);
+  return $req->fetchAll(PDO::FETCH_ASSOC);
+
+}
+
+$listFournisseur=getListFournisseur($pdoBt);
+
+
+
 $statHeureMercredi=getByHeure($pdoBt, 5);
 
 $statHeureMardi=getByHeure($pdoBt, 4);
@@ -231,187 +251,225 @@ DEBUT CONTENU CONTAINER
             <td class="text-right">
               &nbsp;<br>
               <?=$nbMagInscrit?>/<?= $nbPart?></td>
-            <td class="text-right">
-              &nbsp;<br>
-              <?=$nbMagInscritPrev?>/<?= $nbPartPrev ?></td>
-          </tr>
+              <td class="text-right">
+                &nbsp;<br>
+                <?=$nbMagInscritPrev?>/<?= $nbPartPrev ?></td>
+              </tr>
 
-          <tr class="text-deux">
-            <td >
-              <b>Mardi : </b><br>
-              nb mag / nb personnes :<br>
-              repas :
-            </td>
-            <td class="text-right">
-              &nbsp;<br>
-              <?=$magMardi .'/'.$nb['p_mardi']?><br>
-              <?=$nb['repas_mardi']?>
-            </td>
-            <td class="text-right">
-              &nbsp;<br>
-              <?=$magMardiPrev .'/'.$nbPrev['p_mardi']?><br>
-              <?=$nbPrev['repas_mardi']?>
-            </td>
-          </tr>
+              <tr class="text-deux">
+                <td >
+                  <b>Mardi : </b><br>
+                  nb mag / nb personnes :<br>
+                  repas :
+                </td>
+                <td class="text-right">
+                  &nbsp;<br>
+                  <?=$magMardi .'/'.$nb['p_mardi']?><br>
+                  <?=$nb['repas_mardi']?>
+                </td>
+                <td class="text-right">
+                  &nbsp;<br>
+                  <?=$magMardiPrev .'/'.$nbPrev['p_mardi']?><br>
+                  <?=$nbPrev['repas_mardi']?>
+                </td>
+              </tr>
 
-          <tr class="text-trois">
-            <td >
-              <b>Mercredi : </b><br>
-              nb mag / nb personnes :<br>
-              repas :
-            </td>
-            <td class="text-right">
-              &nbsp;<br>
-              <?=$magMercredi .'/'.$nb['p_mercr']?><br>
-              <?=$nb['repas_mercr']?>
-            </td>
+              <tr class="text-trois">
+                <td >
+                  <b>Mercredi : </b><br>
+                  nb mag / nb personnes :<br>
+                  repas :
+                </td>
+                <td class="text-right">
+                  &nbsp;<br>
+                  <?=$magMercredi .'/'.$nb['p_mercr']?><br>
+                  <?=$nb['repas_mercr']?>
+                </td>
 
-            <td class="text-right">
-              &nbsp;<br>
-              <?=$magMercrediPrev .'/'.$nbPrev['p_mercr']?><br>
-              <?=$nbPrev['repas_mercr']?>
-            </td>
+                <td class="text-right">
+                  &nbsp;<br>
+                  <?=$magMercrediPrev .'/'.$nbPrev['p_mercr']?><br>
+                  <?=$nbPrev['repas_mercr']?>
+                </td>
 
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
 
 
-    </div>
-    <div class="col-xl-1"></div>
-  </div>
-  <div class="row pb-3">
-    <div class="col">
-      <div class="text-main-blue heavy"> Répartition par centrale (nb de magasins):</div>
-    </div>
-  </div>
-  <div class="row  mb-5">
-    <div class="col">
-      <div class="row justify-content-center">
-        <?php
-        foreach ($perCentrale as $centrale)
-        {
-          echo '<div class="col-auto text-center border '.strtolower($centrale['centrale']).'">'.$centrale['centrale'] .' : <br>'. $centrale['nb'] . '</div>';
-        }
-        ?>
+        </div>
+        <div class="col-xl-1"></div>
       </div>
-    </div>
-  </div>
-  <div class="row pb-3">
-    <div class="col">
-      <div class="text-main-blue heavy"> Répartition par fonction :</div>
-    </div>
-  </div>
-  <div class="row  mb-5">
-    <div class="col">
-      <div class="row justify-content-center">
-        <?php
-        $precedent='';
-        $nb='';
-        $somme='';
-        foreach ($perFonction as $fonction)
-        {
-
-
-          echo '<div class="col-auto text-center border">'.$fonction['short'] .' : <br>'. $fonction['nb'] . '</div>';
-
-
-        }
-        ?>
+      <div class="row pb-3">
+        <div class="col">
+          <div class="text-main-blue heavy"> Répartition par centrale (nb de magasins):</div>
+        </div>
       </div>
-    </div>
-  </div>
+      <div class="row  mb-5">
+        <div class="col">
+          <div class="row justify-content-center">
+            <?php
+            foreach ($perCentrale as $centrale)
+            {
+              echo '<div class="col-auto text-center border '.strtolower($centrale['centrale']).'">'.$centrale['centrale'] .' : <br>'. $centrale['nb'] . '</div>';
+            }
+            ?>
+          </div>
+        </div>
+      </div>
+      <div class="row pb-3">
+        <div class="col">
+          <div class="text-main-blue heavy"> Répartition par fonction :</div>
+        </div>
+      </div>
+      <div class="row  mb-5">
+        <div class="col">
+          <div class="row justify-content-center">
+            <?php
+            $precedent='';
+            $nb='';
+            $somme='';
+            foreach ($perFonction as $fonction)
+            {
 
-  <?php
+
+              echo '<div class="col-auto text-center border">'.$fonction['short'] .' : <br>'. $fonction['nb'] . '</div>';
+
+
+            }
+            ?>
+          </div>
+        </div>
+      </div>
+
+      <?php
   // if(new DateTime()>=new DateTime("2020-06-09")){
   //   include('stats-salon-2020-presence.php');
 
   // }
 
-  ?>
+      ?>
 
 
 
 
 
 
-  <div class="row pb-3">
-    <div class="col">
-      <div class="text-main-blue heavy"> Listing des inscriptions :</div>
+      <div class="row pb-3">
+        <div class="col">
+          <div class="text-main-blue heavy"> Listing des inscriptions :</div>
+        </div>
+        <div class="col text-right">
+          <a href="xl-generate-salon-2020.php" class="btn btn-green"><i class="fas fa-file-excel pr-3"></i>Export</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <table class="table table-sm" id="table-inscr">
+            <thead class="thead-dark">
+              <tr>
+                <th class="sortable" onclick="sortTable(0);">Magasin</th>
+                <th class="sortable" onclick="sortTable(1);">Galec</th>
+                <th class="sortable" onclick="sortTable(2);">Centrale</th>
+                <th class="sortable" onclick="sortTable(3);">Nom</th>
+                <th class="sortable" onclick="sortTable(4);">Prénom</th>
+                <th class="sortable" onclick="sortTable(5);">Fonction</th>
+                <th class="sortable" onclick="sortTable(6);">Date Inscription</th>
+                <th class="sortable" onclick="sortTable(7);">Mardi</th>
+                <th class="sortable" onclick="sortTable(8);">Mercredi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              foreach ($listParticipant as $part)
+              {
+                $bgMardi=$part['mardi'] +$part['repas_mardi'];
+                $bgMardi=$class[$bgMardi];
+                $bgMercredi=$part['mercredi'] +$part['repas_mercredi'];
+                $bgMercredi=$class[$bgMercredi];
+                echo '<tr>';
+                echo '<td class="'.strtolower($part['centrale']).'">'.$part['mag'].'</td>';
+                echo '<td>'.$part['galec'].'</td>';
+                echo '<td>'.$part['centrale'].'</td>';
+                echo '<td>'.$part['nom'].'</td>';
+                echo '<td>'.$part['prenom'].'</td>';
+                echo '<td>'.$part['fonction'].'</td>';
+                echo '<td>'.$part['datesaisie'].'</td>';
+                echo '<td class="'.$bgMardi.'">'.$presence[$part['mardi']].$repas[$part['repas_mardi']].'</td>';
+                echo '<td class="'.$bgMercredi.'">'.$presence[$part['mercredi']].$repas[$part['repas_mercredi']].'</td>';
+                echo '</tr>';
+
+              }
+
+              ?>
+
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <div class="text-main-blue heavy"> Listing des fournisseurs / génération des badges :</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th>Nom du fournisseur</th>
+                <th>Nom des personnes présentes</th>
+                <th>Badges</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($listFournisseur as $key => $fournisseurMain): ?>
+                <?php $fournisseurs=getFournisseurParticipants($pdoBt, $listFournisseur[0]['id']);?>
+
+                <tr>
+                  <td><?=$fournisseurMain['fournisseur']?></td>
+                  <td>
+                    <?php foreach ($fournisseurs as $key => $f): ?>
+                      <?=$f['nom'] .' ' .$f['prenom']?><br>
+                    <?php endforeach ?>
+                  </td>
+                  <td><a href="pdf-fournisseur.php?id=<?=$fournisseurMain['id']?>" class="btn btn-primary">Badge</a></td>
+                </tr>
+              <?php endforeach ?>
+
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+
+
+      <!-- ./container -->
     </div>
-    <div class="col text-right">
-      <a href="xl-generate-salon-2020.php" class="btn btn-green"><i class="fas fa-file-excel pr-3"></i>Export</a>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <table class="table table-sm" id="table-inscr">
-        <thead class="thead-dark">
-          <tr>
-            <th class="sortable" onclick="sortTable(0);">Magasin</th>
-            <th class="sortable" onclick="sortTable(1);">Galec</th>
-            <th class="sortable" onclick="sortTable(2);">Centrale</th>
-            <th class="sortable" onclick="sortTable(3);">Nom</th>
-            <th class="sortable" onclick="sortTable(4);">Prénom</th>
-            <th class="sortable" onclick="sortTable(5);">Fonction</th>
-            <th class="sortable" onclick="sortTable(6);">Date Inscription</th>
-            <th class="sortable" onclick="sortTable(7);">Mardi</th>
-            <th class="sortable" onclick="sortTable(8);">Mercredi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php
-          foreach ($listParticipant as $part)
-          {
-            $bgMardi=$part['mardi'] +$part['repas_mardi'];
-            $bgMardi=$class[$bgMardi];
-            $bgMercredi=$part['mercredi'] +$part['repas_mercredi'];
-            $bgMercredi=$class[$bgMercredi];
-            echo '<tr>';
-            echo '<td class="'.strtolower($part['centrale']).'">'.$part['mag'].'</td>';
-            echo '<td>'.$part['galec'].'</td>';
-            echo '<td>'.$part['centrale'].'</td>';
-            echo '<td>'.$part['nom'].'</td>';
-            echo '<td>'.$part['prenom'].'</td>';
-            echo '<td>'.$part['fonction'].'</td>';
-            echo '<td>'.$part['datesaisie'].'</td>';
-            echo '<td class="'.$bgMardi.'">'.$presence[$part['mardi']].$repas[$part['repas_mardi']].'</td>';
-            echo '<td class="'.$bgMercredi.'">'.$presence[$part['mercredi']].$repas[$part['repas_mercredi']].'</td>';
-            echo '</tr>';
-
-          }
-
-          ?>
 
 
-        </tbody>
-      </table>
-    </div>
-  </div>
+    <script src="../js/sortmultitable.js"></script>
+    <script type="text/javascript">
 
 
-  <!-- ./container -->
-</div>
+      function sortTable(n) {
+        sort_table(document.getElementById("table-inscr"), n);
+      }
 
-
-<script src="../js/sortmultitable.js"></script>
-<script type="text/javascript">
-
-
-  function sortTable(n) {
-    sort_table(document.getElementById("table-inscr"), n);
-  }
-
-  function sortTable(n) {
-    sort_table(document.getElementById("table-presence"), n);
-  }
+      function sortTable(n) {
+        sort_table(document.getElementById("table-presence"), n);
+      }
 
 
 
 
-</script>
+    </script>
 
-<?php
-require '../view/_footer-bt.php';
-?>
+    <?php
+    require '../view/_footer-bt.php';
+    ?>
