@@ -67,7 +67,6 @@ function formatArrayNomListe($nomListesDiffu,$pdoMag){
 		$suffixe=substr($ldFull,strlen($ldFull)-4,4);
 		$ldShort=substr($ldFull,0,strlen($ldFull)-4);
 		$btlec=getBtlecAndGalec($pdoMag,$ldShort);
-
 		$nomLdClean[$i]['ld_full']=$ldFull;
 		$nomLdClean[$i]['suffixe']=$suffixe;
 		$nomLdClean[$i]['ld_short']=$ldShort;
@@ -167,14 +166,12 @@ $contenuListeDiffu=getDataFromFile($contents,'Members:');
 // print_r($contenuListeDiffu);
 // echo '</pre>';
 
-
 if(count($contenuListeDiffu)!=count($nomListesDiffu)){
 	echo "WARNING on ne peut pas traiter, envoyer un mail";
 	exit();
 }
 if($manuel){
 	$lastinsertId=addNewFile($pdoMag, $newFile);
-
 
 }else{
 	$lastinsertId=addNewFile($pdoMag, $newFile);
@@ -195,7 +192,11 @@ $contenuListeDiffu=formatArrayContenuListe($contenuListeDiffu);
    // [16] =>   Directeur VIRYDIS/virydis/scadif/btlec/e-leclerc/fr
     // [17] =>   Thierry JODET/virydis/scadif/btlec/e-leclerc/fr
 
-
+echo "<pre>";
+// print_r($nomListesDiffu);
+// print_r($contenuListeDiffu);
+echo '</pre>';
+exit();
 
 
 /*
