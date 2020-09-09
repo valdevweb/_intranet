@@ -39,7 +39,7 @@ function insertEvo($pdoEvo, $resp){
 		':id_from'		=>$_SESSION['id_web_user'],
 		':id_resp'		=>$resp,
 		':objet'		=>$_POST['objet'],
-		':evo'		=>$_POST['evo'],
+		':evo'		=>nl2br($_POST['evo']),
 		':id_etat'		=>1,
 		':date_dde'		=>date('Y-m-d H:i:s'),
 		':id_prio'		=>$_POST['prio'],
