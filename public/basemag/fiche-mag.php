@@ -660,7 +660,6 @@ DEBUT CONTENU CONTAINER
 						$("#msg-racine").html(html)
 					}
 				});
-				// $('#msg-racine').addClass()
 			});
 
 			$("#email").keyup(function(){
