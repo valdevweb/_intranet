@@ -93,6 +93,8 @@ $empty=getExtraction($pdoMag,$newData[0]['id'],"vide");
 $lotus=getExtraction($pdoMag,$newData[0]['id'],"lotus");
 $emailDb=getExtraction($pdoMag,$newData[0]['id'],"email");
 $ld=getExtraction($pdoMag,$newData[0]['id'],"ld");
+
+
 // efface lotus_ld
 eraseLdLotus($pdoMag);
 
