@@ -279,6 +279,7 @@ if(isset($_GET['notallowed'])){
 // initialisation
 if(!isset($_SESSION['form-data']['date_start']) || empty($_SESSION['form-data']['date_start'])){
 	$_SESSION['form-data']['date_start']=((new DateTime())->modify('-90 days'))->format('Y-m-d');
+	// $_SESSION['form-data']['date_start']=((new DateTime())->modify('first day of January this year'))->format('Y-m-d');
 
 }
 
@@ -300,6 +301,7 @@ if(isset($_POST['search_form'])){
 if(isset($_POST['clear_form'])){
 	unset($_SESSION['form-data']);
 	$_SESSION['form-data']['date_start']=$_POST['date_start']=((new DateTime())->modify('- 90 days'))->format('Y-m-d');
+	// $_SESSION['form-data']['date_start']=$_POST['date_start']=((new DateTime())->modify('first day of January this year'))->format('Y-m-d');
 	$_SESSION['form-data']['date_end']=$_POST['date_end']=date('Y-m-d');
 
 }
@@ -545,7 +547,7 @@ DEBUT CONTENU CONTAINER
 						<div class="col-4">
 
 							<div class="form-group" id="equipe">
-								<input class="form-control mr-5 pr-5" placeholder="n°litige,  magasin, galec" name="search_strg" type="text"  value="<?=isset($_SESSION['form-data']['search_strg'])? $_SESSION['form-data']['search_strg'] : false?>">
+								<input class="form-control mr-5 pr-5" placeholder="n°litige,  magasin, galec" name="search_strg" type="text"  value="<?=isset($_SESSION['form-data']['search_strg'])? $_SESSION['form-data']['search_strg'] : "" ?>">
 							</div>
 						</div>
 
