@@ -48,7 +48,7 @@ function cleanActual($pdoMag){
 }
 
 function getBtlecAndGalec($pdoMag,$ldName){
-	$req=$pdoMag->prepare("SELECT btlec_sca as btlec, deno_sca as deno, racine_list, galec_sca as galec FROM sca3 WHERE racine_list=:racine_list");
+	$req=$pdoMag->prepare("SELECT id as btlec, deno, racine_list, galec FROM mag LEFT JOIN sca3 on mag.id=sca3.btlec_sca WHERE racine_list=:racine_list");
 	$req->execute([
 		':racine_list'		=>$ldName
 	]);
@@ -143,7 +143,7 @@ if(empty($newFile)){
 	echo 'rien';
 	exit;
 }elseif($manuel){
-	$newFile='LOTUS_20200609.txt';
+	// $newFile='LOTUS_20200609.txt';
 }else{
 	echo $newFile;
 }
