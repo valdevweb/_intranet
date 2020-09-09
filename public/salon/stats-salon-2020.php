@@ -105,22 +105,7 @@ function getByHeure($pdoBt, $day){
   return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getListFournisseur($pdoBt){
-  $req=$pdoBt->query("SELECT * FROM salon_fournisseurs");
-  return $req->fetchAll(PDO::FETCH_ASSOC);
 
-}
-
-function getFournisseurParticipants($pdoBt, $idFournisseur){
-  $req=$pdoBt->prepare("SELECT * FROM salon_fournisseurs_presence WHERE id_fournisseur = :id_fournisseur");
-  $req->execute([
-    ':id_fournisseur' =>$idFournisseur
-  ]);
-  return $req->fetchAll(PDO::FETCH_ASSOC);
-
-}
-
-$listFournisseur=getListFournisseur($pdoBt);
 
 
 
@@ -410,43 +395,7 @@ DEBUT CONTENU CONTAINER
         </div>
       </div>
 
-      <div class="row">
-        <div class="col">
-          <div class="text-main-blue heavy"> Listing des fournisseurs / génération des badges :</div>
-        </div>
-      </div>
 
-      <div class="row">
-        <div class="col">
-
-          <table class="table">
-            <thead class="thead-dark">
-              <tr>
-                <th>Nom du fournisseur</th>
-                <th>Nom des personnes présentes</th>
-                <th>Badges</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($listFournisseur as $key => $fournisseurMain): ?>
-                <?php $fournisseurs=getFournisseurParticipants($pdoBt, $listFournisseur[0]['id']);?>
-
-                <tr>
-                  <td><?=$fournisseurMain['fournisseur']?></td>
-                  <td>
-                    <?php foreach ($fournisseurs as $key => $f): ?>
-                      <?=$f['nom'] .' ' .$f['prenom']?><br>
-                    <?php endforeach ?>
-                  </td>
-                  <td><a href="pdf-fournisseur.php?id=<?=$fournisseurMain['id']?>" class="btn btn-primary">Badge</a></td>
-                </tr>
-              <?php endforeach ?>
-
-            </tbody>
-          </table>
-
-        </div>
-      </div>
 
 
       <!-- ./container -->
