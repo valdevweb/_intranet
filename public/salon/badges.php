@@ -37,8 +37,6 @@ $listFournisseur=getListFournisseur($pdoBt);
 
 
 
-
-
 // require_once '../../vendor/autoload.php';
 
 
