@@ -55,7 +55,7 @@ function convertArray($data, $field,$separator){
 }
 
 function updateSca($pdoMag){
-	$req=$pdoMag->prepare("UPDATE sca3 SET galec_sca= :galec_sca, deno_sca= :deno_sca, ad1_sca= :ad1_sca, ad2_sca= :ad2_sca, ad3= :ad3_sca, cp_sca= :cp_sca, ville_sca= :ville_sca, tel_sca= :tel_sca, fax_sca= :fax_sca, adherent_sca= :adh_sca, directeur_sca= :dir_sca, centrale_sca= :centrale_sca, centrale_doris= :centrale_doris, centrale_smiley= :centrale_smiley, surface_sca= :surface_sca, sorti= :sorti, date_ouverture= :date_ouverture, date_adhesion= :date_adhesion, date_fermeture= :date_fermeture, date_resiliation= :date_resiliation, date_sortie= :date_sortie, pole_sav_sca= :pole_sav_sca, nom_gesap= :gesap, affilie= :affilie, date_update= :date_update WHERE btlec_sca= :btlec_sca");
+	$req=$pdoMag->prepare("UPDATE sca3 SET galec_sca= :galec_sca, deno_sca= :deno_sca, ad1_sca= :ad1_sca, ad2_sca= :ad2_sca, ad3= :ad3_sca, cp_sca= :cp_sca, ville_sca= :ville_sca, tel_sca= :tel_sca, fax_sca= :fax_sca, adherent_sca= :adh_sca, directeur_sca= :dir_sca, centrale_sca= :centrale_sca, centrale_doris= :centrale_doris, centrale_smiley= :centrale_smiley, surface_sca= :surface_sca, sorti= :sorti, date_ouverture= :date_ouverture, date_adhesion= :date_adhesion, date_fermeture= :date_fermeture, date_resiliation= :date_resiliation, date_sortie= :date_sortie, pole_sav_sca= :pole_sav_sca, nom_gesap= :gesap, affilie= :affilie, racine_list= :racine_list, date_update= :date_update WHERE btlec_sca= :btlec_sca");
 
 	$req->execute([
 		':btlec_sca'		=>$_GET['id'],
@@ -82,6 +82,7 @@ function updateSca($pdoMag){
 		':date_sortie'		=>(empty($_POST['date_sortie']))? NULL:( DateTime::createFromFormat('d/m/Y',$_POST['date_sortie']))->format('Y-m-d'),
 		':pole_sav_sca'		=>(empty($_POST['pole_sav_sca']))? NULL:$_POST['pole_sav_sca'],
 		':gesap'		=>$_POST['gesap'],
+		':racine_list'		=>$_POST['racine_list'],
 		':affilie'		=>$_POST['affilie'],
 		':date_update'	=>date('Y-m-d H:i:s')
 	]);
@@ -647,6 +648,20 @@ DEBUT CONTENU CONTAINER
 				url=url.split("#");
 				window.scrollTo(0, url[1]);
 			}
+
+			$("#racine_list").keyup(function(){
+				var racineList=$("#racine_list").val();
+
+				$.ajax({
+					type:'POST',
+					url:'ajax-check-racine.php',
+					data:{racine_list:racineList},
+					success: function(html){
+						$("#msg-racine").html(html)
+					}
+				});
+				// $('#msg-racine').addClass()
+			});
 
 			$("#email").keyup(function(){
 
