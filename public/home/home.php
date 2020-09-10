@@ -231,15 +231,30 @@ if(isset($_SESSION['mag_filters'])){
 
 
 
+
 include('../view/_head-bt.php');
 include ('../view/_navbar.php');
+include('../salon/badges-home.php');
+// include('test.php');
 
 
 
 //contenu
 include('home.ct.php');
+include('salon-modal.php');
 ?>
-<script src="js/slider.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(window).on('load',function(){
+			if($('#choice').val()!=1){
+				$('#myModal').modal('show');
+
+			}
+		});
+	});
+</script>
+
+<!-- <script src="js/slider.js"></script> -->
 <?php
 require '../view/_footer-bt.php';
 ?>

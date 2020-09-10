@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -26,12 +25,12 @@
 			border: 1px solid #343a40;
 			border-collapse: collapse;
 			margin :0 auto;
-			/* background-color:#dcf0ff; */
+			background-color:#ffdfb1;
 		}
 
 		.width{
 			width: 9cm !important;
-			height: 5.3cm !important;
+			height: 5.4cm !important;
 		}
 		.no-border, .no-border td{
 			border: none ;
@@ -114,56 +113,51 @@
 	<p class="intro">Merci de vous munir du badge ci-dessous sur le salon. A l'accueil du salon, il vous sera demandé de scanner le qrcode afin d'enregistrer votre présence</p>
 
 	<div class="main-center">
-
-		<?php foreach ($fournisseurs as $key => $fou): ?>
-
-			<table class="border-table-grey">
-				<tr>
-					<td class="width">
-						<table class="full-size no-border" cellpadding="0" cellspacing="0">
-							<tr>
-								<td colspan="2" class="text-right">
-									<img src="../img/logo_bt/bt30-transparent.png">
-								</td>
-							</tr>
-							<tr>
-								<td colspan="2" class="full-size text-center text-primary" ><h3><?= $fou['fournisseur']?></h3><br></td>
-							</tr>
-							<tr>
-								<td  colspan="2">&nbsp;</td>
-							</tr>
-							<tr>
-								<td colspan="2"  class="full-size text-center text-secondary"><h3><?=$fou['nom'] .' '.$fou['prenom']?></h3></td>
-							</tr>
-							<tr>
-								<td  colspan="2">&nbsp;</td>
-							</tr>
-				<!-- 		<tr>
-							<td  colspan="2">&nbsp;</td>
-						</tr> -->
+		<table class="border-table-grey">
+			<tr>
+				<td class="width">
+					<table class="full-size no-border" cellpadding="0" cellspacing="0">
 						<tr>
-							<td class="text-center col-text vbottom">
-
-								<p class="text-center">Salon et convention BTlec Est</p>
-							</td>
-
-							<td class="text-right col-qr">
-								<?php
-								$qrCodeId=$fou['id'];
-								// echo $qrCodeId;
-								 ?>
-								<img class="qrcode" src="../img/qrcode/<?=$listQrcode[$qrCodeId]?>.jpg">
+							<td class="text-right">
+								<img src="../img/logo_bt/bt30-transparent.png">
 							</td>
 						</tr>
+						<tr>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td class="full-size text-center text-primary" ><h3><?= $participant['fullname']?></h3><br></td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td  class="full-size text-center text-secondary">
+								<h3>
+									<?php if ($participant['service_name']!="" && $participant['service_name']!='NULL'): ?>
+											Service <?=$participant['service_name']?>
+											<?php else: ?>
+												BTLec Est
+									<?php endif ?>
+
+								</h3>
+							</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<td class="full-size text-center">Salon et convention BTlec Est 2020</td>
+						</tr>
+
 					</table>
 				</td>
 			</tr>
 		</table>
-		<p>&nbsp;</p>
-
-	<?php endforeach ?>
-
-</div>
+	</div>
 
 
 
