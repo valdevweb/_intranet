@@ -1,8 +1,11 @@
 <div class="row">
 	<div class="col">
 		<ul>
-			<li>Formation Google : <a href="#google" id="show-google"> s'incrire</a></li>
+			<li>Formation Google ChromeBook: <a href="#google" id="show-google"> s'incrire</a><br>
+			Au programme : fonctionnement de l'OS, explication de la gamme Leclerc, <br>points forts : simplicité, Office, sécurité, batterie, rapidité
+			</li>
 		</ul>
+
 	</div>
 </div>
 
