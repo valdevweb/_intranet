@@ -50,7 +50,7 @@ $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4']);
 
 $mpdf->WriteHTML($html);
 $pdfContent = $mpdf->Output();
-
+// $mpdf->Output('filename.pdf', '\Mpdf\Output\Destination::FILE');
 //------------------------------------------------------
 //			DECLARATIONS
 //------------------------------------------------------
