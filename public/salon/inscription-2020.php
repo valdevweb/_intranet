@@ -36,6 +36,9 @@ addRecord($pdoStat,$page,$action, $descr);
 //			FONCTIONS
 //------------------------------------------------------
 
+
+
+
 function getFunction($pdoBt)
 {
 	$req=$pdoBt->prepare("SELECT * FROM salon_fonction ORDER BY fonction");
