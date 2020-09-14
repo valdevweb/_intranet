@@ -16,8 +16,8 @@ input{
 
 
 td:nth-child(7){
-	white-space: no-wrap !important;
-	width: 10% !important;
+  white-space: nowrap !important;
+	/* min-width: 10% !important; */
 }
 
 /* icone commission */
