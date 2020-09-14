@@ -34,23 +34,3 @@
 
 		</div>
 	</div>
-	<div class="row">
-		<div class="col"></div>
-		<div class="col text-right">
-			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
-				<div class="row justify-content-end">
-					<div class="col"></div>
-
-					<div class="col-auto">
-						<p class="text-red heavy"></p>
-					</div>
-
-					<div class="col-auto">
-						<button class="no-btn" type="submit" name="esp" value="1"><img src="../img/litiges/2448esp_ico.png"></button>
-						<button class="no-btn" type="submit" name="esp" value="0"><img src="../img/litiges/2448esp_no_ico.png"></button>
-						<button class="no-btn" type="submit" name="reset-esp" ><img src="../img/litiges/2448esp_reset_ico.png"></button>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
