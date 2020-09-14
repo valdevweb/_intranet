@@ -37,13 +37,13 @@ if(isset($_POST['vingtquatre'])){
 
 if(isset($_POST['reset-pending'])){
 	unset($_POST['pending']);
-	unset($_SESSION['filter-data']['pending']);
-	unset($_SESSION['filter-data']['pending-ico']);
+	unset($_SESSION['filter-data']);
+	unset($_SESSION['filter-data']);
 }
 if(isset($_POST['reset-vingtquatre'])){
 	unset($_POST['vingtquatre']);
-	unset($_SESSION['filter-data']['vingtquatre']);
-	unset($_SESSION['filter-data']['vingtquatre-ico']);
+	unset($_SESSION['filter-data']);
+	unset($_SESSION['filter-data']);
 }
 // if(isset($_POST['reset-esp'])){
 // 	unset($_POST['esp']);
