@@ -12,7 +12,7 @@
 			<tbody>
 				<tr>
 					<td class="text-red">Valorisation Totale</td>
-					<td class="text-right heavy bg-red"><?= number_format((float)$valoTotal['valo_totale'],2,'.',' ')?>&euro;</td>
+					<td class="text-right heavy bg-red"><?= number_format((float)$valoTotal,2,'.',' ')?>&euro;</td>
 					<td></td>
 				</tr>
 				<?php

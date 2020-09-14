@@ -61,71 +61,13 @@ function getListCentrale($pdoMag){
 
 
 
-// function getSumValo($pdoLitige)
-// {
-// 	// $strg=isset($_POST['search_strg']) ? $_POST['search_strg'] :'';
-// 	$strg=empty($_SESSION['form-data']['search_strg']) ? '': $_SESSION['form-data']['search_strg'];
-
-// 	if(!empty($_SESSION['form-data']['etat']))
-// 	{
-// 		$reqEtat= ' AND id_etat= ' .$_SESSION['form-data']['etat'];
-// 	}
-// 	else
-// 	{
-// 		$reqEtat='';
-// 	}
-// 	if(!empty($_SESSION['filter-data']['pending'])){
-// 		if($_SESSION['filter-data']['pending']=='pending'){
-// 			$reqCommission= ' AND commission !=1';
-// 		}
-// 		else{
-// 			$reqCommission= ' AND commission =' .intval($_SESSION['filter-data']['pending']);
-
-// 		}
-// 	}
-// 	else{
-// 		$reqCommission='';
-// 	}
-
-// 	if(isset($_SESSION['filter-data']['vingtquatre'])){
-// 		if($_SESSION['filter-data']['vingtquatre']==1){
-// 			$reqLivraison= ' AND vingtquatre=1 ';
-// 		}elseif($_SESSION['filter-data']['vingtquatre']==0){
-// 			$reqLivraison= ' AND vingtquatre='.intval(0);
-// 		}
-// 	}
-// 	else{
-// 		$reqLivraison= ' AND vingtquatre is NOT NULL';
-// 	}
-// 	if(isset($_SESSION['form-data']['esp'])){
-// 		if($_SESSION['form-data']['esp']==1){
-// 			$reqLivraisonEsp= ' AND esp=1 ';
-// 		}elseif($_SESSION['form-data']['esp']==0){
-// 			$reqLivraisonEsp= ' AND esp='.intval(0);
-// 		}
-// 	}
-// 	else{
-// 		$reqLivraisonEsp= ' AND esp is NOT NULL';
-// 	}
-
-
-// 	$req=$pdoLitige->prepare("SELECT  sum(dossiers.valo) as valo_totale
-// 		FROM dossiers
-// 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
-// 		-- LEFT JOIN details ON dossiers.id=details.id_dossier
-
-// 		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec)
-// 		LIKE :search $reqEtat $reqCommission $reqLivraison $reqLivraisonEsp");
-
-
-// 	$req->execute(array(
-// 		':search' =>'%'.$strg.'%',
-// 		':date_start'=>$_SESSION['form-data']['date_start']. ' 00:00:00',
-// 		':date_end'	=>$_SESSION['form-data']['date_end'].' 23:59:59',
-
-// 	));
-// 	return $req->fetch(PDO::FETCH_ASSOC);
-// }
+function getSumValo($pdoLitige, $listLitige){
+	$valoTotal=0;
+	foreach ($listLitige as $key => $litige) {
+		$valoTotal+=$litige['valo'];
+	}
+	return $valoTotal;
+}
 
 
 function getSumValoByType($pdoLitige)
@@ -241,8 +183,7 @@ if(isset($_GET['notallowed'])){
 
 
 
-
-include 'bt-litige-encours-formsearch-ex.php';
+include 'bt-litge-encours-formsearch-ex.php';
 include 'bt-litige-encours-filtres-ex.php';
 include 'bt-litige-encours-sessions-ex.php';
 
@@ -279,6 +220,8 @@ if(!isset($paramList)){
 		$params
 		ORDER BY dossiers.dossier DESC";
 
+
+
 	}else{
 		$query="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp,
 		dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission,	magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
@@ -293,9 +236,14 @@ if(!isset($paramList)){
 }
 $arCentrale=getListCentrale($pdoMag);
 $nbLitiges=count($listLitige);
-$valoTotal=getSumValo($pdoLitige);
-// $valoEtat=getSumValoByType($pdoLitige);
+// apparemment le moins gourmand est de parcourir le tableau avec un foreach (un array_map ferait lui aussi une boucle or ce serait moins rapide qu'une vraie boucle
+// https://stackoverflow.com/questions/16138395/sum-values-of-multidimensional-array-by-key-without-loop
 
+
+$valoTotal=getSumValo($pdoLitige, $listLitige);
+
+// $valoEtat=getSumValoByType($pdoLitige);
+$valoEtat=[];
 
 include 'bt-litige-encours-statut-ex.php';
 
@@ -329,7 +277,7 @@ DEBUT CONTENU CONTAINER
 	</div>
 
 
-	<?php //include ('bt-litige-encours-stats.php') ?>
+	<?php include ('bt-litige-encours-stats.php') ?>
 	<?php include ('bt-litige-encours-filtres.php') ?>
 	<?php include ('bt-litige-encours-table.php') ?>
 	<?php include ('bt-litige-encours-statut-modal.php') ?>
