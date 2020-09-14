@@ -35,26 +35,26 @@
 <script type="text/javascript">
   $(document).ready(function(){
 
-    // function checkSession(){
+    function checkSession(){
 
-    //   $.ajax({
-    //     url:"../../config/checksession.php",
-    //     method:"POST",
-    //     success:function(data){
-    //       if(data==1){
-    //         alert("Votre session a expirée, vous allez être déconnecté");
-    //         window.location.href='../../index.php';
-    //       }
-    //       else{
-    //         // console.log(data);
-    //       }
-    //     }
-    //   });
-    // }
+      $.ajax({
+        url:"../../config/checksession.php",
+        method:"POST",
+        success:function(data){
+          if(data==1){
+            alert("Votre session a expirée, vous allez être déconnecté");
+            window.location.href='../../index.php';
+          }
+          else{
+            // console.log(data);
+          }
+        }
+      });
+    }
 
-    // setInterval(function(){
-    //   checkSession();
-    // },10000);
+    setInterval(function(){
+      checkSession();
+    },10000);
 
   });
 
