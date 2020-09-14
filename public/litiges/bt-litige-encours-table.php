@@ -3,7 +3,7 @@
 
 		<?php if (isset($paramList) && !empty($paramList) ): ?>
 
-			<?php else: ?>
+		<?php else: ?>
 			<h4 class="text-main-blue text-center"> <?=$nbLitiges?> litiges pour un montant de <?= number_format((float)$valoTotalDefault,2,'.',' ')?></h4>
 
 		<?php endif ?>
@@ -32,33 +32,8 @@
 					</tr>
 				</thead>
 				<tbody id="tosort">
-					<?php
-					foreach ($listLitige as $active)
-					{
-						if($active['vingtquatre']==1){
-							$vingtquatre='<img src="../img/litiges/2448_ico.png">';
-
-						}
-						else{
-							$vingtquatre="";
-						}
-
-						if($active['esp']==1){
-							$esp='<img src="../img/litiges/2448esp_ico.png">';
-						}
-						else{
-							$esp="";
-						}
-
-
-
-						if($active['etat']=="Cloturé"){
-							$etat="text-dark-grey";
-						}
-						else{
-							$etat="text-red";
-						}
-
+					<?php foreach ($listLitige as $active):?>
+						<?php
 						if($active['ctrl_ok']==0){
 							$ctrl='';
 						}
@@ -89,56 +64,51 @@
 						// 		$icoDemandeVideo="";
 						// 	}
 						// }
-								$icoDemandeVideo="";
-
-						if(isset($arCentrale[$active['centrale']])){
-							$centrale=$arCentrale[$active['centrale']];
-						}else{
-							$centrale='';
-						}
+						$icoDemandeVideo="";
 
 
-						echo '<tr class="'.$active['etat_dossier'].'" id="'.$active['id_main'].'">';
-						echo'<td><a href="bt-detail-litige.php?id='.$active['id_main'].'">'.$active['dossier'].'</a></td>';
-						echo'<td>'.$active['datecrea'].'</td>';
-						echo'<td><a href="stat-litige-mag.php?galec='.$active['galec'].'">'.$active['deno'].'</a></td>';
-						echo'<td>'.$active['btlec'].'</td>';
-						echo'<td>'.$centrale.'</td>';
-						echo'<td class="'.$etat.'">'.$active['etat'].'</td>';
-						echo'<td class="text-right">'.number_format((float)$active['valo'],2,'.',' ').'&euro;</td>';
-						echo '<td class="text-center">'.$ctrl .$icoDemandeVideo.'</td>';
-						if($class=='validated'){
+						?>
 
-							echo '<td class="text-center"><a href="commission-traitement.php?id='.$active['id_main'].'&etat='.$class.'" class="unvalidate"><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';
-						}
-						else{
-							echo '<td class="text-center"><a href="#modal1" data="'.$active['id_main'].'" class="stamps"><i class="fas fa-user-check stamp '.$class.'"></i></a></td>';
 
-						}
-						echo '<td><input type="checkbox" name="pendingbox-'.$active['id_main'].'-'.$active['commission'].'"></td>';
+						<tr class="<?=$active['etat_dossier']?>" id="<?=$active['id_main']?>">
+							<td><a href="bt-detail-litige.php?id=<?=$active['id_main']?>"><?=$active['dossier']?></a></td>
+							<td><?=$active['datecrea']?></td>
+							<td><a href="stat-litige-mag.php?galec=<?=$active['galec']?>"><?=$active['deno']?></a></td>
+							<td><?=$active['btlec']?></td>
+							<td><?= (isset($arCentrale[$active['centrale']]))?$arCentrale[$active['centrale']] :''?></td>
+							<td class="<?=($active['etat']=="Cloturé")?'text-dark-grey':'text-red'?>"><?=$active['etat']?></td>
+							<td class="text-right"><?=number_format((float)$active['valo'],2,'.',' ')?>&euro;</td>
+							<td class="text-center"><?=$ctrl .$icoDemandeVideo?></td>
+							<?php if ($class=='validated'): ?>
+								<td class="text-center"><a href="commission-traitement.php?id='.$active['id_main'].'&etat='.$class.'" class="unvalidate"><i class="fas fa-user-check stamp <?= $class?>"></i></a></td>
+								<?php else: ?>
+									<td class="text-center"><a href="#modal1" data="'.$active['id_main'].'" class="stamps"><i class="fas fa-user-check stamp <?=$class?>"></i></a></td>
 
-						echo '<td class="text-center">'.$vingtquatre .'</td>';
-						echo '<td class="text-center">'.$esp .'</td>';
-						echo '</tr>';
+								<?php endif ?>
+								<td><input type="checkbox" name="pendingbox-<?=$active['id_main'].'-'.$active['commission']?>"></td>
 
-					}
-
-					?>
-				</tbody>
-			</table>
+								<td class="text-center"><?=($active['vingtquatre']==1)? '<img src="../img/litiges/2448_ico.png">' :''?></td>
+								<td class="text-center"><?= ($active['esp']==1)? '<img src="../img/litiges/2448esp_ico.png">' :''?></td>
+							</tr>
 
 
 
-			<?php if($_SESSION['id_web_user'] ==959 || $_SESSION['id_web_user'] ==981): ?>
+						<?php endforeach ?>
+					</tbody>
+				</table>
 
-				<div class="row">
-					<div class="col text-right mr-5">
-						<button type="submit"  class="btn btn-red right mb-5" name="chg_pending"><i class="fas fa-user-check pr-3"></i>Statuer</button>
+
+
+				<?php if($_SESSION['id_web_user'] ==959 || $_SESSION['id_web_user'] ==981): ?>
+
+					<div class="row">
+						<div class="col text-right mr-5">
+							<button type="submit"  class="btn btn-red right mb-5" name="chg_pending"><i class="fas fa-user-check pr-3"></i>Statuer</button>
+						</div>
 					</div>
-				</div>
-			<?php endif	?>
+				<?php endif	?>
 
-		</form>
+			</form>
+		</div>
+
 	</div>
-
-</div>
