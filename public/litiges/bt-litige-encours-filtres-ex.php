@@ -17,22 +17,22 @@ if(isset($_POST['vingtquatre'])){
 	if($_SESSION['filter-data']['vingtquatre']==1){
 		$_SESSION['filter-data']['vingtquatre-ico']='<div class="d-inline-block pl-3"><img src="../img/litiges/2448_ico.png"></div>';
 
-	}elseif($_SESSION['filter-data']['vingtquatre']==1){
+	}elseif($_SESSION['filter-data']['vingtquatre']==0){
 		$_SESSION['filter-data']['vingtquatre-ico']='<div class="d-inline-block  pl-3"><img src="../img/litiges/2448_no_ico.png"></div>';
 
 	}
 }
 
-if(isset($_POST['esp'])){
-	$_SESSION['filter-data']['esp']=$_POST['esp'];
-	if($_SESSION['filter-data']['esp']==1){
-		$_SESSION['filter-data']['esp-ico']='<div class="d-inline-block pl-3"><img src="../img/litiges/2448esp_ico.png"></div>';
+// if(isset($_POST['esp'])){
+// 	$_SESSION['filter-data']['esp']=$_POST['esp'];
+// 	if($_SESSION['filter-data']['esp']==1){
+// 		$_SESSION['filter-data']['esp-ico']='<div class="d-inline-block pl-3"><img src="../img/litiges/2448esp_ico.png"></div>';
 
-	}elseif($_SESSION['filter-data']['esp']==1){
-		$_SESSION['filter-data']['esp-ico']='<div class="d-inline-block  pl-3"><img src="../img/litiges/2448esp_no_ico.png"></div>';
+// 	}elseif($_SESSION['filter-data']['esp']==1){
+// 		$_SESSION['filter-data']['esp-ico']='<div class="d-inline-block  pl-3"><img src="../img/litiges/2448esp_no_ico.png"></div>';
 
-	}
-}
+// 	}
+// }
 
 
 if(isset($_POST['reset-pending'])){
