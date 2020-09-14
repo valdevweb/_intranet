@@ -12,7 +12,9 @@
 			<div class="modal-body">
 				<?php if ($_SESSION['type']=='mag'): ?>
 					<h5 class="text-center text-violet">Vos badges sont disponibles !</h5>
-					<p>Cette année, afin d'assurer la sécurité de tous et de limiter les regroupements de personnes notamment au niveau de l'accueil, nous mettons à votre disposition un document pdf vous permettant d'imprimer vos badges. Ces badges sont muni d'un qrcode qu'il vous suffira de scanner à l'accueil du salon.</p>
+					<p>Cette année, afin d'assurer la sécurité de tous et de limiter les regroupements de personnes notamment au niveau de l'accueil, nous mettons à votre disposition un document pdf vous permettant d'imprimer vos badges. Ces badges sont munis d'un qrcode qu'il vous suffira de scanner à l'accueil du salon.</p>
+					<p><b>Aucun bagde ne sera délivré sur le salon, en revanche, nous vous fournirons le support de badge</b></p>
+					<p>Avant d'imprimer, pensez à vérifier vos options d'impression, l'échelle doit être sur "défaut" (ce paramètre se trouve dans les options avancées)</p>
 					<p> Pour télécharger le fichier pdf, il vous suffit de cliquer sur le lien ci-dessous</p>
 					<div class="text-center">
 						<a href="../salon/pdf-badges-multiple.php">Imprimer mon badge</a>
