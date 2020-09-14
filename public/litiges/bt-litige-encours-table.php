@@ -1,4 +1,14 @@
+<div class="row">
+	<div class="col">
 
+		<?php if (isset($paramList) && !empty($paramList) ): ?>
+
+			<?php else: ?>
+			<h4 class="text-main-blue text-center"> <?=$nbLitiges?> litiges pour un montant de <?= number_format((float)$valoTotalDefault,2,'.',' ')?></h4>
+
+		<?php endif ?>
+	</div>
+</div>
 <!-- start row -->
 <div class="row">
 	<div class="col">
@@ -25,34 +35,27 @@
 					<?php
 					foreach ($listLitige as $active)
 					{
-						if($active['vingtquatre']==1)
-						{
+						if($active['vingtquatre']==1){
 							$vingtquatre='<img src="../img/litiges/2448_ico.png">';
 
 						}
-						else
-						{
+						else{
 							$vingtquatre="";
 						}
 
-						if($active['esp']==1)
-						{
+						if($active['esp']==1){
 							$esp='<img src="../img/litiges/2448esp_ico.png">';
-
 						}
-						else
-						{
+						else{
 							$esp="";
 						}
 
 
 
-						if($active['etat']=="Cloturé")
-						{
+						if($active['etat']=="Cloturé"){
 							$etat="text-dark-grey";
 						}
-						else
-						{
+						else{
 							$etat="text-red";
 						}
 
@@ -62,14 +65,12 @@
 						elseif($active['ctrl_ok']==1){
 							$ctrl= '<i class="fas fa-boxes pl-3 text-green"></i>';
 						}
-						elseif($active['ctrl_ok']==2)
-						{
+						elseif($active['ctrl_ok']==2){
 							$ctrl='<i class="fas fa-hourglass-end pl-3 text-red"></i>';
 						}
 
 
-						if($active['commission']==0)
-						{
+						if($active['commission']==0){
 							$class='pending';
 
 						}

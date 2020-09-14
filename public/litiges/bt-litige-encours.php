@@ -36,7 +36,7 @@ function getListLitige($pdoLitige){
 	LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE
 	id_etat != :id_etat AND commission != :commission
 	ORDER BY dossiers.dossier DESC";
-	echo $query;
+
 
 	$req=$pdoLitige->prepare($query);
 	$req->execute([
@@ -195,8 +195,20 @@ include 'bt-litige-encours-sessions-ex.php';
 // 3- requete grace à paramList si il existe ou
 // requete par défaut
 
+
 if(!isset($paramList)){
 	$listLitige=getListLitige($pdoLitige);
+
+	$dateStart=(new DateTime('first day of january this year'))->format('Y-m-d H:i:s');
+	$dateEnd=date('Y-m-d H:i:s');
+
+
+	$queryStats="SELECT  sum(valo) as valo, dossiers.id_etat, etat.etat, count(dossiers.id) as nbEtat FROM dossiers
+	LEFT JOIN etat ON id_etat=etat.id
+	WHERE date_crea BETWEEN '$dateStart' AND '$dateEnd' GROUP BY etat";
+	$req=$pdoLitige->query($queryStats);
+
+	$valoEtat=$req->fetchAll(PDO::FETCH_ASSOC);
 }else{
 
 	$paramList=array_filter($paramList);
@@ -221,7 +233,6 @@ if(!isset($paramList)){
 		ORDER BY dossiers.dossier DESC";
 
 
-
 	}else{
 		$query="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp,
 		dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission,	magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
@@ -229,10 +240,21 @@ if(!isset($paramList)){
 		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE
 		$params
 		ORDER BY dossiers.dossier DESC";
+
 	}
+
+
+
 
 	$req=$pdoLitige->query($query);
 	$listLitige=$req->fetchAll(PDO::FETCH_ASSOC);
+
+	$queryStats="SELECT  sum(valo) as valo, dossiers.id_etat, etat.etat, count(dossiers.id) as nbEtat,	magasin.mag.deno, magasin.mag.centrale, magasin.mag.id as btlec  FROM dossiers
+	LEFT JOIN etat ON id_etat=etat.id
+	LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec
+	WHERE $params GROUP BY etat";
+	$req=$pdoLitige->query($queryStats);
+	$valoEtat=$req->fetchAll(PDO::FETCH_ASSOC);
 }
 $arCentrale=getListCentrale($pdoMag);
 $nbLitiges=count($listLitige);
@@ -240,10 +262,15 @@ $nbLitiges=count($listLitige);
 // https://stackoverflow.com/questions/16138395/sum-values-of-multidimensional-array-by-key-without-loop
 
 
-$valoTotal=getSumValo($pdoLitige, $listLitige);
+//  la valoTotale
+$valoTotalDefault=getSumValo($pdoLitige, $listLitige);
+$valoTotalEtat=getSumValo($pdoLitige, $valoEtat);
 
 // $valoEtat=getSumValoByType($pdoLitige);
-$valoEtat=[];
+
+
+
+
 
 include 'bt-litige-encours-statut-ex.php';
 
