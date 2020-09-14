@@ -45,8 +45,8 @@ if(isset($_POST['reset-vingtquatre'])){
 	unset($_SESSION['filter-data']['vingtquatre']);
 	unset($_SESSION['filter-data']['vingtquatre-ico']);
 }
-if(isset($_POST['reset-esp'])){
-	unset($_POST['esp']);
-	unset($_SESSION['filter-data']['esp']);
-	unset($_SESSION['filter-data']['esp-ico']);
-}
+// if(isset($_POST['reset-esp'])){
+// 	unset($_POST['esp']);
+// 	unset($_SESSION['filter-data']['esp']);
+// 	unset($_SESSION['filter-data']['esp-ico']);
+// }
