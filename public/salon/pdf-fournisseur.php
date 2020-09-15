@@ -22,8 +22,7 @@ require_once '../../vendor/autoload.php';
 //			FONCTION
 //------------------------------------------------------
 
-function getFournisseur($pdoBt)
-{
+function getFournisseur($pdoBt){
 	$req=$pdoBt->prepare("SELECT * FROM salon_fournisseurs_presence WHERE  id_fournisseur= :id_fournisseur");
 	$req->execute(array(
 		':id_fournisseur'	=>$_GET['id']
@@ -35,6 +34,16 @@ function getListQrcode($pdoBt){
 	$req=$pdoBt->query("SELECT id,qrcode FROM qrcode WHERE  id>=500");
 	return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 }
+
+
+function upadateFournisseur($pdoBt){
+	$req=$pdoBt->prepare("UPDATE salon_fournisseurs_presence set printed=1 where  id_fournisseur= :id_fournisseur");
+	$req->execute(array(
+		':id_fournisseur'	=>$_GET['id']
+	));
+}
+
+upadateFournisseur($pdoBt);
 $fournisseurs=getFournisseur($pdoBt);
 $listQrcode=getListQrcode($pdoBt);
 
