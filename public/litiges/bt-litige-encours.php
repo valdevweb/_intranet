@@ -31,23 +31,24 @@ function getEtat($pdoLitige){
 
 function getListLitige($pdoLitige){
 	$query="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp,
-	dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission,	magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
+	dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission,	dossiers.id_etat, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
 	LEFT JOIN etat ON id_etat=etat.id
 	LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE
-	id_etat != :id_etat AND commission != :commission
+	(id_etat != 1 AND id_etat != 20)|| commission != 1
 	ORDER BY dossiers.dossier DESC";
+	$req=$pdoLitige->query($query);
 
-
-	$req=$pdoLitige->prepare($query);
-	$req->execute([
-		':id_etat'=>1,
-		':commission'	=>1,
-
-	]);
 	// return $req->errorInfo();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function getListVideo($pdoLitige,$idContrainte){
+    $req=$pdoLitige->prepare("SELECT id_dossier, id_contrainte FROM action WHERE id_contrainte= :id_contrainte");
+    $req->execute([
+        ':id_contrainte' =>$idContrainte
+    ]);
+    return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+}
 
 
 function getListCentrale($pdoMag){
@@ -55,79 +56,12 @@ function getListCentrale($pdoMag){
 	return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 }
 
-
-
-
-
-
-
 function getSumValo($pdoLitige, $listLitige){
 	$valoTotal=0;
 	foreach ($listLitige as $key => $litige) {
 		$valoTotal+=$litige['valo'];
 	}
 	return $valoTotal;
-}
-
-
-function getSumValoByType($pdoLitige)
-{
-	$strg=empty($_SESSION['form-data']['search_strg']) ? '': $_SESSION['form-data']['search_strg'];
-
-	if(!empty($_SESSION['form-data']['etat']))
-	{
-		$reqEtat= ' AND id_etat= ' .$_SESSION['form-data']['etat'];
-	}
-	else
-	{
-		$reqEtat='';
-	}
-	if(!empty($_SESSION['filter-data']['pending'])){
-		if($_SESSION['filter-data']['pending']=='pending'){
-			$reqCommission= ' AND commission !=1';
-		}
-		else{
-			$reqCommission= ' AND commission =' .intval($_SESSION['filter-data']['pending']);
-
-		}
-	}
-	else{
-		$reqCommission='';
-	}
-
-	if(isset($_SESSION['filter-data']['vingtquatre'])){
-		if($_SESSION['filter-data']['vingtquatre']==1){
-			$reqLivraison= ' AND vingtquatre=1 ';
-		}elseif($_SESSION['filter-data']['vingtquatre']==0){
-			$reqLivraison= ' AND vingtquatre='.intval(0);
-		}
-	}
-	else{
-		$reqLivraison= ' AND vingtquatre is NOT NULL';
-	}
-	if(isset($_SESSION['form-data']['esp'])){
-		if($_SESSION['form-data']['esp']==1){
-			$reqLivraisonEsp= ' AND esp=1 ';
-		}elseif($_SESSION['form-data']['esp']==0){
-			$reqLivraisonEsp= ' AND esp='.intval(0);
-		}
-	}
-	else{
-		$reqLivraisonEsp= ' AND esp is NOT NULL';
-	}
-	$req=$pdoLitige->prepare("SELECT  sum(valo) as valo_etat, dossiers.id_etat, etat.etat, count(dossiers.id) as nbEtat FROM dossiers
-		LEFT JOIN etat ON id_etat=etat.id
-		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
-		WHERE date_crea BETWEEN :date_start AND :date_end AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search $reqEtat $reqCommission $reqLivraison $reqLivraisonEsp GROUP BY etat");
-	$req->execute(array(
-		':search' =>'%'.$strg.'%',
-		':date_start'=>$_SESSION['form-data']['date_start']. ' 00:00:00',
-		':date_end'	=>$_SESSION['form-data']['date_end'].' 23:59:59',
-
-	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-	// return $req->errorInfo();
-
 }
 
 
@@ -153,34 +87,13 @@ function addAction($pdoLitige, $idContrainte){
 		':id_web_user'		=>$_SESSION['id_web_user'],
 		':date_action'		=>date('Y-m-d H:i:s'),
 	]);
+
 	return $req->rowCount();
 }
-
-
-function isAction($pdoLitige,$idLitige,$idContrainte){
-	$req=$pdoLitige->prepare("SELECT * FROM action WHERE id_dossier= :id_dossier AND id_contrainte= :id_contrainte");
-	$req->execute([
-		':id_dossier' => $idLitige,
-		':id_contrainte' =>$idContrainte
-	]);
-	$data=$req->fetch();
-
-
-	if(empty($data)){
-		return false;
-	}
-	return true;
-}
-
 
 if(isset($_GET['notallowed'])){
 	$errors[]="Vous n'êtes pas autorisé à modifier le statut 'validé en commission'";
 }
-
-
-
-
-
 
 
 include 'bt-litge-encours-formsearch-ex.php';
@@ -190,12 +103,8 @@ include 'bt-litige-encours-sessions-ex.php';
 
 
 
-
-
 // 3- requete grace à paramList si il existe ou
 // requete par défaut
-
-
 if(!isset($paramList)){
 	$listLitige=getListLitige($pdoLitige);
 
@@ -225,17 +134,17 @@ if(!isset($paramList)){
 	// 2 requetes types : une sur la table dossier "seule", une sur la table dossier jointe à la table article
 	if(isset($_SESSION['form-data-deux']['article'])){
 		$query="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp,
-		dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission,	magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
+		dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
 		LEFT JOIN details ON dossiers.id=details.id_dossier
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE
 		$params
-		ORDER BY dossiers.dossier DESC";
+		GROUP BY dossiers.id ORDER BY dossiers.dossier DESC ";
 
 
 	}else{
 		$query="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp,
-		dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission,	magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
+		dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE
 		$params
@@ -243,30 +152,31 @@ if(!isset($paramList)){
 
 	}
 
-
-
-
 	$req=$pdoLitige->query($query);
 	$listLitige=$req->fetchAll(PDO::FETCH_ASSOC);
 
 	$queryStats="SELECT  sum(valo) as valo, dossiers.id_etat, etat.etat, count(dossiers.id) as nbEtat,	magasin.mag.deno, magasin.mag.centrale, magasin.mag.id as btlec  FROM dossiers
 	LEFT JOIN etat ON id_etat=etat.id
+	LEFT JOIN details ON dossiers.id=details.id_dossier
 	LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec
 	WHERE $params GROUP BY etat";
+
 	$req=$pdoLitige->query($queryStats);
 	$valoEtat=$req->fetchAll(PDO::FETCH_ASSOC);
+
+
+
 }
 $arCentrale=getListCentrale($pdoMag);
 $nbLitiges=count($listLitige);
-// apparemment le moins gourmand est de parcourir le tableau avec un foreach (un array_map ferait lui aussi une boucle or ce serait moins rapide qu'une vraie boucle
-// https://stackoverflow.com/questions/16138395/sum-values-of-multidimensional-array-by-key-without-loop
-
-
-//  la valoTotale
+// foreach moins long
 $valoTotalDefault=getSumValo($pdoLitige, $listLitige);
 $valoTotalEtat=getSumValo($pdoLitige, $valoEtat);
 
-// $valoEtat=getSumValoByType($pdoLitige);
+$listVideoOk=getListVideo($pdoLitige, 7);
+$listVideoko=getListVideo($pdoLitige, 6);
+
+
 
 
 
