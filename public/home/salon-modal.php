@@ -19,13 +19,7 @@
 					<div class="text-center">
 						<a href="../salon/pdf-badges-multiple.php">Imprimer mon badge</a>
 					</div>
-					<?php else: ?>
-						<h5 class="text-center text-violet">Badges</h5>
-						<p>Pour générer votre badge et l'imprimer, veuillez cliquer sur le lien si dessous</p>
-						<div class="text-center">
-							<a href="../salon/pdf-badges-bt.php">Imprimer mon badge</a>
-						</div>
-					<?php endif ?>
+				<?php endif ?>
 
 					<form method="post" action="<?=$_SERVER['PHP_SELF']?>">
 						<div class="form-check">

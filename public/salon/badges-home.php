@@ -25,7 +25,7 @@ $choice=1;
 
 
 
-if($_SESSION['type']=="btlec"  || $_SESSION['type']=="mag"){
+if($_SESSION['type']=="mag"){
 	$userChoice=getUserChoice($pdoBt);
 	if(empty($userChoice)){
 		$choice=0;
