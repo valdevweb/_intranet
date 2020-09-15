@@ -47,6 +47,8 @@ Thumbs.db
 /exploit/*
 /vendor/*
 /public/img/*
+/public/salon/pdf-fournisseur/*
+/public/salon/pdf-intern/*
 
 # files             #
 ######################
