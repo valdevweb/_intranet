@@ -49,6 +49,10 @@ Thumbs.db
 /public/img/*
 /public/salon/pdf-fournisseur/*
 /public/salon/pdf-intern/*
+/public/salon/fpdf181/*
+/public/salon/doc2019/*
+/public/salon/v1/*
+/public/salon/v2/*
 
 # files             #
 ######################
