@@ -50,6 +50,7 @@ Thumbs.db
 /public/salon/pdf-fournisseur/*
 /public/salon/pdf-intern/*
 /public/salon/fpdf181/*
+/public/salon/fpdf181/doc/*
 /public/salon/doc2019/*
 /public/salon/v1/*
 /public/salon/v2/*
