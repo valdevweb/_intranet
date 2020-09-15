@@ -8,7 +8,10 @@
 
 		<?php endif ?>
 
-		<h5 class="text-main-blue text-center"> Filtre(s) actif(s) : <?=isset($_SESSION['pending-ico'])?$_SESSION['pending-ico']:'' ?><?=isset($_SESSION['vingtquatre-ico'])?$_SESSION['vingtquatre-ico']:'' ?><?= !isset($_SESSION['pending-ico']) && !isset($_SESSION['vingtquatre-ico']) ? '<span class="text-grey">aucun</span>' : ''?></h5>
+		<h5 class="text-main-blue text-center"> Filtre(s) actif(s) :
+			<?=isset($_SESSION['filter-data']['pending-ico'])?$_SESSION['filter-data']['pending-ico']:'' ?>
+			<?=isset($_SESSION['filter-data']['vingtquatre-ico'])?$_SESSION['filter-data']['vingtquatre-ico']:'' ?>
+			<?= !isset($_SESSION['filter-data']['pending-ico']) && !isset($_SESSION['filter-data']['vingtquatre-ico']) ? '<span class="text-grey">aucun</span>' : ''?></h5>
 
 	</div>
 </div>
