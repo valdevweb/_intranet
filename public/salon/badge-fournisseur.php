@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -116,7 +115,7 @@
 	<p class="intro">Avant d'imprimer, pensez à vérifier vos options d'impression, l'échelle doit être sur "défaut" (ce paramètre se trouve dans les options avancées)</p>
 	<div class="main-center">
 
-		<?php foreach ($fournisseurs as $key => $fou): ?>
+		<?php foreach ($thisFou as $key => $fou): ?>
 
 			<table class="border-table-grey">
 				<tr>
