@@ -284,10 +284,10 @@ if(isset($_POST['add-formation-google'])){
 }
 
 if(isset($_GET['success'])){
-    $arrSuccess=[
-        2=>'Choix de formation ajouté',
-    ];
-    $success[]=$arrSuccess[$_GET['success']];
+	$arrSuccess=[
+		2=>'Choix de formation ajouté',
+	];
+	$success[]=$arrSuccess[$_GET['success']];
 }
 
 //----------------------------------------------------
@@ -320,8 +320,9 @@ require '../view/_navbar.php';
 		<div class="col">
 			<div class="mini-nav text-center">
 				<ul>
-					<li><a href="#salon-lk">Salon 2020</a></li>
-					<li><a href="#inscription-lk">Badges</a></li>
+
+					<li><a href="#badge-lk">Badges</a></li>
+					<li><a href="#inscription-lk">Inscription</a></li>
 					<li><a href="#formation-lk">Formations</a></li>
 					<li><a href="#modalite-lk">Modalités</a></li>
 				</ul>
@@ -367,9 +368,10 @@ require '../view/_navbar.php';
 					<li><strong>Mardi 14h30 : </strong><span class="text-blue">conférence GFK Multimédia </span>(Informatique, TV-Vidéo...) de 45 mn</li>
 				</ul>
 			</p>
-			<p>La <span class="text-blue"> Convention </span>se déroulera cette année le Mercredi à 9h30</p>
-			<p>Afin d'organiser au mieux le déroulement du salon, nous vous prions de bien vouloir remplir le <a href="#inscription-lk" class="blue-link">formulaire d'inscription</a>.  Sous le formulaire d'inscription, vous trouverez les informations sur les <a href="#modalite-lk" class="blue-link">modalités d'accueil et d'accès</a> à BTlec Est</p>
-			<p>Un badge vous sera remis à votre entrée sur le salon.</p>
+			<p>Afin d'organiser au mieux le déroulement du salon, nous vous prions de bien vouloir remplir le <a href="#inscription-lk" class="blue-link">formulaire d'inscription</a> et d'<a href="#badge-lk" class="blue-link">imprimer votre badge</a>.</p>
+			<p> Sous le formulaire d'inscription, vous trouverez les informations sur les <a href="#modalite-lk" class="blue-link">modalités d'accueil et d'accès</a> à BTlec Est</p>
+
+
 			<p class="text-right"><a href="#up" class="blue-link">retour</a></p>
 		</div>
 	</div>
@@ -380,7 +382,10 @@ require '../view/_navbar.php';
 	<!-- form inscription -->
 	<div class="row mt-5">
 		<div class="col">
-			<h4 class="text-main-blue"><i class="fas fa-hand-point-right pr-3" id="inscription-lk"></i>VOS BADGES</h4>
+			<h4 class="text-main-blue"><i class="fas fa-hand-point-right pr-3" id="badge-lk"></i>VOS BADGES</h4>
+			<p>Cette année, afin d'assurer la sécurité de tous et de limiter les regroupements de personnes notamment au niveau de l'accueil, nous mettons à votre disposition un document pdf vous permettant d'imprimer vos badges. Ces badges sont munis d'un qrcode qu'il vous suffira de scanner à l'accueil du salon.</p>
+			<p><b>Aucun badge ne sera délivré sur le salon, en revanche, nous vous fournirons le support de badge</b></p>
+
 			<p class="pb-3">Lors de votre venue au salon, vous devrez <span class="text-blue">Scanner votre badge</span> à l'accueil.</p>
 
 		</div>
@@ -447,8 +452,7 @@ require '../view/_navbar.php';
 	<div class="row mt-3">
 		<div class="col">
 			<div class="alert alert-primary">
-				Votre badge n'est pas à la bonne taille ?<br>
-				La taille des badges à l'impression devrait être de 9cm x 5.4cm, si ce n'est pas le cas, vérifiez vos paramètres d'impression. Dans les paramètres avancés, modifiez la mise à l'échelle pour qu'elle soit sur la valeur "défaut"
+				Avant d'imprimer, pensez à vérifier vos paramètres d'impression. Dans les paramètres avancés, modifiez la mise à l'échelle pour qu'elle soit sur la valeur "défaut"
 			</div>
 
 		</div>
