@@ -234,6 +234,10 @@ a.text-ctbt{
 .bg-dust-light{
 background: #A9AABC;
 }
+.bg-ghostwhite{
+  background: #f8f8ff;
+}
+
 
 .bg-dust-dark{
 background: #757687
@@ -248,7 +252,6 @@ background: #757687
   height:  10px;
   margin-left: -15px !important;
   margin-right: -15px !important;
-
 }
 
 .no-bg{
