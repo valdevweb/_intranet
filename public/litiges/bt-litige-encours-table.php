@@ -47,25 +47,17 @@
 
 						if($active['commission']==0){
 							$class='pending';
-
 						}
 						else{
 							$class='validated';
 						}
 
-
-
-						// if(isAction($pdoLitige,$active['id_main'],7)){
-						// 	$icoDemandeVideo='<i class="fas fa-video text-green pl-3"></i>';
-						// }else{
-						// 	if(isAction($pdoLitige,$active['id_main'],6)){
-						// 		$icoDemandeVideo='<i class="fas fa-video text-red pl-3"></i>';
-						// 	}else{
-						// 		$icoDemandeVideo="";
-						// 	}
-						// }
 						$icoDemandeVideo="";
-
+						if(isset($listVideoOk[$active['id_main']])){
+							$icoDemandeVideo='<i class="fas fa-video text-green pl-3"></i>';
+						}elseif (isset($listVideoKo[$active['id_main']])) {
+								$icoDemandeVideo='<i class="fas fa-video text-red pl-3"></i>';
+						}
 
 						?>
 
@@ -76,13 +68,13 @@
 							<td><a href="stat-litige-mag.php?galec=<?=$active['galec']?>"><?=$active['deno']?></a></td>
 							<td><?=$active['btlec']?></td>
 							<td><?= (isset($arCentrale[$active['centrale']]))?$arCentrale[$active['centrale']] :''?></td>
-							<td class="<?=($active['etat']=="Cloturé")?'text-dark-grey':'text-red'?>"><?=$active['etat']?></td>
+							<td class="<?=($active['id_etat']=="1" ||$active['id_etat']=="20" )?'text-dark-grey':'text-red'?>"><?=$active['etat']?></td>
 							<td class="text-right"><?=number_format((float)$active['valo'],2,'.',' ')?>&euro;</td>
 							<td class="text-center"><?=$ctrl .$icoDemandeVideo?></td>
 							<?php if ($class=='validated'): ?>
-								<td class="text-center"><a href="commission-traitement.php?id='.$active['id_main'].'&etat='.$class.'" class="unvalidate"><i class="fas fa-user-check stamp <?= $class?>"></i></a></td>
+								<td class="text-center"><a href="commission-traitement.php?id=<?=$active['id_main'].'&etat='.$class?>" class="unvalidate"><i class="fas fa-user-check stamp <?= $class?>"></i></a></td>
 								<?php else: ?>
-									<td class="text-center"><a href="#modal1" data="'.$active['id_main'].'" class="stamps"><i class="fas fa-user-check stamp <?=$class?>"></i></a></td>
+									<td class="text-center"><a href="#modal1" data="<?=$active['id_main']?>" class="stamps"><i class="fas fa-user-check stamp <?=$class?>"></i></a></td>
 
 								<?php endif ?>
 								<td><input type="checkbox" name="pendingbox-<?=$active['id_main'].'-'.$active['commission']?>"></td>
