@@ -6,6 +6,8 @@ if(isset($_POST['validate'])){
 	{
 
 		$action=addAction($pdoLitige, 3);
+
+
 		if($action==1){
 			$result=updateCommission($pdoLitige,$_POST['iddossier'],1);
 		}
