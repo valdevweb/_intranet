@@ -22,9 +22,9 @@ public static function checkSelected($value,$field){
     return "";
 }
 
-public static function checkCheckedSession($value,$field){
-    if(isset($_SESSION[$field])){
-        if($_SESSION[$field]==$value){
+public static function checkCheckedArray($value,$array){
+    if(isset($array)){
+        if($array==$value){
             return "checked";
         }
     }
