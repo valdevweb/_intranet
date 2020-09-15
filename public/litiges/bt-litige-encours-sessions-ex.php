@@ -27,7 +27,7 @@ if(isset($_SESSION['form-data'])){
 
 
 	if(isset($_SESSION['form-data']['etat'])){
-		$paramEtat= ' id_etat = '.$_SESSION['form-data']['etat'];
+		$paramEtat=join(' OR ', array_map(function($value){return 'id_etat='.$value;},$_SESSION['form-data']['etat']));
 	}else{
 		$paramEtat='';
 	}
