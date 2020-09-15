@@ -33,12 +33,25 @@ function getListQrcode($pdoBt){
 	$req=$pdoBt->query("SELECT id,qrcode FROM qrcode WHERE  id>=500");
 	return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 }
+
+function getFournisseur($pdoBt, $idFou){
+	$req=$pdoBt->prepare("SELECT * FROM salon_fournisseurs_presence WHERE  id_fournisseur= :id_fournisseur");
+	$req->execute(array(
+		':id_fournisseur'	=>$idFou
+	));
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
 $listFournisseur=getListFournisseur($pdoBt);
 $listQrcode=getListQrcode($pdoBt);
 
 
+
+
+
 foreach ($listFournisseur as $key => $fournisseurs) {
+	$thisFou=getFournisseur($pdoBt, $fournisseurs['id']);
 	ob_start();
+
 	include('badge-fournisseur.php');
 	$html=ob_get_contents();
 	ob_end_clean();
@@ -46,7 +59,7 @@ foreach ($listFournisseur as $key => $fournisseurs) {
 
 	$mpdf->WriteHTML($html);
 	// $pdfContent = $mpdf->Output();
-	$mpdf->Output('D:\\www\\'.VERSION.'intranet\\'.VERSION.'btlecest\\public\\salon\\pdf-fournisseur\\'.$fournisseurs['fournisseur'].'.pdf', 'F');
+	$mpdf->Output('D:\\www\\'.VERSION.'intranet\\'.VERSION.'btlecest\\public\\salon\\pdf-fournisseur\\'.trim($fournisseurs['fournisseur']).'.pdf', 'F');
 }
 
 
