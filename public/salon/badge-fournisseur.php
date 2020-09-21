@@ -111,7 +111,7 @@
 		Bonjour,
 	</h1>
 	<p class="intro">Merci de vous munir du badge ci-dessous sur le salon. A l'accueil du salon, il vous sera demandé de scanner le qrcode afin d'enregistrer votre présence</p>
-	<p class="intro"><b>Aucun bagde ne sera délivré sur le salon, en revanche, nous vous fournirons le support de badge</b></p>
+	<p class="intro"><b>Aucun badge ne sera délivré sur le salon, en revanche, nous vous fournirons le support de badge</b></p>
 	<p class="intro">Avant d'imprimer, pensez à vérifier vos options d'impression, l'échelle doit être sur "défaut" (ce paramètre se trouve dans les options avancées)</p>
 	<div class="main-center">
 
