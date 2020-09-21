@@ -63,7 +63,22 @@
 					</h1>
 					<h4  class="text-center">Nouvelles dates pour le salon bazar Technique BTLec Est :<br> <span class="text-orange"> 22 et 23 septembre 2020</span></h4>
 					<h4 class="text-center">Les inscriptions sont ouvertes !!</h4>
-					<div class="text-center" ><a href="../salon/inscription-2020.php"><button class="glow-on-hover" >S'INSCRIRE AU SALON</button></a></div>
+					<div class="row">
+						<div class="col">
+							<div class="text-center" ><a href="../salon/inscription-2020.php"><button class="glow-on-hover" >S'INSCRIRE AU SALON</button></a></div>
+
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="col">
+							<div class="text-center" ><a href="../salon/pdf-badges-multiple.php" class="next"><button class="glow-on-hover" >IMPRIMER MES BADGES</button></a></div>
+						</div>
+						<div class="col">
+							<div class="text-center" ><a href="../salon/inscription-2020.php#formation-lk" class="next"><button class="glow-on-hover" >S'INSCRIRE AUX FORMATIONS</button></a></div>
+
+						</div>
+					</div>
 				<?php endif ?>
 
 
