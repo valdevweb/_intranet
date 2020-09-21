@@ -94,9 +94,9 @@ $lotus=getExtraction($pdoMag,$newData[0]['id'],"lotus");
 $emailDb=getExtraction($pdoMag,$newData[0]['id'],"email");
 $ld=getExtraction($pdoMag,$newData[0]['id'],"ld");
 
-
 // efface lotus_ld
 eraseLdLotus($pdoMag);
+
 
 if(!empty($empty)){
 	foreach ($empty as $key => $extraction) {
@@ -117,48 +117,41 @@ if(!empty($lotus)){
 	foreach ($lotus as $key => $extraction) {
 		$name=explode('/',$extraction['contenu']);
 		$name=trim($name[0]);
+
 		$result=ldap_search($lotusCon, $ldaptree, "(CN=*".$name."*)",$justThese);
 		$data = ldap_get_entries($lotusCon, $result);
-		// correspondace trouvée
-		if(count($data)>1){
-			$email=$data[0]['mail'][0];
-			$anotherLotus=explode('/',$email);
-			if(count($anotherLotus)>1){
-				$codeErr=5;
-				$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], '', $email, $extraction['btlec'], $extraction['galec'], $codeErr);
-				if($one){
-					$added++;
-				}else{
-					$taskErrors[$extraction['ld_id']][$extraction['array_i']]['type']="lotus";
-					$taskErrors[$extraction['ld_id']][$extraction['array_i']]['ld_full']=$extraction['ld_full'];
-					$taskErrors[$extraction['ld_id']][$extraction['array_i']]['contenu']=$email;
-					$taskErrors[$extraction['ld_id']][$extraction['array_i']]['id_import']=$newData[0]['id'];
-				}
-			}else{
+		if($data['count']==0){
+			// pas trouvé
+			$codeErr=4;
+			$email="";
+		}elseif($data['count']==1){
+			// trouvé unique
+			if(!strpos($data[0]['mail'][0],'/')){
+				$email=$data[0]['mail'][0];
 				$codeErr=0;
-				$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], $email,'', $extraction['btlec'], $extraction['galec'], $codeErr);
-				if($one){
-					$added++;
-				}else{
-					$taskErrors[$extraction['ld_id']][$extraction['array_i']]['type']="lotus";
-					$taskErrors[$extraction['ld_id']][$extraction['array_i']]['ld_full']=$extraction['ld_full'];
-					$taskErrors[$extraction['ld_id']][$extraction['array_i']]['contenu']=$email;
-					$taskErrors[$extraction['ld_id']][$extraction['array_i']]['id_import']=$newData[0]['id'];
-				}
+			}else{
+				$codeErr=5;
+				$email="";
 			}
 		}else{
-			// correspondance non trouvée
-			$codeErr=2;
-			$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], '', $email, $extraction['btlec'],$extraction['galec'], $codeErr);
-			if($one){
-				$added++;
-			}else{
-				$taskErrors[$extraction['ld_id']][$extraction['array_i']]['type']="lotus";
-				$taskErrors[$extraction['ld_id']][$extraction['array_i']]['ld_full']=$extraction['ld_full'];
-				$taskErrors[$extraction['ld_id']][$extraction['array_i']]['contenu']=$extraction['contenu'];
-				$taskErrors[$extraction['ld_id']][$extraction['array_i']]['id_import']=$newData[0]['id'];
+			// plusieurs correspondances trouvées
+			for($i=0;$i<count($data)-1;$i++){
+				if($extraction['contenu']==$data[$i]['displayname'][0]){
+					// on reverifie si on n'a pas à nouveau une adresse lotus : pour l'instant cas unqiue avec laurice lionel.
+					// Il a 2 fiches dans lotus dont une où aucune adresse mail n'est saisie si bien que ça renvoie à nouveau l'adresse lotus
+					if(!strpos($data[$i]['mail'][0],'/')){
+						$email=$data[$i]['mail'][0];
+						$codeErr=0;
+					}
+				}
 			}
+			if(empty($email)){
+				$codeErr=4;
+				$email="";
+			}
+
 		}
+		insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], $email, '', $extraction['btlec'], $extraction['galec'], $codeErr);
 	}
 }
 
