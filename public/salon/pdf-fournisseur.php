@@ -52,7 +52,7 @@ $listQrcode=getListQrcode($pdoBt);
 
 
 ob_start();
-include('badge-fournisseur.php');
+include('badge-fournisseur-par-fournisseur.php');
 $html=ob_get_contents();
 ob_end_clean();
 $mpdf = new \Mpdf\Mpdf(['mode' => 'utf-8', 'format' => 'A4']);

@@ -19,9 +19,11 @@ function getParticipant($pdoBt)
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-$participantList=getParticipant($pdoBt);
+if(isset($_SESSION['id_galec'])){
+	$participantList=getParticipant($pdoBt);
+}
 
-if(!empty($participantList)){
+if(isset($participantList) && !empty($participantList)){
 	$mpdf = new \Mpdf\Mpdf();
 
 		ob_start();
