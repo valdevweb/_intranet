@@ -1,0 +1,79 @@
+
+INSERT INTO `email_gtoccasion`( `id_web_user`, `btlec`, `galec`, `email`) VALUES (727,4390,0190,"myriam.bourron@scapalsace.fr"),
+(727,4390,0190,"technique.beldis@scapalsace.fr"),
+(1135,4460,1071,"culturel.digoin@scacentre.fr"),
+(1238,4605,1031,"smassardier@leclerc-roques.com"),
+(1238,4605,1031,"rsoulie@leclerc-roques.com"),
+(794,4385,0957,"bazar.freydis@scapalsace.fr"),
+(794,4385,0957,"occasion.freydis@scapalsace.fr"),
+
+(759,4391,0357,"bazar_technique.croixdis@scapalsace.fr"),
+(759,4391,0357,"electromenager.croixdis@scapalsace.fr"),
+(759,4391,0357,"occasion-achat.croixdis@scapalsace.fr"),
+(884,4073,0851,"directeur.sodichamp@scapest.fr"),
+(747,4064,0751,"culturel.chamdis@scapest.fr"),
+(710,4340,1168,"occasion.alcoba@scapalsace.fr"),
+(1250,4613,0366,"dvilleret@leclerc-boulou.com"),
+(821,4048,0170,"abdel.boutbel@scapalsace.fr"),
+(852,4329,0888,"rdbazar.raon@scapalsace.fr"),
+(1110,4479,0503,"leclercoccasion.avermes@gmail.com"),
+(889,4944,0462,"Alice.Hecquet@scapartois.fr"),
+(889,4944,0462,"yohan.jonnart@scapartois.fr"),
+(923,4059,0355,"directeur.verdun@scapest.fr"),
+(712,4334,0367,"direction_ec.alsedis@scapalsace.fr"),
+(871,4078,0351,"directeur.sezadis@scapest.fr"),
+(871,4078,0351,"leclerc-occasion.sezadis@scapest.fr"),
+(832,4379,0325,"occasion.montbedis@scapalsace.fr"),
+(562,4947,0562,"resp-occasion.attin@scapartois.fr"),
+(562,4947,0562,"julien.tavan@scapartois.fr");
+
+
+
+
+
+
+
+562
+    resp-occasion.attin@scapartois.fr
+    julien.tavan@scapartois.fr
+----------------------------------------------
+
+
+0576
+Directeur-Commercial Elbeuf/ELBEUF/scanormande/galec/e-leclerc/fr, 
+Bazar Elbeuf/ELBEUF/scanormande/galec/e-leclerc/fr, 
+
+
+845
+occasion.gien@socamaine.fr, Marketing Giendis/Giendis/socamaine/galec/e-leclerc/fr, 
+1244
+textile.sodiretz@scaouest.fr
+
+1014
+CDG IFS/IFS/scanormande/galec/e-leclerc/fr
+
+
+
+1876
+cd.nonal Gonfrevildis/GONFREVILDIS/scanormande/galec/e-leclerc/fr, Julien Bussolini/GONFREVILDIS/scanormande/galec/e-leclerc/fr
+3429
+Christophe Duquenoy/Plougastel/scarmor/galec/e-leclerc/fr
+
+
+766
+Responsable-Marketing Sodisro/sodisro/scanormande/galec/e-leclerc/fr, Ludovic.Bracq@scanormande.fr
+
+
+1635
+Attachee-CDG Sodirennes/Sodirennes/Scaouest/galec/e-leclerc/fr, Directeur M801E71Sodirennes/Sodirennes/Scaouest/
+galec/e-leclerc/fr,
+
+    
+0614 
+lisieux
+communication.lisieux@scanormande.fr
+informatique.lisieux@scanormande.fr
+Lisieux /Lisieux/scanormande/galec/e-leclerc/fr
+
+INSERT INTO `email_gtoccasion`( `id_web_user`, `btlec`, `galec`, `email`) VALUES (727,4390,0190,"myriam.bourron@scapalsace.fr"),
+(727,4390,0190,"technique.beldis@scapalsace.fr"),
