@@ -1,6 +1,6 @@
 <?php
-function getQuantiteActuelle($pdoBt,$article){
-	$req=$pdoBt->prepare("SELECT * FROM occ_article_qlik WHERE article_qlik= :article_qlik");
+function getQuantiteActuelle($pdoOcc,$article){
+	$req=$pdoOcc->prepare("SELECT * FROM articles_qlik WHERE article_qlik= :article_qlik");
 	$req->execute([
 		':article_qlik'	=>$article
 
@@ -14,11 +14,11 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 if(isset($_POST['checkout'])){
 
 
-	foreach ($paletteDansPanierMag as $key => $itemReserve) {
+	foreach ($paletteEtArticleDansPanier as $key => $itemReserve) {
 		// cas palette
 		if(!empty($itemReserve['id_palette'])){
 		//  on vérifie l'état des palettes si commandé ou expédié entre temps, on suppprile de temp et on averti le mag
-			$paletteStatut = getPaletteStatut($pdoBt,$itemReserve['id_palette']);
+			$paletteStatut = getPaletteStatut($pdoOcc,$itemReserve['id_palette']);
 
 			//  palette plus dispo
 			if($paletteStatut['statut'] !=1){
@@ -27,7 +27,7 @@ if(isset($_POST['checkout'])){
 		}else{
 
 			// on vérfie le stock article
-			$quantiteActuelle = getQuantiteActuelle($pdoBt,$itemReserve['article_occ']);
+			$quantiteActuelle = getQuantiteActuelle($pdoOcc,$itemReserve['article_occ']);
 
 
 			if($quantiteActuelle['qte_qlik']<$itemReserve['qte_cde']){
@@ -43,46 +43,45 @@ if(isset($_POST['checkout'])){
  // la table temporaire pourretirer toutes les palettes de cette commande
 	if(empty($errors)){
 			// on créé le numéro de commande statut 2 = comandé comme pour les palettes
-		$req=$pdoBt->query("INSERT INTO occ_cdes_numero (statut) VALUES (2)");
-		$lastinsertid=$pdoBt->lastInsertId();
-		foreach ($paletteDansPanierMag as $key => $itemReserve) {
+		$req=$pdoOcc->query("INSERT INTO cdes_numero (statut) VALUES (2)");
+		$lastinsertid=$pdoOcc->lastInsertId();
+
+
+		foreach ($paletteEtArticleDansPanier as $key => $itemReserve) {
 
 			// palette
 			if(!empty($itemReserve['id_palette'])){
 
-				$cdeOk=addToCmd($pdoBt,$itemReserve['id_palette'],$lastinsertid, $itemReserve['article_occ'], $itemReserve['panf_occ'], $itemReserve['deee_occ'], $itemReserve['sorecop_occ'], $itemReserve['design_occ'], $itemReserve['fournisseur_occ'], $itemReserve['ean_occ'], $itemReserve['qte_cde']);
+				$cdeOk=addToCmd($pdoOcc,$itemReserve['id_palette'],$lastinsertid, $itemReserve['article_occ'], $itemReserve['panf_occ'], $itemReserve['deee_occ'], $itemReserve['sorecop_occ'], $itemReserve['design_occ'], $itemReserve['fournisseur_occ'], $itemReserve['ean_occ'], $itemReserve['qte_cde']);
 				if($cdeOk){
 					$statut=2;
-					$upPalette=$paletteMgr->updatePaletteStatut($pdoBt,$itemReserve['id_palette'],$statut);
+					$upPalette=$paletteMgr->updatePaletteStatut($pdoOcc,$itemReserve['id_palette'],$statut);
 				}else{
 					$errors[]="Une erreur est survenue avec la palette ".$itemReserve['palette'];
 				}
 				if($upPalette){
-					$deleteTemRow=deleteTempCmd($pdoBt,$itemReserve['id']);
+					$deleteTemRow=deleteTempCmd($pdoOcc,$itemReserve['id']);
 				}
 
 			}else{
 				// article
-				$cdeOk=addToCmd($pdoBt,$itemReserve['id_palette'],$lastinsertid, $itemReserve['article_occ'], $itemReserve['panf_occ'], $itemReserve['deee_occ'], $itemReserve['sorecop_occ'], $itemReserve['design_occ'], $itemReserve['fournisseur_occ'], $itemReserve['ean_occ'], $itemReserve['qte_cde']);
+				$cdeOk=addToCmd($pdoOcc,$itemReserve['id_palette'],$lastinsertid, $itemReserve['article_occ'], $itemReserve['panf_occ'], $itemReserve['deee_occ'], $itemReserve['sorecop_occ'], $itemReserve['design_occ'], $itemReserve['fournisseur_occ'], $itemReserve['ean_occ'], $itemReserve['qte_cde']);
 				if($cdeOk){
 					// on supprime la ligne temporaire
-					$deleteTemRow=deleteTempCmd($pdoBt,$itemReserve['id']);
+					$deleteTemRow=deleteTempCmd($pdoOcc,$itemReserve['id']);
 					// on met à jour les quantité de la table cde
 					// donc on récupère la qte actuelle
-					$qteStock=getQteArticleQlik($pdoBt, $itemReserve['article_occ']);
+					$qteStock=getQteArticleQlik($pdoOcc, $itemReserve['article_occ']);
 					$qte=$qteStock - $itemReserve['qte_cde'];
-					$ok=updateQteArticle($pdoBt,$itemReserve['article_occ'], $qte);
-					if(!$ok){
-						$errors[]="une erreur est survenue, impossible de passer votre commande";
+					$ok=updateQteArticle($pdoOcc,$itemReserve['article_occ'], $qte);
+						if(!$ok){
+						$errors[]="une erreur est survenue, impossible de passer votre commande 1";
 					}
 				}else{
-					$errors[]="une erreur est survenue, impossible de passer votre commande";
+					$errors[]="une erreur est survenue, impossible de passer votre commande 2";
 				}
 			}
 		}
-
-
-
 	}
 
 	if(empty($errors)){

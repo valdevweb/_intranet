@@ -17,8 +17,8 @@ if(VERSION=="_"){
 	$target_dir = "D:\\www\\intranet\\upload\\flash\\";
 }
 	file_put_contents($target_dir.$file, $_POST['iframe']);
-	function alreadyInDb($pdoBt){
-		$req=$pdoBt->prepare("SELECT html_file FROM occ_news WHERE html_file LIKE :html_file");
+	function alreadyInDb($pdoOcc){
+		$req=$pdoOcc->prepare("SELECT html_file FROM news WHERE html_file LIKE :html_file");
 		$req->execute([
 			':html_file'	=>$_POST['filename']
 		]);
@@ -29,8 +29,8 @@ if(VERSION=="_"){
 		}
 		return false;
 	}
-	if(!alreadyInDb($pdoBt)){
-		$req=$pdoBt->prepare("INSERT INTO occ_news (html_file, id_web_user, date_insert) VALUES (:html_file, :id_web_user, :date_insert)");
+	if(!alreadyInDb($pdoOcc)){
+		$req=$pdoOcc->prepare("INSERT INTO news (html_file, id_web_user, date_insert) VALUES (:html_file, :id_web_user, :date_insert)");
 		$req->execute([
 			':html_file'	=>$_POST['filename'],
 			':id_web_user'	=>$_SESSION['id_web_user'],

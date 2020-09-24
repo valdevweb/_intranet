@@ -3,18 +3,18 @@
 class OccPaletteMgr{
 
 
-	private $pdoBt;
+	private $pdoOcc;
 
-	public function __construct($pdoBt){
-		$this->setPdo($pdoBt);
+	public function __construct($pdoOcc){
+		$this->setPdo($pdoOcc);
 	}
-	public function setPdo($pdoBt){
-		$this->pdoBt=$pdoBt;
-		return $pdoBt;
+	public function setPdo($pdoOcc){
+		$this->pdoOcc=$pdoOcc;
+		return $pdoOcc;
 	}
 
 	public function getListPaletteDetailByStatut($statut){
-		$req=$this->pdoBt->prepare("SELECT occ_palettes.id as idpalette, occ_palettes.palette, occ_articles.*  FROM occ_palettes LEFT JOIN occ_articles ON occ_palettes.id=occ_articles.id_palette WHERE statut=:statut ORDER BY palette");
+		$req=$this->pdoOcc->prepare("SELECT palettes.id as idpalette, palettes.palette, palettes_articles.*  FROM palettes LEFT JOIN palettes_articles ON palettes.id=palettes_articles.id_palette WHERE statut=:statut ORDER BY palette");
 		$req->execute([
 			':statut'		=>$statut
 		]);
@@ -23,14 +23,14 @@ class OccPaletteMgr{
 
 
 	public function getListPaletteByCde($statut){
-		$req=$this->pdoBt->prepare("SELECT occ_palettes.*, occ_cdes.*,occ_cdes.id as id_cde, DATE_FORMAT(date_insert,'%d-%m-%Y') as date_cde FROM occ_palettes LEFT JOIN occ_cdes ON occ_palettes.id=occ_cdes.id_palette WHERE statut=:statut");
+		$req=$this->pdoOcc->prepare("SELECT palettes.*, cdes_detail.*,cdes_detail.id as id_cde, DATE_FORMAT(date_insert,'%d-%m-%Y') as date_cde FROM palettes LEFT JOIN cdes_detail ON palettes.id=cdes_detail.id_palette WHERE statut=:statut");
 		$req->execute([
 			':statut'		=>$statut
 		]);
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
-	public function updatePaletteStatut($pdoBt,$idPalette,$statut){
-		$req=$pdoBt->prepare("UPDATE occ_palettes SET statut= :statut WHERE id= :id");
+	public function updatePaletteStatut($pdoOcc,$idPalette,$statut){
+		$req=$pdoOcc->prepare("UPDATE palettes SET statut= :statut WHERE id= :id");
 		$req->execute([
 			':id'		=>$idPalette,
 			':statut'	=>$statut
@@ -43,8 +43,8 @@ class OccPaletteMgr{
 		return true;
 	}
 
-	public function updatePaletteCdeStatut($pdoBt,$idCde,$statut){
-		$req=$pdoBt->prepare("UPDATE occ_palettes LEFT JOIN occ_cdes ON occ_palettes.id=occ_cdes.id_palette SET statut= :statut WHERE id_cde= :id_cde");
+	public function updatePaletteCdeStatut($pdoOcc,$idCde,$statut){
+		$req=$pdoOcc->prepare("UPDATE palettes LEFT JOIN cdes_detail ON palettes.id=cdes_detail.id_palette SET statut= :statut WHERE id_cde= :id_cde");
 		$req->execute([
 			':id_cde'		=>$idCde,
 			':statut'	=>$statut
@@ -53,7 +53,7 @@ class OccPaletteMgr{
 	}
 
 	public function getListCommandeByStatut($statut){
-		$req=$this->pdoBt->prepare("SELECT * FROM occ_cdes_numero LEFT JOIN occ_cdes ON occ_cdes_numero.id=occ_cdes.id_cde WHERE statut= :statut GROUP BY id_cde");
+		$req=$this->pdoOcc->prepare("SELECT * FROM cdes_numero LEFT JOIN cdes_detail ON cdes_numero.id=cdes_detail.id_cde WHERE statut= :statut GROUP BY id_cde");
 		$req->execute([
 			':statut'	=>$statut
 		]);
@@ -61,7 +61,7 @@ class OccPaletteMgr{
 
 	}
 	public function getCdeByIdCde($idCde){
-	$req=$this->pdoBt->prepare("SELECT occ_cdes.*,occ_articles.*, occ_cdes.date_insert as date_cde  FROM occ_cdes LEFT JOIN occ_articles ON occ_cdes.id_palette = occ_articles.id_palette WHERE  id_cde= :id_cde ORDER BY occ_cdes.id_palette");
+	$req=$this->pdoOcc->prepare("SELECT cdes_detail.*,palettes_articles.*, cdes_detail.date_insert as date_cde  FROM cdes_detail LEFT JOIN palettes_articles ON cdes_detail.id_palette = palettes_articles.id_palette WHERE  id_cde= :id_cde ORDER BY cdes_detail.id_palette");
 	$req->execute([
 		':id_cde'	=>$idCde
 

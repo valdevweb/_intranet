@@ -24,7 +24,7 @@
 			</div> <!--end shopping-cart-header -->
 
 			<div class="shopping-cart-items">
-				<?php foreach ($paletteDansPanierMag as $key => $tempPalette): ?>
+				<?php foreach ($paletteEtArticleDansPanier as $key => $tempPalette): ?>
 					<?php if (empty($tempPalette['id_palette'])): ?>
 						<div class="row no-gutters">
 							<div class="col text-left">

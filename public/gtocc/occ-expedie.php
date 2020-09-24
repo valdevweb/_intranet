@@ -34,12 +34,12 @@ $errors=[];
 $success=[];
 
 
-$paletteMgr=new OccPaletteMgr($pdoBt);
+$paletteMgr=new OccPaletteMgr($pdoOcc);
 $paletteExpediees=$paletteMgr->getListCommandeByStatut(3);
 
 
 
-$arrayListPalette=OccHelpers::arrayPalette($pdoBt);
+$arrayListPalette=OccHelpers::arrayPalette($pdoOcc);
 
 
 //------------------------------------------------------

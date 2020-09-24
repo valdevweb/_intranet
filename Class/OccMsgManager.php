@@ -20,7 +20,7 @@ class OccMsgManager{
 		if(isset($params)){
 			$paramStr='WHERE ' .join(' AND ',$params);
 		}
-		$req=$this->pdo->query("SELECT * FROM occ_msg {$paramStr} ORDER BY date_insert");
+		$req=$this->pdo->query("SELECT * FROM msg {$paramStr} ORDER BY date_insert");
 
 		$data=$req->fetchAll(PDO::FETCH_ASSOC);
 		if(empty($data)){

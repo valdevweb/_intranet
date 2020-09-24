@@ -45,16 +45,16 @@ require '../../Class/OccHelpers.php';
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-function getListPanier($pdoBt){
-	$req=$pdoBt->prepare("SELECT occ_cdes_temp.*, palette FROM occ_cdes_temp LEFT JOIN occ_palettes ON id_palette=occ_palettes.id WHERE id_web_user= :id_web_user");
+function getListPanier($pdoOcc){
+	$req=$pdoOcc->prepare("SELECT cdes_temp.*, palette FROM cdes_temp LEFT JOIN palettes ON id_palette=palettes.id WHERE id_web_user= :id_web_user");
 	$req->execute([
 		':id_web_user'		=>$_SESSION['id_web_user']
 
 	]);
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-function addToTemp($pdoBt){
-	$req=$pdoBt->prepare("INSERT INTO occ_cdes_temp (id_web_user, id_palette, date_insert) VALUES (:id_web_user, :id_palette, :date_insert) ");
+function addToTemp($pdoOcc){
+	$req=$pdoOcc->prepare("INSERT INTO cdes_temp (id_web_user, id_palette, date_insert) VALUES (:id_web_user, :id_palette, :date_insert) ");
 	$req->execute([
 		':id_web_user'		=>$_SESSION['id_web_user'],
 		':id_palette'		=>$_POST['id_palette'],
@@ -71,8 +71,8 @@ function addToTemp($pdoBt){
 	return true;
 }
 
-function addToTempArt($pdoBt){
-	$req=$pdoBt->prepare("INSERT INTO occ_cdes_temp (id_web_user, id_palette, article_occ, design_occ, fournisseur_occ, ean_occ, panf_occ, deee_occ, sorecop_occ ,qte_cde, date_insert) VALUES (:id_web_user, :id_palette, :article_occ, :design_occ, :fournisseur_occ, :ean_occ, :panf_occ, :deee_occ, :sorecop_occ , :qte_cde, :date_insert) ");
+function addToTempArt($pdoOcc){
+	$req=$pdoOcc->prepare("INSERT INTO cdes_temp (id_web_user, id_palette, article_occ, design_occ, fournisseur_occ, ean_occ, panf_occ, deee_occ, sorecop_occ ,qte_cde, date_insert) VALUES (:id_web_user, :id_palette, :article_occ, :design_occ, :fournisseur_occ, :ean_occ, :panf_occ, :deee_occ, :sorecop_occ , :qte_cde, :date_insert) ");
 	$req->execute([
 		':id_web_user'		=>$_SESSION['id_web_user'],
 		':id_palette'		=>0,
@@ -99,15 +99,15 @@ function addToTempArt($pdoBt){
 }
 
 
-function delTempCde($pdoBt){
-	$req=$pdoBt->prepare("DELETE FROM occ_cdes_temp WHERE id= :id");
+function delTempCde($pdoOcc){
+	$req=$pdoOcc->prepare("DELETE FROM cdes_temp WHERE id= :id");
 	$req->execute([
 		':id'		=>$_GET['idTempDel']
 	]);
 }
 
-function getPaletteStatut($pdoBt,$id){
-	$req=$pdoBt->prepare("SELECT * FROM occ_palettes WHERE id= :id ");
+function getPaletteStatut($pdoOcc,$id){
+	$req=$pdoOcc->prepare("SELECT * FROM palettes WHERE id= :id ");
 	$req->execute([
 		':id'	=>$id
 
@@ -116,8 +116,8 @@ function getPaletteStatut($pdoBt,$id){
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-function updatePalette($pdoBt,$idPalette,$statut){
-	$req=$pdoBt->prepare("UPDATE occ_palettes SET statut= :statut WHERE id= :id");
+function updatePalette($pdoOcc,$idPalette,$statut){
+	$req=$pdoOcc->prepare("UPDATE palettes SET statut= :statut WHERE id= :id");
 	$req->execute([
 		':id'		=>$idPalette,
 		':statut'	=>$statut
@@ -129,8 +129,8 @@ function updatePalette($pdoBt,$idPalette,$statut){
 	return true;
 }
 
-function addToCmd($pdoBt,$idPalette,$idCde, $article, $panf, $deee, $sorecop, $design, $fournisseur, $ean, $qte){
-	$req=$pdoBt->prepare("INSERT INTO occ_cdes (id_web_user, id_palette, id_cde, article_occ, panf_occ, deee_occ, sorecop_occ, design_occ, fournisseur_occ, ean_occ, qte_cde, date_insert) VALUES (:id_web_user, :id_palette, :id_cde, :article_occ, :panf_occ, :deee_occ, :sorecop_occ, :design_occ, :fournisseur_occ, :ean_occ, :qte_cde, :date_insert) ");
+function addToCmd($pdoOcc,$idPalette,$idCde, $article, $panf, $deee, $sorecop, $design, $fournisseur, $ean, $qte){
+	$req=$pdoOcc->prepare("INSERT INTO cdes_detail (id_web_user, id_palette, id_cde, article_occ, panf_occ, deee_occ, sorecop_occ, design_occ, fournisseur_occ, ean_occ, qte_cde, date_insert) VALUES (:id_web_user, :id_palette, :id_cde, :article_occ, :panf_occ, :deee_occ, :sorecop_occ, :design_occ, :fournisseur_occ, :ean_occ, :qte_cde, :date_insert) ");
 	$req->execute([
 		':id_web_user'		=>$_SESSION['id_web_user'],
 		':id_cde'		=>$idCde,
@@ -153,8 +153,8 @@ function addToCmd($pdoBt,$idPalette,$idCde, $article, $panf, $deee, $sorecop, $d
 	}
 	return true;
 }
-function deleteTempCmd($pdoBt,$id){
-	$req=$pdoBt->prepare("DELETE FROM occ_cdes_temp WHERE id= :id");
+function deleteTempCmd($pdoOcc,$id){
+	$req=$pdoOcc->prepare("DELETE FROM cdes_temp WHERE id= :id");
 	$req->execute([
 		':id'	=>$id
 	]);
@@ -165,14 +165,14 @@ function deleteTempCmd($pdoBt,$id){
 	return true;
 }
 
-function getAssortiment($pdoBt){
-	$req=$pdoBt->query(" SELECT occ_article_qlik.*, cmt	FROM occ_article_qlik LEFT JOIN occ_article_qlik_cmt ON occ_article_qlik.article_qlik= occ_article_qlik_cmt.article WHERE qte_qlik !=0 ORDER BY article_qlik");
+function getAssortiment($pdoOcc){
+	$req=$pdoOcc->query(" SELECT articles_qlik.*, cmt	FROM articles_qlik LEFT JOIN articles_qlik_cmt ON articles_qlik.article_qlik= articles_qlik_cmt.article WHERE qte_qlik !=0 ORDER BY article_qlik");
 	return $req->fetchAll();
 }
 
 
-function onPaletteOccas($pdoBt, $article){
-	$req=$pdoBt->prepare("SELECT id_palette, palette, statut  FROM occ_articles LEFT JOIN occ_palettes ON occ_articles.id_palette=occ_palettes.id WHERE code_article= :code_article");
+function onPaletteOccas($pdoOcc, $article){
+	$req=$pdoOcc->prepare("SELECT id_palette, palette, statut  FROM palettes_articles LEFT JOIN palettes ON palettes_articles.id_palette=palettes.id WHERE code_article= :code_article");
 	$req->execute([
 		':code_article'	=>$article
 
@@ -180,8 +180,18 @@ function onPaletteOccas($pdoBt, $article){
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-function isMagArticleInTemp($pdoBt, $article){
-	$req=$pdoBt->prepare("SELECT * FROM occ_cdes_temp WHERE article_occ= :article_occ AND id_web_user= :id_web_user");
+
+function getListArticleMagInTemp($pdoOcc){
+	$req=$pdoOcc->prepare("SELECT article_occ, qte_cde FROM cdes_temp WHERE id_web_user= :id_web_user AND article_occ IS NOT NULL");
+	$req->execute([
+		':id_web_user'	=>$_SESSION['id_web_user']
+
+	]);
+	$data=$req->fetchAll(PDO::FETCH_KEY_PAIR);
+	return $data;
+}
+function isMagArticleInTemp($pdoOcc, $article){
+	$req=$pdoOcc->prepare("SELECT * FROM cdes_temp WHERE article_occ= :article_occ AND id_web_user= :id_web_user");
 	$req->execute([
 		':article_occ'	=>$article,
 		':id_web_user'	=>$_SESSION['id_web_user']
@@ -192,8 +202,8 @@ function isMagArticleInTemp($pdoBt, $article){
 }
 
 
-function delLine($pdoBt,$idCdeTemp){
-	$req=$pdoBt->prepare("DELETE FROM occ_cdes_temp WHERE id= :id");
+function delLine($pdoOcc,$idCdeTemp){
+	$req=$pdoOcc->prepare("DELETE FROM cdes_temp WHERE id= :id");
 	$req->execute([
 		':id'	=>$idCdeTemp
 	]);
@@ -204,9 +214,9 @@ function delLine($pdoBt,$idCdeTemp){
 	return true;
 }
 
-function updateTempArt($pdoBt,$id){
+function updateTempArt($pdoOcc,$id){
 
-	$req=$pdoBt->prepare("UPDATE occ_cdes_temp SET qte_cde= :qte_cde, date_insert= :date_insert WHERE id= :id" );
+	$req=$pdoOcc->prepare("UPDATE cdes_temp SET qte_cde= :qte_cde, date_insert= :date_insert WHERE id= :id" );
 	$req->execute([
 		':qte_cde'		=>$_POST['qte_cde'],
 		':date_insert'		=>date('Y-m-d H:i:s'),
@@ -214,8 +224,8 @@ function updateTempArt($pdoBt,$id){
 	]);
 }
 
-function updateQteArticle($pdoBt,$article, $qte){
-	$req=$pdoBt->prepare("UPDATE occ_article_qlik SET qte_qlik= :qte_qlik WHERE article_qlik= :article_qlik");
+function updateQteArticle($pdoOcc,$article, $qte){
+	$req=$pdoOcc->prepare("UPDATE articles_qlik SET qte_qlik= :qte_qlik WHERE article_qlik= :article_qlik");
 	$req->execute([
 		':qte_qlik'	=>$qte,
 		':article_qlik'		=>$article
@@ -228,8 +238,8 @@ function updateQteArticle($pdoBt,$article, $qte){
 	return true;
 }
 
-function getQteArticleQlik($pdoBt, $article){
-	$req=$pdoBt->prepare(" SELECT qte_qlik	FROM occ_article_qlik WHERE article_qlik= :article_qlik");
+function getQteArticleQlik($pdoOcc, $article){
+	$req=$pdoOcc->prepare(" SELECT qte_qlik	FROM articles_qlik WHERE article_qlik= :article_qlik");
 	$req->execute([
 		':article_qlik' =>$article
 	]);
@@ -246,30 +256,32 @@ $errors=[];
 $success=[];
 $displayCart=false;
 
-$paletteMgr=new OccPaletteMgr($pdoBt);
+$paletteMgr=new OccPaletteMgr($pdoOcc);
 $paletteCommandable=$paletteMgr->getListPaletteDetailByStatut(1);
+
+
 $paletteEnPrepa=$paletteMgr->getListPaletteDetailByStatut(0);
 $paletteCommandees=$paletteMgr->getListCommandeByStatut(2);
-$paletteDansPanierMag=getListPanier($pdoBt);
+$paletteEtArticleDansPanier=getListPanier($pdoOcc);
 
-$listAssortiment=getAssortiment($pdoBt);
-$arrayListPalette=OccHelpers::arrayPalette($pdoBt);
+$listAssortiment=getAssortiment($pdoOcc);
+$arrayListPalette=OccHelpers::arrayPalette($pdoOcc);
 
 
+// si le magasin a des article ou des palettes dans son panier
+if(!empty($paletteEtArticleDansPanier)){
+	$nbPalettePanier=count($paletteEtArticleDansPanier);
+	// on récupère la liste des articles d'occasion dans son panier pour pouvoir afficher la quantité commandée dans les inputs et modifier le stock affiché
+	$artInTemp=getListArticleMagInTemp($pdoOcc);
 
-if(!empty($paletteDansPanierMag)){
-	$nbPalettePanier=count($paletteDansPanierMag);
 }else{
 	$nbPalettePanier=0;
 }
-// if(isset($_GET['id'])){
-// 	$detailPalette=getPalette($pdoBt, $_GET['id']);
-// }
+
+
+//  permet d'ajouter une palette au panier
 if(isset($_POST['addtocart'])){
-	$displayCart=addToTemp($pdoBt);
-		// echo "<pre>";
-		// print_r($displayCart);
-		// echo '</pre>';
+	$displayCart=addToTemp($pdoOcc);
 	if($displayCart){
 		$successQ='?success=cart';
 		unset($_POST);
@@ -279,15 +291,15 @@ if(isset($_POST['addtocart'])){
 		$errors[]="erreur";
 	}
 }
-// lien supprimerune palette du cart
 
+// lien supprimer une palette du cart
 if(isset($_GET['idTempDel'])){
-	delTempCde($pdoBt);
+	delTempCde($pdoOcc);
 	header("Location:occ-palette.php");
 }
 
 if(isset($_GET['idTempDelArticle'])){
-	delLine($pdoBt,$_GET['idTempDelArticle']);
+	delLine($pdoOcc,$_GET['idTempDelArticle']);
 	header("Location:occ-palette.php");
 }
 
@@ -300,7 +312,7 @@ include 'occ-palette-addarticle.php';
 if(isset($_GET['expedier'])){
 	$majStatutPalette=false;
 	// mettre à jour len uméro de commande
-	$req=$pdoBt->prepare("UPDATE occ_cdes_numero SET statut=3 WHERE id= :id");
+	$req=$pdoOcc->prepare("UPDATE cdes_numero SET statut=3 WHERE id= :id");
 	$req->execute([
 		':id'		=>$_GET['expedier']
 	]);
@@ -317,7 +329,7 @@ if(isset($_GET['expedier'])){
 	if($majStatutPalette){
 
 		// on n'utilise pas le nuémro de palette pour mettre à jour mais le numéro de commande mais
-		$upPalette=$paletteMgr->updatePaletteCdeStatut($pdoBt,$_GET['expedier'],3);
+		$upPalette=$paletteMgr->updatePaletteCdeStatut($pdoOcc,$_GET['expedier'],3);
 
 		if($upPalette>=1){
 			header("Location:occ-palette.php?success=expedie");
@@ -352,9 +364,6 @@ include('../view/_navbar.php');
 
 
 $infoMag=UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $_SESSION['id_web_user']);
-
-
-
 
 
 ?>
@@ -408,7 +417,7 @@ DEBUT CONTENU CONTAINER
 
 	<?php
 	// affichage du panier si article en commande
-	if (!empty($paletteDansPanierMag)){
+	if (!empty($paletteEtArticleDansPanier)){
 		include 'occ-palette-cart.php';
 	}
 	// affichage de la liste des articles gt13 commandables
