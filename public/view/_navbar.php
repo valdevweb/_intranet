@@ -171,16 +171,11 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 
 			<li class='active has-sub'><a href="#"><span>Leclerc occasion</span></a>
 				<ul>
-					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-news.php'?>">Informations générales</a>
-						<ul>
-							<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-editinfo.php'?>">Editeur d'info</a></li>
-						</ul>
-					</li>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-palette.php'?>">Offres produits</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-import-palette.php'?>">Gestion GT Occasion</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-expedie.php'?>">Palettes expédiées</a></li>
 
-					<li><a href="/public/#">Demandes magasins</a></li>
+
 				</ul>
 			</li>
 		<?php endif ?>
@@ -188,7 +183,6 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 
 			<li class='active has-sub'><a href="<?= ROOT_PATH?>/public/gtocc/#"><span>Leclerc occasion</span></a>
 				<ul>
-					<li><a href="#">Informations générales</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-palette.php'?>">Offres produits</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-ddes.php'?>">Vos demandes</a></li>
 				</ul>
