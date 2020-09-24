@@ -48,23 +48,42 @@ function connectToDb($dbname) {
 }
 
 // no dev
-$pdoUser=connectToDb('web_users');
-$pdoStat= connectToDb('stats');
-$pdoQlik= connectToDb('qlik');
-$pdoExploit= connectToDb('exploit');
-
-// dev
-$pdoBt=connectToDb(VERSION.'btlec');
-$pdoMag=connectToDb(VERSION.'magasin');
-$pdoSav=connectToDb(VERSION.'sav');
-$pdoLitige=connectToDb(VERSION.'litige');
-$pdoCasse=connectToDb(VERSION.'casse');
-$pdoCm=connectToDb(VERSION.'cm');
-$pdoEvo=connectToDb(VERSION.'evo');
-
-
-
-
+if(!isset($pdoBt)){
+	$pdoBt=connectToDb(VERSION.'btlec');
+}
+if(!isset($pdoUser)){
+	$pdoUser=connectToDb('web_users');
+}
+if(!isset($pdoMag)){
+	$pdoMag=connectToDb(VERSION.'magasin');
+}
+if(!isset($pdoSav)){
+	$pdoSav=connectToDb(VERSION.'sav');
+}
+if(!isset($pdoLitige)){
+	$pdoLitige=connectToDb(VERSION.'litige');
+}
+if(!isset($pdoCasse)){
+	$pdoCasse=connectToDb(VERSION.'casse');
+}
+if(!isset($pdoOcc)){
+	$pdoOcc=connectToDb(VERSION.'occasion');
+}
+if(!isset($pdoCm)){
+	$pdoCm=connectToDb(VERSION.'cm');
+}
+if(!isset($pdoEvo)){
+	$pdoEvo=connectToDb(VERSION.'evo');
+}
+if(!isset($pdoStat)){
+	$pdoStat= connectToDb('stats');
+}
+if(!isset($pdoQlik)){
+	$pdoQlik= connectToDb('qlik');
+}
+if(!isset($pdoExploit)){
+	$pdoExploit= connectToDb('exploit');
+}
 
 // css files
 $md_css=ROOT_PATH ."/vendor/materialize/css/materialize.css";

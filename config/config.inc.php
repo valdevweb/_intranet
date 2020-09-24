@@ -23,17 +23,43 @@ function connectToDb($dbname) {
 	return  $pdo;
 }
 
-$pdoCm=connectToDb(VERSION .'cm');
-$pdoUser=connectToDb('web_users');
-$pdoStat= connectToDb('stats');
+if(!isset($pdoBt)){
+	$pdoBt=connectToDb(VERSION.'btlec');
+}
+if(!isset($pdoUser)){
+	$pdoUser=connectToDb('web_users');
+}
+if(!isset($pdoMag)){
+	$pdoMag=connectToDb(VERSION.'magasin');
+}
+if(!isset($pdoSav)){
+	$pdoSav=connectToDb(VERSION.'sav');
+}
+if(!isset($pdoLitige)){
+	$pdoLitige=connectToDb(VERSION.'litige');
+}
+if(!isset($pdoCasse)){
+	$pdoCasse=connectToDb(VERSION.'casse');
+}
+if(!isset($pdoOcc)){
+	$pdoOcc=connectToDb(VERSION.'occasion');
+}
+if(!isset($pdoCm)){
+	$pdoCm=connectToDb(VERSION.'cm');
+}
+if(!isset($pdoEvo)){
+	$pdoEvo=connectToDb(VERSION.'evo');
+}
+if(!isset($pdoStat)){
+	$pdoStat= connectToDb('stats');
+}
+if(!isset($pdoQlik)){
+	$pdoQlik= connectToDb('qlik');
+}
+if(!isset($pdoExploit)){
+	$pdoExploit= connectToDb('exploit');
+}
 
-$pdoQlik=connectToDb('qlik');
-
-$pdoExploit= connectToDb('exploit');
-$pdoMag=connectToDb(VERSION .'magasin');
-$pdoBt=connectToDb(VERSION .'btlec');
-$pdoSav=connectToDb(VERSION .'sav');
-$pdoEvo=connectToDb(VERSION.'evo');
 
 
 // emplacement fichier csv gessica et ctbt
