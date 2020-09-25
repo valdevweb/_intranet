@@ -85,6 +85,7 @@ $justThese = array( "mail","displayname");
 // regarde si import non traité => done à 0
 $newData=undoneImport($pdoMag);
 if(!$newData){
+	echo "no data";
 	exit;
 }
 

@@ -2,7 +2,7 @@
 
 if (preg_match('/_btlecest/', dirname(__FILE__))){
 	set_include_path("D:\www\_intranet\_btlecest\\");
-	$manuel=true;
+	$manuel=false;
 
 }
 else{
@@ -65,7 +65,10 @@ function formatArrayNomListe($nomListesDiffu,$pdoMag){
 		$nomListesDiffu[$i]=str_replace('ListName:','',$nomListesDiffu[$i]);
 		$ldFull=trim($nomListesDiffu[$i]);
 		$suffixe=substr($ldFull,strlen($ldFull)-4,4);
-		$ldShort=substr($ldFull,0,strlen($ldFull)-4);
+		$decoupageLdFull=explode('-',$ldFull);
+		$suffixe='-'.end($decoupageLdFull);
+		$suffixeLength=strlen($suffixe);
+		$ldShort=substr($ldFull,0,strlen($ldFull)-$suffixeLength);
 		$btlec=getBtlecAndGalec($pdoMag,$ldShort);
 		$nomLdClean[$i]['ld_full']=$ldFull;
 		$nomLdClean[$i]['suffixe']=$suffixe;
@@ -146,6 +149,9 @@ if(empty($newFile)){
 }else{
 	echo $newFile;
 }
+
+
+
 // 2- ouvre le fichier
 $file=DIR_LOTUS_CSV."\\".$newFile;
 $fn = fopen($file,"rw");
@@ -161,15 +167,13 @@ $nomListesDiffu=getDataFromFile($contents,'ListName:');
 $contenuListeDiffu=getDataFromFile($contents,'Members:');
 // [158] => Members:  eric.morlier@lecasud.fr
 // [159] => Members:  CN=Culturel Sodimaz/OU=Sodimaz/OU=socamil/OU=btlec/O=e-leclerc/C=fr,CN=David Santoul/OU=Sodimaz/OU=socamil/OU=btlec/O=e-leclerc/C=fr
-// echo "<pre>";
-// print_r($nomListesDiffu);
-// print_r($contenuListeDiffu);
-// echo '</pre>';
 
 if(count($contenuListeDiffu)!=count($nomListesDiffu)){
 	echo "WARNING on ne peut pas traiter, envoyer un mail";
 	exit();
 }
+
+echo $newFile;
 if($manuel){
 	$lastinsertId=addNewFile($pdoMag, $newFile);
 
@@ -192,11 +196,11 @@ $contenuListeDiffu=formatArrayContenuListe($contenuListeDiffu);
    // [16] =>   Directeur VIRYDIS/virydis/scadif/btlec/e-leclerc/fr
     // [17] =>   Thierry JODET/virydis/scadif/btlec/e-leclerc/fr
 
-echo "<pre>";
+// echo "<pre>";
 // print_r($nomListesDiffu);
 // print_r($contenuListeDiffu);
-echo '</pre>';
-exit();
+// echo '</pre>';
+// exit();
 
 
 /*
@@ -209,11 +213,11 @@ for ($idLd=0; $idLd <count($contenuListeDiffu) ; $idLd++) {
 		// inserer nom ld avec code erreur vide (4)
 		$type="vide";
 		$videExt=addToExtraction($pdoMag,$lastinsertId,$nomListesDiffu[$idLd]['ld_full'],$nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, 1,'', $nomListesDiffu[$idLd]['btlec'], $nomListesDiffu[$idLd]['galec'], $type);
-			if(!$videExt){
-				$taskErrors[][$idLd]['type']="lotus";
-				$taskErrors[][$idLd]['ld_full']=$nomListesDiffu[$idLd]['ld_full'];
-				$taskErrors[][$idLd]['contenu']=trim($singleMail[$i]);
-			}
+		if(!$videExt){
+			$taskErrors[][$idLd]['type']="lotus";
+			$taskErrors[][$idLd]['ld_full']=$nomListesDiffu[$idLd]['ld_full'];
+			$taskErrors[][$idLd]['contenu']=trim($singleMail[$i]);
+		}
 		// $one=insertEmail($pdoMag, $lastinsertId, $nomListesDiffu[$idLd]['ld_full'], $nomListesDiffu[$idLd]['ld_short'], $nomListesDiffu[$idLd]['suffixe'], $idLd, '', '', $nomListesDiffu[$idLd]['btlec'], $codeErr);
 		echo $nomListesDiffu[$idLd]['ld_full'] . ' contenu '. $contenuListeDiffu[$idLd];
 		echo "<br>";
@@ -265,9 +269,9 @@ foreach ($arrOfMails as $idLd => $singleMail) {
 
 if(count($taskErrors)!=0){
 	echo "mauvais";
-		echo "<pre>";
-		print_r($taskErrors);
-		echo '</pre>';
+	echo "<pre>";
+	print_r($taskErrors);
+	echo '</pre>';
 
 }else{
 	echo 'tout s\'est bein passé';
