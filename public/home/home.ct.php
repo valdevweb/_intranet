@@ -35,57 +35,6 @@
 			<h4 class="text-center text-danger font-weight-bold">BTLec EST continue de travailler et d'assurer les livraisons</h4>
 		</div>
 	</div> -->
-	<div class="row pb-5 align-items-center">
-		<div class="col-lg-1"></div>
-		<div class="col  py-3 text-center  ">
-			<img class="border border-secondary" src="../img/salon/salon-2020.jpg">
-		</div>
-		<div class="col text-main-blue">
-			<?php if($_SESSION['id_web_user']==1102): ?>
-				<h1 class="text-main-blue">
-				SALON 2020</h1>
-				<h4  class="text-center">Nouvelles dates pour le salon bazar Technique BTLec Est :<br> <span class="text-orange"> 22 et 23 septembre 2020</span></h4>
-				<h4 class="text-center">Les inscriptions sont ouvertes !!</h4>
-				<div class="text-center" ><a href="../salon/inscription-2020.php"><button class="btn btn-orange" >S'INSCRIRE AU SALON</button></a></div>
-				<?php else: ?>
-
-					<h1 class="jump">
-						<span>S</span>
-						<span>A</span>
-						<span>L</span>
-						<span>O</span>
-						<span>N</span>
-						<span>&nbsp;</span>
-						<span>2</span>
-						<span>0</span>
-						<span>2</span>
-						<span>0</span>
-					</h1>
-					<h4  class="text-center">Nouvelles dates pour le salon bazar Technique BTLec Est :<br> <span class="text-orange"> 22 et 23 septembre 2020</span></h4>
-					<h4 class="text-center">Les inscriptions sont ouvertes !!</h4>
-					<div class="row">
-						<div class="col">
-							<div class="text-center" ><a href="../salon/inscription-2020.php"><button class="glow-on-hover" >S'INSCRIRE AU SALON</button></a></div>
-
-						</div>
-
-					</div>
-					<div class="row">
-						<div class="col">
-							<div class="text-center" ><a href="../salon/pdf-badges-multiple.php" class="next"><button class="glow-on-hover" >IMPRIMER MES BADGES</button></a></div>
-						</div>
-						<div class="col">
-							<div class="text-center" ><a href="../salon/inscription-2020.php#formation-lk" class="next"><button class="glow-on-hover" >S'INSCRIRE AUX FORMATIONS</button></a></div>
-
-						</div>
-					</div>
-				<?php endif ?>
-
-
-			</div>
-			<div class="col-lg-1"></div>
-
-		</div>
 
 		<div class="row pb-5">
 			<div class="col-lg-1"></div>
