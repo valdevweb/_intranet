@@ -42,6 +42,7 @@ if(isset($_POST['checkout'])){
  // le statu de la palette en commandé
  // la table temporaire pourretirer toutes les palettes de cette commande
 	if(empty($errors)){
+
 			// on créé le numéro de commande statut 2 = comandé comme pour les palettes
 		$req=$pdoOcc->query("INSERT INTO cdes_numero (statut) VALUES (2)");
 		$lastinsertid=$pdoOcc->lastInsertId();
@@ -74,7 +75,7 @@ if(isset($_POST['checkout'])){
 					$qteStock=getQteArticleQlik($pdoOcc, $itemReserve['article_occ']);
 					$qte=$qteStock - $itemReserve['qte_cde'];
 					$ok=updateQteArticle($pdoOcc,$itemReserve['article_occ'], $qte);
-						if(!$ok){
+					if(!$ok){
 						$errors[]="une erreur est survenue, impossible de passer votre commande 1";
 					}
 				}else{
@@ -93,16 +94,24 @@ if(isset($_POST['checkout'])){
 			$cc=[];
 			$hidden=[];
 		}else{
-			$req=$pdoMag->prepare("SELECT * from email_gtoccasion WHERE id_web_user= :id_web_user");
+			$req=$pdoMag->prepare("SELECT * from lotus_ld WHERE galec= :galec AND ld_suffixe='-GT13'");
 			$req->execute([
-				':id_web_user'	=>$infoMag['id_web_user']
+				':galec'	=>$infoMag['galec']
 			]);
 			while ($emailMag = $req->fetch()){
-				$dest[]=$emailMag['email'];
+				if(isset($emailMag['email']) && filter_var($emailMag['email'], FILTER_VALIDATE_EMAIL)){
+					$dest[]=$emailMag['email'];
+				}
 			}
 
 			$cc=['jonathan.domange@btlec.fr', 'stephane.wendling@btlec.fr', 'luc.muller@btlec.fr'];
 			$hidden=['valerie.montusclat@btlec.fr'];
+		}
+		// on ajoutera un message dans le mail si aucune adresse mail GT13 n'est trouvée
+		$warning="";
+		if(empty($dest)){
+			$dest=['valerie.montusclat@btlec.fr'];
+			$warning= "<p>Attention, le magasin n'a pas reçu ce mail de confirmation, aucune adresse mail n'a été trouvée dans les listes de diffusion GT Occasion</p>";
 		}
 
 		$pathXl="D:\\www\\_intranet\\upload\\excel\\";
@@ -199,6 +208,7 @@ if(isset($_POST['checkout'])){
 // ---------------------------------------
 		$htmlMail = file_get_contents('mail-cmd-mag.html');
 		$htmlMail=str_replace('{MAG}',$infoMag['deno'],$htmlMail);
+		$htmlMail=str_replace('{WARNING}',$warning,$htmlMail);
 		$subject='Portail BTLec - Leclerc Occasion - commande du magasin '. $infoMag['deno'];
 
 // ---------------------------------------
@@ -223,9 +233,6 @@ if(isset($_POST['checkout'])){
 			unset($_POST);
 			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 		}
-
-
-
 			// header("Location:occ-palette.php?success=cde");
 	}
 
