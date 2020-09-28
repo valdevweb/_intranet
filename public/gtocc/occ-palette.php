@@ -260,6 +260,7 @@ $paletteMgr=new OccPaletteMgr($pdoOcc);
 $paletteCommandable=$paletteMgr->getListPaletteDetailByStatut(1);
 
 
+
 $paletteEnPrepa=$paletteMgr->getListPaletteDetailByStatut(0);
 $paletteCommandees=$paletteMgr->getListCommandeByStatut(2);
 $paletteEtArticleDansPanier=getListPanier($pdoOcc);
