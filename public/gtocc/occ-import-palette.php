@@ -25,29 +25,29 @@ require_once '../../vendor/autoload.php';
 // require "../../functions/stats.fn.php";
 // addRecord($pdoStat,basename(__file__),'consultation', "fichiers d'info du service achats", 101);
 
-function addImport($pdoBt, $filename){
-	$req=$pdoBt->prepare("INSERT INTO occ_import_excel( filename, date_import, id_web_user) VALUES  (:filename, :date_import, :id_web_user)");
+function addImport($pdoOcc, $filename){
+	$req=$pdoOcc->prepare("INSERT INTO import_excel( filename, date_import, id_web_user) VALUES  (:filename, :date_import, :id_web_user)");
 	$req->execute([
 		':filename'		=> $filename,
 		':date_import'		=>date('Y-m-d H:i:s'),
 		':id_web_user'		=>$_SESSION['id_web_user']
 	]);
 
-	return $pdoBt->lastInsertId();
+	return $pdoOcc->lastInsertId();
 }
 
-function addPalette($pdoBt, $palette){
-	$req=$pdoBt->prepare("INSERT INTO occ_palettes (palette, statut, import, date_crea) VALUES  (:palette, :statut, :import, :date_crea)");
+function addPalette($pdoOcc, $palette){
+	$req=$pdoOcc->prepare("INSERT INTO palettes (palette, statut, import, date_crea) VALUES  (:palette, :statut, :import, :date_crea)");
 	$req->execute([
 		':palette'		=>$palette,
 		':statut'		=>1,
 		':import'		=>1,
 		':date_crea'	=>date('Y-m-d H:i:s'),
 	]);
-	return $pdoBt->lastInsertId();
+	return $pdoOcc->lastInsertId();
 }
-function insertArticle($pdoBt, $idPalette, $idImport, $designation,$ean, $qte, $pa, $pvc, $marge)	{
-	$req=$pdoBt->prepare("INSERT INTO occ_articles (id_palette, id_import,  designation, ean, quantite, pa, pvc, marge, date_insert) VALUES  (:id_palette, :id_import, :designation, :ean, :quantite, :pa, :pvc, :marge, :date_insert)");
+function insertArticle($pdoOcc, $idPalette, $idImport, $designation,$ean, $qte, $pa, $pvc, $marge)	{
+	$req=$pdoOcc->prepare("INSERT INTO palettes_articles (id_palette, id_import,  designation, ean, quantite, pa, pvc, marge, date_insert) VALUES  (:id_palette, :id_import, :designation, :ean, :quantite, :pa, :pvc, :marge, :date_insert)");
 	$req->execute([
 		':id_palette'	=>$idPalette,
 		':id_import'	=>$idImport,
@@ -59,12 +59,12 @@ function insertArticle($pdoBt, $idPalette, $idImport, $designation,$ean, $qte, $
 		':marge'	=>$marge,
 		':date_insert'	=>date('Y-m-d H:i:s'),
 	]);
-	return $pdoBt->lastInsertId();
+	return $pdoOcc->lastInsertId();
 }
 
 
-function getAssortiment($pdoBt){
-	$req=$pdoBt->query(" SELECT occ_article_qlik.*, cmt	FROM occ_article_qlik LEFT JOIN occ_article_qlik_cmt ON occ_article_qlik.article_qlik= occ_article_qlik_cmt.article WHERE qte_qlik !=0 ORDER BY article_qlik");
+function getAssortiment($pdoOcc){
+	$req=$pdoOcc->query(" SELECT articles_qlik.*, cmt FROM articles_qlik LEFT JOIN articles_qlik_cmt ON articles_qlik.article_qlik= articles_qlik_cmt.article WHERE qte_qlik !=0 ORDER BY article_qlik");
 	return $req->fetchAll();
 }
 
@@ -77,7 +77,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
-$listAssortiment=getAssortiment($pdoBt);
+$listAssortiment=getAssortiment($pdoOcc);
 
 
 
@@ -111,7 +111,7 @@ if(isset($_POST['send']))
 			$worksheet = $spreadsheet->getActiveSheet();
 			$highestRow = $worksheet->getHighestRow();
 			// 1 ajout fichier dans table imporyt et recup id
-			$idImport=addImport($pdoBt, $filename);
+			$idImport=addImport($pdoOcc, $filename);
 
 			$firstPalette=true;
 			for ($row = 2; $row <$highestRow; ++$row){
@@ -145,14 +145,14 @@ if(isset($_POST['send']))
 			$arPalette = array_values($arPalette);
 
 			for($i=0;$i<count($arPalette); $i++){
-				$idPalette=addPalette($pdoBt, $arPalette[$i]);
+				$idPalette=addPalette($pdoOcc, $arPalette[$i]);
 				$newArPalette[$arPalette[$i]]=$idPalette;
 
 			}
 
 
 			foreach ($excelData as $key => $data) {
-				insertArticle($pdoBt, $newArPalette[$data['palette']], $idImport, $data['libelle'],$data['ean'], $data['qte'], $data['pa'], $data['pvc'], $data['taux']);
+				insertArticle($pdoOcc, $newArPalette[$data['palette']], $idImport, $data['libelle'],$data['ean'], $data['qte'], $data['pa'], $data['pvc'], $data['taux']);
 			}
 
 		}
