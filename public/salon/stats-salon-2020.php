@@ -43,17 +43,17 @@ function getNbMagInscrit($pdoBt,$year){
   return $req->fetchAll();
 }
 
-function getNbMagPresent($pdoBt,$year){
-  $table="salon_".$year;
-  $req=$pdoBt->prepare("SELECT DISTINCT galec FROM (SELECT * FROM {$table} WHERE date_passage !='' AND mask=0) sousreq ");
+function getNbMagPresent($pdoBt){
+
+  $req=$pdoBt->prepare("SELECT DISTINCT galec FROM salon2020_mag_arrivee LEFT JOIN salon_2020 ON id_user=salon_2020.id");
   $req->execute();
   return $req->fetchAll();
 }
-function getNbPresent($pdoBt, $year){
-  $table="salon_".$year;
-  $req=$pdoBt->prepare("SELECT count(id) as nb FROM {$table} WHERE date_passage !='' AND mask=0");
+function getNbPresent($pdoBt){
+
+  $req=$pdoBt->prepare("SELECT DISTINCT id_user FROM salon2020_mag_arrivee");
   $req->execute();
-  return $req->fetch();
+  return $req->fetchAll();
 }
 
 
@@ -100,7 +100,7 @@ function nbInscritFonction($pdoBt, $year){
 }
 
 function getByHeure($pdoBt, $day){
-  $req=$pdoBt->query("SELECT count(id) as nb, DATE_FORMAT(date_passage, '%H') as hour, date_passage FROM (SELECT * FROM salon_2020 WHERE DATE_FORMAT(date_passage, '%d')=$day) as sousreq GROUP by DATE_FORMAT(date_passage, '%H')");
+  $req=$pdoBt->query("SELECT count(id) as nb, DATE_FORMAT(datetime_arrivee, '%H') as hour, datetime_arrivee FROM (SELECT * FROM salon2020_mag_arrivee WHERE DATE_FORMAT(datetime_arrivee, '%d')=$day) as sousreq GROUP by DATE_FORMAT(datetime_arrivee, '%H')");
   // return $req->rowCount();
   return $req->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -109,11 +109,10 @@ function getByHeure($pdoBt, $day){
 
 
 
-$statHeureMercredi=getByHeure($pdoBt, 5);
-
-$statHeureMardi=getByHeure($pdoBt, 4);
+$statHeureMercredi=getByHeure($pdoBt, 23);
 
 
+$statHeureMardi=getByHeure($pdoBt, 22);
 
 
 
@@ -135,13 +134,14 @@ $perFonctionPrev=nbInscritFonction($pdoBt,$prev);
 
 
 $nbMagInscrit=count(getNbMagInscrit($pdoBt,$now));
-$nbMagPresent=count(getNbMagPresent($pdoBt,$now));
 $nbPart=count(getParticipantYear($pdoBt,$now));
 
-$nbPres=getNbPresent($pdoBt,$now);
 $nb=getNbPart($pdoBt, $now);
+$nbLastYear=getNbPart($pdoBt, $prev);
 $magMardi=count(getNbMagInscritMardi($pdoBt,$now));
 $magMercredi =count(getNbMagInscritMercredi($pdoBt, $now));
+$magMardiLastYear=count(getNbMagInscritMardi($pdoBt,$prev));
+$magMercrediLastYear =count(getNbMagInscritMercredi($pdoBt, $prev));
 $listParticipant=getParticipantYear($pdoBt,$now);
 
 
@@ -155,13 +155,20 @@ $nbMagPresentPrev=count(getNbMagPresent($pdoBt,$prev));
 $nbPartPrev=count(getParticipantYear($pdoBt,$prev));
 
 
-$nbPresPrev=getNbPresent($pdoBt,$prev);
-$nbPrev=getNbPart($pdoBt, $prev);
 $magMardiPrev=count(getNbMagInscritMardi($pdoBt,$prev));
 $magMercrediPrev=count(getNbMagInscritMercredi($pdoBt, $prev));
 
 
 
+
+$nbMagPresent=count(getNbMagPresent($pdoBt));
+
+$nbPres=count(getNbPresent($pdoBt));
+
+
+
+// $nbPresPrev=getNbPresent($pdoBt,$prev);
+// $nbPrev=getNbPart($pdoBt, $prev);
 
 // require_once '../../vendor/autoload.php';
 
@@ -254,8 +261,8 @@ DEBUT CONTENU CONTAINER
                 </td>
                 <td class="text-right">
                   &nbsp;<br>
-                  <?=$magMardiPrev .'/'.$nbPrev['p_mardi']?><br>
-                  <?=$nbPrev['repas_mardi']?>
+                  <?=$magMardiLastYear .'/'.$nbLastYear['p_mardi']?><br>
+                  <?=$nbLastYear['repas_mardi']?>
                 </td>
               </tr>
 
@@ -273,8 +280,8 @@ DEBUT CONTENU CONTAINER
 
                 <td class="text-right">
                   &nbsp;<br>
-                  <?=$magMercrediPrev .'/'.$nbPrev['p_mercr']?><br>
-                  <?=$nbPrev['repas_mercr']?>
+                  <?=$magMercrediLastYear .'/'.$nbLastYear['p_mercr']?><br>
+                  <?=$nbLastYear['repas_mercr']?>
                 </td>
 
                 <td></td>
@@ -329,10 +336,10 @@ DEBUT CONTENU CONTAINER
       </div>
 
       <?php
-  // if(new DateTime()>=new DateTime("2020-06-09")){
-  //   include('stats-salon-2020-presence.php');
 
-  // }
+    include('stats-salon-2020-presence.php');
+
+
 
       ?>
 

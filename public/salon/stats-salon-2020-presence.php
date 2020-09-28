@@ -2,7 +2,7 @@
     <div class="col">
       <h5 class="text-main-blue heavy"> Présence :</h5>
       <p>Nombre de magasins présents : <?= $nbMagPresent?></p>
-      <p>Nombre de personnes présentes : <?= $nbPres['nb']?></p>
+      <p>Nombre de personnes présentes : <?= $nbPres?></p>
     </div>
   </div>
 
