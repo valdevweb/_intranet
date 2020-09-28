@@ -211,11 +211,13 @@
 						<div class="col text-orange"><?=$ldAdhName?></div>
 						<div class="col text-orange"><?=$ldDirName?></div>
 						<div class="col text-orange"><?=$ldRbtName?></div>
+						<div class="col text-orange"><?=$ldOkazName?></div>
 					</div>
 					<div class="row yanone-replace pb-3">
 						<div class="col"><div class="pl-2 border-left"><?=$ldAdhLink?></div></div>
 						<div class="col"><div class="pl-2 border-left"><?=$ldDirLink?></div> </div>
 						<div class="col"><div class="pl-2 border-left"><?=$ldRbtLink?></div></div>
+						<div class="col"><div class="pl-2 border-left"><?=$ldOkazLink?></div></div>
 					</div>
 				</div>
 			</div>
