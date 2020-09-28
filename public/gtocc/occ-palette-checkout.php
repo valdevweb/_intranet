@@ -15,7 +15,7 @@ if(isset($_POST['checkout'])){
 
 
 	foreach ($paletteEtArticleDansPanier as $key => $itemReserve) {
-		// cas palette
+		// si on a un numéro de palette, c'est que l'on travaille avec un aplette !
 		if(!empty($itemReserve['id_palette'])){
 		//  on vérifie l'état des palettes si commandé ou expédié entre temps, on suppprile de temp et on averti le mag
 			$paletteStatut = getPaletteStatut($pdoOcc,$itemReserve['id_palette']);
