@@ -95,27 +95,24 @@ $lotus=getExtraction($pdoMag,$newData[0]['id'],"lotus");
 $emailDb=getExtraction($pdoMag,$newData[0]['id'],"email");
 $ld=getExtraction($pdoMag,$newData[0]['id'],"ld");
 
+
+
+
+
+
+
 // efface lotus_ld
 eraseLdLotus($pdoMag);
 
 
-if(!empty($empty)){
-	foreach ($empty as $key => $extraction) {
-		$codeErr=4;
-		$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], '', '', $extraction['btlec'], $extraction['galec'], $codeErr);
-		if($one){
-			$added++;
-		}else{
-			$taskErrors[$extraction['ld_id']][$extraction['array_i']]['type']="vide";
-			$taskErrors[$extraction['ld_id']][$extraction['array_i']]['ld_full']=$extraction['ld_full'];
-			$taskErrors[$extraction['ld_id']][$extraction['array_i']]['contenu']='';
-			$taskErrors[$extraction['ld_id']][$extraction['array_i']]['id_import']=$newData[0]['id'];
-		}
-	}
-}
-
 if(!empty($lotus)){
 	foreach ($lotus as $key => $extraction) {
+		echo $key;
+		echo "<br>";
+
+		echo $extraction['contenu'];
+		echo "<br>";
+
 		$name=explode('/',$extraction['contenu']);
 		$name=trim($name[0]);
 
@@ -152,10 +149,28 @@ if(!empty($lotus)){
 			}
 
 		}
+
 		insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], $email, '', $extraction['btlec'], $extraction['galec'], $codeErr);
 	}
 }
 
+
+
+
+if(!empty($empty)){
+	foreach ($empty as $key => $extraction) {
+		$codeErr=4;
+		$one=insertEmail($pdoMag, $newData[0]['id'], $extraction['ld_full'], $extraction['ld_short'], $extraction['suffixe'], $extraction['ld_id'], '', '', $extraction['btlec'], $extraction['galec'], $codeErr);
+		if($one){
+			$added++;
+		}else{
+			$taskErrors[$extraction['ld_id']][$extraction['array_i']]['type']="vide";
+			$taskErrors[$extraction['ld_id']][$extraction['array_i']]['ld_full']=$extraction['ld_full'];
+			$taskErrors[$extraction['ld_id']][$extraction['array_i']]['contenu']='';
+			$taskErrors[$extraction['ld_id']][$extraction['array_i']]['id_import']=$newData[0]['id'];
+		}
+	}
+}
 
 if(!empty($emailDb)){
 	foreach ($emailDb as $key => $extraction) {
