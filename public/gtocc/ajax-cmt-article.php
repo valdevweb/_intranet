@@ -1,7 +1,7 @@
 <?php
 include('../../config/autoload.php');
 function alreadyCmt($pdoOcc){
-	$req=$pdoOcc->prepare("SELECT * FROM article_qlik_cmt WHERE article= :article");
+	$req=$pdoOcc->prepare("SELECT * FROM articles_qlik_cmt WHERE article= :article");
 	$req->execute([
 		':article'		=>$_POST['id']
 	]);
@@ -14,7 +14,7 @@ function alreadyCmt($pdoOcc){
 
 
 function updateCmt($pdoOcc){
-	$req=$pdoOcc->prepare("UPDATE article_qlik_cmt  SET cmt= :cmt, insert_by= :insert_by, insert_on= :insert_on WHERE article = :article");
+	$req=$pdoOcc->prepare("UPDATE articles_qlik_cmt  SET cmt= :cmt, insert_by= :insert_by, insert_on= :insert_on WHERE article = :article");
 	$req->execute([
 		':article'		=>$_POST['id'],
 		':cmt'			=>$_POST['value'],
@@ -34,7 +34,7 @@ function updateCmt($pdoOcc){
 
 
 function insertCmt($pdoOcc){
-	$req=$pdoOcc->prepare("INSERT INTO article_qlik_cmt  (cmt, article, insert_by, insert_on) VALUES (:cmt, :article, :insert_by, :insert_on)");
+	$req=$pdoOcc->prepare("INSERT INTO articles_qlik_cmt  (cmt, article, insert_by, insert_on) VALUES (:cmt, :article, :insert_by, :insert_on)");
 	$req->execute([
 		':article'		=>$_POST['id'],
 		':cmt'			=>$_POST['value'],
@@ -44,6 +44,9 @@ function insertCmt($pdoOcc){
 	if($req->rowCount()==1){
 		echo "ok";
 	}else{
+					echo "<pre>";
+			print_r($req->errorInfo());
+			echo '</pre>';
 		echo "error";
 	}
 }
