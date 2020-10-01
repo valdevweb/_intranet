@@ -135,7 +135,7 @@
 
 
 #cssmenu > ul > li.has-sub > a {
-  padding-right: 45px;
+  padding-right: 40px;
 }
 #cssmenu > ul > li.has-sub > a::after {
   content: "";
