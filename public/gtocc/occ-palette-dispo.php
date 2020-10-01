@@ -4,6 +4,14 @@
 			<h3 class="text-main-blue text-center pt-4 pb-2" id="over">Palettes disponibles à la commande</h3>
 		</div>
 	</div>
+	<div class="row">
+		<div class="col">
+			<div class="alert alert-danger">
+				Commande limitée à une palette par magasin jusqu'au 4 octobre. Commande libre à partir du 5 octobre
+
+			</div>
+		</div>
+	</div>
 
 	<?php if (!empty($paletteCommandable)): ?>
 

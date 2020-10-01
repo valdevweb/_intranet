@@ -36,12 +36,12 @@ function addImport($pdoOcc, $filename){
 	return $pdoOcc->lastInsertId();
 }
 
-function addPalette($pdoOcc, $palette){
+function addPalette($pdoOcc, $palette, $idImport){
 	$req=$pdoOcc->prepare("INSERT INTO palettes (palette, statut, import, date_crea) VALUES  (:palette, :statut, :import, :date_crea)");
 	$req->execute([
 		':palette'		=>$palette,
 		':statut'		=>1,
-		':import'		=>1,
+		':import'		=>$idImport,
 		':date_crea'	=>date('Y-m-d H:i:s'),
 	]);
 	return $pdoOcc->lastInsertId();
@@ -145,7 +145,7 @@ if(isset($_POST['send']))
 			$arPalette = array_values($arPalette);
 
 			for($i=0;$i<count($arPalette); $i++){
-				$idPalette=addPalette($pdoOcc, $arPalette[$i]);
+				$idPalette=addPalette($pdoOcc, $arPalette[$i], $idImport);
 				$newArPalette[$arPalette[$i]]=$idPalette;
 
 			}
