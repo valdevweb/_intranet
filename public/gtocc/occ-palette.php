@@ -428,6 +428,9 @@ DEBUT CONTENU CONTAINER
 		include 'occ-palette-prepa.php';
 	}
 	// affichage palette terminées pour tout le monde
+
+
+
 	include 'occ-palette-dispo.php';
 	// affichage palettes commandéew et expédiées
 	if ($_SESSION['type']=='btlec'){
