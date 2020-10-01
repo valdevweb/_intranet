@@ -231,7 +231,13 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 
 		<!-- section sans sous menu -->
 
-		<li><a href="<?= ROOT_PATH. '/public/gazette/gazette.php'?>" >Les gazettes</a></li>
+		<li  class='active has-sub'><a href="<?= ROOT_PATH. '/public/gazette/gazette.php'?>" >Les gazettes</a>
+			<?php if ($d_strictAdmin): ?>
+				<ul>
+					<li><a href="<?= ROOT_PATH. '/public/gazette/opp-exploit.php'?>">Ajout opportunités</a></li>
+				</ul>
+			<?php endif ?>
+		</li>
 		<li  class='active has-sub'><a href="#" >documents</a>
 			<ul>
 				<li class='has-sub'><a href="<?= ROOT_PATH. '/public/doc/display-doc.php'?>">Achats</a>
