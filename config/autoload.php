@@ -19,6 +19,7 @@ if (preg_match('/_btlecest/', $path)){
 
 define("SITE_ADDRESS", "http://172.30.92.53/".VERSION."btlecest");
 define("UPLOAD_DIR","http://172.30.92.53/".VERSION."upload" );
+define("URL_UPLOAD","http://172.30.92.53/".VERSION."upload/" );
 define("DIR_UPLOAD","D:\www\\".VERSION."intranet\upload\\" );
 define("PORTAIL_SAV_HOME","http://172.30.92.53/".VERSION."sav/scapsav/home.php" );
 define("PORTAIL_SAV","http://172.30.92.53/".VERSION."sav/" );
