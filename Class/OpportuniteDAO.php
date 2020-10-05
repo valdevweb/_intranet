@@ -98,6 +98,32 @@ class OpportuniteDAO{
 		return $arFiles;
 	}
 
+	public function getActiveOpp(){
+		$req=$this->pdoBt->query("SELECT * FROM opp WHERE date_start <= NOW() AND date_end>=NOW() ORDER BY date_start DESC");
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+
+	}
+
+	public function updateOpportunite($idOpp){
+		$req=$this->pdoBt->prepare("UPDATE opp SET date_start = :date_start, date_end= :date_end, id_web_user= :id_web_user, title= :title, descr= :descr, salon= :salon, cata= :cata, dispo= :dispo, gt= :gt WHERE id= :id");
+		$req->execute([
+			':id'			=>$idOpp,
+			':date_start'	=>$_POST['date_start'],
+			':date_end'	=>$_POST['date_end'],
+			':id_web_user'	=>$_SESSION['id_web_user'],
+			':title'	=>$_POST['title'],
+			':descr'	=>isset($_POST['descr']) ? $_POST['descr'] : '',
+			':salon'	=>$_POST['salon'],
+			':cata'	=>$_POST['cata'],
+			':dispo'	=>isset($_POST['dispo']) ? $_POST['dispo'] : '',
+			':gt'		=>$_POST['gt'],
+
+		]);
+
+		return $this->pdoBt->lastInsertId();
+	}
+
+
 
 
 }
