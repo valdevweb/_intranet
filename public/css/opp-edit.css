@@ -1,0 +1,86 @@
+.vignette{
+	max-width:  180px;
+	height:  auto;
+}
+
+.mini-input{
+	max-width: 40px;
+	margin: 0 !important;
+	height: calc(2.25rem + 2px);
+	padding: 0.375rem 0.75rem;
+	font-size: 1rem;
+	line-height: 1.5;
+	color: #495057;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	border-radius: 0.25rem;
+}
+
+td{
+	vertical-align: middle !important;
+}
+
+.bg-grey-table{
+	background: #dee2e6;
+}
+
+h5.border-bottom{
+	color: #0D47A1 !important;
+	padding : 3rem 0 1rem 0 !important;
+}
+
+h5.no-top-padding{
+	color: #0D47A1 !important;
+	padding : 2rem 0 1rem 0 !important;
+}
+
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.btn-upload{
+	/* border: #1f271b 1px solid !important; */
+    background: #0D47A1;
+    box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
+    transition: all 4s;
+    transition-timing: ease-in-out;
+    color: #fff;
+}
+
+
+.btn-upload:hover{
+    transform: scale(1.01);
+    background: #0c3f8f;
+}
+.date-width{
+    max-width: 250px;
+}
+
+
+.form-control{
+    border:  1px solid #b4d4f7 !important;
+    background-color: #dbebfd59 !important;
+}
+
+.bg-blue-input{
+    background-color: #dbebfd59 !important;
+    border:  1px solid #b4d4f7 !important;
+}
