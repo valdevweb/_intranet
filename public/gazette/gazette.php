@@ -8,6 +8,7 @@ if(!isset($_SESSION['id'])){
 require "../../functions/gazette.fn.php";
 require "../../functions/stats.fn.php";
 
+require_once '../../Class/OpportuniteDAO.php';
 
 
 //---------------------------------------
@@ -50,8 +51,6 @@ function getGazette($pdoBt, $doccode){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 
 }
-
-
 
 
 function getGazetteSpeciale($pdoBt, $doccode, $dateStart,$dateEnd){
@@ -102,10 +101,6 @@ if (isset($_POST['submit']))
 			$linkSearch.="<a href='http://172.30.92.53/".$version ."upload/gazette/" . $value['file'] . "'>" .$value['file'] ."</a><br>";
 		}
 		$linkSearch.="</p>";
-
-		// $file=$result['file'];
-
-		// $linkSearch= "<a href='http://172.30.92.53/".$version ."upload/gazette/" . $file . "'>" .$file ."</a>";
 	}
 	else
 	{
@@ -126,24 +121,10 @@ $quotidienne=getGazette($pdoBt, 1);
 $suiviCata=getGazetteSuivi($pdoBt,2, $today->format('Y-m-d'));
 $speciale=getGazetteSpeciale($pdoBt, 8, $monday->format('Y-m-d'), $saturday->format('Y-m-d'));
 
-$opp="D:\www\intranet\opportunites\index.html";
-if (file_exists($opp))
-{
-	$oppLastMaj=date ('Y-m-d', filemtime($opp));
-	setlocale(LC_TIME, 'fr_FR.utf-8','fra');
-	$oppLastMaj =  strftime("%A %d %B %Y", strtotime($oppLastMaj));
-	$oppLastMaj = utf8_encode($oppLastMaj);
 
-}
+$oppDao=new OpportuniteDAO($pdoBt);
+$listActiveOpp=$oppDao->getActiveOpp();
 
-
-
-	// echo "<pre>";
-	// print_r($monday);
-	// echo '</pre>';
-	// echo "<pre>";
-	// print_r($saturday);
-	// echo '</pre>';
 
 //------------------------------------------------------
 //			VIEW
@@ -214,9 +195,19 @@ include('../view/_navbar.php');
 							<div class="col">
 								<img class="d-inline-block align-top" src="../img/gazette/gaz-alerte-promo.png">
 								<div class="d-inline-block pl-3" id="alerte-promo-list">
+									<p class="heavy">L'alerte promo :</p>
 
 									<ul>
-										<li><a href="http://172.30.92.53/OPPORTUNITES/index.html">l'alerte promo</a> <br>dernière mise à jour : <?=$oppLastMaj?></li>
+										<?php foreach ($listActiveOpp as $activeOpp): ?>
+
+											<li>
+												<a class='stat-link' href="../gazette/opp-encours.php#<?=$activeOpp['id']?>" ><?=$activeOpp['title']?></a>
+												<?=($activeOpp['date_start']==date('Y-m-d') ||  $activeOpp['date_start']==(new DateTime('yesterday'))->format('Y-m-d'))?
+												"<span class='badge badge-warning ml-3'>Nouveau</span>" :""
+												?>
+											</li>
+										<?php endforeach ?>
+
 									</ul>
 								</div>
 							</div>
@@ -226,65 +217,65 @@ include('../view/_navbar.php');
 					<div class="col">
 
 
-						</div>
 					</div>
 				</div>
-				<div class="col-xl-1"></div>
-
 			</div>
+			<div class="col-xl-1"></div>
+
+		</div>
 
 
 
 
 
-			<!-- formulaire de recherche -->
-			<div class="row mt-5">
-				<div class="col">
-					<h1 class="text-main-blue" id="search">Historique des gazettes</h1>
-					<p class="pl-5">Pour rechercher une gazette, veuillez saisir la période dans le formulaire ci dessous (les gazettes antérieures à septembre 2017 n'ont pas été conservées)</p>
-				</div>
+		<!-- formulaire de recherche -->
+		<div class="row mt-5">
+			<div class="col">
+				<h1 class="text-main-blue" id="search">Historique des gazettes</h1>
+				<p class="pl-5">Pour rechercher une gazette, veuillez saisir la période dans le formulaire ci dessous (les gazettes antérieures à septembre 2017 n'ont pas été conservées)</p>
 			</div>
-			<div class="row mb-5 pl-5">
-				<div class="col-auto">
-					<img src="../img/gazette/gaz-search.png">
-				</div>
-				<div class="col mt-3">
-					<form method="post" action="">
-						<div class="row">
-							<div class="col-xl-2">
-								<div class="form-group">
-									<label for="date">Début de période</label>
-									<input type="date" value="<?= $todayInput?>" class="form-control" name="start" min="2017-09-01" >
-								</div>
-							</div>
-							<div class="col-xl-2">
-								<div class="form-group">
-									<label for="date">Début de période</label>
-									<input type="date" value="<?= $todayInput?>" class="form-control" name="end" min="2017-09-01">
-								</div>
-							</div>
-							<div class="col-xl-3 mt-4 pt-2">
-								<button class="btn btn-primary" type="submit" name="submit" >Rechercher</button>
+		</div>
+		<div class="row mb-5 pl-5">
+			<div class="col-auto">
+				<img src="../img/gazette/gaz-search.png">
+			</div>
+			<div class="col mt-3">
+				<form method="post" action="">
+					<div class="row">
+						<div class="col-xl-2">
+							<div class="form-group">
+								<label for="date">Début de période</label>
+								<input type="date" value="<?= $todayInput?>" class="form-control" name="start" min="2017-09-01" >
 							</div>
 						</div>
-					</form>
-				</div>
-				<div class="col-xl-1"></div>
+						<div class="col-xl-2">
+							<div class="form-group">
+								<label for="date">Début de période</label>
+								<input type="date" value="<?= $todayInput?>" class="form-control" name="end" min="2017-09-01">
+							</div>
+						</div>
+						<div class="col-xl-3 mt-4 pt-2">
+							<button class="btn btn-primary" type="submit" name="submit" >Rechercher</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-xl-1"></div>
+		</div>
+
+
+
+
+		<div class="row" id="result">
+			<div class="col">
+				<?php if(isset($linkSearch)){echo "<p>Resultat de votre recherche : </p>". $linkSearch ;} ?>
 			</div>
 
-
-
-
-			<div class="row" id="result">
-				<div class="col">
-					<?php if(isset($linkSearch)){echo "<p>Resultat de votre recherche : </p>". $linkSearch ;} ?>
-				</div>
-
-			</div>
-			<!-- END formulaire de recherche -->
-		</div><!-- END container -->
+		</div>
+		<!-- END formulaire de recherche -->
+	</div><!-- END container -->
 
 
 
 
-		<?php require '../view/_footer-bt.php'; ?>
+	<?php require '../view/_footer-bt.php'; ?>
