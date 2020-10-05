@@ -5,6 +5,9 @@ if(!isset($_SESSION['id'])){
 	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
 }
+if($_SESSION['id']==1531){
+	header('Location:../gtocc/occ-palette.php');
+}
 
 //----------------------------------------------------------------
 //	css dynamique
@@ -17,6 +20,7 @@ require "../../functions/form.fn.php";
 require "../../functions/userinfo.fn.php";
 require "../../functions/gazette.fn.php";
 require "../../functions/stats.fn.php";
+require_once '../../Class/OpportuniteDAO.php';
 
 // stats recup mdp
 function getnbRecupPwd($pdoUser){
@@ -229,6 +233,8 @@ if(isset($_SESSION['mag_filters'])){
 	unset($_SESSION['mag_filters']);
 }
 
+$oppDao=new OpportuniteDAO($pdoBt);
+$listActiveOpp=$oppDao->getActiveOpp();
 
 
 
