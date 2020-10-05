@@ -60,13 +60,9 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
-	<div class="row border">
-		<div class="col">
-			<?php
-			include 'opp-display-inc.php'
-			?>
-		</div>
-	</div>
+	<?php
+	include 'opp-display-inc.php'
+	?>
 	<div class="row my-5 pb-5">
 		<div class="col">
 			<a href="opp-exploit.php" class="btn btn-primary">Retour</a>
