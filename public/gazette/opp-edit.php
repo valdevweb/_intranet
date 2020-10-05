@@ -71,9 +71,13 @@ $listOpp=$oppDao->getOpp($_GET['id']);
 $oneOpp=$listOpp[0];
 $oppIds=[$_GET['id']];
 $listMainFiles=$oppDao->getListMainFiles($oppIds);
-
-
 $listAddonsFiles=$oppDao->getListAddonsFiles($oppIds);
+$listIcons=$oppDao->getListIcons($oppIds);
+$oneOppIcons=[];
+if(isset($listIcons[$_GET['id']])){
+	$oneOppIcons=$listIcons[$_GET['id']];
+}
+
 
 if(isset($_POST['update'])){
 	foreach ($notMandatoryFields as $key => $field) {
@@ -84,6 +88,10 @@ if(isset($_POST['update'])){
 
 	if(empty($errors)){
 		$oppDao->updateOpportunite($_GET['id']);
+		$oppDao->deleteOppIcons($_GET['id']);
+		if(isset($_POST['icons'])){
+			$oppDao->addIcons($_GET['id'],$_POST['icons']);
+		}
 		$successQ='?id='.$_GET['id'].'&success=maj';
 		unset($_POST);
 		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
@@ -284,6 +292,28 @@ DEBUT CONTENU CONTAINER
 							<textarea class="form-control" name="descr" id="descr" row="3"><?=FormHelpers::restoreValue($oneOpp['descr'])?></textarea>
 						</div>
 					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<p class="heavy pt-2">Ajouter des icônes :</p>
+
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value="0" id="icon1" name="icons[]"
+							<?= (in_array(0,$oneOppIcons)) ? "checked" :""?>>
+							<label class="form-check-label" for="icon1">Nouveauté</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value="1" id="icon2" name="icons[]"
+							<?= (in_array(1,$oneOppIcons)) ? "checked" :""?>>
+							<label class="form-check-label" for="icon2">TEL</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value="2" id="icon3" name="icons[]"
+							<?= (in_array(2,$oneOppIcons)) ? "checked" :""?>>
+							<label class="form-check-label" for="icon3">BRII</label>
+						</div>
+					</div>
+
 				</div>
 				<div class="row">
 					<div class="col text-right">
