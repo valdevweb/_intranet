@@ -63,7 +63,7 @@ DEBUT CONTENU CONTAINER
 	<div class="row border">
 		<div class="col">
 			<?php
-			include 'opp-display.php'
+			include 'opp-display-inc.php'
 			?>
 		</div>
 	</div>
