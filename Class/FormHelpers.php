@@ -50,14 +50,14 @@ class FormHelpers{
     }
 
  // case à cocher, btn radio
-    public static function checkCheckedArray($value,$array){
-        if(isset($array)){
-            if($array==$value){
-                return "checked";
+    public static function checkCheckedArray($value,$postName){
+        if(isset($_POST[$postName])){
+            for ($i=0; $i < count($_POST[$postName]); $i++) {
+                if($_POST[$postName][$i]==$value)
+                    return "checked";
             }
         }
 
-        return "";
     }
 //  liste déroulante
     public static function checkSelectedSession($value,$field){
