@@ -32,6 +32,22 @@ class FormHelpers{
         }
         return "";
     }
+    // valeur
+    public static function restoreValue($value){
+        if(isset($value)){
+            return $value;
+        }
+        return "";
+    }
+
+    public static function restoreChecked($value,$dbValue){
+        if(isset($dbValue)){
+            if($dbValue==$value){
+                return "checked";
+            }
+        }
+        return "";
+    }
 
  // case à cocher, btn radio
     public static function checkCheckedArray($value,$array){
