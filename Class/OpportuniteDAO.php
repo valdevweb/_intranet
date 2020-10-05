@@ -55,6 +55,16 @@ class OpportuniteDAO{
 		return $req->errorInfo();
 	}
 
+	public function addIcons($idOpp,$icons){
+		for ($i=0; $i < count($_POST['icons']) ; $i++) {
+			$req=$this->pdoBt->prepare("INSERT INTO opp_icons (id_opp, icon) VALUES (:id_opp, :icon)");
+			$req->execute([
+				':id_opp'	=>$idOpp,
+				':icon'		=>$_POST['icons'][$i]
+			]);
+		}
+
+	}
 	public function getOpp($idOpp){
 		$req=$this->pdoBt->prepare("SELECT * FROM opp WHERE id= :id");
 		$req->execute([
@@ -98,6 +108,23 @@ class OpportuniteDAO{
 		return $arFiles;
 	}
 
+
+	public function getListIcons($OppIds){
+		$arIcons=[];
+		$listIds=join(' OR ', array_map(function($value){return 'id_opp='.$value;},$OppIds));
+
+		// $i=0;
+		$req=$this->pdoBt->query("SELECT * FROM opp_icons WHERE {$listIds} ORDER BY id_opp");
+		$datas=$req->fetchAll(PDO::FETCH_ASSOC);
+		foreach ($datas as $key => $icon) {
+			$arIcons[$icon['id_opp']][]=$icon['icon'];
+			// $i++;
+		}
+
+		return $arIcons;
+	}
+
+
 	public function getActiveOpp(){
 		$req=$this->pdoBt->query("SELECT * FROM opp WHERE date_start <= NOW() AND date_end>=NOW() ORDER BY date_start DESC");
 		return $req->fetchAll(PDO::FETCH_ASSOC);
@@ -123,7 +150,13 @@ class OpportuniteDAO{
 		return $this->pdoBt->lastInsertId();
 	}
 
-
+	public function deleteOppIcons($idOpp){
+		$req=$this->pdoBt->prepare("DELETE FROM opp_icons WHERE id_opp= :id_opp");
+		$req->execute([
+			':id_opp'		=>$idOpp
+		]);
+		return $req->errorInfo();
+	}
 
 
 }
