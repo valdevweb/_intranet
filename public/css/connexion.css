@@ -12,7 +12,7 @@ table.service  > tbody > tr > td:nth-child(n+2) {
  }
 
 .connection{
-	background-color: #cddc39;
+	background-color: #f18e0b;
 }
 .deno{
 	font-variant: small-caps;
@@ -20,10 +20,14 @@ table.service  > tbody > tr > td:nth-child(n+2) {
 
 
 .sum{
-	background-color: #cddc39 !important;
+	background-color: #f18e0b!important;
 	text-align: center;
 	font-weight: bold;
 	/* color: #fff; */
 }
 
 /* table#services  > tbody > tr > td:nth-of-type(1) { */
+
+.sat,.sun{
+	background: #96a2af;
+}
