@@ -231,6 +231,10 @@ a.text-ctbt{
 .bg-grey{
     background-color: #ddd;
 }
+
+.bg-light-grey{
+  background:rgba(0, 0, 0, 0.05)
+}
 .bg-dust-light{
 background: #A9AABC;
 }
