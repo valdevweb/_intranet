@@ -25,21 +25,33 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 function getAllDossier($pdoLitige)
 {
 	$strg=empty($_SESSION['form-data']['search_strg']) ? '': $_SESSION['form-data']['search_strg'];
-	if(!empty($_SESSION['form-data']['etat']))
-	{
-		$reqEtat= ' AND id_etat= ' .$_SESSION['form-data']['etat'];
+	if(!isset($_SESSION['form-data-deux']['date_start'])){
+		$dateStart= (new DateTime("2019-01-01"))->format("Y-m-d H:i:s");
+	}else{
+		$dateStart=$_SESSION['form-data-deux']['date_start']. ' 00:00:00';
+	}
+
+	if(!isset($_SESSION['form-data']['date_end'])){
+		$dateEnd= (new DateTime("2019-12-31 23:59:59"))->format("Y-m-d H:i:s");
+	}else{
+		$dateEnd=$_SESSION['form-data']['date_end'].' 23:59:59';
+	}
+
+
+	if(!empty($_SESSION['form-data']['etat'])){
+		  $reqEtat=join(' OR ', array_map(function($value){return 'id_etat='.$value;},$_SESSION['form-data']['etat']));
 	}
 	else
 	{
 		$reqEtat='';
 	}
 	// attention quand pendig =0, c'est vide
-	if(!empty($_SESSION['pending'])){
-		if($_SESSION['pending']=='pending'){
+	if(!empty($_SESSION['filter-data']['pending'])){
+		if($_SESSION['filter-data']['pending']=='pending'){
 			$reqCommission= ' AND commission !=1 ';
 		}
 		else{
-			$reqCommission= ' AND commission =' .intval($_SESSION['pending']);
+			$reqCommission= ' AND commission =' .intval($_SESSION['filter-data']['pending']);
 
 		}
 	}
@@ -47,10 +59,10 @@ function getAllDossier($pdoLitige)
 		$reqCommission='';
 	}
 
-	if(isset($_SESSION['vingtquatre'])){
-		if($_SESSION['vingtquatre']==1){
+	if(isset($_SESSION['filter-data']['vingtquatre'])){
+		if($_SESSION['filter-data']['vingtquatre']==1){
 			$reqLivraison= ' AND vingtquatre=1 ';
-		}elseif($_SESSION['vingtquatre']==0){
+		}elseif($_SESSION['filter-data']['vingtquatre']==0){
 			$reqLivraison= ' AND vingtquatre='.intval(0);
 		}
 	}
@@ -87,8 +99,8 @@ function getAllDossier($pdoLitige)
 		");
 	$req->execute(array(
 		':search' =>'%'.$strg.'%',
-		':date_start'=>$_SESSION['form-data']['date_start']. ' 00:00:00',
-		':date_end'	=>$_SESSION['form-data']['date_end'].' 23:59:59',
+		':date_start'=>$dateStart,
+		':date_end'	=>$dateEnd,
 
 	));
 	// return $req->errorInfo();
@@ -97,6 +109,15 @@ function getAllDossier($pdoLitige)
 }
 
 $dossiers=getAllDossier($pdoLitige);
+// 	echo "<pre>";
+// 	print_r($_SESSION);
+// 	echo '</pre>';
+
+// 	echo "<pre>";
+// 	print_r($dossiers);
+// 	echo '</pre>';
+// exit;
+
 
 // function getPaletteCde($pdoLitige,$id_dossier)
 // {
