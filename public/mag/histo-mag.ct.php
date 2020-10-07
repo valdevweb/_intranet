@@ -51,7 +51,7 @@
 				</td>
 				<td>
 					<?php
-					$service=$userManager->getService($pdoBt,$value['id_service']);
+					$service=$userManager->getService($pdoUser,$value['id_service']);
 
 					?>
 					<?= $service['service'] ?>

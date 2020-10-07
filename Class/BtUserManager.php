@@ -2,8 +2,8 @@
 
 class BtUserManager{
 
-	public function getService($pdoBt,$idService){
-		$req=$pdoBt->prepare('SELECT * FROM services WHERE id = :id');
+	public function getService($pdoUser,$idService){
+		$req=$pdoUser->prepare('SELECT * FROM services WHERE id = :id');
 		$req->execute(array(
 			':id' =>$idService
 		));
@@ -19,11 +19,17 @@ class BtUserManager{
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 
 	}
-	public function listServicesContact($pdoBt){
-		$req=$pdoBt->prepare("SELECT * FROM services WHERE slug <>'' ORDER BY service");
+	public function listServicesContact($pdoUser){
+		$req=$pdoUser->prepare("SELECT * FROM services WHERE slug <>'' ORDER BY service");
 		$req->execute();
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
+		public function listServicesContactStrict($pdoUser){
+		$req=$pdoUser->prepare("SELECT * FROM services WHERE mask_contact=0 ORDER BY service");
+		$req->execute();
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
 	public function getUserByid($pdoUser, $id){
 		$req=$pdoUser->prepare("SELECT * FROM intern_users WHERE id_web_user= :id_web_user");
 		$req->execute([
@@ -48,8 +54,8 @@ class BtUserManager{
 
 	}
 
-	public function getServiceById($pdoBt,$idService){
-		$req=$pdoBt->prepare("SELECT * FROM services WHERE id = :id");
+	public function getServiceById($pdoUser,$idService){
+		$req=$pdoUser->prepare("SELECT * FROM services WHERE id = :id");
 		$req->execute(array(
 			':id'	=>$idService,
 		));

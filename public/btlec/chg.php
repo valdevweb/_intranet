@@ -34,7 +34,7 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 //liste des services qui s'affichent dans les checkbox
 $userManager=new BtUserManager();
 $msgManager=new MsgManager();
-$listServicesContact=$userManager->listServicesContact($pdoBt);
+$listServicesContact=$userManager->listServicesContactStrict($pdoUser);
 
 
 $idMsg=$_GET['msg'];
@@ -77,7 +77,7 @@ if(isset($_POST['affect']))
 	else
 	{
 
-		$newServiceInfo=$userManager-> getServiceById($pdoBt,$_POST['service'][0]);
+		$newServiceInfo=$userManager-> getServiceById($pdoUser,$_POST['service'][0]);
 		$msgManager->affectation($pdoBt,$idMsg,$_POST['service'][0]);
 		$username=UserHelpers::getFullname($pdoUser,$_SESSION['id_web_user']);
 

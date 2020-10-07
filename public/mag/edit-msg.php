@@ -66,7 +66,7 @@ $msgManager=new MsgManager();
 $msg=$msgManager->getDemande($pdoBt,$_GET['msg']);
 $replies=$msgManager->getListReplies($pdoBt, $_GET['msg']);
 $btUserManager=new BtUserManager();
-$infoService=$btUserManager->getService($pdoBt,$msg['id_service']);
+$infoService=$btUserManager->getService($pdoUser,$msg['id_service']);
 
 // on supprime la var de session qui permet la redirection suite à l'ouverture du mail
 unset($_SESSION['goto']);

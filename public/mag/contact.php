@@ -53,8 +53,10 @@ function addMsg($db,$id_service,$inc_file){
 //			affichage : infos du services
 //----------------------------------------------------------------
 $userManager=new BtUserManager();
-$service=$userManager->getService($pdoBt,$_GET['id']);
+$service=$userManager->getService($pdoUser,$_GET['id']);
 $serviceMembers=$userManager->getListUserService($pdoBt,$_GET['id']);
+
+
 $tplForBtlec="../mail/new_mag_msg.tpl.html";
 $tplForMag="../mail/ar_mag.tpl.html";
 mb_internal_encoding('UTF-8');

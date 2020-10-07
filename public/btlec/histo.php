@@ -34,7 +34,7 @@ $userManager=new BtUserManager();
 $msgManager=new MsgManager();
 $magManager=new MagDbHelper($pdoMag);
 
-$listServicesContact=$userManager->listServicesContact($pdoBt);
+$listServicesContact=$userManager->listServicesContact($pdoUser);
 $selected="";
 $userServiceList=[];
 $userServiceList=$userManager->getUserServiceContact($pdoBt,$_SESSION['id_web_user']);
