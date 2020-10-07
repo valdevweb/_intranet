@@ -5,10 +5,9 @@ if(!isset($_SESSION['id'])){
 	echo "pas de variable session";
 
 }
-//			css dynamique
+//			css spécifique
 //----------------------------------------------------------------
-$pageCss=explode(".php",basename(__file__));
-$pageCss=$pageCss[0];
+$pageCss='opp-display-inc';
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require_once '../../Class/OpportuniteDAO.php';
