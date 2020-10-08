@@ -62,10 +62,10 @@ function getCentrales($pdoMag){
 
 
 
-function getBtlecGalec($pdoBt){
-	$req=$pdoBt->query("SELECT galec, btlec FROM sca3");
-	return $req->fetchAll(PDO::FETCH_KEY_PAIR);
-}
+// function getBtlecGalec($pdoBt){
+// 	$req=$pdoBt->query("SELECT galec, btlec FROM sca3");
+// 	return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+// }
 
 function getMagSav($pdoSav){
 	$req=$pdoSav->query("SELECT * FROM mag");

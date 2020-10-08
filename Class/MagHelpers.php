@@ -67,16 +67,7 @@ class MagHelpers{
 		return $data['idwebuser'];
 	}
 
-	public static function fulladresse($pdo,$galec,$separateur){
-		$data=self::magInfo($pdo, $galec);
-		$address=$data['ad1'];
-		$address.= (!empty($data['ad2'])) ? $separateur .$data['ad2'] :'';
-		$address.= (!empty($data['ad3'])) ? $separateur .$data['ad3'] :'';
-		$address.= (!empty($data['cp'])) ? $separateur .$data['cp'] :'';
-		$address.= (!empty($data['city'])) ? $separateur .$data['city'] :'';
 
-		return $address;
-	}
 	public static function getListCentrale($pdoMag){
 		return $req=$pdoMag->query("SELECT id_ctbt,centrale  FROM centrales WHERE main=1 ORDER BY centrales.centrale")->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
