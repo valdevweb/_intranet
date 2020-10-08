@@ -24,7 +24,11 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 function getAllDossier($pdoLitige)
 {
-	$strg=empty($_SESSION['form-data']['search_strg']) ? '': $_SESSION['form-data']['search_strg'];
+	if(!empty($_SESSION['form-data']['search_strg'])){
+		$strg=" AND concat(dossiers.dossier,magasin.mag.deno,dossiers.galec,magasin.mag.id) LIKE '%".$_SESSION['form-data-deux']['search_strg'] ."%'";
+	}else{
+		$strg='';
+	}
 	if(!isset($_SESSION['form-data-deux']['date_start'])){
 		$dateStart= (new DateTime("2019-01-01"))->format("Y-m-d H:i:s");
 	}else{
@@ -32,19 +36,21 @@ function getAllDossier($pdoLitige)
 	}
 
 	if(!isset($_SESSION['form-data']['date_end'])){
-		$dateEnd= (new DateTime("2019-12-31 23:59:59"))->format("Y-m-d H:i:s");
+		$dateEnd= (new DateTime())->format("Y-m-d H:i:s");
 	}else{
 		$dateEnd=$_SESSION['form-data']['date_end'].' 23:59:59';
 	}
 
 
 	if(!empty($_SESSION['form-data']['etat'])){
-		  $reqEtat=join(' OR ', array_map(function($value){return 'id_etat='.$value;},$_SESSION['form-data']['etat']));
+		  $reqEtat=' and '.join(' OR ', array_map(function($value){return 'id_etat='.$value;},$_SESSION['form-data']['etat']));
 	}
 	else
 	{
 		$reqEtat='';
 	}
+
+	// echo $reqEtat;
 	// attention quand pendig =0, c'est vide
 	if(!empty($_SESSION['filter-data']['pending'])){
 		if($_SESSION['filter-data']['pending']=='pending'){
@@ -67,17 +73,16 @@ function getAllDossier($pdoLitige)
 		}
 	}
 	else{
-		$reqLivraison= ' AND vingtquatre is NOT NULL';
+		$reqLivraison= '';
 	}
 
-	$req=$pdoLitige->prepare("
-		SELECT dossiers.id as id_main, dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,DATE_FORMAT(date_cloture, '%d-%m-%Y') as dateclos, user_crea,dossiers.galec,etat_dossier, mag, centrale, sca3.btlec,vingtquatre, etat, transporteur, affrete, transit, CONCAT(prepa.nom,' ', prepa.prenom) as fullprepa, CONCAT(ctrl.nom,' ',ctrl.prenom) as fullctrl,CONCAT(chg.nom,' ',chg.prenom) as fullchg, mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag, esp,
+	$query="SELECT dossiers.id as id_main, dossiers.dossier,date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,DATE_FORMAT(date_cloture, '%d-%m-%Y') as dateclos, user_crea,dossiers.galec,etat_dossier, magasin.mag.deno, magasin.mag.centrale, magasin.mag.id as btlec,vingtquatre, etat, transporteur, affrete, transit, CONCAT(prepa.nom,' ', prepa.prenom) as fullprepa, CONCAT(ctrl.nom,' ',ctrl.prenom) as fullctrl,CONCAT(chg.nom,' ',chg.prenom) as fullchg, mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag, esp,
 		details.palette, details.facture, DATE_FORMAT(details.date_facture, '%d-%m-%Y') as datefacture ,details.article, details.ean, details.dossier_gessica, details.descr, details.qte_cde, details.tarif, details.fournisseur, qte_litige, inv_palette, inv_article,inv_descr, inv_tarif, inv_fournisseur,inv_qte, reclamation, id_reclamation, valo,inversion,imputation, typo,analyse, conclusion, valo_line, details.serials,
 		qte_litige, inv_article,inv_descr, inv_tarif, inv_fournisseur,inv_qte, reclamation, id_reclamation, valo,inversion,imputation, typo,analyse, conclusion
 
 		FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
-		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
+		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec
 		LEFT JOIN transporteur ON id_transp=transporteur.id
 		LEFT JOIN affrete ON id_affrete=affrete.id
 		LEFT JOIN transit ON id_transit=transit.id
@@ -92,13 +97,14 @@ function getAllDossier($pdoLitige)
 		LEFT JOIN analyse ON id_analyse=analyse.id
 		LEFT JOIN conclusion ON id_conclusion=conclusion.id
 		WHERE
-		date_crea BETWEEN :date_start AND :date_end
-		AND concat(dossiers.dossier,mag,dossiers.galec,sca3.btlec) LIKE :search $reqEtat
+		(date_crea BETWEEN :date_start AND :date_end)
+		$strg $reqEtat
 		$reqCommission $reqLivraison
-		ORDER BY dossiers.dossier DESC
-		");
+		ORDER BY dossiers.dossier DESC";
+
+	$req=$pdoLitige->prepare($query);
 	$req->execute(array(
-		':search' =>'%'.$strg.'%',
+
 		':date_start'=>$dateStart,
 		':date_end'	=>$dateEnd,
 
@@ -107,18 +113,12 @@ function getAllDossier($pdoLitige)
 
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-
 $dossiers=getAllDossier($pdoLitige);
-// 	echo "<pre>";
-// 	print_r($_SESSION);
-// 	echo '</pre>';
+	// echo "<pre>";
+	// print_r($dossiers);
+	// echo '</pre>';
 
-// 	echo "<pre>";
-// 	print_r($dossiers);
-// 	echo '</pre>';
 // exit;
-
-
 // function getPaletteCde($pdoLitige,$id_dossier)
 // {
 // 	$req=$pdoLitige->prepare("SELECT sum(tarif) as tarif_palette_cde, sum(qte_cde) as qte_art_cde FROM details WHERE id_dossier= :id_dossier");
@@ -130,13 +130,13 @@ $dossiers=getAllDossier($pdoLitige);
 
 function getPaletteRecu($pdoLitige, $id_dossier)
 {
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main, dossiers.dossier,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,,DATE_FORMAT(date_cloture, '%d-%m-%Y') as dateclos, mag, sca3.btlec, dossiers.galec,centrale, etat, vingtquatre, esp, etat_dossier, palette_inv.palette as palette,DATE_FORMAT(details.date_facture, '%d-%m-%Y') as datefacture, palette_inv.article, palette_inv.ean,palette_inv.descr, palette_inv.qte_cde, palette_inv.tarif as valo_line,palette_inv.fournisseur, palette_inv.cnuf,
+	$req=$pdoLitige->prepare("SELECT dossiers.id as id_main, dossiers.dossier,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,DATE_FORMAT(date_cloture, '%d-%m-%Y') as dateclos, magasin.mag.deno, magasin.mag.id as btlec, dossiers.galec,magasin.mag.centrale, etat, vingtquatre, esp, etat_dossier, palette_inv.palette as palette,DATE_FORMAT(details.date_facture, '%d-%m-%Y') as datefacture, palette_inv.article, palette_inv.ean,palette_inv.descr, palette_inv.qte_cde, palette_inv.tarif as valo_line,palette_inv.fournisseur, palette_inv.cnuf,
 		CONCAT(prepa.nom,' ', prepa.prenom) as fullprepa, CONCAT(ctrl.nom,' ',ctrl.prenom) as fullctrl,CONCAT(chg.nom,' ',chg.prenom) as fullchg,
 		mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag, imputation, typo,analyse, conclusion, transporteur, transit, affrete
 
 	 FROM palette_inv
 		LEFT JOIN dossiers ON palette_inv.id_dossier=dossiers.id
-		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
+		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec
 		LEFT JOIN transporteur ON id_transp=transporteur.id
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN affrete ON id_affrete=affrete.id
@@ -352,7 +352,7 @@ foreach ($dossiers as $key => $dossier){
 	$solde=($dossier['etat_dossier']==0)?'non':'oui';
 	$sheet->setCellValue('A'.$row, $dossier['dossier']);
 	$sheet->setCellValue('B'.$row, $dossier['datecrea']);
-	$sheet->setCellValue('C'.$row, $dossier['mag']);
+	$sheet->setCellValue('C'.$row, $dossier['deno']);
 	$sheet->setCellValue('D'.$row, $dossier['btlec']);
 	$sheet->setCellValue('E'.$row, $dossier['galec']);
 	$sheet->setCellValue('F'.$row, $dossier['centrale']);
@@ -401,6 +401,8 @@ foreach ($dossiers as $key => $dossier){
 if(!empty($listDossierInvPalette)){
 	for ($i=0; $i <count($listDossierInvPalette) ; $i++) {
 		$dossiers=getPaletteRecu($pdoLitige, $listDossierInvPalette[$i]);
+
+
 		if($dossier['id_main']==$dossierW){
 			$mtTransp=0;
 			$mtAssur=0;
@@ -429,7 +431,7 @@ if(!empty($listDossierInvPalette)){
 			$solde=($dossier['etat_dossier']==0)?'non':'oui';
 			$sheet->setCellValue('A'.$row, $dossier['dossier']);
 			$sheet->setCellValue('B'.$row, $dossier['datecrea']);
-			$sheet->setCellValue('C'.$row, $dossier['mag']);
+			$sheet->setCellValue('C'.$row, $dossier['deno']);
 			$sheet->setCellValue('D'.$row, $dossier['btlec']);
 			$sheet->setCellValue('E'.$row, $dossier['galec']);
 			$sheet->setCellValue('F'.$row, $dossier['centrale']);
@@ -477,6 +479,7 @@ if(!empty($listDossierInvPalette)){
 
 	}
 }
+
 
  // dimensionnement des colnes
 $cols=['A','B','C','D','E','F','G', 'H', 'I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC', 'AD','AE','AF','AG', 'AH', 'AI','AJ', 'AK', 'AL','AM', 'AN', 'AO', 'AP'];
