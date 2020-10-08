@@ -184,7 +184,7 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 			<li class='active has-sub'><a href="<?= ROOT_PATH?>/public/gtocc/#"><span>Leclerc occasion</span></a>
 				<ul>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-palette.php'?>">Offres produits</a></li>
-					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-ddes.php'?>">Vos demandes</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-mag-cdes.php'?>">Vos Commandes</a></li>
 				</ul>
 			</li>
 		<?php endif ?>
