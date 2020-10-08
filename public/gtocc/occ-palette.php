@@ -313,9 +313,10 @@ include 'occ-palette-addarticle.php';
 if(isset($_GET['expedier'])){
 	$majStatutPalette=false;
 	// mettre à jour len uméro de commande
-	$req=$pdoOcc->prepare("UPDATE cdes_numero SET statut=3 WHERE id= :id");
+	$req=$pdoOcc->prepare("UPDATE cdes_numero SET statut=3, date_exp= :date_exp WHERE id= :id");
 	$req->execute([
-		':id'		=>$_GET['expedier']
+		':id'		=>$_GET['expedier'],
+		'date_exp'	=>date('Y-m-d H:i:s')
 	]);
 	// // mettre à jour les palette si palette !!!
 	$detailCde=$paletteMgr->getCdeByIdCde($_GET['expedier']);
