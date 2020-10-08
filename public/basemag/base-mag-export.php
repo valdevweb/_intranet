@@ -11,22 +11,6 @@
 								<a href="xl-basemag.php?nofilter=0" class="btn btn-green">Export avec filtres actifs</a>
 							</div>
 						</div>
-						<!-- <p class="mt-3">
-							<a data-toggle="collapse" href="#collapseFieldFilter" role="button" aria-expanded="false" aria-controls="collapseFieldFilter">
-								Préciser les champs à exporter :
-							</a>
-						</p>
-
-						<div class="collapse" id="collapseFieldFilter">
-							<div class="card card-body">
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" value="" id="address" name="address">
-									<label class="form-check-label" for="model">Adresse </label>
-								</div>
-
-
-							</div>
-						</div> -->
 					</fieldset>
 				</form>
 			</div>

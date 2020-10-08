@@ -225,7 +225,7 @@
 			<div class="bg-separation-small"></div>
 
 			<!-- <div class="sub-title-ico  pt-3"><i class="fas fa-calendar text-light-grey"></i></div> -->
-			<h5 class="text-center font-weight-bold  sub-title">Historique magasin</h5>
+			<h5 class="text-center font-weight-bold  sub-title" id="syno">Historique magasin</h5>
 
 			<div class="row light-shadow-round py-3 mb-3">
 				<div class="col yanone-replace">

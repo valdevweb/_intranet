@@ -274,13 +274,41 @@ if(isset($_POST['submit_crea'])){
 		header("Location: ".$_SERVER['PHP_SELF'].'?id='.$_GET['id'].'&'.$successQ,true,303);
 	}else{
 		$error=$req->errorInfo();
-		echo "<pre>";
-		print_r($error);
-		echo '</pre>';
+
 
 		$errors[]="impossible d'ajouter le magasin : ".$error[2];
 	}
 }
+
+if(isset($_POST['submit-syno'])){
+	if(!isset($_POST['galec-syno']) || !isset($_POST['bt-new'])){
+		$errors[]="Merci de saisir le nouveau code BTLec ainsi que le panonceau galec";
+	}
+		echo "<pre>";
+		print_r($_POST);
+		echo '</pre>';
+
+	if(empty($errors)){
+		$req=$pdoMag->prepare("INSERT INTO magsyno (btlec_old, btlec_new, galec, date_insert) VALUES (:btlec_old, :btlec_new, :galec, :date_insert)");
+		$req->execute([
+			':btlec_old'		=>$_GET['id'],
+			':btlec_new'		=>$_POST['bt-new'],
+			':galec'		=>$_POST['galec-syno'],
+			':date_insert'		=>date('Y-m-d H:i:s')
+		]);
+		$insert=$req->rowCount();
+		if($insert==1){
+			$successQ='success=ajoutsyno#syno';
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF'].'?id='.$_GET['id'].'&'.$successQ,true,303);
+		}else{
+			$error=$req->errorInfo();
+			$errors[]="impossible d'ajouter le magasin synonyme: ".$error[2];
+		}
+	}
+
+}
+
 
 if(isset($_POST['submitdocubase'])){
 
@@ -516,7 +544,8 @@ if(isset($_GET['success'])){
 		'majacdlec'=>'Code ajouté avec succès',
 		'ajoutmag'=>'infos magasin recopiée avec succès dans la table sca3',
 		'upnote' =>'Mise à jour de l\'observation faite avec succès',
-		'insertnote' =>'Ajout de l\'observation faite avec succès'
+		'insertnote' =>'Ajout de l\'observation faite avec succès',
+		'ajoutsyno' =>'Ajout du magasin synonyme fait avec succès'
 	];
 	$success[]=$arrSuccess[$_GET['success']];
 }
