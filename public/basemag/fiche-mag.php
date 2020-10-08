@@ -284,9 +284,6 @@ if(isset($_POST['submit-syno'])){
 	if(!isset($_POST['galec-syno']) || !isset($_POST['bt-new'])){
 		$errors[]="Merci de saisir le nouveau code BTLec ainsi que le panonceau galec";
 	}
-		echo "<pre>";
-		print_r($_POST);
-		echo '</pre>';
 
 	if(empty($errors)){
 		$req=$pdoMag->prepare("INSERT INTO magsyno (btlec_old, btlec_new, galec, date_insert) VALUES (:btlec_old, :btlec_new, :galec, :date_insert)");
