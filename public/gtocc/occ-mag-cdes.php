@@ -54,7 +54,7 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Main title</h1>
+	<h1 class="text-main-blue py-5 ">Vos commandes Leclerc Occasion</h1>
 
 	<div class="row">
 		<div class="col-lg-1"></div>
@@ -73,9 +73,10 @@ DEBUT CONTENU CONTAINER
 					<thead class="thead-dark">
 						<tr>
 							<th>Cde n°</th>
-							<th>Magasin</th>
 							<th>Date commande</th>
+							<th>Date expédition</th>
 							<th>Détail</th>
+							<th>BL</th>
 
 						</tr>
 					</thead>
@@ -83,13 +84,13 @@ DEBUT CONTENU CONTAINER
 						<?php foreach ($paletteMag as $key => $palette): ?>
 							<tr>
 								<td><?=$palette['id_cde']?></td>
+								<td><?=date('d-m-Y', strtotime($palette['date_insert']))?></td>
 
-								<td><?= UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $palette['id_web_user'], 'deno_sca')  ?></td>
-								<td><?=$palette['date_insert']?></td>
+								<td><?= !empty($palette['date_exp'])? date('d-m-Y', strtotime($palette['date_exp'])):""  ?></td>
 								<td><div class="btn btn-primary detail-btn" data-btn-id="<?=$palette['id_cde']?>">Voir le détail</div></td>
+								<td><a href="occ-mag-cdes-pdf.php?id=<?=$palette['id_cde']?>" class="btn btn-danger detail-btn" target="_blank" ><i class="fas fa-file-pdf pr-3"></i>Bon de livraison</a></td>
 							</tr>
 							<tr class="borderless">
-
 								<td colspan="6" class="mx-auto text-center">
 									<?php
 
