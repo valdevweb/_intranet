@@ -520,7 +520,7 @@ DEBUT CONTENU CONTAINER
 			?>
 		</div>
 		<div class="col">
-			<p class="text-right pt-3">
+			<p class="text-right pt-0">
 				<?php if ($prev!=0): ?>
 					<a href="bt-detail-litige.php?id=<?=$prev?>" class="grey-link"><i class="fas fa-angle-left pr-2 pt-2"></i>Litige précédent</a>
 				<?php endif ?>
@@ -529,7 +529,7 @@ DEBUT CONTENU CONTAINER
 
 				<?php endif ?>
 			</div>
-			<div class="col-auto  pt-3">
+			<div class="col-auto  pt-5">
 				<p class="text-right"><a href="bt-litige-encours.php" class="btn btn-primary">Retour</a></p>
 			</div>
 		</div>
@@ -981,7 +981,6 @@ DEBUT CONTENU CONTAINER
 			</div>
 		</div>
 
-		<!--  -->
 
 
 
