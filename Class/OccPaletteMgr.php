@@ -58,16 +58,26 @@ class OccPaletteMgr{
 			':statut'	=>$statut
 		]);
 		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	public function getListCommandeByMag($idwebuser){
+		$req=$this->pdoOcc->prepare("SELECT * FROM cdes_numero LEFT JOIN cdes_detail ON cdes_numero.id=cdes_detail.id_cde WHERE id_web_user = :id_web_user GROUP BY id_cde");
+		$req->execute([
+			':id_web_user'	=>$idwebuser
+		]);
+		return $req->fetchAll(PDO::FETCH_ASSOC);
 
 	}
 	public function getCdeByIdCde($idCde){
-	$req=$this->pdoOcc->prepare("SELECT cdes_detail.*,palettes_articles.*, cdes_detail.date_insert as date_cde  FROM cdes_detail LEFT JOIN palettes_articles ON cdes_detail.id_palette = palettes_articles.id_palette WHERE  id_cde= :id_cde ORDER BY cdes_detail.id_palette");
-	$req->execute([
-		':id_cde'	=>$idCde
+		$req=$this->pdoOcc->prepare("SELECT cdes_detail.*,palettes_articles.*, cdes_detail.date_insert as date_cde  FROM cdes_detail LEFT JOIN palettes_articles ON cdes_detail.id_palette = palettes_articles.id_palette WHERE  id_cde= :id_cde ORDER BY cdes_detail.id_palette");
+		$req->execute([
+			':id_cde'	=>$idCde
 
-	]);
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
+		]);
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+
 
 }
 
