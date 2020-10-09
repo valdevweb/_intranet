@@ -3,8 +3,9 @@
  // require('../../config/pdo_connect.php');
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
-	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
+	echo "pas de variable session";
+
 }
 //			css dynamique
 //----------------------------------------------------------------
@@ -14,9 +15,9 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-function search($pdoBt)
+function search($pdoMag)
 {
-	$req=$pdoBt->prepare("SELECT * FROM sca3  WHERE concat(mag,galec,btlec,city) LIKE :search ");
+	$req=$pdoMag->prepare("SELECT * FROM mag  WHERE concat(deno, galec,id,ville) LIKE :search ");
 	$req->execute(array(
 		':search' =>'%'.$_POST['search_strg'] .'%'
 	));
@@ -25,10 +26,8 @@ function search($pdoBt)
 }
 // $search=search($pdoSav);
 
-if(isset($_POST['search_form']))
-{
-	$mags=search($pdoBt);
-
+if(isset($_POST['search_form'])){
+	$mags=search($pdoMag);
 }
 else{
 
@@ -73,7 +72,7 @@ DEBUT CONTENU CONTAINER
 						<th>Galec</th>
 						<th>Déno</th>
 						<th>Ville</th>
-						<th>Centrale</th>
+
 						<th class="text-center">Saisie guidée</th>
 						<th class="text-center">Saisie libre</th>
 					</tr>
@@ -84,11 +83,11 @@ DEBUT CONTENU CONTAINER
 						foreach ($mags as $mag)
 						{
 							echo '<tr>';
-							echo '<td>'.$mag['btlec'].'</td>';
+							echo '<td>'.$mag['id'].'</td>';
 							echo '<td>'.$mag['galec'].'</td>';
-							echo '<td>'.$mag['mag'].'</td>';
-							echo '<td>'.$mag['city'].'</td>';
-							echo '<td>'.$mag['centrale'].'</td>';
+							echo '<td>'.$mag['deno'].'</td>';
+							echo '<td>'.$mag['ville'].'</td>';
+
 							echo '<td class="text-center"><a href="hidden-session.php?galec='.$mag['galec'].'"><i class="fas fa-hand-pointer"></i></td>';
 							echo '<td class="text-center"><a href="bt-ouv-saisie.php?galec='.$mag['galec'].'"><i class="fas fa-hand-pointer"></i></td>';
 							echo '</tr>';
