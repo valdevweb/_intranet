@@ -453,8 +453,7 @@ else{
 	$next=$last;
 }
 
-if($_GET['id']!=1)
-{
+if($_GET['id']!=1){
 	$prev=$pagination[$page-1];
 }
 else{
@@ -525,496 +524,497 @@ DEBUT CONTENU CONTAINER
 					<a href="bt-detail-litige.php?id=<?=$prev?>" class="grey-link"><i class="fas fa-angle-left pr-2 pt-2"></i>Litige précédent</a>
 				<?php endif ?>
 				<?php if ($next!=$last): ?>
-					<a href="bt-detail-litige.php?id=<?=$next?>" class="grey-link"><i class="fas fa-angle-right pl-5 pr-2 pt-1"></i>Litige suivant</a></p>
+					<a href="bt-detail-litige.php?id=<?=$next?>" class="grey-link"><i class="fas fa-angle-right pl-5 pr-2 pt-1"></i>Litige suivant</a>
 
 				<?php endif ?>
-			</div>
-			<div class="col-auto  pt-5">
-				<p class="text-right"><a href="bt-litige-encours.php" class="btn btn-primary">Retour</a></p>
-			</div>
+			</p>
+		</div>
+		<div class="col-auto  pt-5">
+			<p class="text-right"><a href="bt-litige-encours.php" class="btn btn-primary">Retour</a></p>
+		</div>
+	</div>
+
+
+	<div class="row  pb-3 align-items-center">
+
+		<div class="col">
+			<h1 class="text-main-blue ">
+				Dossier N° <?= $fLitige[0]['dossier']?>
+			</h1>
 		</div>
 
-
-		<div class="row  pb-3 align-items-center">
-
-			<div class="col">
-				<h1 class="text-main-blue ">
-					Dossier N° <?= $fLitige[0]['dossier']?>
-				</h1>
-			</div>
-
-			<div class="col">
-				<p class="text-right text-main-blue bigger my-auto">
-					déclaration du <?=$fLitige[0]['datecrea'] ?>
-				</p>
-			</div>
-			<div class="col-auto">
-				<?php
-				if($fLitige[0]['vingtquatre']==1)
-				{
-					$vingtquatre='<img src="../img/litiges/2448_40.png">';
-
-				}
-				else
-				{
-					$vingtquatre="";
-				}
-				echo $vingtquatre;
-				?>
-			</div>
+		<div class="col">
+			<p class="text-right text-main-blue bigger my-auto">
+				déclaration du <?=$fLitige[0]['datecrea'] ?>
+			</p>
 		</div>
+		<div class="col-auto">
+			<?php
+			if($fLitige[0]['vingtquatre']==1)
+			{
+				$vingtquatre='<img src="../img/litiges/2448_40.png">';
 
-		<div class="row no-gutters">
-			<div class="col">
-				<?php
-				include('../view/_errors.php');
-				?>
-			</div>
-			<div class="col-lg-1 col-xxl-2"></div>
+			}
+			else
+			{
+				$vingtquatre="";
+			}
+			echo $vingtquatre;
+			?>
 		</div>
-		<!-- info mag -->
-		<div class="row mb-3">
-			<div class="col-lg-2"></div>
-			<div class="col">
-				<div class="row bg-alert-primary border light-shadow no-gutters">
-					<div class="col-auto my-auto">
-						<div class="align-middle"><img src="../img/litiges/mag-sm.jpg"></div>
+	</div>
+
+	<div class="row no-gutters">
+		<div class="col">
+			<?php
+			include('../view/_errors.php');
+			?>
+		</div>
+		<div class="col-lg-1 col-xxl-2"></div>
+	</div>
+	<!-- info mag -->
+	<div class="row mb-3">
+		<div class="col-lg-2"></div>
+		<div class="col">
+			<div class="row bg-alert-primary border light-shadow no-gutters">
+				<div class="col-auto my-auto">
+					<div class="align-middle"><img src="../img/litiges/mag-sm.jpg"></div>
+				</div>
+				<div class="col pl-5">
+					<div class="row">
+						<div class="col">
+							<h4 class="khand pt-2"><a href="stat-litige-mag.php?galec=<?=$fLitige[0]['galec']?>"><?= $fLitige[0]['mag'] .' - '.$fLitige[0]['btlec'].' ('.$fLitige[0]['galec'].')' ?></a></h4>
+						</div>
+						<div class="col">
+							<h4 class="khand pt-2 text-right pr-3"><?=$fLitige[0]['centrale']?></h4>
+						</div>
 					</div>
-					<div class="col pl-5">
-						<div class="row">
-							<div class="col">
-								<h4 class="khand pt-2"><a href="stat-litige-mag.php?galec=<?=$fLitige[0]['galec']?>"><?= $fLitige[0]['mag'] .' - '.$fLitige[0]['btlec'].' ('.$fLitige[0]['galec'].')' ?></a></h4>
-							</div>
-							<div class="col">
-								<h4 class="khand pt-2 text-right pr-3"><?=$fLitige[0]['centrale']?></h4>
-							</div>
+					<div class="row">
+						<div class="col">
+							<span class="heavy">Interlocuteur : </span><?= $fLitige[0]['nom'] ?>
 						</div>
-						<div class="row">
-							<div class="col">
-								<span class="heavy">Interlocuteur : </span><?= $fLitige[0]['nom'] ?>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<span class="heavy">Commentaire : </span><?= $firstDial['msg'] ?>
-							</div>
-						</div>
-
 					</div>
+					<div class="row">
+						<div class="col">
+							<span class="heavy">Commentaire : </span><?= $firstDial['msg'] ?>
+						</div>
+					</div>
+
 				</div>
 			</div>
-			<div class="col-lg-2"></div>
 		</div>
+		<div class="col-lg-2"></div>
+	</div>
 
-		<div class="bg-separation"></div>
+	<div class="bg-separation"></div>
 
-		<div class="row mt-3">
-			<div class="col">
-				<div class="row">
-					<div class="col">
-						<h5 class="khand text-main-blue pb-3">Intervenir sur le dossier :</h5>
-					</div>
-				</div>
-				<div class="row">
-					<!-- <div class="col"></div> -->
-					<div class="col-auto">
-						<p class="text-right"><a href="bt-analyse.php?id=<?=$_GET['id']?>" class="btn btn-primary"><i class="fas fa-chart-area pr-3"></i>Analyser litige</a></p>
-					</div>
-
-					<div class="col-auto">
-						<p class="text-right"><a href="bt-action-add.php?id=<?=$_GET['id']?>" class="btn btn-red"><i class="fas fa-plus-square pr-3"></i>Ajouter une action</a></p>
-					</div>
-					<div class="col-auto">
-						<p class="text-right"><a href="bt-contact.php?id=<?=$_GET['id']?>" class="btn btn-kaki"><i class="fas fa-comment pr-3"></i>Contacter le magasin</a></p>
-					</div>
-					<div class="col-auto">
-						<p class="text-right"><a href="bt-info-litige.php?id=<?=$_GET['id']?>" class="btn btn-yellow"><i class="fas fa-highlighter pr-3"></i>Ajouter des informations</a></p>
-					</div>
-					<div class="col-auto">
-						<p class="text-right"><a href="bt-generate-fiche.php?id=<?=$_GET['id']?>" class="btn btn-black" target="_blank"><i class="fas fa-print pr-3"></i>Imprimer</a></p>
-					</div>
-
-					<!-- <div class="col"></div> -->
+	<div class="row mt-3">
+		<div class="col">
+			<div class="row">
+				<div class="col">
+					<h5 class="khand text-main-blue pb-3">Intervenir sur le dossier :</h5>
 				</div>
 			</div>
+			<div class="row">
+				<!-- <div class="col"></div> -->
+				<div class="col-auto">
+					<p class="text-right"><a href="bt-analyse.php?id=<?=$_GET['id']?>" class="btn btn-primary"><i class="fas fa-chart-area pr-3"></i>Analyser litige</a></p>
+				</div>
 
+				<div class="col-auto">
+					<p class="text-right"><a href="bt-action-add.php?id=<?=$_GET['id']?>" class="btn btn-red"><i class="fas fa-plus-square pr-3"></i>Ajouter une action</a></p>
+				</div>
+				<div class="col-auto">
+					<p class="text-right"><a href="bt-contact.php?id=<?=$_GET['id']?>" class="btn btn-kaki"><i class="fas fa-comment pr-3"></i>Contacter le magasin</a></p>
+				</div>
+				<div class="col-auto">
+					<p class="text-right"><a href="bt-info-litige.php?id=<?=$_GET['id']?>" class="btn btn-yellow"><i class="fas fa-highlighter pr-3"></i>Ajouter des informations</a></p>
+				</div>
+				<div class="col-auto">
+					<p class="text-right"><a href="bt-generate-fiche.php?id=<?=$_GET['id']?>" class="btn btn-black" target="_blank"><i class="fas fa-print pr-3"></i>Imprimer</a></p>
+				</div>
+
+				<!-- <div class="col"></div> -->
+			</div>
 		</div>
-		<div class="bg-separation"></div>
-		<!-- infos produit -->
-		<?php
+
+	</div>
+	<div class="bg-separation"></div>
+	<!-- infos produit -->
+	<?php
 
 	// affiche soit le tableau de detail des produits soit le tableau d'inversion de palette
-		if($fLitige[0]['id_reclamation']==7)
-		{
+	if($fLitige[0]['id_reclamation']==7)
+	{
 	// traitement pour affichage détail palette
-			$detailInv=false;
-			$detailCde=false;
-			$majrecherchepalette='';
-			$pj='';
-			$invPal = sommeInvPalette($pdoLitige);
-			$cdePal=sommePaletteCde($pdoLitige);
-			if(isset($_GET['inv']))
-			{
-				$invPalette=getInvPaletteDetail($pdoLitige);
-				$detailInv=true;
-			}
-			if(isset($_GET['cde']))
-			{
+		$detailInv=false;
+		$detailCde=false;
+		$majrecherchepalette='';
+		$pj='';
+		$invPal = sommeInvPalette($pdoLitige);
+		$cdePal=sommePaletteCde($pdoLitige);
+		if(isset($_GET['inv']))
+		{
+			$invPalette=getInvPaletteDetail($pdoLitige);
+			$detailInv=true;
+		}
+		if(isset($_GET['cde']))
+		{
 		//on réutilise fLitige
-				$detailCde=true;
-			}
+			$detailCde=true;
+		}
 		// tableau palette + pj
-			if($cdePal['pj']!='')
-			{
-				$pj=createFileLink($cdePal['pj']);
+		if($cdePal['pj']!='')
+		{
+			$pj=createFileLink($cdePal['pj']);
 
-			}
+		}
 
 		// si la palette n'a pas été trouvée au moment de la déclaration, l'utilisateur voit un btn rechercher apparaitre , l'adresse du bouton contient le paramètre search
-			if(isset($_GET['search']))
+		if(isset($_GET['search']))
+		{
+			$newFoundPalette=searchPalette($pdoQlik, $fLitige[0]['inv_palette']);
+			if(empty($newFoundPalette))
 			{
-				$newFoundPalette=searchPalette($pdoQlik, $fLitige[0]['inv_palette']);
-				if(empty($newFoundPalette))
+				$majrecherchepalette='<div class="alert alert-danger">la palette n\'a pas été trouvée</div>';
+			}
+			else
+			{
+				foreach ($newFoundPalette as $pal)
 				{
-					$majrecherchepalette='<div class="alert alert-danger">la palette n\'a pas été trouvée</div>';
-				}
-				else
-				{
-					foreach ($newFoundPalette as $pal)
+					$paletteFound=addPaletteInv($pdoLitige,$pal['palette'],$pal['facture'], $pal['date_mvt'],$pal['article'],$pal['gencod'],$pal['dossier'],$pal['libelle'],$pal['qte'],$pal['tarif'],$pal['fournisseur'],$pal['cnuf']);
+					if($paletteFound!=1)
 					{
-						$paletteFound=addPaletteInv($pdoLitige,$pal['palette'],$pal['facture'], $pal['date_mvt'],$pal['article'],$pal['gencod'],$pal['dossier'],$pal['libelle'],$pal['qte'],$pal['tarif'],$pal['fournisseur'],$pal['cnuf']);
-						if($paletteFound!=1)
-						{
-							$errors[]="Problème d'enregistrement lors de l'ajout de la palette reçue";
-						}
-						else
-						{
+						$errors[]="Problème d'enregistrement lors de l'ajout de la palette reçue";
+					}
+					else
+					{
 						// il faut recalculer la valo totale
-							$sumLitige=getSumLitige($pdoLitige);
-							$sumRecu=getSumPaletteRecu($pdoLitige);
-							$sumCde=$sumLitige['sumValo'];
-							$sumRecu=$sumRecu['sumValo'];
-							$sumValo=$sumCde -$sumRecu;
-							$update=updateValoDossier($pdoLitige,$sumValo);
-							$majrecherchepalette='<div class="alert alert-success">la palette a été trouvée et la base de donnée mise à jour. Cliquez <a href="?id='.$_GET['id'].'">ici pour rafraichir la page</a></div>';
+						$sumLitige=getSumLitige($pdoLitige);
+						$sumRecu=getSumPaletteRecu($pdoLitige);
+						$sumCde=$sumLitige['sumValo'];
+						$sumRecu=$sumRecu['sumValo'];
+						$sumValo=$sumCde -$sumRecu;
+						$update=updateValoDossier($pdoLitige,$sumValo);
+						$majrecherchepalette='<div class="alert alert-success">la palette a été trouvée et la base de donnée mise à jour. Cliquez <a href="?id='.$_GET['id'].'">ici pour rafraichir la page</a></div>';
+					}
+				}
+
+			}
+		}
+		include('dt-invpalette.php');
+
+	}
+
+	else
+	{
+		include('dt-prod.php');
+	}
+
+	?>
+
+
+	<div class="bg-separation"></div>
+
+	<!-- analyse service, imputation, typo, etat, analyse, conclusion -->
+	<div class="row mt-3">
+		<div class="col">
+			<h5 class="khand text-main-blue pb-3">Analyse :</h5>
+		</div>
+	</div>
+	<div class="row mb-3">
+		<div class="col">
+			<!-- start table -->
+			<table class="table light-shadow">
+				<thead class="thead-dark">
+					<tr>
+						<th>Nature</th>
+						<th>Imputation</th>
+						<th>Typologie</th>
+						<th>Etat</th>
+						<th>Analyse</th>
+						<th>Réponse</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><?=$analyse['gt']?></td>
+						<td><?=$analyse['imputation']?></td>
+						<td><?=$analyse['typo']?></td>
+						<td><?=$analyse['etat']?></td>
+						<td><?=$analyse['analyse']?></td>
+						<td><?=$analyse['conclusion']?></td>
+					</tr>
+				</tbody>
+			</table>
+			<!-- ./table -->
+		</div>
+	</div>
+
+	<div class="bg-separation"></div>
+
+	<!-- infos -->
+	<div class="row mt-3">
+		<div class="col">
+			<h5 class="khand text-main-blue pb-3">Informations :</h5>
+
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col bg-alert mr-3 border-kaki">
+			<div class="row">
+				<div class="col text-center"><img src="../img/litiges/ico-entrepot.png"></div>
+
+			</div>
+			<div class="row">
+				<div class="col-5 text-kaki">Préparateur :</div>
+				<div class="col "><?=$infos['fullprepa']?></div>
+			</div>
+			<div class="row">
+				<div class="col-5 text-kaki">Date prépa :</div>
+				<div class="col "><?=$infos['dateprepa']?></div>
+			</div>
+			<div class="row">
+				<div class="col-5 text-kaki">Contrôleur :</div>
+				<div class="col "><?=$infos['fullctrl']?></div>
+			</div>
+			<div class="row">
+				<div class="col-5 text-kaki">Chargeur :</div>
+				<div class="col "><?=$infos['fullchg']?></div>
+			</div>
+			<div class="row">
+				<div class="col-5 text-kaki">Contrôle stock : </div>
+				<div class="col "><?=$ctrl?></div>
+			</div>
+		</div>
+		<div class="col bg-alert mr-3  border-yellow">
+			<div class="row">
+				<div class="col text-center"><img src="../img/litiges/ico-transp.png"></div>
+			</div>
+			<div class="row">
+				<div class="col text-yellow">Transporteur :</div>
+				<div class="col"><?=$infos['transporteur']?></div>
+			</div>
+			<div class="row">
+				<div class="col text-yellow">Affreteur :</div>
+				<div class="col"><?=$infos['affrete']?></div>
+			</div>
+			<div class="row">
+				<div class="col text-yellow">Transité par :</div>
+				<div class="col"><?=$infos['transit']?></div>
+			</div>
+		</div>
+		<div class="col bg-alert border-reddish">
+			<div class="row">
+				<div class="col text-center"><img src="../img/litiges/ico-fact.png"></div>
+
+			</div>
+			<div class="row">
+				<div class="col-8 text-red">Réglement transporteur :</div>
+				<div class="col text-right"><?=number_format((float)$infos['mt_transp'],2,'.','')?>&euro;</div>
+			</div>
+			<div class="row">
+				<div class="col-8 text-red">Réglement assurance :</div>
+				<div class="col text-right"><?= number_format((float)$infos['mt_assur'],2,'.','')?>&euro;</div>
+			</div>
+			<div class="row">
+				<div class="col-8 text-red">Réglement fournisseur :</div>
+				<div class="col text-right"><?= number_format((float)$infos['mt_fourn'],2,'.','')?>&euro;</div>
+			</div>
+			<div class="row">
+				<div class="col-8 text-red">Avoir magasin :</div>
+				<div class="col text-right"><?= number_format((float)$infos['mt_mag'],2,'.','')?>&euro;</div>
+			</div>
+			<div class="row">
+				<div class="col-8 text-red">Coût du litige :</div>
+				<div class="col text-right"><?= number_format((float)$coutTotal,2,'.','') ?>&euro;</div>
+			</div>
+
+		</div>
+
+	</div>
+	<div class="bg-separation"></div>
+
+	<div class="row mt-3">
+		<div class="col">
+			<h5 class="khand text-main-blue pb-3">Actions :</h5>
+		</div>
+	</div>
+	<?php if ($fLitige[0]['commission']==0): ?>
+		<div class="row">
+			<div class="col stamps pb-3">
+				Cliquez sur <a href="#hidden"  class="stamps" ><i class="fas fa-user-check stamp pending"></i></a> si le dossier a été statué en commission
+			</div>
+		</div>
+
+
+		<div class="row mb-3" id="hidden">
+			<div class="col">
+				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?> " method="post">
+					<div class="form-group">
+						<label class="text-main-blue">Commentaire :</label>
+						<textarea class="form-control" name="cmt" rows="3" id="cmtarea"></textarea>
+					</div>
+					<div class="form-group">
+						<input type="hidden" class="form-control" name="iddossier" id="hiddeninput" value="<?=$_GET['id']?>">
+					</div>
+					<button class="btn btn-black" name="validate">Valider</button>
+					<button class="btn btn-red" id="annuler">Annuler</button>
+
+				</form>
+			</div>
+		</div>
+	<?php endif ?>
+
+
+	<div class="row">
+		<div class="col">
+			<table class="table light-shadow">
+				<thead class="thead-dark">
+					<tr>
+						<th>date</th>
+						<th>Par</th>
+						<th>Action</th>
+						<th>PJ</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+
+
+					if(isset($actionList) && count($actionList)>0)
+					{
+						foreach ($actionList as $action)
+						{
+							if($action['pj']!='')
+							{
+								$pj=createFileLink($action['pj']);
+							}
+							else
+							{
+								$pj='';
+							}
+							echo '<tr>';
+							echo'<td>'.$action['dateFr'].'</td>';
+							echo'<td>'. UserHelpers::getFullname($pdoUser, $action['id_web_user']) .'</td>';
+
+							echo'<td>'.$action['libelle'].'</td>';
+							echo'<td>'.$pj.'</td>';
+							echo '</tr>';
 						}
+
+					}
+					else
+					{
+						echo '<tr><td colspan="3">Aucune Action</td></tr>';
 					}
 
-				}
+					?>
+
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+	<div class="bg-separation"></div>
+
+	<div class="row mt-3">
+		<div class="col">
+			<h5 class="khand text-main-blue pb-3">Echange avec le magasin</h5>
+
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+
+			<?php
+			if(isset($dials) && count($dials)>0)
+			{
+				include('echanges.php');
+
 			}
-			include('dt-invpalette.php');
+			?>
 
-		}
-
-		else
-		{
-			include('dt-prod.php');
-		}
-
-		?>
-
-
-		<div class="bg-separation"></div>
-
-		<!-- analyse service, imputation, typo, etat, analyse, conclusion -->
-		<div class="row mt-3">
-			<div class="col">
-				<h5 class="khand text-main-blue pb-3">Analyse :</h5>
-			</div>
-		</div>
-		<div class="row mb-3">
-			<div class="col">
-				<!-- start table -->
-				<table class="table light-shadow">
-					<thead class="thead-dark">
-						<tr>
-							<th>Nature</th>
-							<th>Imputation</th>
-							<th>Typologie</th>
-							<th>Etat</th>
-							<th>Analyse</th>
-							<th>Réponse</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td><?=$analyse['gt']?></td>
-							<td><?=$analyse['imputation']?></td>
-							<td><?=$analyse['typo']?></td>
-							<td><?=$analyse['etat']?></td>
-							<td><?=$analyse['analyse']?></td>
-							<td><?=$analyse['conclusion']?></td>
-						</tr>
-					</tbody>
-				</table>
-				<!-- ./table -->
-			</div>
-		</div>
-
-		<div class="bg-separation"></div>
-
-		<!-- infos -->
-		<div class="row mt-3">
-			<div class="col">
-				<h5 class="khand text-main-blue pb-3">Informations :</h5>
-
-			</div>
-		</div>
-
-
-		<div class="row">
-			<div class="col bg-alert mr-3 border-kaki">
-				<div class="row">
-					<div class="col text-center"><img src="../img/litiges/ico-entrepot.png"></div>
-
-				</div>
-				<div class="row">
-					<div class="col-5 text-kaki">Préparateur :</div>
-					<div class="col "><?=$infos['fullprepa']?></div>
-				</div>
-				<div class="row">
-					<div class="col-5 text-kaki">Date prépa :</div>
-					<div class="col "><?=$infos['dateprepa']?></div>
-				</div>
-				<div class="row">
-					<div class="col-5 text-kaki">Contrôleur :</div>
-					<div class="col "><?=$infos['fullctrl']?></div>
-				</div>
-				<div class="row">
-					<div class="col-5 text-kaki">Chargeur :</div>
-					<div class="col "><?=$infos['fullchg']?></div>
-				</div>
-				<div class="row">
-					<div class="col-5 text-kaki">Contrôle stock : </div>
-					<div class="col "><?=$ctrl?></div>
-				</div>
-			</div>
-			<div class="col bg-alert mr-3  border-yellow">
-				<div class="row">
-					<div class="col text-center"><img src="../img/litiges/ico-transp.png"></div>
-				</div>
-				<div class="row">
-					<div class="col text-yellow">Transporteur :</div>
-					<div class="col"><?=$infos['transporteur']?></div>
-				</div>
-				<div class="row">
-					<div class="col text-yellow">Affreteur :</div>
-					<div class="col"><?=$infos['affrete']?></div>
-				</div>
-				<div class="row">
-					<div class="col text-yellow">Transité par :</div>
-					<div class="col"><?=$infos['transit']?></div>
-				</div>
-			</div>
-			<div class="col bg-alert border-reddish">
-				<div class="row">
-					<div class="col text-center"><img src="../img/litiges/ico-fact.png"></div>
-
-				</div>
-				<div class="row">
-					<div class="col-8 text-red">Réglement transporteur :</div>
-					<div class="col text-right"><?=number_format((float)$infos['mt_transp'],2,'.','')?>&euro;</div>
-				</div>
-				<div class="row">
-					<div class="col-8 text-red">Réglement assurance :</div>
-					<div class="col text-right"><?= number_format((float)$infos['mt_assur'],2,'.','')?>&euro;</div>
-				</div>
-				<div class="row">
-					<div class="col-8 text-red">Réglement fournisseur :</div>
-					<div class="col text-right"><?= number_format((float)$infos['mt_fourn'],2,'.','')?>&euro;</div>
-				</div>
-				<div class="row">
-					<div class="col-8 text-red">Avoir magasin :</div>
-					<div class="col text-right"><?= number_format((float)$infos['mt_mag'],2,'.','')?>&euro;</div>
-				</div>
-				<div class="row">
-					<div class="col-8 text-red">Coût du litige :</div>
-					<div class="col text-right"><?= number_format((float)$coutTotal,2,'.','') ?>&euro;</div>
-				</div>
-
-			</div>
 
 		</div>
-		<div class="bg-separation"></div>
+	</div>
 
-		<div class="row mt-3">
-			<div class="col">
-				<h5 class="khand text-main-blue pb-3">Actions :</h5>
-			</div>
-		</div>
-		<?php if ($fLitige[0]['commission']==0): ?>
-			<div class="row">
-				<div class="col stamps pb-3">
-					Cliquez sur <a href="#hidden"  class="stamps" ><i class="fas fa-user-check stamp pending"></i></a> si le dossier a été statué en commission
-				</div>
-			</div>
+	<?php
 
 
-			<div class="row mb-3" id="hidden">
-				<div class="col">
-					<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?> " method="post">
+
+
+	?>
+
+
+
+	<!--  -->
+	<!-- MODAL SN -->
+	<div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+
+				<div class="modal-body">
+					<h5 class="text-center text-violet">Numéros de séries :</h5>
+					<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post">
 						<div class="form-group">
-							<label class="text-main-blue">Commentaire :</label>
-							<textarea class="form-control" name="cmt" rows="3" id="cmtarea"></textarea>
+							<textarea class="form-control" name=""></textarea>
 						</div>
-						<div class="form-group">
-							<input type="hidden" class="form-control" name="iddossier" id="hiddeninput" value="<?=$_GET['id']?>">
+
+						<div class="text-right">
+							<button class="btn btn-primary" name="submit-serials">Enregistrer</button>
+
 						</div>
-						<button class="btn btn-black" name="validate">Valider</button>
-						<button class="btn btn-red" id="annuler">Annuler</button>
+
+
 
 					</form>
+
 				</div>
-			</div>
-		<?php endif ?>
-
-
-		<div class="row">
-			<div class="col">
-				<table class="table light-shadow">
-					<thead class="thead-dark">
-						<tr>
-							<th>date</th>
-							<th>Par</th>
-							<th>Action</th>
-							<th>PJ</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php
-
-
-						if(isset($actionList) && count($actionList)>0)
-						{
-							foreach ($actionList as $action)
-							{
-								if($action['pj']!='')
-								{
-									$pj=createFileLink($action['pj']);
-								}
-								else
-								{
-									$pj='';
-								}
-								echo '<tr>';
-								echo'<td>'.$action['dateFr'].'</td>';
-								echo'<td>'. UserHelpers::getFullname($pdoUser, $action['id_web_user']) .'</td>';
-
-								echo'<td>'.$action['libelle'].'</td>';
-								echo'<td>'.$pj.'</td>';
-								echo '</tr>';
-							}
-
-						}
-						else
-						{
-							echo '<tr><td colspan="3">Aucune Action</td></tr>';
-						}
-
-						?>
-
-					</tbody>
-				</table>
-			</div>
-
-		</div>
-		<div class="bg-separation"></div>
-
-		<div class="row mt-3">
-			<div class="col">
-				<h5 class="khand text-main-blue pb-3">Echange avec le magasin</h5>
-
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col">
-
-				<?php
-				if(isset($dials) && count($dials)>0)
-				{
-					include('echanges.php');
-
-				}
-				?>
-
-
-			</div>
-		</div>
-
-		<?php
-
-
-
-
-		?>
-
-
-
-		<!--  -->
-		<!-- MODAL SN -->
-		<div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-			<div class="modal-dialog modal-lg">
-				<div class="modal-content">
-
-					<div class="modal-body">
-						<h5 class="text-center text-violet">Numéros de séries :</h5>
-						<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post">
-							<div class="form-group">
-								<textarea class="form-control" name=""></textarea>
-							</div>
-
-							<div class="text-right">
-								<button class="btn btn-primary" name="submit-serials">Enregistrer</button>
-
-							</div>
-
-
-
-						</form>
-
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-violet" data-dismiss="modal">Fermer</button>
-					</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-violet" data-dismiss="modal">Fermer</button>
 				</div>
 			</div>
 		</div>
-
-
-
-
-
-
-
-
-
 	</div>
 
 
 
-	<script type="text/javascript">
-
-		$(document).ready(function(){
-			$('#largeModal').on('show.bs.modal', function (e) {
-				var rowid = $(e.relatedTarget).data('id');
-				console.log(rowid);
-				$('textarea').attr('name', "iddetail-"+rowid);
-				if(rowid){
-					$.ajax({
-						type:'POST',
-						url:'bt-detail-serial.php',
-						data:'idprod='+rowid,
-						success:function(html){
-							$('textarea').val(html);
-							console.log(html);
-						}
-					});
-				}
 
 
 
-			});
+
+
+
+</div>
+
+
+
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		$('#largeModal').on('show.bs.modal', function (e) {
+			var rowid = $(e.relatedTarget).data('id');
+			console.log(rowid);
+			$('textarea').attr('name', "iddetail-"+rowid);
+			if(rowid){
+				$.ajax({
+					type:'POST',
+					url:'bt-detail-serial.php',
+					data:'idprod='+rowid,
+					success:function(html){
+						$('textarea').val(html);
+						console.log(html);
+					}
+				});
+			}
+
+
+
+		});
 		//
 		var url = window.location + '';
 		var splited=url.split("?id=");
