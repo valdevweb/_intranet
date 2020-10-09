@@ -17,7 +17,6 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require "../../functions/form.fn.php";
-require "../../functions/userinfo.fn.php";
 require "../../functions/gazette.fn.php";
 require "../../functions/stats.fn.php";
 require_once '../../Class/OpportuniteDAO.php';
