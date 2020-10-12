@@ -93,7 +93,6 @@ function convertCentraleExport($data,$centraleList){
 
 
 function convertTrueFalseExport($data){
-
 		if($data==0){
 			return "Faux";
 		}elseif($data==9){
