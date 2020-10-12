@@ -121,11 +121,18 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 				<li><a href="<?= ROOT_PATH?>/public/litiges/mag-litige-listing.php">Mes litiges</a></li>
 			</ul>
 		</li>
-		<li class='has-sub'><a href="#"><span>Chargé de mission</span></a>
+		<li>
+			<a href="#" class="">Chargé de mission <i class="fas fa-bell text-danger nav-bg-icon"></i></a>
 			<ul>
 				<li><a href="<?= ROOT_PATH?>/public/cm/rdv.php">Vos rendez-vous</a></li>
 			</ul>
 		</li>
+
+<!--
+<a href="#cart" id="cart">
+				<i class="fa fa-shopping-cart fa-lg"></i>
+				<div class='cart-wrapper'><span id='cart-count'></span></div>
+			</a> -->
 
 		<?php
 		$magNav=ob_get_contents();

@@ -336,6 +336,18 @@
 #cssmenu ul ul li.active > a.red-nav {
   background-color: #ff4c4c;
 }
+
+
+.nav-bg-icon {
+    background: #fff;
+    padding:4px 5px 4px 5px;
+    border-radius: 50%;
+    margin-left: 5px;
+
+ }
+
+
+
 /*
 
   @media all and (max-width: 800px), only screen and (-webkit-min-device-pixel-ratio: 2) and (max-width: 1024px), only screen and (min--moz-device-pixel-ratio: 2) and (max-width: 1024px), only screen and (-o-min-device-pixel-ratio: 2/1) and (max-width: 1024px), only screen and (min-device-pixel-ratio: 2) and (max-width: 1024px), only screen and (min-resolution: 192dpi) and (max-width: 1024px), only screen and (min-resolution: 2dppx) and (max-width: 1024px) {
