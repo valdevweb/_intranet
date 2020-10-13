@@ -1,0 +1,74 @@
+.overlay-container {
+  position: relative;
+  width: 308px;
+  height: 178px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px;
+  border:  1px #ccc solid;
+margin: auto;
+}
+
+#bg-img-convention {
+  background-image: url('../img/salon/soon.jpg');
+  background-size: cover;
+  height: 170px;
+  width: 300px;
+}
+
+#bg-img-multimedia {
+  background-image: url('../img/salon/gfk-multi-2020.jpg');
+  background-size: cover;
+  height: 170px;
+  width: 300px;
+}
+
+#bg-img-maison {
+  background-image: url('../img/salon/gfk-maison-2020.jpg');
+  background-size: cover;
+  height: 170px;
+  width: 300px;
+}
+
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  color: #FFF;
+  text-align: center;
+}
+
+
+.link-overlay{
+  color: #495057;
+
+  font-size: 1.1rem;
+  /* font-weight: bold; */
+}
+
+
+.link-overlay:hover{
+text-decoration: none;
+  color: #f18E0b;
+
+}
+
+
+
+#bg-img-convention:hover .overlay,
+#bg-img-multimedia:hover .overlay,
+#bg-img-maison:hover .overlay {
+  cursor: pointer;
+  opacity: 1;
+  background: rgba(255, 255, 255, .6);
+  transition: all .3s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
