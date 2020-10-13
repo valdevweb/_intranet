@@ -1,5 +1,4 @@
 <?php
-// la variable okko permet de verifier si on travaille sur la bonne version avec la bonne connexion à la db
 session_start();
 $path=dirname(__FILE__);
 if (preg_match('/_btlecest/', $path)){
