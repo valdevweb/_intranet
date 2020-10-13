@@ -238,7 +238,7 @@
 							<?= ($key+1==ceil((count($histo)+1)/2))? "</div><div class='col yanone-replace'>" :'' ?>
 
 							<div class="font-weight-bold"><i class="far fa-calendar pr-3 text-orange"></i><?=$prevMag['dateOuv'] .'<i class="fas fa-long-arrow-alt-right px-3"></i> '.$prevMag['dateFerm']?> :</div>
-							<div class="pl-5"><?=$prevMag['btlec_old'] .' - '.$prevMag['deno_sca']?></div>
+							<div class="pl-5"><?=$prevMag['btlec_old'] .' - '.$prevMag['deno']?></div>
 
 
 						<?php endforeach ?>

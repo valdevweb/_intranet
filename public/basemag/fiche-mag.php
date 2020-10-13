@@ -117,7 +117,7 @@ if(isset($_POST['clear_form'])){
 }
 if (isset($_GET['id'])){
 	$magDbHelper=new MagDbHelper($pdoMag);
-	$mag=$magDbHelper->getMagBt($_GET['id']);
+	$mag=$magDbHelper->getMagAndScaTroisInfo($_GET['id']);
 
 	$histo= $magDbHelper->getHisto($mag->getGalec());
 	$listCentralesSca=$magDbHelper->getDistinctCentraleSca();
@@ -186,11 +186,8 @@ if (isset($_GET['id'])){
 
 if(isset($_GET['id'])){
 	$magDbHelper=new MagDbHelper($pdoMag);
-	$mag=$magDbHelper->getMagBt($_GET['id']);
+	$mag=$magDbHelper->getMagAndScaTroisInfo($_GET['id']);
 	$cmtList=$magDbHelper->getCmt($_GET['id']);
-
-
-
 }
 
 if(isset($_POST['maj'])){
