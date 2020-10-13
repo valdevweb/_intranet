@@ -115,7 +115,7 @@ function errorlog($pdoUser){
 	$req=$pdoUser->prepare("INSERT INTO log_error (session, page,date_log) VALUES (:session, :page,:date_log)");
 	$req->execute([
 		':session'	=>$data,
-		':page'		=>basename(__FILE__),
+		':page'		=>basename($_SERVER['PHP_SELF']),
 		':date_log'	=>date('Y-m-d H:i:s')
 	]);
 
