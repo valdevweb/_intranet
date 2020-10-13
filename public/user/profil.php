@@ -45,7 +45,7 @@ if(isset($_SESSION['code_bt'])){
 	addRecord($pdoStat,basename(__file__),'consultation', "fiche mag profil mag", 101);
 
 	$magDbHelper=new MagDbHelper($pdoMag);
-	$mag=$magDbHelper->getMagBt($_SESSION['code_bt']);
+	$mag=$magDbHelper->getMagAndScaTroisInfo($_SESSION['code_bt']);
 	$listCentralesSca=$magDbHelper->getDistinctCentraleSca();
 	$centreRei=$magDbHelper->centreReiToString($mag->getCentreRei());
 	$listCm=UserHelpers::getUserByService($pdoUser, 17);
