@@ -20,7 +20,7 @@ if(isset($_SESSION['form-data'])){
 	if(isset($_SESSION['form-data']['date_end']) && !empty($_SESSION['form-data']['date_end'])){
 		$dateEnd=$_SESSION['form-data']['date_end'];
 	}else{
-		$dateEnd=date('Y-m-d') ." 23:59:59";
+		$dateEnd=date('Y-m-d H:i:s');
 	}
 	$paramDate="date_crea BETWEEN '".$dateStart ."'  AND '".$dateEnd."'";
 	$paramList[]=$paramDate;
