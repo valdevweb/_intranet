@@ -18,20 +18,12 @@ unset($_SESSION['goto']);
 require_once '../../vendor/autoload.php';
 require_once '../../Class/UserHelpers.php';
 require_once '../../Class/MagHelpers.php';
+require_once '../../Class/CmRdvDao.php';
 require_once '../../Class/Helpers.php';
 
-function getLastPendingRdv($pdoCm){
-	$req=$pdoCm->prepare("SELECT * FROM rdv WHERE galec= :galec AND accepted=0 ORDER BY id desc LIMIT 1 ");
-	$req->execute([
-		':galec'	=>$_SESSION['id_galec']
-	]);
-	$data=$req->fetch(PDO::FETCH_ASSOC);
-	if(!empty($data)){
-		return $data;
-	}
-	return false;
-}
-$pendingRdv=getLastPendingRdv($pdoCm);
+
+$rdvDao=new CmRdvDao($pdoCm);
+$pendingRdv=$rdvDao->getLastPendingRdv($pdoCm);
 
 $magInfo=MagHelpers::magInfo($pdoMag, $_SESSION['id_galec']);
 $deno=MagHelpers::deno($pdoMag, $_SESSION['id_galec']);
