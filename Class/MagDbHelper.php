@@ -14,8 +14,23 @@ class MagDbHelper{
 		return $this->pdo=$pdo;
 	}
 
+	public function searchMagByConcat($strg){
+		$req=$this->pdo->prepare("SELECT * FROM mag WHERE concat(deno, id, galec, ville) LIKE :search ORDER BY deno");
+	// $req=$pdoMag->prepare("SELECT * FROM mag WHERE concat(deno, id, galec, ville) LIKE :search ORDER BY deno");
+
+		$req->execute([
+			':search' =>'%'.$strg .'%'
+		]);
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+	}
+
+
+
 	public function basicSearch($strg){
-		$req=$this->pdo->prepare("SELECT * FROM mag  LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE concat(mag.deno,mag.galec,mag.id,mag.ville) LIKE :search");
+		$req=$this->pdo->prepare("SELECT * FROM mag  LIKE :search");
 		$req->execute([
 			':search' =>'%'.$strg .'%'
 		]);
@@ -32,7 +47,7 @@ class MagDbHelper{
 
 	}
 
-	public function getMagBt($btlec){
+	public function getMagAndScaTroisInfo($btlec){
 		$req=$this->pdo->prepare("SELECT * FROM mag  LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE id= :id");
 		$req->execute([
 			':id' =>$btlec
@@ -46,8 +61,8 @@ class MagDbHelper{
 	}
 
 
-	public function getMagGalec($galec){
-		$req=$this->pdo->prepare("SELECT * FROM mag  LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE mag.galec= :galec");
+	public function getMagByGalec($galec){
+		$req=$this->pdo->prepare("SELECT * FROM mag WHERE galec= :galec");
 		$req->execute([
 			':galec' =>$galec
 		]);
@@ -89,17 +104,19 @@ class MagDbHelper{
 
 
 	}
+
+
 	public function getHisto($galec){
-		$req=$this->pdo->prepare("SELECT *, DATE_FORMAT(date_ouverture, '%d/%m/%Y') as dateOuv, DATE_FORMAT(date_fermeture, '%d/%m/%Y') as dateFerm FROM magsyno  LEFT JOIN sca3 ON magsyno.btlec_old=sca3.btlec_sca WHERE galec= :galec ORDER BY date_ouverture DESC ");
+		$req=$this->pdo->prepare("SELECT *, DATE_FORMAT(date_ouv, '%d/%m/%Y') as dateOuv, DATE_FORMAT(date_ferm, '%d/%m/%Y') as dateFerm FROM magsyno  LEFT JOIN mag ON magsyno.btlec_old=mag.id WHERE magsyno.galec= :galec ORDER BY date_ouv DESC ");
 		$req->execute([
 			':galec'		=>$galec
 		]);
 		$datas=$req->fetchAll(PDO::FETCH_ASSOC);
+		// return $req->errorInfo();
 		if(!empty($datas)){
 			return $datas;
 		}
 		return '';
-
 	}
 	public function getMagCaByYear($pdoQlik,$btlec,$year){
 		$req=$pdoQlik->prepare("SELECT CA_Annuel FROM statsventesadh WHERE CodeBtlec= :btlec AND AnneeCA= :year");
