@@ -10,11 +10,11 @@ function pwdHash($pwd){
 	return $pwdHash;
 }
 
-function btInfo($pdoBt)
+function btInfo($pdoUser)
 {
-	$req=$pdoBt->prepare("SELECT * FROM btlec WHERE id_webuser= :id_webuser");
+	$req=$pdoUser->prepare("SELECT * FROM intern_users WHERE id_web_user= :id_web_user");
 	$req->execute(array(
-		':id_webuser'		=>$_SESSION['id_web_user']
+		':id_web_user'		=>$_SESSION['id_web_user']
 	));
 	$data=$req->fetch(PDO::FETCH_ASSOC);
 	if(!empty($data)){
@@ -50,6 +50,8 @@ function getUserSavInfo($pdoSav){
 
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
+
+
 
 
 function getDateMajNohash($pdoUser){
@@ -144,7 +146,7 @@ function checkPwd($webUser,$pdoMag,$pdoUser){
 
 
 
-function initSession($pdoBt, $pdoSav, $pdoMag, $webUser){
+function initSession($pdoBt, $pdoSav, $pdoMag,$pdoCm, $pdoUser, $webUser){
 		//commun
 	$_SESSION['id']=$webUser['id'];
 	$_SESSION['id_web_user']=$webUser['id'];
@@ -163,7 +165,7 @@ function initSession($pdoBt, $pdoSav, $pdoMag, $webUser){
 	}
 
 	if($_SESSION['type']=='btlec' || $_SESSION['type']=="autre" || $_SESSION['type']=="mask"){
-		$btInfo=btInfo($pdoBt);
+		$btInfo=btInfo($pdoUser);
 		if(!empty($btInfo)){
 			$nom=$btInfo['nom'];
 			$prenom=$btInfo['prenom'];
@@ -191,6 +193,12 @@ function initSession($pdoBt, $pdoSav, $pdoMag, $webUser){
 		}
 		if(!empty($magSav)){
 			$_SESSION['sav']=$magSav['sav'];
+		}
+		$rdvDao=new CmRdvDao($pdoCm);
+		$pendingRdv=$rdvDao->getLastPendingRdv();
+
+		if($pendingRdv){
+			$_SESSION['rdv_cm']=1;
 		}
 	}
 }
