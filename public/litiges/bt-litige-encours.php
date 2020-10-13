@@ -102,10 +102,10 @@ include 'bt-litige-encours-sessions-ex.php';
 
 
 
-
 // 3- requete grace à paramList si il existe ou
 // requete par défaut
 if(!isset($paramList)){
+
 	$listLitige=getListLitige($pdoLitige);
 
 	$dateStart=(new DateTime('first day of january this year'))->format('Y-m-d H:i:s');
