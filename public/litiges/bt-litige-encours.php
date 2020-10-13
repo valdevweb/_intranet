@@ -121,7 +121,6 @@ if(!isset($paramList)){
 }else{
 
 	$paramList=array_filter($paramList);
-
 	$joinParam=function($value){
 		if(!empty($value)){
 			return '('.$value.')';
