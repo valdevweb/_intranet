@@ -1,0 +1,352 @@
+1,44,articles-occasion,1,"supprime contenu table article_qlik, récup qte cdes non expéditées, soustrait du nouveau stock qlik.basearticle et importe dans occasion.article_qlik",batch-basearticle
+1,46,1-newfile,1,"vérif si nouveau fichier dans D:\btlec\lotus
+Pousse donnée dands lotus_extraction",batch-lotus
+1,46,2-traitement,1,"vide table ld_lotus, 
+analyse données lotus extraction pour insertion lotus_ld",batch-lotus
+1,46,3-maj,1,"ajout nouveau mail à emails
+met à jour id_email de ld_lotus
+passe lotus_imports.done à 1",batch-lotus
+1,37,csv-ctbt-to-qlik,1,info fichier ctbt vers qlik,batch-mag
+1,37,csv-ctbtparam-to-qlik,1,info fichier ctbtparam vers qlik,batch-mag
+1,37,csv-gessica-to-qklik,1,info fichier gessica vers qlik,batch-mag
+1,37,csv-to-sql,1,moulinette,batch-mag
+1,37,export-access-csv,1,génère fichiers d'export base mag pour access david,batch-mag
+1,37,newmag-import-cm-sav,1,a permis d'ajouter les attribution cm et les infos sav lors de la migration,batch-mag
+1,37,newmag-import-qlik,1,import donnée mag qlik.mag_gessica vers magasin. mag,batch-mag
+1,37,newmag-import-sca,1,poussait info btlec.sca3 vers magasin.sca3,batch-mag
+1,37,newmag-import-syno,1,poussait info btlec.magsyno vers magasin.syno,batch-mag
+1,37,utils.fn,3,"fonction de conversion centrale, vrai/faux, etc. Utilisé dans les scripts du répertoire batch-mag",batch-mag
+1,37,daily-update,1,envoi mail info nouveauté portail aux mag,batch-mail
+1,37,mail-daily.html,9,template pour daily-update,batch-mail
+1,67,Form,2,construction de balise de formulaire,Class/Form
+1,67,Select,2,construction de liste déroulante html,Class/Form
+1,67,test-form,2,page de test des classes form,Class/Form
+1,67,BtUserManager,2,utilise la base web_user sauf pour la table contact_services,Class
+1,67,DateHelpers,2,formatage de date en fr,Class
+1,65,EvoHelpers,2,helper pour les évo,Class
+1,65,EvoManager,2,requete db evo,Class
+1,47,FormationDAO,2,requete pour formations du salon 2020,Class
+1,47,FormHelpers,2,"helpers pour formulaire, notamment réaffichage des données saisies",Class
+1,67,Helpers,2,"helper divers (flatten array, bouton retour, separateur auto, etc)",Class
+1,67,Mag,2,getter et setter mag pour le table mag et sca3,Class
+1,67,MagDbHelper,2,requete table mag et sca3 de la base  magasin,Class
+1,67,MagHelpers,2,req select un mag et utilise static renvoyer une donnée précise,Class
+1,67,Month,2,class pour créer planning mais plus de planning sur bt,Class
+1,38,MsgManager,2,requete sur tables liées au module de contact,Class
+1,44,OccHelper,2,helper pour correspondance palette palette_id,Class
+1,44,OccMsgManager,2,module contact occ. A déployer ??,Class
+1,44,OccPaletteMgr,2,requete occasion,Class
+1,68,OpportuniteDAO,2,requete opp,Class
+1,67,Table,2,construction tableau html,Class
+1,67,Uploader,2,upload,Class
+1,67,UserHelper,2,requete sur base web_users,Class
+1,67,autoload,12,autoload,config
+1,67,config.inc,12,config,config
+1,67,checksession,6,vérif session tj active,config
+1,67,ajax,3,supprimée,functions
+1,48,ajax.stats,3,stats via ajax,functions
+1,47,Csv,3,class utilisé pour export csv salon (salon/export),functions
+1,67,error.fn,3,supprimée,functions
+1,67,form.fn,3,"fn génériques pour formulaire (upload, récup valeur)",functions
+1,54,gazette.fn,3,fonction utilisées sur la page home pour la gazette,functions
+1,67,global.fn,3,fn diverses de vérif utilisées dans plusieurs page,functions
+1,67,group.fn,3,vide - supprimée,functions
+1,67,login.fn,3,fn de login utilisée dans index + peut-être conseil,functions
+1,67,mail.fn,3,fn de mail utilisées pricnipalement sur module contact,functions
+1,54,odr.fn,3,fn pour le module odr,functions
+1,67,oldupload,3,à supprimer ?,functions
+1,67,register.fn,3,fn pour créer un login/pwd surement jamais utilisé,functions
+1,47,salon.fn,3,stats salon 2018 ,functions
+1,48,stats.fn,3,enregistrement de stats,functions
+1,48,stats,3,enregistrement de stats,functions
+1,37,tasklog.fn,3,log des script de batch-mag,functions
+1,67,upload.basic.fn,3,upload gazette ?,functions
+1,67,upload.simple.fn,3,upload,functions
+1,67,upload.fn,3,upload,functions
+1,67,userinfo.fn,3,plus utilisée - mise en commentaire,functions
+1,67,utilities.fn,3,tableau avec dates en français,functions
+1,37,ajax-check-racine,6,"vérif si racine liste déjà utilisée (fiche-mag, ajout racine liste)",public/basemag
+1,37,ajax-search-mag,6,fn rechch mag avec jointure sca3 (voir si jointure utile),public/basemag
+1,37,base-mag-export,4,include base mag,public/basemag
+1,37,base-mag-filtre,4,include base mag,public/basemag
+1,37,base-mag-tableau,4,include base mag - utilise userhelper,public/basemag
+1,37,base-mag,1,utilise MagDbHelper,public/basemag
+1,37,fiche-mag-commun,4,include fiche mag,public/basemag
+1,37,fiche-mag-copy,6,update du sca3,public/basemag
+1,37,fiche-mag-exploit,4,include de fiche mag,public/basemag
+1,37,fiche-mag-modal,4,modal fiche mag pour ajout observation,public/basemag
+1,37,fiche-mag,1,"include MagDbHelper, Mag, UserHelpers. Update sca3",public/basemag
+1,37,mail-code-docubase,9,template mail code docubase mag depuis fiche-mag,public/basemag
+1,37,search-form-org,4,remplacé par search-form,public/basemag
+1,37,search-form,4,html du formulaire de recherche inclus dans fiche mag ,public/basemag
+1,37,xl-base-mag,7,export xl base mag et sca3,public/basemag
+1,38,answer,1,utilise BTUsermanager + MsgManager (+ mail.fn + upload.fn) + la table group au lieu des droits.Page de réponse aux demandes mag,public/btlec
+1,38,chg,1,réattribution demande mag,public/btlec
+1,38,dashboard.ct,4,include de dashboard,public/btlec
+1,38,dashboard,1,suivi des demandes mag,public/btlec
+1,38,histo.ct,4,include de histo,public/btlec
+1,38,histo,1,demande mag cloturées,public/btlec
+1,38,search,1,recherche demandes par magasin,public/btlec
+1,50,bt-casse-dashboard,1,page exploit casse bt,public/casse
+1,50,bt-declaration-casse,1,déclaration d'une casse,public/casse
+1,50,casse-clos,1,cloture d'une casse (lien de la page facturation casse) + envoi mail compta,public/casse
+1,50,casse-getters.fn,3,fonctions de selection pour les casses,public/casse
+1,50,certif-upload,1,envoi certificat de destruction sav à bt,public/casse
+1,50,delete-casse,6,suppression d'une casse depuis dashboard,public/casse
+1,50,delivery-ok,6,validation d'une exp depuis dashboard,public/casse
+1,50,detail-casse,1,detail d'une casse (un article) et ajout de commentaire,public/casse
+1,50,detail-palette,1,detail d'une palette + positionnement de la palette sur un magasin,public/casse
+1,50,facturation-casse,1,génération fichier xl facturation + mise en statut exp cloturée (lien vers casse-clos),public/casse
+1,50,g-pdf-detail-palette-valo,8,génération pdf detail palette avec col valo (template : pdf-detail-palette-valo),public/casse
+1,50,g-pdf-detail-palette,8,génération pdf detail palette sans col valo (template : pdf-detail-palette),public/casse
+1,50,histo-casse,1,casses cloturées avec répartition mag,public/casse
+1,50,mag-info-casse,1,"envoi mail (mail-mag-exp) informant d'1 livraison palettes casse + pdf detail des palettes (pdf-mag) à un mag
+ou envoi mail (mail-pole-exp) demande de destruction palettes casse au sav avec pdf-certificat-destruction ",public/casse
+1,50,mail-certif-upload,9,template mail info certificat destruction ajouté par sav,public/casse
+1,50,mail-compta,9,template mail info casse facturée,public/casse
+1,50,mail-mag-exp,9,template mail info mag exp palette casse (mag-info-casse),public/casse
+1,50,mail-pilote-dd,9,template mail demande de destockage palette casse pour envoi mag,public/casse
+1,50,mail-pilote-retour,9,template mail info palettes controlées par pilote,public/casse
+1,50,mail-pole-exp,9,template mail info sav palette casse pour destruction envoyée,public/casse
+1,50,pdf-certificat-destruction,10,template certificat de destruction,public/casse
+1,50,pdf-detail-palette,10,template détail palette (btn sur p detail palette),public/casse
+1,50,pdf-detail-palette-valo,10,template détail palette avec valo  (btn sur p detail palette),public/casse
+1,50,pdf-mag,10,bl palette casse pour mag (mag-info-casse),public/casse
+1,50,pilote-dd,6,demande de destockage (mail-pilote-dd) (btn dashboard),public/casse
+1,50,pilote-palette-ok,6,retour pilote sur demande de destockage (btn dashboard),public/casse
+1,50,xl-dashboard-casse,7,export xl casse (btn dashboard),public/casse
+1,49,cm-news,1,non utilisé dans menu chargé de mission => fil d'actu,public/cm
+1,49,mail-rep-rdv,9,template mail réponse demande rdv cm,public/cm
+1,49,rdv,1,page de réponse à une demande de rdv cm,public/cm
+1,54,com_menu,1,menu accueil pour page document comm,public/doc
+1,54,delete.ajax,6,suppression de gazette,public/doc
+1,54,display-doc,1,"page d'affichage des documents achats (odr, tickets, etc)",public/doc
+1,54,display-doc.ct,4,"page d'affichage des documents achats (odr, tickets, etc)",public/doc
+1,54,doris,1,listing des fichiers analyse doris,public/doc
+1,54,enattente,1,?,public/doc
+1,54,exploit_rev,1,ajout fichierrs reversement,public/doc
+1,54,exploit_rev.ct,4,ajout fichierrs reversement,public/doc
+1,54,extralec,1,presentation extralec,public/doc
+1,43,flash-add,1,ajout info flash,public/doc
+1,43,flash-ko,1,refus info flash,public/doc
+1,43,flash-mail-new,9,template mail new flash info à valider,public/doc
+1,43,flash-modif,1,non fait,public/doc
+1,43,flash-ok,1,autorisation flash info,public/doc
+1,43,flash-validation,1,listing des flash info à valider ou non,public/doc
+1,43,flash-view,4,inclus dans le home si flash info,public/doc
+1,42,gazette.ajax,6,upload-main,public/doc
+1,54,histo_rev.ct,4,listing reversement,public/doc
+1,54,histo_rev,1,listing reversement,public/doc
+1,54,kitaffiche,1,page telechargement kit affiche,public/doc
+1,54,plancom2019,1,plan de com,public/doc
+1,54,plancom2021,1,plan de com,public/doc
+1,54,plancom2020,1,plan de com,public/doc
+1,54,upload-main,1,utilisation de group !!!,public/doc
+1,54,upload-main-ct,4,page upload doc achats et comm,public/doc
+1,67,discover,1,pres entrepot,public/entrepot
+1,65,ajax-get-appli,6,"récup appli, module pour page dde-evo",public/evo
+1,65,ajax-get-evo,5,recup list appli/Resp et module pour page dashboard,public/evo
+1,65,ajax-getthis-evo,5,récup une evo pr dashboard statuer et cloturer,public/evo
+1,65,dashboard-evo,1,"supervision des evo : filtre, cloturer, statuer, débuter",public/evo
+1,65,dashboard-modal-cloturer,4,modal pour cloturer,public/evo
+1,65,dashboard-modal-statuer,4,modal pour statuer,public/evo
+1,65,dashboard-post-cloturer,6,traitement form de cloture,public/evo
+1,65,dashboard-post-statuer,6,traitement form pour statuer,public/evo
+1,65,dde-evo,1,ajout demande d'evo,public/evo
+1,65,mail-cloture-dd.html,9,mail cloture demandeur de l'évo envoyé via dashboard,public/evo
+1,65,mail-cloture-resp.html,9,mail cloture dev de l'évo envoyé via dashboard,public/evo
+1,65,mail-decision-dd.html,9,mail statuer demandeur de l'évo envoyé via dashboard,public/evo
+1,65,mail-decision-dev.html,9,mail statuer dev de l'évo envoyé via dashboard,public/evo
+1,65,mail-new-dd.html,9,mail demande d'evo envoyé via dde-evo,public/evo
+1,65,vosdemandes-evo,1,"non developpé, permettra au demandeur de voir ses demandes",public/evo
+1,48,ajaxMag,6,récup liste mag en fonction de la centrale plus utilisé,public/exploit
+1,48,connexion-contact-data,6,traitement data module contact,public/exploit
+1,48,connexion-contact-view,4,affichage data module contact,public/exploit
+1,48,connexion-stat-data,6,traitement stats connexion,public/exploit
+1,48,connexion-stat-view,4,affichage stats connexion ,public/exploit
+1,48,connexion,1,stats de connexion et de demande module contact,public/exploit
+1,53,doc-adh,1,menu adh et pres : liste des pres uploadée via upload-adh,public/exploit
+1,46,ld-exploit,1,page de surveillance de coohérence des email récup via batchlotus,public/exploit
+1,53,upload-adh,1,ajout présentation + doc pour adhérent,public/exploit
+1,42,gazette,1,liens vers gazettes et opp en cours + form recherche,public/gazette
+1,68,opp-delete-file,6,suppression d'un fichier opp (opp-edit),public/gazette
+1,68,opp-delete,6,suppression d'une opp (opp-exploit),public/gazette
+1,68,opp-display-inc,4,template affichage opp ( preview et encours),public/gazette
+1,68,opp-edit,1,modif opp (utilise opp-delete-file),public/gazette
+1,68,opp-encours,1,affichage des opp actives (display-inc),public/gazette
+1,68,opp-exploit,1,"saisie des opp + lien vers delete, preview, edit",public/gazette
+1,68,opp-preview,1,affichage d'une opp (display-inc),public/gazette
+1,44,ajax-cmt-article,6,ajout d'un commentaire sur un article via occ-import-palette,public/gtocc
+1,44,ajax-saveas-html,6,futur module ajout info ,public/gtocc
+1,44,ajax-upload-img,6,futur module ajout info ,public/gtocc
+1,44,mail-cmd-mag.html,9,mail qd valide cde sur occ-palette,public/gtocc
+1,44,occ-dashboard-mag,1,futur formulaire de demande contact gt occasion,public/gtocc
+1,44,occ-ddes,1,futur recap ddes,public/gtocc
+1,44,occ-editinfo,1,futur saisie info mag,public/gtocc
+1,44,occ-news,1,futur affichage news occ pour mag,public/gtocc
+1,44,preview,1,futur preview news,public/gtocc
+1,44,occ-expedie,1,page visu cde expédiées,public/gtocc
+1,44,occ-import-palette,1,page upload xl palette + saisi cmt (ajax-cmt-article),public/gtocc
+1,44,occ-mag-cdes-pdf,8,appelé depuis occ-mag-cdes pour générer bl avec pdf-cmd-mag,public/gtocc
+1,44,occ-mag-cdes,1,visu commandes exp pour 1 mag,public/gtocc
+1,44,occ-palette-addarticle,6,ajout article au panier,public/gtocc
+1,44,occ-palette-artlist,4,affichage listing des articles d'occasion,public/gtocc
+1,44,occ-palette-cart,4,affichage panier de commande,public/gtocc
+1,44,occ-palette-cdes,4,affichage liste palettes commandées (bt uniquement),public/gtocc
+1,44,occ-palette-checkout,6,traitement validation du panier,public/gtocc
+1,44,occ-palette-dispo,4,affichage liste palettes dispo à la commande,public/gtocc
+1,44,occ-palette-prepa,4,affichage palette en cours de prépa (bt),public/gtocc
+1,44,occ-palette,1,"page offre produit qui liste article occ, palette occ divers état et permet commander",public/gtocc
+1,44,pdf-cmd-mag,10,template pdf appelé par occ-mag-cdes via occ-mag-cdes-pdf,public/gtocc
+1,67,home.ct,4,view page d'accueil ,public/home
+1,67,home,1,page d'accueil,public/home
+1,47,salon-modal,4,pour salon 2020 => modal badge prets,public/home
+1,54,contact-interne-mag,1,jamais mis en prod : rép tel bt intern pour bt,public/infos
+1,54,contact-interne,1,jamais mis en prod : rép tel bt intern pour mag,public/infos
+1,54,twentyfour,1,info sur la mise en place du 2448h menu documents/ communication plv 48,public/infos
+1,69,chg-lcom,1,changer doc de catégorie,public/lcom
+1,69,doc-lcom,1,documents pour lcom,public/lcom
+1,69,move-lcom,1,gestion doc lcom,public/lcom
+1,69,upload-lcom,1,upload doc lcom,public/lcom
+1,45,box-hidden-maj,6,plus utilisé,public/litiges
+1,45,box-search,6,plus utilisé,public/litiges
+1,45,bt-action-add,1,"ajout d'action bt faite sur dossier, utilise contrainte",public/litiges
+1,45,bt-analyse,1,ajout info d'analyse du litige et poss cloturer avec envoi mail (mail-mag-cloture),public/litiges
+1,45,bt-contact,1,include echange.fn,public/litiges
+1,45,bt-detail-litige,1,"detail d'un litige + lien vers : bt-analyse, bt-action-add, bt-contact, bt-info-litige, bt-generate-fiche
+include dt-invpalette, dt-prod, echange, echange.fn, bt-detail-serial (ajax))
+actions possible : ajout de numéro des séries, ajout statut commission et donc action, recherche palette si manquant",public/litiges
+1,45,bt-detail-serial,6,ajout serial via ajax page bt-detail,public/litiges
+1,45,bt-generate-fiche,8,"lancé via bt-detail, appel pdf-fiche-suivi",public/litiges
+1,45,bt-info-litige,1,ajout info sur le litige + envoi mail info facturation au mag (mail-mag-fac),public/litiges
+1,45,bt-litge-encours-formsearch-ex,6,inc_ traitement formulaire de rechch,public/litiges
+1,45,bt-litige-encours-filtres-ex,6,inc_ traitement filtres,public/litiges
+1,45,bt-litige-encours-filtres,4,inc_ affichage filtres,public/litiges
+1,45,bt-litige-encours-formsearch,4,inc_ affichage form recherhce,public/litiges
+1,45,bt-litige-encours-header,4,inc entete avec lien vers hit parade (pdf-hitparade-litige),public/litiges
+1,45,bt-litige-encours-old,1,,public/litiges
+1,45,bt-litige-encours-sessions-ex,6,"inc_ traitement de variables de sessions (filtre, form)",public/litiges
+1,45,bt-litige-encours-stats,4,inc_ affichage répartition cout litige par statut,public/litiges
+1,45,bt-litige-encours-statut-ex,6,inc_ traitement modif statut commission,public/litiges
+1,45,bt-litige-encours-statut-modal,4,inc_ modal avec form statut commission,public/litiges
+1,45,bt-litige-encours-table,4,inc_ affichage litiges,public/litiges
+1,45,bt-litige-encours,1,"page affichage des litiges autre que validé commission et/ou clos ou affichage. Modif critère affichage via formulaires 
+Statuer sur litige + hit parade",public/litiges
+1,45,bt-ouv-saisie,1,"page de saisie libre de litige, on y arrive soit depuis declaration-bt-basic soit depuis bt-ouverture (listing demande ouverture mag)
+forme de recherche ean  (multiples) et form de recherche palette/facture
+=> liste article corrrespondants au recherche => sélection et ajout info comme sur page declaration basic",public/litiges
+1,45,bt-ouv-traitement,1,"page de réponse et échnage sur demande d'ouverture libre mag. Puet accepter, refuser, demander complément d'info dossier, envoi msg, pj (mail-mag-suivi-ouverture)",public/litiges
+1,45,bt-ouvertures,1,listing des demandes d'ouverture de dossier lititge (saisie libre) avec lien pour répondre (bt-ouv-traitement) et créer le dossier litige (bt-ouv_saisie),public/litiges
+1,45,bt-saisie-libre,1,?? remplacé par ouv-saisie ?,public/litiges
+1,45,commission-traitement,6,appelé depuis litige en cours qd statut sur un dossier (utilisé ?),public/litiges
+1,45,contrainte-achats,6,"inc_ contrainte si GET= id achats
+mail mail_dde_sav_achats avec pdf-achat",public/litiges
+1,45,contrainte-commission-sav,6,"inc_ contrainte si GET= id commission sav
+mail mail_dde_sav_achats avec pdf-commission",public/litiges
+1,45,contrainte-sav,6,"inc_ contrainte si GET= id sav
+mail mail_dde_sav_achats avec pdf pdf-sav",public/litiges
+1,45,contrainte-stock-retour,6,"inc_ contrainte si GET= id stock retour
+juste header location sur bt-action-add",public/litiges
+1,45,contrainte-stock,6,"inc_ contrainte si GET= id stock
+envoi mail mail-dde-ctrl-stock avec pdf pdf-pilote-stock",public/litiges
+1,45,contrainte-video-rep,6,"inc_ contrainte si GET= id video-rep
+envoi mail mail-rep-video à logistique",public/litiges
+1,45,contrainte-video,6,"inc_ contrainte si GET= id video
+envoi mail mail-dde-video avec pdf pdf-video",public/litiges
+1,45,contrainte,1,"require info-litige.fn et echanges.fn
+commun : envoi le message saisi dans bt-action-add",public/litiges
+1,45,ctrl-stock,1,"page de saisie pour pilote pour retour contrôle de stock + envoi mail-bt-ctrl-stock-ok
+inc info-litige.fn",public/litiges
+1,45,data-hide,6,utilisé par les fichiers d'exploit des tables litiges pour masquer ou afficher des lignes,public/litiges
+1,45,data-show,6,utilisé par les fichiers d'exploit des tables litiges pour masquer ou afficher des lignes,public/litiges
+1,45,declaration-basic,1,"déclaration mag ou bt, page de recherche de palette ou facture puis sélection d'article. Envoi sur declaration-detail ou declaration-detail-palette à la validation",public/litiges
+1,45,declaration-bt-basic,1,"form recherche un mag pour déclarer litige pour lui 
+soit déclaration habituelle (redirige vers hidden-session qui lui redirige vers declaration-detail) soit déclaration libre (bt-ouv-saisie)",public/litiges
+1,45,declaration-detail-palette,1,"2ème page de déclaration après declaration basic. Redirige ensuite sur declaration-validation
+spécifique déclaration palette entière",public/litiges
+1,45,declaration-detail,1,2ème page de déclaration après declaration basic. Redirige ensuite sur declaration-validation,public/litiges
+1,45,declaration-horsqlik,1,page de contact affiché si mag n'a pas trouvé sa palette ou son produit (lien sur page declaration-basic),public/litiges
+1,45,declaration-recap,1,"Dernière page affichée qd fait déclaration de litige (l'utilisateur a l'impression de venir de la page declaration-detail mais on vient en fait de déclaration validation qui passe les données des table temp dans le table actives. Ici, on fait  les calculs de valo total pour le dossier. Si mag connecté, envoi d'un mail au mag (mail-mag-new-litige) + à litigelivraison@btlec.fr (mail-bt-new-litige). Si bt connecté : bouton pour envoyer mail au mag  ou non (mail-mag-force-litige)",public/litiges
+1,45,declaration-robbery,1,"Seul BT peut déclarer un vol, on peut faire 2 recherches : soit par code bt et periode soit par numéro de facture. Si plusieurs magasins sont concernés par un vol, on fait une délcaration de litige par magsin mais on regroupe ces litiges sur un nuémro de vol. Donc quand on sélectionne les palettes, on peut aussi assigner le litige à un numéro de vol.Si on ne le fait pas un nouveau vol est créé.
+Une fois les sélections faite, on valide et on est redirigé sur la page declaration-basic avec 2 variables de session initialisés : $_SESSION['id_galec'] (comme pour tous les litiges) et $_SESSION['vol-id'], spécifique au vol",public/litiges
+1,45,declaration-type,1,"à supprimer, permettait de choisir un type de déclaration",public/litiges
+1,45,declaration-validation,6,"reset les var de session (id_galec, palette, vol-id, dossier_litige, dd-ouv) et pousse toutes les infos enreg dans tables temp dans le table actives
+redirige sur declaration-recap",public/litiges
+1,45,dt-facturation,4,mag-detail-litige,public/litiges
+1,45,dt-invpalette-edit,6,edit-dossier-litige (1 hit),public/litiges
+1,45,dt-invpalette,4,bt-detail-litige (1 hit),public/litiges
+1,45,dt-mag-palette,4,mag-detail-litige,public/litiges
+1,45,dt-mag-prod,4,mag-detail-litige,public/litiges
+1,45,dt-prod-edit,6,inclus dans edit-dossier-litige ,public/litiges
+1,45,dt-prod,4,bt-detail-litige => listing des produits du litige,public/litiges
+1,45,echanges.fn,3,"bt-contact,bt-detail-litige,contrainte, ouv-mag-horsqlik. Fonctions couramment utilisées dans les ltiges",public/litiges
+1,45,echanges,4,"affichage des correspondances (messages) entre mag et bt
+bt-contact
+bt-detail-litige
+ouv-echanges",public/litiges
+1,45,edit-detail-litige-inv,1,"si produit inversé non trouvé qd fait edit-detail-litige depuis la page litige-detail, cette page est appellée via un lien dans le tableau des resultats de rpoduits correspndants à la recherche et permet de mettre à jour les info sur l'article inversé et mettre à jour la valo du dossier",public/litiges
+1,45,edit-detail-litige,1,appelée depuis bt-detail-litige sur un produit du tableau récap des produits du litige. Permet de modifier certaines données,public/litiges
+1,45,edit-dossier-litige,1,inclus dt-prod-edit ou dt-invpalette-edit mais ne semble pas utilisé,public/litiges
+1,45,ex-analyse,1,page d'exploit des tables d'analyse. Appel ex-reclamation-modify pour modifier une réclamation,public/litiges
+1,45,ex-delete,6, utilisée par ex-helper,public/litiges
+1,45,ex-equipe-main,1,"page d'exploit de la table equipe. Pour modifier les renseignements sur une personnes, on clique sur le lien vers la page ex-equipe",public/litiges
+1,45,ex-equipe,1,page d'exploit de modification d'info sur un employé,public/litiges
+1,45,ex-helper,1,page d'exploit des textes préparés et action,public/litiges
+1,45,ex-reclamation-modify,1,appelé par ex-analyse quand modif une réclamation,public/litiges
+1,45,ex-transp,1,"page exploit table transport, transit et affrete",public/litiges
+1,45,exploit-ltg,1,"page d'accu'eil de la zone d'exploit, liens vers :
+ex-transport
+ex-analyse
+ex-equipe-main
+ex-helper",public/litiges
+1,45,hidden-session,6,la page declaration-bt-basic  passe en get le pano galec sélectionnée par bt et redirige sur hidden session pour initialiser la variable de session $_SESSION['id_galec'] et rediriger sur declaration-basic,public/litiges
+1,45,info-litige.fn,3,fn utilisées par ctrl-stock et contrainte,public/litiges
+1,45,intervention-achats,1,"accessible depuis menu litige => retour achats
+echange entre service litige et services achats => peuvent envoyer des messages, des pj, consulter certaines infos sur le dossier. Envoi mail mail_rep_achats qd valide le form",public/litiges
+1,45,intervention-commission-sav,1,"accessible depuis menu litige => retour commission sav
+même chose que intervention-achats
+mail : mail_rep_commission",public/litiges
+1,45,intervention-sav,1,"accessible depuis menu litige => retour sav
+même chose que intervention-achats
+mail : mail_rep_sav",public/litiges
+1,45,mag-detail-litige,1,"page de détail d'un litige our un mag : tableau récap détail litige, formulaire de contact, listing des échanges avec bt
+Envoi un mail à bt template mail-bt-msgmag",public/litiges
+1,45,mag-litige-listing,1,"affiche liste des litige du mag connecté. Peut en cherche un et voir les details d'un litige en cliquant sur lien (mag-detail-litige)
+Affiche aussi la liste des demandes d'ouverture de dossier, peut en voir le détail en cliquant sur le lien vers ouv-mag-horsqlik",public/litiges
+1,45,mail-bt-ctrl-stock-ok,9,ctrl-stock,public/litiges
+1,45,mail-bt-dde-ouverture,9,declaration-horsqlik,public/litiges
+1,45,mail-bt-msgmag,9,mag-detail-litige,public/litiges
+1,45,mail-bt-new-litige,9,"declaration-recap, mail bt",public/litiges
+1,45,mail-bt-suivi-ouverture,9,ouv-mag-horsqlik,public/litiges
+1,45,mail-dde-ctrl-stock,9,contrainte-stock,public/litiges
+1,45,mail-dde-video,9,contrainte-video,public/litiges
+1,45,mail-mag-cloture,9,via bt-analyse,public/litiges
+1,45,mail-mag-fac,9,via bt-info-litige,public/litiges
+1,45,mail-mag-force-litige,9,"declaration recap, mail mag si saisie bt et si bt clique sur btn envoi",public/litiges
+1,45,mail-mag-msgbt,9,bt-contact,public/litiges
+1,45,mail-mag-new-litige,9,"declaration-recap, mail mag",public/litiges
+1,45,mail-mag-suivi-ouverture,9,bt-ouv-traitement,public/litiges
+1,45,mail-rep-video,9,contrainte-video-rep,public/litiges
+1,45,mail_dde_sav_achats,9,"contrainte-achats,  contrainte-commission-sav, contrainte-sav",public/litiges
+1,45,mail_rep_achats,9,intervention-achats,public/litiges
+1,45,mail_rep_commission,9,intervention-commission-sav,public/litiges
+1,45,mail_rep_sav,9,intervention-sav,public/litiges
+1,45,notyours,1,mag-detail-litige redirige sur cette page si le numéro de litige récup via le get ne correspond pas à un litige du mag connecté,public/litiges
+1,45,ouv-echanges.fn,3,fn utilisées dans ouv-mag-horsqlik,public/litiges
+1,45,ouv-echanges,4,inc de ouv-mag-horsqlik  : affiche la demande initiale puis les échanges entre le mag et bt sur ce dossier de demande d'ouverture,public/litiges
+1,45,ouv-mag-horsqlik,1,page détail d'une demande d'ouverture de dossier (interface magasin). Include ouv-echange + un formulaire pour envoyer des messsages et pj à bt (mail-bt-suivi-ouverture),public/litiges
+1,45,pdf-achat,10,contrainte-achats utilise echange.fn,public/litiges
+1,45,pdf-commission,10,contrainte-commission-sav,public/litiges
+1,45,pdf-fiche-suivi,10,bt-generate-fiche,public/litiges
+1,45,pdf-hitparade-litige,10,bt-litige-encours-header,public/litiges
+1,45,pdf-model,10,,public/litiges
+1,45,pdf-pilote-stock,10,contrainte-stock,public/litiges
+1,45,pdf-sav,10,contrainte-sav,public/litiges
+1,45,pdf-stat-litige-mag,10,"template pdf de stat lancé par print-stat-litige-mag, lien sur  stat-litige-mag",public/litiges
+1,45,pdf-video,10,contrainte-video,public/litiges
+1,45,print-stat-litige-mag,8,lien de la page stat-litige lance le template pdf-stat-litige-mag,public/litiges
+1,45,stat-litige-mag,1,"page qui reprend tout les litiges d'un mag, son ca, permet de générer pdf (print-stat-litige)",public/litiges
+1,45,stats-mini,1,KAPUT a débuger (lien de stat-litige-mag),public/litiges
+1,45,xl-encours,7,export xl tous les litiges (depuis litige-encours),public/litiges
+1,45,xl-robbery,7,lien dans dt-prod. export d'un dossier de vol,public/litiges
+1,45,xl-selected,7,export xl litiges sélectionnés (depuis litige-encours),public/litiges
