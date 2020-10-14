@@ -4,7 +4,7 @@
 
 			<div class="col-auto">
 				<h5 class="khand text-main-blue pb-3">Palettes :</h5>
-				<p><span class="text-main-blue">Facture : </span><?=$fLitige[0]['facture'] .' du '.$fLitige[0]['datefacture']?></p>
+				<p><span class="text-main-blue">Facture : </span><?=$infoLitige[0]['facture'] .' du '.$infoLitige[0]['datefacture']?></p>
 
 
 				<table class="table light-shadow table-bordered">
@@ -32,7 +32,7 @@
 						</tr>
 					</tbody>
 				</table>
-			<p class="text-right heavy bigger mb-3 text-main-blue pr-3">Valorisation magasin : <?=number_format((float)$fLitige[0]['valo'],2,'.',' ')?> &euro; </p>
+			<p class="text-right heavy bigger mb-3 text-main-blue pr-3">Valorisation magasin : <?=number_format((float)$infoLitige[0]['valo'],2,'.',' ')?> &euro; </p>
 
 			</div>
 			<div class="col"></div>
@@ -49,7 +49,7 @@ if(!$invPal['palette'])
 	echo '<div class="col">';
 	echo '<div class="row">';
 	echo '<div class="col">';
-	echo 'Le magasin a signalé qu\'il a reçu la palette ' .$fLitige[0]['inv_palette'] .'. Cette palette n\'a pas été retrouvée dans la base, voulez-vous lancer une <span class="text-main-blue">nouvelle recherche ?</span>';
+	echo 'Le magasin a signalé qu\'il a reçu la palette ' .$infoLitige[0]['inv_palette'] .'. Cette palette n\'a pas été retrouvée dans la base, voulez-vous lancer une <span class="text-main-blue">nouvelle recherche ?</span>';
 	echo '<div class="text-center py-3"><a href="?id='.$_GET['id'].'&search" class="btn btn-primary"><i class="fas fa-search pr-3"></i>Rechercher</a></div>';
 	echo $majrecherchepalette;
 
@@ -121,7 +121,7 @@ if($detailCde)
 	echo '</tr>';
 	echo '</thead>';
 	echo '<tbody>';
-	foreach ($fLitige as $pal)
+	foreach ($infoLitige as $pal)
 	{
 		echo '<tr>';
 		echo '<td>'.$pal['article'].'</td>';

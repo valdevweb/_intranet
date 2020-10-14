@@ -5,13 +5,13 @@
 				<div class="row">
 					<div class="col-10">
 						<h5 class="khand text-main-blue pb-3">Produit(s) :</h5>
-						<p><span class="text-main-blue">Facture : </span><?=$fLitige[0]['facture'] .' du '.$fLitige[0]['datefacture']?></p>
+						<p><span class="text-main-blue">Facture : </span><?=$infoLitige[0]['facture'] .' du '.$infoLitige[0]['datefacture']?></p>
 
 
 					</div>
 					<div class="col-2 text-right">
-						<?php if ($fLitige[0]['id_robbery'] !=null): ?>
-							<a href="xl-robbery.php?id=<?=$fLitige[0]['id_robbery']?>" class="img-overlay"></a>
+						<?php if ($infoLitige[0]['id_robbery'] !=null): ?>
+							<a href="xl-robbery.php?id=<?=$infoLitige[0]['id_robbery']?>" class="img-overlay"></a>
 						<?php endif ?>
 
 					</div>
@@ -38,7 +38,7 @@
 					<tbody>
 						<?php
 						$sumValo=0;
-						foreach ($fLitige as $prod)
+						foreach ($infoLitige as $prod)
 						{
 							// $valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
 							$pj='';
