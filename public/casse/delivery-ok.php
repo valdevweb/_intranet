@@ -18,6 +18,9 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require 'casse-getters.fn.php';
 require ('../../Class/Helpers.php');
+require ('../../Class/MagDao.php');
+require('../../Class/Mag.php');
+// require ('../../Class/MagHelpers.php');
 
 //---------------------------------------
 //	ajout enreg dans stat
@@ -44,10 +47,10 @@ function updatePalette($pdoCasse, $idPalette){
 }
 
 
-function getMagInfo($pdoBt, $btlec){
-	$req=$pdoBt->prepare("SELECT galec FROM sca3 WHERE btlec= :btlec");
+function getMagInfo($pdoMag, $btlec){
+	$req=$pdoMag->prepare("SELECT galec FROM mag WHERE id= :id");
 	$req->execute([
-		':btlec'	=>$btlec
+		':id'	=>$btlec
 	]);
 	if($req){
 		return $req->fetch(PDO::FETCH_ASSOC);
@@ -86,12 +89,21 @@ function updateNumExp($pdoCasse,$newExpId,$key){
 $errors=[];
 $success=[];
 $today=date('Y-m-d');
+
+
+
+
 if(isset($_GET['id'])){
 	$numExp=$_GET['id'];
 	// on récupère les palettes pour afficher un champ de commentaire en face de chaque
 	$listPalette=getExpAndPalette($pdoCasse,$numExp);
 
 }
+
+
+
+
+
 
 if(isset($_POST['submit'])){
 
@@ -120,8 +132,10 @@ if(isset($_POST['submit'])){
 		//on créé une nouvelle expédition,
 		//on met à jour les palettes livrées avec la date et le statut expédié (2)
 		//on récupère l'id de la palette qui n'a pas été livrée et on met à jour son id_exp
-		$galec=getMagInfo($pdoBt, $listPalette[0]['btlec']);
-		$newExpId=addExp($pdoCasse, $galec['galec'], $listPalette[0]['btlec']);
+		$magDao=new MagDao($pdoMag);
+		$galec=$magDao->getMagByBtlec($listPalette[0]['btlec']);
+
+		$newExpId=addExp($pdoCasse, $galec->getGalec(), $listPalette[0]['btlec']);
 		foreach ($_POST as $key => $value) {
 			if($key!='submit' && $key!='delivery'){
 				if($value!='unchecked'){
@@ -151,9 +165,9 @@ if(isset($_POST['submit'])){
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
-		include('../view/_head-bt.php');
-		include('../view/_navbar.php');
-		?>
+include('../view/_head-bt.php');
+include('../view/_navbar.php');
+?>
 <!--********************************
 DEBUT CONTENU CONTAINER
 *********************************-->
