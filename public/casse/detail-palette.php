@@ -15,6 +15,9 @@ $success=[];
 require('casse-getters.fn.php');
 require ('../../Class/Helpers.php');
 require('../../Class/Table.php');
+require('../../Class/MagDao.php');
+require('../../Class/Mag.php');
+
 
 //---------------------------------------
 //	ajout enreg dans stat
@@ -89,8 +92,10 @@ else{
 if(isset($_POST['submitnew']))
 {
 	// on verifie que le code bt exisite
-	$galec=getMagInfo($pdoBt);
-	if(!$galec){
+	$magDao=new MagDao($pdoMag);
+	$magInfo=$magDao->getMagByBtlec($_POST['mag']);
+
+	if(empty($magInfo)){
 		$errors[]="Vous avez saisi le code BT : ".$_POST['mag'].". Il semblerait que ce code n'existe pas";
 	}
 	else{
@@ -98,7 +103,7 @@ if(isset($_POST['submitnew']))
 		$magExp=magExpAlreadyExist($pdoCasse, $_POST['mag']);
 		if($magExp==false){
 			// on crée l'exp
-			$lastExp=addExp($pdoCasse, $galec['galec']);
+			$lastExp=addExp($pdoCasse, $magInfo->getGalec());
 		}
 		else{
 				// on récupère l'id de l'exp
