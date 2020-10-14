@@ -14,6 +14,8 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require_once  '../../vendor/autoload.php';
+require_once  '../../Class/UserHelpers.php';
+require_once  '../../Class/MagHelpers.php';
 
 
 //------------------------------------------------------
@@ -29,7 +31,7 @@ function getLitige($pdoLitige)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-$fLitige=getLitige($pdoLitige);
+$infoLitige=getLitige($pdoLitige);
 
 
 
@@ -80,11 +82,14 @@ $success=[];
 
 $defaultTxt='Bonjour,&#13;&#10;&#13;&#10;&#13;&#10;Cordialement,&#13;&#10;'.$_SESSION['nom_bt'];
 $uploadDir= '..\..\..\upload\litiges\\';
-$infoMag=getMagName($pdoUser, $fLitige['id_web_user']);
+
+$btlec=MagHelpers::btlec($pdoMag,$infoLitige['galec']);
+
+
+
 if(isset($_POST['submit']) ||isset($_POST['submit_mail']))
 {
-	if(empty($_FILES['form_file']['name'][0]))
-	{
+	if(empty($_FILES['form_file']['name'][0])){
 	// pas de fichier
 		$filelist="";
 	}
@@ -138,25 +143,15 @@ if(isset($_POST['submit']) ||isset($_POST['submit_mail']))
 		{
 			if(isset($_POST['submit_mail']))
 			{
-				if(VERSION =='_')
-				{
+				if(VERSION =='_'){
 					$mailMag=array('valerie.montusclat@btlec.fr');
-				}
-				else
-				{
-					if($_SESSION['code_bt']!='4201')
-					{
-						$mailMag=array($infoMag['btlec'].'-rbt@btlec.fr');
-					}
-					else
-					{
-						$mailMag=array('valerie.montusclat@btlec.fr');
-					}
+				}else{
+						$mailMag=array($btlec.'-rbt@btlec.fr');
 				}
 
 				$magTemplate = file_get_contents('mail-mag-msgbt.php');
-				$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
-				$subject='Portail BTLec Est  - nouveau message sur le dossier litige ' . $fLitige['dossier'];
+				$magTemplate=str_replace('{DOSSIER}',$infoLitige['dossier'],$magTemplate);
+				$subject='Portail BTLec Est  - nouveau message sur le dossier litige ' . $infoLitige['dossier'];
 			// ---------------------------------------
 				$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
 				$mailer = new Swift_Mailer($transport);
@@ -211,7 +206,7 @@ DEBUT CONTENU CONTAINER
 			<p class="text-right"><a href="bt-detail-litige.php?id=<?=$_GET['id']?>" class="btn btn-primary">Retour</a></p>
 		</div>
 	</div>
-	<h1 class="text-main-blue pb-5 ">Dossier N° <?= $fLitige['dossier']?></h1>
+	<h1 class="text-main-blue pb-5 ">Dossier N° <?= $infoLitige['dossier']?></h1>
 	<div class="row no-gutters">
 		<div class="col">
 			<?php
