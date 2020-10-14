@@ -1,6 +1,7 @@
 <?php
-class MagDbHelper{
+class MagDao{
 
+	// pdoMag
 	private $pdo;
 	private $galec;
 
@@ -22,9 +23,6 @@ class MagDbHelper{
 			':search' =>'%'.$strg .'%'
 		]);
 		return $req->fetchAll(PDO::FETCH_ASSOC);
-
-
-
 	}
 
 
