@@ -1,27 +1,29 @@
+
 <?php
+
+
+
 
 foreach ($dials as $dial)
 {
 	if(!empty($dial['msg']))
 	{
-		if($dial['mag']==1)
-		{
-			$name=$infoMag['mag'];
+		if($dial['mag']==1){
+			if(isset($infoLitige[0]['mag'])){
+				$name=$infoLitige[0]['mag'];
+			}else{
+				$name=MagHelpers::deno($pdoMag,$infoLitige['galec']);
+				// $infoLitige['mag'];
+			}
 			$type='bg-kaki-light';
-
 		}
-		else
-		{
-			$infoBt=getBtName($pdoBt, $dial['id_web_user']);
-			$name=$infoBt['name'];
+		else{
+			$name=UserHelpers::getFullname($pdoUser, $dial['id_web_user']);
 			$type='bg-alert-primary';
 		}
-		if($dial['filename']!='')
-		{
+		if($dial['filename']!=''){
 			$pj=createFileLink($dial['filename']);
-		}
-		else
-		{
+		}else{
 			$pj='';
 		}
 	// conteneur
