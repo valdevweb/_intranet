@@ -58,6 +58,19 @@ class MagDao{
 		return false;
 	}
 
+	public function getMagByBtlec($btlec){
+		$req=$this->pdo->prepare("SELECT * FROM mag WHERE id= :id");
+		$req->execute([
+			':id' =>$btlec
+		]);
+		$data=$req->fetch(PDO::FETCH_ASSOC);
+
+		if(!empty($data)){
+			return new Mag($data);
+		}
+		return false;
+	}
+
 
 	public function getMagByGalec($galec){
 		$req=$this->pdo->prepare("SELECT * FROM mag WHERE galec= :galec");
