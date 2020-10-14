@@ -12,15 +12,6 @@ $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
-//---------------------------------------
-//	ajout enreg dans stat
-//---------------------------------------
-// require "../../functions/stats.fn.php";
-// $descr="saisie déclaration mag hors qlik" ;
-// $page=basename(__file__);
-// $action="";
-// // addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
-// addRecord($pdoStat,$page,$action, $descr, 208);
 
 //------------------------------------------------------
 //			MEMO
@@ -34,14 +25,16 @@ etat :
 unset($_SESSION['goto']);
 
 require_once  '../../vendor/autoload.php';
-
+require_once  '../../Class/LitigeDao.php';
+require_once  '../../Class/UserHelpers.php';
+require '../../Class/MagDao.php';
+require '../../Class/Mag.php';
 
 
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-function getThisOuverture($pdoLitige)
-{
+function getThisOuverture($pdoLitige){
 	$req=$pdoLitige->prepare("SELECT ouv.id, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, mag, btlec, ouv.galec FROM ouv LEFT JOIN btlec.sca3 ON ouv.galec=btlec.sca3.galec WHERE ouv.id= :id");
 	$req->execute(array(
 		':id'		=>$_GET['id']
@@ -58,14 +51,6 @@ function getRep($pdoLitige)
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getBtName($pdoBt, $idwu)
-{
-	$req=$pdoBt->prepare("SELECT CONCAT (prenom, ' ', nom) as fullname FROM btlec WHERE id_webuser= :id_webuser");
-	$req->execute(array(
-		':id_webuser'	=>$idwu
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
 
 function createFileLink($filelist)
 {
@@ -128,8 +113,9 @@ $errors=[];
 $success=[];
 
 $uploadDir= '..\..\..\upload\litiges\\';
+$litigeDao=new LitigeDao($pdoLitige);
 
-$thisOuv=getThisOuverture($pdoLitige);
+$thisOuv=$litigeDao->getThisOuverture($_GET['id']);
 $theseRep=getRep($pdoLitige);
 
 
@@ -200,23 +186,16 @@ if(isset($_POST['submit']))
 		if(count($errors)==0)
 		{
 
-			if(VERSION =='_')
-			{
+			if(VERSION =='_'){
 				$mailMag=array('valerie.montusclat@btlec.fr');
+			}else{
+				$magDao=new MagDao($pdoMag);
+				$infoMag=$magDao->getMagByBtlec($thisOuv['btlec']);
+				$codeBt=$infoMag->getId();
+				$mailMag=array($codeBt.'-rbt@btlec.fr');
 			}
-			else
-			{
-				$btlec=getInfoMag($pdoBt,$thisOuv);
-				if($_SESSION['code_bt']!='4201')
-				{
-					// $mailMag=array($btlec['btlec'].'-rbt@btlec.fr');
-					$mailMag=array($thisOuv['btlec'].'-rbt@btlec.fr');
-				}
-				else
-				{
-					$mailMag=array('valerie.montusclat@btlec.fr');
-				}
-			}
+
+
 			$msg=strip_tags($_POST['msg']);
 			$msg=nl2br($msg);
 			$btTemplate = file_get_contents('mail-mag-suivi-ouverture.php');
@@ -293,7 +272,7 @@ DEBUT CONTENU CONTAINER
 		<div class="col alert alert-primary">
 			<div class="row">
 				<div class="col">
-					<?= $thisOuv['btlec'].'-'.$thisOuv['mag']?>
+					<?= $thisOuv['btlec'].'-'.$thisOuv['deno']?>
 				</div>
 				<div class="col text-right">
 					date de la demande : <?= $thisOuv['datesaisie']?>
@@ -327,13 +306,12 @@ DEBUT CONTENU CONTAINER
 			if($rep['mag']==0)
 			{
 				$alertColor='alert-warning';
-				$from=getBtName($pdoBt, $rep['id_web_user']);
-				$from=$from['fullname'];
+				$from=UserHelpers::getFullname($pdoUser, $rep['id_web_user']);
 			}
 			else
 			{
 				$alertColor='alert-primary';
-				$from=$thisOuv['mag'];
+				$from=$thisOuv['deno'];
 			}
 			if(!empty($rep['pj']))
 			{
