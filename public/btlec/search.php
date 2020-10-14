@@ -12,58 +12,17 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require('../../Class/MsgManager.php');
+require('../../Class/MagDao.php');
 
 $msgManager=new MsgManager();
-
-
-function search($pdoMag){
-	$req=$pdoMag->prepare("SELECT * FROM mag WHERE concat(deno, id, galec, ville) LIKE :search ORDER BY deno");
-	$req->execute([
-		':search' =>'%'.$_POST['search_strg'] .'%'
-	]);
-	$datas=$req->fetchAll(PDO::FETCH_ASSOC);
-	if(empty($datas)){
-		return false;
-	}
-	return $datas;
-}
-
-function histoMagFn($pdoBt){
-	$req=$pdoBt->prepare("SELECT msg.id as id_detail, date_msg, real_service, etat, msg, objet,deno FROM msg LEFT JOIN web_users.mag on msg.id_galec=web_users.mag.galec LEFT JOIN  services on msg.id_service=services.id WHERE msg.id_galec= :mag ORDER BY date_msg DESC");
-	$req->execute(array(
-		':mag'		=>$_GET['galec']
-	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
-
-function histoMagServiceFn($pdoBt){
-	$req=$pdoBt->prepare("SELECT msg.id as id_detail, date_msg, real_service, etat, msg,objet FROM msg LEFT JOIN sca3 on msg.id_galec=sca3.galec INNER JOIN  services on msg.id_service=services.id WHERE msg.id_galec= :mag AND msg.id_service= :id_service ORDER BY date_msg DESC");
-	$req->execute(array(
-		':mag'		=>$_POST['mag'],
-		':id_service'	=>$_SESSION['id_service']
-	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
-
-function getMyService($pdoBt){
-	$req=$pdoBt->prepare("SELECT full_name FROM services WHERE id= :id_service ");
-	$req->execute(array(
-		':id_service'	=>$_SESSION['id_service']
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
+$magDao=new MagDao($pdoMag);
 
 if(isset($_GET['galec'])){
-
 	$histoMag=$msgManager->getListDemandeByGalec($pdoBt,$_GET['galec']);
-
-
 }
 
 if(isset($_POST['search'])){
-	$magList=search($pdoMag);
-
-
+	$magList=$magDao->searchMagByConcat($_POST['search_strg']);
 }
 
 
