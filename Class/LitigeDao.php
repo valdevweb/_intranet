@@ -89,33 +89,37 @@ class LitigeDao{
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public function getActiveAffrete()
-	{
+	public function getActiveAffrete(){
 		$req=$this->pdo->prepare("SELECT * FROM affrete WHERE mask=0 ORDER BY affrete");
 		$req->execute();
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
-	public function getActiveTransporteur()
-	{
+
+	public function getActiveTransporteur(){
 		$req=$this->pdo->prepare("SELECT * FROM transporteur WHERE mask=0 ORDER BY transporteur");
 		$req->execute();
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 
-	public function getActiveTransit()
-	{
+	public function getActiveTransit(){
 		$req=$this->pdo->prepare("SELECT * FROM transit WHERE mask=0 ORDER BY transit");
 		$req->execute();
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public function getActiveEquipe()
-	{
+	public function getActiveEquipe(){
 		$req=$this->pdo->prepare("SELECT id, concat(nom, ' ', prenom) as name FROM equipe WHERE mask=0 ORDER BY  nom");
 		$req->execute();
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+public function getThisOuverture($idOuv){
+	$req=$this->pdo->prepare("SELECT ouv.id, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, deno, magasin.mag.id as btlec, ouv.galec FROM ouv LEFT JOIN magasin.mag ON ouv.galec=magasin.mag.galec WHERE ouv.id= :id");
+	$req->execute(array(
+		':id'		=>$idOuv
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
 
 }
