@@ -1,6 +1,5 @@
 <?php
 
- // require('../../config/pdo_connect.php');
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
 	echo "pas de variable session";
@@ -13,6 +12,9 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require_once  '../../vendor/autoload.php';
+require_once  '../../Class/LitigeDao.php';
+require_once  '../../Class/MagDao.php';
+require_once  '../../Class/Mag.php';
 
 $errors=[];
 $success=[];
@@ -35,8 +37,7 @@ traitement facturation 								#6
 // ----------------------------------------
 //  GETTER 					#1
 // ----------------------------------------
-function getLitige($pdoLitige)
-{
+function getLitige($pdoLitige){
 	$req=$pdoLitige->prepare("
 		SELECT *
 		FROM dossiers
@@ -49,46 +50,19 @@ function getLitige($pdoLitige)
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
-function getAffrete($pdoLitige)
-{
-	$req=$pdoLitige->prepare("SELECT * FROM affrete WHERE mask=0 ORDER BY affrete");
-	$req->execute();
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
-function getTransporteur($pdoLitige)
-{
-	$req=$pdoLitige->prepare("SELECT * FROM transporteur WHERE mask=0 ORDER BY transporteur");
-	$req->execute();
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
-
-
-function getTransit($pdoLitige)
-{
-	$req=$pdoLitige->prepare("SELECT * FROM transit WHERE mask=0 ORDER BY transit");
-	$req->execute();
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
-
-function getEquipe($pdoLitige)
-{
-	$req=$pdoLitige->prepare("SELECT id, concat(nom, ' ', prenom) as name FROM equipe WHERE mask=0 ORDER BY  nom");
-	$req->execute();
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
 
 // ----------------------------------
 //  VARIABLES 					#2
 // ---------------------------------
 
 $fLitige=getLitige($pdoLitige);
-
 $coutTotal=$fLitige['mt_transp']+$fLitige['mt_assur']+$fLitige['mt_fourn']+$fLitige['mt_mag'];
 $thisId=$_GET['id'];
-$affretes=getAffrete($pdoLitige);
-$transporteurs=getTransporteur($pdoLitige);
-$transits=getTransit($pdoLitige);
-$equipes=getEquipe($pdoLitige);
+$litigeDao=new LitigeDao($pdoLitige);
+$affretes=$litigeDao->getActiveAffrete();
+$transporteurs=$litigeDao->getActiveTransporteur();
+$transits=$litigeDao->getActiveTransit();
+$equipes=$litigeDao->getActiveEquipe();
 $etatTransp="etat-gris";
 $etatentre="etat-gris";
 $etatfac="etat-gris";
@@ -276,15 +250,6 @@ function updateVingtQuatreEsp($pdoLitige){
 
 
 
-function getInfoMag($pdoBt, $galec)
-{
-	$req=$pdoBt->prepare("SELECT btlec FROM sca3 WHERE galec = :galec");
-	$req->execute(array(
-		':galec'		=>$galec,
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
-
 
 // ajout action quand envoi mail cloture au mag
 function addAction($pdoLitige, $action){
@@ -367,29 +332,23 @@ if(isset($_POST['submit_mail']))
 			{
 				$mailMag=array('valerie.montusclat@btlec.fr');
 			}
-			else
-			{
-				$btlec=getInfoMag($pdoBt,$fLitige['galec']);
-				if($_SESSION['code_bt']!='4201')
-				{
-					$mailMag=array($btlec['btlec'].'-rbt@btlec.fr');
-				}
-				else
-				{
-					$mailMag=array('valerie.montusclat@btlec.fr');
-				}
+			else{
+
+				$magDao=new MagDao($pdoMag);
+				$infoMag=$magDao->getMagByGalec($fLitige['galec']);
+				$codeBt=$infoMag->getId();
+				$mailMag=array($codeBt.'-rbt@btlec.fr');
 			}
-			if($_POST['mt_mag']<0)
-			{
+			if($_POST['mt_mag']<0){
 				$type='un avoir ';
 				$mt=abs($_POST['mt_mag']);
-			}
-			else
-			{
+			}else{
 				$type='une facture ';
 				$mt=$_POST['mt_mag'];
 
 			}
+
+
 			$magTemplate = file_get_contents('mail-mag-fac.php');
 			$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
 			$magTemplate=str_replace('{FACTURE}',$_POST['fac_mag'],$magTemplate);
