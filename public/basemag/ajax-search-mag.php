@@ -1,7 +1,6 @@
 <?php
 
-	require '../../config/config.inc.php';
-	require '../../Class/MagDbHelper.php';
+require '../../config/config.inc.php';
 // https://www.webslesson.info/2016/06/ajax-autocomplete-textbox-using-jquery-php-and-mysql.html
 
 if(isset($_POST["query"]))
