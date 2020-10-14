@@ -2,7 +2,6 @@
 require('../../config/autoload.php');
 
 if(!isset($_SESSION['id'])){
-	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
 }
 if($_SESSION['id']==1531){
@@ -239,9 +238,6 @@ $listActiveOpp=$oppDao->getActiveOpp();
 
 include('../view/_head-bt.php');
 include ('../view/_navbar.php');
-
-// include('test.php');
-
 
 
 //contenu
