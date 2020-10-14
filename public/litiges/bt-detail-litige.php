@@ -17,6 +17,8 @@ unset($_SESSION['goto']);
 
 require 'echanges.fn.php';
 require('../../Class/UserHelpers.php');
+require('../../Class/MagHelpers.php');
+require('../../Class/LitigeDao.php');
 
 //------------------------------------------------------
 //			INFOS
@@ -29,44 +31,20 @@ require('../../Class/UserHelpers.php');
 //------------------------------------------------------
 
 // info produit
-function getLitige($pdoLitige)
-{
-	$req=$pdoLitige->prepare("
-		SELECT
-		dossiers.id as id_main,	dossiers.dossier,dossiers.date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,dossiers.user_crea,dossiers.galec,dossiers.etat_dossier,vingtquatre, dossiers.id_web_user, inversion,inv_article,inv_fournisseur,inv_tarif,inv_descr,nom, valo, flag_valo, id_reclamation,inv_palette,inv_qte,id_robbery, commission, box_tete, box_art,
-		details.id as id_detail,details.ean,details.id_dossier,	details.palette,details.facture,details.article,details.tarif,details.qte_cde, details.qte_litige,details.valo_line,details.dossier_gessica,details.descr,details.fournisseur,details.pj,DATE_FORMAT(details.date_facture, '%d-%m-%Y') as datefacture, details.serials,
-		reclamation.reclamation,
-		btlec.sca3.mag, btlec.sca3.centrale, btlec.sca3.btlec,
-		etat.etat
-		FROM dossiers
-		LEFT JOIN details ON dossiers.id=details.id_dossier
-		LEFT JOIN reclamation ON details.id_reclamation = reclamation.id
-		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
-		LEFT JOIN etat ON etat_dossier=etat.id
-		WHERE dossiers.id= :id ORDER BY date_crea");
-	$req->execute(array(
-		':id'	=>$_GET['id']
-	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-	// return $req->errorInfo();
-}
-
-$fLitige=getLitige($pdoLitige);
 
 
-function getFirstDial($pdoLitige)
-{
+
+
+function getFirstDial($pdoLitige){
 	$req=$pdoLitige->prepare("SELECT * FROM `dial` WHERE id_dossier=:id AND mag=3");
 	$req->execute(array(
 		':id'	=>$_GET['id']
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
-
 }
 
 
-function getInfos($pdoLitige)
-{
+function getInfos($pdoLitige){
 	$req=$pdoLitige->prepare("SELECT transporteur.transporteur, affrete.affrete, transit.transit, CONCAT(prepa.nom,' ', prepa.prenom) as fullprepa, CONCAT(ctrl.nom,' ',ctrl.prenom) as fullctrl,CONCAT(chg.nom,' ',chg.prenom) as fullchg, mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag, DATE_FORMAT(date_prepa,'%d-%m-%Y') as dateprepa, ctrl_ok FROM dossiers
 		LEFT JOIN transporteur ON id_transp=transporteur.id
 		LEFT JOIN affrete ON id_affrete=affrete.id
@@ -82,11 +60,9 @@ function getInfos($pdoLitige)
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
-$infos=getInfos($pdoLitige);
 
 
-function getAnalyse($pdoLitige)
-{
+function getAnalyse($pdoLitige){
 	$req=$pdoLitige->prepare("SELECT gt, imputation, typo, etat, analyse, conclusion FROM dossiers
 		LEFT JOIN gt ON id_gt=gt.id
 		LEFT JOIN imputation ON id_imputation=imputation.id
@@ -101,10 +77,8 @@ function getAnalyse($pdoLitige)
 	return $req->fetch(PDO::FETCH_ASSOC);
 
 }
-$analyse=getAnalyse($pdoLitige);
 
-function getAction($pdoLitige)
-{
+function getAction($pdoLitige){
 	$req=$pdoLitige->prepare("SELECT libelle, id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y')as dateFr,  pj, sav, achats FROM action  WHERE action.id_dossier= :id ORDER BY date_action");
 	$req->execute(array(
 		':id'		=>$_GET['id']
@@ -112,46 +86,8 @@ function getAction($pdoLitige)
 	));
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-$actionList=getAction($pdoLitige);
 
-
-
-$coutTotal=$infos['mt_transp']+$infos['mt_assur']+$infos['mt_fourn']+$infos['mt_mag'];
-if($infos['ctrl_ok']==0)
-{
-	$ctrl="non contrôlé";
-}
-elseif($infos['ctrl_ok']==1){
-	$ctrl="fait";
-
-}
-elseif($infos['ctrl_ok']==2){
-	$ctrl="demandé";
-}
-
-if($coutTotal!=0){
-	$coutTotal=number_format((float)$coutTotal,2,'.','');
-}
-
-
-
-function updateValo($pdoLitige, $valo,$flag)
-{
-	$req=$pdoLitige->prepare("UPDATE dossiers SET valo= :valo, flag_valo= :flag_valo WHERE id= :id");
-	$req->execute(array(
-		':id'		=>$_GET['id'],
-		':valo'		=>$valo,
-		':flag_valo'	=>$flag
-	));
-	return $req->rowCount();
-}
-$articleAZero='';
-
-
-
-
-function getFinance($pdoQlik, $btlec, $year)
-{
+function getFinance($pdoQlik, $btlec, $year){
 	$req=$pdoQlik->prepare("SELECT CA_Annuel FROM statsventesadh WHERE CodeBtlec= :btlec AND AnneeCA= :year");
 	$req->execute(array(
 		':btlec' =>$btlec,
@@ -192,45 +128,15 @@ function getCoutTotalYear($pdoLitige,$galec,$year){
 }
 
 
-
-$yearN=date('Y');
-$yearNUn= date("Y",strtotime("-1 year"));
-$yearNDeux= date("Y",strtotime("-2 year"));
-
-$financeN=getFinance($pdoQlik,$fLitige[0]['btlec'],$yearN);
-$financeNUn=getFinance($pdoQlik,$fLitige[0]['btlec'],$yearNUn);
-$financeNDeux=getFinance($pdoQlik,$fLitige[0]['btlec'],$yearNDeux);
-$reclameN=getSumDeclare($pdoLitige,$fLitige[0]['galec'],$yearN);
-$reclameNUn=getSumDeclare($pdoLitige,$fLitige[0]['galec'],$yearNUn);
-$reclameNDeux=getSumDeclare($pdoLitige,$fLitige[0]['galec'],$yearNDeux);
-
-$rembourseN=getMtMag($pdoLitige,$fLitige[0]['galec'],$yearN);
-$rembourseNUn=getMtMag($pdoLitige,$fLitige[0]['galec'],$yearNUn);
-$rembourseNDeux=getMtMag($pdoLitige,$fLitige[0]['galec'],$yearNDeux);
-
-$coutN=getCoutTotalYear($pdoLitige,$fLitige[0]['galec'],$yearN);
-$coutN=$coutN['mtMag']+$coutN['mtfourn']+$coutN['mttransp']+$coutN['mtassur'];
-$coutNUn=getCoutTotalYear($pdoLitige,$fLitige[0]['galec'],$yearNUn);
-$coutNUn=$coutNUn['mtMag']+$coutNUn['mtfourn']+$coutNUn['mttransp']+$coutNUn['mtassur'];
-
-$coutNDeux=getCoutTotalYear($pdoLitige,$fLitige[0]['galec'],$yearNDeux);
-
-$coutNDeux=$coutNDeux['mtMag']+$coutNDeux['mtfourn']+$coutNDeux['mttransp']+$coutNDeux['mtassur'];
-
-
-
-
-
-
-if($fLitige[0]['flag_valo']==2)
-{
-	$valoMag='impossible de calculer la valorisation';
-	$articleAZero='<i class="fas fa-info-circle text-main-blue pr-3"></i>Un des articles n\'a pas de tarif, veuillez cliquer sur le code article pour effectuer une recherche dans la base';
-
+function updateValo($pdoLitige, $valo,$flag){
+	$req=$pdoLitige->prepare("UPDATE dossiers SET valo= :valo, flag_valo= :flag_valo WHERE id= :id");
+	$req->execute(array(
+		':id'		=>$_GET['id'],
+		':valo'		=>$valo,
+		':flag_valo'	=>$flag
+	));
+	return $req->rowCount();
 }
-
-
-$firstDial=getFirstDial($pdoLitige);
 function getInvPaletteDetail($pdoLitige)
 {
 	$req=$pdoLitige->prepare("SELECT * FROM palette_inv WHERE id_dossier = :id_dossier");
@@ -314,54 +220,6 @@ function addAction($pdoLitige, $idContrainte){
 	]);
 	return $req->rowCount();
 }
-
-
-
-
-
-
-// $name=getMagName($pdoUser, $dial['id_web_user']);
-$infoMag=getMagName($pdoUser, $fLitige[0]['id_web_user']);
-
-if(isset($_POST['validate']))
-{
-	if($_SESSION['id_web_user'] !=959 && $_SESSION['id_web_user'] !=981)
-	{
-		header('Location:bt-detail-litige.php?notallowed&id='.$_GET['id']);
-
-	}
-	elseif(!empty($_POST['cmt']))
-	{
-
-		$action=addAction($pdoLitige, 3);
-		if($action==1){
-			$result=updateCommission($pdoLitige,1);
-		}
-		else{
-			$errors[]="impossible d'ajouter le commentaire";
-		}
-		if($result==1)
-		{
-			header('Location:bt-detail-litige.php?id='.$_GET['id']);
-
-		}
-		else{
-			$errors[]="impossible de mettre le statut à jour";
-		}
-	}
-	else{
-		$errors[]="Veuillez saisir un commentaire";
-	}
-}
-if(isset($_GET['notallowed'])){
-	$errors[]="Vous n'êtes pas autorisé à modifier le statut 'validé en commission'";
-}
-
-if(isset($_POST['annuler']))
-{
-	header('Location:bt-detail-litige.php?id='.$_POST['iddossier']);
-
-}
 // calcul valo totale uniquement si inversion de palette et palette reçue non toruvéé au moment de la déclaration
 function getSumLitige($pdoLitige){
 	$req=$pdoLitige->prepare("SELECT sum(valo_line) as sumValo, dossiers.valo, id_reclamation FROM details LEFT JOIN dossiers ON details.id_dossier= dossiers.id WHERE details.id_dossier= :id");
@@ -408,6 +266,109 @@ function addSerials($pdoLitige,$idDetail,$values){
 	]);
 	return $req->rowCount();
 }
+
+$litigeDao=new LitigeDao($pdoLitige);
+$infoLitige=$litigeDao->getLitigeDossierDetailReclamMagEtatById($_GET['id']);
+
+$actionList=getAction($pdoLitige);
+$infos=getInfos($pdoLitige);
+$analyse=getAnalyse($pdoLitige);
+$firstDial=getFirstDial($pdoLitige);
+
+$coutTotal=$infos['mt_transp']+$infos['mt_assur']+$infos['mt_fourn']+$infos['mt_mag'];
+
+if($infos['ctrl_ok']==0){
+	$ctrl="non contrôlé";
+}
+elseif($infos['ctrl_ok']==1){
+	$ctrl="fait";
+
+}elseif($infos['ctrl_ok']==2){
+	$ctrl="demandé";
+}
+
+if($coutTotal!=0){
+	$coutTotal=number_format((float)$coutTotal,2,'.','');
+}
+
+$articleAZero='';
+
+$yearN=date('Y');
+$yearNUn= date("Y",strtotime("-1 year"));
+$yearNDeux= date("Y",strtotime("-2 year"));
+
+$financeN=getFinance($pdoQlik,$infoLitige[0]['btlec'],$yearN);
+$financeNUn=getFinance($pdoQlik,$infoLitige[0]['btlec'],$yearNUn);
+$financeNDeux=getFinance($pdoQlik,$infoLitige[0]['btlec'],$yearNDeux);
+$reclameN=getSumDeclare($pdoLitige,$infoLitige[0]['galec'],$yearN);
+$reclameNUn=getSumDeclare($pdoLitige,$infoLitige[0]['galec'],$yearNUn);
+$reclameNDeux=getSumDeclare($pdoLitige,$infoLitige[0]['galec'],$yearNDeux);
+
+$rembourseN=getMtMag($pdoLitige,$infoLitige[0]['galec'],$yearN);
+$rembourseNUn=getMtMag($pdoLitige,$infoLitige[0]['galec'],$yearNUn);
+$rembourseNDeux=getMtMag($pdoLitige,$infoLitige[0]['galec'],$yearNDeux);
+
+$coutN=getCoutTotalYear($pdoLitige,$infoLitige[0]['galec'],$yearN);
+$coutN=$coutN['mtMag']+$coutN['mtfourn']+$coutN['mttransp']+$coutN['mtassur'];
+$coutNUn=getCoutTotalYear($pdoLitige,$infoLitige[0]['galec'],$yearNUn);
+$coutNUn=$coutNUn['mtMag']+$coutNUn['mtfourn']+$coutNUn['mttransp']+$coutNUn['mtassur'];
+
+$coutNDeux=getCoutTotalYear($pdoLitige,$infoLitige[0]['galec'],$yearNDeux);
+
+$coutNDeux=$coutNDeux['mtMag']+$coutNDeux['mtfourn']+$coutNDeux['mttransp']+$coutNDeux['mtassur'];
+
+
+if($infoLitige[0]['flag_valo']==2){
+	$valoMag='impossible de calculer la valorisation';
+	$articleAZero='<i class="fas fa-info-circle text-main-blue pr-3"></i>Un des articles n\'a pas de tarif, veuillez cliquer sur le code article pour effectuer une recherche dans la base';
+
+}
+
+
+
+// $name=getMagName($pdoUser, $dial['id_web_user']);
+$infoMag=getMagName($pdoUser, $infoLitige[0]['id_web_user']);
+
+if(isset($_POST['validate']))
+{
+	if($_SESSION['id_web_user'] !=959 && $_SESSION['id_web_user'] !=981)
+	{
+		header('Location:bt-detail-litige.php?notallowed&id='.$_GET['id']);
+
+	}
+	elseif(!empty($_POST['cmt']))
+	{
+
+		$action=addAction($pdoLitige, 3);
+		if($action==1){
+			$result=updateCommission($pdoLitige,1);
+		}
+		else{
+			$errors[]="impossible d'ajouter le commentaire";
+		}
+		if($result==1)
+		{
+			header('Location:bt-detail-litige.php?id='.$_GET['id']);
+
+		}
+		else{
+			$errors[]="impossible de mettre le statut à jour";
+		}
+	}
+	else{
+		$errors[]="Veuillez saisir un commentaire";
+	}
+}
+if(isset($_GET['notallowed'])){
+	$errors[]="Vous n'êtes pas autorisé à modifier le statut 'validé en commission'";
+}
+
+if(isset($_POST['annuler']))
+{
+	header('Location:bt-detail-litige.php?id='.$_POST['iddossier']);
+
+}
+
 
 
 if(isset($_POST['submit-serials'])){
@@ -461,7 +422,7 @@ else{
 }
 
 	// echo "<pre>";
-	// print_r($fLitige);
+	// print_r($infoLitige);
 	// echo '</pre>';
 // $reclameN=getSumDeclare($pdoBt,$listLitige[0]['galec'],$yearN);
 
@@ -539,18 +500,18 @@ DEBUT CONTENU CONTAINER
 
 		<div class="col">
 			<h1 class="text-main-blue ">
-				Dossier N° <?= $fLitige[0]['dossier']?>
+				Dossier N° <?= $infoLitige[0]['dossier']?>
 			</h1>
 		</div>
 
 		<div class="col">
 			<p class="text-right text-main-blue bigger my-auto">
-				déclaration du <?=$fLitige[0]['datecrea'] ?>
+				déclaration du <?=$infoLitige[0]['datecrea'] ?>
 			</p>
 		</div>
 		<div class="col-auto">
 			<?php
-			if($fLitige[0]['vingtquatre']==1)
+			if($infoLitige[0]['vingtquatre']==1)
 			{
 				$vingtquatre='<img src="../img/litiges/2448_40.png">';
 
@@ -583,15 +544,15 @@ DEBUT CONTENU CONTAINER
 				<div class="col pl-5">
 					<div class="row">
 						<div class="col">
-							<h4 class="khand pt-2"><a href="stat-litige-mag.php?galec=<?=$fLitige[0]['galec']?>"><?= $fLitige[0]['mag'] .' - '.$fLitige[0]['btlec'].' ('.$fLitige[0]['galec'].')' ?></a></h4>
+							<h4 class="khand pt-2"><a href="stat-litige-mag.php?galec=<?=$infoLitige[0]['galec']?>"><?= $infoLitige[0]['mag'] .' - '.$infoLitige[0]['btlec'].' ('.$infoLitige[0]['galec'].')' ?></a></h4>
 						</div>
 						<div class="col">
-							<h4 class="khand pt-2 text-right pr-3"><?=$fLitige[0]['centrale']?></h4>
+							<h4 class="khand pt-2 text-right pr-3"><?= MagHelpers::centraleToSTring($pdoMag,$infoLitige[0]['centrale']) ?></h4>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col">
-							<span class="heavy">Interlocuteur : </span><?= $fLitige[0]['nom'] ?>
+							<span class="heavy">Interlocuteur : </span><?= $infoLitige[0]['nom'] ?>
 						</div>
 					</div>
 					<div class="row">
@@ -644,7 +605,7 @@ DEBUT CONTENU CONTAINER
 	<?php
 
 	// affiche soit le tableau de detail des produits soit le tableau d'inversion de palette
-	if($fLitige[0]['id_reclamation']==7)
+	if($infoLitige[0]['id_reclamation']==7)
 	{
 	// traitement pour affichage détail palette
 		$detailInv=false;
@@ -673,7 +634,7 @@ DEBUT CONTENU CONTAINER
 		// si la palette n'a pas été trouvée au moment de la déclaration, l'utilisateur voit un btn rechercher apparaitre , l'adresse du bouton contient le paramètre search
 		if(isset($_GET['search']))
 		{
-			$newFoundPalette=searchPalette($pdoQlik, $fLitige[0]['inv_palette']);
+			$newFoundPalette=searchPalette($pdoQlik, $infoLitige[0]['inv_palette']);
 			if(empty($newFoundPalette))
 			{
 				$majrecherchepalette='<div class="alert alert-danger">la palette n\'a pas été trouvée</div>';
@@ -842,7 +803,7 @@ DEBUT CONTENU CONTAINER
 			<h5 class="khand text-main-blue pb-3">Actions :</h5>
 		</div>
 	</div>
-	<?php if ($fLitige[0]['commission']==0): ?>
+	<?php if ($infoLitige[0]['commission']==0): ?>
 		<div class="row">
 			<div class="col stamps pb-3">
 				Cliquez sur <a href="#hidden"  class="stamps" ><i class="fas fa-user-check stamp pending"></i></a> si le dossier a été statué en commission
