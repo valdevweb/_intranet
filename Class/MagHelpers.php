@@ -67,6 +67,15 @@ class MagHelpers{
 		return $data['idwebuser'];
 	}
 
+	public static function centraleToString($pdo, $idCtbt){
+		$req=$pdo->prepare("SELECT id_ctbt, centrale FROM centrales WHERE id_ctbt= :id_ctbt");
+		$req->execute([
+			':id_ctbt'		=>$idCtbt
+		]);
+		$data=$req->fetch(PDO::FETCH_ASSOC);
+		return $data['centrale'];
+	}
+
 
 	public static function getListCentrale($pdoMag){
 		return $req=$pdoMag->query("SELECT id_ctbt,centrale  FROM centrales WHERE main=1 ORDER BY centrales.centrale")->fetchAll(PDO::FETCH_KEY_PAIR);
