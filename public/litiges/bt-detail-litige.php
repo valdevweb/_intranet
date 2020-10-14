@@ -326,9 +326,6 @@ if($infoLitige[0]['flag_valo']==2){
 
 
 
-// $name=getMagName($pdoUser, $dial['id_web_user']);
-$infoMag=getMagName($pdoUser, $infoLitige[0]['id_web_user']);
-
 if(isset($_POST['validate']))
 {
 	if($_SESSION['id_web_user'] !=959 && $_SESSION['id_web_user'] !=981)
