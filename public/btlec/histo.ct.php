@@ -61,7 +61,7 @@
 						<?php $idMag=$value['id_mag'];
 
 
-						$magInfo=$magManager->getMagGalec($value['id_galec']);
+						$magInfo=$magManager->getMagByGalec($value['id_galec']);
 
 						?>
 						<div class="col l3">
