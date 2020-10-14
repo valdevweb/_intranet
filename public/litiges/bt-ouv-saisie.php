@@ -13,7 +13,8 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 
-
+require '../../Class/MagDao.php';
+require '../../Class/Mag.php';
 
 //---------------------------------------
 //	ajout enreg dans stat
@@ -31,14 +32,6 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-function getMagName($pdoBt)
-{
-	$req=$pdoBt->prepare("SELECT mag FROM sca3 WHERE galec=:galec");
-	$req->execute(array(
-		':galec'		=>$_GET['galec']
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
 
 
 function searchEan($pdoQlik, $ean)
@@ -59,8 +52,7 @@ function searchPalette($pdoQlik){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getMagIdwebuser($pdoUser)
-{
+function getMagIdwebuser($pdoUser){
 	$req=$pdoUser->prepare("SELECT id FROM users WHERE galec=:galec");
 	$req->execute(array(
 		':galec'		=>$_GET['galec']
@@ -68,8 +60,7 @@ function getMagIdwebuser($pdoUser)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-function insertDossier($pdoLitige, $numDossier,$magId)
-{
+function insertDossier($pdoLitige, $numDossier,$magId){
 	// par défaut l'état est à 0 = ouvert
 	if(isset($_POST['rapid']) && $_POST['rapid']=="oui")
 	{
@@ -163,8 +154,7 @@ function addDetails($pdoLitige, $lastInsertId,$numDossier, $article, $ean,$dossi
 
 
 // le numéro de dossier du litige et non l'id du litige
-function getLastNumDossier($pdoLitige)
-{
+function getLastNumDossier($pdoLitige){
 	$req=$pdoLitige->prepare("SELECT dossier FROM dossiers ORDER BY dossier DESC LIMIT 1");
 	$req->execute();
 	return $req->fetch(PDO::FETCH_ASSOC);
@@ -203,9 +193,11 @@ else{
 
 // 8806098019618
 // 4897008076382
-$mag=getMagName($pdoBt);
-$magtxt="<span class='text-reddish'>pour ".$mag['mag']."</span>";
 
+$magDao=new MagDao($pdoMag);
+$infoMag=$magDao->getMagByGalec($_GET['galec']);
+
+$magtxt="<span class='text-reddish'>pour ".$infoMag->getDeno()."</span>";
 
 if(isset($_POST['submit']))
 {
@@ -228,16 +220,6 @@ if(isset($_POST['submit']))
 
 if(isset($_POST['submit-palette'])){
 	$foundProd=searchPalette($pdoQlik);
-
-
-// id
-//  dossier
-//   panf
-//    pfnp
-//     descr,
-//      pcb,
-//       fournisseur,
-//        ean FROM basearticles
 }
 
 
