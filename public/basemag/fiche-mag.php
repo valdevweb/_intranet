@@ -15,7 +15,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //			REQUIRES
 //------------------------------------------------------
 require_once '../../vendor/autoload.php';
-require_once '../../Class/MagDbHelper.php';
+require_once '../../Class/MagDao.php';
 require_once '../../Class/Mag.php';
 require_once '../../Class/Helpers.php';
 require_once '../../Class/UserHelpers.php';
@@ -116,7 +116,7 @@ if(isset($_POST['clear_form'])){
 
 }
 if (isset($_GET['id'])){
-	$magDbHelper=new MagDbHelper($pdoMag);
+	$magDbHelper=new MagDao($pdoMag);
 	$mag=$magDbHelper->getMagAndScaTroisInfo($_GET['id']);
 
 	$histo= $magDbHelper->getHisto($mag->getGalec());
@@ -185,7 +185,7 @@ if (isset($_GET['id'])){
 }
 
 if(isset($_GET['id'])){
-	$magDbHelper=new MagDbHelper($pdoMag);
+	$magDbHelper=new MagDao($pdoMag);
 	$mag=$magDbHelper->getMagAndScaTroisInfo($_GET['id']);
 	$cmtList=$magDbHelper->getCmt($_GET['id']);
 }

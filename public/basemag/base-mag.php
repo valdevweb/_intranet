@@ -15,7 +15,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //			REQUIRES
 //------------------------------------------------------
 // require_once '../../vendor/autoload.php';
-require_once '../../Class/MagDbHelper.php';
+require_once '../../Class/MagDao.php';
 require_once '../../Class/Mag.php';
 require_once '../../Class/UserHelpers.php';
 require_once '../../Class/Helpers.php';
@@ -35,7 +35,7 @@ addRecord($pdoStat,basename(__file__),'consultation', "base magasin", 101);
 $errors=[];
 $success=[];
 
-$magDbHelper=new MagDbHelper($pdoMag);
+$magDbHelper=new MagDao($pdoMag);
 $listCentrale=$magDbHelper-> getDistinctCentraleDoris();
 $listType=$magDbHelper->getListType();
 $listCm=UserHelpers::getUserByService($pdoUser,17);

@@ -37,14 +37,14 @@ function convertArray($data, $field,$separator){
 
 
 if(isset($_SESSION['code_bt'])){
-	require_once '../../Class/MagDbHelper.php';
+	require_once '../../Class/MagDao.php';
 	require_once '../../Class/Mag.php';
 	require_once '../../Class/UserHelpers.php';
 
 	require "../../functions/stats.fn.php";
 	addRecord($pdoStat,basename(__file__),'consultation', "fiche mag profil mag", 101);
 
-	$magDbHelper=new MagDbHelper($pdoMag);
+	$magDbHelper=new MagDao($pdoMag);
 	$mag=$magDbHelper->getMagAndScaTroisInfo($_SESSION['code_bt']);
 	$listCentralesSca=$magDbHelper->getDistinctCentraleSca();
 	$centreRei=$magDbHelper->centreReiToString($mag->getCentreRei());

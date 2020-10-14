@@ -12,14 +12,14 @@ require "config/config.inc.php";
 //----------------------------------------------------
 // require 'functions/mail.fn.php';
 require 'functions/stats.fn.php';
-include 'Class/MagDbHelper.php';
+include 'Class/MagDao.php';
 require 'vendor/autoload.php';
 //----------------------------------------------------
 // STATS
 //----------------------------------------------------
 $page=basename(__file__);
 $action="demande d'identifiants de connexion";
-$magDbHelper=new MagDbHelper($pdoMag);
+$magDbHelper=new MagDao($pdoMag);
 $centraleList=$magDbHelper->getDistinctCentraleMag();
 
 

@@ -9,7 +9,7 @@ if(!isset($_SESSION['id'])){
 require('../../functions/form.fn.php');
 require('../../Class/BtUserManager.php');
 require('../../Class/MsgManager.php');
-require('../../Class/MagDbHelper.php');
+require('../../Class/MagDao.php');
 require('../../Class/Mag.php');
 
 require "../../functions/stats.fn.php";
@@ -32,7 +32,7 @@ $cssFile=ROOT_PATH ."/public/css/".$page.".css";
 
 $userManager=new BtUserManager();
 $msgManager=new MsgManager();
-$magManager=new MagDbHelper($pdoMag);
+$magManager=new MagDao($pdoMag);
 
 $listServicesContact=$userManager->listServicesContact($pdoUser);
 $selected="";
