@@ -13,6 +13,9 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require_once  '../../vendor/autoload.php';
+require '../../Class/MagDao.php';
+require '../../Class/Mag.php';
+
 
 
 //------------------------------------------------------
@@ -108,22 +111,15 @@ function updateDossier($pdoLitige)
 
 }
 
-function getInfoMag($pdoBt, $galec)
-{
-	$req=$pdoBt->prepare("SELECT btlec FROM sca3 WHERE galec = :galec");
-	$req->execute(array(
-		':galec'		=>$galec,
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
+
 // ajout action quand envoi mail cloture au mag
 function addAction($pdoLitige, $action){
 	$req=$pdoLitige->prepare("INSERT INTO action (id_dossier, libelle, id_web_user, date_action) VALUES (:id_dossier, :libelle, :id_web_user, :date_action)");
 	$req->execute([
 		':id_dossier'		=> $_GET['id'],
-		 ':libelle'			=>$action,
-		 ':id_web_user'		=>$_SESSION['id_web_user'],
-		 ':date_action'		=> date('Y-m-d H:i:s'),
+		':libelle'			=>$action,
+		':id_web_user'		=>$_SESSION['id_web_user'],
+		':date_action'		=> date('Y-m-d H:i:s'),
 	]);
 	return $req->rowCount();
 }
@@ -157,21 +153,14 @@ if(isset($_POST['submit_mail']))
 	{
 		if(!empty($_POST['date_cloture']))
 		{
-			if(VERSION =='_')
-			{
+			if(VERSION =='_'){
 				$mailMag=array('valerie.montusclat@btlec.fr');
 			}
-			else
-			{
-				if($_SESSION['code_bt']!='4201')
-				{
-					$infoMag=getInfoMag($pdoBt, $fLitige['galec']);
-					$mailMag=array($infoMag['btlec'].'-rbt@btlec.fr');
-				}
-				else
-				{
-					$mailMag=array('valerie.montusclat@btlec.fr');
-				}
+			else{
+				$magDao=new MagDao($pdoMag);
+				$infoMag=$magDao->getMagByGalec($fLitige['galec']);
+				$codeBt=$infoMag->getId();
+				$mailMag=array($codeBt.'-rbt@btlec.fr');
 			}
 
 			$magTemplate = file_get_contents('mail-mag-cloture.php');
@@ -186,23 +175,18 @@ if(isset($_POST['submit_mail']))
 			->setTo($mailMag)
 			->setBcc(['valerie.montusclat@btlec.fr', 'nathalie.pazik@btlec.fr', 'jonathan.domange@btlec.fr']);
 			$delivered=$mailer->send($message);
-			if($delivered >0)
-			{
+			if($delivered >0){
 				// ajout d'une entrée dans les actions
 				$action='envoi du mail de clôture au magasin';
 				$add=addAction($pdoLitige, $action);
-				if($add==1)
-				{
+				if($add==1){
 					$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'].'&etat=ok';
 					header($loc);
-				}
-				else{
+				}else{
 					$errors[]='l\'action n\'a pas pu être enregistrée';
 				}
 
-			}
-			else
-			{
+			}else{
 				$errors[]='Le mail n\'a pas pu être envoyé';
 			}
 		}
@@ -241,7 +225,7 @@ DEBUT CONTENU CONTAINER
 	<div class="row">
 		<div class="col">
 			<h1 class="text-main-blue pb-3 ">Dossier N° <?= $fLitige['dossier']?></h1>
-	<h4 class="khand text-main-blue">Analyse du litige</h4>
+			<h4 class="khand text-main-blue">Analyse du litige</h4>
 
 		</div>
 	</div>
