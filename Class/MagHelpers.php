@@ -3,12 +3,7 @@
 class MagHelpers{
 
 
-	/*
-
-	WARNING UTILISER PDOMAG
-
-
-	 */
+	/*	WARNING UTILISER PDOMAG */
 
 	public static function magInfo($pdo, $galec){
 		$req=$pdo->prepare("SELECT mag.*,users.id as idwebuser FROM mag LEFT JOIN web_users.users ON mag.galec=web_users.users.galec  WHERE mag.galec= :galec");
@@ -17,6 +12,9 @@ class MagHelpers{
 		]);
 		return $req->fetch(PDO::FETCH_ASSOC);
 	}
+
+
+
 
 	public static function deno($pdo,$galec){
 		if($galec!=''){
@@ -46,7 +44,7 @@ class MagHelpers{
 
 	public static function btlec($pdo,$galec){
 		$data=self::magInfo($pdo, $galec);
-		return $data['btlec'];
+		return $data['id'];
 	}
 
 	public static function tel($pdo,$galec){
