@@ -2,9 +2,12 @@
 
 require('config/autoload.php');
 require 'functions/stats.fn.php';
+require('Class/CmRdvDao.php');
 
 // on connecte l'utilisateur et recup $_SESSION['id']=$id (id web_user) et $_SESSION['user']=$_POST['login'];
 require('functions/login.fn.php');
+
+
 
 /*---------------------------------------------------------------------*/
 /* 						détection navigateur     							*/
@@ -50,7 +53,7 @@ if(isset($_POST['connexion'])){
 		$msg[]="le login n'existe pas";
 	}
 	if($pwdOk){
-		initSession($pdoBt, $pdoSav, $pdoMag, $loginExist);
+		initSession($pdoBt, $pdoSav, $pdoMag, $pdoCm, $pdoUser, $loginExist);
 		if(isset($_SESSION['id_web_user']) && !empty($_SESSION['id_web_user'])){
 			$action="user authentification";
 			$page=basename(__file__);
