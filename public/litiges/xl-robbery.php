@@ -21,7 +21,7 @@ function getAllDossier($pdoLitige)
 {
 	$req=$pdoLitige->prepare("
 		SELECT dossiers.id as id_main, dossiers.dossier, date_crea, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, user_crea, dossiers.galec, etat_dossier, vingtquatre,
-		mag, centrale, sca3.btlec,
+		deno, magasin.centrales.centrale, magasin.mag.id as btlec,
 		transporteur, affrete, transit,
 		etat,
 		mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag,
@@ -31,7 +31,8 @@ function getAllDossier($pdoLitige)
 
 		FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
-		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
+		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec
+		LEFT JOIN magasin.centrales ON magasin.mag.centrale=magasin.centrales.id_ctbt
 		LEFT JOIN transporteur ON id_transp=transporteur.id
 		LEFT JOIN affrete ON id_affrete=affrete.id
 		LEFT JOIN transit ON id_transit=transit.id
@@ -223,7 +224,7 @@ foreach ($dossiers as $key => $dossier)
 
 		$sheet->setCellValue('A'.$row, $dossier['dossier']);
 		$sheet->setCellValue('B'.$row, $dossier['datecrea']);
-		$sheet->setCellValue('C'.$row, $dossier['mag']);
+		$sheet->setCellValue('C'.$row, $dossier['deno']);
 		$sheet->setCellValue('D'.$row, $dossier['btlec']);
 		$sheet->setCellValue('E'.$row, $dossier['galec']);
 		$sheet->setCellValue('F'.$row, $dossier['centrale']);
