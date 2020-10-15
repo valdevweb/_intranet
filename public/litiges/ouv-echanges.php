@@ -19,7 +19,7 @@
 		<div class="col alert alert-primary">
 			<div class="row">
 				<div class="col">
-					<?= $thisOuv['btlec'].'-'.$thisOuv['mag']?>
+					<?= $thisOuv['btlec'].'-'.$thisOuv['deno']?>
 				</div>
 				<div class="col text-right">
 					date de la demande : <?= $thisOuv['datesaisie']?>
@@ -50,15 +50,11 @@
 		foreach ($theseRep as $rep)
 		{
 			$pj='';
-			if($rep['mag']==0)
-			{
+			if($rep['mag']==0){
 				$alertColor='alert-warning';
-				$from=getBtName($pdoBt, $rep['id_web_user']);
-				$from=$from['fullname'];
-
+				$from=UserHelpers::getFullname($pdoUser, $rep['id_web_user']);
 			}
-			else
-			{
+			else{
 				$alertColor='alert-primary';
 				$from=$thisOuv['mag'];
 			}
