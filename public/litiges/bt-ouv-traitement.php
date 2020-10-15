@@ -34,24 +34,6 @@ require '../../Class/Mag.php';
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-function getThisOuverture($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT ouv.id, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, mag, btlec, ouv.galec FROM ouv LEFT JOIN btlec.sca3 ON ouv.galec=btlec.sca3.galec WHERE ouv.id= :id");
-	$req->execute(array(
-		':id'		=>$_GET['id']
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
-
-function getRep($pdoLitige)
-{
-	$req=$pdoLitige->prepare("SELECT id, id_web_user, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg,pj, mag FROM ouv_rep WHERE id_ouv= :id ORDER BY date_saisie");
-	$req->execute(array(
-		':id'		=>$_GET['id']
-	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
-
-
 function createFileLink($filelist)
 {
 	$rValue='';
@@ -97,15 +79,6 @@ function updateStatut($pdoLitige)
 
 
 
-function getInfoMag($pdoBt, $galec)
-{
-	$req=$pdoBt->prepare("SELECT btlec FROM sca3 WHERE galec = :galec");
-	$req->execute(array(
-		':galec'		=>$galec,
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
-
 //------------------------------------------------------
 //			DECLARATIONS
 //------------------------------------------------------
@@ -116,8 +89,7 @@ $uploadDir= '..\..\..\upload\litiges\\';
 $litigeDao=new LitigeDao($pdoLitige);
 
 $thisOuv=$litigeDao->getThisOuverture($_GET['id']);
-$theseRep=getRep($pdoLitige);
-
+$theseRep=$litigeDao->getOuvertureMsg($_GET['id']);
 
 if(isset($_POST['submit']))
 {
