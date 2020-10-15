@@ -104,14 +104,7 @@ function getBoxHead($pdoQlik,$dossier, $article){
 
 }
 
-// cas ou bt déclare pour un mag, on récupère le nom du mag
-function getMagName($pdoBt){
-	$req=$pdoBt->prepare("SELECT mag FROM sca3 WHERE galec=:galec");
-	$req->execute(array(
-		':galec'		=>$_SESSION['id_galec']
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
+
 // recup idwebuser du mag
 function getMagIdwebuser($pdoUser)
 {
