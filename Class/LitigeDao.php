@@ -45,7 +45,7 @@ class LitigeDao{
 	}
 
 	function getLitigesByGalec($galec){
-		$req=$this->pdo->prepare("SELECT dossier,DATE_FORMAT(date_crea,'%d-%m-%Y')as datecrea, typo, imputation, etat, tablegt.gt, valo, analyse, conclusion, mt_transp, mt_assur, mt_fourn, mt_mag, magasin.mag.deno, magasin.mag.id as btlec, magasin.mag.centrale  FROM dossiers
+		$req=$this->pdo->prepare("SELECT dossiers.id as id, dossier,DATE_FORMAT(date_crea,'%d-%m-%Y')as datecrea, typo, imputation, etat, tablegt.gt, valo, analyse, conclusion, mt_transp, mt_assur, mt_fourn, mt_mag, magasin.mag.deno, magasin.mag.id as btlec, magasin.mag.centrale  FROM dossiers
 			LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec
 			LEFT JOIN typo ON dossiers.id_typo=typo.id
 			LEFT JOIN imputation ON dossiers.id_imputation=imputation.id
