@@ -14,6 +14,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 
 require_once  '../../vendor/autoload.php';
+require_once  '../../Class/LitigeDao.php';
 
 
 //------------------------------------------------------
@@ -29,16 +30,6 @@ function getLastNumDossier($pdoLitige)
 	// return $req->errorInfo();
 }
 
-
-
-function getLitige($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT dossiers.id as id, dossier, mag, btlec FROM dossiers LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec WHERE dossiers.id= :id");
-	$req->execute(array(
-		':id'		=>$_GET['id']
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
-$fLitige=getLitige($pdoLitige);
 
 function getSumLitige($pdoLitige){
 	$req=$pdoLitige->prepare("SELECT sum(valo_line) as sumValo, dossiers.valo, id_reclamation FROM details LEFT JOIN dossiers ON details.id_dossier= dossiers.id WHERE details.id_dossier= :id");
@@ -70,54 +61,34 @@ function updateValoDossier($pdoLitige,$sumValo){
 	return $req->rowCount();
 }
 // on a normalement toute les infos donc on peut recopier de la table temp à la table de prod
+$litigeDao= new LitigeDao($pdoLitige);
+$fLitige=$litigeDao->getLitigeInfoMagById($_GET['id']);
+$errors=[];
+$success=[];
 
-if(isset($_GET['id']))
-{
+if(isset($_GET['id'])){
 	// on profite du recap pour calculer la valo totale d'un litige
 // 2 cas
 // normal : somme,
 // inversion de palette = somme palette cammandé - sommme palette reçue
 // inversion de palette =7
-$sumLitige=getSumLitige($pdoLitige);
+	$sumLitige=getSumLitige($pdoLitige);
 
-if($sumLitige['id_reclamation']==7)
-{
-	$sumRecu=getSumPaletteRecu($pdoLitige);
-	$sumCde=$sumLitige['sumValo'];
-	$sumRecu=$sumRecu['sumValo'];
-	$sumValo=$sumCde -$sumRecu;
-	$update=updateValoDossier($pdoLitige,$sumValo);
+	if($sumLitige['id_reclamation']==7)
+	{
+		$sumRecu=getSumPaletteRecu($pdoLitige);
+		$sumCde=$sumLitige['sumValo'];
+		$sumRecu=$sumRecu['sumValo'];
+		$sumValo=$sumCde -$sumRecu;
+		$update=updateValoDossier($pdoLitige,$sumValo);
+
+	}
+	else{
+		$sumValo=$sumLitige['sumValo'];
+		$update=updateValoDossier($pdoLitige,$sumValo);
+	}
 
 }
-else{
-	$sumValo=$sumLitige['sumValo'];
-	$update=updateValoDossier($pdoLitige,$sumValo);
-}
-
-}
-
-
-
-
-
-
-$errors=[];
-$success=[];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //------------------------------------------------------
 //			PRINCIPE ENVOI DE MAIL
@@ -140,29 +111,18 @@ un pour mag qd bt déclare un litige  à  sa place)
 //			ENVOI MAIL
 //------------------------------------------------------
 // mail mag = 4444-rbt@btlec.fr
-if(VERSION =='_')
-{
+if(VERSION =='_'){
 	$mailMag=array('valerie.montusclat@btlec.fr');
 	$mailBt=array('valerie.montusclat@btlec.fr');
 }
-else
-{
-	if($_SESSION['code_bt']!='4201')
-	{
-		$mailMag=array($fLitige['btlec'].'-rbt@btlec.fr');
-		$mailBt=array('litigelivraison@btlec.fr');
-	}
-	else
-	{
-		$mailMag=array('valerie.montusclat@btlec.fr');
-		$mailBt=array('valerie.montusclat@btlec.fr');
-	}
+else{
+	$mailMag=array($fLitige['btlec'].'-rbt@btlec.fr');
+	$mailBt=array('litigelivraison@btlec.fr');
 }
 
 
 
-if($_SESSION['type']=='mag')
-{
+if($_SESSION['type']=='mag'){
 // ---------------------------------------
 // gestion du template mag
 	$magTemplate = file_get_contents('mail-mag-new-litige.php');
@@ -177,11 +137,9 @@ if($_SESSION['type']=='mag')
 	->setTo($mailMag)
 	->addBcc('valerie.montusclat@btlec.fr');
 	$delivered=$mailer->send($message);
-	if($delivered >0)
-	{
+	if($delivered >0){
 	}
-	else
-	{
+	else{
 		$errors[]='Nous n\'avons pas pu vous faire parvenir le mail accusant réception de votre dossier';
 	}
 
@@ -190,7 +148,7 @@ if($_SESSION['type']=='mag')
 // gestion du template mag
 	$btTemplate = file_get_contents('mail-bt-new-litige.php');
 	$btTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$btTemplate);
-	$btTemplate=str_replace('{MAG}',$fLitige['mag'],$btTemplate);
+	$btTemplate=str_replace('{MAG}',$fLitige['deno'],$btTemplate);
 	$btTemplate=str_replace('{BTLEC}',$fLitige['btlec'],$btTemplate);
 	$subject='Portail BTLec Est  - nouveau dossier litige ' . $fLitige['dossier'];
 // ---------------------------------------
@@ -202,8 +160,7 @@ if($_SESSION['type']=='mag')
 	->setTo($mailBt)
 	->addBcc('valerie.montusclat@btlec.fr');
 	$delivered=$mailer->send($message);
-	if($delivered >0)
-	{
+	if($delivered >0){
 	}
 	else
 	{
@@ -214,12 +171,10 @@ if($_SESSION['type']=='mag')
 
 
 
-if(isset($_POST['submit']))
-{
-	$mailMag=array($fLitige['btlec'].'-rbt@btlec.fr');
+if(isset($_POST['submit'])){
 	$magTemplate = file_get_contents('mail-mag-force-litige.php');
 	$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
-	$subject='Portail BTLec Est  - ouverture du dossier litige ' . $fLitige['dossier'] . ' - ' .$fLitige['mag'];
+	$subject='Portail BTLec Est  - ouverture du dossier litige ' . $fLitige['dossier'] . ' - ' .$fLitige['deno'];
 	// ---------------------------------------
 	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
 	$mailer = new Swift_Mailer($transport);
@@ -230,8 +185,7 @@ if(isset($_POST['submit']))
 	// ->setTo('valerie.montusclat@btlec.fr');
 	->setBcc(['valerie.montusclat@btlec.fr', 'btlecest.portailweb.logistique@btlec.fr']);
 	$delivered=$mailer->send($message);
-	if($delivered >0)
-	{
+	if($delivered >0){
 		$success[]='mail envoyé avec succès à '.$mailMag[0];
 	}
 	else
