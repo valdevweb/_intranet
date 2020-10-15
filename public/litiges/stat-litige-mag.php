@@ -302,11 +302,6 @@ DEBUT CONTENU CONTAINER
 	</div>
 
 
-	<div class="row">
-		<div class="col">
-			<p><a href="stats-mini.php"><i class="fas fa-external-link-alt pr-3"></i>Nb de fréquentations des pages litiges par jour</a></p>
-		</div>
-	</div>
 
 
 	<!-- ./container -->
