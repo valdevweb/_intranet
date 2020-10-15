@@ -9,8 +9,13 @@ if(!isset($_SESSION['id'])){
 
 require_once '../../vendor/autoload.php';
 
+require '../../Class/LitigeDao.php';
+require '../../Class/UserHelpers.php';
+
 require 'info-litige.fn.php';
 require 'echanges.fn.php';
+
+
 
 //			css dynamique
 //----------------------------------------------------------------
@@ -72,11 +77,15 @@ function getActionMsg($pdoLitige){
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-$infos=getInfos($pdoLitige);
-$analyse=getAnalyse($pdoLitige);
-$litige=getLitige($pdoLitige);
-$firstCmt=getComment($pdoLitige);
+$litigeDao= new LitigeDao($pdoLitige);
 
+
+$infos=$litigeDao->getInfos($_GET['id']);
+$analyse=$litigeDao->getAnalyse($_GET['id']);
+$litige=$litigeDao->getLitigeDossierDetailReclamMagEtatById($_GET['id']);
+
+
+$firstCmt=getComment($pdoLitige);
 
 //------------------------------------------------------
 //			CONTRAINTE ACTUELLES
