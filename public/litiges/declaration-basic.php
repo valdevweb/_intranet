@@ -22,6 +22,13 @@ $action="consultation";
 // addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
 addRecord($pdoStat,$page,$action, $descr, 101);
 
+
+
+require '../../Class/MagDao.php';
+require '../../Class/Mag.php';
+
+
+
 //------------------------------------------------------
 //			INFO
 //------------------------------------------------------
@@ -47,8 +54,7 @@ Lors de l’affichage des résultats, on met la class none aux détails de box e
 //			FONCTION
 //------------------------------------------------------
 //recherche dans statsvente facture ou palette
-function search($pdoQlik)
-{
+function search($pdoQlik){
 	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  WHERE concat( concat('0',facture),palette) LIKE :search AND galec= :galec ORDER BY article,dossier");
 	$req->execute(array(
 		':search' =>'%'.$_POST['search_strg'] .'%',
@@ -69,8 +75,7 @@ function getPaletteForRobbery($pdoQlik)
 }
 
 // si on a un tarif à 0, on peut-etre un tête de box, on vérifie donc si couple code art et dossier est dans assortiment
-function checkBox($pdoQlik, $dossier,$article)
-{
+function checkBox($pdoQlik, $dossier,$article){
 	$req=$pdoQlik->prepare("SELECT * FROM assortiments WHERE `SCEBFAST.AST-ART`= :article AND `SCEBFAST.DOS-COD`= :dossier ");
 	$req->execute(array(
 		':dossier' =>$dossier,
@@ -80,8 +85,7 @@ function checkBox($pdoQlik, $dossier,$article)
 }
 
 // si box, on récupère le contenu du box dans la table assortiment (voir powerpoint)
-function getBoxContent($pdoQlik,$dossier, $article)
-{
+function getBoxContent($pdoQlik,$dossier, $article){
 	$req=$pdoQlik->prepare("SELECT `SCEBFAST.AST-ART` as tete FROM assortiments WHERE `SCEBFAST.ART-COD`= :article AND `SCEBFAST.DOS-COD` =:dossier");
 	$req->execute(array(
 		':article'	=>$article,
@@ -90,8 +94,7 @@ function getBoxContent($pdoQlik,$dossier, $article)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 //  on vérifie si art = tete de box
-function getBoxHead($pdoQlik,$dossier, $article)
-{
+function getBoxHead($pdoQlik,$dossier, $article){
 	$req=$pdoQlik->prepare("SELECT * FROM assortiments WHERE `SCEBFAST.AST-ART`= :article AND `SCEBFAST.DOS-COD` =:dossier");
 	$req->execute(array(
 		':article'	=>$article,
@@ -102,8 +105,7 @@ function getBoxHead($pdoQlik,$dossier, $article)
 }
 
 // cas ou bt déclare pour un mag, on récupère le nom du mag
-function getMagName($pdoBt)
-{
+function getMagName($pdoBt){
 	$req=$pdoBt->prepare("SELECT mag FROM sca3 WHERE galec=:galec");
 	$req->execute(array(
 		':galec'		=>$_SESSION['id_galec']
@@ -120,20 +122,10 @@ function getMagIdwebuser($pdoUser)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-// initialisation des variables suivant le user connecté
-if($_SESSION['type']=='btlec')
-{
-	$magId=getMagIdwebuser($pdoUser);
-	$magId=$magId['id'];
-}
-else
-{
-	$magId=$_SESSION['id_web_user'];
-}
+
 
 // création du dossier dans la table ($idRobbery = 0 si pas vol, 1 si vol)
-function insertDossier($pdoLitige, $numDossier,$magId, $idRobbery)
-{
+function insertDossier($pdoLitige, $numDossier,$magId, $idRobbery){
 
 	if(isset($_POST['date_bt']) && !empty($_POST['date_bt']))
 	{
@@ -159,8 +151,7 @@ function insertDossier($pdoLitige, $numDossier,$magId, $idRobbery)
 
 
 // recupère les infos articles dans la base statventes
-function getSelectedDetails($pdoQlik,$id)
-{
+function getSelectedDetails($pdoQlik,$id){
 	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges WHERE id= :id");
 	$req->execute(array(
 		':id'	=>$id
@@ -169,8 +160,7 @@ function getSelectedDetails($pdoQlik,$id)
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 // ajoute info produits dans table detail
-function addDetails($pdoLitige, $lastInsertId,$numDossier,$palette,	$facture,$dateFacture, $article, $ean,$dossierG, $descr, $qteC,	$tarif, $fou, $cnuf,$boxTete,$boxDetail, $puv,$pul)
-{
+function addDetails($pdoLitige, $lastInsertId,$numDossier,$palette,	$facture,$dateFacture, $article, $ean,$dossierG, $descr, $qteC,	$tarif, $fou, $cnuf,$boxTete,$boxDetail, $puv,$pul){
 	$req=$pdoLitige->prepare("INSERT INTO details_temp(id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf, box_tete,box_art, puv, pul) VALUES(:id_dossier, :dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :box_tete, :box_art, :puv, :pul)");
 	$req->execute(array(
 		':id_dossier'	=>$lastInsertId,
@@ -199,8 +189,7 @@ function addDetails($pdoLitige, $lastInsertId,$numDossier,$palette,	$facture,$da
 
 
 // recup poids dans la base article (info non présente dans statsvente mais obligatoire pour les déclarations de vol )
-function getPoids($pdoQlik, $art,$dossier)
-{
+function getPoids($pdoQlik, $art,$dossier){
 	$req=$pdoQlik->prepare("SELECT `GESSICA.PoidsBrutUV` as puv, `GESSICA.PoidsBrutUL` as pul FROM basearticles  WHERE `GESSICA.CodeArticle` = :article AND `GESSICA.CodeDossier` = :dossier LIMIT 1");
 	$req->execute([
 		':article'	=>	$art,
@@ -211,8 +200,7 @@ function getPoids($pdoQlik, $art,$dossier)
 }
 
 // ajout d'un dossier vol => recupère l'id  pour le mettre ensuite dans table dossiers id_robbery
-function insertRobbery($pdoLitige)
-{
+function insertRobbery($pdoLitige){
 	$req=$pdoLitige->prepare("INSERT INTO robbery (date_saisie) VALUES (:date_saisie)");
 	$req->execute([
 		':date_saisie' =>date('Y-m-d H:i:s'),
@@ -221,11 +209,46 @@ function insertRobbery($pdoLitige)
 	return $pdoLitige->lastInsertId();
 }
 
-//------------------------------------------------------
-//			AFFICHAGE DES RECHERCHES
-//------------------------------------------------------
-if(isset($_POST['submit']))
+
+$ids=[];
+$errors=[];
+$success=[];
+
+// ajoute nom du mag au titre si dclaration faite par btlec
+$magtxt="";
+if($_SESSION['type']=='btlec'){
+	$magDao=new MagDao($pdoMag);
+	$infoMag=$magDao->getMagByGalec($_SESSION['id_galec']);
+	// $codeBt=;
+	// $mag=getMagName($pdoBt);
+	$magtxt="<span class='text-reddish'>pour ".$infoMag->getDeno()."</span>";
+}
+
+
+// si on vient de la page déclaration de vol et que l'on a récupéré les numéros de palettes volées, on lance la recherche directement
+if(isset($_SESSION['palette'])){
+	$_POST['submit']=true;
+	$dataSearch=getPaletteForRobbery($pdoQlik);
+}
+
+// initialisation des variables suivant le user connecté
+if($_SESSION['type']=='btlec'){
+	$magId=getMagIdwebuser($pdoUser);
+	$magId=$magId['id'];
+}
+else
 {
+	$magId=$_SESSION['id_web_user'];
+}
+
+
+
+//-----------------------------------------------------------------
+//			AFFICHAGE RESULTAT DE LA RECHERCHE DE PALETTE/FACTURE
+//-----------------------------------------------------------------
+
+
+if(isset($_POST['submit'])){
 	$i=1;
 	$arrI=[];
 	$searchStr=$_POST['search_strg'];
@@ -282,23 +305,14 @@ if(isset($_POST['submit']))
 
 	}
 }
-// si on vient de la page déclaration de vol et que l'on a récupéré les numéros de palettes volées, on lance la recherche directement
-if(isset($_SESSION['palette']))
-{
-	$_POST['submit']=true;
-	$dataSearch=getPaletteForRobbery($pdoQlik);
-}
+
+
 
 
 //------------------------------------------------------
-//			TRAITEMENT CHOIX ARTICLES
+//			TRAITEMENT VALIDATION FORMUALIRE SELECTION ARTICLE
 //------------------------------------------------------
-$ids=[];
-$errors=[];
-$success=[];
-//
-if(isset($_POST['choose']))
-{
+if(isset($_POST['choose'])){
 //  on ne veut récuperer que les id (ce sont les ids des articles dans la table statsventeslitiges) donc on supprime les valeurs des champ submit, date, etc
 	foreach ($_POST as $key => $value){
 		if($key!='choose' && $key!='selectAll'  && $key !='nom' && $key !='date_bt' && $key != 'num_dossier_form' && $key != 'palette_complete')
@@ -432,14 +446,8 @@ if(isset($_POST['choose']))
 		}
 	}
 }
-// ajoute nom du mag au titre si dclaration faite par btlec
-$magtxt="";
-if($_SESSION['type']=='btlec')
-{
-	$mag=getMagName($pdoBt);
-	$magtxt="<span class='text-reddish'>pour ".$mag['mag']."</span>";
 
-}
+
 
 // on va utiliser l'id pour enregistrer les produits sélectionnés sachant qu'à chaque import de la base, il changera
 
