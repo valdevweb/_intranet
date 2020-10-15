@@ -1,9 +1,6 @@
 <?php
-
- // require('../../config/pdo_connect.php');
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
-	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
 }
 //			css dynamique
@@ -22,6 +19,8 @@ $action="";
 // addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
 addRecord($pdoStat,$page,$action, $descr, 208);
 
+
+
 //------------------------------------------------------
 //			MEMO
 //------------------------------------------------------
@@ -33,12 +32,14 @@ etat :
  */
 
 require_once  '../../vendor/autoload.php';
-require('ouv-echanges.fn.php');
+require('echanges.fn.php');
+require_once  '../../Class/UserHelpers.php';
+require "../../Class/LitigeDao.php";
 
 
 
-function addMsg($pdoLitige, $filelist,$magRep)
-{
+
+function addMsg($pdoLitige, $filelist,$magRep){
 	$msg=strip_tags($_POST['msg']);
 	$msg=nl2br($msg);
 	$req=$pdoLitige->prepare("INSERT INTO ouv_rep (id_ouv,id_web_user,date_saisie,msg,pj, mag) VALUES (:id_ouv,:id_web_user,:date_saisie,:msg,:pj, :mag)");
@@ -67,8 +68,9 @@ $success=[];
 
 $uploadDir= '..\..\..\upload\litiges\\';
 
-$thisOuv=getThisOuverture($pdoLitige);
-$theseRep=getRep($pdoLitige);
+$litigeDao=new LitigeDao($pdoLitige);
+$thisOuv=$litigeDao->getThisOuverture($_GET['id']);
+$theseRep=$litigeDao->getOuvertureMsg($_GET['id']);
 
 
 if(isset($_POST['submit']))
