@@ -38,7 +38,6 @@ $mpdf->WriteHTML($html);
 $pdfContent = $mpdf->Output('', 'S');
 		// $pdfContent = $mpdf->Output();
 
-
 $filename='litige '.$litige[0]['dossier'].' - fiche suivi achats.pdf';
 
 		// recup msg action
