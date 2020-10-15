@@ -29,10 +29,9 @@ unset($_SESSION['goto']);
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-function getWaiting($pdoLitige)
-{
-	$req=$pdoLitige->prepare("SELECT ouv.id as id_ouv, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, mag, btlec, etat,ouv.galec, dossiers.dossier,  dossiers.id as id_dossier_litige FROM ouv
-		LEFT JOIN btlec.sca3 ON ouv.galec=btlec.sca3.galec
+function getWaiting($pdoLitige){
+	$req=$pdoLitige->prepare("SELECT ouv.id as id_ouv, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, magasin.mag.deno, magasin.mag.id  as btlec, etat, ouv.galec, dossiers.dossier,  dossiers.id as id_dossier_litige FROM ouv
+		LEFT JOIN magasin.mag ON ouv.galec=magasin.mag.galec
 		LEFT JOIN dossiers ON ouv.id_litige=dossiers.id
 		ORDER BY etat, date_saisie");
 	$req->execute();
@@ -41,8 +40,9 @@ function getWaiting($pdoLitige)
 
 $waiting=getWaiting($pdoLitige);
 
-function createFileLink($filelist)
-{
+
+
+function createFileLink($filelist){
 	$rValue='';
 	$filelist=explode(';',$filelist);
 
@@ -122,7 +122,7 @@ DEBUT CONTENU CONTAINER
 
 						echo '<tr>';
 						echo '<td class="text-right">'.$wait['id_ouv'].'</td>';
-						echo '<td>'.$wait['mag'].'</td>';
+						echo '<td>'.$wait['deno'].'</td>';
 						echo '<td>'.$wait['datesaisie'].'</td>';
 						echo '<td>'.$msg.'</td>';
 						echo '<td class="'.$classAr[$wait['etat']].'">'.$etatAr[$wait['etat']].'</td>';
