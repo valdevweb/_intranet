@@ -44,6 +44,22 @@ class LitigeDao{
 	// return $req->errorInfo();
 	}
 
+	function getLitigesByGalec($galec){
+		$req=$this->pdo->prepare("SELECT dossier,DATE_FORMAT(date_crea,'%d-%m-%Y')as datecrea, typo, imputation, etat, tablegt.gt, valo, analyse, conclusion, mt_transp, mt_assur, mt_fourn, mt_mag, magasin.mag.deno, magasin.mag.id as btlec, magasin.mag.centrale  FROM dossiers
+			LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec
+			LEFT JOIN typo ON dossiers.id_typo=typo.id
+			LEFT JOIN imputation ON dossiers.id_imputation=imputation.id
+			LEFT JOIN gt as tablegt ON dossiers.id_gt=tablegt.id
+			LEFT JOIN etat ON dossiers.id_etat=etat.id
+			LEFT JOIN gt ON dossiers.id_gt=gt.id
+			LEFT JOIN analyse ON dossiers.id_analyse=analyse.id
+			LEFT JOIN conclusion ON dossiers.id_conclusion=conclusion.id
+			WHERE dossiers.galec= :galec");
+		$req->execute(array(
+			':galec'	=>$galec
+		));
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
 
 	public function getFirstDial($idLitige){
 		$req=$this->pdo->prepare("SELECT * FROM `dial` WHERE id_dossier=:id AND mag=3");
