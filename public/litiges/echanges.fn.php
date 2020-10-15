@@ -11,26 +11,6 @@ function getDialog($pdoLitige)
 }
 $dials=getDialog($pdoLitige);
 
-
-
-function getBtName($pdoBt, $idwebuser){
-	$req=$pdoBt->prepare("SELECT CONCAT (prenom, ' ', nom) as name FROM btlec WHERE id_webuser= :id_web_user");
-	$req->execute(array(
-		':id_web_user'	=>$idwebuser
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
-
-
-function getMagName($pdoUser, $idwebuser){
-	$req=$pdoUser->prepare("SELECT btlec.sca3.mag, btlec.sca3.btlec FROM btlec.sca3 LEFT JOIN web_users.users ON btlec.sca3.galec= web_users.users.galec WHERE web_users.users.id= :id_web_user ");
-	$req->execute(array(
-		':id_web_user'	=>$idwebuser
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-
-}
-
 function createFileLink($filelist)
 {
 	$rValue='';

@@ -293,12 +293,11 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 		echo '</tr>';
 		foreach ($dials as $dial) {
 			if($dial['mag']==1){
-				$personn=getMagName($pdoBt,$dial['id_web_user']);
-				$personn=$personn['mag'];
-				// $personn=$dial['id_web_user'];
+					$personn=UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $dial['id_web_user'],'deno');
+
 			}else{
-				$personn=getBtName($pdoBt, $dial['id_web_user']);
-				$personn=$personn['name'];
+				$personn=UserHelpers::getInternUser($pdoUser, $dial['id_web_user']);
+				$personn=$personn['fullname'];
 			}
 
 			echo '<tr>';
