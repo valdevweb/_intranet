@@ -15,6 +15,14 @@ class LitigeDao{
 		return $pdo;
 	}
 
+	public function getLitigeInfoMagById($idLitige){
+	$req=$this->pdo->prepare("SELECT dossiers.id as id, dossier, magasin.mag.deno, magasin.mag.id as btlec FROM dossiers LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE dossiers.id= :id");
+	$req->execute(array(
+		':id'		=>$idLitige
+	));
+	return $req->fetch(PDO::FETCH_ASSOC);
+}
+
 	public function getLitigeDossierDetailReclamMagEtatById($idLitige){
 		$req=$this->pdo->prepare("
 			SELECT
