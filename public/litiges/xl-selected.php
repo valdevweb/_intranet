@@ -113,7 +113,6 @@ function getAllDossier($pdoLitige)
 
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-$dossiers=getAllDossier($pdoLitige);
 	// echo "<pre>";
 	// print_r($dossiers);
 	// echo '</pre>';
@@ -166,6 +165,8 @@ function nullToZero($value){
 	}
 	return $value;
 }
+
+$dossiers=getAllDossier($pdoLitige);
 
 
 //------------------------------------------------------
