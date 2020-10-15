@@ -13,32 +13,56 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require_once  '../../vendor/autoload.php';
+require_once  '../../Class/LitigeDao.php';
+require_once  '../../Class/MagHelpers.php';
 
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
 
-function getMagLitiges($pdoLitige)
-{
-	$req=$pdoLitige->prepare("SELECT dossier,DATE_FORMAT(date_crea,'%d-%m-%Y')as datecrea, typo, imputation, etat, tablegt.gt, valo, analyse, conclusion, mt_transp, mt_assur, mt_fourn, mt_mag, btlec.sca3.mag, btlec.sca3.btlec, btlec.sca3.centrale  FROM dossiers
-		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
-		LEFT JOIN typo ON dossiers.id_typo=typo.id
-		LEFT JOIN imputation ON dossiers.id_imputation=imputation.id
-		LEFT JOIN gt as tablegt ON dossiers.id_gt=tablegt.id
-		LEFT JOIN etat ON dossiers.id_etat=etat.id
-		LEFT JOIN gt ON dossiers.id_gt=gt.id
-		LEFT JOIN analyse ON dossiers.id_analyse=analyse.id
-		LEFT JOIN conclusion ON dossiers.id_conclusion=conclusion.id
+// function getMagLitiges($pdoLitige)
+// {
+// 	$req=$pdoLitige->prepare("SELECT dossier,DATE_FORMAT(date_crea,'%d-%m-%Y')as datecrea, typo, imputation, etat, tablegt.gt, valo, analyse, conclusion, mt_transp, mt_assur, mt_fourn, mt_mag, btlec.sca3.mag, btlec.sca3.btlec, btlec.sca3.centrale  FROM dossiers
+// 		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
+// 		LEFT JOIN typo ON dossiers.id_typo=typo.id
+// 		LEFT JOIN imputation ON dossiers.id_imputation=imputation.id
+// 		LEFT JOIN gt as tablegt ON dossiers.id_gt=tablegt.id
+// 		LEFT JOIN etat ON dossiers.id_etat=etat.id
+// 		LEFT JOIN gt ON dossiers.id_gt=gt.id
+// 		LEFT JOIN analyse ON dossiers.id_analyse=analyse.id
+// 		LEFT JOIN conclusion ON dossiers.id_conclusion=conclusion.id
 
 
 
-		WHERE dossiers.galec= :galec");
+// 		WHERE dossiers.galec= :galec");
+// 	$req->execute(array(
+// 		':galec'	=>$_GET['galec']
+// 	));
+// 	return $req->fetchAll(PDO::FETCH_ASSOC);
+// }
+
+function getFinance($pdoQlik, $btlec, $year){
+	$req=$pdoQlik->prepare("SELECT CA_Annuel FROM statsventesadh WHERE CodeBtlec= :btlec AND AnneeCA= :year");
 	$req->execute(array(
-		':galec'	=>$_GET['galec']
+		':btlec' =>$btlec,
+		':year'	=>$year
 	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
+	return $req->fetch(PDO::FETCH_ASSOC);
 }
-$listLitige=getMagLitiges($pdoLitige);
+
+
+
+// $listLitige=getMagLitiges($pdoLitige);
+// 	echo "<pre>";
+// 	print_r($listLitige);
+// 	echo '</pre>';
+$litigeDao=new LitigeDao($pdoLitige);
+$listLitige=$litigeDao->getLitigesByGalec($_GET['galec']);
+	// echo "<pre>";
+	// print_r($listLitigeM);
+	// echo '</pre>';
+
+
 $nbLitiges=count($listLitige);
 $valoTotal=0;
 foreach ($listLitige as $litige)
@@ -49,15 +73,7 @@ $valoTotal=number_format((float)$valoTotal,2,'.','');
 
 
 
-function getFinance($pdoQlik, $btlec, $year)
-{
-	$req=$pdoQlik->prepare("SELECT CA_Annuel FROM statsventesadh WHERE CodeBtlec= :btlec AND AnneeCA= :year");
-	$req->execute(array(
-		':btlec' =>$btlec,
-		':year'	=>$year
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
+
 
 
 $yearN=date('Y');
@@ -79,7 +95,6 @@ $footer='<p class="footer">BTLEC EST - 2 rue des Moissons - Parc d\'activité Wi
 $mpdf = new \Mpdf\Mpdf(['orientation' => 'L']);
 $mpdf->SetHTMLFooter($footer);
 $mpdf->WriteHTML($html);
-		// $pdfContent = $mpdf->Output('', 'S');
 $pdfContent = $mpdf->Output();
 
 

@@ -184,7 +184,7 @@
 </head>
 <body>
 	<p class="text-right entete">état au <?= date('d-m-Y')?></p>
-	<h3>Chiffres d'affaire du magasin <?= $listLitige[0]['mag'] .' - '. $listLitige[0]['btlec'] .' - '.$listLitige[0]['centrale']?> </h3>
+	<h3>Chiffres d'affaire du magasin <?= $listLitige[0]['deno'] .' - '. $listLitige[0]['btlec'] .' - '.MagHelpers::centraleToString($pdoMag,$listLitige[0]['centrale'])?> </h3>
 
 	<table class="border-table border-table-sec">
 		<tr class="bg-sec">
