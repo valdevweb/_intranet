@@ -38,8 +38,11 @@ function getNbDeclarationByMonth($pdoLitige)
 
 function getStats($pdoStat)
 {
-	$req=$pdoStat->prepare("SELECT *  FROM `stats_logs` LEFT JOIN web_users.users on stats_logs.id_web_user=web_users.users.id LEFT JOIN btlec.sca3 ON web_users.users.galec=btlec.sca3.galec WHERE `type_log` LIKE 'prod' AND type='mag' AND (`page` LIKE '%litige%' OR `page` LIKE '%declaration%')
-		ORDER BY date_format(`stats_logs`.date_heure, '%Y-%m-%d'), btlec.sca3.mag");
+	$req=$pdoStat->prepare("SELECT *  FROM `stats_logs`
+		LEFT JOIN web_users.users on stats_logs.id_web_user=web_users.users.id
+		LEFT JOIN magasin.mag ON web_users.users.galec=magasin.mag.galec
+		WHERE `type_log` LIKE 'prod' AND type='mag' AND (`page` LIKE '%litige%' OR `page` LIKE '%declaration%')
+		ORDER BY date_format(`stats_logs`.date_heure, '%Y-%m-%d'), magasin.mag.deno");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -60,14 +63,14 @@ foreach ($statsReq as $stat)
 	$statDate=new DateTime($stat['date_heure']);
 	$statDate=$statDate->format('Y-m-d');
 	if(!isset($statByDay[$statDate])){
-		$statByDay[$statDate][]=$stat['mag'];
-		$witnessMag=$stat['mag'];
+		$statByDay[$statDate][]=$stat['deno'];
+		$witnessMag=$stat['deno'];
 
 	}
 	else{
-		if($stat['mag'] !=$witnessMag){
-			$statByDay[$statDate][]=$stat['mag'];
-			$witnessMag=$stat['mag'];
+		if($stat['deno'] !=$witnessMag){
+			$statByDay[$statDate][]=$stat['deno'];
+			$witnessMag=$stat['deno'];
 
 		}
 
