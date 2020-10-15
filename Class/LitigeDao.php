@@ -16,12 +16,12 @@ class LitigeDao{
 	}
 
 	public function getLitigeInfoMagById($idLitige){
-	$req=$this->pdo->prepare("SELECT dossiers.id as id, dossier, magasin.mag.deno, magasin.mag.id as btlec FROM dossiers LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE dossiers.id= :id");
-	$req->execute(array(
-		':id'		=>$idLitige
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
+		$req=$this->pdo->prepare("SELECT dossiers.id as id, dossier, magasin.mag.deno, magasin.mag.id as btlec FROM dossiers LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE dossiers.id= :id");
+		$req->execute(array(
+			':id'		=>$idLitige
+		));
+		return $req->fetch(PDO::FETCH_ASSOC);
+	}
 
 	public function getLitigeDossierDetailReclamMagEtatById($idLitige){
 		$req=$this->pdo->prepare("
@@ -122,12 +122,20 @@ class LitigeDao{
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-public function getThisOuverture($idOuv){
-	$req=$this->pdo->prepare("SELECT ouv.id, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, deno, magasin.mag.id as btlec, ouv.galec FROM ouv LEFT JOIN magasin.mag ON ouv.galec=magasin.mag.galec WHERE ouv.id= :id");
-	$req->execute(array(
-		':id'		=>$idOuv
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
+	public function getThisOuverture($idOuv){
+		$req=$this->pdo->prepare("SELECT ouv.id, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, deno, magasin.mag.id as btlec, ouv.galec, ouv.etat FROM ouv LEFT JOIN magasin.mag ON ouv.galec=magasin.mag.galec WHERE ouv.id= :id");
+		$req->execute(array(
+			':id'		=>$idOuv
+		));
+		return $req->fetch(PDO::FETCH_ASSOC);
+	}
+
+	function getOuvertureMsg($idOuv){
+		$req=$this->pdo->prepare("SELECT id, id_web_user, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg,pj, mag FROM ouv_rep WHERE id_ouv= :id ORDER BY date_saisie");
+		$req->execute(array(
+			':id'		=>$idOuv
+		));
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
 
 }
