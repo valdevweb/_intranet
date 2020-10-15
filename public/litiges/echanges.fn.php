@@ -47,6 +47,3 @@ function createFileLink($filelist)
 	return $rValue;
 }
 
-
-
-
