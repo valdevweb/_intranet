@@ -1,30 +1,5 @@
 <?php
 
-function getLitige($pdoLitige)
-{
-	$req=$pdoLitige->prepare("
-		SELECT
-		dossiers.id as id_main,	dossiers.dossier,dossiers.date_crea,DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea,dossiers.user_crea,dossiers.galec,dossiers.etat_dossier,vingtquatre, inversion,inv_article,inv_fournisseur,inv_tarif,inv_descr,nom,
-		details.id as id_detail,details.ean,details.id_dossier,	details.palette,details.article,details.tarif,details.qte_cde, details.qte_litige,details.dossier_gessica,details.descr,details.fournisseur,details.pj,details.valo_line,
-		reclamation.reclamation,
-		btlec.sca3.mag, btlec.sca3.centrale, btlec.sca3.btlec,
-		etat.etat
-		FROM dossiers
-		LEFT JOIN details ON dossiers.id=details.id_dossier
-		LEFT JOIN reclamation ON details.id_reclamation = reclamation.id
-		LEFT JOIN btlec.sca3 ON dossiers.galec=btlec.sca3.galec
-		LEFT JOIN etat ON etat_dossier=etat.id
-		WHERE dossiers.id= :id ORDER BY date_crea");
-	$req->execute(array(
-		':id'	=>$_GET['id']
-	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
-
-
-
-
-
 function getInfos($pdoLitige)
 {
 	$req=$pdoLitige->prepare("SELECT transporteur.transporteur, affrete.affrete, transit.transit, CONCAT(prepa.nom,' ', prepa.prenom) as fullprepa, CONCAT(ctrl.nom,' ',ctrl.prenom) as fullctrl,CONCAT(chg.nom,' ',chg.prenom) as fullchg, mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag, DATE_FORMAT(date_prepa,'%d-%m-%Y') as dateprepa, ctrl_ok FROM dossiers
@@ -69,14 +44,3 @@ function getComment($pdoLitige){
 }
 
 
-
-// function getDial($pdoLitige){
-
-// 	$req=$pdoLitige->prepare("SELECT * FROM dial WHERE id_dossier= :id AND mag <>3");
-// 	$req->execute([
-// 		':id'	=>$_GET['id']
-// 	]);
-// 	return $req->fetchAll(PDO::FETCH_ASSOC);
-
-
-// }
