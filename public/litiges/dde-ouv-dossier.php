@@ -126,7 +126,7 @@ if(isset($_POST['submit']))
 			$msg=nl2br($msg);
 			$link='<a href="'.SITE_ADDRESS.'/index.php?litiges/bt-ouvertures.php">Voir sa demande sur le portail</a>';
 
-			$btTemplate = file_get_contents('mail-bt-dde-ouverture.php');
+			$btTemplate = file_get_contents('mail/mail-bt-dde-ouverture.php');
 			$btTemplate=str_replace('{MAG}',$_SESSION['nom'],$btTemplate);
 			$btTemplate=str_replace('{BTLEC}',$_SESSION['code_bt'],$btTemplate);
 			$btTemplate=str_replace('{MSG}',$msg,$btTemplate);
