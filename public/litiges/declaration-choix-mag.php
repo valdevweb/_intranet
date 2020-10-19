@@ -88,7 +88,7 @@ DEBUT CONTENU CONTAINER
 							echo '<td>'.$mag['deno'].'</td>';
 							echo '<td>'.$mag['ville'].'</td>';
 
-							echo '<td class="text-center"><a href="hidden-session.php?galec='.$mag['galec'].'"><i class="fas fa-hand-pointer"></i></td>';
+							echo '<td class="text-center"><a href="declaration-hidden-session.php?galec='.$mag['galec'].'"><i class="fas fa-hand-pointer"></i></td>';
 							echo '<td class="text-center"><a href="bt-ouv-saisie.php?galec='.$mag['galec'].'"><i class="fas fa-hand-pointer"></i></td>';
 							echo '</tr>';
 

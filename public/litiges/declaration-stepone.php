@@ -29,6 +29,7 @@ require '../../Class/Mag.php';
 
 
 
+
 //------------------------------------------------------
 //			INFO
 //------------------------------------------------------
@@ -221,7 +222,6 @@ if($_SESSION['type']=='btlec'){
 // si on vient de la page déclaration de vol et que l'on a récupéré les numéros de palettes volées, on lance la recherche directement
 if(isset($_SESSION['palette'])){
 	$_POST['submit']=true;
-	$dataSearch=getPaletteForRobbery($pdoQlik);
 }
 
 // initialisation des variables suivant le user connecté
@@ -235,6 +235,9 @@ else
 }
 
 
+	echo "<pre>";
+	print_r($_SESSION);
+	echo '</pre>';
 
 //-----------------------------------------------------------------
 //			AFFICHAGE RESULTAT DE LA RECHERCHE DE PALETTE/FACTURE
@@ -244,9 +247,13 @@ else
 if(isset($_POST['submit'])){
 	$i=1;
 	$arrI=[];
-	$searchStr=$_POST['search_strg'];
+	if(!isset($_SESSION['palette'])){
+		$searchStr=$_POST['search_strg'];
+		$dataSearch=search($pdoQlik);
+	}else{
+		$dataSearch=getPaletteForRobbery($pdoQlik);
+	}
 
-	$dataSearch=search($pdoQlik);
 	// on récupère les tete de box et contenu de box dans ces tableaux pour plus tard dans l'insertion de donnée pourvoir préciser si box
 	$boxTete=[];
 	$boxDetail=[];
@@ -430,12 +437,12 @@ if(isset($_POST['choose'])){
 		// suivant type de déclaration (palette complète ou non), on ne renvoie pas sur la même page
 		if($added>0 && !isset($_POST['palette_complete']))
 		{
-			header('Location:declaration-detail.php?id='.$lastInsertId);
+			header('Location:declaration-steptwo.php?id='.$lastInsertId);
 		}
 		elseif ($added>0 && isset($_POST['palette_complete']))
 		{
 
-			header('Location:declaration-detail-palette.php?id='.$lastInsertId);
+			header('Location:declaration-steptwo-palette.php?id='.$lastInsertId);
 		}
 	}
 }
@@ -565,7 +572,7 @@ DEBUT CONTENU CONTAINER
 						<?php
 						if(empty($dataSearch))
 						{
-							echo '<p>La palette que vous recherchez n\'a pas été trouvée ? Elle ne vous était pas destinée ? Veuillez vous rendre sur <a href="declaration-horsqlik.php">cette page</a></p>';
+							echo '<p>La palette que vous recherchez n\'a pas été trouvée ? Elle ne vous était pas destinée ? Veuillez vous rendre sur <a href="dde-ouv-dossier.php">cette page</a></p>';
 						}
 						elseif(!empty($dataSearch))
 						{
@@ -671,7 +678,7 @@ DEBUT CONTENU CONTAINER
 					?>
 
 
-					<p><i class="fas fa-info-circle  pr-3"></i>Le produit que vous avez reçu n'apparaît pas dans la liste et vous avez bien reçu tous les autres produits commandés ? Veuillez vous rendre sur <a href="declaration-horsqlik.php">cette page</a></p>
+					<p><i class="fas fa-info-circle  pr-3"></i>Le produit que vous avez reçu n'apparaît pas dans la liste et vous avez bien reçu tous les autres produits commandés ? Veuillez vous rendre sur <a href="dde-ouv-dossier.php">cette page</a></p>
 
 
 				</div>
