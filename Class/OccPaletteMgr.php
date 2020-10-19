@@ -77,7 +77,15 @@ class OccPaletteMgr{
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+	public function getActiveListPaletteCmt(){
+		$req=$this->pdoOcc->prepare("SELECT * FROM palettes_cmt WHERE date_end >= :date_end");
+		$req->execute([
+			':date_end'		=>date('Y-m-d H:i:s')
+		]);
+		return $req->fetchAll(PDO::FETCH_ASSOC);
 
+
+	}
 
 }
 
