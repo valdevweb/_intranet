@@ -268,6 +268,10 @@ $paletteEtArticleDansPanier=getListPanier($pdoOcc);
 $listAssortiment=getAssortiment($pdoOcc);
 $arrayListPalette=OccHelpers::arrayPalette($pdoOcc);
 
+$cmtPalette=$paletteMgr->getActiveListPaletteCmt();
+
+
+
 
 // si le magasin a des article ou des palettes dans son panier
 if(!empty($paletteEtArticleDansPanier)){
