@@ -125,7 +125,7 @@ else{
 if($_SESSION['type']=='mag'){
 // ---------------------------------------
 // gestion du template mag
-	$magTemplate = file_get_contents('mail-mag-new-litige.php');
+	$magTemplate = file_get_contents('mail/mail-mag-new-litige.php');
 	$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
 	$subject='Portail BTLec Est  - ouverture du dossier litige ' . $fLitige['dossier'];
 // ---------------------------------------
@@ -146,7 +146,7 @@ if($_SESSION['type']=='mag'){
 
 // ---------------------------------------
 // gestion du template mag
-	$btTemplate = file_get_contents('mail-bt-new-litige.php');
+	$btTemplate = file_get_contents('mail/mail-bt-new-litige.php');
 	$btTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$btTemplate);
 	$btTemplate=str_replace('{MAG}',$fLitige['deno'],$btTemplate);
 	$btTemplate=str_replace('{BTLEC}',$fLitige['btlec'],$btTemplate);
@@ -172,7 +172,7 @@ if($_SESSION['type']=='mag'){
 
 
 if(isset($_POST['submit'])){
-	$magTemplate = file_get_contents('mail-mag-force-litige.php');
+	$magTemplate = file_get_contents('mail/mail-mag-force-litige.php');
 	$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
 	$subject='Portail BTLec Est  - ouverture du dossier litige ' . $fLitige['dossier'] . ' - ' .$fLitige['deno'];
 	// ---------------------------------------
