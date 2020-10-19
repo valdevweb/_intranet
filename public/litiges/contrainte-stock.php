@@ -7,7 +7,7 @@ if(VERSION=='_'){
 }
 // 1 récup info litige pour envoyer demande de contrôle aux pilotes
 ob_start();
-include('pdf-pilote-stock.php');
+include('pdf/pdf-pilote-stock.php');
 $html=ob_get_contents();
 ob_end_clean();
 
@@ -25,7 +25,7 @@ $attachmentPdf = new Swift_Attachment($pdfContent, $filename, 'application/pdf')
 // // content
 $link='<a href="'.SITE_ADDRESS.'/index.php?litiges/ctrl-stock.php?id='.$litige[0]['id_main'].'"> cliquant ici</a>';
 
-$htmlMail = file_get_contents('mail-dde-ctrl-stock.php');
+$htmlMail = file_get_contents('mail/mail-dde-ctrl-stock.php');
 $htmlMail=str_replace('{DOSSIER}',$litige[0]['dossier'],$htmlMail);
 $htmlMail=str_replace('{LINK}',$link,$htmlMail);
 $htmlMail=str_replace('{MSG}',$msg['libelle'],$htmlMail);
