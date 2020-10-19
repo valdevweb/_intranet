@@ -170,7 +170,7 @@ if(isset($_POST['submit']))
 
 			$msg=strip_tags($_POST['msg']);
 			$msg=nl2br($msg);
-			$btTemplate = file_get_contents('mail-mag-suivi-ouverture.php');
+			$btTemplate = file_get_contents('mail/mail-mag-suivi-ouverture.php');
 			$btTemplate=str_replace('{MSG}',$msg,$btTemplate);
 			$subject='Portail BTLec Est  - votre demande d\'ouverture de dossier litige' ;
 			// ---------------------------------------
