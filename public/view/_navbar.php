@@ -131,7 +131,7 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 			<li class='active has-sub'><a href="#"><span>Leclerc occasion</span></a>
 				<ul>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-palette.php'?>">Offres produits</a></li>
-					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-import-palette.php'?>">Gestion GT Occasion</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-exploit.php'?>">Gestion GT Occasion</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-expedie.php'?>">Palettes expédiées</a></li>
 				</ul>
 			</li>
