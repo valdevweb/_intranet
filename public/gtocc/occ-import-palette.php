@@ -68,6 +68,15 @@ function getAssortiment($pdoOcc){
 	return $req->fetchAll();
 }
 
+function insertPaletteCmt($pdoOcc){
+	$req=$pdoOcc->prepare("INSERT INTO palettes_cmt (cmt, date_insert, date_end) VALUES (:cmt, :date_insert, :date_end)");
+	$req->execute([
+		':cmt'	=>$_POST['palettes-cmt'],
+		':date_insert'	=>date('Y-m-d H:i:s'),
+		':date_end'	=>$_POST['date-end']
+	]);
+}
+
  //------------------------------------------------------
 //			DECLARATIONS
 //------------------------------------------------------
@@ -164,6 +173,26 @@ if(isset($_POST['send']))
 
 }
 
+if(isset($_POST['insert_global_cmt'])){
+	if(empty($_POST['palettes-cmt'])||empty($_POST['date-end'])){
+		$errors[]="Merci de remplir tous les champs";
+	}
+	if(empty($error)){
+
+		insertPaletteCmt($pdoOcc);
+		$successQ='?success=cmt';
+		unset($_POST);
+		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+	}
+}
+
+if(isset($_GET['success'])){
+    $arrSuccess=[
+        'cmt'=>'Commentaire ajouté avec succès',
+    ];
+    $success[]=$arrSuccess[$_GET['success']];
+}
+
 
 //------------------------------------------------------
 //			VIEW
@@ -236,6 +265,38 @@ DEBUT CONTENU CONTAINER
 		</div>
 	</div>
 	<div class="bg-separation mb-3"></div>
+	<div class="row my-3">
+		<div class="col">
+			<h4 class="text-main-blue">Ajout d'un commentaire pour les palettes commandables</h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
+				<div class="row">
+					<div class="col">
+						<div class="form-group">
+							<label for="palettes-cmt">Commentaire :</label>
+							<textarea class="form-control" name="palettes-cmt" id="palettes-cmt" required></textarea>
+						</div>
+					</div>
+					<div class="col-lg-3">
+						<div class="form-group">
+							<label for="date-end">Date de fin</label>
+							<input type="date" class="form-control" name="date-end" id="date-end" required>
+						</div>
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					<div class="col text-right"><button class="btn btn-primary" name="insert_global_cmt">Valider</button></div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+	<div class="bg-separation mb-3"></div>
 	<div class="row">
 		<div class="col">
 			<h4 class="text-main-blue">Import fichiers palettes GT occasion</h4>
@@ -277,27 +338,27 @@ DEBUT CONTENU CONTAINER
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		 $('.cmt').click(function(){
-		 	$(this).addClass('edit-mode');
-		 });
-		 $(".cmt").focusout(function(){
-		 	console.log("edit");
-		 	$(this).removeClass("edit-mode");
-		 	var id = this.id;
-		 	var value = $(this).text();
+		$('.cmt').click(function(){
+			$(this).addClass('edit-mode');
+		});
+		$(".cmt").focusout(function(){
+			console.log("edit");
+			$(this).removeClass("edit-mode");
+			var id = this.id;
+			var value = $(this).text();
 
-		 	$.ajax({
-		 		url: 'ajax-cmt-article.php',
-		 		type: 'post',
-		 		data: { value:value, id:id },
-		 		success:function(response){
-		 			console.log('Save successfully');
-		 		}
-		 	});
+			$.ajax({
+				url: 'ajax-cmt-article.php',
+				type: 'post',
+				data: { value:value, id:id },
+				success:function(response){
+					console.log('Save successfully');
+				}
+			});
 
-		 });
+		});
 
-});
+	});
 
 </script>
 
