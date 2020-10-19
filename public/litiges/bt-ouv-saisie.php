@@ -325,7 +325,7 @@ if(isset($_POST['choose'])){
 				$_SESSION['dd_ouv']=$_GET['id_ouv'];
 
 			}
-			header('Location:declaration-detail.php?id='.$lastInsertId);
+			header('Location:declaration-steptwo.php?id='.$lastInsertId);
 		}
 	}
 }
