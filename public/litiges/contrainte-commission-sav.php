@@ -17,7 +17,7 @@ else{
 $footer='<table class="padding-table">';
 $footer.='<tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>';
 ob_start();
-include('pdf-commission.php');
+include('pdf/pdf-commission.php');
 
 
 
@@ -39,7 +39,7 @@ $msg=getActionMsg($pdoLitige);
 
 $link='<a href="'.SITE_ADDRESS.'/index.php?litiges/intervention-commission-sav.php?id='.$litige[0]['id_main'].'"> cliquant ici</a>';
 // mail commmun
-$htmlMail = file_get_contents('mail_dde_sav_achats.php');
+$htmlMail = file_get_contents('mail/mail_dde_sav_achats.php');
 $htmlMail=str_replace('{MAG}',$litige[0]['mag'],$htmlMail);
 $htmlMail=str_replace('{DOSSIER}',$litige[0]['dossier'],$htmlMail);
 $htmlMail=str_replace('{MSG}',$msg['libelle'],$htmlMail);
