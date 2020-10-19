@@ -104,7 +104,7 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 
 		<li class='has-sub'><a href="#"><span>Litiges</span></a>
 			<ul>
-				<li><a href="<?= ROOT_PATH?>/public/litiges/declaration-basic.php">Déclaration de litige</a></li>
+				<li><a href="<?= ROOT_PATH?>/public/litiges/declaration-stepone.php">Déclaration de litige</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/mag-litige-listing.php">Mes litiges</a></li>
 			</ul>
 		</li>
@@ -149,7 +149,7 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 
 		<li class='has-sub'><a href="#"><span>Litiges</span></a>
 			<ul>
-				<li><a href="<?= ROOT_PATH?>/public/litiges/declaration-bt-basic.php">Déclarer un litige pour un magasin</a></li>
+				<li><a href="<?= ROOT_PATH?>/public/litiges/declaration-choix-mag.php">Déclarer un litige pour un magasin</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/declaration-robbery.php">Déclarer un vol</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/bt-litige-encours.php">Litiges en cours</a></li>
 				<li><a href="<?= ROOT_PATH?>/public/litiges/bt-ouvertures.php">Demandes d'ouverture de dossier</a></li>
