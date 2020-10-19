@@ -70,21 +70,21 @@ $success=[];
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-if(isset($_POST['submit']))
-{
-	if(!empty($_POST['fac']))
-	{
+if(isset($_POST['submit'])){
+	if(!empty($_POST['fac']))	{
 		$dataSearch=searchFac($pdoQlik);
 	}
-	else
-	{
+	else{
 		$dataSearch=searchDate($pdoQlik);
 
 	}
 }
 
-if(isset($_POST['choose']) && isset($_POST['vol']))
-{
+
+
+if(isset($_POST['choose']) && isset($_POST['vol'])){
+
+
 	$_SESSION['palette']=[];
 	foreach ($_POST as $key => $value) {
 		if($key !='choose' && $key != 'galec' && $key!='vol' && $key !='new-vol'){
@@ -94,8 +94,8 @@ if(isset($_POST['choose']) && isset($_POST['vol']))
 	}
 	$_SESSION['id_galec']=$_POST['galec'];
 	$_SESSION['vol-id']=$_POST['vol'];
-	header('location: declaration-basic.php');
 
+	header('location: declaration-stepone.php');
 }
 
 //------------------------------------------------------
