@@ -143,7 +143,7 @@ if(isset($_POST['submit']))
 			$msg=strip_tags($_POST['msg']);
 			$msg=nl2br($msg);
 			$link='<a href="'.SITE_ADDRESS.'/index.php?litiges/bt-ouv-traitement.php?id='.$_GET['id'].'"> cliquant ici</a>';
-			$btTemplate = file_get_contents('mail-bt-suivi-ouverture.php');
+			$btTemplate = file_get_contents('mail/mail-bt-suivi-ouverture.php');
 			$btTemplate=str_replace('{MSG}',$msg,$btTemplate);
 			$btTemplate=str_replace('{LINK}',$link,$btTemplate);
 			$subject='Portail BTLec Est  - saisie libre - réponse du magasin ' .$_SESSION['nom'] ;

@@ -227,7 +227,7 @@ if(isset($_POST['submit']))
 				}
 			}
 
-			$btTemplate = file_get_contents('mail-bt-msgmag.php');
+			$btTemplate = file_get_contents('mail/mail-bt-msgmag.php');
 			$btTemplate=str_replace('{DOSSIER}',$thisLitige[0]['dossier'],$btTemplate);
 			$btTemplate=str_replace('{MAG}',$_SESSION['nom'],$btTemplate);
 			$subject='Portail BTLec Est  - nouveau message sur le dossier litige ' . $thisLitige[0]['dossier'];
