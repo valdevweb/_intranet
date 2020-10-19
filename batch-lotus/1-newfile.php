@@ -171,9 +171,13 @@ $contenuListeDiffu=getDataFromFile($contents,'Members:');
 if(count($contenuListeDiffu)!=count($nomListesDiffu)){
 	echo "WARNING on ne peut pas traiter, envoyer un mail";
 	exit();
+}elseif (empty($contenuListeDiffu)) {
+		echo "WARNING on ne peut pas traiter, pas de mail, envoyer un mail";
+	exit();# code...
 }
 
 echo $newFile;
+
 if($manuel){
 	$lastinsertId=addNewFile($pdoMag, $newFile);
 
