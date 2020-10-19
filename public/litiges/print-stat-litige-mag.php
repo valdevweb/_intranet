@@ -87,7 +87,7 @@ $financeNDeux=getFinance($pdoQlik,$listLitige[0]['btlec'],$yearNDeux);
 
 
 ob_start();
-include('pdf-stat-litige-mag.php');
+include('pdf/pdf-stat-litige-mag.php');
 $html=ob_get_contents();
 ob_end_clean();
 $footer='<p class="footer">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</p>';
