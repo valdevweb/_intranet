@@ -286,7 +286,7 @@ if(isset($_POST['submit']))
 			$dest[]='btlecest.portailweb.logistique@btlec.fr';
 
 		}
-		$htmlMail = file_get_contents('mail-bt-ctrl-stock-ok.php');
+		$htmlMail = file_get_contents('mail/mail-bt-ctrl-stock-ok.php');
 		$htmlMail=str_replace('{DOSSIER}',$litige[0]['dossier'],$htmlMail);
 		$htmlMail=str_replace('{CODEBT}',$litige[0]['btlec'],$htmlMail);
 		$htmlMail=str_replace('{MAG}',$litige[0]['mag'],$htmlMail);

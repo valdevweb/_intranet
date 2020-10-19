@@ -10,7 +10,7 @@ else{
 }
 $link='<a href="'.SITE_ADDRESS.'/index.php?litiges/bt-detail-litige.php?id='.$litige[0]['id_main'].'"> cliquez ici</a>';
 
-$htmlMail = file_get_contents('mail-rep-video.php');
+$htmlMail = file_get_contents('mail/mail-rep-video.php');
 $htmlMail=str_replace('{MAG}',$litige[0]['mag'],$htmlMail);
 $htmlMail=str_replace('{DOSSIER}',$litige[0]['dossier'],$htmlMail);
 $htmlMail=str_replace('{MSG}',$msg['libelle'],$htmlMail);
