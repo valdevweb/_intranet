@@ -349,7 +349,7 @@ if(isset($_POST['submit_mail']))
 			}
 
 
-			$magTemplate = file_get_contents('mail-mag-fac.php');
+			$magTemplate = file_get_contents('mail/mail-mag-fac.php');
 			$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
 			$magTemplate=str_replace('{FACTURE}',$_POST['fac_mag'],$magTemplate);
 			$magTemplate=str_replace('{TYPE}',$type,$magTemplate);

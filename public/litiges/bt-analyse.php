@@ -163,7 +163,7 @@ if(isset($_POST['submit_mail']))
 				$mailMag=array($codeBt.'-rbt@btlec.fr');
 			}
 
-			$magTemplate = file_get_contents('mail-mag-cloture.php');
+			$magTemplate = file_get_contents('mail/mail-mag-cloture.php');
 			$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
 			$subject='Portail BTLec Est  - clôture du dossier litige ' . $fLitige['dossier'];
 			// ---------------------------------------

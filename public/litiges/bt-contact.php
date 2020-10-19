@@ -149,7 +149,7 @@ if(isset($_POST['submit']) ||isset($_POST['submit_mail']))
 						$mailMag=array($btlec.'-rbt@btlec.fr');
 				}
 
-				$magTemplate = file_get_contents('mail-mag-msgbt.php');
+				$magTemplate = file_get_contents('mail/mail-mag-msgbt.php');
 				$magTemplate=str_replace('{DOSSIER}',$infoLitige['dossier'],$magTemplate);
 				$subject='Portail BTLec Est  - nouveau message sur le dossier litige ' . $infoLitige['dossier'];
 			// ---------------------------------------

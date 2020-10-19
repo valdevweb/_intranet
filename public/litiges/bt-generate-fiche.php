@@ -89,7 +89,7 @@ else{
 
 		// récupération du contenu html du pdf
 ob_start();
-include('pdf-fiche-suivi.php');
+include('pdf/pdf-fiche-suivi.php');
 $html=ob_get_contents();
 ob_end_clean();
 $footer='<table class="padding-table">';
