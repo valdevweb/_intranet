@@ -44,7 +44,7 @@ DEBUT CONTENU CONTAINER
 	<div class="row mb-4">
 		<div class="col-xl-1"></div>
 		<div class="col pl-5">
-			<a href="declaration-basic.php" class="no-decoration"><div class="btn-large bg-red"><i class="fas fa-box-open fa-lg pr-3"></i>J'ai une réclamation sur une de mes palettes ou liée à des produits présents sur une de mes palettes</div></a>
+			<a href="declaration-stepone.php" class="no-decoration"><div class="btn-large bg-red"><i class="fas fa-box-open fa-lg pr-3"></i>J'ai une réclamation sur une de mes palettes ou liée à des produits présents sur une de mes palettes</div></a>
 			<div class="pt-3 pl-5"><i>Exemples : inversion de palette, inversion de produit, produits abîmés, produits manquants, etc</i></div>
 		</div>
 		<div class="col-xl-1"></div>
@@ -52,7 +52,7 @@ DEBUT CONTENU CONTAINER
 	<div class="row mb-4">
 		<div class="col-xl-1"></div>
 		<div class="col pl-5">
-			<a href="declaration-horsqlik.php" class="no-decoration"><div class="btn-large bg-cyan"><i class="fas fa-box-open fa-lg pr-3"></i>J'ai reçu des produits/palettes en plus et je n'ai pas de produit/palette manquant</div></a>
+			<a href="dde-ouv-dossier.php" class="no-decoration"><div class="btn-large bg-cyan"><i class="fas fa-box-open fa-lg pr-3"></i>J'ai reçu des produits/palettes en plus et je n'ai pas de produit/palette manquant</div></a>
 			<div class="pt-3 pl-5"><i>Exemples : palette en excédent sans inversion avec une de mes palettes, produits en excédent sans manquant</i></div>
 		</div>
 		<div class="col-xl-1"></div>
