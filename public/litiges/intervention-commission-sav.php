@@ -187,7 +187,7 @@ if(isset($_POST['submit'])){
 
 			}
 		// envoi mail litigelivraison
-			$htmlMail = file_get_contents('mail_rep_commission.php');
+			$htmlMail = file_get_contents('mail/mail_rep_commission.php');
 			$htmlMail=str_replace('{MAG}',$thisLitige[0]['mag'],$htmlMail);
 			$htmlMail=str_replace('{DOSSIER}',$thisLitige[0]['dossier'],$htmlMail);
 			$htmlMail=str_replace('{MSG}',$_POST['msg'],$htmlMail);
