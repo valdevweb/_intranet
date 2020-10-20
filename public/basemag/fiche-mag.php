@@ -121,7 +121,7 @@ if (isset($_GET['id'])){
 
 	$histo= $magDbHelper->getHisto($mag->getGalec());
 	$listCentralesSca=$magDbHelper->getDistinctCentraleSca();
-	$webusers=$magDbHelper->getWebUser($mag->getGalec());
+	$webuser=$magDbHelper->getWebUser($mag->getGalec());
 	$centreRei=$magDbHelper->centreReiToString($mag->getCentreRei());
 	$listTypesMag=$magDbHelper-> getListType();
 	$listCm=UserHelpers::getUserByService($pdoUser, 17);

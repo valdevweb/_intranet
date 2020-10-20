@@ -73,7 +73,7 @@ class MagDao{
 
 
 	public function getMagByGalec($galec){
-		$req=$this->pdo->prepare("SELECT * FROM mag WHERE galec= :galec");
+		$req=$this->pdo->prepare("SELECT  * FROM mag WHERE galec= :galec");
 		$req->execute([
 			':galec' =>$galec
 		]);
@@ -167,11 +167,7 @@ class MagDao{
 		$req->execute([
 			':galec'		=>$galec
 		]);
-		$datas=$req->fetchAll(PDO::FETCH_ASSOC);
-		if(!empty($datas)){
-			return $datas;
-		}
-		return "";
+		 return $req->fetch(PDO::FETCH_ASSOC);
 	}
 
 	public function centreReiToString($centreRei){
