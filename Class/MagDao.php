@@ -71,7 +71,14 @@ class MagDao{
 		return false;
 	}
 
+	public function getMagAndScaTroisInfoByGalec($galec){
+		$req=$this->pdo->prepare("SELECT * FROM mag  LEFT JOIN sca3 ON mag.id=sca3.btlec_sca WHERE galec= :galec");
+		$req->execute([
+			':galec' =>$galec
+		]);
+		 return $data=$req->fetch(PDO::FETCH_ASSOC);
 
+	}
 	public function getMagByGalec($galec){
 		$req=$this->pdo->prepare("SELECT  * FROM mag WHERE galec= :galec");
 		$req->execute([
