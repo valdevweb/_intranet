@@ -29,6 +29,16 @@ class OccPaletteMgr{
 		]);
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
+
+	public function getListArticleOccByArticlePalette($articlePalette){
+		$req=$this->pdoOcc->prepare("SELECT id as article_occ, article_palette, designation as libelle, ean as gencod, quantite as qte, pa as tarif FROM palettes_articles WHERE article_palette=:article_palette");
+		$req->execute([
+			':article_palette'		=>$articlePalette
+		]);
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+
 	public function updatePaletteStatut($pdoOcc,$idPalette,$statut){
 		$req=$pdoOcc->prepare("UPDATE palettes SET statut= :statut WHERE id= :id");
 		$req->execute([
