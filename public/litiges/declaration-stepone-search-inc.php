@@ -17,6 +17,15 @@ if(isset($_POST['submit'])){
 	$boxTete=[];
 	$boxDetail=[];
 	foreach ($dataSearch as $key =>$data){
+		if($magInfo['occasion']==1){
+
+			$listProdOcc=$occDao->getListArticleOccByArticlePalette($data['article']);
+			if(!empty($listProdOcc)){
+				$dataSearch[$key]['occasion']=1;
+				$dataSearch[$key]['occasion_detail']=$listProdOcc;
+			}
+
+		}
 		$dataSearch[$key]['box-tete']='';
 		$dataSearch[$key]['box-detail']='';
 
@@ -39,6 +48,9 @@ if(isset($_POST['submit'])){
 			$dataSearch[$key]['box-detail']=$boxContent['tete'];
 		}
 
+
+
+
 	}
 
 	if(!empty($boxDetail)){
@@ -47,5 +59,9 @@ if(isset($_POST['submit'])){
 		}
 		usort($dataSearch, 'nameSort');
 	}
+
+
+
+
 
 }
