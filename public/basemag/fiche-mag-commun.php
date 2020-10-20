@@ -68,8 +68,7 @@
 				<div class="text-orange"><img src="../img/logo_bt/bt-rond-20.jpg" class="float-left pr-3">Portail :</div>
 			</div>
 			<div class="col">
-				<?php if (!empty($webusers)): ?>
-					<?php foreach ($webusers as $key => $webuser): ?>
+				<?php if (!empty($webuser)): ?>
 						<div class="row">
 							<div class="col">
 								<span class="text-orange pl-3">Login :</span> <?= $webuser['login']?> <br>
@@ -79,7 +78,6 @@
 								<span class="text-orange pl-3">Ident : </span><?= $webuser['id_web_user']?><br>
 							</div>
 						</div>
-					<?php endforeach ?>
 
 					<?php else: ?>
 						Ce magasin n'a pas de compte sur le portail
