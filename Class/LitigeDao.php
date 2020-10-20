@@ -15,6 +15,43 @@ class LitigeDao{
 		return $pdo;
 	}
 
+	public function searchPaletteOrFacture($pdoQlik, $searchStrg, $galec){
+		$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  WHERE concat( concat('0',facture),palette) LIKE :search AND galec= :galec ORDER BY article,dossier");
+		$req->execute(array(
+			':search' =>'%'.$_POST['search_strg'] .'%',
+			':galec'	=>$_SESSION['id_galec']
+		));
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	public function getPaletteForRobbery($pdoQlik, $arPalettes){
+		$placeholders=array_fill(0, count($arPalettes), ' palette = ? OR ');
+		$placeholders[count($arPalettes) -1]= 'palette = ? ';
+		$placeholders=implode(' ',$placeholders);
+		$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  WHERE $placeholders ORDER BY palette, article");
+		$req->execute($arPalettes);
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	public function getBoxHead($pdoQlik, $dossier,$article){
+		$req=$pdoQlik->prepare("SELECT * FROM assortiments WHERE `SCEBFAST.AST-ART`= :article AND `SCEBFAST.DOS-COD`= :dossier ");
+		$req->execute(array(
+			':dossier' =>$dossier,
+			':article'	=>$article
+		));
+		return $req->fetch(PDO::FETCH_ASSOC);
+	}
+
+
+	function getBoxDetail($pdoQlik,$dossier, $article){
+		$req=$pdoQlik->prepare("SELECT `SCEBFAST.AST-ART` as tete FROM assortiments WHERE `SCEBFAST.ART-COD`= :article AND `SCEBFAST.DOS-COD` =:dossier");
+		$req->execute(array(
+			':article'	=>$article,
+			':dossier'	=>$dossier
+		));
+		return $req->fetch(PDO::FETCH_ASSOC);
+	}
+
 	public function getLitigeInfoMagById($idLitige){
 		$req=$this->pdo->prepare("SELECT dossiers.id as id, dossier, magasin.mag.deno, magasin.mag.id as btlec FROM dossiers LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE dossiers.id= :id");
 		$req->execute(array(
