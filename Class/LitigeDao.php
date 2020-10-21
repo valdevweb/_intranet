@@ -183,12 +183,46 @@ class LitigeDao{
 		return $req->fetch(PDO::FETCH_ASSOC);
 	}
 
-	function getOuvertureMsg($idOuv){
+	public function getOuvertureMsg($idOuv){
 		$req=$this->pdo->prepare("SELECT id, id_web_user, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg,pj, mag FROM ouv_rep WHERE id_ouv= :id ORDER BY date_saisie");
 		$req->execute(array(
 			':id'		=>$idOuv
 		));
 		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	public function addDetails($lastInsertId,$numDossier,$palette,	$facture,$dateFacture, $article, $ean,$dossierG, $descr, $qteC,	$tarif, $fou, $cnuf,$boxTete,$boxDetail,$occArticlePalette, $puv,$pul){
+		$req=$this->pdo->prepare("INSERT INTO details_temp(id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf, box_tete,box_art, occ_article_palette, puv, pul) VALUES(:id_dossier, :dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :box_tete, :box_art, :occ_article_palette, :puv, :pul)");
+		$req->execute(array(
+			':id_dossier'	=>$lastInsertId,
+			':dossier'		=>$numDossier,
+			':palette'		=>$palette,
+			':facture'		=>$facture,
+			':date_facture'	=>$dateFacture,
+			':article'		=>$article,
+			':ean'			=>$ean,
+			':dossier_gessica'	=>$dossierG,
+			':descr'		=>$descr,
+			':qte_cde'		=> $qteC,
+			':tarif'		=>$tarif,
+			':fournisseur'	=>$fou,
+			':cnuf'			=>$cnuf,
+			':box_tete'		=>$boxTete,
+			':box_art'		=>$boxDetail,
+			':occ_article_palette'		=>$occArticlePalette,
+			':puv'			=>$puv,
+			':pul'			=>$pul
+		));
+	// return $req->errorInfo();
+		$row=$req->rowCount();
+		return	$row;
+	}
+
+	public function updateOccDossier($idDossier){
+		$req=$this->pdo->prepare("UPDATE dossiers_temp SET occasion=1 WHERE id= :id");
+		$req->execute([
+			':id'		=>$idDossier
+		]);
 	}
 
 }
