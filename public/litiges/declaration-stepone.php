@@ -77,31 +77,8 @@ function getSelectedDetails($pdoQlik,$id){
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
-// ajoute info produits dans table detail
-function addDetails($pdoLitige, $lastInsertId,$numDossier,$palette,	$facture,$dateFacture, $article, $ean,$dossierG, $descr, $qteC,	$tarif, $fou, $cnuf,$boxTete,$boxDetail, $puv,$pul){
-	$req=$pdoLitige->prepare("INSERT INTO details_temp(id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf, box_tete,box_art, puv, pul) VALUES(:id_dossier, :dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :box_tete, :box_art, :puv, :pul)");
-	$req->execute(array(
-		':id_dossier'	=>$lastInsertId,
-		':dossier'		=>$numDossier,
-		':palette'		=>$palette,
-		':facture'		=>$facture,
-		':date_facture'	=>$dateFacture,
-		':article'		=>$article,
-		':ean'			=>$ean,
-		':dossier_gessica'	=>$dossierG,
-		':descr'		=>$descr,
-		':qte_cde'		=> $qteC,
-		':tarif'		=>$tarif,
-		':fournisseur'	=>$fou,
-		':cnuf'			=>$cnuf,
-		':box_tete'		=>$boxTete,
-		':box_art'		=>$boxDetail,
-		':puv'			=>$puv,
-		':pul'			=>$pul
-	));
-	$row=$req->rowCount();
-	return	$row;
-}
+
+
 
 
 
@@ -167,16 +144,14 @@ if($_SESSION['type']=='btlec'){
 
 
 
-//-----------------------------------------------------------------
-//			AFFICHAGE RESULTAT DE LA RECHERCHE DE PALETTE/FACTURE
-//-----------------------------------------------------------------
-include 'declaration-stepone-search-inc.php';
+// AFFICHAGE RESULTAT DE LA RECHERCHE DE PALETTE/FACTURE
+if(isset($_POST['submit'])){
+
+	include 'declaration-stepone-search-inc.php';
+}
 
 
-
-//------------------------------------------------------
-//			TRAITEMENT VALIDATION FORMUALIRE SELECTION ARTICLE
-//------------------------------------------------------
+// TRAITEMENT VALIDATION FORMUALIRE SELECTION ARTICLE
 if(isset($_POST['choose'])){
 	include 'declaration-stepone-insert-inc.php';
 }
@@ -331,24 +306,25 @@ DEBUT CONTENU CONTAINER
 									<?php if (isset($sResult['occasion'])): ?>
 										<?php foreach ($sResult['occasion_detail'] as $key => $articleOcc): ?>
 											<tr class="">
-												<td colspan="3"><?=$sResult['libelle']?></td>
+												<td colspan="2"><?=$sResult['libelle']?></td>
+												<td><?=$sResult['palette']?></td>
 												<td><?=$articleOcc['gencod']?></td>
 												<td><?=$sResult['article']?></td>
 												<td><?=$articleOcc['libelle']?></td>
 												<td>
 													<div class="form-check article">
 														<input class="form-check-input checkarticle" type="checkbox"
-														name="article_id[]" value="<?=$sResult['id_article_occ']?>" >
+														name="article_id[]" value="<?=$articleOcc['id_article_occ']?>" >
 													</div>
 												</td>
 											</tr>
-											<input type="hidden" class="form-check-input" name="hidden_id[]" value="<?=$sResult['id_article_occ']?>">
+											<input type="hidden" class="form-check-input" name="hidden_id[]" value="<?=$articleOcc['id_article_occ']?>">
 											<input type="hidden" class="form-check-input" name="hidden_palette[]" value="<?=$sResult['palette']?>">
 											<input type="hidden" class="form-check-input" name="hidden_facture[]" value="<?=$sResult['facture']?>">
 											<input type="hidden" class="form-check-input" name="hidden_date_facture[]" value="<?=$sResult['date_mvt']?>">
 											<input type="hidden" class="form-check-input" name="hidden_article[]" value="">
 											<input type="hidden" class="form-check-input" name="hidden_ean[]" value="<?=$articleOcc['gencod']?>">
-											<input type="hidden" class="form-check-input" name="hidden_dossier[]" value="<?=?>">
+											<input type="hidden" class="form-check-input" name="hidden_dossier[]" value="">
 											<input type="hidden" class="form-check-input" name="hidden_descr[]" value="<?=$articleOcc['libelle']?>">
 											<input type="hidden" class="form-check-input" name="hidden_qte[]" value="<?=$articleOcc['qte']?>">
 											<input type="hidden" class="form-check-input" name="hidden_tarif[]" value="<?=$articleOcc['tarif']?>">
@@ -423,7 +399,7 @@ DEBUT CONTENU CONTAINER
 										<div class="col"></div>
 										<div class="col">
 											<div class="form-check">
-												<input type="checkbox" class="form-check-input vol-list-palette" id="<?=$arPalettesCheckBox[$i]?>">
+												<input type="checkbox" class="form-check-input list-palette" id="<?=$arPalettesCheckBox[$i]?>">
 												<label class="form-check-label" for="checkAll">Sélectionner tous les articles de la palette <?= $arPalettesCheckBox[$i]?></label>
 											</div>
 										</div>
@@ -494,8 +470,6 @@ DEBUT CONTENU CONTAINER
 			if(isset($_POST['submit'])){
 				echo $dataMag;
 			}
-
-
 			?>
 			<!-- ./row -->
 		</div>
@@ -504,20 +478,17 @@ DEBUT CONTENU CONTAINER
 
 			$("#checkAll").click(function () {
 				$('.article input:checkbox').not(this).prop('checked', this.checked);
-			// $('input:checkbox').(#checkpalette).prop('unchecked', this.checked);
-		});
+			});
+
 			$("#checkpalette").click(function () {
+
 				$('input:checkbox').not(this).prop('checked', this.checked);
 			});
 
 
-			$(".vol-list-palette").click(function(){
+			$(".list-palette").click(function(){
 				var palette=$(this).attr('id');
-				// var thisclass='.'+palette;
 				$('.'+ palette).prop('checked', this.checked);
-
-
-				console.log(palette);
 			});
 
 
