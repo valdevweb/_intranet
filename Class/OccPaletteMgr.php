@@ -31,7 +31,7 @@ class OccPaletteMgr{
 	}
 
 	public function getListArticleOccByArticlePalette($articlePalette){
-		$req=$this->pdoOcc->prepare("SELECT id as article_occ, article_palette, designation as libelle, ean as gencod, quantite as qte, pa as tarif FROM palettes_articles WHERE article_palette=:article_palette");
+		$req=$this->pdoOcc->prepare("SELECT id as id_article_occ, article_palette, designation as libelle, ean as gencod, quantite as qte, pa as tarif FROM palettes_articles WHERE article_palette=:article_palette");
 		$req->execute([
 			':article_palette'		=>$articlePalette
 		]);
