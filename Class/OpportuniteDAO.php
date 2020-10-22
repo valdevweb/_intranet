@@ -45,11 +45,12 @@ class OpportuniteDAO{
 		return $req->errorInfo();
 	}
 
-	public function addAddonsFile($idOpp, $filename){
-		$req=$this->pdoBt->prepare("INSERT INTO opp_files_addons (id_opp, filename) VALUES (:id_opp, :filename)");
+	public function addAddonsFile($idOpp, $filename, $name){
+		$req=$this->pdoBt->prepare("INSERT INTO opp_files_addons (id_opp, filename, name) VALUES (:id_opp, :filename, :name)");
 		$req->execute([
 			':id_opp'		=>$idOpp,
 			':filename'	=>$filename,
+			':name'	=>$name,
 		]);
 
 		return $req->errorInfo();
@@ -102,6 +103,7 @@ class OpportuniteDAO{
 		foreach ($datas as $key => $file) {
 			$arFiles[$file['id_opp']][$i]['id']=$file['id'];
 			$arFiles[$file['id_opp']][$i]['filename']=$file['filename'];
+			$arFiles[$file['id_opp']][$i]['name']=$file['name'];
 			$i++;
 		}
 
@@ -126,7 +128,13 @@ class OpportuniteDAO{
 
 
 	public function getActiveOpp(){
-		$req=$this->pdoBt->query("SELECT * FROM opp WHERE date_start <= NOW() AND date_end>=NOW() ORDER BY date_start DESC");
+		$req=$this->pdoBt->query("SELECT * FROM opp WHERE date_start <= NOW() AND date_end>=NOW() ORDER BY date_end ASC");
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+
+	}
+
+	public function getFuturOpp(){
+		$req=$this->pdoBt->query("SELECT * FROM opp WHERE date_start > NOW() AND date_end>=NOW() ORDER BY date_start DESC");
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 
 	}
@@ -158,5 +166,12 @@ class OpportuniteDAO{
 		return $req->errorInfo();
 	}
 
+	public function updateAddonName($id,$name){
+		$req=$this->pdoBt->prepare("UPDATE opp_files_addons SET name= :name WHERE id= :id");
+		$req->execute([
+			':name'		=>$name,
+			':id'		=>$id
+		]);
+	}
 
 }
