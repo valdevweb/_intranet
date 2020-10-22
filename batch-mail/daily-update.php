@@ -89,9 +89,9 @@ $newOpp=getTodayOpp($pdoBt);
 
 if(!empty($newOpp)){
 	if(count($newOpp)==1){
-		$strOpp="une nouvelle alerte promo : <ul>";
+		$strOpp="une nouvelle offre spéciale : <ul>";
 	}else{
-		$strOpp="de nouvelles alertes promo : <ul>";
+		$strOpp="de nouvelles offres spéciales : <ul>";
 
 	}
 	foreach ($newOpp as $key => $opp) {
