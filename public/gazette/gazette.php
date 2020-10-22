@@ -195,16 +195,16 @@ include('../view/_navbar.php');
 							<div class="col">
 								<img class="d-inline-block align-top" src="../img/gazette/gaz-alerte-promo.png">
 								<div class="d-inline-block pl-3" id="alerte-promo-list">
-									<p class="heavy">L'alerte promo :</p>
+									<p class="heavy">Offres spéciales :</p>
 
 									<ul>
 										<?php foreach ($listActiveOpp as $activeOpp): ?>
-
 											<li>
-												<a class='stat-link' href="../gazette/opp-encours.php#<?=$activeOpp['id']?>" ><?=$activeOpp['title']?></a>
-												<?=($activeOpp['date_start']==date('Y-m-d') ||  $activeOpp['date_start']==(new DateTime('yesterday'))->format('Y-m-d'))?
-												"<span class='badge badge-warning ml-3'>Nouveau</span>" :""
-												?>
+												<a class='stat-link' href="../gazette/opp-encours.php#<?=$activeOpp['id']?>"><?=$activeOpp['title'] ?></a>
+												<?=($activeOpp['date_start']==date('Y-m-d') ||  $activeOpp['date_start']==(new DateTime('yesterday'))->format('Y-m-d')) ? "<span class='badge badge-warning ml-3'>Nouveau</span>" :""?>
+												<br>
+												<i class="fas fa-hourglass-half px-3"></i>fin de l'offre le  <?=date('d/m/Y', strtotime($activeOpp['date_end']))?>
+
 											</li>
 										<?php endforeach ?>
 
