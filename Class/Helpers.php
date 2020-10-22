@@ -57,6 +57,17 @@ class Helpers{
 		}
 	}
 
+	public static function removeLastStringElt($string, $separator, $newSeparator=null){
+		$parts  = explode($separator, $string);
+		array_pop($parts);
+		if(!$newSeparator){
+			$string = implode('', $parts);
+		}else{
+			$string = implode($newSeparator, $parts);
+
+		}
+		return $string;
+	}
 
 
 }
