@@ -16,6 +16,13 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 // require_once '../../vendor/autoload.php';
 require_once '../../Class/OpportuniteDAO.php';
+require_once '../../functions/accessCheck.fn.php';
+
+
+$accessDenied=localAccessDenied($pdoUser,array(89));
+if($accessDenied){
+	header('Location:'. ROOT_PATH.'/public/home/home.php?access-denied');
+}
 
 
 
