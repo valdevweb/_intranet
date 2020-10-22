@@ -4,7 +4,12 @@ function isUserAllowed($pdoUser, $params){
 	$placeholders=implode(',', array_fill(0, count($params), '?'));
 	$req=$pdoUser->prepare("SELECT id_user FROM attributions WHERE id_droit IN($placeholders) AND id_user=$session" );
 	$req->execute($params);
-	return $req->fetchAll(PDO::FETCH_ASSOC);
+	$datas=$req->fetchAll(PDO::FETCH_ASSOC);
+	if(empty($datas)){
+		return false;
+	}
+	return true;
+
 }
 
 
@@ -178,11 +183,11 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 		<!-- section sans sous menu -->
 
 		<li  class='active has-sub'><a href="<?= ROOT_PATH. '/public/gazette/gazette.php'?>" >Les gazettes</a>
-			<?php if ($d_strictAdmin): ?>
+
 				<ul>
 					<li><a href="<?= ROOT_PATH. '/public/gazette/opp-exploit.php'?>">Ajout opportunités</a></li>
 				</ul>
-			<?php endif ?>
+
 		</li>
 		<li  class='active has-sub'><a href="#" >documents</a>
 			<ul>
