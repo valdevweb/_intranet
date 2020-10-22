@@ -1,7 +1,10 @@
 <?php
 $listMainFiles=$oppDao->getListMainFiles($oppIds);
 $listAddonsFiles=$oppDao->getListAddonsFiles($oppIds);
+
+
 $listIcons=$oppDao->getListIcons($oppIds);
+$nbDoc=1;
 ?>
 
 <?php foreach ($listOpp as $key => $oneOpp): ?>
@@ -44,67 +47,110 @@ $listIcons=$oppDao->getListIcons($oppIds);
 						</div>
 						<div class="nothing"></div>
 					</div>
-
 				</div>
+
+
 				<div class="col-lg-2 col-xl-3"></div>
 			</div>
-			<?php if (isset($listIcons[$oneOpp['id']])): ?>
-				<div class="row mt-1 pb-3">
-					<div class="col"></div>
-					<?php if (in_array(0,$listIcons[$oneOpp['id']])): ?>
-						<div class="col-auto text-center">
-							<img src="../img/opp/new-orange-100.png">
-						</div>
-					<?php endif ?>
-					<?php if (in_array(1,$listIcons[$oneOpp['id']])): ?>
-						<div class="col-auto text-center">
-							<img src="../img/opp/tel-grey-100.png">
-						</div>
-						<div class="col"></div>
-					<?php endif ?>
-					<?php if (in_array(2,$listIcons[$oneOpp['id']])): ?>
 
-						<div class="col-auto text-center">
-							<img src="../img/opp/brii-grey-100.png">
-						</div>
-						<div class="col"></div>
-					<?php endif ?>
-				</div>
+			<?php if (isset($oneOpp['descr']) ||isset($listIcons[$oneOpp['id']])): ?>
 
-			<?php endif ?>
-
-			<div class="row">
-				<div class="col">
-					<?= isset($oneOpp['descr']) ? nl2br($oneOpp['descr']) : ""?>
-				</div>
-			</div>
 			<div class="row mt-5">
 				<div class="col">
-					<?php if (isset($listMainFiles[$oneOpp['id']])): ?>
-						<?php foreach ($listMainFiles[$oneOpp['id']] as $key => $mainFile): ?>
-							<?php if ($mainFile['image']==1): ?>
-								<div class="row">
-									<div class="col">
-										<p><img class="shadow img-fluid" src="<?=URL_UPLOAD_OPP.$mainFile['filename']?>"></p>
-									</div>
-								</div>
-								<?php else: ?>
+						<h5 class="font-weight-bold text-center text-descr"><i class="fas fa-info-circle pr-2"></i>Informations</h5>
+				</div>
+			</div>
+			<?php endif ?>
+
+			<?php if (isset($oneOpp['descr']) && !empty($oneOpp['descr'])): ?>
+				<div class="row">
+					<div class="col-xl-1"></div>
+					<div class="col">
+						<div class="descr ">
+							<?= nl2br($oneOpp['descr'])?>
+						</div>
+					</div>
+					<div class="col-xl-1"></div>
+
+				</div>
+			<?php endif ?>
+			<?php if (isset($listIcons[$oneOpp['id']])): ?>
+
+				<!-- <div class="col-xl"> -->
+					<div class="row justify-content-center mt-1 pb-3">
+						<!-- <div class="col"></div> -->
+						<?php if (in_array(0,$listIcons[$oneOpp['id']])): ?>
+							<div class="col-auto text-center">
+								<img src="../img/opp/new-orange-100.png">
+							</div>
+						<?php endif ?>
+						<?php if (in_array(1,$listIcons[$oneOpp['id']])): ?>
+							<div class="col-auto text-center">
+								<img src="../img/opp/tel-120.png">
+							</div>
+
+						<?php endif ?>
+						<?php if (in_array(2,$listIcons[$oneOpp['id']])): ?>
+							<div class="col-auto text-center">
+								<img src="../img/opp/brii-120.png">
+							</div>
+						<?php endif ?>
+						<?php if (in_array(3,$listIcons[$oneOpp['id']])): ?>
+							<div class="col-auto text-center">
+								<img src="../img/opp/odr-120.png">
+							</div>
+						<?php endif ?>
+						<!-- <div class="col"></div> -->
+
+					</div>
+					<!-- </div> -->
+
+				<?php endif ?>
+
+				<div class="row mt-5">
+					<div class="col">
+						<?php if (isset($listMainFiles[$oneOpp['id']])): ?>
+							<?php foreach ($listMainFiles[$oneOpp['id']] as $key => $mainFile): ?>
+								<?php if ($mainFile['image']==1): ?>
 									<div class="row">
 										<div class="col">
-											<p><a href="<?=URL_UPLOAD_OPP.$mainFile['filename']?>">Ouvrir / télécharger le fichier de l'opportunité</a></p>
+											<p><img class="shadow img-fluid" src="<?=URL_UPLOAD_OPP.$mainFile['filename']?>"></p>
 										</div>
 									</div>
-								<?php endif ?>
-							<?php endforeach ?>
-						<?php endif ?>
+									<?php else: ?>
+										<div class="row">
+											<div class="col">
+												<p><a href="<?=URL_UPLOAD_OPP.$mainFile['filename']?>">Ouvrir / télécharger le fichier de l'opportunité</a></p>
+											</div>
+										</div>
+									<?php endif ?>
+								<?php endforeach ?>
+							<?php endif ?>
+						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col text-right">
-						<a class="bg-grey px-1" href="#cssmenu" ><i class="fas fa-arrow-up"></i></a>
+					<div class="row mt-3">
+						<div class="col">
+							<?php if (!empty($listAddonsFiles[$oneOpp['id']])): ?>
+								<p>Documents techniques :</p>
+								<ul class="doc-tech">
+									<?php foreach ($listAddonsFiles[$oneOpp['id']] as $key => $addons): ?>
+										<li>
+											<a href="<?=URL_UPLOAD_OPP.$addons['filename']?>" target="_blank">
+												<?= (!empty($addons['name']))? $addons['name'] : 'documentation technique '.$nbDoc?>
+											</a>
+										</li>
+										<?php $nbDoc++ ?>
+									<?php endforeach ?>
+								</ul>
+							<?php endif ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col text-right">
+							<a class="bg-grey px-1" href="#cssmenu" ><i class="fas fa-arrow-up"></i></a>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-	<?php endforeach ?>
+		<?php endforeach ?>
