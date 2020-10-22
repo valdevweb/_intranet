@@ -92,3 +92,33 @@ background: white
 a.mini-nav{
   color: #212529;
 }
+
+ul.doc-tech{
+  list-style: none;
+}
+
+
+ul.doc-tech li:before {
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    content: '\f013';
+    margin:0 5px 0 -15px;
+    color:  #007bff;
+}
+
+.descr{
+
+  color:  #6c757d;
+  border-left : 4px solid #f18e0b;
+/*   border-right : 1px solid #ccc;
+  border-top : 1px solid #ccc;
+  border-bottom : 1px solid #ccc; */
+  padding :  10px;
+/*   -webkit-box-shadow: 0 8px 6px -6px #6c757d;
+     -moz-box-shadow: 0 8px 6px -6px #6c757d;
+          box-shadow: 0 8px 6px -6px #6c757d; */
+}
+.text-descr{
+  color:  #6c757d;
+
+}
