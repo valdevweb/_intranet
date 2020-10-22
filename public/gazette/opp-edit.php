@@ -18,7 +18,15 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 // require_once '../../vendor/autoload.php';
 require_once '../../Class/FormHelpers.php';
 require_once '../../Class/OpportuniteDAO.php';
+require_once '../../Class/Helpers.php';
 
+require_once '../../functions/accessCheck.fn.php';
+
+
+$accessDenied=localAccessDenied($pdoUser,array(89));
+if($accessDenied){
+	header('Location:'. ROOT_PATH.'/public/home/home.php?access-denied');
+}
 
 
 //---------------------------------------
@@ -64,6 +72,8 @@ $notMandatoryFields=[
 		'warning'=>'Vous devez saisir une date de mise à dispo'
 	]
 ];
+$ico=["Nouveauté", "TEL", "BRII", "ODR"];
+
 
 $oppDao=new OpportuniteDAO($pdoBt);
 
@@ -92,7 +102,7 @@ if(isset($_POST['update'])){
 		if(isset($_POST['icons'])){
 			$oppDao->addIcons($_GET['id'],$_POST['icons']);
 		}
-		$successQ='?id='.$_GET['id'].'&success=maj';
+		$successQ='?id='.$_GET['id'].'&success=maj#main-mod';
 		unset($_POST);
 		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 	}
@@ -157,15 +167,29 @@ if(isset($_POST['add_new_files'])){
 			}
 			if(!empty($listFilenameAddons)){
 				for ($i=0; $i < count($listFilenameAddons); $i++) {
-					$oppDao->addAddonsFile($idOpp,$listFilenameAddons[$i]);
+					$oppDao->addAddonsFile($idOpp,$listFilenameAddons[$i], $_POST['intitule'][$i]);
 				}
 			}
+
 			header("Location: opp-edit.php?id=".$idOpp,true,303);
 
 		}else{
 			$errors[]="Une erreur est survenue, impossible d'enregistrer l'opportunité";
 		}
 	}
+}
+
+if(isset($_POST['new-name'])){
+	echo "<pre>";
+	print_r($_POST);
+	echo '</pre>';
+	for($i=0; $i<count($_POST['id_addon']); $i++){
+		$oppDao->updateAddonName($_POST['id_addon'][$i],$_POST['name'][$i]);
+	}
+	$idOpp=$_GET['id'].'#file-addon-form';
+
+	unset($_POST);
+	header("Location: opp-edit.php?id=".$idOpp,true,303);
 
 }
 
@@ -198,7 +222,7 @@ DEBUT CONTENU CONTAINER
 	</div>
 	<div class="row">
 		<div class="col">
-			<h1 class="text-main-blue">Modifier l'opportunité</h1>
+			<h1 class="text-main-blue" id="main-mod">Modifier l'opportunité</h1>
 		</div>
 	</div>
 	<div class="row">
@@ -296,22 +320,14 @@ DEBUT CONTENU CONTAINER
 				<div class="row">
 					<div class="col">
 						<p class="heavy pt-2">Ajouter des icônes :</p>
+						<?php for($i=0; $i< count($ico); $i++):?>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" value="<?=$i?>" id="icon1" name="icons[]"
+								<?= (in_array($i,$oneOppIcons)) ? "checked" :""?>>
+								<label class="form-check-label" for="icon1"><?= $ico[$i]?></label>
+							</div>
+						<?php endfor ?>
 
-						<div class="form-check">
-							<input class="form-check-input" type="checkbox" value="0" id="icon1" name="icons[]"
-							<?= (in_array(0,$oneOppIcons)) ? "checked" :""?>>
-							<label class="form-check-label" for="icon1">Nouveauté</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="checkbox" value="1" id="icon2" name="icons[]"
-							<?= (in_array(1,$oneOppIcons)) ? "checked" :""?>>
-							<label class="form-check-label" for="icon2">TEL</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="checkbox" value="2" id="icon3" name="icons[]"
-							<?= (in_array(2,$oneOppIcons)) ? "checked" :""?>>
-							<label class="form-check-label" for="icon3">BRII</label>
-						</div>
 					</div>
 
 				</div>
@@ -387,13 +403,13 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="row">
 			<div class="col">
-				<form method="post" name="file-main-form" id="file-main-form">
+				<form method="post" class="form-inline" name="file-addon-form" id="file-addon-form">
 
-					<table class="table w-auto table-sm table-bordered">
+					<table class="table w-auto table-sm table-bordered-special">
 						<thead class="bg-grey-table">
 							<tr>
 								<th class="px-5 text-center">Nom du fichier</th>
-
+								<th class="px-5 text-center">Intitulé du lien</th>
 								<th class="px-5 text-center ">Suppression</th>
 
 							</tr>
@@ -401,7 +417,18 @@ DEBUT CONTENU CONTAINER
 						<tbody>
 							<?php foreach ($listAddonsFiles[$oneOpp['id']] as $key => $addonsFile): ?>
 								<tr>
-									<td class="px-5 text-center"><a href="<?=URL_UPLOAD_OPP.$addonsFile['filename']?>"><?=$addonsFile['filename']?></a></td>
+									<td class="px-5 text-center">
+										<a href="<?=URL_UPLOAD_OPP.$addonsFile['filename']?>"><?= Helpers::removeLastStringElt($addonsFile['filename'],"_"," ")?></a><br>
+
+									</td>
+									<td>
+
+										<div class="form-group">
+											<label for="name"></label>
+											<input type="text" class="form-control wider" name="name[]" id="name" value="<?=(!empty($addonsFile['name'])) ? $addonsFile['name']:''?>">
+											<input type="hidden" name="id_addon[]" value="<?=$addonsFile['id']?>">
+										</div>
+									</td>
 
 									<td class="px-5 text-center">
 										<a href="opp-delete-file.php?idaddons=<?=$addonsFile['id'].'&id='.$_GET['id']?>" class="btn btn-orange" name="delete">Supprimer</a>
@@ -410,6 +437,13 @@ DEBUT CONTENU CONTAINER
 								</tr>
 
 							<?php endforeach ?>
+							<tr>
+								<td></td>
+								<td class="text-right">
+									<button class="btn btn-primary" name="new-name"><i class="fas fa-save pr-3"></i>Enregistrer</button>
+								</td>
+								<td></td>
+							</tr>
 
 						</tbody>
 					</table>
@@ -474,6 +508,11 @@ DEBUT CONTENU CONTAINER
 						<div class="form-group">
 							<input type="hidden" class="form-control" name="hidden_addons_size" id="hidden_addons_size">
 						</div>
+					</div>
+				</div>
+				<div class="row mt-3">
+
+					<div class="col" id="zone-intitule">
 					</div>
 				</div>
 			</div>
@@ -587,13 +626,20 @@ DEBUT CONTENU CONTAINER
 			var fileName='';
 			var fileList='';
 			var nbFiles = $(this).get(0).files.length;
-
+			var formGroup="<div class='form-group'>";
+			var endDiv="</div>";
+			var titre="<div class='text-main-blue heavy'>Donner un intitulé au fichier :</div>";
 
 			for (var i = 0; i < nbFiles; ++i) {
 				var fileSize=$(this).get(0).files[i].size;
 				fileName=$(this).get(0).files[i].name;
 				totalSize = totalSize+fileSize;
 				fileList += fileName + '<br>';
+
+				var label="<label>"+fileName+"</label>";
+				var input="<input type='text' class='form-control'  name='intitule[" +i +"]'>";
+
+				$("#zone-intitule").append(titre+formGroup+label+input+endDiv);
 			}
 
 			$('#hidden_addons_size').val(totalSize);
