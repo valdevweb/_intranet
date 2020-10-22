@@ -27,14 +27,23 @@
 	<header>
 		<h1 class="text-center text-main-blue <?= $marge ?>"><?= $typeTitle .' '.$nom ?></h1>
 	</header>
+
+	<div class="row">
+		<div class="col-lg-1"></div>
+		<div class="col">
+			<?php
+			include('../view/_errors.php');
+			?>
+		</div>
+		<div class="col-lg-1"></div>
+	</div>
+
+
+
 	<?php
 	include('../doc/flash-view.php');
 	?>
-<!-- 	<div class="row">
-		<div class="col  py-3">
-			<h4 class="text-center text-danger font-weight-bold">BTLec EST continue de travailler et d'assurer les livraisons</h4>
-		</div>
-	</div> -->
+
 
 	<div class="row pb-5">
 		<div class="col-lg-1"></div>
@@ -61,16 +70,17 @@
 					<ul class='links'>
 						<?= isset($approHtml)? $approHtml: ''?>
 					</ul>
-					<P class="text-orange subtitle">LES ALERTES PROMOS</p>
+					<P class="text-orange subtitle">LES OFFRES SPECIALES</p>
 
 						<ul class='links'>
 							<?php foreach ($listActiveOpp as $activeOpp): ?>
 
 								<li>
-									<a class='stat-link' href="../gazette/opp-encours.php#<?=$activeOpp['id']?>" ><?=$activeOpp['title']?></a>
-									<?=($activeOpp['date_start']==date('Y-m-d') ||  $activeOpp['date_start']==(new DateTime('yesterday'))->format('Y-m-d'))?
-									"<span class='badge badge-warning ml-3'>Nouveau</span>" :""
-									?>
+									<a class='stat-link' href="../gazette/opp-encours.php#<?=$activeOpp['id']?>"><?=$activeOpp['title'] ?></a>
+									<?=($activeOpp['date_start']==date('Y-m-d') ||  $activeOpp['date_start']==(new DateTime('yesterday'))->format('Y-m-d')) ? "<span class='badge badge-warning ml-3'>Nouveau</span>" :""?>
+
+									<div class="text-dark-grey"><i class="fas fa-hourglass-half px-3"></i>fin de l'offre le  <?=date('d/m/Y', strtotime($activeOpp['date_end']))?></div>
+
 								</li>
 							<?php endforeach ?>
 
