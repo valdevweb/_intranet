@@ -34,6 +34,30 @@ function getnbCompte($pdoUser){
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
+function rev($pdoBt){
+	$today=date('Y-m-d H:i:s');
+	$todayMoinsSept=date_sub(date_create($today), date_interval_create_from_date_string('7 days'));
+	$todayMoinsSept=date_format($todayMoinsSept,'Y-m-d H:i:s');
+
+	$req=$pdoBt->prepare("SELECT divers, date_rev,doc_type.name, id_type, DATE_FORMAT(date_rev,'%d/%m/%Y') as date_display FROM reversements LEFT JOIN doc_type ON reversements.id_type = doc_type.id WHERE date_rev >= :todayMoinsSept AND date_rev <= :today ");
+	$req->execute(array(
+		':todayMoinsSept' =>$todayMoinsSept,
+		':today'	=>$today
+	));
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getFlashNews($pdoBt){
+	$req=$pdoBt->prepare("SELECT * FROM flash WHERE valid=1 AND date_start <= :today AND date_end >= :today ORDER BY id DESC");
+	$req->execute(array(
+		':today'		=>date('Y-m-d 00:00:00')
+	));
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+$errors=[];
+$success=[];
+
 $nbRecup=getnbRecupPwd($pdoUser);
 $nbCompte=getnbCompte($pdoUser);
 
@@ -180,19 +204,7 @@ if(!empty($_SESSION['goto']))
 
 
 
-function rev($pdoBt)
-{
-	$today=date('Y-m-d H:i:s');
-	$todayMoinsSept=date_sub(date_create($today), date_interval_create_from_date_string('7 days'));
-	$todayMoinsSept=date_format($todayMoinsSept,'Y-m-d H:i:s');
 
-	$req=$pdoBt->prepare("SELECT divers, date_rev,doc_type.name, id_type, DATE_FORMAT(date_rev,'%d/%m/%Y') as date_display FROM reversements LEFT JOIN doc_type ON reversements.id_type = doc_type.id WHERE date_rev >= :todayMoinsSept AND date_rev <= :today ");
-	$req->execute(array(
-		':todayMoinsSept' =>$todayMoinsSept,
-		':today'	=>$today
-	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
 $revRes=rev($pdoBt);
 $info=[];
 if(!empty($revRes))
@@ -213,14 +225,7 @@ if(!empty($revRes))
 	$infoRev.='</div>';
 }
 
-function getFlashNews($pdoBt)
-{
-	$req=$pdoBt->prepare("SELECT * FROM flash WHERE valid=1 AND date_start <= :today AND date_end >= :today ORDER BY id DESC");
-	$req->execute(array(
-		':today'		=>date('Y-m-d 00:00:00')
-	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
+
 
 $flashNews=getFlashNews($pdoBt);
 
@@ -234,10 +239,16 @@ if(isset($_SESSION['mag_filters'])){
 $oppDao=new OpportuniteDAO($pdoBt);
 $listActiveOpp=$oppDao->getActiveOpp();
 
+if(isset($_GET['access-denied'])){
+    $errors[]="Vous avez été redirigé ici car vos droits d'accès ne vous permettent pas de consulter la page demandée";
+}
 
 
 include('../view/_head-bt.php');
 include ('../view/_navbar.php');
+
+
+
 
 
 //contenu
