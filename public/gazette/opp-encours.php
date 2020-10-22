@@ -41,7 +41,7 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue pt-5">Opportunités en cours</h1>
+	<h1 class="text-main-blue pt-5">Offres spéciales en cours</h1>
 
 	<div class="row">
 		<div class="col-lg-1"></div>
