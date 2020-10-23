@@ -62,8 +62,8 @@ function getLastNumDossier($pdoLitige)
 }
 
 function copyDossier($pdoLitige){
-	$req=$pdoLitige->prepare("INSERT INTO dossiers(dossier,date_crea, user_crea, nom, galec, id_web_user, vingtquatre, etat_dossier, id_robbery, id_transp, id_affrete, transitok, id_transit, id_prepa, id_ctrl, id_chg, id_ctrl_stock, ctrl_ok, id_user_ctrl_stock, id_gt, id_imputation, id_typo, id_etat, id_analyse, id_conclusion, date_prepa, mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag, flag_valo, valo, date_cloture, commission, date_commission)
-		SELECT dossier, date_crea, user_crea, nom, galec, id_web_user, vingtquatre, etat_dossier, id_robbery, id_transp, id_affrete, transitok, id_transit, id_prepa, id_ctrl, id_chg, id_ctrl_stock, ctrl_ok, id_user_ctrl_stock, id_gt, id_imputation, id_typo, id_etat, id_analyse, id_conclusion, date_prepa, mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag, flag_valo, valo, date_cloture, commission, date_commission FROM dossiers_temp WHERE dossiers_temp.id= :id");
+	$req=$pdoLitige->prepare("INSERT INTO dossiers(dossier,date_crea, user_crea, nom, galec, id_web_user, vingtquatre, occasion, etat_dossier, id_robbery, id_transp, id_affrete, transitok, id_transit, id_prepa, id_ctrl, id_chg, id_ctrl_stock, ctrl_ok, id_user_ctrl_stock, id_gt, id_imputation, id_typo, id_etat, id_analyse, id_conclusion, date_prepa, mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag, flag_valo, valo, date_cloture, commission, date_commission)
+		SELECT dossier, date_crea, user_crea, nom, galec, id_web_user, vingtquatre, occasion, etat_dossier, id_robbery, id_transp, id_affrete, transitok, id_transit, id_prepa, id_ctrl, id_chg, id_ctrl_stock, ctrl_ok, id_user_ctrl_stock, id_gt, id_imputation, id_typo, id_etat, id_analyse, id_conclusion, date_prepa, mt_transp, mt_assur, mt_fourn, mt_mag, fac_mag, flag_valo, valo, date_cloture, commission, date_commission FROM dossiers_temp WHERE dossiers_temp.id= :id");
 	$req->execute([
 		':id'		=>$_GET['id']
 	]);
