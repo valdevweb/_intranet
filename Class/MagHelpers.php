@@ -74,7 +74,10 @@ class MagHelpers{
 		return $data['idwebuser'];
 	}
 
+	public static function getListMagOcc($pdoMag){
+		return $req=$pdoMag->query("SELECT btlec_sca, occasion  FROM sca3 WHERE occasion=1 ORDER BY btlec_sca")->fetchAll(PDO::FETCH_KEY_PAIR);
 
+	}
 
 
 	public static function getListCentrale($pdoMag){
