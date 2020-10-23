@@ -45,8 +45,10 @@ if (isset($_SESSION['form-data-deux'])) {
 	$paramList[]=$paramStrg;
 }
 if(isset($_SESSION['filter-data'])){
-	if(isset($_SESSION['filter-data']['vingtquatre']) ){
+	if(isset($_SESSION['filter-data']['vingtquatre']) && $_SESSION['filter-data']['vingtquatre']==1){
 		$paramVingtQuatre= ' vingtquatre = 1 OR esp = 1';
+	}elseif (isset($_SESSION['filter-data']['vingtquatre']) && $_SESSION['filter-data']['vingtquatre']==0){
+		$paramVingtQuatre= " vingtquatre = 0 AND esp = 0";
 	}else{
 		$paramVingtQuatre= '';
 	}
@@ -61,4 +63,15 @@ if(isset($_SESSION['filter-data'])){
 	}
 
 	$paramList[]=$paramCommission;
+
+	if (isset($_SESSION['filter-data']['occasion']) && $_SESSION['filter-data']['occasion']==1) {
+		$paramOccasion= " occasion=1 ";
+	}elseif (isset($_SESSION['filter-data']['occasion']) && $_SESSION['filter-data']['occasion']==0){
+		$paramOccasion= " occasion=0 ";
+	}else{
+		$paramOccasion= "";
+	}
+	$paramList[]=$paramOccasion;
+
 }
+

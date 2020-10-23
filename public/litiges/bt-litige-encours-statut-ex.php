@@ -30,6 +30,8 @@ if(isset($_POST['validate'])){
 
 if(isset($_POST['chg_pending'])){
 
+
+
 	foreach ($_POST as $key => $value) {
 		if($key !='chg_pending'){
 		// recup le nom du champ et le découpe :

@@ -15,19 +15,21 @@
 		<form method="post" action=<?=$_SERVER['PHP_SELF']?>>
 			<table class="table border" id="dossier">
 				<thead class="thead-dark smaller">
-					<th class="sortable align-top">Dossier</th>
-					<th class="sortable smaller">Date déclaration</>
-						<th class="sortable align-top">Magasin</th>
-						<th class="sortable align-top">Code BT</th>
-						<th class="sortable align-top">Centrale</th>
-						<th class="sortable align-top">Etat</th>
-						<th class="sortable align-top text-right">Valo</th>
-						<th class="sortable text-center align-top">Ctrl Stock</th>
-						<th class="sortable text-center align-top">Statué</th>
-						<th class="sortable text-center align-top"><input type="checkbox" name="title"></th>
+					<th class="align-top">Dossier</th>
+					<th class="smaller">Date déclaration</>
+						<th class="align-top">Magasin</th>
+						<th class="align-top">Code BT</th>
+						<th class="align-top">Centrale</th>
+						<th class="align-top">Etat</th>
+						<th class="align-top text-right">Valo</th>
+						<th class="text-center align-top">GT13</th>
 
-						<th class="sortable text-center align-top">24/48h</th>
-						<th class="sortable text-center align-top">Esp</th>
+						<th class="text-center align-top">Ctrl Stock</th>
+						<th class="text-center align-top">Statué</th>
+						<th class="text-center align-top"><input type="checkbox" name="title" id="main-check"></th>
+
+						<th class="text-center align-top">24/48h</th>
+						<th class="text-center align-top">Esp</th>
 
 					</tr>
 				</thead>
@@ -43,7 +45,11 @@
 						elseif($active['ctrl_ok']==2){
 							$ctrl='<i class="fas fa-hourglass-end pl-3 text-red"></i>';
 						}
-
+						if($active['occasion']==1){
+							$icoOcc="<img src='../img/logos/leclerc-occasion-circle-mini.gif'>";
+						}else{
+							$icoOcc="";
+						}
 
 						if($active['commission']==0){
 							$class='pending';
@@ -56,13 +62,18 @@
 						if(isset($listVideoOk[$active['id_main']])){
 							$icoDemandeVideo='<i class="fas fa-video text-green pl-3"></i>';
 						}elseif (isset($listVideoKo[$active['id_main']])) {
-								$icoDemandeVideo='<i class="fas fa-video text-red pl-3"></i>';
+							$icoDemandeVideo='<i class="fas fa-video text-red pl-3"></i>';
 						}
+						if(isset($arMagOcc[$active['btlec']])){
+							$bgOccasion="bg-light-blue";
+						}else{
+							$bgOccasion="";
 
+						}
 						?>
 
 
-						<tr class="<?=$active['etat_dossier']?>" id="<?=$active['id_main']?>">
+						<tr class="<?=$active['etat_dossier'] .' ' .$bgOccasion?>" id="<?=$active['id_main']?>">
 							<td><a href="bt-detail-litige.php?id=<?=$active['id_main']?>"><?=$active['dossier']?></a></td>
 							<td><?=$active['datecrea']?></td>
 							<td><a href="stat-litige-mag.php?galec=<?=$active['galec']?>"><?=$active['deno']?></a></td>
@@ -70,6 +81,7 @@
 							<td><?= (isset($arCentrale[$active['centrale']]))?$arCentrale[$active['centrale']] :''?></td>
 							<td class="<?=($active['id_etat']=="1" ||$active['id_etat']=="20" )?'text-dark-grey':'text-red'?>"><?=$active['etat']?></td>
 							<td class="text-right"><?=number_format((float)$active['valo'],2,'.',' ')?>&euro;</td>
+							<td class="text-center"><?=$icoOcc?></td>
 							<td class="text-center"><?=$ctrl .$icoDemandeVideo?></td>
 							<?php if ($class=='validated'): ?>
 								<td class="text-center"><a href="commission-traitement.php?id=<?=$active['id_main'].'&etat='.$class?>" class="unvalidate"><i class="fas fa-user-check stamp <?= $class?>"></i></a></td>
@@ -77,7 +89,7 @@
 									<td class="text-center"><a href="#modal1" data="<?=$active['id_main']?>" class="stamps"><i class="fas fa-user-check stamp <?=$class?>"></i></a></td>
 
 								<?php endif ?>
-								<td><input type="checkbox" name="pendingbox-<?=$active['id_main'].'-'.$active['commission']?>"></td>
+								<td><input type="checkbox" name="pendingbox-<?=$active['id_main'].'-'.$active['commission']?>" class="cb-commission"></td>
 
 								<td class="text-center"><?=($active['vingtquatre']==1)? '<img src="../img/litiges/2448_ico.png">' :''?></td>
 								<td class="text-center"><?= ($active['esp']==1)? '<img src="../img/litiges/2448esp_ico.png">' :''?></td>

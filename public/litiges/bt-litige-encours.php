@@ -15,8 +15,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 
 require('../../Class/FormHelpers.php');
-
-
+require('../../Class/MagHelpers.php');
 
 
 //------------------------------------------------------
@@ -31,7 +30,7 @@ function getEtat($pdoLitige){
 
 function getListLitige($pdoLitige){
 	$query="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp,
-	dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission,	dossiers.id_etat, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
+	dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission,	dossiers.id_etat, dossiers.occasion, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
 	LEFT JOIN etat ON id_etat=etat.id
 	LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE
 	(id_etat != 1 AND id_etat != 20)|| commission != 1
@@ -43,11 +42,11 @@ function getListLitige($pdoLitige){
 }
 
 function getListVideo($pdoLitige,$idContrainte){
-    $req=$pdoLitige->prepare("SELECT id_dossier, id_contrainte FROM action WHERE id_contrainte= :id_contrainte");
-    $req->execute([
-        ':id_contrainte' =>$idContrainte
-    ]);
-    return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	$req=$pdoLitige->prepare("SELECT id_dossier, id_contrainte FROM action WHERE id_contrainte= :id_contrainte");
+	$req->execute([
+		':id_contrainte' =>$idContrainte
+	]);
+	return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 }
 
 
@@ -133,7 +132,7 @@ if(!isset($paramList)){
 	// 2 requetes types : une sur la table dossier "seule", une sur la table dossier jointe à la table article
 	if(isset($_SESSION['form-data-deux']['article'])){
 		$query="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp,
-		dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
+		dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, dossiers.occasion, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
 		LEFT JOIN details ON dossiers.id=details.id_dossier
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE
@@ -143,13 +142,14 @@ if(!isset($paramList)){
 
 	}else{
 		$query="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp,
-		dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
+		dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, dossiers.occasion, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE
 		$params
 		ORDER BY dossiers.dossier DESC";
 
 	}
+
 
 	$req=$pdoLitige->query($query);
 	$listLitige=$req->fetchAll(PDO::FETCH_ASSOC);
@@ -166,6 +166,10 @@ if(!isset($paramList)){
 
 
 }
+
+$errors=[];
+$success=[];
+
 $arCentrale=getListCentrale($pdoMag);
 $nbLitiges=count($listLitige);
 // foreach moins long
@@ -174,7 +178,7 @@ $valoTotalEtat=getSumValo($pdoLitige, $valoEtat);
 
 $listVideoOk=getListVideo($pdoLitige, 7);
 $listVideoko=getListVideo($pdoLitige, 6);
-
+$arMagOcc=MagHelpers::getListMagOcc($pdoMag);
 
 
 
@@ -198,37 +202,36 @@ DEBUT CONTENU CONTAINER
 <div class="container">
 
 
-	<?php include ('bt-litige-encours-header.php') ?>
-	<?php include ('bt-litige-encours-formsearch.php') ?>
+		<?php include ('bt-litige-encours-header.php') ?>
+		<?php include ('bt-litige-encours-formsearch.php') ?>
 
-	<div class="row">
-		<div class="col-lg-1 col-xxl-2"></div>
+		<div class="row">
+			<div class="col-lg-1 col-xxl-2"></div>
 
-		<div class="col">
-			<?php
-			include('../view/_errors.php');
-			?>
+			<div class="col">
+				<?php
+				include('../view/_errors.php');
+				?>
+			</div>
+			<div class="col-lg-1 col-xxl-2"></div>
 		</div>
-		<div class="col-lg-1 col-xxl-2"></div>
-	</div>
 
 
-	<?php include ('bt-litige-encours-stats.php') ?>
-	<?php include ('bt-litige-encours-filtres.php') ?>
-	<?php include ('bt-litige-encours-table.php') ?>
-	<?php include ('bt-litige-encours-statut-modal.php') ?>
+		<?php include ('bt-litige-encours-stats.php') ?>
+		<?php include ('bt-litige-encours-filtres.php') ?>
+		<?php include ('bt-litige-encours-table.php') ?>
+		<?php include ('bt-litige-encours-statut-modal.php') ?>
 
 
 
 
-	<!-- ./row -->
-	<!-- ./row -->
-
+		<!-- ./row -->
+		<!-- ./row -->
 
 
 
 </div>
-<script src="../js/sorttable2.js"></script>
+
 
 <script type="text/javascript">
 
@@ -245,27 +248,39 @@ DEBUT CONTENU CONTAINER
 			$("tr#"+line).addClass("anim");
 		}
 
-		$('.stamps').on('click',function(){
-			var line=$(this).attr("data")
-			console.log(line);
-			$('#hiddeninput').val(line);
-			$('#modal1').css("display","null");
-			$('#modal1').removeAttr('aria-hidden');
+		$("#main-check").click(function () {
+			$('.cb-commission').prop('checked', this.checked);
+		});
+        // lorsque l'on décoche, on fait l'inverse
+        $("#uncheck-code").click(function () {
+        	$('.acdlec').removeAttr('checked');
+        });
+
+
+
+
+        $('.stamps').on('click',function(){
+        	var line=$(this).attr("data")
+
+        	console.log(line);
+        	$('#hiddeninput').val(line);
+        	$('#modal1').css("display","null");
+        	$('#modal1').removeAttr('aria-hidden');
 				// $('#modal1').attr('aria-modal', true);
 				$('#cmtarea').focus();
 			// $("tr#"+line).addClass("anim");
 		});
-		$('#annuler').on('click', function(){
+        $('#annuler').on('click', function(){
 
-			$('#modal1').css("display","hidden");
+        	$('#modal1').css("display","hidden");
 
-		});
+        });
 
-		$('.unvalidate').on('click', function(){
-			return confirm('Etes vous sûrs de vouloir passer le statut du dossier en non statué ?')
-		});
+        $('.unvalidate').on('click', function(){
+        	return confirm('Etes vous sûrs de vouloir passer le statut du dossier en non statué ?')
+        });
 
-	});
+    });
 
 
 
