@@ -69,8 +69,7 @@ class LitigeDao{
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	// return $req->errorInfo();
 	}
-
-		public function getLitigeDossierDetailReclamMagEtatById($idLitige){
+	public function getLitigeDossierDetailReclamMagEtatById($idLitige){
 		$req=$this->pdo->prepare("
 			SELECT
 			dossiers.id as id_main,	dossiers.dossier, dossiers.date_crea, DATE_FORMAT(dossiers.date_crea, '%d-%m-%Y') as datecrea, dossiers.user_crea, dossiers.galec, dossiers.etat_dossier, dossiers.vingtquatre, dossiers.id_web_user, dossiers.nom, dossiers.valo, dossiers.flag_valo, dossiers.id_robbery, dossiers.commission,
@@ -238,6 +237,57 @@ class LitigeDao{
 	public function getReclamation(){
 		$req=$this->pdo->query("SELECT * FROM reclamation WHERE mask=0 ORDER BY reclamation");
 		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	public function saveDetailInModif($idDetail, $lastinsertid=false){
+		$req=$this->pdo->prepare("INSERT INTO details_modif (id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj) SELECT id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj FROM details WHERE details.id= :id");
+		$req->execute([
+			':id'		=>$idDetail
+		]);
+		if (!$lastinsertid) {
+			$err=$req->errorInfo();
+			if(!empty($err[2])){
+				return false;
+			}
+			return true;
+		}else{
+			return $this->pdo->lastInsertId();
+		}
+
+
+	}
+
+	public function updateDetail($idDetail, $qCde, $tarif, $idReclamation, $qL, $valo){
+
+		$req=$this->pdo->prepare("UPDATE details SET qte_cde= :qte_cde, tarif= :tarif, id_reclamation= :id_reclamation, qte_litige= :qte_litige, valo_line= :valo_line WHERE id= :id");
+		$req->execute([
+			':qte_cde'		=>$qCde,
+			':tarif'		=>$tarif,
+			':id_reclamation'	=>$idReclamation,
+			':qte_litige'	=>$qL,
+			':valo_line'	=>$valo,
+			':id'			=>$idDetail
+		]);
+		$err=$req->errorInfo();
+		if(!empty($err[2])){
+			return false;
+		}
+		return true;
+	}
+
+	function updateModif($lastinsertid){
+		$req=$this->pdo->prepare("UPDATE details_modif SET modif= :modif, updated_by= :updated_by, updated_on= :updated_on WHERE id= :id");
+		$req->execute([
+			':modif'		=>1,
+			':updated_by'	=>$_SESSION['id_web_user'],
+			':updated_on'	=>date('Y-m-d H:i:s'),
+			':id'			=>$lastinsertid
+		]);
+		$err=$req->errorInfo();
+		if(!empty($err[2])){
+			return false;
+		}
+		return true;
 	}
 
 }
