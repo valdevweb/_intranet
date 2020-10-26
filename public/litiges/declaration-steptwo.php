@@ -99,7 +99,6 @@ function addDial($pdoLitige)
 	return $req->rowCount();
 }
 
-$fMotif=getReclamation($pdoLitige);
 
 function getProdInversion($pdoQlik,$ean)
 {
@@ -111,8 +110,17 @@ function getProdInversion($pdoQlik,$ean)
 }
 
 
-if(isset($_GET['id']))
-{
+$fMotif=getReclamation($pdoLitige);
+$foreachErrors=[];
+$foreachSuccess=[];
+
+$errors=[];
+$success=[];
+$newData=0;
+$uploadDir= '..\..\..\upload\litiges\\';
+$valoTotal=0;
+
+if(isset($_GET['id'])){
 	$fLitige=getLitigeTemp($pdoLitige);
 }
 
@@ -131,14 +139,6 @@ if(isset($_SESSION['dd_ouv'])){
 }
 
 
-$foreachErrors=[];
-$foreachSuccess=[];
-
-$errors=[];
-$success=[];
-$newData=0;
-$uploadDir= '..\..\..\upload\litiges\\';
-$valoTotal=0;
 
 if(isset($_POST['submit']))
 {
