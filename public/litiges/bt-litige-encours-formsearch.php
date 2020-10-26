@@ -25,7 +25,7 @@
 				</div>
 				<div class="col-auto">
 					<div class="form-group">
-						<label>Etat <span class="text-small"><i>(maintenir la touche contrôle pour séléctionner plusieurs états)</i></span></label>
+						<label>Etat* </label>
 						<select name="etat[]"  class="form-control"  multiple>
 							<option value="">Sélectionner</option>
 							<?php
@@ -46,10 +46,40 @@
 						</select>
 					</div>
 				</div>
+
+				<div class="col-auto">
+					<div class="form-group">
+						<label>Centrales * </label>
+						<select name="centrale[]"  class="form-control"  multiple>
+							<option value="">Sélectionner</option>
+							<?php
+							foreach ($arCentrale as $key => $centrale)
+							{
+								$selected="";
+								if(isset($_SESSION['form-data']['centrale']) && !empty($_SESSION['form-data']['centrale'])){
+									if(in_array($key,$_SESSION['form-data']['centrale'])){
+										$selected='selected';
+									}
+									else{
+										$selected="";
+									}
+								}
+								echo '<option value="'.$key.'" '.$selected.'>'.$arCentrale[$key].'</option>';
+							}
+							?>
+						</select>
+					</div>
+				</div>
+
 				<div class="col align-self-center text-right">
 					<button class="btn btn-black mr-5" type="submit"  name="search_one"><i class="fas fa-search pr-2"></i>Rechercher</button>
 				</div>
 
+			</div>
+			<div class="row">
+				<div class="col">
+					<span class="text-small"><i>* Multisélection : maintenir la touche contrôle pour séléctionner plusieurs élements</i></span>
+				</div>
 			</div>
 
 		</form>
@@ -71,10 +101,22 @@
 						<input class="form-control mr-5 pr-5" placeholder="n°litige,  magasin, galec" name="search_strg" type="text"  value="<?=isset($_SESSION['form-data-deux']['search_strg'])? $_SESSION['form-data-deux']['search_strg'] : "" ?>">
 					</div>
 				</div>
-				<div class="col">
+				<div class="col-auto">
 					<div class="form-check form-check-inline mt-3">
 						<input type="checkbox" class="form-check-input" name="article" id="article" <?= isset($_SESSION['form-data-deux']['article'])? "checked" : ""?>>
-						<label for="article" class="form-check-label">recherche d'un code article</label>
+						<label for="article" class="form-check-label">Code article</label>
+					</div>
+				</div>
+				<div class="col-auto">
+					<div class="form-check form-check-inline mt-3">
+						<input type="checkbox" class="form-check-input" name="btlec" id="btlec" <?= isset($_SESSION['form-data-deux']['btlec'])? "checked" : ""?>>
+						<label for="btlec" class="form-check-label">Code BTlec</label>
+					</div>
+				</div>
+				<div class="col-auto">
+					<div class="form-check form-check-inline mt-3">
+						<input type="checkbox" class="form-check-input" name="galec" id="galec" <?= isset($_SESSION['form-data-deux']['galec'])? "checked" : ""?>>
+						<label for="galec" class="form-check-label">Panonceau Galec</label>
 					</div>
 				</div>
 				<div class="col text-right">

@@ -28,8 +28,8 @@ require_once '../../Class/LitigeDao.php';
 
 $errors=[];
 $success=[];
-unset($_SESSION['goto']);
 $litigeDao=new LitigeDao($pdoLitige);
+unset($_SESSION['goto']);
 
 //------------------------------------------------------
 //			DESCRIPTIF PAGE
@@ -181,12 +181,14 @@ else{
 	$ldDossier="";
 }
 
-if(isset($_GET['id']))
-{
-	$litige=$litigeDao->getLitigeDossierDetailReclamMagEtatById($_GET['id']);
-	$analyse=$litigeDao->getanalyse($_GET['id']);
-	$infos=$litigeDao->getInfos($_GET['id']);
+if(isset($_GET['id'])){
+	$litige= $litigeDao->getInfos($_GET['id']);
+	$analyse=$litigeDao->getAnalyse($_GET['id']);
+	$infos= $litigeDao->getInfos($_GET['id']);
 	$actionList=$litigeDao->getAction($_GET['id']);
+	echo "<pre>";
+	print_r($litige);
+	echo '</pre>';
 
 
 }

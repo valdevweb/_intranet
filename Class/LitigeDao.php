@@ -235,4 +235,9 @@ class LitigeDao{
 		]);
 	}
 
+	public function getReclamation(){
+		$req=$this->pdo->query("SELECT * FROM reclamation WHERE mask=0 ORDER BY reclamation");
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
 }

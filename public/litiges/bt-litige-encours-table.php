@@ -50,6 +50,11 @@
 						}else{
 							$icoOcc="";
 						}
+						if(!empty($active['id_robbery'])){
+							$icoRobbery="<img src='../img/litiges/thief35.png'>";
+						}else{
+							$icoRobbery="";
+						}
 
 						if($active['commission']==0){
 							$class='pending';
@@ -82,7 +87,7 @@
 							<td class="<?=($active['id_etat']=="1" ||$active['id_etat']=="20" )?'text-dark-grey':'text-red'?>"><?=$active['etat']?></td>
 							<td class="text-right"><?=number_format((float)$active['valo'],2,'.',' ')?>&euro;</td>
 							<td class="text-center"><?=$icoOcc?></td>
-							<td class="text-center"><?=$ctrl .$icoDemandeVideo?></td>
+							<td class="text-center"><?=$icoRobbery. $ctrl .$icoDemandeVideo?></td>
 							<?php if ($class=='validated'): ?>
 								<td class="text-center"><a href="commission-traitement.php?id=<?=$active['id_main'].'&etat='.$class?>" class="unvalidate"><i class="fas fa-user-check stamp <?= $class?>"></i></a></td>
 								<?php else: ?>

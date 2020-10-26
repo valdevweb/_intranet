@@ -32,13 +32,24 @@ if(isset($_SESSION['form-data'])){
 		$paramEtat='';
 	}
 	$paramList[]=$paramEtat;
+
+	if(isset($_SESSION['form-data']['centrale'])){
+		$paramCentrale=join(' OR ', array_map(function($value){return 'centrale='.$value;},$_SESSION['form-data']['centrale']));
+	}else{
+		$paramCentrale='';
+	}
+	$paramList[]=$paramCentrale;
 	// $listLitige=getListLitige($pdoLitige);
 }
 if (isset($_SESSION['form-data-deux'])) {
-	if(isset($_SESSION['form-data-deux']['search_strg']) && !isset($_SESSION['form-data-deux']['article'])){
-		$paramStrg= "concat(dossiers.dossier,magasin.mag.deno,dossiers.galec,magasin.mag.id) LIKE '%".$_SESSION['form-data-deux']['search_strg'] ."%'";
+	if(isset($_SESSION['form-data-deux']['search_strg']) && !isset($_SESSION['form-data-deux']['article']) && !isset($_SESSION['form-data-deux']['btlec']) && !isset($_SESSION['form-data-deux']['galec'])){
+		$paramStrg= "concat(dossiers.dossier,magasin.mag.deno) LIKE '%".$_SESSION['form-data-deux']['search_strg'] ."%'";
 	}elseif(isset($_SESSION['form-data-deux']['search_strg']) && isset($_SESSION['form-data-deux']['article'])){
 		$paramStrg= "details.article LIKE '%".$_SESSION['form-data-deux']['search_strg'] ."%'";
+	}elseif(isset($_SESSION['form-data-deux']['search_strg']) && isset($_SESSION['form-data-deux']['btlec'])){
+		$paramStrg= "magasin.mag.id =".$_SESSION['form-data-deux']['search_strg'];
+	}elseif(isset($_SESSION['form-data-deux']['search_strg']) && isset($_SESSION['form-data-deux']['galec'])){
+		$paramStrg= "magasin.mag.galec=".$_SESSION['form-data-deux']['search_strg'] ;
 	}else{
 		$paramStrg="";
 	}

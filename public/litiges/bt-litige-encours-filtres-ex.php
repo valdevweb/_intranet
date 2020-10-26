@@ -32,18 +32,6 @@ if(isset($_POST['occasion'])){
 }
 
 
-// if(isset($_POST['esp'])){
-// 	$_SESSION['filter-data']['esp']=$_POST['esp'];
-// 	if($_SESSION['filter-data']['esp']==1){
-// 		$_SESSION['filter-data']['esp-ico']='<div class="d-inline-block pl-3"><img src="../img/litiges/2448esp_ico.png"></div>';
-
-// 	}elseif($_SESSION['filter-data']['esp']==1){
-// 		$_SESSION['filter-data']['esp-ico']='<div class="d-inline-block  pl-3"><img src="../img/litiges/2448esp_no_ico.png"></div>';
-
-// 	}
-// }
-
-
 if(isset($_POST['reset-pending'])){
 	unset($_POST['pending']);
 	unset($_SESSION['filter-data']);
@@ -60,10 +48,3 @@ if(isset($_POST['reset-occasion'])){
 	unset($_SESSION['filter-data']);
 }
 
-
-
-// if(isset($_POST['reset-esp'])){
-// 	unset($_POST['esp']);
-// 	unset($_SESSION['filter-data']['esp']);
-// 	unset($_SESSION['filter-data']['esp-ico']);
-// }
