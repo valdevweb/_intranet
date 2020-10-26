@@ -23,10 +23,12 @@ $action="";
 addRecord($pdoStat,$page,$action, $descr, 101);
 
 require_once '../../vendor/autoload.php';
-require 'info-litige.fn.php';
+require_once '../../Class/LitigeDao.php';
+// require 'info-litige.fn.php';
 
 $errors=[];
 $success=[];
+$litigeDao=new LitigeDao($pdoLitige);
 unset($_SESSION['goto']);
 
 //------------------------------------------------------
@@ -179,12 +181,14 @@ else{
 	$ldDossier="";
 }
 
-if(isset($_GET['id']))
-{
-	$litige=getlitige($pdoLitige);
-	$analyse=getanalyse($pdoLitige);
-	$infos=getInfos($pdoLitige);
-	$actionList=getThisAction($pdoLitige);
+if(isset($_GET['id'])){
+	$litige= $litigeDao->getInfos($_GET['id']);
+	$analyse=$litigeDao->getAnalyse($_GET['id']);
+	$infos= $litigeDao->getInfos($_GET['id']);
+	$actionList=$litigeDao->getAction($_GET['id']);
+	echo "<pre>";
+	print_r($litige);
+	echo '</pre>';
 
 
 }

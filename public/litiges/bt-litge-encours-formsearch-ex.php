@@ -39,6 +39,14 @@ if(isset($_POST['search_one'])){
 		}
 	}
 
+	if (isset($_POST['centrale']) && !empty($_POST['centrale'])) {
+		$_SESSION['form-data']['centrale']=$_POST['centrale'];
+	}else{
+		if(isset($_SESSION['form-data']['centrale'])){
+			unset($_SESSION['form-data']['centrale']);
+		}
+	}
+
 	header("Location: ".$_SERVER['PHP_SELF'],true,303);
 }
 
@@ -51,13 +59,18 @@ if(isset($_POST['search_two'])){
 	if(isset($_POST['article'])){
 		$_SESSION['form-data-deux']['article']=true;
 	}
+	if(isset($_POST['btlec'])){
+		$_SESSION['form-data-deux']['btlec']=true;
+	}
+	if(isset($_POST['galec'])){
+		$_SESSION['form-data-deux']['galec']=true;
+	}
 
 	// search_strg
 	if(isset($_POST['search_strg']) && !empty($_POST['search_strg'])){
 		$_SESSION['form-data-deux']['search_strg']=$_POST['search_strg'];
 	}else{
 		unset($_SESSION['form-data-deux']['search_strg']);
-
 	}
 	header("Location: ".$_SERVER['PHP_SELF'],true,303);
 }
