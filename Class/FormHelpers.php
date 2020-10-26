@@ -48,6 +48,14 @@ class FormHelpers{
         }
         return "";
     }
+     public static function restoreSelected($value,$dbValue){
+        if(isset($dbValue)){
+            if($dbValue==$value){
+                return "selected";
+            }
+        }
+        return "";
+    }
 
  // case à cocher, btn radio
     public static function checkCheckedArray($value,$postName){
