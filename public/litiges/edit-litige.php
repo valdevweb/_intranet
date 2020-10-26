@@ -34,25 +34,46 @@ require '../../Class/FormHelpers.php';
 $errors=[];
 $success=[];
 
-$idLitige=1434;
+
 
 $litigeDao=new LitigeDao($pdoLitige);
 
-$detailLitige=$litigeDao ->getDetail($idLitige);
+$detailLitige=$litigeDao ->getDetail($_GET['id']);
 $listReclamations=LitigeHelpers::listReclamation($pdoLitige);
 
 if(isset($_POST['update_detail'])){
-	echo "<pre>";
-	print_r($_POST);
-	echo '</pre>';
+	$key=array_keys($_POST['update_detail']);
+
+	if($litigeDao->saveDetailInModif($_POST['id_detail'][$key[0]])){
+		$errors[]= "impossible de recopier les données initiales";
+	}
+	if($litigeDao->updateDetail($_POST['id_detail'][$key[0]], $_POST['qte_cde'][$key[0]], $_POST['tarif'][$key[0]], $_POST['id_reclamation'][$key[0]], $_POST['qte_litige'][$key[0]], $_POST['valo_line'][$key[0]])){
+		$errors[]= "impossible de modifier l'article";
+	}
+	$idTableModif=$litigeDao->saveDetailInModif($_POST['id_detail'][$key[0]], true);
+
+	if($idTableModif>0){
+		if($litigeDao->updateModif( $idTableModif)){
+			$successQ='?id='.$_GET['id'];
+			unset($_POST);
+			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+		}else{
+			$errors[]="une erreur est survenue";
+		}
+	}else{
+		$errors[]= "impossible de recopier les données initiales";
+
+	}
+
+
+
 
 }
 
 
 if(isset($_POST['delete_detail'])){
-	echo "<pre>";
-	print_r($_POST);
-	echo '</pre>';
+	$key=array_keys($_POST['delete_detail']);
+$idDetailToDelete=$_POST['id_detail'][$key[0]];
 
 }
 
@@ -135,33 +156,33 @@ DEBUT CONTENU CONTAINER
 			</thead>
 			<tbody>
 				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post">
-					<?php foreach ($detailLitige as $key => $detail): ?>
+					<?php foreach ($detailLitige as $keydetail => $detail): ?>
 						<?php if (empty($detail['inv_article'])): ?>
 							<tr>
 								<td><?=$detail['article']?></td>
 								<td><?=$detail['dossier']?></td>
 								<td>
 									<div class="form-group">
-										<input type="text" class="form-control" name="qte_cde" id="qte_cde" value="<?=$detail['qte_cde']?>">
+										<input type="text" class="form-control mini-input" pattern="[0-9]+" title="Quantité non valide" name="qte_cde[]" id="qte_cde" value="<?=$detail['qte_cde']?>">
 									</div>
 
 
 								</td>
 								<td>
 									<div class="form-group">
-										<input type="text" class="form-control" name="tarif" id="tarif" value="<?=$detail['tarif']?>">
+										<input type="text" class="form-control moyen-input" pattern="[-+]?[0-9]*[.]?[0-9]+" title="Exemple 1.1" name="tarif[]" id="tarif" value="<?=$detail['tarif']?>">
 									</div>
 								</td>
 								<td>
 									<div class="form-group">
-										<input type="text" class="form-control" name="qte_litige" id="qte_litige" value=<?=$detail['qte_litige']?>>
+										<input type="text" class="form-control mini-input" pattern="[0-9]+" title="Quantité non valide"  name="qte_litige[]" id="qte_litige" value=<?=$detail['qte_litige']?>>
 									</div>
 
 
 								</td>
 								<td>
 									<div class="form-group">
-										<input type="text" class="form-control" name="valo_line" id="valo_line" value="<?=$detail['valo_line']?>">
+										<input type="text" class="form-control moyen-input" name="valo_line[]" pattern="[-+]?[0-9]*[.]?[0-9]+" title="Exemple 1.1" id="valo_line" value="<?=$detail['valo_line']?>">
 									</div>
 
 
@@ -169,7 +190,7 @@ DEBUT CONTENU CONTAINER
 								<td>
 									<div class="form-group">
 										<div class="form-group">
-											<select class="form-control" name="model" id="model">
+											<select class="form-control" name="id_reclamation[]" id="id_reclamation">
 												<?php foreach ($listReclamations as $key => $reclam): ?>
 													<option value="<?=$key?>" <?=FormHelpers::restoreSelected($key,$detail['id_reclamation'])?>>
 														<?=$listReclamations[$key]?>
@@ -180,16 +201,14 @@ DEBUT CONTENU CONTAINER
 											</select>
 										</div>
 
-
-										<input type="text" class="form-control" name="id_reclamation" id="id_reclamation" value="<?=$detail['id_reclamation']?>">
 									</div>
 								</td>
 								<td>
-									<input type="hidden" class="form-control" name="model" id="model" value="<?=$detail['id_reclamation']?>">
-									<button class="btn btn-primary" type="submit" name="update_detail">Modifier</button>
+									<input type="hidden" class="form-control" name="id_detail[]" id="id_detail" value="<?=$detail['id_detail']?>">
+									<button class="btn btn-primary" type="submit" name="update_detail[<?=$keydetail?>]" >Modifier <?=$keydetail?></button>
 								</td>
 								<td>
-									<button class="btn btn-red" type="submit" name="delete_detail">Supprimer</button>
+									<button class="btn btn-red" type="submit" name="delete_detail[<?=$keydetail?>]">Supprimer</button>
 								</td>
 							</tr>
 							<?php else: ?>
