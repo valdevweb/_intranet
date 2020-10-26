@@ -1,22 +1,21 @@
+
 <div class="row mt-3">
+	<div class="col-10">
+		<h5 class="khand text-main-blue pb-3">Produit(s) :</h5>
+		<p><span class="text-main-blue">Facture : </span><?=$infoLitige[0]['facture'] .' du '.$infoLitige[0]['datefacture']?></p>
+
+
+	</div>
+	<div class="col-2 text-right">
+		<?php if ($infoLitige[0]['id_robbery'] !=null): ?>
+			<a href="xl-robbery.php?id=<?=$infoLitige[0]['id_robbery']?>" class="img-overlay"></a>
+		<?php endif ?>
+
+	</div>
+</div>
+
+<div class="row">
 	<div class="col">
-
-		<div class="row">
-			<div class="col-10">
-				<h5 class="khand text-main-blue pb-3">Produit(s) :</h5>
-				<p><span class="text-main-blue">Facture : </span><?=$infoLitige[0]['facture'] .' du '.$infoLitige[0]['datefacture']?></p>
-
-
-			</div>
-			<div class="col-2 text-right">
-				<?php if ($infoLitige[0]['id_robbery'] !=null): ?>
-					<a href="xl-robbery.php?id=<?=$infoLitige[0]['id_robbery']?>" class="img-overlay"></a>
-				<?php endif ?>
-
-			</div>
-		</div>
-
-
 		<table class="table light-shadow">
 			<thead class="thead-dark">
 				<tr>
@@ -165,10 +164,15 @@
 			</tbody>
 		</table>
 
+	</div>
+</div>
+<div class="row">
+	<div class="col">
 		<p class="text-right heavy bigger mb-3 text-main-blue pr-3">Valorisation magasin : <?= $prod['valo']?> </p>
 		<p><?= $articleAZero?></p>
 
-
-
 	</div>
 </div>
+
+
+
