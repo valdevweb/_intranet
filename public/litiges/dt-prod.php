@@ -167,6 +167,11 @@
 	</div>
 </div>
 <div class="row">
+	<div class="col text-right">
+		<a href="edit-litige.php?id=<?=$prod['id_main']?>" class="btn btn-primary"><i class="fas fa-tools pr-3"></i>Modifier</a>
+	</div>
+</div>
+<div class="row">
 	<div class="col">
 		<p class="text-right heavy bigger mb-3 text-main-blue pr-3">Valorisation magasin : <?= $prod['valo']?> </p>
 		<p><?= $articleAZero?></p>
