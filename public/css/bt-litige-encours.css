@@ -20,13 +20,15 @@ td:nth-child(7){
   /* min-width: 10% !important; */
 }
 
-#two-cols{
-    -webkit-column-count:2; /* Opera, Safari, Google Chrome */
-    -moz-column-count: 2; /* Firefox */
-    column-count: 2; /* Internet Explorer */
-    /* -webkit-column-rule: 2px dashed #555; */
-    /* -moz-column-rule: 2px dashed #555; */
-    /* column-rule: 2px dashed #555; */
+.two-cols{
+    -webkit-column-count:2;
+    -moz-column-count: 2;
+    column-count: 2;
+}
+.reset-cols{
+    -webkit-column-count:1;
+    -moz-column-count: 1;
+    column-count: 1;
 }
 
 
