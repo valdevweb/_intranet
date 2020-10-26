@@ -101,34 +101,32 @@ include 'bt-litige-encours-sessions-ex.php';
 
 
 
-$listLitigeDefaultQuery="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp, dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, dossiers.occasion, dossiers.id_robbery, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
+$litigeQuery="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp, dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, dossiers.occasion, dossiers.id_robbery, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
 LEFT JOIN etat ON id_etat=etat.id
 LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE";
-$listLitigeDefaultParam="(id_etat != 1 AND id_etat != 20)|| commission != 1";
-$listLitigeDefaultMod="ORDER BY dossiers.dossier DESC";
+$litigeParam="(id_etat != 1 AND id_etat != 20)|| commission != 1";
+$litigeMod="ORDER BY dossiers.dossier DESC";
 
-$listLitigeFormDeuxQuery="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp, dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, dossiers.occasion, dossiers.id_robbery, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat FROM dossiers
-LEFT JOIN details ON dossiers.id=details.id_dossier
-LEFT JOIN etat ON id_etat=etat.id
-LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE";
-$listLitigeFormDeuxMod="GROUP BY dossiers.id ORDER BY dossiers.dossier DESC ";
 
-$sQuery="SELECT  sum(valo) as valo, dossiers.id_etat, etat.etat, count(dossiers.id) as nbEtat, etat.occ_etat FROM dossiers
+
+$statutQuery="SELECT  sum(valo) as valo, dossiers.id_etat, etat.etat, count(dossiers.id) as nbEtat, etat.occ_etat FROM dossiers
 LEFT JOIN etat ON id_etat=etat.id
+LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec
+WHERE";
+$typoQuery="SELECT sum(valo) as valo, dossiers.id_typo, typo.typo, count(dossiers.id) as nbTypo FROM dossiers
+LEFT JOIN typo ON id_typo=typo.id
+LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec
 WHERE";
 // requete par défaut
-$lQuery=$listLitigeDefaultQuery;
-$params=$listLitigeDefaultParam;
-$lMod=$listLitigeDefaultMod;
+$dateStart=(new DateTime('first day of january this year'))->format('Y-m-d H:i:s');
+$dateEnd=date('Y-m-d H:i:s');
 
-if(!isset($paramList)){
-	// query stats
-	$dateStart=(new DateTime('first day of january this year'))->format('Y-m-d H:i:s');
-	$dateEnd=date('Y-m-d H:i:s');
+$statutParam="date_crea BETWEEN '$dateStart' AND '$dateEnd' GROUP BY etat ORDER BY occ_etat, etat.etat";
+$typoParam="date_crea BETWEEN '$dateStart' AND '$dateEnd' GROUP BY id_typo ORDER BY typo";
 
-	$sParam="date_crea BETWEEN '$dateStart' AND '$dateEnd' GROUP BY etat ORDER BY occ_etat, etat.etat";
-	// $valoEtat=makeQuery($pdoLitige, $listStatsDefaultQuery, $listStatsDefaultParam);
-}else{
+
+
+if(isset($paramList)){
 	$paramList=array_filter($paramList);
 	$joinParam=function($value){
 		if(!empty($value)){
@@ -136,25 +134,33 @@ if(!isset($paramList)){
 		}
 	};
 
-	$params=join(' AND ',array_map($joinParam,$paramList));
+	$litigeParam=join(' AND ',array_map($joinParam,$paramList));
 
-	$sQuery="SELECT  sum(valo) as valo, dossiers.id_etat, etat.etat, count(dossiers.id) as nbEtat, etat.occ_etat FROM dossiers
-	LEFT JOIN etat ON id_etat=etat.id
-	LEFT JOIN details ON dossiers.id=details.id_dossier
-	LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE";
-	$sParam=$params." GROUP BY etat ORDER BY occ_etat, etat.etat";
+	$statutParam=$litigeParam." GROUP BY etat ORDER BY occ_etat, etat.etat";
+	$typoParam=$litigeParam." GROUP BY id_typo ORDER BY typo";
 
 		// 2 requetes types : une sur la table dossier "seule", une sur la table dossier jointe à la table article
 	if(isset($_SESSION['form-data-deux']['article'])){
-		$lQuery=$listLitigeFormDeuxQuery;
-		$lMod=$listLitigeFormDeuxMod;
+		$litigeQuery="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp, dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, dossiers.occasion, dossiers.id_robbery, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat FROM dossiers
+		LEFT JOIN details ON dossiers.id=details.id_dossier
+		LEFT JOIN etat ON id_etat=etat.id
+		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE";
+		$litigeMod="GROUP BY dossiers.id ORDER BY dossiers.dossier DESC ";
+		$statutQuery="SELECT  sum(valo) as valo, dossiers.id_etat, etat.etat, count(dossiers.id) as nbEtat, etat.occ_etat FROM dossiers
+		LEFT JOIN etat ON id_etat=etat.id
+		LEFT JOIN details ON dossiers.id=details.id_dossier
+		WHERE";
+		$typoQuery="SELECT sum(valo) as valo, dossiers.id_typo, typo.typo, count(dossiers.id) as nbTypo FROM dossiers LEFT JOIN typo ON id_typo=typo.id LEFT JOIN details ON dossiers.id=details.id_dossier WHERE";
+
 
 	}
 }
 
 $litigeDao=new LitigeDao($pdoLitige);
-$listLitige=makeQuery($pdoLitige, $lQuery, $params, $lMod);
-$valoEtat=makeQuery($pdoLitige, $sQuery, $sParam);
+$listLitige=makeQuery($pdoLitige, $litigeQuery, $litigeParam, $litigeMod);
+$valoEtat=makeQuery($pdoLitige, $statutQuery, $statutParam);
+$valoTypo=makeQuery($pdoLitige, $typoQuery, $typoParam);
+
 
 $errors=[];
 $success=[];
@@ -164,8 +170,7 @@ $arCentrale=MagHelpers::getListCentrale($pdoMag);
 $nbLitiges=count($listLitige);
 // foreach moins long
 $valoTotalDefault=getSumValo($pdoLitige, $listLitige);
-$valoTotalEtat=getSumValo($pdoLitige, $valoEtat);
-
+// $valoTotalEtat=getSumValo($pdoLitige, $valoEtat);
 
 $listReclamations=$litigeDao->getReclamation();
 $listVideoOk=getListVideo($pdoLitige, 7);
@@ -173,6 +178,9 @@ $listVideoko=getListVideo($pdoLitige, 6);
 $arMagOcc=MagHelpers::getListMagOcc($pdoMag);
 $sumValoMain=0;
 $sumValoOcc=0;
+$sumValoTypo=0;
+$nbTotalDossierTypo=0;
+$nbTotalDossierStatut=0;
 
 
 include 'bt-litige-encours-statut-ex.php';
