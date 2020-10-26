@@ -60,7 +60,17 @@ class LitigeDao{
 		return $req->fetch(PDO::FETCH_ASSOC);
 	}
 
-	public function getLitigeDossierDetailReclamMagEtatById($idLitige){
+	public function getDetail($idLitige){
+		$req=$this->pdo->prepare("
+			SELECT *, details.id as id_detail FROM dossiers LEFT JOIN details ON dossiers.id=details.id_dossier	WHERE dossiers.id= :id ORDER BY date_crea");
+		$req->execute(array(
+			':id'	=>$idLitige
+		));
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	// return $req->errorInfo();
+	}
+
+		public function getLitigeDossierDetailReclamMagEtatById($idLitige){
 		$req=$this->pdo->prepare("
 			SELECT
 			dossiers.id as id_main,	dossiers.dossier, dossiers.date_crea, DATE_FORMAT(dossiers.date_crea, '%d-%m-%Y') as datecrea, dossiers.user_crea, dossiers.galec, dossiers.etat_dossier, dossiers.vingtquatre, dossiers.id_web_user, dossiers.nom, dossiers.valo, dossiers.flag_valo, dossiers.id_robbery, dossiers.commission,
