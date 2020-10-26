@@ -1,3 +1,14 @@
 .table .form-group{
 	margin-bottom: 0 !important;
 }
+
+input.mini-input{
+	width:  60px;
+	text-align: right;
+}
+
+input.moyen-input{
+	width:  100px;
+	text-align: right;
+
+}
