@@ -341,7 +341,7 @@ DEBUT CONTENU CONTAINER
 				</div>
 			</div>
 
-			<?php if ($article['inversion']!="" && $article['inv_qte']!=""): ?>
+			<?php if ($article['inversion']!="" ): ?>
 				<div class="row">
 					<div class="col text-main-blue pb-3"><h5>Produit reçu en inversion de référence: </h5></div>
 				</div>
