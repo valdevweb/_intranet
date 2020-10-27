@@ -12,3 +12,13 @@ input.moyen-input{
 	text-align: right;
 
 }
+
+td.inv{
+	padding: 0 0.75rem !important;
+	text-align: center;
+	font-weight: bold;
+	background: #deebff;
+}
+tr.no-bottom-border, tr.no-bottom-border td{
+	border: 0 solid #fff !important;
+}
