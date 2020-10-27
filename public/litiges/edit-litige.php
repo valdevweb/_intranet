@@ -159,7 +159,7 @@ DEBUT CONTENU CONTAINER
 	<!-- valo totale -->
 	<div class="row">
 		<div class="col">
-			<h5>Modification de la valo totale du dossier :</h5>
+			<h5 class="text-main-blue">Modification de la valo totale du dossier :</h5>
 		</div>
 		<div class="col">
 			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post">
@@ -180,14 +180,7 @@ DEBUT CONTENU CONTAINER
 	</div>
 	<div class="row">
 		<div class="col">
-			<h5>Modification des détails articles du dossier :</h5>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col">
-
-
+			<h5 class="text-main-blue">Modification des détails articles du dossier :</h5>
 		</div>
 	</div>
 	<?php if ($detailLitige[0]['id_reclamation']!=7): ?>
@@ -426,6 +419,39 @@ DEBUT CONTENU CONTAINER
 						Inversion de palette, la fonctionnalité de modification sur une inversion de la palette n'a pas été développée
 
 					<?php endif ?>
+					<div class="row">
+						<div class="col">
+							<h5 class="text-main-blue">Ajout d'articles à la déclaration :</h5>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post">
+								<div class="row">
+									<div class="col">
+										<div class="form-group">
+											<label for="article">Rechercher un article </label>
+											<input type="text" class="form-control" placeholder="EAN ou code article" name="article" id="article">
+										</div>
+									</div>
+									<div class="col-auto">
+										Article présent sur une commande du magasin ?<br>
+										<div class="form-check-inline mt-3">
+											<input class="form-check-input" type="radio" value="1" id="model" name="cde_mag">
+											<label class="form-check-label" for="cde_mag">oui</label>
+										</div>
+										<div class="form-check-inline">
+											<input class="form-check-input" type="radio" value="2" id="cde_mag" name="cde_mag">
+											<label class="form-check-label" for="cde_mag">non</label>
+										</div>
+									</div>
+									<div class="col mt-4 pt-2">
+										<button type="submit" name="search_2" class="btn btn-primary">Rechercher</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
 
 					<!-- ./container -->
 				</div>
