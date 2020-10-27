@@ -39,7 +39,8 @@ $success=[];
 $litigeDao=new LitigeDao($pdoLitige);
 
 $detailLitige=$litigeDao ->getDetail($_GET['id']);
-$listReclamations=LitigeHelpers::listReclamationIncludingMasked($pdoLitige);
+$listReclamationsIncludingMasked=LitigeHelpers::listReclamationIncludingMasked($pdoLitige);
+$listReclamations=LitigeHelpers::listReclamation($pdoLitige);
 
 if(isset($_POST['update_detail'])){
 	$key=array_keys($_POST['update_detail']);
@@ -47,7 +48,24 @@ if(isset($_POST['update_detail'])){
 	if($litigeDao->saveDetailInModif($_POST['id_detail'][$key[0]])){
 		$errors[]= "impossible de recopier les données initiales";
 	}
-	if($litigeDao->updateDetail($_POST['id_detail'][$key[0]], $_POST['qte_cde'][$key[0]], $_POST['tarif'][$key[0]], $_POST['id_reclamation'][$key[0]], $_POST['qte_litige'][$key[0]], $_POST['valo_line'][$key[0]])){
+	//si on etait sur une inversion de référence (inv_ref existe), on a 2 cas :
+	//on reste en inversion de réf après la modification,
+	//on décide ne ne plus être en inversion de référence après la modification
+	//et dans ce dernier cas, on remet les champs inv à 0.
+	//si on n'était pas sur une inversion de réfénrece, on initialise aussi les champs inv à 0
+	if(isset($_POST['inv_ref'][$key[0]]) && $_POST['inv_ref'][$key[0]]==5){
+		$invArticle=$_POST['inv_article'][$key[0]];
+		$invQte=$_POST['inv_qte'][$key[0]];
+		$invTarif=$_POST['inv_tarif'][$key[0]];
+
+	}else{
+		$invArticle=$invQte=$invTarif=null;
+
+
+
+	}
+
+	if($litigeDao->updateDetailInvRef($_POST['id_detail'][$key[0]], $_POST['qte_cde'][$key[0]], $_POST['tarif'][$key[0]], $_POST['id_reclamation'][$key[0]], $_POST['qte_litige'][$key[0]], $invArticle, $invQte, $invTarif, $_POST['valo_line'][$key[0]])){
 		$errors[]= "impossible de modifier l'article";
 	}
 	$idTableModif=$litigeDao->saveDetailInModif($_POST['id_detail'][$key[0]], true);
@@ -93,7 +111,15 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Modification du  litige  <?=$detailLitige[0]['dossier']?></h1>
+
+	<div class="row py-5">
+		<div class="col">
+			<h1 class="text-main-blue ">Modification du  litige  <?=$detailLitige[0]['dossier']?></h1>
+		</div>
+		<div class="col-auto">
+			<a href="bt-detail-litige.php?id=<?=$_GET['id']?>" class="btn btn-primary">Retour</a>
+		</div>
+	</div>
 
 	<div class="row">
 		<div class="col-lg-1"></div>
@@ -192,6 +218,8 @@ DEBUT CONTENU CONTAINER
 										<div class="form-group">
 											<select class="form-control" name="id_reclamation[]" id="id_reclamation">
 												<?php foreach ($listReclamations as $key => $reclam): ?>
+													<option value="" >NC</option>
+
 													<option value="<?=$key?>" <?=FormHelpers::restoreSelected($key,$detail['id_reclamation'])?>>
 														<?=$listReclamations[$key]?>
 
@@ -213,7 +241,7 @@ DEBUT CONTENU CONTAINER
 							</tr>
 							<?php else: ?>
 								<tr>
-									<td colspan="9">Article commandé :</td>
+									<td class="inv" colspan="9">Article commandé :</td>
 								</tr>
 								<tr>
 									<td><?=$detail['article']?></td>
@@ -240,12 +268,11 @@ DEBUT CONTENU CONTAINER
 										<div class="form-group">
 											<div class="form-group">
 												<select class="form-control" name="id_reclamation[]" id="id_reclamation">
-													<?php foreach ($listReclamations as $key => $reclam): ?>
+													<?php foreach ($listReclamationsIncludingMasked as $key => $reclam): ?>
 														<option value="<?=$key?>" <?=FormHelpers::restoreSelected($key,$detail['id_reclamation'])?>>
-															<?=$listReclamations[$key]?>
+															<?=$listReclamationsIncludingMasked[$key]?>
 
 														</option>
-
 													<?php endforeach ?>
 												</select>
 											</div>
@@ -256,10 +283,14 @@ DEBUT CONTENU CONTAINER
 									<td></td>
 								</tr>
 								<tr>
-									<td colspan="9">Article reçu :</td>
+									<td class="inv" colspan="9">Article reçu :</td>
 								</tr>
 								<tr>
-									<td><?=$detail['inv_article']?></td>
+									<td>
+										<?=$detail['inv_article']?>
+										<input type="hidden" class="form-control" name="inv_article[]" id="inv_article" value="<?=$detail['inv_article']?>">
+
+									</td>
 									<td></td>
 									<td></td>
 									<td>
@@ -281,6 +312,7 @@ DEBUT CONTENU CONTAINER
 									</td>
 									<td></td>
 									<td>
+										<input type="hidden" class="form-control" name="inv_ref[]" id="inv_ref" value="<?=$detail['id_detail']?>">
 										<input type="hidden" class="form-control" name="id_detail[]" id="id_detail" value="<?=$detail['id_detail']?>">
 										<button class="btn btn-primary" type="submit" name="update_detail[<?=$keydetail?>]" >Modifier <?=$keydetail?></button>
 									</td>
