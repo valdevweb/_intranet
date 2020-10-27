@@ -48,7 +48,7 @@ class FormHelpers{
         }
         return "";
     }
-     public static function restoreSelected($value,$dbValue){
+    public static function restoreSelected($value,$dbValue){
         if(isset($dbValue)){
             if($dbValue==$value){
                 return "selected";
@@ -59,6 +59,15 @@ class FormHelpers{
 
  // case à cocher, btn radio
     public static function checkCheckedArray($value,$postName){
+        if(isset($_POST[$postName])){
+            for ($i=0; $i < count($_POST[$postName]); $i++) {
+                if($_POST[$postName][$i]==$value)
+                    return "checked";
+            }
+        }
+
+    }
+    public static function checkSelectedArray($value,$postName){
         if(isset($_POST[$postName])){
             for ($i=0; $i < count($_POST[$postName]); $i++) {
                 if($_POST[$postName][$i]==$value)
