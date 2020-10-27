@@ -240,7 +240,7 @@ class LitigeDao{
 	}
 
 	public function saveDetailInModif($idDetail, $lastinsertid=false){
-		$req=$this->pdo->prepare("INSERT INTO details_modif (id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj) SELECT id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj FROM details WHERE details.id= :id");
+		$req=$this->pdo->prepare("INSERT INTO details_modif (id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inversion, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj) SELECT id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, puv, pul, fournisseur, cnuf, qte_litige, box_tete, box_art, id_reclamation, inv_palette, inversion, inv_qte, inv_descr, inv_tarif, valo_line, inv_fournisseur, etat_detail, pj FROM details WHERE details.id= :id");
 		$req->execute([
 			':id'		=>$idDetail
 		]);
@@ -274,6 +274,28 @@ class LitigeDao{
 		}
 		return true;
 	}
+	public function updateDetailInvRef($idDetail, $qCde, $tarif, $idReclamation, $qL, $inversion, $invArticle, $invQte, $invTarif, $valo){
+
+		$req=$this->pdo->prepare("UPDATE details SET qte_cde= :qte_cde, tarif= :tarif, id_reclamation= :id_reclamation, qte_litige= :qte_litige,inversion = :inversion, inv_article= :inv_article, inv_qte= :inv_qte, inv_tarif= :inv_tarif, valo_line= :valo_line WHERE id= :id");
+		$req->execute([
+			':qte_cde'		=>$qCde,
+			':tarif'		=>$tarif,
+			':id_reclamation'	=>$idReclamation,
+			':qte_litige'	=>$qL,
+			':inversion'	=>$inversion,
+			':inv_article'	=>$invArticle,
+			':inv_qte'		=>$invQte,
+			':inv_tarif'	=>$invTarif,
+			':valo_line'	=>$valo,
+			':id'			=>$idDetail
+		]);
+		$err=$req->errorInfo();
+		if(!empty($err[2])){
+			return false;
+		}
+		return true;
+	}
+
 
 	function updateModif($lastinsertid){
 		$req=$this->pdo->prepare("UPDATE details_modif SET modif= :modif, updated_by= :updated_by, updated_on= :updated_on WHERE id= :id");
