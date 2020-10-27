@@ -362,7 +362,7 @@ DEBUT CONTENU CONTAINER
 																<td><?=$f['GESSICA.LibelleArticle']?></td>
 																<td><?=$f['GESSICA.PANF']?></td>
 																<td><?=$f['GESSICA.PCB']?></td>
-																<td><a href="edit-detail-litige-inv.php?id_dossier=<?=$_GET['id']?>&id_detail=<?=$detail['id_detail']?>&id_inv=<?=$f['id']?>&inv_qte=<?=$detail['inv_qte']?>"><i class="fas fa-check-circle"></i></a></td>
+																<td><a href="edit-litige-inv-inc.php?id_dossier=<?=$_GET['id']?>&id_detail=<?=$detail['id_detail']?>&id_inv=<?=$f['id']?>&inv_qte=<?=$detail['inv_qte']?>"><i class="fas fa-check-circle"></i></a></td>
 															</tr>
 														<?php endforeach ?>
 
