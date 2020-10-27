@@ -72,14 +72,16 @@
 					</ul>
 					<P class="text-orange subtitle">LES OFFRES SPECIALES</p>
 
-						<ul class='links'>
+						<ul class='links leaders'>
 							<?php foreach ($listActiveOpp as $activeOpp): ?>
 
 								<li>
-									<a class='stat-link' href="../gazette/opp-encours.php#<?=$activeOpp['id']?>"><?=$activeOpp['title'] ?></a>
-									<?=($activeOpp['date_start']==date('Y-m-d') ||  $activeOpp['date_start']==(new DateTime('yesterday'))->format('Y-m-d')) ? "<span class='badge badge-warning ml-3'>Nouveau</span>" :""?>
+									<span>
+										<a class='stat-link' href="../gazette/opp-encours.php#<?=$activeOpp['id']?>"><?=$activeOpp['title'] ?></a>
+										<?=($activeOpp['date_start']==date('Y-m-d') ||  $activeOpp['date_start']==(new DateTime('yesterday'))->format('Y-m-d')) ? "<span class='badge badge-warning ml-3'>Nouveau</span>" :""?>
+									</span>
 
-									<div class="text-dark-grey"><i class="fas fa-hourglass-half px-3"></i>fin de l'offre le  <?=date('d/m/Y', strtotime($activeOpp['date_end']))?></div>
+									<span class="text-dark-grey font-italic">fin de l'offre le  <?=date('d/m/Y', strtotime($activeOpp['date_end']))?></span>
 
 								</li>
 							<?php endforeach ?>
