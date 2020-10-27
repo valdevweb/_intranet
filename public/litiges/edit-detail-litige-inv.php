@@ -43,7 +43,7 @@ function getDetail($pdoLitige)
 {
 	$req=$pdoLitige->prepare("SELECT * FROM details WHERE details.id= :id");
 	$req->execute(array(
-		':id'	=>$_GET['id']
+		':id'	=>$_GET['id_detail']
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 	// return $req->errorInfo();
@@ -55,7 +55,7 @@ function updateDetail($pdoLitige,$artFound,$detail){
 	$req=$pdoLitige->prepare("UPDATE details SET inversion= :inversion, inv_article= :inv_article, inv_descr= :inv_descr, inv_tarif= :inv_tarif, valo_line= :valo_line, inv_fournisseur= :inv_fournisseur WHERE id=:id");
 	$invTarif=$artFound['GESSICA.PANF']*
 	$req->execute([
-		':id'		=>$_GET['id'],
+		':id'		=>$_GET['id_detail'],
 		':inversion'=>$artFound['GESSICA.Gencod'],
 		':inv_article'	=>$artFound['GESSICA.CodeArticle'],
 		':inv_descr'	=>$artFound['GESSICA.LibelleArticle'],
@@ -93,7 +93,7 @@ function updateValoDossier($pdoLitige,$sumValo,$idLitige){
 }
 
 
-if(isset($_GET['id_inv']) && isset($_GET['inv_qte'])){
+if(isset($_GET['id_inv'])){
 	$artFound=getArt($pdoQlik);
 	$detail=getDetail($pdoLitige);
 
@@ -104,9 +104,9 @@ if(isset($_GET['id_inv']) && isset($_GET['inv_qte'])){
 		$sumLitige=getSumLitige($pdoLitige, $detail['id_dossier']);
 		$sumValo=$sumLitige['sumValo'];
 		$update=updateValoDossier($pdoLitige,$sumValo, $detail['id_dossier']);
-		$redir='?id='.$_GET['id'].'&success';
 		unset($_POST);
-		header("Location:edit-detail-litige.php?id=".$_GET['id'],true,303);
+		header("Location:edit-litige.php?id=".$_GET['id_dossier'],true,303);
+
 	}
 
 
