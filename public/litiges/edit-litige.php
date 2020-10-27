@@ -39,7 +39,7 @@ $success=[];
 $litigeDao=new LitigeDao($pdoLitige);
 
 $detailLitige=$litigeDao ->getDetail($_GET['id']);
-$listReclamations=LitigeHelpers::listReclamation($pdoLitige);
+$listReclamations=LitigeHelpers::listReclamationIncludingMasked($pdoLitige);
 
 if(isset($_POST['update_detail'])){
 	$key=array_keys($_POST['update_detail']);
@@ -73,7 +73,7 @@ if(isset($_POST['update_detail'])){
 
 if(isset($_POST['delete_detail'])){
 	$key=array_keys($_POST['delete_detail']);
-$idDetailToDelete=$_POST['id_detail'][$key[0]];
+	$idDetailToDelete=$_POST['id_detail'][$key[0]];
 
 }
 
@@ -212,7 +212,82 @@ DEBUT CONTENU CONTAINER
 								</td>
 							</tr>
 							<?php else: ?>
+								<tr>
+									<td colspan="9">Article commandé :</td>
+								</tr>
+								<tr>
+									<td><?=$detail['article']?></td>
+									<td><?=$detail['dossier']?></td>
+									<td>
+										<div class="form-group">
+											<input type="text" class="form-control mini-input" pattern="[0-9]+" title="Quantité non valide" name="qte_cde[]" id="qte_cde" value="<?=$detail['qte_cde']?>">
+										</div>
 
+
+									</td>
+									<td>
+										<div class="form-group">
+											<input type="text" class="form-control moyen-input" pattern="[-+]?[0-9]*[.]?[0-9]+" title="Exemple 1.1" name="tarif[]" id="tarif" value="<?=$detail['tarif']?>">
+										</div>
+									</td>
+									<td>
+										<div class="form-group">
+											<input type="text" class="form-control mini-input" pattern="[0-9]+" title="Quantité non valide"  name="qte_litige[]" id="qte_litige" value=<?=$detail['qte_litige']?>>
+										</div>
+									</td>
+									<td></td>
+									<td>
+										<div class="form-group">
+											<div class="form-group">
+												<select class="form-control" name="id_reclamation[]" id="id_reclamation">
+													<?php foreach ($listReclamations as $key => $reclam): ?>
+														<option value="<?=$key?>" <?=FormHelpers::restoreSelected($key,$detail['id_reclamation'])?>>
+															<?=$listReclamations[$key]?>
+
+														</option>
+
+													<?php endforeach ?>
+												</select>
+											</div>
+
+										</div>
+									</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td colspan="9">Article reçu :</td>
+								</tr>
+								<tr>
+									<td><?=$detail['inv_article']?></td>
+									<td></td>
+									<td></td>
+									<td>
+										<div class="form-group">
+											<input type="text" class="form-control moyen-input" pattern="[-+]?[0-9]*[.]?[0-9]+" title="Exemple 1.1" name="inv_tarif[]" id="inv_tarif" value="<?=$detail['inv_tarif']?>">
+										</div>
+
+									</td>
+									<td>
+										<div class="form-group">
+											<input type="text" class="form-control mini-input" pattern="[-+]?[0-9]*[.]?[0-9]+" title="Exemple 1.1" name="inv_qte[]" id="tarif" value="<?=$detail['inv_qte']?>">
+										</div>
+									</td>
+									<td>
+										<div class="form-group">
+											<input type="text" class="form-control moyen-input" name="valo_line[]" pattern="[-+]?[0-9]*[.]?[0-9]+" title="Exemple 1.1" id="valo_line" value="<?=$detail['valo_line']?>">
+										</div>
+
+									</td>
+									<td></td>
+									<td>
+										<input type="hidden" class="form-control" name="id_detail[]" id="id_detail" value="<?=$detail['id_detail']?>">
+										<button class="btn btn-primary" type="submit" name="update_detail[<?=$keydetail?>]" >Modifier <?=$keydetail?></button>
+									</td>
+									<td>
+										<button class="btn btn-red" type="submit" name="delete_detail[<?=$keydetail?>]">Supprimer</button>
+									</td>
+								</tr>
 							<?php endif ?>
 
 						<?php endforeach ?>
