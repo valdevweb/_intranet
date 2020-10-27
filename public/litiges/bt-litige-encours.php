@@ -17,6 +17,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 require('../../Class/FormHelpers.php');
 require('../../Class/MagHelpers.php');
 require('../../Class/LitigeDao.php');
+require('../../Class/LitigeHelpers.php');
 
 
 // unset($_SESSION['form-data-deux']);
@@ -101,7 +102,7 @@ include 'bt-litige-encours-sessions-ex.php';
 
 
 
-$litigeQuery="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp, dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, dossiers.occasion, dossiers.id_robbery, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
+$litigeQuery="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp, dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, dossiers.occasion, dossiers.id_robbery, dossiers.id_typo, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat	FROM dossiers
 LEFT JOIN etat ON id_etat=etat.id
 LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE";
 $litigeParam="(id_etat != 1 AND id_etat != 20)|| commission != 1";
@@ -141,7 +142,7 @@ if(isset($paramList)){
 
 		// 2 requetes types : une sur la table dossier "seule", une sur la table dossier jointe à la table article
 	if(isset($_SESSION['form-data-deux']['article'])){
-		$litigeQuery="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp, dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, dossiers.occasion, dossiers.id_robbery, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat FROM dossiers
+		$litigeQuery="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp, dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, dossiers.occasion, dossiers.id_robbery, dossiers.id_typo, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat FROM dossiers
 		LEFT JOIN details ON dossiers.id=details.id_dossier
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE";
@@ -175,6 +176,7 @@ $valoTotalDefault=getSumValo($pdoLitige, $listLitige);
 $listReclamations=$litigeDao->getReclamation();
 $listVideoOk=getListVideo($pdoLitige, 7);
 $listVideoko=getListVideo($pdoLitige, 6);
+$arTypo=LitigeHelpers::listTypo($pdoLitige);
 $arMagOcc=MagHelpers::getListMagOcc($pdoMag);
 $sumValoMain=0;
 $sumValoOcc=0;
