@@ -297,7 +297,7 @@ class LitigeDao{
 	}
 
 
-	function updateModif($lastinsertid){
+	public function updateModif($lastinsertid){
 		$req=$this->pdo->prepare("UPDATE details_modif SET modif= :modif, updated_by= :updated_by, updated_on= :updated_on WHERE id= :id");
 		$req->execute([
 			':modif'		=>1,
@@ -311,5 +311,12 @@ class LitigeDao{
 		}
 		return true;
 	}
+	public function deleteDetail($idDetail){
+		$req=$this->pdo->prepare("DELETE FROM details WHERE id= :id");
+		$req->execute([
+			':id'		=>$idDetail
+		]);
+	}
+
 
 }
