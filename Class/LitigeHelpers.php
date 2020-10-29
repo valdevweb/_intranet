@@ -24,5 +24,8 @@ class LitigeHelpers{
 		$req=$pdoLitige->query("SELECT id, typo FROM typo WHERE mask=0 ORDER BY typo");
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
-
+	public static function listReclamationContrainte($pdoLitige){
+		$req=$pdoLitige->query("SELECT id, reclamation_contrainte FROM reclamation_contrainte ORDER BY reclamation_contrainte");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
 }
