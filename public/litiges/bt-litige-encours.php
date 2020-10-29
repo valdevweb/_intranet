@@ -36,8 +36,8 @@ function makeQuery($pdoLitige, $query, $param, $mod=null){
 		$mod="";
 	}
 	$fullQuery=$query. ' ' .$param. ' '.$mod;
-	echo $fullQuery;
-	echo "<br>";
+	// echo $fullQuery;
+	// echo "<br>";
 	$req=$pdoLitige->query($fullQuery);
 	// return $req->errorInfo();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
@@ -96,7 +96,7 @@ if(isset($_GET['notallowed'])){
 }
 
 
-include 'bt-litge-encours\01-data-formsearch.php';
+include 'bt-litige-encours\01-data-formsearch.php';
 include 'bt-litige-encours\02-data-filtres.php';
 include 'bt-litige-encours\03-data-sessions.php';
 
