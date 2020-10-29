@@ -72,7 +72,7 @@ class LitigeDao{
 	public function getLitigeDossierDetailReclamMagEtatById($idLitige){
 		$req=$this->pdo->prepare("
 			SELECT
-			dossiers.id as id_main,	dossiers.dossier, dossiers.date_crea, DATE_FORMAT(dossiers.date_crea, '%d-%m-%Y') as datecrea, dossiers.user_crea, dossiers.galec, dossiers.etat_dossier, dossiers.vingtquatre, dossiers.id_web_user, dossiers.nom, dossiers.valo, dossiers.flag_valo, dossiers.id_robbery, dossiers.commission,
+			dossiers.id as id_main,	dossiers.dossier, dossiers.date_crea, DATE_FORMAT(dossiers.date_crea, '%d-%m-%Y') as datecrea, dossiers.user_crea, dossiers.galec, dossiers.etat_dossier, dossiers.vingtquatre, dossiers.esp, dossiers.id_web_user, dossiers.nom, dossiers.valo, dossiers.flag_valo, dossiers.id_robbery, dossiers.commission, dossiers.occasion,
 			details.inv_palette, details.inv_qte, details.box_tete, details.box_art, details.id as id_detail, details.id_reclamation, details.ean, details.id_dossier, details.palette, details.facture, details.article, details.tarif, details.qte_cde, details.qte_litige, details.valo_line, details.dossier_gessica, details.descr, details.fournisseur, details.pj, DATE_FORMAT(details.date_facture, '%d-%m-%Y') as datefacture, details.serials, details.inversion, details.inv_article, details.inv_fournisseur, details.inv_tarif, details.inv_descr,
 			reclamation.reclamation,
 			magasin.mag.deno as mag, magasin.mag.centrale, magasin.mag.id as btlec,
