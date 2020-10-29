@@ -13,14 +13,26 @@
 		</div>
 		<div class="col-auto">
 			<?php
+			$vingtquatre="";
+			$litigeOcc="";
+			$magOcc="";
 			if($infoLitige[0]['vingtquatre']==1){
 				$vingtquatre='<img src="../img/litiges/2448_40.png">';
 
-			}else{
-				$vingtquatre="";
 			}
-			echo $vingtquatre;
+			if($infoLitige[0]['esp']==1){
+				$vingtquatre='<img src="../img/litiges/2448esp_40.png">';
+
+			}
+			if($infoLitige[0]['occasion']==1){
+				$litigeOcc='<img src="../img/litiges/occasion-40.png">';
+			}
+			if(isset($arMagOcc[$infoLitige[0]['btlec']])){
+				$magOcc='<img src="../img/logos/leclerc-occasion-circle-mini.gif" class="pr-2">';
+			}
 			?>
+
+			<?=$vingtquatre .$litigeOcc?>
 		</div>
 	</div>
 
@@ -35,9 +47,14 @@
 				<div class="col pl-5">
 					<div class="row">
 						<div class="col">
-							<h4 class="khand pt-2"><a href="stat-litige-mag.php?galec=<?=$infoLitige[0]['galec']?>"><?= $infoLitige[0]['mag'] .' - '.$infoLitige[0]['btlec'].' ('.$infoLitige[0]['galec'].')' ?></a></h4>
+							<h4 class="khand pt-2">
+								<a href="stat-litige-mag.php?galec=<?=$infoLitige[0]['galec']?>">
+									<?= $magOcc.$infoLitige[0]['mag'] .' - '.$infoLitige[0]['btlec'].'<br> ('.$infoLitige[0]['galec'].')' ?>
+
+								</a>
+							</h4>
 						</div>
-						<div class="col">
+						<div class="col-auto">
 							<h4 class="khand pt-2 text-right pr-3"><?= MagHelpers::centraleToSTring($pdoMag,$infoLitige[0]['centrale']) ?></h4>
 						</div>
 					</div>
