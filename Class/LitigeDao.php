@@ -274,7 +274,7 @@ class LitigeDao{
 		}
 		return true;
 	}
-	public function updateDetailInvRef($idDetail, $qCde, $tarif, $idReclamation, $qL, $inversion, $invArticle, $invQte, $invTarif, $valo){
+	public function updateDetailAllCases($idDetail, $qCde, $tarif, $idReclamation, $qL, $inversion, $invArticle, $invQte, $invTarif, $valo){
 
 		$req=$this->pdo->prepare("UPDATE details SET qte_cde= :qte_cde, tarif= :tarif, id_reclamation= :id_reclamation, qte_litige= :qte_litige,inversion = :inversion, inv_article= :inv_article, inv_qte= :inv_qte, inv_tarif= :inv_tarif, valo_line= :valo_line WHERE id= :id");
 		$req->execute([
@@ -297,10 +297,10 @@ class LitigeDao{
 	}
 
 
-	public function updateModif($lastinsertid){
+	public function updateModif($lastinsertid, $typeModif){
 		$req=$this->pdo->prepare("UPDATE details_modif SET modif= :modif, updated_by= :updated_by, updated_on= :updated_on WHERE id= :id");
 		$req->execute([
-			':modif'		=>1,
+			':modif'		=>$typeModif,
 			':updated_by'	=>$_SESSION['id_web_user'],
 			':updated_on'	=>date('Y-m-d H:i:s'),
 			':id'			=>$lastinsertid
