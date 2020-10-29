@@ -220,6 +220,8 @@ $analyse=$litigeDao->getAnalyse($_GET['id']);
 $actionList=$litigeDao->getAction($_GET['id']);
 
 $coutTotal=$infos['mt_transp']+$infos['mt_assur']+$infos['mt_fourn']+$infos['mt_mag'];
+$arMagOcc=MagHelpers::getListMagOcc($pdoMag);
+
 
 if($infos['ctrl_ok']==0){
 	$ctrl="non contrôlé";
