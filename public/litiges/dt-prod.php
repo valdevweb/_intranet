@@ -29,7 +29,6 @@
 
 					<th class="align-top text-right">Valo</th>
 					<th class="align-top">PJ</th>
-					<th class="align-top pt-1"><i class="fas fa-tools"></i></th>
 					<th class="align-top pt-1"><img src="../img/litiges/serial-icon-title.png"></th>
 
 				</tr>
@@ -81,7 +80,7 @@
 						echo '<td class="text-right"> '.number_format((float)$prod['valo_line'],2,'.','').'&euro;</td>';
 
 						echo '<td class="text-right">'.$pj.'</td>';
-						echo '<td class="text-center"><a href="edit-detail-litige.php?id='.$prod['id_detail'].'"><i class="fas fa-tools"></i></a></td>';
+
 						echo '<td><a href="#largeModal" data-toggle="modal" data-id="'.$prod['id_detail'].'"><img src="../img/litiges/'.$serialIcon.'"></a></td>';
 						echo '</tr>';
 					}
@@ -102,7 +101,7 @@
 						echo '<td class="text-right"> '.number_format((float)$prod['tarif']/$prod['qte_cde']*$prod['qte_litige'],2,'.','').'</td>';
 
 						echo '<td class="text-right">'.$pj.'</td>';
-						echo '<td class="text-center"><a href="edit-detail-litige.php?id='.$prod['id_detail'].'"><i class="fas fa-tools"></i></a></td>';
+
 						echo '<td><a href="#largeModal" data-toggle="modal" data-id="'.$prod['id_detail'].'">SN</a></td>';
 
 						echo '</tr>';
@@ -118,14 +117,14 @@
 							echo '<td class="text-right">'.$prod['inv_qte'].'</td>';
 							echo '<td class="text-right"></td>';
 							echo '<td class="text-right"></td>';
-							echo '<td class="text-center"></td>';
+
 							echo '</tr>';
 							echo '<tr class="text-center bg-reddish text-white">';
-							echo '<td colspan="11" class="text-right">&nbsp;</td>';
+							echo '<td colspan="10" class="text-right">&nbsp;</td>';
 
 							echo '</tr>';
 							echo '<tr>';
-							echo '<td colspan="11" class="text-right">&nbsp;</td>';
+							echo '<td colspan="10" class="text-right">&nbsp;</td>';
 							echo '</tr>';
 
 
@@ -147,11 +146,11 @@
 							echo '</tr>';
 							echo '<tr class="text-center bg-reddish text-white">';
 							echo '<td colspan="8" class="text-right">'.number_format((float)$prod['valo_line'],2,'.','').'&euro;</td>';
-							echo '<td colspan="3"></td>';
+							echo '<td colspan="2"></td>';
 
 							echo '</tr>';
 							echo '<tr>';
-							echo '<td colspan="11" class="text-right">&nbsp;</td>';
+							echo '<td colspan="10" class="text-right">&nbsp;</td>';
 							echo '</tr>';
 
 						}
