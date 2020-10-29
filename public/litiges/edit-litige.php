@@ -62,27 +62,35 @@ function searchDbLitigeByEanOrArticle($pdoQlik, $btlec){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function addArticle($pdoLitige, $key, $palette, $facture, $dateFacture, $qteCde,$valo ){
-	$req=$pdoLitige->prepare("INSERT INTO details (id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif,  fournisseur, cnuf, qte_litige, id_reclamation, valo_line) VALUES (:id_dossier, :dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :qte_litige, :id_reclamation, :valo_line)");
+function searchDbOccByEan($pdoOcc){
+		$req=$pdoOcc->prepare("SELECT article_palette, designation as libelle, ean as gencod, quantite as qte, pa as tarif FROM palettes_articles WHERE ean LIKE :ean");
+	$req->execute([
+		':ean'		=>'%'.$_POST['article'].'%',
+	]);
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+function addArticle($pdoLitige, $key, $article, $dossier, $palette, $facture, $dateFacture, $qteCde, $cnuf,$occArticlePalette,$valo ){
+	$req=$pdoLitige->prepare("INSERT INTO details (id_dossier, dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif,  fournisseur, cnuf, qte_litige, id_reclamation, occ_article_palette, valo_line) VALUES (:id_dossier, :dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :qte_litige, :id_reclamation, :occ_article_palette, :valo_line)");
 	$req->execute([
 		':id_dossier'		=>$_POST['id_litige'][$key],
 		':dossier'		=>$_POST['dossier_litige'][$key],
 		':palette'		=>$palette,
 		':facture'		=>$facture,
 		':date_facture'		=>$dateFacture,
-		':article'		=>$_POST['article'][$key],
+		':article'		=>$article,
 		':ean'		=>$_POST['ean'][$key],
-		':dossier_gessica'		=>$_POST['dossier'][$key],
+		':dossier_gessica'		=>$dossier,
 		':descr'		=>$_POST['descr'][$key],
 		':qte_cde'		=>$qteCde,
 		':tarif'		=>$_POST['tarif'][$key],
 		':fournisseur'		=>$_POST['fournisseur'][$key],
-		':cnuf'		=>$_POST['cnuf'][$key],
+		':cnuf'		=>$cnuf,
 		':qte_litige'		=>$_POST['qte_litige'][$key],
 		':id_reclamation'		=>$_POST['id_reclamation'][$key],
+		':occ_article_palette'	=>$occArticlePalette,
 		':valo_line'		=>$valo,
 	]);
-	return $req->rowCount();
+	return $pdoLitige->lastInsertId();
 }
 
 $errors=[];
@@ -95,6 +103,7 @@ $litigeDao=new LitigeDao($pdoLitige);
 $detailLitige=$litigeDao ->getDetail($_GET['id']);
 $listReclamationsIncludingMasked=LitigeHelpers::listReclamationIncludingMasked($pdoLitige);
 $listReclamations=LitigeHelpers::listReclamation($pdoLitige);
+$listReclamationsEdit=LitigeHelpers::listReclamationEdit($pdoLitige);
 
 
 
@@ -123,13 +132,13 @@ if(isset($_POST['update_detail'])){
 
 	}
 
-	if($litigeDao->updateDetailInvRef($_POST['id_detail'][$key], $_POST['qte_cde'][$key], $_POST['tarif'][$key], $_POST['id_reclamation'][$key], $_POST['qte_litige'][$key], $inversion, $invArticle, $invQte, $invTarif, $_POST['valo_line'][$key])){
+	if($litigeDao->updateDetailAllCases($_POST['id_detail'][$key], $_POST['qte_cde'][$key], $_POST['tarif'][$key], $_POST['id_reclamation'][$key], $_POST['qte_litige'][$key], $inversion, $invArticle, $invQte, $invTarif, $_POST['valo_line'][$key])){
 		$errors[]= "impossible de modifier l'article";
 	}
 	$idTableModif=$litigeDao->saveDetailInModif($_POST['id_detail'][$key], true);
 
 	if($idTableModif>0){
-		if($litigeDao->updateModif( $idTableModif)){
+		if($litigeDao->updateModif( $idTableModif,1)){
 			$successQ='?id='.$_GET['id'];
 			unset($_POST);
 			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
@@ -152,8 +161,10 @@ if(isset($_POST['search'])){
 if(isset($_POST['delete_detail'])){
 	$key=implode(array_keys($_POST['delete_detail']));
 	$idDetail=$_POST['id_detail'][$key];
+	$idTableModif=$litigeDao->saveDetailInModif($idDetail, true);
 	$litigeDao->deleteDetail($idDetail);
 	// echo $idDetail;
+	$litigeDao->updateModif($idTableModif,3);
 	$successQ='?id='.$_GET['id'];
 	unset($_POST);
 	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
@@ -165,6 +176,9 @@ if (isset($_POST['search_2'])) {
 		$listArticles=searchDbLitigeByEanOrArticle($pdoQlik, $btlec);
 	}elseif($_POST['cde_mag']==2){
 		$listArticles=searchDbArticleByEanOrArticle($pdoQlik);
+	}elseif ($_POST['cde_mag']==3) {
+		$listArticles=searchDbOccByEan($pdoOcc);
+
 	}
 
 }
@@ -178,20 +192,25 @@ if(isset($_POST['add_article'])){
 	if(empty($errors)){
 		if(empty($_POST['qte_cde'][$key])){
 			$qteCde=1;
-			echo $qteCde;
 			$valo=$_POST['tarif'][$key]*$_POST['qte_litige'][$key];
 
 		}else{
 			$qteCde=$_POST['qte_cde'][$key];
 			$valo=$_POST['tarif'][$key]/$_POST['qte_cde'][$key]*$_POST['qte_litige'][$key];
 		}
+		$article=!empty($_POST['article'][$key])?$_POST['article'][$key]:null;
+		$dossier=!empty($_POST['dossier'][$key])?$_POST['dossier'][$key]:null;
+		$cnuf=!empty($_POST['cnuf'][$key])?$_POST['cnuf'][$key]:null;
 
 		$facture=isset($_POST['facture'][$key])?$_POST['facture'][$key]:null;
 		$dateFacture=isset($_POST['date_facture'][$key])?$_POST['date_facture'][$key]:null;
 		$palette=isset($_POST['palette'][$key])?$_POST['palette'][$key]:null;
-		$done=addArticle($pdoLitige, $key, $palette, $facture, $dateFacture, $qteCde, $valo);
+		$occArticlePalette=isset($_POST['occ_article_palette'][$key])?$_POST['occ_article_palette'][$key]:null;
 
-		if($done==1){
+		$lastInsertId=addArticle($pdoLitige, $key,$article, $dossier, $palette, $facture, $dateFacture, $qteCde, $cnuf, $occArticlePalette, $valo);
+		$idTableModif=$litigeDao->saveDetailInModif($lastInsertId, true);
+
+		if($litigeDao->updateModif($idTableModif,2)){
 			$successQ='?id='.$_GET['id'].'&success=add';
 			unset($_POST);
 			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
@@ -258,7 +277,7 @@ DEBUT CONTENU CONTAINER
 						</div>
 					</div>
 					<div class="col">
-						<button class="btn btn-black" name="update_valo">Modifier</button>
+						<button class="btn btn-primary" name="update_valo">Modifier</button>
 					</div>
 				</div>
 			</form>
@@ -276,12 +295,15 @@ DEBUT CONTENU CONTAINER
 			<h5 class="text-main-blue">Ajout d'articles à la déclaration :</h5>
 		</div>
 	</div>
+	<?php include 'edit-litige-add-inc.php' ?>
 
 
-		<!-- ./container -->
-	</div>
+	<!-- ./container -->
+</div>
 
-	<?php
-	require '../view/_footer-bt.php';
-	?>
+
+
+<?php
+require '../view/_footer-bt.php';
+?>
 
