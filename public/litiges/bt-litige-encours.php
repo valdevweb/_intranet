@@ -96,9 +96,9 @@ if(isset($_GET['notallowed'])){
 }
 
 
-include 'bt-litge-encours-formsearch-ex.php';
-include 'bt-litige-encours-filtres-ex.php';
-include 'bt-litige-encours-sessions-ex.php';
+include 'bt-litge-encours\01-data-formsearch.php';
+include 'bt-litige-encours\02-data-filtres.php';
+include 'bt-litige-encours\03-data-sessions.php';
 
 
 
@@ -185,7 +185,7 @@ $nbTotalDossierTypo=0;
 $nbTotalDossierStatut=0;
 
 
-include 'bt-litige-encours-statut-ex.php';
+include 'bt-litige-encours\04-data-statut.php';
 
 
 
@@ -202,8 +202,8 @@ DEBUT CONTENU CONTAINER
 <div class="container">
 
 
-	<?php include ('bt-litige-encours-header.php') ?>
-	<?php include ('bt-litige-encours-formsearch.php') ?>
+	<?php include ('bt-litige-encours\05-view-header.php') ?>
+	<?php include ('bt-litige-encours\06-view-formsearch.php') ?>
 
 	<div class="row">
 		<div class="col-lg-1 col-xxl-2"></div>
@@ -217,10 +217,10 @@ DEBUT CONTENU CONTAINER
 	</div>
 
 
-	<?php include ('bt-litige-encours-stats.php') ?>
-	<?php include ('bt-litige-encours-filtres.php') ?>
-	<?php include ('bt-litige-encours-table.php') ?>
-	<?php include ('bt-litige-encours-statut-modal.php') ?>
+	<?php include ('bt-litige-encours\07-view-stats.php') ?>
+	<?php include ('bt-litige-encours\08-view-filtres.php') ?>
+	<?php include ('bt-litige-encours\09-view-table.php') ?>
+	<?php include ('bt-litige-encours\10-view-statut-modal.php') ?>
 
 
 
