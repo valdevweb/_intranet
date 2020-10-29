@@ -42,41 +42,27 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php
-
-
-				if(isset($actionList) && count($actionList)>0)
-				{
-					foreach ($actionList as $action)
-					{
-						if($action['pj']!='')
-						{
-							$pj=createFileLink($action['pj']);
-						}
-						else
-						{
-							$pj='';
-						}
-						echo '<tr>';
-						echo'<td>'.$action['dateFr'].'</td>';
-						echo'<td>'. UserHelpers::getFullname($pdoUser, $action['id_web_user']) .'</td>';
-
-						echo'<td>'.$action['libelle'].'</td>';
-						echo'<td>'.$pj.'</td>';
-						echo '</tr>';
+				<?php if (isset($actionList) && count($actionList)>0): ?>
+				<?php foreach ($actionList as $action): ?>
+					<?php
+					if($action['pj']!=''){
+						$pj=createFileLink($action['pj']);
+					}else{
+						$pj='';
 					}
-
-				}
-				else
-				{
-					echo '<tr><td colspan="3">Aucune Action</td></tr>';
-				}
-
-				?>
-
+					?>
+					<tr>
+						<td><?=$action['dateFr']?></td>
+						<td><?=UserHelpers::getFullname($pdoUser, $action['id_web_user'])?></td>
+						<td><?=$action['libelle']?></td>
+						<td><?=$pj?></td>
+					</tr>
+				<?php endforeach ?>
+				<?php else: ?>
+					<tr><td colspan="3">Aucune Action</td></tr>
+				<?php endif ?>
 			</tbody>
 		</table>
 	</div>
-
 </div>
 <div class="bg-separation"></div>

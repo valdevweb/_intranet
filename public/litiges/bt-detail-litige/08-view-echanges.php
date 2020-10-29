@@ -9,7 +9,6 @@
 		<?php
 		if(isset($dials) && count($dials)>0){
 			include('echanges.php');
-
 		}
 		?>
 	</div>

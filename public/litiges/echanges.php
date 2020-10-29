@@ -1,13 +1,7 @@
 
-<?php
-
-
-
-
-foreach ($dials as $dial)
-{
-	if(!empty($dial['msg']))
-	{
+<?php foreach ($dials as $dial): ?>
+	<?php if (!empty($dial['msg'])): ?>
+		<?php
 		if($dial['mag']==1){
 			if(isset($infoLitige[0]['mag'])){
 				$name=$infoLitige[0]['mag'];
@@ -26,37 +20,31 @@ foreach ($dials as $dial)
 		}else{
 			$pj='';
 		}
-	// conteneur
-		echo '<div class="row alert '.$type.' mb-5">';
-		echo '<div class="col">';
-// ligne 1
-		echo '<div class="row heavy">';
-		echo '<div class="col">';
-		echo $name;
-		echo '</div>';
+		?>
 
-		echo '<div class="col">';
-		echo '<div class="text-right"><i class="far fa-calendar-alt pr-3"></i>'.$dial['dateFr'].'<i class="far fa-clock px-3"></i>'.$dial['heure'].'</div>';
-		echo '</div>';
+		<div class="row alert <?=$type?> mb-5">
+			<div class="col">
+				<div class="row heavy">
+					<div class="col">
+						<?=$name ?>
+					</div>
+					<div class="col">
+						<div class="text-right">
+							<i class="far fa-calendar-alt pr-3"></i><?=$dial['dateFr']?><i class="far fa-clock px-3"></i><?=$dial['heure']?>
+						</div>
+					</div>
+				</div>
+				<div class="row ">
+					<div class="col">
+						<?=$dial['msg']?>
+					</div>
+					<div class="col-auto">
+						<?=$pj?>
+					</div>
+				</div>
+			</div>
+		</div>
+	<?php endif ?>
 
-		echo '</div>';
-// ligne 2
-		echo '<div class="row ">';
-		echo '<div class="col">';
-		echo $dial['msg'];
-		echo '</div>';
-		echo '<div class="col-auto">';
-		echo $pj;
-		echo '</div>';
-		echo '</div>';
-		echo '</div>';
-		echo '</div>';
+<?php endforeach ?>
 
-	}
-}
-
-
-
-
-
-?>
