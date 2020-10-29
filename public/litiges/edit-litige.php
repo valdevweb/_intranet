@@ -63,7 +63,7 @@ function searchDbLitigeByEanOrArticle($pdoQlik, $btlec){
 }
 
 function searchDbOccByEan($pdoOcc){
-		$req=$pdoOcc->prepare("SELECT article_palette, designation as libelle, ean as gencod, quantite as qte, pa as tarif FROM palettes_articles WHERE ean LIKE :ean");
+	$req=$pdoOcc->prepare("SELECT article_palette, designation as libelle, ean as gencod, quantite as qte, pa as tarif FROM palettes_articles WHERE ean LIKE :ean");
 	$req->execute([
 		':ean'		=>'%'.$_POST['article'].'%',
 	]);
@@ -93,6 +93,14 @@ function addArticle($pdoLitige, $key, $article, $dossier, $palette, $facture, $d
 	return $pdoLitige->lastInsertId();
 }
 
+function updateValo($pdoLitige){
+	$req=$pdoLitige->prepare("UPDATE dossiers SET valo= :valo WHERE id= :id");
+	$req->execute([
+		':valo'	=>$_POST['valo_totale'],
+		':id'	=>$_GET['id']
+	]);
+}
+
 $errors=[];
 $success=[];
 
@@ -106,7 +114,12 @@ $listReclamations=LitigeHelpers::listReclamation($pdoLitige);
 $listReclamationsEdit=LitigeHelpers::listReclamationEdit($pdoLitige);
 
 
-
+if(isset($_POST['update_valo'])){
+	updateValo($pdoLitige);
+	$successQ='?id='.$_GET['id'];
+	unset($_POST);
+	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+}
 
 
 if(isset($_POST['update_detail'])){
