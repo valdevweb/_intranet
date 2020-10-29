@@ -16,19 +16,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //			FONCTION
 //------------------------------------------------------
 
-// analyse
-// conclusion
-// equipe
-// état
-// imputation
-// reclamation
-// typo
-
-
-
-
-$errors=[];
-$success=[];
+include '../../Class/LitigeHelpers.php';
 
 
 function getanalyse($pdoLitige){
@@ -36,14 +24,13 @@ function getanalyse($pdoLitige){
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-$analyses=getanalyse($pdoLitige);
+
 
 function getconclusion($pdoLitige){
 	$req=$pdoLitige->prepare("SELECT * FROM conclusion ORDER BY conclusion");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-$conclusions=getconclusion($pdoLitige);
 
 
 function getetat($pdoLitige){
@@ -51,7 +38,6 @@ function getetat($pdoLitige){
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-$etats=getetat($pdoLitige);
 
 
 function getimputation($pdoLitige){
@@ -59,21 +45,18 @@ function getimputation($pdoLitige){
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-$imputations=getimputation($pdoLitige);
 
 function getreclamation($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT * FROM reclamation ORDER BY reclamation");
+	$req=$pdoLitige->prepare("SELECT * FROM reclamation LEFT JOIN reclamation_contrainte ON id_contrainte=reclamation_contrainte.id ORDER BY reclamation");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-$reclamations=getreclamation($pdoLitige);
 
 function getgt($pdoLitige){
 	$req=$pdoLitige->prepare("SELECT * FROM gt ORDER BY gt");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-$gts=getgt($pdoLitige);
 
 
 function gettypo($pdoLitige){
@@ -81,7 +64,6 @@ function gettypo($pdoLitige){
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-$typos=gettypo($pdoLitige);
 
 function add($pdoLitige, $key)
 {
@@ -94,20 +76,31 @@ function add($pdoLitige, $key)
 	return $req->rowCount();
 }
 
-function addReclamationContrainte($pdoLitige)
-{
-	$req=$pdoLitige->prepare("INSERT INTO reclamation SET reclamation=:reclamation, contrainte=:contrainte, libelle_contrainte=:libelle");
+function addReclamation($pdoLitige){
+	$contrainte=0;
+	if (!empty($_POST['contrainte'])) {
+		$contrainte=$_POST['contrainte'];
+	}
+	$req=$pdoLitige->prepare("INSERT INTO reclamation SET reclamation=:reclamation, id_contrainte=:id_contrainte");
 	$req->execute(array(
 		':reclamation'	=>$_POST['reclamation-form'],
-		':contrainte'	=>1,
-		':libelle'	=>$_POST['libelle-contrainte-form']
+		':id_contrainte'	=>$contrainte,
 
 	));
 	return $req->rowCount();
 }
 
+$errors=[];
+$success=[];
 
-
+$analyses=getanalyse($pdoLitige);
+$conclusions=getconclusion($pdoLitige);
+$etats=getetat($pdoLitige);
+$imputations=getimputation($pdoLitige);
+$reclamations=getreclamation($pdoLitige);
+$gts=getgt($pdoLitige);
+$typos=gettypo($pdoLitige);
+$arReclamContrainte=LitigeHelpers::listReclamationContrainte($pdoLitige);
 
 if(isset($_POST['analyse']))
 {
@@ -158,38 +151,14 @@ if(isset($_POST['imputation']))
 	}
 }
 
-if(isset($_POST['reclamation']))
-{
-	if(isset($_POST['contrainte-form']))
-	{
-		if(!empty($_POST['libelle-contrainte-form']))
-		{
-			$row=addReclamationContrainte($pdoLitige);
-			if($row>0)
-			{
-				$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?success=ok';
-				header($loc);
-			}
-		}
-		else
-		{
-			$errors[]="Vous devez nommer le ou les documents qui seront obligatoires pour cette réclamation";
-		}
+if(isset($_POST['reclamation'])){
+	$row=addReclamation($pdoLitige);
+	if($row>0){
+		$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?success=ok';
+		header($loc);
 	}
-	else
-	{
-		$row=add($pdoLitige,'reclamation');
-		if($row>0)
-		{
-			$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?success=ok';
-			header($loc);
-		}
-		else{
-			$errors[]="impossible de mettre à jour la base de donnée";
-		}
 
 
-	}
 }
 
 if(isset($_POST['gt']))
@@ -224,6 +193,7 @@ if(isset($_GET['success']))
 {
 	$success[]='mise à jour effectuée';
 }
+
 
 
 
@@ -567,7 +537,7 @@ DEBUT CONTENU CONTAINER
 						echo '<tr>';
 						echo'<td>'.$ico.'</td>';
 						echo'<td>'.$reclamation['reclamation'].'</td>';
-						echo'<td>'.$reclamation['libelle_contrainte'].'</td>';
+						echo'<td>'.$reclamation['reclamation_contrainte'].'</td>';
 						echo'<td class="text-center"><a href="ex-reclamation-modify.php?id='.$reclamation['id'].'"><i class="fas fa-pen"></i></a></td>';
 						echo '</tr>';
 
@@ -583,14 +553,15 @@ DEBUT CONTENU CONTAINER
 							<input type="text" class="form-control" name="reclamation-form" required></input>
 						</div>
 						<p class="heavy text-blue">Imposer une contrainte :</p>
-						<div class="form-check">
-							<input type="checkbox" class="form-check-input" name="contrainte-form"></input>
-							<label class="form-check-label">Pièce(s) jointe(s) obligatoire(s)</label>
-						</div>
-						<div class="form-group pl-3 pt-3">
-							<label>Nom du ou des documents obligatoires :</label>
-							<input type="text" class="form-control" name="libelle-contrainte-form"></input>
 
+						<div class="form-group">
+							<select class="form-control" name="contrainte" id="contrainte">
+								<option value="">Pas de contrainte</option>
+
+								<?php foreach ($arReclamContrainte as $keyContrainte => $reclamContrainte): ?>
+									<option value="<?=$keyContrainte?>"><?=$arReclamContrainte[$keyContrainte]?></option>
+								<?php endforeach ?>
+							</select>
 						</div>
 						<div class="pt-4 mt-2 text-right">
 							<button type="submit" id="submit" class="btn btn-primary" name="reclamation"><i class="fas fa-save pr-3"></i>Enregistrer</button>
@@ -603,7 +574,7 @@ DEBUT CONTENU CONTAINER
 	<div class="row">
 		<div class="col text-right"><a href="#top" class="link-blue">Retour au menu<i class="fas fa-chevron-circle-up fa-lg pl-3"></i></a></div>
 	</div>
-<!-- #6 -->
+	<!-- #6 -->
 	<div class="row my-3">
 		<div class="col"></div>
 		<div class="col"><hr></div>
@@ -725,11 +696,11 @@ DEBUT CONTENU CONTAINER
 	<div class="row">
 		<div class="col text-right"><a href="#top" class="link-blue">Retour au menu<i class="fas fa-chevron-circle-up fa-lg pl-3"></i></a></div>
 	</div>
-<div class="row my-5">
-	<div class="col">
-		<p class="text-center "><a href="exploit-ltg.php" class="btn btn-primary"><i class="fas fa-arrow-alt-circle-left pr-3"></i>Retour</a></p>
+	<div class="row my-5">
+		<div class="col">
+			<p class="text-center "><a href="exploit-ltg.php" class="btn btn-primary"><i class="fas fa-arrow-alt-circle-left pr-3"></i>Retour</a></p>
+		</div>
 	</div>
-</div>
 
 </div>
 
