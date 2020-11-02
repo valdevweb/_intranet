@@ -65,15 +65,23 @@ function gettypo($pdoLitige){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function add($pdoLitige, $key)
-{
-
+function add($pdoLitige, $key){
 	$value=$key.'-form';
 	$req=$pdoLitige->prepare("INSERT INTO $key SET $key=:value");
 	$req->execute(array(
 		':value'	=>$_POST[$value]
 	));
 	return $req->rowCount();
+}
+
+function addEtat($pdoLitige){
+	$req=$pdoLitige->prepare("INSERT INTO etat (etat, occ_etat) VALUES (:etat, :occ_etat) ");
+	$req->execute([
+		':etat'		=>$_POST['etat-form'],
+		':occ_etat'	=>$_POST['occasion']
+	]);
+	return $req->rowCount();
+
 }
 
 function addReclamation($pdoLitige){
@@ -127,7 +135,7 @@ if(isset($_POST['conclusion']))
 
 if(isset($_POST['etat']))
 {
-	$row=add($pdoLitige,'etat');
+	$row=addEtat($pdoLitige);
 	if($row>0)
 	{
 		$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?success=ok';
@@ -200,7 +208,7 @@ if(isset($_GET['success']))
 
 $tableHeadAnalyse=	'<div class="col"><table class="table border table-striped"><thead class="thead-blue"><tr><th>Etat</th><th>Analyse</th></tr></thead><tbody>';
 $tableHeadReponse=	'<div class="col"><table class="table border table-striped"><thead class="thead-blue"><tr><th>Etat</th><th>Reponse</th></tr></thead><tbody>';
-$tableHeadStatut=	'<div class="col"><table class="table border table-striped"><thead class="thead-blue"><tr><th>Etat</th><th>Statut</th></tr></thead><tbody>';
+$tableHeadStatut=	'<div class="col"><table class="table border table-striped"><thead class="thead-blue"><tr><th>Etat</th><th>Statut</th><th>Occasion</th></tr></thead><tbody>';
 $tableHeadImputation=	'<div class="col"><table class="table border table-striped"><thead class="thead-blue"><tr><th>Etat</th><th>Imputation</th></tr></thead><tbody>';
 $tableHeadgt=	'<div class="col"><table class="table border table-striped"><thead class="thead-blue"><tr><th>Etat</th><th>Nature</th></tr></thead><tbody>';
 $tableHeadReclamation=	'<div class="col"><table class="table border table-striped"><thead class="thead-blue"><tr><th>Etat</th><th>Reclamation</th><th>Contrainte</th><th>Modifier</th></tr></thead><tbody>';
@@ -400,26 +408,28 @@ DEBUT CONTENU CONTAINER
 				<div class="col"></div>
 			</div>
 			<div class="row">
-				<div class="col-4">
+				<div class="col-5">
 					<?php
 					echo $tableHeadStatut;
-					foreach ($etats as $etat)
-					{
-						if($etat['mask']==0)
-						{
+					?>
+					<?php foreach ($etats as $etat): ?>
+
+						<?php
+						if($etat['mask']==0){
 							$ico='<a href="data-hide.php?table=etat&id='.$etat['id'].'" class="blue-link"><i class="fas fa-eye"></i></a>';
-						}
-						else
-						{
+						}else{
 							$ico='<a href="data-show.php?table=etat&id='.$etat['id'].'" class="text-dark-grey"><i class="fas fa-eye-slash"></i></a>';
-
 						}
-						echo '<tr>';
-						echo'<td>'.$ico.'</td>';
-						echo'<td>'.$etat['etat'].'</td>';
-						echo '</tr>';
+						?>
+						<tr>
+							<td><?=$ico?></td>
+							<td><?=$etat['etat']?></td>
+							<td><?=($etat['occ_etat']==1)?'oui':''?></td>
+						</tr>
 
-					}
+
+					<?php endforeach ?>
+					<?php
 					echo $tablefoot;
 					?>
 				</div>
@@ -429,6 +439,15 @@ DEBUT CONTENU CONTAINER
 						<div class="form-group">
 							<label>Statut : </label>
 							<input type="text" class="form-control" name="etat-form" required></input>
+						</div>
+						<p>Est-ce un statut spécifique au GT occasion ?</p>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" value="1" id="occ_oui" name="occasion">
+							<label class="form-check-label" for="occ_oui">Oui</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" value="0" id="occ_non" name="occasion" checked>
+							<label class="form-check-label" for="occ_non">Non</label>
 						</div>
 						<div class="pt-4 mt-2 text-right">
 							<button type="submit" id="submit" class="btn btn-primary" name="etat"><i class="fas fa-save pr-3"></i>Enregistrer</button>
