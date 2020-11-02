@@ -44,7 +44,7 @@
 			<?php endif ?>
 		</p>
 	</div>
-	<div class="col-auto  pt-5">
+	<div class="col-auto align-self-end pt-5">
 		<p class="text-right"><a href="bt-litige-encours.php" class="btn btn-primary">Retour</a></p>
 	</div>
 </div>
