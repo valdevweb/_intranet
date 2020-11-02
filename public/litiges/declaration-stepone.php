@@ -45,12 +45,10 @@ function getMagIdwebuser($pdoUser)
 // création du dossier dans la table ($idRobbery = 0 si pas vol, 1 si vol)
 function insertDossier($pdoLitige, $numDossier,$magId, $idRobbery){
 
-	if(isset($_POST['date_bt']) && !empty($_POST['date_bt']))
-	{
+	if(isset($_POST['date_bt']) && !empty($_POST['date_bt'])){
 		$dateDecl=$_POST['date_bt'];
 	}
-	else
-	{
+	else{
 		$dateDecl=	date('Y-m-d H:i:s');
 	}
 
