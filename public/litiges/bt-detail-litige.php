@@ -19,6 +19,7 @@ require 'echanges.fn.php';
 require('../../Class/UserHelpers.php');
 require('../../Class/MagHelpers.php');
 require('../../Class/LitigeDao.php');
+require('../../Class/OccHelpers.php');
 
 //------------------------------------------------------
 //			INFOS
@@ -214,6 +215,7 @@ function addSerials($pdoLitige,$idDetail,$values){
 
 $litigeDao=new LitigeDao($pdoLitige);
 $infoLitige=$litigeDao->getLitigeDossierDetailReclamMagEtatById($_GET['id']);
+
 $firstDial=$litigeDao->getFirstDial($_GET['id']);
 $infos=$litigeDao->getInfos($_GET['id']);
 $analyse=$litigeDao->getAnalyse($_GET['id']);
