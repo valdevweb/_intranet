@@ -55,7 +55,7 @@ function convertArray($data, $field,$separator){
 }
 
 function updateSca($pdoMag){
-	$req=$pdoMag->prepare("UPDATE sca3 SET galec_sca= :galec_sca, deno_sca= :deno_sca, ad1_sca= :ad1_sca, ad2_sca= :ad2_sca, ad3= :ad3_sca, cp_sca= :cp_sca, ville_sca= :ville_sca, tel_sca= :tel_sca, fax_sca= :fax_sca, adherent_sca= :adh_sca, directeur_sca= :dir_sca, centrale_sca= :centrale_sca, centrale_doris= :centrale_doris, centrale_smiley= :centrale_smiley, surface_sca= :surface_sca, sorti= :sorti, date_ouverture= :date_ouverture, date_adhesion= :date_adhesion, date_fermeture= :date_fermeture, date_resiliation= :date_resiliation, date_sortie= :date_sortie, pole_sav_sca= :pole_sav_sca, nom_gesap= :gesap, affilie= :affilie, racine_list= :racine_list, date_update= :date_update WHERE btlec_sca= :btlec_sca");
+	$req=$pdoMag->prepare("UPDATE sca3 SET galec_sca= :galec_sca, deno_sca= :deno_sca, ad1_sca= :ad1_sca, ad2_sca= :ad2_sca, ad3= :ad3_sca, cp_sca= :cp_sca, ville_sca= :ville_sca, tel_sca= :tel_sca, fax_sca= :fax_sca, adherent_sca= :adh_sca, directeur_sca= :dir_sca, centrale_sca= :centrale_sca, centrale_doris= :centrale_doris, centrale_smiley= :centrale_smiley, surface_sca= :surface_sca, sorti= :sorti, date_ouverture= :date_ouverture, date_adhesion= :date_adhesion, date_fermeture= :date_fermeture, date_resiliation= :date_resiliation, date_sortie= :date_sortie, pole_sav_sca= :pole_sav_sca, nom_gesap= :gesap, affilie= :affilie, racine_list= :racine_list, occasion= :occasion, backoffice_sca= :backoffice_sca, date_update= :date_update WHERE btlec_sca= :btlec_sca");
 
 	$req->execute([
 		':btlec_sca'		=>$_GET['id'],
@@ -84,6 +84,8 @@ function updateSca($pdoMag){
 		':gesap'		=>$_POST['gesap'],
 		':racine_list'		=>$_POST['racine_list'],
 		':affilie'		=>$_POST['affilie'],
+		':occasion'		=>$_POST['occasion'],
+		':backoffice_sca'		=>$_POST['backoffice_sca'],
 		':date_update'	=>date('Y-m-d H:i:s')
 	]);
 	return $req->rowCount();
@@ -118,14 +120,16 @@ if(isset($_POST['clear_form'])){
 if (isset($_GET['id'])){
 	$magDbHelper=new MagDao($pdoMag);
 	$mag=$magDbHelper->getMagAndScaTroisInfo($_GET['id']);
+	$occ=$mag->getOccasion();
 
 	$histo= $magDbHelper->getHisto($mag->getGalec());
 	$listCentralesSca=$magDbHelper->getDistinctCentraleSca();
 	$webuser=$magDbHelper->getWebUser($mag->getGalec());
 	$centreRei=$magDbHelper->centreReiToString($mag->getCentreRei());
 	$listTypesMag=$magDbHelper-> getListType();
-	$listCm=UserHelpers::getUserByService($pdoUser, 17);
+	$listBackOffice=$magDbHelper->getListBackOffice();
 
+	$listCm=UserHelpers::getUserByService($pdoUser, 17);
 	$yearN=date('Y');
 	$yearNUn= date("Y",strtotime("-1 year"));
 	$yearNDeux= date("Y",strtotime("-2 year"));
@@ -597,10 +601,17 @@ DEBUT CONTENU CONTAINER
 				<div class="row pb-3 ">
 					<div class="col">
 						<h1 class="text-main-blue pt-5 ">
-							<?= (isset($mag))? 'Leclerc '.$mag->getDeno(): "Fiche magasin" ?>
+							Leclerc <?= $mag->getDeno() ?>
 						</h1>
 
-						<h5 class="yanone">Code BTLec : <span class="text-orange" ><?= $mag->getId() .'</span><span class="pl-5">Panonceau Galec : <span class="text-orange">'.$mag->getGalec().'</span>'?> <span class="pl-5">Centrale : </span><span class="text-orange"><?=$centraleSca?></span> </h5>
+						<h5 class="yanone">
+							Code BTLec : <span class="text-orange" ><?= $mag->getId() ?></span>
+							<span class="pl-5">Panonceau Galec : <span class="text-orange"><?=$mag->getGalec()?></span>
+							<span class="pl-5">Centrale : </span><span class="text-orange"><?=$centraleSca?></span>
+							<span class="pl-5">Occasion : </span><span class="text-orange"><?=($mag->getOccasion()==1)?"oui":"non"?></span>
+
+
+						</h5>
 
 					</div>
 					<?php
