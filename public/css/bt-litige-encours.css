@@ -15,7 +15,7 @@ input{
 
 
 
-td:nth-child(7){
+td.valo{
   white-space: nowrap !important;
   /* min-width: 10% !important; */
 }

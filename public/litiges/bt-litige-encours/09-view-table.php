@@ -22,7 +22,7 @@
 						<th class="align-top">Centrale</th>
 						<th class="align-top">Etat</th>
 						<th class="align-top">Typo</th>
-						<th class="align-top text-right">Valo</th>
+						<th class="align-top text-right valo">Valo</th>
 						<th class="text-center align-top">GT13</th>
 
 						<th class="text-center align-top">Ctrl Stock</th>
@@ -87,7 +87,7 @@
 							<td><?= (isset($arCentrale[$active['centrale']]))?$arCentrale[$active['centrale']] :''?></td>
 							<td class="<?=($active['id_etat']=="1" ||$active['id_etat']=="20" )?'text-dark-grey':'text-red'?>"><?=$active['etat']?></td>
 							<td><?=(!empty($active['id_typo'])) ? $arTypo[$active['id_typo']]:""?></td>
-							<td class="text-right"><?=number_format((float)$active['valo'],2,'.',' ')?>&euro;</td>
+							<td class="text-right valo"><?=number_format((float)$active['valo'],2,'.',' ')?>&euro;</td>
 							<td class="text-center"><?=$icoOcc?></td>
 							<td class="text-center"><?=$icoRobbery. $ctrl .$icoDemandeVideo?></td>
 							<?php if ($class=='validated'): ?>
