@@ -28,4 +28,9 @@ class LitigeHelpers{
 		$req=$pdoLitige->query("SELECT id, reclamation_contrainte FROM reclamation_contrainte ORDER BY reclamation_contrainte");
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
+
+	public static function listReclamationPhoto($pdoLitige){
+		$req=$pdoLitige->query("SELECT id FROM reclamation WHERE id_contrainte=1");
+		return $req->fetchAll(PDO::FETCH_COLUMN);
+	}
 }
