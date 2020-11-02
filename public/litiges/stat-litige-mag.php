@@ -87,6 +87,10 @@ $yearNDeux= date("Y",strtotime("-2 year"));
 $errors=[];
 $success=[];
 
+$backUrl=$_SERVER['HTTP_REFERER'];
+
+
+
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
@@ -100,9 +104,10 @@ DEBUT CONTENU CONTAINER
 
 	<div class="row py-3">
 		<div class="col">
-			<p class="text-right"><a href="bt-litige-encours.php" class="btn btn-primary">Retour</a></p>
+			<p class="text-right"><a href="<?=$backUrl?>" class="btn btn-primary">Retour</a></p>
 		</div>
 	</div>
+
 	<h1 class="text-main-blue ">Réclamations par magasin</h1>
 
 	<div class="row">
