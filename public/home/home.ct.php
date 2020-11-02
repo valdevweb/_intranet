@@ -105,6 +105,8 @@
 								<li>Prenez en main rapidement et facilement les applications de l'univers Extralec grâce au portail (guide d'installation , formation, assistance technique) et administrez vos comptes utilisateurs.<br><a class="simple-link stat-link" data-user-session="<?= $_SESSION['user']?>"  href="https://www.extralecbtlec.fr/"><i class="fas fa-external-link-alt pr-3"></i>Portail Extralec</a><br><br></li>
 								<li>Si vous ne connaissez pas bien Extralec, n'hésitez pas à consulter <a class="simple-link stat-link" data-user-session="<?= $_SESSION['user']?>"  href="<?= ROOT_PATH. '/public/doc/extralec.php'?>">la plaquette commerciale </a></li>
 							</ul>
+							<p class="text-orange subtitle">ACTUALITE :</p>
+							<p class="text-orange">Nous vous informons que votre centrale d'achat BTLec Est et le SAV Leclerc Est resteront ouverts durant toute la période de confinement</p>
 						</div>
 					</div>
 				</div>

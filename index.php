@@ -164,21 +164,17 @@ if(!empty($revRes))
 
 
 
-				<!-- <div class="row infos">
+				<div class="row infos">
 					<div class="col-1"></div>
 					<i class="pin"></i>
 					<div class="col px-5 inside-infos">
 						<p class="center-text pt-2"><i class="fa fa-bell fa-lg" aria-hidden="true"></i></p>
-						<h4 class="orange-text text-darken-3 text-center">INFORMATION LIVRAISON - IMPORTANT</h4>
+						<h4 class="orange-text text-darken-3 text-center">INFORMATION - IMPORTANT</h4>
 
-						<p class="text-left">Compte tenu des informations à notre disposition à cet instant, nous vous informons que les commandes 24/48h00 des mercredi  4 et jeudi 5 décembre sont supprimées.
-En fonction de l'évolution de la situation nous vous informerons sur le traitement ou non des commandes du vendredi 6 décembre.
-
-
-Concernant les livraisons hebdomadaires magasins, nous n'avons pas à l'heure actuelle de confirmation de point de blocage. Par conséquent, nous aviserons en fonction des remontées d'information que nous aurons.</p>
+						<p class="text-left">Votre centrale d'achat BTLec Est et le SAV Leclerc Est resteront ouverts durant toute la période de confinement</p>
 					</div>
 					<div class="col-1"></div>
-				</div> -->
+				</div>
 					<!-- <div class="row infos">
 					<div class="col-1"></div>
 					<i class="pin"></i>
