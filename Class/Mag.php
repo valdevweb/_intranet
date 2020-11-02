@@ -73,6 +73,8 @@ class Mag{
     private $pole_sav_ctbt;
     private $reservable;
     private $backoffice;
+    private $occasion;
+    private $backoffice_sca;
 
 
     public function __construct(array $data){
@@ -863,6 +865,24 @@ public function getDirecteurSca(){
 
 public function setDirecteurSca($directeur_sca){
     $this->directeur_sca = $directeur_sca;
+    return $this;
+}
+
+public function getOccasion(){
+    return $this->occasion;
+}
+
+public function setOccasion($occasion){
+    $this->occasion = $occasion;
+    return $this;
+}
+
+public function getBackofficeSca(){
+    return $this->backoffice_sca;
+}
+
+public function setBackofficeSca($backoffice_sca){
+    $this->backoffice_sca = $backoffice_sca;
     return $this;
 }
 }
