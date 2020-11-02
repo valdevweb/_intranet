@@ -93,7 +93,7 @@ function addArticle($pdoLitige, $key, $article, $dossier, $palette, $facture, $d
 	return $pdoLitige->lastInsertId();
 }
 
-function updateValo($pdoLitige){
+function modifValo($pdoLitige){
 	$req=$pdoLitige->prepare("UPDATE dossiers SET valo= :valo WHERE id= :id");
 	$req->execute([
 		':valo'	=>$_POST['valo_totale'],
@@ -101,6 +101,14 @@ function updateValo($pdoLitige){
 	]);
 }
 
+function updateValo($pdoLitige){
+	$req=$pdoLitige->prepare("UPDATE dossiers SET valo =(SELECT sum(valo_line) as sumValo FROM details WHERE id_dossier= :id_dossier) WHERE id= :id_dossier");
+	$req->execute([
+		':id_dossier'	=>$_GET['id']
+	]);
+
+
+}
 $errors=[];
 $success=[];
 
@@ -115,7 +123,7 @@ $listReclamationsEdit=LitigeHelpers::listReclamationEdit($pdoLitige);
 
 
 if(isset($_POST['update_valo'])){
-	updateValo($pdoLitige);
+	modifValo($pdoLitige);
 	$successQ='?id='.$_GET['id'];
 	unset($_POST);
 	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
@@ -150,6 +158,7 @@ if(isset($_POST['update_detail'])){
 
 	if($idTableModif>0){
 		if($litigeDao->updateModif( $idTableModif,1)){
+			updateValo($pdoLitige);
 			$successQ='?id='.$_GET['id'];
 			unset($_POST);
 			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
@@ -174,7 +183,7 @@ if(isset($_POST['delete_detail'])){
 	$idDetail=$_POST['id_detail'][$key];
 	$idTableModif=$litigeDao->saveDetailInModif($idDetail, true);
 	$litigeDao->deleteDetail($idDetail);
-	// echo $idDetail;
+	updateValo($pdoLitige);
 	$litigeDao->updateModif($idTableModif,3);
 	$successQ='?id='.$_GET['id'];
 	unset($_POST);
@@ -222,10 +231,11 @@ if(isset($_POST['add_article'])){
 		$idTableModif=$litigeDao->saveDetailInModif($lastInsertId, true);
 
 		if($litigeDao->updateModif($idTableModif,2)){
-			$successQ='?id='.$_GET['id'].'&success=add';
-			unset($_POST);
-			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+			updateValo($pdoLitige);
 		}
+		$successQ='?id='.$_GET['id'].'&success=add';
+		unset($_POST);
+		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 
 	}
 
