@@ -168,6 +168,9 @@ class MagDao{
 		return $req=$this->pdo->query("SELECT id, type FROM type")->fetchAll(PDO::FETCH_KEY_PAIR);
 
 	}
+	public function getListBackOffice(){
+		return $req=$this->pdo->query("SELECT id, backoffice FROM backoffice ORDER BY backoffice")->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
 
 	public function getWebUser($galec){
 		$req=$this->pdo->prepare("SELECT *, web_users.users.id as id_web_user FROM mag LEFT JOIN web_users.users ON mag.galec=web_users.users.galec WHERE mag.galec= :galec");
