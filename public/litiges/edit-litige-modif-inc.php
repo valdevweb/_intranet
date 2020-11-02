@@ -19,7 +19,7 @@
 						<?php if (empty($detail['inversion'])): ?>
 							<tr>
 								<td><?=$detail['article']?></td>
-								<td><?=$detail['dossier']?></td>
+								<td><?=$detail['dossier_gessica']?></td>
 								<td>
 									<div class="form-group">
 										<input type="text" class="form-control mini-input" pattern="[0-9]+" title="Quantité non valide" name="qte_cde[]" id="qte_cde" value="<?=$detail['qte_cde']?>">

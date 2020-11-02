@@ -126,9 +126,7 @@ if(isset($_POST['update_detail'])){
 	// on récupère l'index du bouton submit qui a été  cliqué
 	$key=implode(array_keys($_POST['update_detail']));
 
-	if($litigeDao->saveDetailInModif($_POST['id_detail'][$key])){
-		$errors[]= "impossible de recopier les données initiales";
-	}
+	$litigeDao->saveDetailInModif($_POST['id_detail'][$key]);
 	//si on etait sur une inversion de référence (inv_ref existe), on a 2 cas :
 	//on reste en inversion de réf après la modification,
 	//on décide ne ne plus être en inversion de référence après la modification
@@ -145,10 +143,10 @@ if(isset($_POST['update_detail'])){
 
 	}
 
-	if($litigeDao->updateDetailAllCases($_POST['id_detail'][$key], $_POST['qte_cde'][$key], $_POST['tarif'][$key], $_POST['id_reclamation'][$key], $_POST['qte_litige'][$key], $inversion, $invArticle, $invQte, $invTarif, $_POST['valo_line'][$key])){
-		$errors[]= "impossible de modifier l'article";
-	}
+	$litigeDao->updateDetailAllCases($_POST['id_detail'][$key], $_POST['qte_cde'][$key], $_POST['tarif'][$key], $_POST['id_reclamation'][$key], $_POST['qte_litige'][$key], $inversion, $invArticle, $invQte, $invTarif, $_POST['valo_line'][$key]);
 	$idTableModif=$litigeDao->saveDetailInModif($_POST['id_detail'][$key], true);
+	// echo 'id table modif'. $idTableModif;
+
 
 	if($idTableModif>0){
 		if($litigeDao->updateModif( $idTableModif,1)){
