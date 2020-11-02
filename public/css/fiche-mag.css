@@ -249,3 +249,30 @@ h5.sub-title{
   width: 50%;
 
 }
+
+
+@media (min-width: 1600px){
+  .container {
+    max-width: 1500px !important;
+  }
+}
+@media (min-width: 1500px){
+  .container {
+    max-width: 1460px !important;
+  }
+}
+
+
+
+@media (min-width: 1400px){
+  .container {
+    max-width: 1400px !important;
+  }
+}
+
+@media (min-width: 1200px){
+
+  .container {
+    max-width: 1140px;
+  }
+}
