@@ -72,6 +72,14 @@ font-weight: bold;
     display: block;
 }
 
+.hidden-photo{
+    display: none;
+}
+.show-photo{
+    display: block;
+}
+
+
 
 .circle-icon {
 	color: #fff;
@@ -95,4 +103,9 @@ font-weight: bold;
 textarea{
     height:  150px !important;
     background:  #fff7df !important;
+}
+
+.contrainte{
+    color:  #721c24;
+    background: #f8d7da;
 }
