@@ -33,4 +33,45 @@ class LitigeHelpers{
 		$req=$pdoLitige->query("SELECT id FROM reclamation WHERE id_contrainte=1");
 		return $req->fetchAll(PDO::FETCH_COLUMN);
 	}
+
+	public static function listTypoAll($pdoLitige){
+		$req=$pdoLitige->query("SELECT id, typo FROM typo ORDER BY typo");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+
+	public static function listAffreteAll($pdoLitige){
+		$req=$pdoLitige->query("SELECT id, affrete FROM affrete ORDER BY affrete");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+
+	public static function listAnalyseAll($pdoLitige){
+		$req=$pdoLitige->query("SELECT id, analyse FROM analyse ORDER BY analyse");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+
+	public static function listConclusionAll($pdoLitige){
+		$req=$pdoLitige->query("SELECT id, conclusion FROM conclusion ORDER BY conclusion");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+	public static function listEquipeAll($pdoLitige){
+		$req=$pdoLitige->query("SELECT id, CONCAT (nom, ' ', prenom) FROM equipe ORDER BY nom");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+	public static function listEtatAll($pdoLitige){
+		$req=$pdoLitige->query("SELECT id, etat FROM etat ORDER BY etat");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+
+	public static function listImputationAll($pdoLitige){
+		$req=$pdoLitige->query("SELECT id, imputation FROM imputation ORDER BY imputation");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+	public static function listTransitAll($pdoLitige){
+		$req=$pdoLitige->query("SELECT id, transit FROM transit ORDER BY transit");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+	public static function listTransporteurAll($pdoLitige){
+		$req=$pdoLitige->query("SELECT id, transporteur FROM transporteur ORDER BY transporteur");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
 }
