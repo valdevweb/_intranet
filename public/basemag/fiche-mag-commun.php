@@ -6,6 +6,7 @@
 				<span class="text-orange">
 					<i class="fas fa-map-marked pr-3"></i>
 					<?= 'Leclerc '.$mag->getDeno()?>
+
 				</span>
 				<?= !empty($mag->getDateFermeture())? '<span class="text-orange pl-5">Fermé le : </span>' .$mag->getDateFermetureFr() :''?>
 			</div>
@@ -144,7 +145,7 @@
 						</div>
 						<div class="col-3">
 							<span class="text-orange">Backoffice :</span>
-							<?= $mag->getBackofficeStr()?>
+							<?=isset($listBackOffice[$mag->getBackofficeSca()])? $listBackOffice[$mag->getBackofficeSca()] :""?>
 						</div>
 						<div class="col-3">
 							<span class="text-orange">Chargé de mission :</span>
