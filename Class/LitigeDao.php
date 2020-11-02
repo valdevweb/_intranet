@@ -227,6 +227,28 @@ class LitigeDao{
 		return	$row;
 	}
 
+	public function addDetailsExcedent($idDossier,$numDossier, $article, $ean,$dossierG, $descr, $qteC,	$tarif, $fou, $cnuf, $qteLitige, $idReclamation, $valo){
+		$req=$this->pdo->prepare("INSERT INTO details_temp(id_dossier, dossier, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf, qte_litige, id_reclamation, valo_line) VALUES(:id_dossier, :dossier, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :qte_litige, :id_reclamation, :valo_line)");
+		$req->execute(array(
+			':id_dossier'	=>$idDossier,
+			':dossier'		=>$numDossier,
+			':article'		=>$article,
+			':ean'			=>$ean,
+			':dossier_gessica'	=>$dossierG,
+			':descr'		=>$descr,
+			':qte_cde'		=> $qteC,
+			':tarif'		=>$tarif,
+			':fournisseur'	=>$fou,
+			':cnuf'			=>$cnuf,
+			':qte_litige'	=>$qteLitige,
+			':id_reclamation' =>$idReclamation,
+			':valo_line'	=>$valo
+		));
+	// return $req->errorInfo();
+		$row=$req->rowCount();
+		return	$row;
+	}
+
 	public function updateOccDossier($idDossier){
 		$req=$this->pdo->prepare("UPDATE dossiers_temp SET occasion=1 WHERE id= :id");
 		$req->execute([
@@ -244,16 +266,8 @@ class LitigeDao{
 		$req->execute([
 			':id'		=>$idDetail
 		]);
-		if (!$lastinsertid) {
-			$err=$req->errorInfo();
-			if(!empty($err[2])){
-				return false;
-			}
-			return true;
-		}else{
-			return $this->pdo->lastInsertId();
-		}
-
+		// return $req->errorInfo();
+		return $this->pdo->lastInsertId();
 
 	}
 
