@@ -90,6 +90,16 @@ class LitigeDao{
 	// return $req->errorInfo();
 	}
 
+		public function getLitigeDossierDetailById($idLitige){
+		$req=$this->pdo->prepare("
+			SELECT *, details.id as id_detail, magasin.mag.id as btlec FROM dossiers	LEFT JOIN details ON dossiers.id=details.id_dossier	LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE dossiers.id= :id ");
+		$req->execute(array(
+			':id'	=>$idLitige
+		));
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	// return $req->errorInfo();
+	}
+
 	function getLitigesByGalec($galec){
 		$req=$this->pdo->prepare("SELECT dossiers.id as id, dossier,DATE_FORMAT(date_crea,'%d-%m-%Y')as datecrea, typo, imputation, etat, tablegt.gt, valo, analyse, conclusion, mt_transp, mt_assur, mt_fourn, mt_mag, magasin.mag.deno, magasin.mag.id as btlec, magasin.mag.centrale  FROM dossiers
 			LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec
