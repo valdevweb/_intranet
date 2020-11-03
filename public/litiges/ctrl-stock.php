@@ -24,6 +24,7 @@ addRecord($pdoStat,$page,$action, $descr, 101);
 
 require_once '../../vendor/autoload.php';
 require_once '../../Class/LitigeDao.php';
+require_once '../../Class/MagHelpers.php';
 // require 'info-litige.fn.php';
 
 $errors=[];
@@ -182,15 +183,15 @@ else{
 }
 
 if(isset($_GET['id'])){
-	$litige= $litigeDao->getInfos($_GET['id']);
+	$litige= $litigeDao->getLitigeDossierDetailById($_GET['id']);
+		// echo "<pre>";
+		// print_r($litige);
+		// echo '</pre>';
+
 	$analyse=$litigeDao->getAnalyse($_GET['id']);
 	$infos= $litigeDao->getInfos($_GET['id']);
 	$actionList=$litigeDao->getAction($_GET['id']);
-	echo "<pre>";
-	print_r($litige);
-	echo '</pre>';
-
-
+	$arCentrale=MagHelpers::getListCentrale($pdoMag);
 }
 $reportAction=$art=$ctrlKo=$ecart=$mvt="";
 
@@ -382,11 +383,11 @@ include('../view/_navbar.php');
 				<div class="row ">
 					<div class="col">
 						<span class="heavy">Magasin : </span>
-						<span>	<?= isset($litige[0]['btlec'])? $litige[0]['btlec'] : ''?> - <?= isset($litige[0]['mag'])? $litige[0]['mag'] : ''?></span>
+						<span>	<?= isset($litige[0]['btlec'])? $litige[0]['btlec'] : ''?> - <?= isset($litige[0]['deno'])? $litige[0]['deno'] : ''?></span>
 					</div>
 					<div class="col">
 						<span class="heavy">Centrale : </span>
-						<span><?= isset($litige[0]['centrale'])? $litige[0]['centrale'] : ''?></span>
+						<span><?= isset($arCentrale[$litige[0]['centrale']])? $arCentrale[$litige[0]['centrale']] : ''?></span>
 
 					</div>
 				</div>
