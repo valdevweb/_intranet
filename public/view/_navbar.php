@@ -101,6 +101,7 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 				<li data-module="11"><a href="<?= $contact?>id=5 ">direction</a></li>
 				<li data-module="12"><a href="<?= $contact?>id=6 ">direction commerciale</a></li>
 				<li data-module="13"><a href="<?= $contact?>id=7">exploitation informatique</a></li>
+				<li data-module="13"><a href="<?= $contact?>id=27">Leclerc Occasion</a></li>
 				<li data-module="14"><a href="<?= $contact?>id=8">logistique</a></li>
 				<li data-module="15"><a href="<?= $contact?>id=9">social</a></li>
 				<li data-module="17"><a href="<?= $contact?>id=11">qualité</a></li>
