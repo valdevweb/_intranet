@@ -124,6 +124,9 @@ if (isset($_GET['id'])){
 
 	$histo= $magDbHelper->getHisto($mag->getGalec());
 	$listCentralesSca=$magDbHelper->getDistinctCentraleSca();
+	$listMainCentrale=$magDbHelper->getMainCentrale();
+
+
 	$webuser=$magDbHelper->getWebUser($mag->getGalec());
 	$centreRei=$magDbHelper->centreReiToString($mag->getCentreRei());
 	$listTypesMag=$magDbHelper-> getListType();
