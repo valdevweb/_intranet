@@ -139,7 +139,9 @@ iframe {
   box-shadow: inset 2px 2px 5px #e4e4e4, inset -5px -5px 10px #FFF;
 
 }
-
+.hidden{
+  display: none;
+}
 
 .btn-file {
   position: relative;
