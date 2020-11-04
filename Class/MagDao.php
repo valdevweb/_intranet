@@ -146,6 +146,10 @@ class MagDao{
 	}
 
 
+	public function getMainCentrale(){
+		// uniquement centrale pour mag de type mag
+		return $req=$this->pdo->query("SELECT * FROM centrales WHERE main=1 ORDER BY centrale")->fetchAll(PDO::FETCH_ASSOC);
+	}
 	public function getDistinctCentraleSca(){
 		// uniquement centrale pour mag de type mag
 		return $req=$this->pdo->query("SELECT DISTINCT centrale_sca, centrale FROM sca3 LEFT JOIN centrales ON  sca3.centrale_sca=centrales.id_ctbt WHERE centrale_sca IS NOT NULL ORDER BY centrale")->fetchAll(PDO::FETCH_ASSOC);
