@@ -262,6 +262,14 @@ background: #757687
   margin-right: -15px !important;
 }
 
+.bg-separation-thin{
+  background-color: #e1e1e1;
+  /* width: 100%; */
+  height:  3px;
+  margin-left: -15px !important;
+  margin-right: -15px !important;
+}
+
 .no-bg{
 
   margin-left: -15px !important;
