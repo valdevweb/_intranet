@@ -170,8 +170,8 @@ iframe {
   transition: all 4s;
   transition-timing: ease-in-out;
   color: #212529;
-    background-color: #f8f9fa;
-    border-color: #f8f9fa;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
 
 }
 
@@ -186,3 +186,67 @@ iframe {
 
 }
 
+
+
+
+/* Effect 13: three circles */
+
+nav a {
+  position: relative;
+  display: inline-block;
+  margin: 15px 25px;
+  text-decoration: none;
+  letter-spacing: 1px;
+  font-weight: 400;
+}
+
+nav a:hover,
+nav a:focus {
+  outline: none;
+}
+
+
+
+.cl-effect-13 a {
+  -webkit-transition: color 0.3s;
+  -moz-transition: color 0.3s;
+  transition: color 0.3s;
+  color: #0D47A1;
+}
+
+.cl-effect-13 a::before {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  content: '_';
+  /* content: '✤'; */
+  /* content: '\25C8'; */
+  /* content: '\274B'; */
+  /* content: '\2261'; */
+/* https://nealchester.com/special-characters/ */
+  color: #0D47A1;
+  font-size: 1.2em;
+  -webkit-transition: text-shadow 0.3s, color 0.3s;
+  -moz-transition: text-shadow 0.3s, color 0.3s;
+  transition: text-shadow 0.3s, color 0.3s;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.cl-effect-13 a:hover::before,
+.cl-effect-13 a:focus::before {
+  /* text-shadow: 0 0 transparent; */
+  text-shadow: 10px 0 #0D47A1, -10px 0 #0D47A1;
+
+  /* color: transparent; */
+  text-decoration: none;
+}
+
+.cl-effect-13 a:hover,
+.cl-effect-13 a:focus {
+  color: #0D47A1;
+  text-decoration: none;
+
+}
