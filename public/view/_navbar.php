@@ -139,6 +139,9 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-palette.php'?>">Offres produits</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-exploit.php'?>">Gestion GT Occasion</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-expedie.php'?>">Palettes expédiées</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-editinfo.php'?>">Exploit infos mag GT13</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-news.php'?>">Informations Leclerc occasion</a></li>
+
 				</ul>
 			</li>
 		<?php endif ?>
@@ -147,6 +150,7 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 				<ul>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-palette.php'?>">Offres produits</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-mag-cdes.php'?>">Vos Commandes</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-news.php'?>">Informations Leclerc occasion</a></li>
 				</ul>
 			</li>
 		<?php endif ?>
