@@ -1,5 +1,7 @@
 <?php
 include('../../config/config.inc.php');
+
+
 $response = ["success"=>false, "message"=>"Bad request"];
 if(isset($_POST["submit"])) {
     $response["message"] ="Unknown error occurred";
@@ -55,6 +57,7 @@ if ($uploadOk == 0) {
         $response["message"] = "The file ". $filename. " has been uploaded.";
         $response["success"] = true;
         $response["path"] = $webdir;
+
     } else {
         $response["message"] = "Sorry, there was an error uploading your file.";
     }
