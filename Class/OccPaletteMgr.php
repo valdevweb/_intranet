@@ -14,7 +14,10 @@ class OccPaletteMgr{
 	}
 
 	public function getListPaletteDetailByStatut($statut){
-		$req=$this->pdoOcc->prepare("SELECT palettes.id as idpalette, palettes.palette, palettes_articles.*  FROM palettes LEFT JOIN palettes_articles ON palettes.id=palettes_articles.id_palette WHERE statut=:statut ORDER BY palette");
+		$req=$this->pdoOcc->prepare("SELECT palettes.id as idpalette, palettes.palette, palettes_articles.* ,date_import FROM palettes
+			LEFT JOIN palettes_articles ON palettes.id=palettes_articles.id_palette
+			LEFT JOIN import_excel ON palettes.import=import_excel.id
+			WHERE statut=:statut ORDER BY palette");
 		$req->execute([
 			':statut'		=>$statut
 		]);
@@ -29,6 +32,14 @@ class OccPaletteMgr{
 		]);
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
+	public function getListPaletteByStatut($statut){
+		$req=$this->pdoOcc->prepare("SELECT palettes.*, import_excel.filename, import_excel.date_import FROM palettes LEFT JOIN import_excel ON palettes.import=import_excel.id WHERE statut=:statut ORDER BY date_import, palettes.id");
+		$req->execute([
+			':statut'		=>$statut
+		]);
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
 
 	public function getListArticleOccByArticlePalette($articlePalette){
 		$req=$this->pdoOcc->prepare("SELECT id as id_article_occ, article_palette, designation as libelle, ean as gencod, quantite as qte, pa as tarif FROM palettes_articles WHERE article_palette=:article_palette");
@@ -88,7 +99,7 @@ class OccPaletteMgr{
 	}
 
 	public function getActiveListPaletteCmt(){
-		$req=$this->pdoOcc->prepare("SELECT * FROM palettes_cmt WHERE date_end >= :date_end");
+		$req=$this->pdoOcc->prepare("SELECT * FROM import_cmt LEFT JOIN import_excel ON id_import= import_excel.id WHERE date_end >= :date_end");
 		$req->execute([
 			':date_end'		=>date('Y-m-d H:i:s')
 		]);
@@ -97,6 +108,15 @@ class OccPaletteMgr{
 
 	}
 
+	public function getListImport(){
+		$req=$this->pdoOcc->query("SELECT * FROM import_excel WHERE mask=0 order BY date_import");
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	public function getListCmtImport(){
+		$req=$this->pdoOcc->query("SELECT * FROM import_cmt LEFT JOIN import_excel ON id_import=import_excel.id WHERE mask=0 order BY id_import");
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
 }
 
 

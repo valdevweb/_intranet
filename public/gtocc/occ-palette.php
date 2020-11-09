@@ -72,7 +72,7 @@ function addToTemp($pdoOcc){
 }
 
 function addToTempArt($pdoOcc){
-	$req=$pdoOcc->prepare("INSERT INTO cdes_temp (id_web_user, id_palette, article_occ, design_occ, fournisseur_occ, ean_occ, panf_occ, deee_occ, sorecop_occ ,qte_cde, date_insert) VALUES (:id_web_user, :id_palette, :article_occ, :design_occ, :fournisseur_occ, :ean_occ, :panf_occ, :deee_occ, :sorecop_occ , :qte_cde, :date_insert) ");
+	$req=$pdoOcc->prepare("INSERT INTO cdes_temp (id_web_user, id_palette, article_occ, design_occ, fournisseur_occ, ean_occ, panf_occ, deee_occ, sorecop_occ ,qte_cde, date_insert, marque_occ, ppi_occ) VALUES (:id_web_user, :id_palette, :article_occ, :design_occ, :fournisseur_occ, :ean_occ, :panf_occ, :deee_occ, :sorecop_occ , :qte_cde, :date_insert, :marque_occ, :ppi_occ) ");
 	$req->execute([
 		':id_web_user'		=>$_SESSION['id_web_user'],
 		':id_palette'		=>0,
@@ -84,7 +84,9 @@ function addToTempArt($pdoOcc){
 		':deee_occ'		=>$_POST['deee_qlik'],
 		':sorecop_occ'		=>$_POST['sorecop'],
 		':qte_cde'		=>$_POST['qte_cde'],
-		':date_insert'		=>date('Y-m-d H:i:s')
+		':date_insert'		=>date('Y-m-d H:i:s'),
+		':ppi_occ'		=>$_POST['ppi_qlik'],
+		':marque_occ'		=>$_POST['marque_qlik'],
 
 	]);
 
@@ -129,8 +131,8 @@ function updatePalette($pdoOcc,$idPalette,$statut){
 	return true;
 }
 
-function addToCmd($pdoOcc,$idPalette,$idCde, $article, $panf, $deee, $sorecop, $design, $fournisseur, $ean, $qte){
-	$req=$pdoOcc->prepare("INSERT INTO cdes_detail (id_web_user, id_palette, id_cde, article_occ, panf_occ, deee_occ, sorecop_occ, design_occ, fournisseur_occ, ean_occ, qte_cde, date_insert) VALUES (:id_web_user, :id_palette, :id_cde, :article_occ, :panf_occ, :deee_occ, :sorecop_occ, :design_occ, :fournisseur_occ, :ean_occ, :qte_cde, :date_insert) ");
+function addToCmd($pdoOcc,$idPalette,$idCde, $article, $panf, $deee, $sorecop, $design, $fournisseur, $ean, $qte, $marque, $ppi){
+	$req=$pdoOcc->prepare("INSERT INTO cdes_detail (id_web_user, id_palette, id_cde, article_occ, panf_occ, deee_occ, sorecop_occ, design_occ, fournisseur_occ, ean_occ, qte_cde, date_insert, marque_occ, ppi_occ) VALUES (:id_web_user, :id_palette, :id_cde, :article_occ, :panf_occ, :deee_occ, :sorecop_occ, :design_occ, :fournisseur_occ, :ean_occ, :qte_cde, :date_insert, :marque_occ, :ppi_occ) ");
 	$req->execute([
 		':id_web_user'		=>$_SESSION['id_web_user'],
 		':id_cde'		=>$idCde,
@@ -143,7 +145,9 @@ function addToCmd($pdoOcc,$idPalette,$idCde, $article, $panf, $deee, $sorecop, $
 		':ean_occ'		=>$ean,
 		':qte_cde'		=>$qte,
 		':id_palette'		=>$idPalette,
-		':date_insert'		=>date('Y-m-d H:i:s')
+		':date_insert'		=>date('Y-m-d H:i:s'),
+		':marque_occ'		=>$marque,
+		':ppi_occ'		=>$ppi,
 
 	]);
 	$err=$req->errorInfo();
@@ -166,7 +170,7 @@ function deleteTempCmd($pdoOcc,$id){
 }
 
 function getAssortiment($pdoOcc){
-	$req=$pdoOcc->query(" SELECT articles_qlik.*, cmt	FROM articles_qlik LEFT JOIN articles_qlik_cmt ON articles_qlik.article_qlik= articles_qlik_cmt.article WHERE qte_qlik !=0 ORDER BY article_qlik");
+	$req=$pdoOcc->query(" SELECT articles_qlik.*, cmt, file	FROM articles_qlik LEFT JOIN articles_qlik_cmt ON articles_qlik.article_qlik= articles_qlik_cmt.article LEFT JOIN fiche_prod ON articles_qlik.article_qlik= fiche_prod.article WHERE qte_qlik !=0 ORDER BY article_qlik");
 	return $req->fetchAll();
 }
 

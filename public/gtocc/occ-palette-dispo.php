@@ -11,6 +11,8 @@
 			<div class="row">
 				<div class="col">
 					<div class="alert alert-danger">
+						<b>Information importante lot de palettes du <?=date('d-m-Y', strtotime($cmt['date_import']))?> : </b><br>
+
 						<?=$cmt['cmt']?>
 					</div>
 				</div>
@@ -25,7 +27,7 @@
 			<?php $montantPalette=0 ?>
 			<div class="row my-3" id="detailPalette">
 				<div class="col">
-					<h5 class="text-main-blue text-center">Palette <?=$palette[0]['palette'] ?></h5>
+					<h5 class="text-main-blue text-center">Palette <?=$palette[0]['palette'] . ' - lot du '.date('d-m-Y', strtotime($cmt['date_import'])) ?></h5>
 				</div>
 			</div>
 

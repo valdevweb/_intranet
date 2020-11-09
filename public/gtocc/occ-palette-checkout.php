@@ -53,7 +53,9 @@ if(isset($_POST['checkout'])){
 			// palette
 			if(!empty($itemReserve['id_palette'])){
 
-				$cdeOk=addToCmd($pdoOcc,$itemReserve['id_palette'],$lastinsertid, $itemReserve['article_occ'], $itemReserve['panf_occ'], $itemReserve['deee_occ'], $itemReserve['sorecop_occ'], $itemReserve['design_occ'], $itemReserve['fournisseur_occ'], $itemReserve['ean_occ'], $itemReserve['qte_cde']);
+				$cdeOk=addToCmd($pdoOcc,$itemReserve['id_palette'],$lastinsertid, $itemReserve['article_occ'], $itemReserve['panf_occ'], $itemReserve['deee_occ'], $itemReserve['sorecop_occ'], $itemReserve['design_occ'], $itemReserve['fournisseur_occ'], $itemReserve['ean_occ'], $itemReserve['qte_cde'], $itemReserve['marque_occ'], $itemReserve['ppi_occ']);
+
+
 				if($cdeOk){
 					$statut=2;
 					$upPalette=$paletteMgr->updatePaletteStatut($pdoOcc,$itemReserve['id_palette'],$statut);
@@ -66,7 +68,9 @@ if(isset($_POST['checkout'])){
 
 			}else{
 				// article
-				$cdeOk=addToCmd($pdoOcc,$itemReserve['id_palette'],$lastinsertid, $itemReserve['article_occ'], $itemReserve['panf_occ'], $itemReserve['deee_occ'], $itemReserve['sorecop_occ'], $itemReserve['design_occ'], $itemReserve['fournisseur_occ'], $itemReserve['ean_occ'], $itemReserve['qte_cde']);
+				$cdeOk=addToCmd($pdoOcc,$itemReserve['id_palette'],$lastinsertid, $itemReserve['article_occ'], $itemReserve['panf_occ'], $itemReserve['deee_occ'], $itemReserve['sorecop_occ'], $itemReserve['design_occ'], $itemReserve['fournisseur_occ'], $itemReserve['ean_occ'], $itemReserve['qte_cde'], $itemReserve['marque_occ'], $itemReserve['ppi_occ']);
+
+
 				if($cdeOk){
 					// on supprime la ligne temporaire
 					$deleteTemRow=deleteTempCmd($pdoOcc,$itemReserve['id']);
@@ -126,11 +130,12 @@ if(isset($_POST['checkout'])){
 		$sheet->setCellValue('B1', 'Magasin');
 		$sheet->setCellValue('C1', 'Palette');
 		$sheet->setCellValue('D1', 'Article');
-		$sheet->setCellValue('E1', 'Désignation');
-		$sheet->setCellValue('F1', 'EAN');
-		$sheet->setCellValue('G1', 'Quantité');
-		$sheet->setCellValue('H1', 'Prix d\'achat');
-		$sheet->setCellValue('I1', 'PVC');
+		$sheet->setCellValue('E1', 'Marque');
+		$sheet->setCellValue('F1', 'Désignation');
+		$sheet->setCellValue('G1', 'EAN');
+		$sheet->setCellValue('H1', 'Quantité');
+		$sheet->setCellValue('I1', 'Prix d\'achat');
+		$sheet->setCellValue('J1', 'PVC');
 		$row=2;
 
 		$infoCde=$paletteMgr->getCdeByIdCde($lastinsertid);
@@ -143,12 +148,17 @@ if(isset($_POST['checkout'])){
 				$ean=$cde['ean'];
 				$qte=$cde['quantite'];
 				$palette=$arrayListPalette[$cde['id_palette']];
+				$marque="";
+				$ppi=$cde['pvc'];
 			}else{
 				$article=$cde['article_occ'];
 				$designation=$cde['design_occ'];
 				$ean=$cde['ean_occ'];
 				$qte=$cde['qte_cde'];
 				$palette="";
+				$marque=$cde['marque_occ'];
+				$ppi=$cde['ppi_occ'];
+
 
 			}
 
@@ -156,12 +166,13 @@ if(isset($_POST['checkout'])){
 			$sheet->setCellValue('B'.$row, $infoMag['deno']);
 			$sheet->setCellValue('C'.$row, $palette );
 			$sheet->setCellValue('D'.$row, $article);
-			$sheet->setCellValue('E'.$row, $designation);
-			$sheet->setCellValue('F'.$row, $ean);
-			$sheet->setCellValue('G'.$row, $qte);
-			$sheet->setCellValue('H'.$row, ($cde['pa']!=null)?$cde['pa']:'');
-			$sheet->setCellValue('I'.$row, ($cde['pvc']!=null)?$cde['pvc']:'');
-			$sheet->getStyle('F'.$row)
+			$sheet->setCellValue('E'.$row, $marque);
+			$sheet->setCellValue('F'.$row, $designation);
+			$sheet->setCellValue('G'.$row, $ean);
+			$sheet->setCellValue('H'.$row, $qte);
+			$sheet->setCellValue('I'.$row, ($cde['pa']!=null)?$cde['pa']:'');
+			$sheet->setCellValue('J'.$row, $ppi);
+			$sheet->getStyle('G'.$row)
 			->getNumberFormat()
 			->setFormatCode(
 				'0000000000000'

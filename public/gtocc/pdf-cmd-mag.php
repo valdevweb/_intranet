@@ -118,10 +118,12 @@
 			<tr class="thead">
 				<td>Palette</td>
 				<td>Code article</td>
+				<td>Marque</td>
 				<td>Désignation</td>
 				<td>EAN</td>
 				<td>Quantité</td>
 				<td>Prix d'achat</td>
+				<td>PPI</td>
 
 			</tr>
 
@@ -136,6 +138,8 @@
 						$qte=$cde['quantite'];
 						$palette=$arrayListPalette[$cde['id_palette']];
 						$tarif=$cde['pa'];
+						$ppi=$cde['pvc'];
+						$marque="";
 					}else{
 						$article=$cde['article_occ'];
 						$designation=$cde['design_occ'];
@@ -143,6 +147,8 @@
 						$qte=$cde['qte_cde'];
 						$palette="";
 						$tarif=$cde['panf_occ'];
+						$ppi=$cde['ppi_occ'];
+						$marque=$cde['marque_occ'];
 
 					}
 
@@ -151,10 +157,12 @@
 					<tr>
 						<td><?=$palette?></td>
 						<td><?=$article?></td>
+						<td><?=$marque?></td>
 						<td><?=$designation?></td>
 						<td><?=$ean?></td>
 						<td class="text-right"><?=$qte?></td>
 						<td class="text-right"><?=$tarif?></td>
+						<td class="text-right"><?=$ppi?></td>
 					</tr>
 
 					<?php

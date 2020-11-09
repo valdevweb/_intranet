@@ -183,7 +183,7 @@ a .fa-ban:hover{
     position: relative;
   display: inline-block;
 }
-td:nth-child(10){
+td:nth-child(12){
   width:50px !important;
   text-align: right;
 
@@ -218,4 +218,31 @@ td:nth-child(10){
  th.fit {
     white-space: nowrap;
     width: 1% !important;
+}
+
+
+@media (min-width: 1600px){
+  .container {
+    max-width: 1500px !important;
+  }
+}
+@media (min-width: 1500px){
+  .container {
+    max-width: 1460px !important;
+  }
+}
+
+
+
+@media (min-width: 1400px){
+  .container {
+    max-width: 1400px !important;
+  }
+}
+
+@media (min-width: 1200px){
+
+  .container {
+    max-width: 1140px;
+  }
 }
