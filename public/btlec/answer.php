@@ -1,8 +1,8 @@
 <?php
-require '../../config/autoload.php';
+require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
-
 	header('Location:'. ROOT_PATH.'/index.php');
+	exit();
 }
 //on supprime la var qui mémorise le lien
 unset($_SESSION['goto']);
@@ -114,6 +114,15 @@ function formatPJ($incFileStrg){
 
 // id du message auquel bt répond donc $_GET['msg']
 
+// if(isset($_POST['post-reply'])){
+// 		echo "<pre>";
+// 		print_r($_POST);
+// 		print_r($_FILES);
+// 		echo '</pre>';
+
+// }
+
+
 if(isset($_POST['post-reply'])){
 	if((empty($_POST['reply']))){
 		echo "merci de remplir tous les champs";
@@ -121,7 +130,7 @@ if(isset($_POST['post-reply'])){
 	else{
 		extract($_POST);
 		//si pas de fichier joint
-		if (!$isFileToUpload){
+		if (empty($_FILES['incfile']['name'][0])){
 			//pas de pièce jointe
 			$allfilename="";
 			// ajout mdp dans webuser
@@ -283,21 +292,11 @@ if(isset($_POST['post-reply'])){
 		$action="envoi réponse BT => mag";
 		addRecord($pdoStat,$page,$action, $descr);
 
-		// fin stats ------------------------------>
 
 	}
-}		//fin soumission formulaire
+}
 
-//affichage
-//suppression le 22/08/2018 - inutile
-// if (isset($_POST['close']))
-// {
-// 	$etat="cloturé par BTlec";
-// 	if(!majEtat($pdoBt,$idMsg, $etat)){
-// 		$err="impossible de clore le dossier";
-// 		die;
-// 	}
-// }
+
 
 // ajout du 22/08/2018 : btn pour cloturer les tickets sans envoyer de réponse ni de mail
 // accès seulement au groupe admin

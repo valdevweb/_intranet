@@ -1,10 +1,8 @@
 <?php
-// session_cache_limiter('private_no_expire');
- // require('../../config/pdo_connect.php');
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
-	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
+	exit();
 }
 //			css dynamique
 //----------------------------------------------------------------

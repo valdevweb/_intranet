@@ -1,10 +1,9 @@
 <?php
-require '../../config/autoload.php';
+require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
-
 	header('Location:'. ROOT_PATH.'/index.php');
+	exit();
 }
-//on supprime la var qui mémorise le lien
 
 
 

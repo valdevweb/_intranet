@@ -1,11 +1,8 @@
 <?php
-
- // require('../../config/pdo_connect.php');
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
-	echo "pas de variable session";
-
+	exit();
 }
 //			css dynamique
 //----------------------------------------------------------------
