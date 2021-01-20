@@ -130,7 +130,7 @@ if(isset($_POST['post-reply'])){
 	else{
 		extract($_POST);
 		//si pas de fichier joint
-		if (empty($_FILES['incfile']['name'][0])){
+		if (isset($_FILES['incfile']['name'][0]) && empty($_FILES['incfile']['name'][0])){
 			//pas de pièce jointe
 			$allfilename="";
 			// ajout mdp dans webuser

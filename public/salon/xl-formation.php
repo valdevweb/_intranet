@@ -1,9 +1,8 @@
 <?php
-
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
-	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
+	exit();
 }
 
 require_once '../../Class/FormationDAO.php';

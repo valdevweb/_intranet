@@ -1,10 +1,9 @@
 <?php
-
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
+	exit();
 }
-
 
 require_once '../../vendor/autoload.php';
 require_once '../../Class/MagHelpers.php';
