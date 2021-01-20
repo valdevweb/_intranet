@@ -108,6 +108,14 @@ function delTempCde($pdoOcc){
 	]);
 }
 
+function delPaletteCde($pdoOcc){
+	$req=$pdoOcc->prepare("DELETE FROM cdes_detail WHERE id_palette= :id_palette");
+	$req->execute([
+		':id_palette'		=>$_GET['del-palette']
+	]);
+}
+
+
 function getPaletteStatut($pdoOcc,$id){
 	$req=$pdoOcc->prepare("SELECT * FROM palettes WHERE id= :id ");
 	$req->execute([
@@ -262,11 +270,12 @@ $displayCart=false;
 
 $paletteMgr=new OccPaletteMgr($pdoOcc);
 $paletteCommandable=$paletteMgr->getListPaletteDetailByStatut(1);
-
+$importW="";
 
 
 $paletteEnPrepa=$paletteMgr->getListPaletteDetailByStatut(0);
 $paletteCommandees=$paletteMgr->getListCommandeByStatut(2);
+
 $paletteEtArticleDansPanier=getListPanier($pdoOcc);
 
 $listAssortiment=getAssortiment($pdoOcc);
@@ -316,7 +325,14 @@ include 'occ-palette-checkout.php';
 
 include 'occ-palette-addarticle.php';
 
+if(isset($_GET['del-palette'])){
+// supprimer la palette de la commande
+// remettre le statut de la palette à 1
+	delPaletteCde($pdoOcc);
+	updatePalette($pdoOcc, $_GET['del-palette'], 1);
+	header("Location:occ-palette.php#cde");
 
+}
 
 if(isset($_GET['expedier'])){
 	$majStatutPalette=false;
@@ -405,6 +421,19 @@ DEBUT CONTENU CONTAINER
 		<div class="col-lg-1"></div>
 	</div>
 
+	<div class="row">
+		<div class="col-lg-2"></div>
+
+		<div class="col">
+			<div class="alert alert-danger text-center">
+				<h5><i class="fas fa-exclamation-circle pr-2"></i>INFORMATION</h5>
+				Dorénavant les nouvelles palettes occasion seront ajoutées <strong>seulement le mardi</strong><br>
+				Merci de votre compréhension.
+			</div>
+		</div>
+		<div class="col-lg-2"></div>
+
+	</div>
 	<!-- partie réservée BT -->
 
 	<?php if ($_SESSION['type']=='btlec'): ?>
@@ -500,8 +529,20 @@ DEBUT CONTENU CONTAINER
 				$('table[data-table-id="'+id+'"]').show();
 			}
 		});
+		$('.detail-palette').hide();
+
+		$('.lot').on("click", function(){
+			var id= $(this).data("lot-id");
+			if($('.detail-palette[data-lot-list="'+id+'"]').is(":visible")){
+				$('.detail-palette[data-lot-list="'+id+'"]').hide();
 
 
+			}else{
+				$('.detail-palette[data-lot-list="'+id+'"]').show();
+				console.log("id" +id);
+
+			}
+		});
 
 	});
 

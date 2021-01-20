@@ -1,6 +1,5 @@
 <?php
 require('../../config/autoload.php');
-
 if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
 }
@@ -118,16 +117,12 @@ if(!empty($_SERVER['HTTP_REFERER']))
 }
 
 //personnalisation des sessions et récup de données utilisateur
-if($_SESSION['type']=="mag" || $_SESSION['type']=="centrale")
-{
+if($_SESSION['id_type']==2 || $_SESSION['id_type']==5){
 
-	if($_SESSION['type']=='mag')
-	{
+	if($_SESSION['id_type']==2){
 		$typeTitle="Bienvenue Leclerc";
 		$nom=$_SESSION['nom'];
-	}
-	else
-	{
+	}else{
 		$typeTitle="";
 		$nom="Bienvenue " .$_SESSION['nom'].',';
 	}
@@ -138,10 +133,9 @@ if($_SESSION['type']=="mag" || $_SESSION['type']=="centrale")
 	$action = (empty($action)) ? "connexion mag" : $action;
 	addRecord($pdoStat,$page,$action, $descr);
 }
-elseif($_SESSION['type']=='btlec')
-{
+elseif($_SESSION['id_type']==1){
 	$typeTitle="Bienvenue";
-	$nom=$_SESSION['nom_bt'];
+	$nom=$_SESSION['nom'];
 		//---------------------------
 		//stats
 		//---------------------------
@@ -149,7 +143,7 @@ elseif($_SESSION['type']=='btlec')
 	$action = (empty($action)) ? "connexion BT" : $action;
 	addRecord($pdoStat,$page,$action, $descr);
 }
-elseif ($_SESSION['type']=='scapsav')
+elseif ($_SESSION['id_type']==3)
 {
 	$typeTitle="";
 	$nom="Bienvenue,";
@@ -180,14 +174,10 @@ if(!empty($_SESSION['goto']))
 		//sinon on recupère toute la query string
 	$goto=$_SESSION['goto'];
 	$redir=explode("&",$goto);
-	if(is_numeric($redir[0]))
-	{
-		if($_SESSION['type']=="btlec")
-		{
+	if(is_numeric($redir[0])){
+		if($_SESSION['id_type']==1){
 			header('Location:'. ROOT_PATH. '/public/btlec/answer.php?msg='.$_SESSION['goto']);
-		}
-		else
-		{
+		}elseif($_SESSION['id_type']==2 || $_SESSION['id_type']==3 || $_SESSION['id_type']==4 || $_SESSION['id_type']==5){
 			header('Location:'. ROOT_PATH. '/public/mag/edit-msg.php?msg='.$_SESSION['goto']);
 		}
 	}else
@@ -197,6 +187,8 @@ if(!empty($_SESSION['goto']))
 
 
 }
+
+
 /*--------------------------------------------------*/
 /*        reversements                              */
 /*            => si info moins de 7 jours afficher*/
@@ -244,12 +236,11 @@ if(isset($_GET['access-denied'])){
 }
 
 
+	// echo "<pre>";
+	// print_r($_SESSION);
+	// echo '</pre>';
 include('../view/_head-bt.php');
 include ('../view/_navbar.php');
-
-
-
-
 
 //contenu
 include('home.ct.php');

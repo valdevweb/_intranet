@@ -1,3 +1,47 @@
+.ico-xmas{
+
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: inherit;
+    margin-top: 0.5rem;
+    font-size: 1.5rem;
+
+
+}
+
+.one{
+  animation: blink-one 2s linear infinite;
+
+}
+.two{
+  animation: blink-two 2s linear infinite;
+
+
+}
+.three{
+  animation: blink-three 2s linear infinite;
+
+}
+
+
+
+
+@keyframes blink-one {
+  30% {
+    opacity: 0;
+  }
+}
+@keyframes blink-two {
+  60% {
+    opacity: 0;
+  }
+}
+@keyframes blink-three {
+  90% {
+    opacity: 0;
+  }
+}
 
 
 .glow-on-hover {

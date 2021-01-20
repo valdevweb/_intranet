@@ -1,7 +1,18 @@
 <?php
 
 class EvoHelpers{
+	public static function getIdResp($pdoEvo, $idwebuser){
+		$req=$pdoEvo->prepare("SELECT id FROM responsables WHERE idwebuser= :idwebuser");
+		$req->execute([
+			':idwebuser'		=>$idwebuser
+		]);
+		$data= $req->fetch(PDO::FETCH_ASSOC);
 
+		if(!empty($data) && isset($data['id'])){
+			return $data['id'];
+		}
+		return "";
+	}
 	public static function arrayAppliRespName($pdoEvo){
 		$req=$pdoEvo->query("SELECT id, resp FROM appli ORDER BY id");
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
@@ -33,6 +44,28 @@ class EvoHelpers{
 	}
 	public static function arrayAppliPlateformeName($pdoEvo){
 		$req=$pdoEvo->query("SELECT appli.id, plateforme FROM appli LEFT JOIN plateformes ON id_plateforme=plateformes.id ORDER BY appli.id");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+
+		public static function arrayAppliNameByResp($pdoEvo, $idResp){
+		$req=$pdoEvo->prepare("SELECT id, appli FROM appli WHERE id_resp=id_resp ORDER BY id");
+		$req->execute([
+			':id_resp'	=>$idResp,
+		]);
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+	public static function arrayPlateformeNameByResp($pdoEvo, $idResp){
+		$req=$pdoEvo->prepare("SELECT id, plateforme FROM plateformes WHERE id_resp=id_resp ORDER BY id");
+		$req->execute([
+			':id_resp'	=>$idResp,
+		]);
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+	public static function arrayModuleNameByResp($pdoEvo, $idResp){
+		$req=$pdoEvo->prepare("SELECT id, module FROM modules LEFT JOIN appli ON id_appli= appli.id WHERE id_resp=id_resp ORDER BY id");
+		$req->execute([
+			':id_resp'	=>$idResp,
+		]);
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
 }

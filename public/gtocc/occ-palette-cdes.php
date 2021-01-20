@@ -19,17 +19,19 @@
 						<th>Détail</th>
 						<th>Modifier</th>
 
+
 					</tr>
 				</thead>
 				<tbody>
 					<?php foreach ($paletteCommandees as $key => $palette): ?>
 						<tr>
-							<td><?=$palette['id_cde']?></td>
+							<td><?=$palette['id']?></td>
 
 							<td><?= UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $palette['id_web_user'], 'deno_sca')  ?></td>
 							<td><?=$palette['date_insert']?></td>
 							<td><div class="btn btn-primary detail-btn" data-btn-id="<?=$palette['id_cde']?>">Voir le détail</div></td>
 							<td><a href="<?=$_SERVER['PHP_SELF'].'?expedier='.$palette['id_cde']?>" class="btn btn-primary">Expédier</a></td>
+
 						</tr>
 
 						<tr class="borderless">
@@ -44,12 +46,15 @@
 									<tr>
 										<td colspan="4" class="font-weight-bold">Détail de la commande : </td>
 									</tr>
-										<tr>
-											<th>Palette</th>
-											<th>EAN</th>
-											<th>Désignation</th>
-											<th class="text-right">Quantité</th>
-										</tr>
+									<tr>
+										<th>Palette</th>
+										<th>EAN</th>
+										<th>Désignation</th>
+										<th class="text-right">Quantité</th>
+										<?php if ($_SESSION['id_web_user']==981 || $_SESSION['id_web_user']==1402): ?>
+											<th>Supprimer</th>
+										<?php endif ?>
+									</tr>
 									<tbody>
 										<?php foreach ($infoCde as $key => $cde): ?>
 											<?php
@@ -75,6 +80,11 @@
 												<td ><?=$ean?></td>
 												<td ><?=$designation?></td>
 												<td class="text-right"><?=$qte?></td>
+												<?php if ($_SESSION['id_web_user']==981 || $_SESSION['id_web_user']==1402): ?>
+													<td>
+														<a href="<?=$_SERVER['PHP_SELF'].'?del-palette='.$cde['id_palette']?>" class="btn btn-primary">Supprimer</a>
+													</td>
+												<?php endif ?>
 											</tr>
 										<?php endforeach ?>
 									</tbody>

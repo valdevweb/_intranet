@@ -16,20 +16,6 @@ body {
 }
 
 
-/* khand-regular - latin */
-@font-face
-{
-  font-family: 'Khand';
-  font-style: normal;
-  font-weight: 400;
-  src: url('../../vendor/fonts/khand-v6-latin-regular.eot'); /* IE9 Compat Modes */
-  src: local('Khand Regular'), local('Khand-Regular'),
-  url('../../vendor/fonts/khand-v6-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('../../vendor/fonts/khand-v6-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-  url('../../vendor/fonts/khand-v6-latin-regular.woff') format('woff'), /* Modern Browsers */
-  url('../../vendor/fonts/khand-v6-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
-  url('../../vendor/fonts/khand-v6-latin-regular.svg#Khand') format('svg'); /* Legacy iOS */
-}
 
 .bg-white{
   background: white;

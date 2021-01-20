@@ -157,8 +157,6 @@ if(isset($_POST['submit'])){
 
 	include 'declaration-steptwo-exec-inc.php';
 
-// on récupère le nombre d'article pour pouvoir boucler sur tableau de champ de formulaire
-
 }
 // on va utiliser l'id pour enregistrer les produits sélectionnés sachant qu'à chaque import de la base, il changera
 
@@ -204,12 +202,12 @@ DEBUT CONTENU CONTAINER
 			lastStrg=inputFileId.length;
 			inputFileId=inputFileId.substring(9,lastStrg);
 			inputFileId="#"+inputFileId;
-			console.log(inputFileId);
+
 			for (var i = 0; i < nbFiles; i++)
 			{
             // var fileName = e.target.files[0].name;
             fileName=e.target.files[i].name;
-            console.log(fileName);
+
 
             fileList += fileName + ' - ';
         }

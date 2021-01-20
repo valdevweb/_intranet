@@ -159,7 +159,7 @@ $arEquipe=LitigeHelpers::listEquipeAll($pdoLitige);
 $arEtat=LitigeHelpers::listEtatAll($pdoLitige);
 $arImputation=LitigeHelpers::listImputationAll($pdoLitige);
 $arTransit=LitigeHelpers::listTransitAll($pdoLitige);
-$arTransport=LitigeHelpers::listTransitAll($pdoLitige);
+$arTransport=LitigeHelpers::listTransporteurAll($pdoLitige);
 $arCentrale=MagHelpers::getListCentrale($pdoMag);
 
 

@@ -171,4 +171,22 @@ class EvoManager{
 		return	$data;
 	}
 
+	public function getListModuleAndDocByResp($idResp){
+		$req=$this->pdoEvo->prepare("SELECT * FROM modules LEFT JOIN appli ON id_appli=appli.id LEFT JOIN doc ON module.id=doc.id_module WHERE id_resp= :id_resp ORDER BY module, doc_name");
+		$req->execute([
+			':id_resp'		=>$idResp
+
+		]);
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+		public function getListAppliAndDocByResp($idResp){
+		$req=$this->pdoEvo->prepare("SELECT * FROM appli LEFT JOIN doc ON appli.id=doc.id_appli WHERE id_resp= :id_resp ORDER BY appli, doc_name");
+		$req->execute([
+			':id_resp'		=>$idResp
+
+		]);
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
+
 }

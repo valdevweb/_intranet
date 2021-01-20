@@ -37,12 +37,33 @@
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
+	<!-- infos -->
+	<div class="row my-3">
+		<div class="col"></div>
+		<div class="col-8 shadow">
+			<div class="row no-margin-bottom">
+				<div class="col-auto align-self-center">
+					<img src="../img/documents/flash-300.png" class="float-left">
+				</div>
+				<div class="col">
+					<div class="row">
+						<div class="col">
+							<h1 class="text-main-blue mt-5">INFORMATION</h1>
+							<p>Nous vous informons que <span class="orange-text font-weight-bold">dimanche 17 janvier à 14h</span>, nous avons prévu une coupure d'exploitation d'environ 1 heure. Cette coupure bloquera l'accès à ce site et au site du portail SAV</p>
+						</div>
+					</div>
 
+				</div>
+			</div>
+		</div>
+		<div class="col"></div>
+	</div>
 
 
 	<?php
 	include('../doc/flash-view.php');
 	?>
+
 
 
 	<div class="row pb-5">
@@ -105,8 +126,7 @@
 								<li>Prenez en main rapidement et facilement les applications de l'univers Extralec grâce au portail (guide d'installation , formation, assistance technique) et administrez vos comptes utilisateurs.<br><a class="simple-link stat-link" data-user-session="<?= $_SESSION['user']?>"  href="https://www.extralecbtlec.fr/"><i class="fas fa-external-link-alt pr-3"></i>Portail Extralec</a><br><br></li>
 								<li>Si vous ne connaissez pas bien Extralec, n'hésitez pas à consulter <a class="simple-link stat-link" data-user-session="<?= $_SESSION['user']?>"  href="<?= ROOT_PATH. '/public/doc/extralec.php'?>">la plaquette commerciale </a></li>
 							</ul>
-							<p class="text-orange subtitle">ACTUALITE :</p>
-							<p class="text-orange">Nous vous informons que votre centrale d'achat BTLec Est et le SAV Leclerc Est resteront ouverts durant toute la période de confinement</p>
+
 						</div>
 					</div>
 				</div>

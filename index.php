@@ -47,6 +47,11 @@ if(!empty( $_SERVER['QUERY_STRING'])){
 // stats
 if(isset($_POST['connexion'])){
 	$loginExist=loginExist($pdoUser);
+		echo "<pre>";
+		print_r($loginExist);
+		echo '</pre>';
+
+
 	if($loginExist){
 		$pwdOk=checkPwd($loginExist,$pdoMag, $pdoUser);
 	}else{
@@ -116,6 +121,8 @@ if(!empty($revRes))
 	$infoRev.='</ul>';
 	$infoRev.='</div><div class="col-1"></div></div>';
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -129,6 +136,8 @@ if(!empty($revRes))
 	<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" href="vendor/materialize/css/materialize.css">
 	<link rel="stylesheet" href="vendor/fontawesome/css/font-awesome.min.css">
+	<link href="vendor/fontawesome5/css/all.css" rel="stylesheet">
+
 	<link rel="stylesheet" href="vendor/w3c/w3c.css">
 
 	<title>Connexion - portail Btlec Est</title>
@@ -162,60 +171,27 @@ if(!empty($revRes))
 				?>
 				<!-- flashs info -->
 
-
-
 				<div class="row infos">
 					<div class="col-1"></div>
 					<i class="pin"></i>
 					<div class="col px-5 inside-infos">
 						<p class="center-text pt-2"><i class="fa fa-bell fa-lg" aria-hidden="true"></i></p>
-						<h4 class="orange-text text-darken-3 text-center">INFORMATION - IMPORTANT</h4>
-
-						<p class="text-left">Votre centrale d'achat BTLec Est et le SAV Leclerc Est resteront ouverts durant toute la période de confinement</p>
+						<h4 class="orange-text text-darken-3 text-center">INFORMATION</h4>
+						<p class="text-left">
+							Nous vous informons que <span class="orange-text font-weight-bold">dimanche 17 janvier à 14h</span>, nous avons prévu une coupure d'exploitation d'environ 1 heure. Cette coupure bloquera l'accès à ce site et au site du portail SAV
+						</p>
 					</div>
 					<div class="col-1"></div>
 				</div>
-					<!-- <div class="row infos">
-					<div class="col-1"></div>
-					<i class="pin"></i>
-					<div class="col px-5 inside-infos">
-						<p class="center-text pt-2"><i class="fa fa-bell fa-lg" aria-hidden="true"></i></p>
-						<h4 class="orange-text text-darken-3 text-center">Attention :</h4>
-						<p class="text-center"><b>Les lundi 24 et 31 décembre</b></p>
-						<p class="text-left">Pas de commandes 24/48H disponibles en raison du jour férié le lendemain.</p>
-					</div>
-					<div class="col-1"></div>
-				</div>
-			-->
-			<!-- <div class="row infos">
-				<div class="col-2"></div>
 
-				<div class="col inside-infos inside-padding">
-					<img class="float-left" src="http://172.30.92.53/upload/flash/vignette-20190722-043439.gif">
-					<p class="w3-text-blue"><b>Les books Promo PEM vont être livrés à l'attention du Responsable Bazar Technique et du Directeur </b>par un coursier qui se présentera à l'accueil de votre magasin<br><br>
-						Nous vous demandons de prévenir votre personnel à l'accueil et de bien préciser de ne pas refuser ce colis qui est stické des destinataires "Responsable Bazar Technique et Directeur"<br>
-						En cas de refus aucun book ne sera renvoyé en magasin<br><br>
-
-						<b>Date de livraison : entre jeudi 25 juillet et mardi 30 juillet</b>
-
-					</p>
-				</div>
-				<div class="col-2"></div>
-
-			</div> -->
-
-			<!-- fin d'info1 -->
-			<!-- flash info auto si reversement -->
-			<?php echo isset($infoRev) ? $infoRev:"";?>
+				<!-- fin d'info1 -->
+				<!-- flash info auto si reversement -->
+				<?php echo isset($infoRev) ? $infoRev:"";?>
 
 
-		</div>
-	</div>
-	<!-- 	<div class="row no-gutters bg-white logo-line">
-			<div class="col no-gutters">
-				<img id="logo-bt" src="public/img/index/bttransfull.png">
 			</div>
-		</div> -->
+		</div>
+
 	</div>
 	<!-- ############################################################################################################################### -->
 	<!--  												./container 																			 -->

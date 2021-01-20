@@ -6,6 +6,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
+	<link rel="icon" href="http://172.30.92.53/btlecest/favicon.ico" />
 
 	<link rel="stylesheet" href="<?= ROOT_PATH?>/public/css/main.css">
 	<link rel="stylesheet" href="<?=ROOT_PATH?>/public/css/nav.css">

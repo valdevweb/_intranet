@@ -22,6 +22,7 @@ define("URL_UPLOAD","http://172.30.92.53/".VERSION."upload/" );
 define("DIR_UPLOAD","D:\www\\".VERSION."intranet\upload\\" );
 define("PORTAIL_SAV_HOME","http://172.30.92.53/".VERSION."sav/scapsav/home.php" );
 define("PORTAIL_SAV","http://172.30.92.53/".VERSION."sav/" );
+define("PORTAIL_FOU","http://172.30.92.53/".VERSION."portail-fournisseurs/" );
 define("DIR_LOGFILES", "D:\www\batch_log\\");
 define("DIR_LOGFILES_CONSULT", "http://172.30.92.53/batchlog/");
 
@@ -84,7 +85,9 @@ if(!isset($pdoQlik)){
 if(!isset($pdoExploit)){
 	$pdoExploit= connectToDb('exploit');
 }
-
+if(!isset($pdoFou)){
+	$pdoFou=connectToDb(VERSION.'fournisseurs');
+}
 // css files
 $md_css=ROOT_PATH ."/vendor/materialize/css/materialize.css";
 $bootstrap=ROOT_PATH ."/vendor/bootstrap/css/bootstrap.css";

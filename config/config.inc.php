@@ -59,7 +59,9 @@ if(!isset($pdoQlik)){
 if(!isset($pdoExploit)){
 	$pdoExploit= connectToDb('exploit');
 }
-
+if(!isset($pdoFou)){
+	$pdoFou=connectToDb(VERSION.'fournisseurs');
+}
 
 
 // emplacement fichier csv gessica et ctbt

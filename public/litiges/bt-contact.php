@@ -80,7 +80,7 @@ $errors=[];
 $success=[];
 
 
-$defaultTxt='Bonjour,&#13;&#10;&#13;&#10;&#13;&#10;Cordialement,&#13;&#10;'.$_SESSION['nom_bt'];
+$defaultTxt='Bonjour,&#13;&#10;&#13;&#10;&#13;&#10;Cordialement,&#13;&#10;'.$_SESSION['nom'];
 $uploadDir= '..\..\..\upload\litiges\\';
 
 $btlec=MagHelpers::btlec($pdoMag,$infoLitige['galec']);
@@ -339,7 +339,7 @@ DEBUT CONTENU CONTAINER
 				var pretxt=txt[1].split(')');
 				var bjr="Bonjour,\n\n";
 				var cdlt="\n\n"+"Cordialement,\n";
-				var name='<?php echo $_SESSION['nom_bt'];?>';
+				var name='<?php echo $_SESSION['nom'];?>';
  						// console.log(name);
  						$('#msg').val(bjr + pretxt[0] + cdlt + name);
  					});

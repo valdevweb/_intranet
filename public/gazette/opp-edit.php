@@ -73,6 +73,7 @@ $notMandatoryFields=[
 	]
 ];
 $ico=["Nouveauté", "TEL", "BRII", "ODR"];
+$imgExt=['jpg', 'jpeg', 'png','gif'];
 
 
 $oppDao=new OpportuniteDAO($pdoBt);

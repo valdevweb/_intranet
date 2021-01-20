@@ -216,7 +216,8 @@ function fileList($mime)
 		"application/pdf",
 		"image/png",
 		"application/vnd.ms-office",
-		"application/msword"
+		"application/msword",
+		"application/xml"
 	);
 	return (in_array($mime,$whiteList)) ? TRUE : FALSE ;
 }

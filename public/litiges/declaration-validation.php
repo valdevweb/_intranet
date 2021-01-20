@@ -264,14 +264,13 @@ if(isset($_GET['id']))
 			// si différent de l'anneé actuelle, on a changé d'année par rapport au der dossier
 			// il faut donc créer le 1er numdossier
 		$yearDossier=substr($numDossier,0,2);
-		if($yearDossier==date('y'))
-		{
+		if($yearDossier==date('y')){
 				// pas de chg d'année, on prend le der num dossier, oon ajoute 1
 			$numDossier=$numDossier +1;
 		}
 		else
 		{
-			$numDossier=date('y').'001';
+			$numDossier=date('y').'0001';
 
 		}
 	}

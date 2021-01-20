@@ -123,7 +123,30 @@ class MagDao{
 
 	}
 
+	public function getMagLdEmails($btlec,$suffixe=null){
+		if($suffixe==null){
+			$req=$this->pdo->prepare("SELECT * FROM lotus_ld WHERE btlec= :btlec ORDER BY suffixe, email");
+			$req->execute([
+				':btlec'		=>$btlec
+			]);
+		}else{
+			$req=$this->pdo->prepare("SELECT * FROM lotus_ld WHERE btlec= :btlec AND ld_suffixe= :ld_suffixe ORDER BY email");
+			$req->execute([
+				':btlec'		=>$btlec,
+				':ld_suffixe'	=>$suffixe
+			]);
+		}
+		$datas=$req->fetchAll(PDO::FETCH_ASSOC);
+		if(!empty($datas)){
+			foreach ($datas as $key => $data) {
+				$emailArray[]=$data['email'];
+			}
+			return $emailArray;
+		}
+		return '';
 
+
+	}
 	public function getHisto($galec){
 		$req=$this->pdo->prepare("SELECT *, DATE_FORMAT(date_ouv, '%d/%m/%Y') as dateOuv, DATE_FORMAT(date_ferm, '%d/%m/%Y') as dateFerm FROM magsyno  LEFT JOIN mag ON magsyno.btlec_old=mag.id WHERE magsyno.galec= :galec ORDER BY date_ouv DESC ");
 		$req->execute([

@@ -63,7 +63,7 @@ function addAction($pdoLitige, $fileList, $contrainte)
 
 function getPretxt($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT action_help.id,nom, pretxt FROM action_help LEFT JOIN action_contrainte ON id_contrainte=action_contrainte.id ORDER BY nom");
+	$req=$pdoLitige->prepare("SELECT action_help.id, nom, pretxt FROM action_help LEFT JOIN action_contrainte ON id_contrainte=action_contrainte.id ORDER BY nom");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -140,8 +140,7 @@ if(isset($_POST['submit']))
 				$uploaded=move_uploaded_file($_FILES['incfile']['tmp_name'][$f],$uploadDir.$filename );
 
 			}
-			if($uploaded==false)
-			{
+			if($uploaded==false){
 				$errors[]="impossible de télécharger le fichier";
 			}
 			else
@@ -349,13 +348,20 @@ DEBUT CONTENU CONTAINER
 									<label for="action">Description de l'action :</label>
 									<textarea type="text" class="form-control" row="10" name="action" id="msg"></textarea>
 								</div>
+
 								<div id="upload-zone">
-									<label for='incfile'>Ajouter une pièce jointe : </label>
+									<label for='incfile'>Ajouter une ou des pièces jointes* : </label>
 									<input type='file' class='form-control-file' id='incfile' name='incfile[]' multiple="" >
-									<p id="p-add-more"><a id="add_more" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Envoyer d'autres fichiers</a></p>
+
 									<div id="filelist"></div>
 								</div>
+								<div class="row">
+									<div class="col">
+										<i>* Maintenir la touche CTRL appuyée pour sélectionner plusieurs fichiers</i>
+									</div>
+								</div>
 							</div>
+
 							<div class="col-auto">
 								<button type="submit" id="submit_t" class="btn btn-kaki" name="submit"><i class="fas fa-plus-square pr-3"></i>Enregistrer</button>
 							</div>
@@ -385,7 +391,7 @@ DEBUT CONTENU CONTAINER
 			splittxt=txt.split(' (');
 			console.log(splittxt);
 			if(splittxt.length>1){
-					var pretxt=splittxt[1].split(')');
+				var pretxt=splittxt[1].split(')');
 				$('#msg').val(pretxt[0]);
 			}else{
 				$('#msg').val('');
@@ -397,10 +403,13 @@ DEBUT CONTENU CONTAINER
 		});
 		var fileName='';
 		var fileList='';
-    	var fileSizeMo=0;
+		var fileSizeMo=0;
 
-		var totalFileSize=0;
 		$('input[type="file"]').change(function(e){
+			var totalFileSize=0;
+
+			$('#filelist').empty();
+			var titre=warning=fileList=end="";
 			var nbFiles=e.target.files.length;
 			for (var i = 0; i < nbFiles; i++)
 			{
@@ -416,7 +425,7 @@ DEBUT CONTENU CONTAINER
     		    }
     		    else
     		    {
-    		  	  fileList += fileName + ' - ';
+    		    	fileList += fileName + ' - ';
     		    }
 
     		}
@@ -426,7 +435,7 @@ DEBUT CONTENU CONTAINER
  		   if(totalFileSize>10000000)
  		   {
  		   	totalFileSizeMo=Math.round(totalFileSize/1000000);
- 		   		warning='<div class="text-red">Attention la taille totale des fichiers dépasse la taille autorisée de 10Mo (Poids total de vos fichiers : ' +totalFileSizeMo + 'Mo)<br></div>';
+ 		   	warning='<div class="text-red">Attention la taille totale des fichiers dépasse la taille autorisée de 10Mo (Poids total de vos fichiers : ' +totalFileSizeMo + 'Mo)<br></div>';
  		   }else{
  		   	warning=''
  		   }

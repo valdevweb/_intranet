@@ -14,9 +14,10 @@ class OccPaletteMgr{
 	}
 
 	public function getListPaletteDetailByStatut($statut){
-		$req=$this->pdoOcc->prepare("SELECT palettes.id as idpalette, palettes.palette, palettes_articles.* ,date_import FROM palettes
+		$req=$this->pdoOcc->prepare("SELECT palettes.id as idpalette, palettes.palette, palettes_articles.* ,date_import, import_cmt.cmt, import_cmt.date_end FROM palettes
 			LEFT JOIN palettes_articles ON palettes.id=palettes_articles.id_palette
 			LEFT JOIN import_excel ON palettes.import=import_excel.id
+			LEFT JOIN import_cmt ON palettes.import=import_cmt.id_import
 			WHERE statut=:statut ORDER BY palette");
 		$req->execute([
 			':statut'		=>$statut
@@ -33,7 +34,9 @@ class OccPaletteMgr{
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 	public function getListPaletteByStatut($statut){
-		$req=$this->pdoOcc->prepare("SELECT palettes.*, import_excel.filename, import_excel.date_import FROM palettes LEFT JOIN import_excel ON palettes.import=import_excel.id WHERE statut=:statut ORDER BY date_import, palettes.id");
+		$req=$this->pdoOcc->prepare("SELECT palettes.*, import_excel.filename, import_excel.date_import FROM palettes
+			LEFT JOIN import_excel ON palettes.import=import_excel.id
+			WHERE statut=:statut ORDER BY date_import, palettes.id");
 		$req->execute([
 			':statut'		=>$statut
 		]);
@@ -74,7 +77,7 @@ class OccPaletteMgr{
 	}
 
 	public function getListCommandeByStatut($statut){
-		$req=$this->pdoOcc->prepare("SELECT * FROM cdes_numero LEFT JOIN cdes_detail ON cdes_numero.id=cdes_detail.id_cde WHERE statut= :statut GROUP BY id_cde");
+		$req=$this->pdoOcc->prepare("SELECT *, cdes_numero.id as id FROM cdes_numero LEFT JOIN cdes_detail ON cdes_numero.id=cdes_detail.id_cde WHERE statut= :statut GROUP BY id_cde");
 		$req->execute([
 			':statut'	=>$statut
 		]);
@@ -117,6 +120,18 @@ class OccPaletteMgr{
 		$req=$this->pdoOcc->query("SELECT * FROM import_cmt LEFT JOIN import_excel ON id_import=import_excel.id WHERE mask=0 order BY id_import");
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
+
+	public function getNbPaletteDispo($idImport){
+		$req=$this->pdoOcc->prepare("SELECT count(id) as nb FROM palettes	WHERE statut=:statut AND import= :import ");
+		$req->execute([
+			':statut'		=>1,
+			':import'		=>$idImport
+
+		]);
+		$data=$req->fetch();
+		return $data['nb'];
+	}
+
 }
 
 

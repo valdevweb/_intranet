@@ -36,13 +36,12 @@ $mpdf->SetHTMLFooter($footer);
 $mpdf->AddPage('', '', '', '', '','', '',  '',  40, 0, 10);
 $mpdf->WriteHTML($html);
 $pdfContent = $mpdf->Output('', 'S');
-		$pdfContent = $mpdf->Output();
+		// $pdfContent = $mpdf->Output();
 $filename='litige '.$litige[0]['dossier'].' - fiche suivi achats.pdf';
 
 		// recup msg action
 $msg=getActionMsg($pdoLitige);
 
-exit;
 
 $link='<a href="'.SITE_ADDRESS.'/index.php?litiges/intervention-achats.php?id='.$litige[0]['id_main'].'"> cliquant ici</a>';
 

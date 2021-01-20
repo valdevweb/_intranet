@@ -18,14 +18,22 @@ unset($_SESSION['goto']);
 require_once '../../vendor/autoload.php';
 require_once '../../Class/UserHelpers.php';
 require_once '../../Class/MagHelpers.php';
+require_once '../../Class/MagDao.php';
 require_once '../../Class/CmRdvDao.php';
 require_once '../../Class/Helpers.php';
 
 
 $rdvDao=new CmRdvDao($pdoCm);
+$magDao=new MagDao($pdoMag);
 $pendingRdv=$rdvDao->getLastPendingRdv($pdoCm);
 
 $magInfo=MagHelpers::magInfo($pdoMag, $_SESSION['id_galec']);
+$magLdAdh=$magDao->getMagLdEmails($magInfo['id'],'-ADH');
+$magLdDir=$magDao->getMagLdEmails($magInfo['id'],'-DIR');
+
+$destAdhDir=array_merge($magLdAdh,$magLdDir);
+
+
 $deno=MagHelpers::deno($pdoMag, $_SESSION['id_galec']);
 $city=MagHelpers::ville($pdoMag, $_SESSION['id_galec']);
 
@@ -163,12 +171,41 @@ if(isset($_POST['accept']) || isset($_POST['deny'])){
 
 		if (!$mailer->send($message, $failures)){
 			print_r($failures);
-		}else{
+			$errors[]="erreur à l'envoi du mail";
+		}
+		if(empty($errors)){
+			if(isset($_POST['accept'])){
+				if(VERSION =="_"){
+					$destAdhDir=['valerie.montusclat@btlec.fr'];
+				}
+				$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+				$mailer = new Swift_Mailer($transport);
+
+				$htmlMail = file_get_contents('mail-confirm-rdv-adhdir.html');
+				$htmlMail=str_replace('{MAG}',$deno,$htmlMail);
+				$htmlMail=str_replace('{RDV}',$dateMailFormat,$htmlMail);
+				$htmlMail=str_replace('{CM}',$cm['fullname'],$htmlMail);
+				$subject='Portail BTLec - Rendez-vous Chargé de mission BTLec EST';
+
+
+
+				$message = (new Swift_Message($subject))
+				->setBody($htmlMail, 'text/html')
+				->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLEC'))
+				->setTo($destAdhDir)
+				->setBcc(['valerie.montusclat@btlec.fr']);
+
+			}
+			if (!$mailer->send($message, $failures)){
+				print_r($failures);
+				$errors[]="erreur à l'envoi du mail";
+			}
+		}
+		if(empty($errors)){
 			$success='?success='.$accepted;
 			unset($_POST);
 			header("Location: ".$_SERVER['PHP_SELF'].$success,true,303);
 		}
-
 
 
 
@@ -221,50 +258,50 @@ DEBUT CONTENU CONTAINER
 				<div class="contact-card">
 					<i class="fas fa-calendar-check  pr-3 text-orange"></i>Prochain rendez-vous :<br>
 					<?php foreach ($futureRdv as $rdv): ?>
-				<div class="text-center font-weight-bold pt-3">	<?=
-				$jours[(new DateTime($rdv['date_start']))->format('w')] .' '.
-				(new DateTime($rdv['date_start']))->format('d') .' '.
-				$moisFr[(new DateTime($rdv['date_start']))->format('n')].' '.
-				(new DateTime($rdv['date_start']))->format('Y')?> à <?=(new DateTime($rdv['date_start']))->format('H:i')?></div>
+						<div class="text-center font-weight-bold pt-3">	<?=
+						$jours[(new DateTime($rdv['date_start']))->format('w')] .' '.
+						(new DateTime($rdv['date_start']))->format('d') .' '.
+						$moisFr[(new DateTime($rdv['date_start']))->format('n')].' '.
+						(new DateTime($rdv['date_start']))->format('Y')?> à <?=(new DateTime($rdv['date_start']))->format('H:i')?></div>
 					<?php endforeach ?>
 				</div>
 			</div>
 
 
-	<?php endif ?>
-	<div class="col"></div>
-	<div class="col-lg-3 light-shadow mb-5 py-3">
-		<img src="../img/logo_bt/bt-rond-30.jpg" class="float-right">
-		<div class="name">M. <?=$cm['fullname']?></div>
-		<div class="contact-card"><i class="fas fa-mobile-alt pr-3 text-orange"></i> <?=$cm['mobile'] ?> <br>
-			<i class="fas fa-envelope pr-3 text-orange"></i><?=$cm['email']?>
+		<?php endif ?>
+		<div class="col"></div>
+		<div class="col-lg-3 light-shadow mb-5 py-3">
+			<img src="../img/logo_bt/bt-rond-30.jpg" class="float-right">
+			<div class="name">M. <?=$cm['fullname']?></div>
+			<div class="contact-card"><i class="fas fa-mobile-alt pr-3 text-orange"></i> <?=$cm['mobile'] ?> <br>
+				<i class="fas fa-envelope pr-3 text-orange"></i><?=$cm['email']?>
+			</div>
+		</div>
+		<div class="col-lg-1"></div>
+
+	</div>
+	<?php if ($pendingRdv): ?>
+
+		<div class="list-article full-bg-blue pt-5">
+			<div class="row justify-content-center">
+				<div class="col-xs-12 col-lg-10 article-wrapper">
+					<article>
+						<a href="?rdv=<?=$pendingRdv['id']?>" class="more">Accepter ou refuser le rendez-vous</a>
+						<div class="img-wrapper">
+							<!-- <img src="../img/cm/temp.png"> -->
+							<img src="../img/cm/notif-or-shadow-red2.jpg">
+
+						</div>
+						<h5 class="text-center">Vous avez une invitation en attente </h5>
+						<p class="smaller">Merci d'accepter ou refuser ce rendez-vous en cliquant ci-dessous :</p>
+						<p class=" rdv text-center"><?=$dateFr?>
+						<br>
+						<?=$fullDate->format('H')?>h<?=$fullDate->format('i')?>
+					</p>
+				</article>
+			</div>
 		</div>
 	</div>
-	<div class="col-lg-1"></div>
-
-</div>
-<?php if ($pendingRdv): ?>
-
-	<div class="list-article full-bg-blue pt-5">
-		<div class="row justify-content-center">
-			<div class="col-xs-12 col-lg-10 article-wrapper">
-				<article>
-					<a href="?rdv=<?=$pendingRdv['id']?>" class="more">Accepter ou refuser le rendez-vous</a>
-					<div class="img-wrapper">
-						<!-- <img src="../img/cm/temp.png"> -->
-						<img src="../img/cm/notif-or-shadow-red2.jpg">
-
-					</div>
-					<h5 class="text-center">Vous avez une invitation en attente </h5>
-					<p class="smaller">Merci d'accepter ou refuser ce rendez-vous en cliquant ci-dessous :</p>
-					<p class=" rdv text-center"><?=$dateFr?>
-					<br>
-					<?=$fullDate->format('H')?>h<?=$fullDate->format('i')?>
-				</p>
-			</article>
-		</div>
-	</div>
-</div>
 <?php endif ?>
 
 <?php if (isset($_GET['rdv']) && $pendingRdv): ?>

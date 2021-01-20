@@ -121,7 +121,7 @@ function checkPwd($webUser,$pdoMag,$pdoUser){
 		return true;
 	}elseif(!empty($webUser['old_pwd'])){
 		if(sha1($_POST['pwd'])!=$webUser['old_pwd']){
-			return $errors[]= "mot de passe incorrect";
+			return false;
 
 		}else{
 
@@ -152,11 +152,13 @@ function initSession($pdoBt, $pdoSav, $pdoMag,$pdoCm, $pdoUser, $webUser){
 	$_SESSION['id_web_user']=$webUser['id'];
 	$_SESSION['user']=$_POST['login'];
 	$_SESSION['type']=$webUser['type'];
+	$_SESSION['id_type']=$webUser['id_type'];
 
 	if(isset($_POST['goto'])){
 		$_SESSION['goto']=$_POST['goto'];
 	}
-	if($_SESSION['type']=='scapsav'){
+	// scapsav
+	if($_SESSION['id_type']==3){
 		$savInfo=getUserSavInfo($pdoSav);
 		if(!empty($savInfo)){
 			$_SESSION['nom'] = $savInfo['prenom'] .' ' .$savInfo['nom'];
@@ -164,24 +166,28 @@ function initSession($pdoBt, $pdoSav, $pdoMag,$pdoCm, $pdoUser, $webUser){
 		}
 	}
 
-	if($_SESSION['type']=='btlec' || $_SESSION['type']=="autre" || $_SESSION['type']=="mask"){
+	// if($_SESSION['type']=='btlec' || $_SESSION['type']=="autre" || $_SESSION['type']=="mask"){
+	if($_SESSION['id_type']==1 || $_SESSION['id_type']==9 || $_SESSION['id_type']==8){
 		$btInfo=btInfo($pdoUser);
 		if(!empty($btInfo)){
 			$nom=$btInfo['nom'];
 			$prenom=$btInfo['prenom'];
-			$_SESSION['nom_bt']= $btInfo['prenom'] .' ' .$btInfo['nom'];
+
 			$_SESSION['nom'] = $btInfo['prenom'] .' ' .$btInfo['nom'];
 			$_SESSION['id_service']=$btInfo['id_service'];
 			$_SESSION['id_btlec']=$webUser['id_bt'];
+			$_SESSION['id_group']=$btInfo['id_group'];
+
 		}else{
 			$_SESSION['nom'] = "";
-			$_SESSION['nom_bt'] = "";
+
 			$_SESSION['id_service']="";
 			$_SESSION['id_btlec']="";
 		}
 	}
 
-	if($_SESSION['type']=="mag" || $_SESSION['type']=="bbj" || $_SESSION['type']=="centrale" || $_SESSION['type']=='adh'){
+	// if($_SESSION['type']=="mag" || $_SESSION['type']=="lcommerce" || $_SESSION['type']=="centrale" || $_SESSION['type']=='adh'){
+	if($_SESSION['id_type']==2 || $_SESSION['id_type']==7 || $_SESSION['id_type']==5 || $_SESSION['id_type']==4){
 		$_SESSION['id_galec']=$webUser['galec'];
 		$scatrois=magInfo($pdoMag);
 		$magSav=getSav($pdoSav);

@@ -70,7 +70,7 @@
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="radio" value="1" id="radio-inv-oui-<?=$litige['detail_id']?>" name="radio-inv[<?=$keyLitige?>]">
 										<label class="form-check-label" for="radio-inv">Oui</label>
-										<input class="form-check-input ml-3" type="radio" value="1" id="radio-inv-non-<?=$litige['detail_id']?>" name="radio-inv[<?=$keyLitige?>]">
+										<input class="form-check-input ml-3" type="radio" value="0" id="radio-inv-non-<?=$litige['detail_id']?>" name="radio-inv[<?=$keyLitige?>]">
 										<label class="form-check-label" for="radio-inv-non">Non</label>
 									</div>
 								</div>
