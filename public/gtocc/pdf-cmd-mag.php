@@ -172,9 +172,10 @@
 
 				<?php endforeach ?>
 				<tr class="table-footer">
-					<td colspan="4">Totaux : </td>
+					<td colspan="5">Totaux : </td>
 					<td class="text-right"><?=$totalQte?></td>
 					<td class="text-right" ><?=$totalPa?></td>
+					<td></td>
 				</tr>
 			</tbody>
 		</table>

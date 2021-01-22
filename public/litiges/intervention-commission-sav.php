@@ -1,8 +1,8 @@
 <?php
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
+	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
-	exit();
 }
 //			css dynamique
 //----------------------------------------------------------------
@@ -206,9 +206,9 @@ if(isset($_POST['submit'])){
 			$delivered=$mailer->send($message);
 			if($delivered !=0)
 			{
-				$success='?id='.$_GET['id'].'&success';
+				$successMsg='?id='.$_GET['id'].'&success';
 				unset($_POST);
-				header("Location: ".$_SERVER['PHP_SELF'].$success,true,303);
+				header("Location: ".$_SERVER['PHP_SELF'].$successMsg,true,303);
 			}else{
 				$errors[]="Une erreur s'est produite, votre réponse n'a pas pu être envoyée";
 			}
@@ -241,6 +241,9 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
+	<?php if (isset($thisLitige) && !empty($thisLitige)): ?>
+
+	<?php endif ?>
 	<h1 class="text-main-blue pt-5 ">Commission SAV - Litige <?= $title=(isset($thisLitige[0]['dossier']))? $thisLitige[0]['dossier'] : '(pas de litige sélectionné)'?></h1>
 	<div class="row">
 		<div class="col"></div>
@@ -265,16 +268,15 @@ DEBUT CONTENU CONTAINER
 		<div class="col-lg-1"></div>
 		<div class="col">
 			<?php
-
 			include('../view/_errors.php');
 			?>
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
 	<div class="bg-separation"></div>
-	<?php
-	ob_start();
-	?>
+<?php if (isset($_GET['id']) && isset($thisLitige[0]['dossier'])): ?>
+
+
 	<div class="row mb-3 pt-3">
 		<div class="col text-yellow-dark heavy">Détail du litige :</div>
 	</div>
@@ -455,14 +457,8 @@ DEBUT CONTENU CONTAINER
 			<div class="col-2"></div>
 		</div>
 
-		<?php
-		$html=ob_get_contents();
-		ob_end_clean();
-		if(isset($_GET['id'])){
-			echo $html;
-		}
+<?php endif ?>
 
-		?>
 
 		<!-- ./container -->
 	</div>

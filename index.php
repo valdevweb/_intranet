@@ -170,7 +170,7 @@ if(!empty($revRes))
 				}
 				?>
 				<!-- flashs info -->
-
+<!--
 				<div class="row infos">
 					<div class="col-1"></div>
 					<i class="pin"></i>
@@ -182,7 +182,7 @@ if(!empty($revRes))
 						</p>
 					</div>
 					<div class="col-1"></div>
-				</div>
+				</div> -->
 
 				<!-- fin d'info1 -->
 				<!-- flash info auto si reversement -->

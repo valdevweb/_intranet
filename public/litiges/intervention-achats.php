@@ -203,9 +203,9 @@ if(isset($_POST['submit'])){
 			$delivered=$mailer->send($message);
 			if($delivered !=0)
 			{
-				$success='?id='.$_GET['id'].'&success';
+				$successQ='?id='.$_GET['id'].'&success';
 				unset($_POST);
-				header("Location: ".$_SERVER['PHP_SELF'].$success,true,303);
+				header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 			}else{
 				$errors[]="Une erreur s'est produite, votre réponse n'a pas pu être envoyée";
 			}
@@ -269,9 +269,8 @@ DEBUT CONTENU CONTAINER
 		<div class="col-lg-1"></div>
 	</div>
 	<div class="bg-separation"></div>
-	<?php
-	ob_start();
-	?>
+<?php if (isset($_GET['id']) && !empty($thisLitige)): ?>
+	
 	<div class="row mb-3 pt-3">
 		<div class="col text-yellow-dark heavy">Détail du litige :</div>
 	</div>
@@ -396,14 +395,8 @@ DEBUT CONTENU CONTAINER
 			<div class="col-2"></div>
 		</div>
 
-		<?php
-		$html=ob_get_contents();
-		ob_end_clean();
-		if(isset($_GET['id'])){
-			echo $html;
-		}
+<?php endif ?>
 
-		?>
 
 		<!-- ./container -->
 	</div>

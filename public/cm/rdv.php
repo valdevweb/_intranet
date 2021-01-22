@@ -202,9 +202,9 @@ if(isset($_POST['accept']) || isset($_POST['deny'])){
 			}
 		}
 		if(empty($errors)){
-			$success='?success='.$accepted;
+			$successQ='?success='.$accepted;
 			unset($_POST);
-			header("Location: ".$_SERVER['PHP_SELF'].$success,true,303);
+			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 		}
 
 

@@ -65,7 +65,7 @@
 					</div>
 					<div class="row">
 						<div class="col">
-							<span class="heavy">Commentaire : </span><?= $firstDial['msg'] ?>
+							<span class="heavy">Commentaire : </span><?=isset($firstDial['msg'])?$firstDial['msg']:"" ?>
 						</div>
 					</div>
 

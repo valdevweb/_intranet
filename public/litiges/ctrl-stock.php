@@ -1,8 +1,10 @@
 <?php
+
+ // require('../../config/pdo_connect.php');
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
+	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
-	exit();
 }
 //			css dynamique
 //----------------------------------------------------------------
@@ -139,46 +141,7 @@ function getThisAction($pdoLitige){
 // SELECT * FROM (SELECT * FROM action WHERE id_contrainte=2 || id_contrainte=1 ORDER BY id_dossier ASC, id_contrainte ASC) sousreq GROUP BY id_dossier
 
 
-if(!isset($_GET['id'])){
 
-	$ddStock=getDdCtrl($pdoLitige);
-
-
-	$ldDossier='<form method="post" action="'.htmlspecialchars($_SERVER['PHP_SELF']).'">';
-	$ldDossier.='<div class="row">';
-	$ldDossier.='<div class="col-3">';
-	$ldDossier.='<div class="form-group">';
-	$ldDossier.='<label for="listDossier">Dossiers à contrôler :</label>';
-	$ldDossier.='<select class="form-control" id="listDossier" name="listDossier">';
-	$ldDossier.='<option value="">Sélectionnez</option>';
-
-	foreach ($ddStock as $dd)
-	{
-		$ldDossier.='<option value="'.$dd['id'].'">'.$dd['dossier'].'</option>';
-
-	}
-	$ldDossier.='</select>';
-	$ldDossier.='</div>';
-	$ldDossier.='</div>';
-	$ldDossier.='<div class="col mt-4 pt-2">';
-	// $ldDossier.='<p>&nbsp;</p>';
-
-	$ldDossier.='<button class="btn btn-primary" name="choose">Sélectionner</button>';
-	$ldDossier.='</div>';
-	$ldDossier.='</div>';
-
-	$ldDossier.='</form>';
-
-	if(isset($_POST['choose']))
-	{
-		header('Location:'.$_SERVER['PHP_SELF'].'?id='.$_POST['listDossier']);
-	}
-
-}
-else{
-
-	$ldDossier="";
-}
 
 if(isset($_GET['id'])){
 	$litige= $litigeDao->getLitigeDossierDetailById($_GET['id']);
@@ -192,11 +155,8 @@ if(isset($_GET['id'])){
 	$arCentrale=MagHelpers::getListCentrale($pdoMag);
 }
 $reportAction=$art=$ctrlKo=$ecart=$mvt="";
-
-
-
-if(isset($_POST['submit']))
-{
+$ddStock=getDdCtrl($pdoLitige);
+if(isset($_POST['submit'])){
 
 
 //les champs de formoulaires renvoient des tableaus avec pour index soit i soit pour le champ art, l'id_detail
@@ -292,7 +252,7 @@ if(isset($_POST['submit']))
 		$htmlMail = file_get_contents('mail/mail-bt-ctrl-stock-ok.php');
 		$htmlMail=str_replace('{DOSSIER}',$litige[0]['dossier'],$htmlMail);
 		$htmlMail=str_replace('{CODEBT}',$litige[0]['btlec'],$htmlMail);
-		$htmlMail=str_replace('{MAG}',$litige[0]['mag'],$htmlMail);
+		$htmlMail=str_replace('{MAG}',$litige[0]['deno'],$htmlMail);
 		$htmlMail=str_replace('{OPERATEUR}',$operateur['fullname'],$htmlMail);
 		$htmlMail=str_replace('{RECAP}',$reportAction,$htmlMail);
 		$subject='Portail BTLec - Litiges : retour contrôle de stock dossier - ' .$litige[0]['dossier'];
@@ -317,13 +277,16 @@ if(isset($_POST['submit']))
 		$delivered=$mailer->send($message);
 		if($delivered !=0)
 		{
-			$success='?id='.$_GET['id'].'&success';
+			$successQ='?id='.$_GET['id'].'&success';
 			unset($_POST);
-			header("Location: ".$_SERVER['PHP_SELF'].$success,true,303);
+			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 		}
 
 	}
-
+}
+if(isset($_POST['choose']))
+{
+	header('Location:'.$_SERVER['PHP_SELF'].'?id='.$_POST['listDossier']);
 }
 
 if(isset($_GET['success'])){
@@ -351,223 +314,264 @@ include('../view/_navbar.php');
 	DEBUT CONTENU CONTAINER
 	*********************************-->
 	<div class="container">
-		<h1 class="text-main-blue py-5 ">Contrôle de stock du dossier <?= isset($litige[0]['dossier'])? $litige[0]['dossier'] : ''?></h1>
 
-		<div class="row">
-			<div class="col-lg-1"></div>
-			<div class="col">
-				<?php
-				include('../view/_errors.php');
-				?>
-			</div>
-			<div class="col-lg-1"></div>
-		</div>
+		<?php if (!isset($_GET['id'])): ?>
+		<h1 class="text-main-blue py-5 ">Contrôle de stock </h1>
 
-
-		<div class="row">
-			<div class="col-lg-1"></div>
-
-			<div class="col">
-				<?= $ldDossier?>
-			</div>
-			<div class="col-lg-1"></div>
-
-		</div>
-		<!-- info dossier -->
-		<div class="row">
-			<div class="col-1"></div>
-			<div class="col bg-alert bg-light-blue">
-				<!-- mag -->
-				<div class="row ">
-					<div class="col">
-						<span class="heavy">Magasin : </span>
-						<span>	<?= isset($litige[0]['btlec'])? $litige[0]['btlec'] : ''?> - <?= isset($litige[0]['deno'])? $litige[0]['deno'] : ''?></span>
-					</div>
-					<div class="col">
-						<span class="heavy">Centrale : </span>
-						<span><?= isset($arCentrale[$litige[0]['centrale']])? $arCentrale[$litige[0]['centrale']] : ''?></span>
-
-					</div>
-				</div>
-				<!--  personnel-->
-				<div class="row mt-3">
-					<div class="col">
-						<span class="heavy">Préparateur : </span>
-						<?= isset($infos['fullprepa'])? $infos['fullprepa'] : ''?>
-					</div>
-					<div class="col">
-						<span class="heavy">Contrôleur : </span>
-						<?= isset($infos['fullctrl'])? $infos['fullctrl'] : ''?>
-
-					</div>
-					<div class="col">
-
-						<span class="heavy">Chargeur : </span>
-						<?= isset($infos['fullchg'])? $infos['fullchg'] : ''?>
-
-					</div>
-				</div>
-
-			</div>
-			<div class="col-1"></div>
-		</div>
-		<div class="row mt-5 mb-3">
-			<div class="col text-center text-main-blue">
-				<h5>Articles à contrôler : </h5>
-			</div>
-		</div>
-
-
-		<div class="row">
-			<div class="col-1"></div>
-			<div class="col">
-				<?php if (isset($litige)): ?>
-					<?php foreach ($actionList as $key => $action): ?>
-						<div class="alert alert-danger"><?=$action['libelle']?></div>
-					<?php endforeach ?>
-
-					<form method="post" action="<?=htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>">
-						<?php foreach ($litige as $key => $prod): ?>
-							<div class="row pb-3">
-								<div class="col-5">
-									<span class="heavy">
-										<?=$prod['article']?> :
-									</span>
-									<?=$prod['descr']?>
-
-								</div>
-								<div class="col-auto">
-									Stock :
-
-								</div>
-								<div class="col-2">
-									<div class="form-check">
-										<input class="form-check-input ctrl-ok" type="radio" name="ctrl[<?=$prod['id_detail']?>]" value="ok" data="<?=$prod['article']?>" required>
-										<label class="form-check-label text-green" for="ctrl">ok</label>
-									</div>
-									<div class="form-check">
-										<input class="form-check-input ctrl-ko" type="radio" name="ctrl[<?=$prod['id_detail']?>]" id="<?=$prod['id_detail']?>" value="no" data="<?=$prod['article']?>" required>
-										<label class="form-check-label text-red" for="ctrl">ko</label>
-									</div>
-									<input type="hidden" name="id_detail[]" value="<?=$prod['id_detail']?>">
-									<input type="hidden" name="art[<?=$prod['id_detail']?>]" value="<?=$prod['article']?>">
-									<input type="hidden" name="descr[<?=$prod['id_detail']?>]" value="<?=$prod['descr']?>">
-								</div>
-								<div class="col ctrl-ko-<?=$prod['article']?>"></div>
-							</div>
-							<!-- si inversion de produit, on demande aussi le contrôle des produits inversés -->
-							<?php if ($prod['inversion']!=''): ?>
-
-								<div class="row pb-3">
-									<div class="col-5">
-										<span class="heavy">
-											<?=$prod['inv_article']?> :
-										</span>
-										<?=$prod['inv_descr']?>
-
-									</div>
-									<div class="col-auto">
-										Stock :
-
-									</div>
-									<div class="col-2">
-										<div class="form-check">
-											<input class="form-check-input ctrl-ok-inv" type="radio" name="ctrl-inv[<?=$prod['id_detail']?>]" value="ok" data="<?=$prod['inv_article']?>" required>
-											<label class="form-check-label text-green" for="ctrl">ok</label>
-										</div>
-										<div class="form-check">
-											<input class="form-check-input ctrl-ko-inv" type="radio" name="ctrl-inv[<?=$prod['id_detail']?>]" id="<?=$prod['id_detail']?>" value="no" data="<?=$prod['inv_article']?>" required>
-											<label class="form-check-label text-red" for="ctrl">ko</label>
-										</div>
-										<input type="hidden" name="id_detail_inv[<?=$prod['id_detail']?>]" value="<?=$prod['id_detail']?>">
-										<input type="hidden" name="art-inv[<?=$prod['id_detail']?>]" value="<?=$prod['inv_article']?>">
-										<input type="hidden" name="descr-inv[<?=$prod['id_detail']?>]" value="<?=$prod['inv_descr']?>">
-
-									</div>
-									<div class="col ctrl-ko-inv-<?=$prod['inv_article']?>"></div>
-								</div>
-
-
-
-							<?php endif ?>
-						<?php endforeach ?>
+			<div class="row pb-5">
+				<div class="col-lg-1"></div>
+				<div class="col">
+					<form method="post" action="<?=htmlspecialchars($_SERVER['PHP_SELF'])?>">
 						<div class="row">
-							<div class="col">
+							<div class="col-3">
 								<div class="form-group">
-									<label>Commentaires : </label>
-									<textarea class="form-control" row="3" name="cmt"></textarea>
+									<label for="listDossier">Dossiers à contrôler :</label>
+									<select class="form-control" id="listDossier" name="listDossier">
+										<option value="">Sélectionnez</option>
+										<?php foreach ($ddStock as $dd): ?>
+											<option value="<?=$dd['id']?>"><?=$dd['dossier']?></option>
+										<?php endforeach ?>
+									</select>
 								</div>
 							</div>
-
+							<div class="col mt-4 pt-2">
+								<p>&nbsp;</p>
+								<button class="btn btn-primary" name="choose">Sélectionner</button>
+							</div>
 						</div>
-						<div class="row mb-5">
-							<div class="col text-right"><button class="btn btn-primary" name="submit" type="submit"><i class="fas fa-save pr-3"></i>Enregistrer</button></div>
-						</div>
-
 					</form>
-					<?php else: ?>
-						<div class="alert alert-primary">Veuillez sélectionner un dossier</div>
-					<?php endif ?>
-
 				</div>
-				<div class="col-1"></div>
+				<div class="col-lg-1"></div>
 			</div>
-			<!-- ./container -->
-		</div>
-		<script type="text/javascript">
+			<?php else: ?>
 
-			$(".ctrl-ko").click(function () {
-				function createCtrl(article){
-					var ctrlInputs='';
-					ctrlInputs+='<div class="form-group">';
-					ctrlInputs+='<label for="ecart">Ecart constaté (nb colis +/-) : </label>';
-					ctrlInputs+='<input type="text" class="form-control" name="ecart['+article+']" id="ecart" title="chiffres positif ou négatif uniqement" pattern="[-+]?[0-9]*[.]?[0-9]+" required>';
-					ctrlInputs+='</div>';
-					ctrlInputs+='<div class="form-group">';
-					ctrlInputs+='<label for="mvt">Mouvement passé :</label>';
-					ctrlInputs+='<input type="text" class="form-control" name="mvt['+article+']" id="mvt">';
-					ctrlInputs+='</div>';
-					return ctrlInputs;
-				}
-				var article=$(this).attr('data');
-				var ctrlInputs=createCtrl(article);
-				$(".ctrl-ko-"+article).append(ctrlInputs);
+				<h1 class="text-main-blue py-5 ">Contrôle de stock du dossier <?= isset($litige[0]['dossier'])? $litige[0]['dossier'] : ''?></h1>
 
-			});
-			$(".ctrl-ok").click(function () {
-				var article=$(this).attr('data');
-				$(".ctrl-ko-"+article).empty();
-			});
+				<div class="row">
+					<div class="col-lg-1"></div>
+					<div class="col">
+						<?php
+						include('../view/_errors.php');
+						?>
+					</div>
+					<div class="col-lg-1"></div>
+				</div>
+
+				<!-- info dossier -->
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col bg-alert bg-light-blue">
+						<!-- mag -->
+						<div class="row ">
+							<div class="col">
+								<span class="heavy">Magasin : </span>
+								<span>	<?= isset($litige[0]['btlec'])? $litige[0]['btlec'] : ''?> - <?= isset($litige[0]['deno'])? $litige[0]['deno'] : ''?></span>
+							</div>
+							<div class="col">
+								<span class="heavy">Centrale : </span>
+								<span><?= isset($arCentrale[$litige[0]['centrale']])? $arCentrale[$litige[0]['centrale']] : ''?></span>
+
+							</div>
+						</div>
+						<!--  personnel-->
+						<div class="row mt-3">
+							<div class="col">
+								<span class="heavy">Préparateur : </span>
+								<?= isset($infos['fullprepa'])? $infos['fullprepa'] : ''?>
+							</div>
+							<div class="col">
+								<span class="heavy">Contrôleur : </span>
+								<?= isset($infos['fullctrl'])? $infos['fullctrl'] : ''?>
+
+							</div>
+							<div class="col">
+
+								<span class="heavy">Chargeur : </span>
+								<?= isset($infos['fullchg'])? $infos['fullchg'] : ''?>
+
+							</div>
+						</div>
+
+					</div>
+					<div class="col-1"></div>
+				</div>
 
 
 
-			$(".ctrl-ko-inv").click(function () {
-				function createCtrl(article){
-					var ctrlInputs='';
-					ctrlInputs+='<div class="form-group">';
-					ctrlInputs+='<label for="ecart">Ecart constaté (nb colis +/-) : </label>';
-					ctrlInputs+='<input type="text" class="form-control" name="ecart-inv['+article+']" id="ecart" title="chiffres positif ou négatif uniqement" pattern="[-+]?[0-9]*[.]?[0-9]+" required>';
-					ctrlInputs+='</div>';
-					ctrlInputs+='<div class="form-group">';
-					ctrlInputs+='<label for="mvt">Mouvement passé :</label>';
-					ctrlInputs+='<input type="text" class="form-control" name="mvt-inv['+article+']" id="mvt">';
-					ctrlInputs+='</div>';
-					return ctrlInputs;
-				}
-				var article=$(this).attr('data');
-				var ctrlInputs=createCtrl(article);
-				$(".ctrl-ko-inv-"+article).append(ctrlInputs);
+				<div class="row mt-5 mb-3">
+					<div class="col text-center text-main-blue">
+						<h5>Historique des actions : </h5>
+					</div>
+				</div>
 
-			});
-			$(".ctrl-ok-inv").click(function () {
-				var article=$(this).attr('data');
-				console.log(article);
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col">
 
-				$(".ctrl-ko-inv-"+article).empty();
-			});
+						<div class="alert alert-secondary">
+							<?php foreach ($actionList as $key => $action): ?>
+								<div class="font-weight-bold">Action du <?=$action['dateFr']?> par <?=$action['name']?></div>
+								<div class="pl-5"><?=$action['libelle']?></div>
+							<?php endforeach ?>
+						</div>
+					</div>
+					<div class="col-1"></div>
+				</div>
+				<div class="row mt-5 mb-3">
+					<div class="col text-center text-main-blue">
+						<h5>Articles à contrôler : </h5>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-1"></div>
+					<div class="col">
+						<?php if (isset($litige)): ?>
 
 
-		</script>
-		<?php
-		require '../view/_footer-bt.php';
-		?>
+							<form method="post" action="<?=htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>">
+								<?php foreach ($litige as $key => $prod): ?>
+									<div class="row pb-3">
+										<div class="col-5">
+											<span class="heavy">
+												<?=$prod['article']?> :
+											</span>
+											<?=$prod['descr']?>
+
+										</div>
+										<div class="col-auto">
+											Stock :
+
+										</div>
+										<div class="col-2">
+											<div class="form-check">
+												<input class="form-check-input ctrl-ok" type="radio" name="ctrl[<?=$prod['id_detail']?>]" value="ok" data="<?=$prod['article']?>" required>
+												<label class="form-check-label text-green" for="ctrl">ok</label>
+											</div>
+											<div class="form-check">
+												<input class="form-check-input ctrl-ko" type="radio" name="ctrl[<?=$prod['id_detail']?>]" id="<?=$prod['id_detail']?>" value="no" data="<?=$prod['article']?>" required>
+												<label class="form-check-label text-red" for="ctrl">ko</label>
+											</div>
+											<input type="hidden" name="id_detail[]" value="<?=$prod['id_detail']?>">
+											<input type="hidden" name="art[<?=$prod['id_detail']?>]" value="<?=$prod['article']?>">
+											<input type="hidden" name="descr[<?=$prod['id_detail']?>]" value="<?=$prod['descr']?>">
+										</div>
+										<div class="col ctrl-ko-<?=$prod['article']?>"></div>
+									</div>
+									<!-- si inversion de produit, on demande aussi le contrôle des produits inversés -->
+									<?php if ($prod['inversion']!=''): ?>
+
+										<div class="row pb-3">
+											<div class="col-5">
+												<span class="heavy">
+													<?=$prod['inv_article']?> :
+												</span>
+												<?=$prod['inv_descr']?>
+
+											</div>
+											<div class="col-auto">
+												Stock :
+
+											</div>
+											<div class="col-2">
+												<div class="form-check">
+													<input class="form-check-input ctrl-ok-inv" type="radio" name="ctrl-inv[<?=$prod['id_detail']?>]" value="ok" data="<?=$prod['inv_article']?>" required>
+													<label class="form-check-label text-green" for="ctrl">ok</label>
+												</div>
+												<div class="form-check">
+													<input class="form-check-input ctrl-ko-inv" type="radio" name="ctrl-inv[<?=$prod['id_detail']?>]" id="<?=$prod['id_detail']?>" value="no" data="<?=$prod['inv_article']?>" required>
+													<label class="form-check-label text-red" for="ctrl">ko</label>
+												</div>
+												<input type="hidden" name="id_detail_inv[<?=$prod['id_detail']?>]" value="<?=$prod['id_detail']?>">
+												<input type="hidden" name="art-inv[<?=$prod['id_detail']?>]" value="<?=$prod['inv_article']?>">
+												<input type="hidden" name="descr-inv[<?=$prod['id_detail']?>]" value="<?=$prod['inv_descr']?>">
+
+											</div>
+											<div class="col ctrl-ko-inv-<?=$prod['inv_article']?>"></div>
+										</div>
+
+
+
+									<?php endif ?>
+								<?php endforeach ?>
+								<div class="row">
+									<div class="col">
+										<div class="form-group">
+											<label>Commentaires : </label>
+											<textarea class="form-control" row="3" name="cmt"></textarea>
+										</div>
+									</div>
+
+								</div>
+								<div class="row mb-5">
+									<div class="col text-right"><button class="btn btn-primary" name="submit" type="submit"><i class="fas fa-save pr-3"></i>Enregistrer</button></div>
+								</div>
+
+							</form>
+							<?php else: ?>
+								<div class="alert alert-primary">Veuillez sélectionner un dossier</div>
+							<?php endif ?>
+
+						</div>
+						<div class="col-1"></div>
+					</div>
+				<?php endif ?>
+
+				<!-- ./container -->
+			</div>
+			<script type="text/javascript">
+
+				$(".ctrl-ko").click(function () {
+					function createCtrl(article){
+						var ctrlInputs='';
+						ctrlInputs+='<div class="form-group">';
+						ctrlInputs+='<label for="ecart">Ecart constaté (nb colis +/-) : </label>';
+						ctrlInputs+='<input type="text" class="form-control" name="ecart['+article+']" id="ecart" title="chiffres positif ou négatif uniqement" pattern="[-+]?[0-9]*[.]?[0-9]+" required>';
+						ctrlInputs+='</div>';
+						ctrlInputs+='<div class="form-group">';
+						ctrlInputs+='<label for="mvt">Mouvement passé :</label>';
+						ctrlInputs+='<input type="text" class="form-control" name="mvt['+article+']" id="mvt">';
+						ctrlInputs+='</div>';
+						return ctrlInputs;
+					}
+					var article=$(this).attr('data');
+					var ctrlInputs=createCtrl(article);
+					$(".ctrl-ko-"+article).append(ctrlInputs);
+
+				});
+				$(".ctrl-ok").click(function () {
+					var article=$(this).attr('data');
+					$(".ctrl-ko-"+article).empty();
+				});
+
+
+
+				$(".ctrl-ko-inv").click(function () {
+					function createCtrl(article){
+						var ctrlInputs='';
+						ctrlInputs+='<div class="form-group">';
+						ctrlInputs+='<label for="ecart">Ecart constaté (nb colis +/-) : </label>';
+						ctrlInputs+='<input type="text" class="form-control" name="ecart-inv['+article+']" id="ecart" title="chiffres positif ou négatif uniqement" pattern="[-+]?[0-9]*[.]?[0-9]+" required>';
+						ctrlInputs+='</div>';
+						ctrlInputs+='<div class="form-group">';
+						ctrlInputs+='<label for="mvt">Mouvement passé :</label>';
+						ctrlInputs+='<input type="text" class="form-control" name="mvt-inv['+article+']" id="mvt">';
+						ctrlInputs+='</div>';
+						return ctrlInputs;
+					}
+					var article=$(this).attr('data');
+					var ctrlInputs=createCtrl(article);
+					$(".ctrl-ko-inv-"+article).append(ctrlInputs);
+
+				});
+				$(".ctrl-ok-inv").click(function () {
+					var article=$(this).attr('data');
+					console.log(article);
+
+					$(".ctrl-ko-inv-"+article).empty();
+				});
+
+
+			</script>
+			<?php
+			require '../view/_footer-bt.php';
+			?>

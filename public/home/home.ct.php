@@ -38,7 +38,7 @@
 		<div class="col-lg-1"></div>
 	</div>
 	<!-- infos -->
-	<div class="row my-3">
+<!-- 	<div class="row my-3">
 		<div class="col"></div>
 		<div class="col-8 shadow">
 			<div class="row no-margin-bottom">
@@ -58,7 +58,7 @@
 		</div>
 		<div class="col"></div>
 	</div>
-
+ -->
 
 	<?php
 	include('../doc/flash-view.php');

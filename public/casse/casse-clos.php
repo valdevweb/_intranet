@@ -149,9 +149,9 @@ if(isset($_POST['clos'])){
 		if (!$mailer->send($message, $failures)){
 			print_r($failures);
 		}else{
-			$success='?id='.$_GET['id'].'&success=closfac';
+			$successQ='?id='.$_GET['id'].'&success=closfac';
 			unset($_POST);
-			header("Location: ".$_SERVER['PHP_SELF'].$success,true,303);
+			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 		}
 
 
@@ -167,9 +167,9 @@ if(isset($_POST['closhs'])){
 	$close=closeCasse($pdoCasse);
 	$closeExp=closeExpNofac($pdoCasse);
 	if($added>0 && $close >0  && $closeExp >0){
-		$success='?id='.$_GET['id'].'&success=clos';
+		$successQ='?id='.$_GET['id'].'&success=clos';
 		unset($_POST);
-		header("Location: ".$_SERVER['PHP_SELF'].$success,true,303);
+		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 
 	}
 	else{

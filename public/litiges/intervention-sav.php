@@ -249,9 +249,8 @@ DEBUT CONTENU CONTAINER
 		<div class="col-lg-1"></div>
 	</div>
 	<div class="bg-separation"></div>
-	<?php
-	ob_start();
-	?>
+	<?php if (isset($_GET['id']) && !empty($thisLitige)): ?>
+		
 	<div class="row mb-3 pt-3">
 		<div class="col text-yellow-dark heavy">Détail du litige :</div>
 	</div>
@@ -376,15 +375,9 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-2"></div>
 	</div>
+	<?php endif ?>
 
-	<?php
-	$html=ob_get_contents();
-	ob_end_clean();
-	if(isset($_GET['id'])){
-		echo $html;
-	}
 
-	?>
 
 	<!-- ./container -->
 </div>

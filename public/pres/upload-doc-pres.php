@@ -107,10 +107,10 @@ if(isset($_POST['add-doc'])){
 
 	$newFiles=addDoc($pdoBt, $ofile, $pdfFile);
 	if($newFiles==1){
-		$success='?id='.$_GET['id'].'&success=1';
+		$successQ='?id='.$_GET['id'].'&success=1';
 		unset($_POST);
 		unset($_FILES);
-		header("Location: ".$_SERVER['PHP_SELF'].$success,true,303);
+		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 	}else{
 		$errors[]="une erreur s'est produite";
 	}

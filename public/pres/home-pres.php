@@ -57,9 +57,9 @@ $allPres=getPres($pdoBt);
 if(isset($_POST['add-pres'])){
 	$addpres=addPres($pdoBt);
 	if($addpres==1){
-		$success='?success=1';
+		$successQ='?success=1';
 		unset($_POST);
-		header("Location: ".$_SERVER['PHP_SELF'].$success,true,303);
+		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 	}
 
 }
