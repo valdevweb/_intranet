@@ -63,7 +63,8 @@ $objBt="PORTAIL BTLec - nouvelle demande : " .$_SESSION['nom'] ." pour le servic
 $objMag="PORTAIL BTLec - demande envoyée";
 mb_internal_encoding('UTF-8');
 $objMag = mb_encode_mimeheader($objMag);
-$uploadDir= '..\..\..\upload\mag\\';
+
+$uploadDir= DIR_UPLOAD. 'mag\\';
 
 
 

@@ -69,7 +69,7 @@ $links=createLinks($pdoBt,$gazettes,$version);
 
 // les 2 dernière gazettes opportunités
 $gazetteAppros=showLastGazettesAppros($pdoBt);
-$link="http://172.30.92.53/".$version."upload/gazette/";
+$link=URL_UPLOAD."gazette/";
 $approHtml="";
 if($gazetteAppros){
 	foreach ($gazetteAppros as $gazette)
@@ -222,7 +222,8 @@ if(!empty($revRes))
 
 $flashNews=getFlashNews($pdoBt);
 
-$flashFilesDir='..\..\..\upload\flash\\';
+$flashFilesDir=DIR_UPLOAD.'flash\\';
+// $flashFilesDir='..\..\..\upload\flash\\';
 
 // on réinitialise les filtres mémorisés par la page base mag
 if(isset($_SESSION['mag_filters'])){

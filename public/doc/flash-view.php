@@ -3,14 +3,14 @@
 		<?php
 		if(!empty($flash['pj']) && !empty($flash['vignette']))
 		{
-			$link='<a href="'.UPLOAD_DIR.'/flash/'.$flash['pj'].'" target="_blank"><img src="'.UPLOAD_DIR.'/flash/'.$flash['vignette'].'" ></a>';
+			$link='<a href="'.URL_UPLOAD.'flash/'.$flash['pj'].'" target="_blank"><img src="'.URL_UPLOAD.'/flash/'.$flash['vignette'].'" ></a>';
 			$vignetteplusdoc='<p class="align-right"><i>Cliquez sur la photo pour afficher le document</i></p>';
 
 
 		}
 		elseif (empty($flash['pj']) && !empty($flash['vignette']))
 		{
-			$link='<img src="'.UPLOAD_DIR.'/flash/'.$flash['vignette'].'" >';
+			$link='<img src="'.URL_UPLOAD.'flash/'.$flash['vignette'].'" >';
 			$vignetteplusdoc='';
 
 
@@ -18,7 +18,7 @@
 		elseif (!empty($flash['pj']) && empty($flash['vignette']))
 		{
 			$link='';
-			$vignetteplusdoc='<a href="'.UPLOAD_DIR.'/flash/'.$flash['pj'].'"  class="blue-link" target="_blank">Plus d\'information en cliquant ici</a>';
+			$vignetteplusdoc='<a href="'.URL_UPLOAD.'flash/'.$flash['pj'].'"  class="blue-link" target="_blank">Plus d\'information en cliquant ici</a>';
 
 
 		}

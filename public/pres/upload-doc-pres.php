@@ -70,11 +70,12 @@ $pres=getThisPres($pdoBt);
 if(isset($_POST['add-doc'])){
 	$ofile="";
 	$pdfFile="";
+	$dirUpload=DIR_UPLOAD.'pres\\';
 
 	if(isset($_FILES['orgfile']['name']) && !empty($_FILES['orgfile']['name']))
 	{
 		$uploader   =   new Uploader();
-		$uploader->setDir('..\..\..\upload\pres\\');
+		$uploader->setDir($dirUpload);
 		$uploader->allowAllFormats();
 		$uploader->setMaxSize(5);
 
@@ -90,7 +91,7 @@ if(isset($_POST['add-doc'])){
 	if(isset($_FILES['pdffile']['name']) && !empty($_FILES['pdffile']['name']))
 	{
 		$uploaderPdf   =   new Uploader();
-		$uploaderPdf->setDir('..\..\..\upload\pres\\');
+		$uploaderPdf->setDir($dirUpload);
 		 // $uploaderPdf->setExtensions('pdf');
 		$uploaderPdf->allowAllFormats();
 		$uploaderPdf->setMaxSize(5);
@@ -183,8 +184,8 @@ DEBUT CONTENU CONTAINER
 					<?php foreach ($pres as $key => $p): ?>
 
 						<tr>
-							<td><a href="<?= UPLOAD_DIR.'\\pres\\'.$p['pdf'] ?>" target="blank"><?=$p['pdf']?></a></td>
-							<td><a href="<?= UPLOAD_DIR.'\\pres\\'.$p['ofile'] ?>" target="blank"><?=$p['ofile']?></a></td>
+							<td><a href="<?= URL_UPLOAD.'\\pres\\'.$p['pdf'] ?>" target="blank"><?=$p['pdf']?></a></td>
+							<td><a href="<?= URL_UPLOAD.'\\pres\\'.$p['ofile'] ?>" target="blank"><?=$p['ofile']?></a></td>
 
 							<td class="text-center"><a href="delete-doc-pres.php?idpres=<?=$_GET['id'].'&iddoc='.$p['iddoc']?>"><i class="fas fa-trash-alt"></i></a></td>
 							<td class="text-right order" contenteditable="true" id="<?=$p['iddoc']?>"><?=$p['ordre']?></td>

@@ -49,7 +49,7 @@ function formatPJ($incFileStrg){
 		$incFileStrg=explode( '; ', $incFileStrg );
 		for ($i=0;$i<count($incFileStrg);$i++){
 		$ico="<i class='fa fa-paperclip fa-lg pl-5 pr-3 hvr-pop' aria-hidden='true'  ></i>";
-		$href.= "<a class='pj' href='http://172.30.92.53/".VERSION ."upload/mag/" . $incFileStrg[$i] . "' target='blank'>" .$ico ."ouvrir</a>";
+		$href.= "<a class='pj' href='".URL_UPLOAD."mag/" . $incFileStrg[$i] . "' target='blank'>" .$ico ."ouvrir</a>";
 		}
 		$href="<p>".$href."</p>";
 
@@ -59,7 +59,8 @@ function formatPJ($incFileStrg){
 }
 
 $errors=[];
-$uploadDir= '..\..\..\upload\mag\\';
+$uploadDir= DIR_UPLOAD. 'mag\\';
+
 $fileList="";
 
 $msgManager=new MsgManager();
@@ -117,7 +118,6 @@ if(isset($_POST['post-reply'])){
 			$contentOne=$msg['who'];
 			$contentTwo=$_SESSION['nom'];
 			$link="Cliquez <a href='" .SITE_ADDRESS."/index.php?btlec/answer.php?msg=".$_GET['msg']."'>ici pour consulter le message</a>";
-			// $link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter le message</a>";
 			if(sendMail($to,$objet,$tplForBtlec,$contentOne,$contentTwo,$link)){
 				$successQ='?msg='.$_GET['msg'].'&success';
 				unset($_POST);

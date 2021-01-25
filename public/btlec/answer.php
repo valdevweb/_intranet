@@ -48,8 +48,6 @@ $err=array();
 $filenameList=array();
 
 
-//test valeur $_FILE, si renvoi true => au moins un fichier à uploader
-$isFileToUpload=isFileToUpload();
 
 // verif si le user a le droit de cloturer la demande sans répondre
 function isUserInGroup($pdoBt,$idWebuser,$groupName){
@@ -102,7 +100,7 @@ function formatPJ($incFileStrg){
 		$incFileStrg=explode( '; ', $incFileStrg );
 		for ($i=0;$i<count($incFileStrg);$i++){
 			$ico="<i class='fa fa-paperclip fa-lg pl-5 pr-3 hvr-pop' aria-hidden='true'  ></i>";
-			$href.= "<a class='pj' href='http://172.30.92.53/".VERSION ."upload/mag/" . $incFileStrg[$i] . "' target='blank'>" .$ico ."ouvrir</a>";
+			$href.= "<a class='pj' href='".URL_UPLOAD."mag/" . $incFileStrg[$i] . "' target='blank'>" .$ico ."ouvrir</a>";
 		}
 		$href="<p>".$href."</p>";
 
@@ -148,7 +146,7 @@ if(isset($_POST['post-reply'])){
 			//------------------------------
 			//			upload du fichier
 			//------------------------------
-			$uploadDir= '..\..\..\upload\mag\\';
+			$uploadDir= DIR_UPLOAD.'mag\\';
 			//on initialise authorized à 0, si il reste à 0, tous les fichiers sont autorisés, sinon
 			//on incrémente et on bloque le message si on n'est pas égal à 0
 			$authorized=0;

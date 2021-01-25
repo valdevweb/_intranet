@@ -98,7 +98,7 @@ if (isset($_POST['submit']))
 	{
 		$linkSearch="<p class='pl-5'>";
 		foreach ($result as $value){
-			$linkSearch.="<a href='http://172.30.92.53/".$version ."upload/gazette/" . $value['file'] . "'>" .$value['file'] ."</a><br>";
+			$linkSearch.="<a href='".URL_UPLOAD."gazette/" . $value['file'] . "'>" .$value['file'] ."</a><br>";
 		}
 		$linkSearch.="</p>";
 	}
@@ -155,7 +155,7 @@ include('../view/_navbar.php');
 									<ul>
 										<?php foreach ($quotidienne as $gazQuotidienne): ?>
 
-											<li><a href="<?=UPLOAD_DIR?>/gazette/<?= $gazQuotidienne['file']?>">la gazette du <?= $gazQuotidienne['day'] . ' '. $months[$gazQuotidienne['month']] . ' '. $gazQuotidienne['year']?></a></li>
+											<li><a href="<?=URL_UPLOAD?>gazette/<?= $gazQuotidienne['file']?>">la gazette du <?= $gazQuotidienne['day'] . ' '. $months[$gazQuotidienne['month']] . ' '. $gazQuotidienne['year']?></a></li>
 										<?php endforeach ?>
 									</ul>
 								<?php endif ?>
@@ -175,7 +175,7 @@ include('../view/_navbar.php');
 
 									<?php foreach ($suiviCata as $suivi): ?>
 										<?php $fileTitle=explode('.xls', $suivi['file']);?>
-										<ul><li class="heavy"><a href="<?=UPLOAD_DIR?>/gazette/<?=$suivi['file']?>"><?= $fileTitle[0] .' <br><i>('.$suivi['deb'].' au '.$suivi['fin'].') : ' ?></i></a></li></ul>
+										<ul><li class="heavy"><a href="<?=URL_UPLOAD?>gazette/<?=$suivi['file']?>"><?= $fileTitle[0] .' <br><i>('.$suivi['deb'].' au '.$suivi['fin'].') : ' ?></i></a></li></ul>
 										<div class="detail"><?= $suivi['title'] ?></div>
 
 									<?php endforeach ?>

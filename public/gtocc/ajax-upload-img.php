@@ -5,11 +5,8 @@ include('../../config/config.inc.php');
 $response = ["success"=>false, "message"=>"Bad request"];
 if(isset($_POST["submit"])) {
     $response["message"] ="Unknown error occurred";
-    if(VERSION=="_"){
-        $target_dir = "D:\\www\\_intranet\\upload\\flash\\";
-    }else{
-        $target_dir = "D:\\www\\intranet\\upload\\flash\\";
-    }
+
+    $target_dir= DIR_UPLOAD. 'flash\\';
 
 
     $temp = explode(".", $_FILES["file"]["name"]);
@@ -17,7 +14,7 @@ if(isset($_POST["submit"])) {
 
 
     $target_file = $target_dir . $filename;
-    $webdir=UPLOAD_DIR.'/flash/'.$filename;
+    $webdir=URL_UPLOAD.'flash/'.$filename;
 
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));

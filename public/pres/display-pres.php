@@ -78,7 +78,7 @@ if(isset($_GET['id_pres']) && isset($_GET['iddoc'])){
 			}
 			else{
 
-				$document=UPLOAD_DIR.'/pres/'.$listDoc[$_GET['iddoc']]['pdf'];
+				$document=URL_UPLOAD.'/pres/'.$listDoc[$_GET['iddoc']]['pdf'];
 				$row='<div class="row"><div class="col">';
 				$rowEnd='</div></div>';
 				$content=$row.'<iframe src="'.$document.'?#view=FitH"  height="100%" width="100%"></iframe>'.$rowEnd;
@@ -102,7 +102,7 @@ include('head_pres.php');
 						$i=0;
 						foreach ($listDoc as $value)
 						{
-							echo '<li><a href="display-pres.php?id_pres='.$_GET['id_pres'].'&iddoc='.$i.'">'. $value['pdf'].'</a><a href="'.UPLOAD_DIR.'/pres/'.$value['ofile'].'"><i class="fas fa-download pl-5"></i></a></li>';
+							echo '<li><a href="display-pres.php?id_pres='.$_GET['id_pres'].'&iddoc='.$i.'">'. $value['pdf'].'</a><a href="'.URL_UPLOAD.'/pres/'.$value['ofile'].'"><i class="fas fa-download pl-5"></i></a></li>';
 							$i++;
 						}
 						?>
@@ -122,7 +122,7 @@ include('head_pres.php');
 			?>
 		</div>
 		<div id="middle">
-			<div class=""><a href="'.UPLOAD_DIR.'/pres/'.$value['ofile'].'"><i class="fas fa-download fa-lg btn-round"></i></a></div>
+			<div class=""><a href="'.URL_UPLOAD.'/pres/'.$value['ofile'].'"><i class="fas fa-download fa-lg btn-round"></i></a></div>
 		</div>
 		<div id="before">
 			<?php

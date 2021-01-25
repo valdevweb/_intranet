@@ -24,7 +24,7 @@
                 <table width="900px" cellpadding="0" cellspacing="0" border="0">
                     <tr>
                         <td colspan="2">
-                            <img src="http://172.30.92.53/_btlecest/public/mail/mail-hebdo-header.jpg">
+                            <img src="{SITE_ADDRESS}/public/mail/mail-hebdo-header.jpg">
                         </td>
                     </tr>
                     <tr>
@@ -36,13 +36,13 @@
                     <tr>
                         <td width="669px">
                             <p>Bonjour,</p>
-                            Aujourd'hui, retrouvez sur le <a href="http://172.30.92.53/btlecest/index.php" class="home">portail BTLec</a> :
+                            Aujourd'hui, retrouvez sur le <a href="<?=SITE_ADDRESS?>/index.php" class="home">portail BTLec</a> :
                             <div style="color:darkblue; font-weight:bold">
                                {FILELIST}
                            </div>
                        </td>
                        <td  width="251px" >
-                        <p><img src="http://172.30.92.53/_btlecest/public/mail/flash-mail.jpg" style="border:1px #ccc solid"></p>
+                        <p><img src="<?=SITE_ADDRESS?>/public/mail/flash-mail.jpg" style="border:1px #ccc solid"></p>
 
                     </td>
                 </tr>
@@ -53,8 +53,8 @@
                         Portail BTLec EST</p>
                         <div class="footer">
                             <p>Pour vous rendre sur le portail, vous pouvez :<br>
-                                - soit<a href="http://172.30.92.53/btlecest/index.php"> cliquer ici </a>
-                                <br>- soit copier/coller cette adresse  :  <span style="color:darkblue;"> http://172.30.92.53/btlecest/</span>
+                                - soit<a href="{SITE_ADDRESS}/index.php"> cliquer ici </a>
+                                <br>- soit copier/coller cette adresse  :  <span style="color:darkblue;"> {SITE_ADDRESS}</span>
                                 <p style="color:darkorange;">*** Merci de ne pas répondre à ce mail, cette boîte mail n'est pas consultée ***</p>
                             </div>
                         </td>

@@ -95,8 +95,10 @@ $mag=MagHelpers::deno($pdoMag,$isFac['galec']);
 if(isset($_POST['clos'])){
 
 
+	$dirUpload=DIR_UPLOAD.'casse\\';
+
 	$uploader   =   new Uploader();
-	$uploader->setDir('..\..\..\upload\casse\\');
+	$uploader->setDir($dirUpload);
 	$uploader->allowAllFormats();
 	$uploader->setMaxSize(5);
 	//                      //set max file size to be allowed in MB//
@@ -108,9 +110,7 @@ if(isset($_POST['clos'])){
 	}
 	else{//upload failed
 		$errors[]=$uploader->getMessage();
-			echo "<pre>";
-			print_r($errors);
-			echo '</pre>';
+
 	}
 
 	$added=addFacDate($pdoCasse);
@@ -145,7 +145,7 @@ if(isset($_POST['clos'])){
 		->setTo($to)
 		->setCc($cc)
 		->addBcc($bcc)
-		->attach(Swift_Attachment::fromPath('..\..\..\upload\casse\\'.$file));
+		->attach(Swift_Attachment::fromPath($dirUpload.$file));
 		if (!$mailer->send($message, $failures)){
 			print_r($failures);
 		}else{

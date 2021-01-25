@@ -95,7 +95,7 @@ function createFileLink($filelist)
 	{
 		if($filelist[$i] !="")
 		{
-			$rValue.='<a href="'.UPLOAD_DIR.'/litiges/'.$filelist[$i].'"><span class="pr-3"><i class="fas fa-link"></i></span></a>';
+			$rValue.='<a href="'.URL_UPLOAD.'/litiges/'.$filelist[$i].'"><span class="pr-3"><i class="fas fa-link"></i></span></a>';
 
 		}
 	}
@@ -113,7 +113,7 @@ if(isset($_POST['submit']))
 	}
 	else
 	{
-		$uploadDir='..\..\..\upload\litiges\\';
+		$uploadDir= DIR_UPLOAD. 'litiges\\';
 		$uploaded=false;
 		$allfilename="";
 		$nbFiles=count($_FILES['incfile']['name']);

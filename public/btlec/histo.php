@@ -76,7 +76,7 @@ function formatPJ($incFileStrg){
 		$incFileStrg=explode( '; ', $incFileStrg );
 		for ($i=0;$i<count($incFileStrg);$i++){
 			$ico="<i class='fa fa-paperclip fa-lg pl-5 pr-3 hvr-pop' aria-hidden='true'  ></i>";
-			$href.= "<a class='pj' href='http://172.30.92.53/".VERSION ."upload/mag/" . $incFileStrg[$i] . "' target='blank'>" .$ico ."ouvrir</a>";
+			$href.= "<a class='pj' href='".URL_UPLOAD."mag/" . $incFileStrg[$i] . "' target='blank'>" .$ico ."ouvrir</a>";
 		}
 		$href="<p>".$href."</p>";
 

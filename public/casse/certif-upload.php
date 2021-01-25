@@ -85,10 +85,12 @@ function getLdSav($pdoSav, $sav, $module){
 
 
 
-if(isset($_POST['submit']))
-{
+if(isset($_POST['submit'])){
+
+	$dirUpload=DIR_UPLOAD.'casse\\';
+
 	$uploader=new Uploader();
-	$uploader->setDir('..\..\..\upload\casse\\');
+	$uploader->setDir($dirUpload);
 	$uploader->allowAllFormats();
 	$uploader->setMaxSize(0.5);                          //set max file size to be allowed in MB//
 
@@ -115,7 +117,7 @@ if(isset($_POST['submit']))
 			$htmlMail=str_replace('{PALETTE}',$contremarque,$htmlMail);
 			$subject='Portail SAV Leclerc - casse - certificat de destruction';
 
-			$attachment = Swift_Attachment::fromPath('..\..\..\upload\casse\\'.$filename);
+			$attachment = Swift_Attachment::fromPath($dirUpload.$filename);
 			// ---------------------------------------
 			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
 			$mailer = new Swift_Mailer($transport);

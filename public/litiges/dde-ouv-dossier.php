@@ -50,7 +50,8 @@ function addMsg($pdoLitige,$pj)
 //------------------------------------------------------
 $errors=[];
 $success=[];
-$uploadDir= '..\..\..\upload\litiges\\';
+$uploadDir= DIR_UPLOAD. 'litiges\\';
+
 
 //------------------------------------------------------
 //			TRAITEMNT

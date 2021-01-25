@@ -3,7 +3,7 @@ require('../../config/autoload.php');
 
 if(!empty($_POST['id_doc_type']))
 {
-	$dir="http://172.30.92.53/".$version."upload/gazette/";
+	$dir=URL_UPLOAD."gazette/";
 	echo "<h5 class='text-center pb-3'>Derniers fichiers :</h5>";
 	// entete tableau
 	echo"<table class='table table-striped table-sm'>";

@@ -78,7 +78,7 @@ DEBUT CONTENU CONTAINER
 							echo '<td>'.$flash['content'].'</td>';
 							if(!empty($flash['vignette']))
 							{
-								echo '<td><a href="'.UPLOAD_DIR.'/flash/'.$flash['pj'].'" target="_blank"><img src="'.UPLOAD_DIR.'/flash/'.$flash['vignette'].'"></a></td>';
+								echo '<td><a href="'.URL_UPLOAD.'/flash/'.$flash['pj'].'" target="_blank"><img src="'.URL_UPLOAD.'/flash/'.$flash['vignette'].'"></a></td>';
 							}
 							else{
 								echo '<td></td>';

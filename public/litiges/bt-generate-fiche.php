@@ -95,7 +95,7 @@ $footer.='<tr><td>TRAITEMENT</td></tr>';
 $footer.='<tr><td class="spacing-l"></td></tr>';
 $footer.='<tr><td>Date et validation</td></tr>';
 $footer.='<tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>';
-$path='http://172.30.92.53/'.VERSION.'upload/litiges/'.$html;
+$path=URL_UPLOAD.'litiges/'.$html;
 
 $mpdf = new \Mpdf\Mpdf();
 $mpdf->SetHTMLFooter($footer);

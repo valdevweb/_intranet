@@ -100,7 +100,7 @@ if(isset($_GET['delete']))
 					$cat="";
 					foreach ($allDoc as $doc)
 					{
-						echo '<tr><td><a  class="blue-link" href="'.UPLOAD_DIR.'\lcom\\'.$doc['filename'] .'">' .$doc['webname'].'</a></td>';
+						echo '<tr><td><a  class="blue-link" href="'.URL_UPLOAD.'\lcom\\'.$doc['filename'] .'">' .$doc['webname'].'</a></td>';
 						echo '<td>'.$doc['date_upload'].' </td>';
 						echo '<td>'.$doc['nom'].' </td>';
 						echo '<td class="text-center"><a href="move-lcom.php?delete='.$doc['id_doc'].'"><i class="fa fa-minus-circle" aria-hidden="true"></i></a></td>';

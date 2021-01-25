@@ -63,12 +63,12 @@ $success=[];
 					if($cat!=$doc['id_cat'])
 					{
 						echo '<p class="mt-5 font-weight-bold">'.$doc['nom'].' : </p>';
-						echo '<a  class="blue-link" href="'.UPLOAD_DIR.'\lcom\\'.$doc['filename'] .'">- ' .$doc['webname'].'</a><br>';
+						echo '<a  class="blue-link" href="'.URL_UPLOAD.'\lcom\\'.$doc['filename'] .'">- ' .$doc['webname'].'</a><br>';
 						$cat=$doc['id_cat'];
 					}
 					else
 					{
-						echo '<a  class="blue-link" href="'.UPLOAD_DIR.'\lcom\\'.$doc['filename'] .'">- ' .$doc['webname'].'</a><br>';
+						echo '<a  class="blue-link" href="'.URL_UPLOAD.'\lcom\\'.$doc['filename'] .'">- ' .$doc['webname'].'</a><br>';
 
 					}
 				}

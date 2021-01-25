@@ -7,8 +7,6 @@ if(!isset($_SESSION['id'])){
 
 
 
-
-// require '../../functions/upload.fn.php';
 require '../../functions/mail.fn.php';
 //affichage de l'historique des réponses
 require "../../functions/stats.fn.php";
@@ -55,7 +53,7 @@ $lig=0;
 
 
 // info msg
-$link="Cliquez <a href='http://172.30.92.53/". VERSION ."btlecest/index.php?".$idMsg."'>ici pour consulter la demande magasin</a>";
+$link="Cliquez <a href='".SITE_ADDRESS."/index.php?".$idMsg."'>ici pour consulter la demande magasin</a>";
 
 $tplt="../mail/reaffectation.html";
 mb_internal_encoding('UTF-8');

@@ -67,7 +67,8 @@ function addMsg($pdoLitige, $filelist,$magRep){
 $errors=[];
 $success=[];
 
-$uploadDir= '..\..\..\upload\litiges\\';
+
+$uploadDir= DIR_UPLOAD. 'litiges\\';
 
 $litigeDao=new LitigeDao($pdoLitige);
 $thisOuv=$litigeDao->getThisOuverture($_GET['id']);

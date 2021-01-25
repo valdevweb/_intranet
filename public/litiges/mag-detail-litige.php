@@ -52,7 +52,7 @@ function createFileLink($filelist)
 	{
 		if($filelist[$i] !="")
 		{
-			$rValue.='<a href="'.UPLOAD_DIR.'/litiges/'.$filelist[$i].'" class="link-main-blue"><span class="pr-3"><i class="fas fa-link"></i></span></a>';
+			$rValue.='<a href="'.URL_UPLOAD.'/litiges/'.$filelist[$i].'" class="link-main-blue"><span class="pr-3"><i class="fas fa-link"></i></span></a>';
 
 		}
 	}
@@ -157,8 +157,7 @@ if($thisLitige[0]['id_reclamation']==7)
 
 
 
-
-$uploadDir= '..\..\..\upload\litiges\\';
+$uploadDir= DIR_UPLOAD. 'litiges\\';
 if(isset($_POST['submit']))
 {
 

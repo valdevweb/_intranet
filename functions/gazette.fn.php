@@ -49,7 +49,7 @@ function showAllSpe($pdoBt)
 
 
 
-function createLinks($pdoBt,$gazettes,$version)
+function createLinks($pdoBt,$gazettes)
 {
 	$months= array('','janvier', 'février', 'mars', 'avril', 'mai', 'juin','juillet', 'août', 'septembre', 'octobre','novembre','décembre');
 	$gazette=array();
@@ -58,7 +58,7 @@ function createLinks($pdoBt,$gazettes,$version)
 	 	$month=$g['month'];
 	 	$month=$months[$month];
 	 	$year=$g['year'];
-	 	$link="http://172.30.92.53/".$version."upload/gazette/" .$g['file'];
+	 	$link=URL_UPLOAD."gazette/" .$g['file'];
 	 	$html="<li><a href='".$link."' class='simple-link stat-link' data-user-session='".$_SESSION['user']."'><i class='far fa-hand-point-right pr-3'></i>la gazette du ".$jour .' '. $month .' '.$year ."</a></li>";
 	 	array_push($gazette,$html);
 	 }
@@ -91,7 +91,7 @@ function createLinksAppros($pdoBt,$gazettes,$version)
 	 	$month=$g['month'];
 	 	$month=$months[$month];
 	 	$year=$g['year'];
-	 	$link="http://172.30.92.53/".$version."upload/gazette/" .$g['file'];
+	 	$link=URL_UPLOAD."gazette/" .$g['file'];
 	 	$html="<li><i class='fa fa-angle-double-right'></i><a href='".$link."' class='simple-link stat-link' data-user-session='".$_SESSION['user']."'>la gazette du appros ".$jour .' '. $month .' '.$year ."</a></li>";
 	 	array_push($gazette,$html);
 	 }

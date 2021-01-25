@@ -236,12 +236,13 @@ if(count($fileList)!=0){
 
 
 		ob_start();
-		include('mail-daily.html');
+		include('mail-daily.php');
 		$htmlMail=ob_get_contents();
 		ob_end_clean();
 	// $htmlMail = file_get_contents('mail-daily.html');
 	$htmlMail=str_replace('{TODAY}',$today,$htmlMail);
 	$htmlMail=str_replace('{FILELIST}',$htmlfileList,$htmlMail);
+	$htmlMail=str_replace('{SITE_ADDRESS}',SITE_ADDRESS,$htmlMail);
 	$subject='Portail BTLec Est - vos infos du jour';
 
 // ---------------------------------------

@@ -114,7 +114,8 @@ $foreachSuccess=[];
 $errors=[];
 $success=[];
 $newData=0;
-$uploadDir= '..\..\..\upload\litiges\\';
+$uploadDir= DIR_UPLOAD. 'litiges\\';
+
 $valoTotal=0;
 if(isset($_POST['submit']))
 {

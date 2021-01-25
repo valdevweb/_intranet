@@ -42,33 +42,31 @@ function repliedByIntoName($pdoUser,$idUser)
 
 
 // upload le fichier si mime ok
-function checkUpload($location, $pdoBt)
-{
-	// $renamed = md5($filename. time());        #rename of the file
-// if (!@move_uploaded_file($_FILES[$uploadfile]['tmp_name'], $save_path.$renamed. $extension))
-//
+// function checkUpload($location, $pdoBt)
+// {
 
-	$filename=$_FILES['file']['name'];
-	$tmp=explode('.',$filename);
-	$ext=end($tmp);
-	$filename= md5(time()).'.'.$ext;
-	$tmp=$_FILES['file']['tmp_name'];
-	$error=$_FILES['file']['error'];
-	$size=$_FILES['file']['size'];
-	$type=$_FILES['file']['type'];
 
-	// si le déplacement du fichier tmp vers le rep d'upload ok
-	if(move_uploaded_file($tmp, $location.$filename))
-	{
+// 	$filename=$_FILES['file']['name'];
+// 	$tmp=explode('.',$filename);
+// 	$ext=end($tmp);
+// 	$filename= md5(time()).'.'.$ext;
+// 	$tmp=$_FILES['file']['tmp_name'];
+// 	$error=$_FILES['file']['error'];
+// 	$size=$_FILES['file']['size'];
+// 	$type=$_FILES['file']['type'];
 
-		$msg=array('filename' =>$filename);
-	}
-	else
-	{
-		$msg=array(	'err' =>'erreur pendant l\'envoi');
-	}
-return $msg;
-}
+// 	// si le déplacement du fichier tmp vers le rep d'upload ok
+// 	if(move_uploaded_file($tmp, $location.$filename))
+// 	{
+
+// 		$msg=array('filename' =>$filename);
+// 	}
+// 	else
+// 	{
+// 		$msg=array(	'err' =>'erreur pendant l\'envoi');
+// 	}
+// return $msg;
+// }
 
 function test()
 {

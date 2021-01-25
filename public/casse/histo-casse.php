@@ -233,13 +233,13 @@ DEBUT CONTENU CONTAINER
 									<td class="text-center">
 
 										<?php if (!empty($exp['file'])): ?>
-											<a href="<?=UPLOAD_DIR.'/casse/'.$exp['file']?>"><i class="far fa-file-alt"></i></a>
+											<a href="<?=URL_UPLOAD.'/casse/'.$exp['file']?>"><i class="far fa-file-alt"></i></a>
 										<?php endif ?>
 
 									</td>
 									<td class="text-center">
 										<?php if (!empty($exp['certificat'])): ?>
-											<a href="<?=UPLOAD_DIR.'/casse/'.$exp['certificat']?>"><i class="far fa-file-alt"></i></a>
+											<a href="<?=URL_UPLOAD.'/casse/'.$exp['certificat']?>"><i class="far fa-file-alt"></i></a>
 										<?php endif ?>
 									</td>
 								</tr>

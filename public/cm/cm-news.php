@@ -79,7 +79,7 @@ DEBUT CONTENU CONTAINER
 				<?php foreach ($news as $n): ?>
 					<div class="row">
 						<div class="col">
-							<i class="fas fa-newspaper pr-3"></i><?=$n['dateupload']?> :	<a href="<?=UPLOAD_DIR.'/documents/'.$n['file']?>">télécharger</a>
+							<i class="fas fa-newspaper pr-3"></i><?=$n['dateupload']?> :	<a href="<?=URL_UPLOAD.'/documents/'.$n['file']?>">télécharger</a>
 						</div>
 					</div>
 					<div class="row">

@@ -30,7 +30,7 @@ $kitData=$req->fetch(PDO::FETCH_ASSOC);
 <h1 class="blue-text text-darken-4">Kit Affiches</h1>
 <br>
 	<h4 class="blue-text text-darken-4" ><i class="fa fa-hand-o-right" aria-hidden="true"></i><?= $kitData['name'] ?></h4>
-	<a  class= "blue-link" href="http://172.30.92.53/<?=$version."upload/documents/".$kitData['file']?>">télécharger le kit affiches</a>
+	<a  class= "blue-link" href="<?=URL_UPLOAD."documents/".$kitData['file']?>">télécharger le kit affiches</a>
 </div>
 
 <?php

@@ -66,7 +66,7 @@ if(isset($_POST['submit']))
 {
 	if($_FILES['file']['error']===0)
 	{
-		$uploadDir= '..\..\..\upload\lcom\\';
+		$uploadDir= DIR_UPLOAD. 'lcom\\';
 		$filename=new SplFileInfo($_FILES['file']['name']);
 		if(!move_uploaded_file($_FILES['file']['tmp_name'],$uploadDir.$filename))
 		{

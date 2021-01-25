@@ -44,7 +44,8 @@ function addFlash($pdoBt, $vignette,$flashfile,$link){
 //------------------------------------------------------
 $errors=[];
 $success=[];
-$uploadDir= '..\..\..\upload\flash\\';
+
+$uploadDir= DIR_UPLOAD. 'flash\\';
 
 $extVignette=[
 	'jpg',

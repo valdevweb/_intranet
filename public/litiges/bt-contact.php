@@ -78,7 +78,7 @@ $success=[];
 
 
 $defaultTxt='Bonjour,&#13;&#10;&#13;&#10;&#13;&#10;Cordialement,&#13;&#10;'.$_SESSION['nom'];
-$uploadDir= '..\..\..\upload\litiges\\';
+$uploadDir= DIR_UPLOAD. 'litiges\\';
 
 $btlec=MagHelpers::btlec($pdoMag,$infoLitige['galec']);
 

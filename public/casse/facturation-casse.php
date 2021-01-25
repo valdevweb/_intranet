@@ -99,7 +99,7 @@ $column=2;
 $i=0;
 // si plus de 99 colonne, il faut faire un nouveau fichier facture
 $maxcol=99;
-$uploadDir= '..\..\..\upload\casse\\';
+$uploadDir= DIR_UPLOAD.'casse\\';
 $nbFac=$nbAvoir=0;
 
 for($i=0;$i<count($articles);$i++){
@@ -333,14 +333,14 @@ include('../view/_navbar.php');
 					if($nbFac==0){
 						// si un seul fichier facture
 						if(file_exists($uploadDir.'\FACTCASSE_'.date('dmy').'.csv')){
-							echo '<a href="'.UPLOAD_DIR.'\casse\FACTCASSE_'.date('dmy').'.csv" class="flash"><button type="button" class="button btn-plus">Télécharger</button></a>';
+							echo '<a href="'.URL_UPLOAD.'\casse\FACTCASSE_'.date('dmy').'.csv" class="flash"><button type="button" class="button btn-plus">Télécharger</button></a>';
 						}
 					}else{
 						echo '<button type="button" class="button btn-plus">Télécharger :<br>';
 
 						for($i=1;$i<=$nbFac;$i++){
 							if(file_exists($uploadDir.'\FACTCASSE_'.date('dmy').$i.'.csv')){
-								echo '<a href="'.UPLOAD_DIR.'\casse\FACTCASSE_'.date('dmy').$i.'.csv" class="flash">Fichier '.$i.'</a>';
+								echo '<a href="'.URL_UPLOAD.'\casse\FACTCASSE_'.date('dmy').$i.'.csv" class="flash">Fichier '.$i.'</a>';
 								echo ($i==$nbFac) ? '' : ' - ' ;
 
 							}
@@ -383,14 +383,14 @@ include('../view/_navbar.php');
 					if($nbAvoir==0){
 						// si un seul fichier facture
 						if(file_exists($uploadDir.'\AVCASSE_'.date('dmy').'.csv')){
-							echo '<a href="'.UPLOAD_DIR.'\casse\AVCASSE_'.date('dmy').'.csv" class="flash"><button type="button" class="button btn-plus">Télécharger</button></a>';
+							echo '<a href="'.URL_UPLOAD.'\casse\AVCASSE_'.date('dmy').'.csv" class="flash"><button type="button" class="button btn-plus">Télécharger</button></a>';
 						}
 					}else{
 						echo '<button type="button" class="button btn-plus">Télécharger :<br>';
 
 						for($i=1;$i<=$nbAvoir;$i++){
 							if(file_exists($uploadDir.'\AVCASSE_'.date('dmy').$i.'.csv')){
-								echo '<a href="'.UPLOAD_DIR.'\casse\AVCASSE_'.date('dmy').$i.'.csv" class="flash">Fichier '.$i.'</a>';
+								echo '<a href="'.URL_UPLOAD.'\casse\AVCASSE_'.date('dmy').$i.'.csv" class="flash">Fichier '.$i.'</a>';
 								echo ($i==$nbAvoir) ? '' : ' - ' ;
 							}
 						}

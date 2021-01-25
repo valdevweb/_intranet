@@ -309,7 +309,7 @@ DEBUT CONTENU CONTAINER
 					<div class="row">
 						<div class="col-md-5 col-lg-4 ml-5"><img src="../img/icons/ico-cross.svg" class="pr-1">Certificat de destruction : </div>
 						<div class="col-md-2 bg-light-blue text-right">
-							<a href="<?=UPLOAD_DIR?>\casse\<?=$paletteInfo[0]['certificat']?>" target="_blank">voir / télécharger</a>
+							<a href="<?=URL_UPLOAD?>\casse\<?=$paletteInfo[0]['certificat']?>" target="_blank">voir / télécharger</a>
 
 						</div>
 						<div class="col-md"></div>

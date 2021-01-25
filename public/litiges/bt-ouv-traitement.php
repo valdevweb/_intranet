@@ -41,7 +41,7 @@ function createFileLink($filelist)
 	{
 		if($filelist[$i] !="")
 		{
-			$rValue.='<a href="'.UPLOAD_DIR.'/litiges/'.$filelist[$i].'" class="link-grey"><span class="pr-3"><i class="fas fa-link"></i></span></a>';
+			$rValue.='<a href="'.URL_UPLOAD.'/litiges/'.$filelist[$i].'" class="link-grey"><span class="pr-3"><i class="fas fa-link"></i></span></a>';
 
 		}
 	}
@@ -83,7 +83,7 @@ function updateStatut($pdoLitige)
 $errors=[];
 $success=[];
 
-$uploadDir= '..\..\..\upload\litiges\\';
+$uploadDir= DIR_UPLOAD. 'litiges\\';
 $litigeDao=new LitigeDao($pdoLitige);
 
 $thisOuv=$litigeDao->getThisOuverture($_GET['id']);

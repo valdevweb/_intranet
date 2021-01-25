@@ -192,10 +192,10 @@ if(isset($_POST['send']) )
 	if($_FILES['file']['error']===0)
 	{
 		if($_SESSION['id_doc_type']==3 || $_SESSION['id_doc_type']==4 || $_SESSION['id_doc_type']==5 || $_SESSION['id_doc_type']==6 || $_SESSION['id_doc_type']==7 || $_SESSION['id_doc_type']==11 || $_SESSION['id_doc_type']==9 || $_SESSION['id_doc_type']==23){
-			$uploadDir= '..\..\..\upload\documents\\';
+			$uploadDir= DIR_UPLOAD. 'documents\\';
 		}
 		elseif($_SESSION['id_doc_type']==1 || $_SESSION['id_doc_type']==8 || $_SESSION['id_doc_type']==2){
-			$uploadDir= '..\..\..\upload\gazette\\';
+			$uploadDir= DIR_UPLOAD. 'gazette\\';
 		}
 		$filename=new SplFileInfo($_FILES['file']['name']);
 		if(move_uploaded_file($_FILES['file']['tmp_name'],$uploadDir.$filename)){
@@ -232,7 +232,7 @@ if(isset($_POST['send']) )
 			if(insertIntoDbDoc($pdoBt,$category['name'], $filename,$title, $dateDeb)){
 				$success[]= $category['name'] . " mis à jour  ";
 				unset($_SESSION['id_doc_type']);
-						}
+			}
 			else{
 				$errors[]="le fichier n'a pas pu être ajouté à la base de donnée";
 			}

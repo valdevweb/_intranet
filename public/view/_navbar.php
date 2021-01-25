@@ -315,8 +315,8 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 			//menu conseil
 			if($d_conseil)
 			{
-				$conseilNav="<li class='has-sub'><a href='http://172.30.92.53/".$version."conseil/home.php' class='tooltipped' data-position='bottom' data-tooltip='Réservé adhérents / conseil'><span>adhérents & pres</span></a>";
-				$conseilNav.="<ul><li><a href='http://172.30.92.53/".$version."conseil/home.php' class='tooltipped' data-position='bottom' data-tooltip='Conseil'><span>Conseil</span></a></li>";
+				$conseilNav="<li class='has-sub'><a href='".CONSEIL."home.php' class='tooltipped' data-position='bottom' data-tooltip='Réservé adhérents / conseil'><span>adhérents & pres</span></a>";
+				$conseilNav.="<ul><li><a href='".CONSEIL."home.php' class='tooltipped' data-position='bottom' data-tooltip='Conseil'><span>Conseil</span></a></li>";
 				$conseilNav.="<li><a href='".ROOT_PATH."/public/exploit/doc-adh.php' class='tooltipped' data-position='bottom' data-tooltip='documents réservés adhérents'><span>Documents</span></a></li>";
 				$conseilNav.="<li><a href='".ROOT_PATH."/public/pres/home-pres.php' ><span>Présentations</span></a></li></ul>";
 				$conseilNav.='</li>';
@@ -326,9 +326,9 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 
 			if($d_mission)
 			{
-				$missionNav="<li class='has-sub'><a href='http://172.30.92.53/".$version."cm/cm/index.php' ><span>CHARGES DE MISSION</span></a>";
-				$missionNav.="<ul><li><a href='http://172.30.92.53/".$version."cm/cm/index.php' ><span>Portail CM</span></a></li>";
-				$missionNav.="<li><a href='http://172.30.92.53/".$version."btlecest/public/cm/cm-news.php' ><span>Fil d'actu</span></a></li>";
+				$missionNav="<li class='has-sub'><a href='".PORTAIL_CM."cm/index.php' ><span>CHARGES DE MISSION</span></a>";
+				$missionNav.="<ul><li><a href='".PORTAIL_CM."cm/index.php' ><span>Portail CM</span></a></li>";
+				$missionNav.="<li><a href='".ROOT_PATH."/public/cm/cm-news.php' ><span>Fil d'actu</span></a></li>";
 				$missionNav.='</ul>';
 				$missionNav.='</li>';
 				echo $missionNav;
@@ -336,7 +336,7 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 
 
 			?>
-			<li><a href="http://172.30.92.53/<?=$version?>sav/scapsav/home.php" class="tooltipped" data-position="bottom" data-tooltip="site du portail SAV">Portail SAV</a></li>
+			<li><a href="<?=PORTAIL_SAV?>scapsav/home.php" class="tooltipped" data-position="bottom" data-tooltip="site du portail SAV">Portail SAV</a></li>
 			<?php if ($d_restraintAdmin): ?>
 
 				<li  class='active has-sub red-nav'><a href="#" >Evolutions</a>

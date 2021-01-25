@@ -31,7 +31,7 @@ $result=$req->fetch(PDO::FETCH_ASSOC);
 return $result;
 
 }
-$path=UPLOAD_DIR ."/documents/";
+$path=URL_UPLOAD ."/documents/";
 
 $odr=getDocument($pdoBt,"listing des ODR");
 $assortiment=getDocument($pdoBt,"assortiment et panier promo");

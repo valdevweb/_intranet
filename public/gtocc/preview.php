@@ -39,13 +39,8 @@ $errors=[];
 $success=[];
 $occInfoDao= new OccInfoDao($pdoOcc);
 $data=$occInfoDao->getHtmlNews($_GET['file']);
-if(VERSION=="_"){
-	$target_dir = "D:\\www\\_intranet\\upload\\flash\\";
-}else{
-	$target_dir = "D:\\www\\intranet\\upload\\flash\\";
-}
-
-$pjDir=UPLOAD_DIR.'\\flash\\';
+$target_dir = DIR_UPLOAD."flash\\";
+$pjDir=URL_UPLOAD.'\\flash\\';
 
 
 

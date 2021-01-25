@@ -17,17 +17,20 @@ if (preg_match('/_btlecest/', $path)){
 
 
 define("SITE_ADDRESS", "http://172.30.92.53/".VERSION."btlecest");
-define("UPLOAD_DIR","http://172.30.92.53/".VERSION."upload" );
-define("URL_UPLOAD","http://172.30.92.53/".VERSION."upload/" );
-define("DIR_UPLOAD","D:\www\\".VERSION."intranet\upload\\" );
 define("PORTAIL_SAV_HOME","http://172.30.92.53/".VERSION."sav/scapsav/home.php" );
 define("PORTAIL_SAV","http://172.30.92.53/".VERSION."sav/" );
 define("PORTAIL_FOU","http://172.30.92.53/".VERSION."portail-fournisseurs/" );
+define("PORTAIL_CM","http://172.30.92.53/".VERSION."cm/" );
+define("CONSEIL", "http://172.30.92.53/".VERSION."conseil/");
 define("DIR_LOGFILES", "D:\www\batch_log\\");
 define("DIR_LOGFILES_CONSULT", "http://172.30.92.53/batchlog/");
+define("UPLOAD_DIR","http://172.30.92.53/".VERSION."upload" ); //=>URL_UPLOAD
+define("URL_UPLOAD","http://172.30.92.53/".VERSION."upload/" );
+define("DIR_UPLOAD","D:\www\\".VERSION."intranet\upload\\" );
 
 
-
+// define("UPLOAD_URL","http://172.30.92.53/".VERSION."upload-main/" );
+// define("UPLOAD_DIR","D:\www\\".VERSION."upload-main\\" );
 
 define("PDF_FOOTER", '<table class="padding-table"><tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>');
 define("PDF_FOOTER_PAGE", '<table class="padding-table full-width"><tr><td class="footer ">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td><td>{PAGENO}{nbpg}</td></tr></table>');

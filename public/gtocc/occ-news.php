@@ -40,14 +40,9 @@ $success=[];
 $occInfoDao= new OccInfoDao($pdoOcc);
 
 $activeNews=$occInfoDao->getActiveNews();
+$target_dir = DIR_UPLOAD."flash\\";
 
-if(VERSION=="_"){
-	$target_dir = "D:\\www\\_intranet\\upload\\flash\\";
-}else{
-	$target_dir = "D:\\www\\intranet\\upload\\flash\\";
-}
-
-$pjDir=UPLOAD_DIR.'\\flash\\';
+$pjDir=URL_UPLOAD.'\\flash\\';
 
 
 
