@@ -72,7 +72,7 @@ if(isset($_GET['id_pres']) && isset($_GET['iddoc'])){
 			---------------------------------------------------------*/
 
 
-			if(empty($listDoc) || !file_exists('d:\www\\'.VERSION.'intranet\upload\pres\\'.$listDoc[$_GET['iddoc']]['pdf'])){
+			if(empty($listDoc) || !file_exists(DIR_UPLOAD.'pres\\'.$listDoc[$_GET['iddoc']]['pdf'])){
 				$content="Ce document a été supprimé";
 
 			}
