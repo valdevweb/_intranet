@@ -118,7 +118,7 @@ if(isset($_POST['checkout'])){
 			$warning= "<p>Attention, le magasin n'a pas reçu ce mail de confirmation, aucune adresse mail n'a été trouvée dans les listes de diffusion GT Occasion</p>";
 		}
 
-		$pathXl="D:\\www\\_intranet\\upload\\excel\\";
+		$pathXl=DIR_UPLOAD."excel\\";
 		// D:\www\_intranet\upload\excel
 		$filename=date('YmdHis').'.xlsx';
 		// $filename=date('YmdHis').'-cde'.$lastinsertid.'-mag'.$infoMag['btlec_sca'].'.xlsx';
