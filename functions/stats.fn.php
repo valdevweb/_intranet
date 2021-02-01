@@ -42,16 +42,13 @@ function addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null){
 //					page index.php
 // on n'a pas de var de session donc on récupère le login saisi
 //-----------------------------------------------------------
-function authStat($pdoStat,$page, $action, $err)
-{
+function authStat($pdoStat,$page, $action, $err){
 	global $version;
 	$date=new DateTime();
 	$date=$date->format('Y-m-d H:i:s');
 	if($version=="_"){
 		$typeLog="dev";
-	}
-	else
-	{
+	}else{
 		$typeLog="prod";
 	}
 	// si la fonction login n'a pas renvoyé de message d'erreur, c'est que le user a ete authentifié et redirgé sur home
@@ -59,7 +56,7 @@ function authStat($pdoStat,$page, $action, $err)
 	{
 		$err="user authentifié";
 	}
-	$req=$pdoStat->prepare('INSERT INTO stats_logs (type_log,id_user,site,date_heure,page,action,description)
+	$req=$pdoStat->prepare('INSERT INTO stats_logs (type_log, id_user, site, date_heure, page, action, description)
 		VALUE(:type_log,:id_user,:site,:date_heure,:page,:action,:description)');
 	$req->execute(array(
 		':type_log'=>$typeLog,
