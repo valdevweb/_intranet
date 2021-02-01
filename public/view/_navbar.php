@@ -155,10 +155,13 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 			</li>
 		<?php endif ?>
 
-		<?php if ($d_litigeBt): ?>
+		<?php if ($d_btlec || $d_litigeBt): ?>
 
 			<li class='has-sub'><a href="#"><span>Litiges</span></a>
 				<ul>
+					<?php if ($_SESSION['id_type']==1 || $_SESSION['id_type']==3): ?>
+							<li><a href="<?=PORTAIL_FOU?>home/home.php" class="lighter-blue">Litiges fournisseurs</a></li>
+					<?php endif ?>
 					<li><a href="<?= ROOT_PATH?>/public/litiges/declaration-choix-mag.php">Déclarer un litige pour un magasin</a></li>
 					<li><a href="<?= ROOT_PATH?>/public/litiges/declaration-robbery.php">Déclarer un vol</a></li>
 					<li><a href="<?= ROOT_PATH?>/public/litiges/bt-litige-encours.php">Litiges en cours</a></li>
@@ -180,12 +183,7 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 
 					<li><a href="<?= ROOT_PATH?>/public/casse/bt-casse-dashboard.php" class="lighter-blue">Traitement casse</a></li>
 					<li><a href="<?= ROOT_PATH?>/public/casse/histo-casse.php" class="lighter-blue">Historique casse</a></li>
-					<?php if ($_SESSION['id_type']==1 || $_SESSION['id_type']==3): ?>
 
-						<?php if ($_SESSION['id_web_user']==981 || $_SESSION['id_web_user']==1394  || $_SESSION['id_web_user']==959): ?>
-							<li><a href="<?=PORTAIL_FOU?>home/home.php">Litiges fournisseurs</a></li>
-						<?php endif ?>
-					<?php endif ?>
 				</ul>
 			</li>
 		<?php endif ?>
