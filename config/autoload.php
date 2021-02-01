@@ -7,19 +7,20 @@ if (preg_match('/_btlecest/', $path)){
 	define("ROOT_PATH","/_btlecest");
 	define("PORTAIL","Portail BTlec - dev" );
 	// define("SITE_ADDRESS", "http://172.30.92.53/_btlecest");
+	define("PORTAIL_FOU","http://172.30.92.53/".VERSION."portail-fournisseurs/" );
 
 }else{
 	$version='';
 	define("VERSION",'');
 	define("ROOT_PATH","/btlecest");
 	define("PORTAIL","Portail BTlec" );
+	define("PORTAIL_FOU","http://159.180.231.226:8000/".VERSION."portail-fournisseurs/" );
 }
 
 
 define("SITE_ADDRESS", "http://172.30.92.53/".VERSION."btlecest");
 define("PORTAIL_SAV_HOME","http://172.30.92.53/".VERSION."sav/scapsav/home.php" );
 define("PORTAIL_SAV","http://172.30.92.53/".VERSION."sav/" );
-define("PORTAIL_FOU","http://172.30.92.53/".VERSION."portail-fournisseurs/" );
 define("PORTAIL_CM","http://172.30.92.53/".VERSION."cm/" );
 define("CONSEIL", "http://172.30.92.53/".VERSION."conseil/");
 
