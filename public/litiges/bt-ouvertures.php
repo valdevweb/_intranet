@@ -23,22 +23,7 @@ unset($_SESSION['goto']);
 // addRecord($pdoStat,$page,$action, $descr, 208);
 
 
-
-//------------------------------------------------------
-//			FONCTION
-//------------------------------------------------------
-function getWaiting($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT ouv.id as id_ouv, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, magasin.mag.deno, magasin.mag.id  as btlec, etat, ouv.galec, dossiers.dossier,  dossiers.id as id_dossier_litige FROM ouv
-		LEFT JOIN magasin.mag ON ouv.galec=magasin.mag.galec
-		LEFT JOIN dossiers ON ouv.id_litige=dossiers.id
-		ORDER BY etat, date_saisie");
-	$req->execute();
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
-
-$waiting=getWaiting($pdoLitige);
-
-
+require "../../Class/LitigeDao.php";
 
 function createFileLink($filelist){
 	$rValue='';
@@ -56,12 +41,19 @@ function createFileLink($filelist){
 }
 
 
-
-//------------------------------------------------------
-//			DECLARATIONS
-//------------------------------------------------------
 $errors=[];
 $success=[];
+
+
+$litigeDao=new LitigeDao($pdoLitige);
+
+$ddeOuv=$litigeDao->getDdeOuverture(0);
+if(isset($_POST['submit'])){
+	$ddeOuv=$litigeDao->getDdeOuverture($_POST['etat']);
+
+}
+
+
 
 $etatAr=['en cours','accepté','refusé'];
 $classAr=['text-red heavy','text-dark-grey','text-dark-grey'];
@@ -93,7 +85,28 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
+	<div class="row">
+		<div class="col">
+			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
+				<div class="row justify-content-center">
+					<div class="col-auto">
+						<div class="form-group">
+							<label for="etat">Afficher les demandes :</label>
+							<select class="form-control" name="etat" id="etat">
+								<?php foreach ($etatAr as $keyEtat => $value): ?>
+									<option value="<?=$keyEtat?>" <?=isset($_POST['etat']) && ($_POST['etat']=="$keyEtat") ? "selected" :""?>><?=$etatAr[$keyEtat]?></option>
+								<?php endforeach ?>
+							</select>
+						</div>
+					</div>
+					<div class="col-auto mt-4 pt-2">
+						<button class="btn btn-primary" name="submit">Filtrer</button>
 
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col">
 			<table class="table">
@@ -101,7 +114,7 @@ DEBUT CONTENU CONTAINER
 					<tr>
 						<th>N°</th>
 						<th>Magasin</th>
-						<th>Date</th>
+						<th>Date demande</th>
 						<th>Message</th>
 						<th>Etat</th>
 						<th class="text-center">Répondre</th>
@@ -110,30 +123,20 @@ DEBUT CONTENU CONTAINER
 					</tr>
 				</thead>
 				<tbody>
+					<?php foreach ($ddeOuv as $key => $ouv): ?>
+					<tr>
+						<td class="text-right"><?=$ouv['id_ouv']?></td>
+						<td><?=$ouv['deno']?></td>
+						<td><?=$ouv['datesaisie']?></td>
+						<td><?=substr(str_replace('<br />',', ', $ouv['msg']),0, 50) .'...';?></td>
+						<td class="<?=$classAr[$ouv['etat']]?>"><?=$etatAr[$ouv['etat']]?></td>
+						<td class="text-center"><a href="bt-ouv-traitement.php?id=<?=$ouv['id_ouv']?>" ><i class="far fa-comments"></i></a></td>
+						<td class="text-center"><a href="bt-ouv-saisie.php?id_ouv=<?=$ouv['id_ouv']?>&galec=<?=$ouv['galec']?>" ><i class="fas fa-folder-plus"></i></a></td>
+						<td class="text-center"><a href="bt-detail-litige.php?id=<?=$ouv['id_dossier_litige']?>"><?=$ouv['dossier']?></a></td>
 
+						</tr>
+					<?php endforeach ?>
 
-					<?php
-					foreach ($waiting as $wait)
-					{
-						$msg=str_replace('<br />',', ', $wait['msg']);
-						$msg=substr($msg,0, 50) .'...';
-
-						echo '<tr>';
-						echo '<td class="text-right">'.$wait['id_ouv'].'</td>';
-						echo '<td>'.$wait['deno'].'</td>';
-						echo '<td>'.$wait['datesaisie'].'</td>';
-						echo '<td>'.$msg.'</td>';
-						echo '<td class="'.$classAr[$wait['etat']].'">'.$etatAr[$wait['etat']].'</td>';
-						echo '<td class="text-center"><a href="bt-ouv-traitement.php?id='.$wait['id_ouv'].'" ><i class="far fa-comments"></i></a></td>';
-						echo '<td class="text-center"><a href="bt-ouv-saisie.php?id_ouv='.$wait['id_ouv'].'&galec='.$wait['galec'].'" ><i class="fas fa-folder-plus"></i></a></td>';
-						echo '<td class="text-center"><a href="bt-detail-litige.php?id='.$wait['id_dossier_litige'].'">'.$wait['dossier'].'</a></td>';
-
-						echo '</tr>';
-
-
-					}
-
-					?>
 
 				</tbody>
 			</table>

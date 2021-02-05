@@ -115,7 +115,7 @@ if(VERSION =='_'){
 }
 else{
 	$mailMag=array($fLitige['btlec'].'-rbt@btlec.fr');
-	$mailBt=array('litigelivraison@btlec.fr');
+	$mailBt=array('btlecest.portailweb.litiges@btlec.fr');
 }
 
 
@@ -132,8 +132,7 @@ if($_SESSION['type']=='mag'){
 	$message = (new Swift_Message($subject))
 	->setBody($magTemplate, 'text/html')
 	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
-	->setTo($mailMag)
-	->addBcc('valerie.montusclat@btlec.fr');
+	->setTo($mailMag);
 	$delivered=$mailer->send($message);
 	if($delivered >0){
 	}
@@ -155,8 +154,8 @@ if($_SESSION['type']=='mag'){
 	$message = (new Swift_Message($subject))
 	->setBody($btTemplate, 'text/html')
 	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
-	->setTo($mailBt)
-	->addBcc('valerie.montusclat@btlec.fr');
+	->setTo($mailBt);
+
 	$delivered=$mailer->send($message);
 	if($delivered >0){
 	}

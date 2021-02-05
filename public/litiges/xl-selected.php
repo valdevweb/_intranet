@@ -9,6 +9,7 @@ require_once '../../vendor/autoload.php';
 require('../../Class/LitigeDao.php');
 require('../../Class/LitigeHelpers.php');
 require('../../Class/MagHelpers.php');
+require('../../Class/OccHelpers.php');
 
 //			css dynamique
 //----------------------------------------------------------------
@@ -119,7 +120,7 @@ if(isset($_SESSION['filter-data'])){
 
 
 
-$litigeQuery="SELECT *, dossiers.id as id_main, magasin.mag.id as btlec
+$litigeQuery="SELECT *, dossiers.id as id_main, details.ean as ean_detail, magasin.mag.id as btlec
 FROM dossiers
 LEFT JOIN details ON dossiers.id=details.id_dossier
 LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec

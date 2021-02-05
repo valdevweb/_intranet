@@ -36,7 +36,8 @@ $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
 ->attach($attachmentPdf)
 ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
-->setTo($dest);
+->setTo($dest)
+->setCc(['btlecest.portailweb.litiges@btlec.fr']);
 
 $delivered = $mailer->send($message);
 if($delivered !=0)

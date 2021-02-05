@@ -342,5 +342,17 @@ class LitigeDao{
 		]);
 	}
 
+	public function getDdeOuverture($statut){
+	$req=$this->pdo->prepare("SELECT ouv.id as id_ouv, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, magasin.mag.deno, magasin.mag.id  as btlec, etat, ouv.galec, dossiers.dossier,  dossiers.id as id_dossier_litige FROM ouv
+		LEFT JOIN magasin.mag ON ouv.galec=magasin.mag.galec
+		LEFT JOIN dossiers ON ouv.id_litige=dossiers.id
+		WHERE ouv.etat= :etat
+		ORDER BY date_saisie DESC ");
+	$req->execute([
+		':etat'	=>$statut
+	]);
+	return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
 
 }

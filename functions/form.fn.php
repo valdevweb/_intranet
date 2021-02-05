@@ -22,16 +22,18 @@ function checkSelected($value,$field){
 }
 
 
-function repliedByIntoName($pdoUser,$idUser)
-{
-	// $req=$pdoBt->prepare("SELECT CONCAT( prenom ,' ', nom)AS fullname FROM btlec JOIN lk_user ON lk_user.id_btlec=btlec.id WHERE lk_user.iduser = :iduser");
+function repliedByIntoName($pdoUser,$idUser){
+   $fullName="";
 	$req=$pdoUser->prepare("SELECT CONCAT( prenom ,' ', nom)AS fullname FROM intern_users WHERE id_web_user = :iduser");
 	$req->execute(array(
 		'iduser' =>$idUser
 	));
 
 	$fullName=$req->fetch();
-	$fullName=$fullName['fullname'];
+    if(!empty($fullName)){
+    $fullName=$fullName['fullname'];
+
+    }
 	return $fullName;
 }
 

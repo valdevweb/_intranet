@@ -16,6 +16,7 @@ require('../../Class/FormHelpers.php');
 require('../../Class/MagHelpers.php');
 require('../../Class/LitigeDao.php');
 require('../../Class/LitigeHelpers.php');
+require('../../Class/LitigeDialDao.php');
 
 
 // unset($_SESSION['form-data-deux']);
@@ -159,6 +160,7 @@ $litigeDao=new LitigeDao($pdoLitige);
 $listLitige=makeQuery($pdoLitige, $litigeQuery, $litigeParam, $litigeMod);
 $valoEtat=makeQuery($pdoLitige, $statutQuery, $statutParam);
 $valoTypo=makeQuery($pdoLitige, $typoQuery, $typoParam);
+$dialDao=new LitigeDialDao($pdoLitige);
 
 
 $errors=[];
@@ -176,12 +178,14 @@ $listVideoOk=getListVideo($pdoLitige, 7);
 $listVideoko=getListVideo($pdoLitige, 6);
 $arTypo=LitigeHelpers::listTypo($pdoLitige);
 $arMagOcc=MagHelpers::getListMagOcc($pdoMag);
+$unread=$dialDao->getUnreadDossierColumn();
+
+
 $sumValoMain=0;
 $sumValoOcc=0;
 $sumValoTypo=0;
 $nbTotalDossierTypo=0;
 $nbTotalDossierStatut=0;
-
 
 include 'bt-litige-encours\04-data-statut.php';
 

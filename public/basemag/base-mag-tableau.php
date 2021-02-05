@@ -65,9 +65,9 @@
 							<td class="text-gessica"><?= isset($ets[ $mag['acdlec_code']])?$ets[ $mag['acdlec_code']]:"" ?></td>
 							<td class="text-sca"><?=isset($centraleName[$mag['centrale_doris']])?$centraleName[$mag['centrale_doris']]:"" ?></td>
 							<td class="text-sca"><?= !empty($mag['date_fermeture'])? (new DateTime($mag['date_fermeture']))->format('d-m-Y'):"" ?></td>
-							<td><?= UserHelpers::getPrenom($pdoUser, $mag['id_cm_web_user'])?></td>
-							<td class="text-right"><nobr><?= number_format((float)$mag['CA_Annuel'],0,'',' ') ?></nobr></td>
-							<td class="text-right"><nobr><?= number_format((float)$ca['CA_Annuel'],0,'',' ') ?></nobr></td>
+							<td><?= ($mag['id_cm_web_user']!=null ||$mag['id_cm_web_user']!="") ? UserHelpers::getPrenom($pdoUser, $mag['id_cm_web_user']):""?></td>
+							<td class="text-right"><nobr><?= isset($mag['CA_Annuel'])?number_format((float)$mag['CA_Annuel'],0,'',' '):"" ?></nobr></td>
+							<td class="text-right"><nobr><?= isset($ca['CA_Annuel'])?number_format((float)$ca['CA_Annuel'],0,'',' '):"" ?></nobr></td>
 
 						</tr>
 					<?php endforeach ?>

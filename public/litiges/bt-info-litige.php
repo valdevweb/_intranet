@@ -361,7 +361,7 @@ if(isset($_POST['submit_mail']))
 			->setBody($magTemplate, 'text/html')
 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
 			->setTo($mailMag)
-			->setBcc(['valerie.montusclat@btlec.fr', 'nathalie.pazik@btlec.fr', 'jonathan.domange@btlec.fr']);
+			->setBcc(['btlecest.portailweb.litiges@btlec.fr']);
 			$delivered=$mailer->send($message);
 			if($delivered >0)
 			{

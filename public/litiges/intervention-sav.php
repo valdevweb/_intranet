@@ -162,7 +162,7 @@ if(isset($_POST['submit'])){
 
 			}
 			else{
-				$dest='btlecest.portailweb.logistique@btlec.fr';
+				$dest=['btlecest.portailweb.litiges@btlec.fr'];
 
 			}
 		// envoi mail litigelivraison
@@ -180,16 +180,9 @@ if(isset($_POST['submit'])){
 			->setBody($htmlMail, 'text/html')
 
 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
-// ->setTo(array('valerie.montusclat@btlec.fr', 'valerie.montusclat@btlec.fr' => 'val'))
-			->setTo($dest)
-// ->addCc($copySender['email'])
-			->addBcc('valerie.montusclat@btlec.fr');
-		// ->attach($attachmentPdf)
-		// ->attach(Swift_Attachment::fromPath('demande-culturel.xlsx'));
-// ou
-// ->setBcc([adress@btl.fr, adresse@bt.fr])
+			->setTo($dest);
 
-// echec => renvoie 0
+
 			$delivered=$mailer->send($message);
 			if($delivered !=0)
 			{
@@ -239,160 +232,161 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col"></div>
 	</div>
-	<div class="row">
-		<div class="col-lg-1"></div>
-		<div class="col">
-			<?php
 
-			include('../view/_errors.php');
-			?>
-		</div>
-		<div class="col-lg-1"></div>
-	</div>
-	<div class="bg-separation"></div>
-	<?php if (isset($_GET['id']) && !empty($thisLitige)): ?>
-
-	<div class="row mb-3 pt-3">
-		<div class="col text-yellow-dark heavy">Détail du litige :</div>
-	</div>
-	<div class="row pb-3">
-		<div class="col"><span class="heavy text-yellow-dark"> Magasin : </span><?= $thisLitige[0]['mag'] .' - '. $thisLitige[0]['btlec'] ?></div>
-		<div class="col"><span class="heavy text-yellow-dark"> Centrale : </span><?=$thisLitige[0]['centrale']?></div>
-		<div class="col-3"><span class="heavy text-yellow-dark">Etat :</span> <?= ($thisLitige[0]['etat_dossier']==1) ? 'Dossier clôturé' : 'Dossier en cours'?></div>
-		<div class="col-2 text-right"><i class="fas fa-calendar-alt pr-3 text-yellow-dark"></i><?=$thisLitige[0]['dateFr']?></div>
-	</div>
-	<div class="row">
-		<div class="col">
-			<table class="table table-bordered ">
-				<tr class="table-warning">
-					<th>CODE ARTICLE</th>
-					<th>DESIGNATION</th>
-					<th>QUANTITE</th>
-					<th>VALORISATION</th>
-					<th>RECLAMATION</th>
-				</tr>
+		<div class="row">
+			<div class="col-lg-1"></div>
+			<div class="col">
 				<?php
-				foreach ($thisLitige as $prod)
-				{
-					echo '<tr>';
-					echo'<td>'.$prod['article'].'</td>';
-					echo'<td>'.$prod['descr'].'</td>';
-					echo'<td class="text-right">'.$prod['qte_litige'].'</td>';
-					echo'<td class="text-right">'.number_format((float)$prod['valo_line'],2,'.','').'&euro;</td>';
-					echo'<td>'.$prod['reclamation'].'</td>';
-					echo '</tr>';
-					if($prod['inversion'] !="")
-					{
-						$valoInv=round( $prod['qte_cde']*$prod['inv_tarif'],2);
-						echo '<tr><td colspan="5" class="text-center text-prim heavy">Produit reçu à la place de la référence ci-dessus :</td></tr>';
-						echo '<tr>';
-						echo'<td class="text-prim heavy">'.$prod['inv_article'].'</td>';
-						echo'<td class="text-prim heavy">'.$prod['inv_descr'].'</td>';
-						echo'<td class="text-right text-prim heavy">'.$prod['qte_litige'].'</td>';
-						echo'<td class="text-right text-prim heavy">'.number_format((float)$valoInv,2,'.','').'&euro;</td>';
-						echo'<td class="text-right"></td>';
-						echo '</tr>';
-					}
 
-				}
+				include('../view/_errors.php');
 				?>
-			</table>
-
+			</div>
+			<div class="col-lg-1"></div>
 		</div>
-	</div>
-	<!-- <div class="bg-separation"></div> -->
-	<div class="row mb-3 pt-3">
-		<div class="col heavy text-main-blue">Echanges sur le dossier :</div>
-	</div>
+		<div class="bg-separation"></div>
+		<?php if (isset($_GET['id']) && !empty($thisLitige)): ?>
 
-	<?php
+		<div class="row mb-3 pt-3">
+			<div class="col text-yellow-dark heavy">Détail du litige :</div>
+		</div>
+		<div class="row pb-3">
+			<div class="col"><span class="heavy text-yellow-dark"> Magasin : </span><?= $thisLitige[0]['mag'] .' - '. $thisLitige[0]['btlec'] ?></div>
+			<div class="col"><span class="heavy text-yellow-dark"> Centrale : </span><?=$thisLitige[0]['centrale']?></div>
+			<div class="col-3"><span class="heavy text-yellow-dark">Etat :</span> <?= ($thisLitige[0]['etat_dossier']==1) ? 'Dossier clôturé' : 'Dossier en cours'?></div>
+			<div class="col-2 text-right"><i class="fas fa-calendar-alt pr-3 text-yellow-dark"></i><?=$thisLitige[0]['dateFr']?></div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<table class="table table-bordered ">
+					<tr class="table-warning">
+						<th>CODE ARTICLE</th>
+						<th>DESIGNATION</th>
+						<th>QUANTITE</th>
+						<th>VALORISATION</th>
+						<th>RECLAMATION</th>
+					</tr>
+					<?php
+					foreach ($thisLitige as $prod)
+					{
+						echo '<tr>';
+						echo'<td>'.$prod['article'].'</td>';
+						echo'<td>'.$prod['descr'].'</td>';
+						echo'<td class="text-right">'.$prod['qte_litige'].'</td>';
+						echo'<td class="text-right">'.number_format((float)$prod['valo_line'],2,'.','').'&euro;</td>';
+						echo'<td>'.$prod['reclamation'].'</td>';
+						echo '</tr>';
+						if($prod['inversion'] !="")
+						{
+							$valoInv=round( $prod['qte_cde']*$prod['inv_tarif'],2);
+							echo '<tr><td colspan="5" class="text-center text-prim heavy">Produit reçu à la place de la référence ci-dessus :</td></tr>';
+							echo '<tr>';
+							echo'<td class="text-prim heavy">'.$prod['inv_article'].'</td>';
+							echo'<td class="text-prim heavy">'.$prod['inv_descr'].'</td>';
+							echo'<td class="text-right text-prim heavy">'.$prod['qte_litige'].'</td>';
+							echo'<td class="text-right text-prim heavy">'.number_format((float)$valoInv,2,'.','').'&euro;</td>';
+							echo'<td class="text-right"></td>';
+							echo '</tr>';
+						}
 
-	foreach ($listAction as $action)
-	{
+					}
+					?>
+				</table>
 
-		if(!empty($action['libelle']))
+			</div>
+		</div>
+		<!-- <div class="bg-separation"></div> -->
+		<div class="row mb-3 pt-3">
+			<div class="col heavy text-main-blue">Echanges sur le dossier :</div>
+		</div>
+
+		<?php
+
+		foreach ($listAction as $action)
 		{
 
-			if($action['pj']!='')
+			if(!empty($action['libelle']))
 			{
-				$pj=createFileLink($action['pj']);
-			}
-			else
-			{
-				$pj='';
-			}
+
+				if($action['pj']!='')
+				{
+					$pj=createFileLink($action['pj']);
+				}
+				else
+				{
+					$pj='';
+				}
 	// conteneur
-			echo '<div class="row alert bg-alert-primary mb-5">';
-			echo '<div class="col">';
+				echo '<div class="row alert bg-alert-primary mb-5">';
+				echo '<div class="col">';
 // ligne 1
-			echo '<div class="row heavy">';
-			echo '<div class="col"></div>';
+				echo '<div class="row heavy">';
+				echo '<div class="col"></div>';
 
-			echo '<div class="col">';
-			echo '<div class="text-right"><i class="far fa-calendar-alt pr-3"></i>'.$action['dateFr'].'</div>';
-			echo '</div>';
+				echo '<div class="col">';
+				echo '<div class="text-right"><i class="far fa-calendar-alt pr-3"></i>'.$action['dateFr'].'</div>';
+				echo '</div>';
 
-			echo '</div>';
+				echo '</div>';
 // ligne 2
-			echo '<div class="row ">';
-			echo '<div class="col">';
-			echo $action['libelle'];
-			echo '</div>';
-			echo '<div class="col-auto">';
-			echo $pj;
-			echo '</div>';
-			echo '</div>';
+				echo '<div class="row ">';
+				echo '<div class="col">';
+				echo $action['libelle'];
+				echo '</div>';
+				echo '<div class="col-auto">';
+				echo $pj;
+				echo '</div>';
+				echo '</div>';
 
-			echo '</div>';
-			echo '</div>';
+				echo '</div>';
+				echo '</div>';
 
+			}
 		}
-	}
-	?>
-	<div class="bg-separation"></div>
-	<div class="row mb-3 py-3 ">
-		<div class="col">
-			<div class="text-main-blue heavy">Répondre à BTLec :</div>
+		?>
+		<div class="bg-separation"></div>
+		<div class="row mb-3 py-3 ">
+			<div class="col">
+				<div class="text-main-blue heavy">Répondre à BTLec :</div>
+			</div>
 		</div>
-	</div>
-	<div class="row pb-5">
-		<div class="col-2"></div>
+		<div class="row pb-5">
+			<div class="col-2"></div>
 
-		<div class="col border p-3">
-			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" enctype="multipart/form-data">
-				<div class="form-group">
-					<label>Votre message :</label>
-					<textarea class="form-control" name="msg" required></textarea>
+			<div class="col border p-3">
+				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" enctype="multipart/form-data">
+					<div class="form-group">
+						<label>Votre message :</label>
+						<textarea class="form-control" name="msg" required></textarea>
+					</div>
+					<div id="upload-zone">
+						<label for='incfile'>Ajouter des pièces jointes :
+							<br><i> (pour ajouter plusieurs fichiers, maintenez la touche ctrl pendant que vous sélectionnez les fichiers)</i>  </label>
+							<input type='file' class='form-control-file' id='incfile' name='incfile[]' multiple="" >
+
+							<div id="filelist"></div>
+						</div>
+						<div class="text-right"><button class="btn btn-primary" name="submit"><i class="far fa-envelope pr-3"></i>Envoyer</button></div>
+					</form>
 				</div>
-				<div id="upload-zone">
-					<label for='incfile'>Ajouter des pièces jointes :
-					<br><i> (pour ajouter plusieurs fichiers, maintenez la touche ctrl pendant que vous sélectionnez les fichiers)</i>  </label>
-					<input type='file' class='form-control-file' id='incfile' name='incfile[]' multiple="" >
+				<div class="col-2"></div>
+			</div>
+		<?php endif ?>
 
-					<div id="filelist"></div>
-				</div>
-				<div class="text-right"><button class="btn btn-primary" name="submit"><i class="far fa-envelope pr-3"></i>Envoyer</button></div>
-			</form>
-		</div>
-		<div class="col-2"></div>
+
+
+		<!-- ./container -->
 	</div>
-	<?php endif ?>
+	<script type="text/javascript">
+		$(document).ready(function (){
 
 
-
-	<!-- ./container -->
-</div>
-<script type="text/javascript">
-	$(document).ready(function (){
-
-
-		var fileName='';
-		var fileList='';
-		$('input[type="file"]').change(function(e){
-			$('#filelist').empty();
-			var nbFiles=e.target.files.length;
-			for (var i = 0; i < nbFiles; i++)
-			{
+			var fileName='';
+			var fileList='';
+			$('input[type="file"]').change(function(e){
+				$('#filelist').empty();
+				var nbFiles=e.target.files.length;
+				for (var i = 0; i < nbFiles; i++)
+				{
         		    // var fileName = e.target.files[0].name;
         		    fileName=e.target.files[i].name;
         		    fileList += fileName + ' - ';
@@ -406,10 +400,10 @@ DEBUT CONTENU CONTAINER
      		});
 
 
-	});
+		});
 
 
-</script>
-<?php
-require '../view/_footer-bt.php';
-?>
+	</script>
+	<?php
+	require '../view/_footer-bt.php';
+	?>

@@ -173,7 +173,7 @@ if(isset($_POST['submit'])){
 
 			}
 			else{
-				$dest='btlecest.portailweb.logistique@btlec.fr';
+				$dest=['btlecest.portailweb.litiges@btlec.fr'];
 
 			}
 		// envoi mail litigelivraison

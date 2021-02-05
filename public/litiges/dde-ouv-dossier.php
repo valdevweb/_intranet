@@ -106,18 +106,13 @@ if(isset($_POST['submit']))
 		if(count($errors)==0)
 		{
 			// ---------------------------------------
-			if(VERSION =='_')
-			{
+			if(VERSION =='_'){
 				$mailBt=array('valerie.montusclat@btlec.fr');
 			}
-			else
-			{
-				if($_SESSION['code_bt']!='4201')
-				{
-					$mailBt=array('litigelivraison@btlec.fr');
-				}
-				else
-				{
+			else{
+				if($_SESSION['code_bt']!='4201'){
+					$mailBt=array('btlecest.portailweb.litiges@btlec.fr');
+				}else{
 					$mailBt=array('valerie.montusclat@btlec.fr');
 				}
 			}
@@ -138,8 +133,7 @@ if(isset($_POST['submit']))
 			->setBody($btTemplate, 'text/html')
 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
 			// ->setTo(array('valerie.montusclat@btlec.fr'))
-			->setTo($mailBt)
-			->addBcc('valerie.montusclat@btlec.fr');
+			->setTo($mailBt);
 			$delivered=$mailer->send($message);
 			if($delivered >0)
 			{

@@ -13,6 +13,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 require_once  '../../vendor/autoload.php';
 require_once  '../../Class/UserHelpers.php';
 require_once  '../../Class/MagHelpers.php';
+require('../../Class/LitigeDialDao.php');
 
 
 //------------------------------------------------------
@@ -75,6 +76,7 @@ require 'echanges.fn.php';
 
 $errors=[];
 $success=[];
+$dialDao=new LitigeDialDao($pdoLitige);
 
 
 $defaultTxt='Bonjour,&#13;&#10;&#13;&#10;&#13;&#10;Cordialement,&#13;&#10;'.$_SESSION['nom'];
@@ -143,7 +145,7 @@ if(isset($_POST['submit']) ||isset($_POST['submit_mail']))
 				if(VERSION =='_'){
 					$mailMag=array('valerie.montusclat@btlec.fr');
 				}else{
-						$mailMag=array($btlec.'-rbt@btlec.fr');
+					$mailMag=array($btlec.'-rbt@btlec.fr');
 				}
 
 				$magTemplate = file_get_contents('mail/mail-mag-msgbt.php');
@@ -155,8 +157,8 @@ if(isset($_POST['submit']) ||isset($_POST['submit_mail']))
 				$message = (new Swift_Message($subject))
 				->setBody($magTemplate, 'text/html')
 				->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
-				->setTo($mailMag)
-				->addBcc('valerie.montusclat@btlec.fr');
+				->setTo($mailMag);
+
 				$delivered=$mailer->send($message);
 				if($delivered >0)
 				{
@@ -178,13 +180,28 @@ if(isset($_POST['submit']) ||isset($_POST['submit_mail']))
 		}
 
 	}
-
-	if(isset($_GET['success']) && $_GET['success']=='ok')
-	{
-		$success[]="message envoyé avec succés";
+	if(isset($_POST['not_read'])){
+		if (UserHelpers::isUserAllowed($pdoUser,['94'])){
+			$dialDao->updateRead($_POST['id_dial'],0);
+			header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
+		}else{
+			$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
+		}
 	}
-	elseif(isset($_GET['success']) && $_GET['success']=='okenreg')
-	{
+	if(isset($_POST['read'])){
+		if (UserHelpers::isUserAllowed($pdoUser,['94'])){
+			$dialDao->updateRead($_POST['id_dial'],1);
+			header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
+		}else{
+			$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
+		}
+	}
+
+
+
+	if(isset($_GET['success']) && $_GET['success']=='ok'){
+		$success[]="message envoyé avec succés";
+	}elseif(isset($_GET['success']) && $_GET['success']=='okenreg'){
 		$success[]="votre message a été enregistré sans envoi";
 	}
 

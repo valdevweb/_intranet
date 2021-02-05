@@ -74,20 +74,25 @@
 							$bgOccasion="bg-light-blue";
 						}else{
 							$bgOccasion="";
-
+						}
+						$unreadMsg="";
+						if (!empty($unread)) {
+							if(in_array($active['id_main'],$unread)){
+								$unreadMsg="<i class='fas fa-bell pl-1 text-yellow'></i>";
+							}
 						}
 						?>
 
 
 						<tr class="<?=$active['etat_dossier'] .' ' .$bgOccasion?>" id="<?=$active['id_main']?>">
-							<td><a href="bt-detail-litige.php?id=<?=$active['id_main']?>"><?=$active['dossier']?></a></td>
+							<td class="nowrap"><a href="bt-detail-litige.php?id=<?=$active['id_main']?>"><?=$active['dossier'].$unreadMsg?></a></td>
 							<td><?=$active['datecrea']?></td>
 							<td><a href="stat-litige-mag.php?galec=<?=$active['galec']?>"><?=$active['deno']?></a></td>
 							<td><?=$active['btlec']?></td>
 							<td><?= (isset($arCentrale[$active['centrale']]))?$arCentrale[$active['centrale']] :''?></td>
 							<td class="<?=($active['id_etat']=="1" ||$active['id_etat']=="20" )?'text-dark-grey':'text-red'?>"><?=$active['etat']?></td>
 							<td><?=(!empty($active['id_typo'])) ? $arTypo[$active['id_typo']]:""?></td>
-							<td class="text-right valo"><?=number_format((float)$active['valo'],2,'.',' ')?>&euro;</td>
+							<td class="text-right nowrap"><?=number_format((float)$active['valo'],2,'.',' ')?>&euro;</td>
 							<td class="text-center"><?=$icoOcc?></td>
 							<td class="text-center"><?=$icoRobbery. $ctrl .$icoDemandeVideo?></td>
 							<?php if ($class=='validated'): ?>

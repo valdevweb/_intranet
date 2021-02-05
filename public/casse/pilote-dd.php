@@ -55,11 +55,11 @@ else{
 }
 
 if(VERSION=='_'){
-	$dest='valerie.montusclat@btlec.fr';
+	$dest=['valerie.montusclat@btlec.fr'];
 	$cc=['valerie.montusclat@btlec.fr'];
 }
 else{
-	$dest='pilotageprepa@btlec.fr';
+	$dest=['pilotageprepa@btlec.fr'];
 	$cc=['valerie.montusclat@btlec.fr', 'christelle.trousset@btlec.fr'];
 
 }
@@ -70,7 +70,11 @@ foreach ($expInfo as $exp) {
 	$table.='<tr><td style="border: 1px solid grey;padding:10px;">'.$exp['palette'].'</td><td style="border: 1px solid grey;padding:10px;">'.$exp['contremarque'].'</td></tr>';
 }
 $table.='</table>';
-
+	echo "<pre>";
+	print_r($dest);
+	print_r($cc);
+	echo '</pre>';
+	
 $htmlMail = file_get_contents('mail-pilote-dd.php');
 $htmlMail=str_replace('{MAG}',$expInfo[0]['btlec'],$htmlMail);
 $htmlMail=str_replace('{NB}',$nb,$htmlMail);
@@ -87,16 +91,10 @@ $message = (new Swift_Message($subject))
 
 ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
 ->setTo($dest)
-// ->setTo(['pilotageprepa@btlec.fr'])
+
 
 ->setCc($cc);
-// ->addBcc('valerie.montusclat@btlec.fr');
-		// ->attach($attachmentPdf)
-		// ->attach(Swift_Attachment::fromPath('demande-culturel.xlsx'));
-// ou
-// ->setBcc([adress@btl.fr, adresse@bt.fr])
 
-// echec => renvoie 0
 $delivered=$mailer->send($message);
 if($delivered !=0)
 {
@@ -118,6 +116,7 @@ if($delivered !=0)
 	}
 }
 
+	
 
 //------------------------------------------------------
 //			DECLARATIONS

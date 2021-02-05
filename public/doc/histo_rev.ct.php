@@ -13,7 +13,7 @@
 								<option value="">Tout type de documents</option>
 								<?php foreach($revList as $rev): ?>
 									<?php
-									if(isset($_POST['doc_type']) & $_POST['doc_type']==$rev['id'])
+									if(isset($_POST['doc_type']) && $_POST['doc_type']==$rev['id'])
 									{
 										$select="selected";
 									}

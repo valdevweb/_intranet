@@ -6,7 +6,7 @@ if(VERSION=='_'){
 	$dest='valerie.montusclat@btlec.fr';
 }
 else{
-	$dest='btlecest.portailweb.logistique@btlec.fr';
+	$dest=['btlecest.portailweb.litiges@btlec.fr'];
 }
 $link='<a href="'.SITE_ADDRESS.'/index.php?litiges/bt-detail-litige.php?id='.$litige[0]['id_main'].'"> cliquez ici</a>';
 
@@ -22,10 +22,8 @@ $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
 
 ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
-->setTo($dest)
-		// ->addCc('btlecest.portailweb.logistique@btlec.fr')
-		// ->addCc('valerie.montusclat@btlec.fr')
-->addBcc('valerie.montusclat@btlec.fr');
+->setTo($dest);
+
 $delivered=$mailer->send($message);
 
 if($delivered !=0)

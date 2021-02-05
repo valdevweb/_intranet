@@ -9,7 +9,6 @@ function isUserAllowed($pdoUser, $params){
 		return false;
 	}
 	return true;
-
 }
 
 

@@ -46,7 +46,31 @@
 						</select>
 					</div>
 				</div>
+				<div class="col-auto">
+					<div class="form-group">
+						<label for="typo">Typologie :</label>
+						<select class="form-control" name="typo[]" id="typo" multiple>
+							<option value="">Sélectionner</option>
+							<?php
+					
+							foreach ($arTypo as $keyTypo =>$value)
+							{
+								$selected="";
+								if(isset($_SESSION['form-data']['typo']) && !empty($_SESSION['form-data']['typo'])){
+									if(in_array($keyTypo,$_SESSION['form-data']['typo'])){
+										$selected='selected';
+									}
+									else{
+										$selected="";
+									}
+								}
+								echo '<option value="'.$keyTypo.'" '.$selected.'>'.$arTypo[$keyTypo].'</option>';
+							}
+							?>
+						</select>
+					</div>
 
+				</div>
 				<div class="col-auto">
 					<div class="form-group">
 						<label>Centrales * </label>

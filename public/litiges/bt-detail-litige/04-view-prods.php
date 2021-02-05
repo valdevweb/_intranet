@@ -67,7 +67,6 @@
 								<td><?=$prod['dossier_gessica']?></td>
 								<?php else: ?>
 									<td colspan="2">Palette Occasion <?= OccHelpers::getPaletteNameByArticlePalette($pdoOcc,$prod['occ_article_palette'])?></td>
-
 								<?php endif ?>
 
 								<td><?=$prod['palette']?></td>

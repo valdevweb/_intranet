@@ -72,19 +72,19 @@
 
 						<div class="col l5">
 							<p class="boldtxt">MAGASIN :
-								<?= $magInfo->getDeno()  ?>
+								<?=(!empty($magInfo))?$magInfo->getDeno():""  ?>
 							</p>
 						</div>
 
 
 						<div class="col l2">
 							<p class="boldtxt">Code BTLec :
-								<?= $magInfo->getId()  ?>
+								<?= (!empty($magInfo))?$magInfo->getId():""  ?>
 							</p>
 						</div>
 						<div class="col l2">
 							<p class="boldtxt">Code Galec :
-								<?= $magInfo->getGalec()  ?>
+								<?= (!empty($magInfo))?$magInfo->getGalec():""  ?>
 							</p>
 						</div>
 					</div>

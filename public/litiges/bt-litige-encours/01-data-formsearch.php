@@ -39,6 +39,14 @@ if(isset($_POST['search_one'])){
 		}
 	}
 
+	if (isset($_POST['typo']) && !empty($_POST['typo'])) {
+		$_SESSION['form-data']['typo']=$_POST['typo'];
+	}else{
+		if(isset($_SESSION['form-data']['typo'])){
+			unset($_SESSION['form-data']['typo']);
+		}
+	}
+
 	if (isset($_POST['centrale']) && !empty($_POST['centrale'])) {
 		$_SESSION['form-data']['centrale']=$_POST['centrale'];
 	}else{

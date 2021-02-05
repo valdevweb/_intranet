@@ -147,7 +147,7 @@ $spreadsheet->getActiveSheet()->getStyle('A1:'.$lastCol.'1')->applyFromArray($st
 
  // dimensionnement des colnes
 
-for ($i=0; $i < sizeof($realFieldsSize) ; $i++){
+for ($i=0; $i <$realFieldsSize ; $i++){
 	$columnLetter = getNameFromNumber($i);
 	$sheet->getColumnDimension($columnLetter)->setAutoSize(true);
 }

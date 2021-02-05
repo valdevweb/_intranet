@@ -246,7 +246,7 @@ if(isset($_POST['submit'])){
 
 		}
 		else{
-			$dest[]='btlecest.portailweb.logistique@btlec.fr';
+			$dest=['btlecest.portailweb.litiges@btlec.fr'];
 
 		}
 		$htmlMail = file_get_contents('mail/mail-bt-ctrl-stock-ok.php');
@@ -265,15 +265,8 @@ if(isset($_POST['submit'])){
 		->setBody($htmlMail, 'text/html')
 
 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail SAV Leclerc'))
-		->setTo($dest)
-		// ->addCc($copySender['email'])
-		->addBcc('valerie.montusclat@btlec.fr');
-		// ->attach($attachmentPdf)
-		// ->attach(Swift_Attachment::fromPath('demande-culturel.xlsx'));
-// ou
-// ->setBcc([adress@btl.fr, adresse@bt.fr])
+		->setTo($dest);
 
-// echec => renvoie 0
 		$delivered=$mailer->send($message);
 		if($delivered !=0)
 		{

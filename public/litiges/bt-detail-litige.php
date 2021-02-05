@@ -17,6 +17,7 @@ require 'echanges.fn.php';
 require('../../Class/UserHelpers.php');
 require('../../Class/MagHelpers.php');
 require('../../Class/LitigeDao.php');
+require('../../Class/LitigeDialDao.php');
 require('../../Class/OccHelpers.php');
 
 //------------------------------------------------------
@@ -212,6 +213,7 @@ function addSerials($pdoLitige,$idDetail,$values){
 }
 
 $litigeDao=new LitigeDao($pdoLitige);
+$dialDao=new LitigeDialDao($pdoLitige);
 $infoLitige=$litigeDao->getLitigeDossierDetailReclamMagEtatById($_GET['id']);
 
 $firstDial=$litigeDao->getFirstDial($_GET['id']);
@@ -315,13 +317,10 @@ if(isset($_POST['annuler']))
 
 
 if(isset($_POST['submit-serials'])){
-
 	$idDetail="";
 	foreach ($_POST as $key => $value) {
 		if(strpos($key,"iddetail")!==false){
-			echo "true";
 			$idDetail=explode("-",$key)[1];
-			echo $idDetail;
 			$added=addSerials($pdoLitige, $idDetail, $_POST[$key]);
 			if($added>=1){
 				$successStr='success=sn';
@@ -333,7 +332,23 @@ if(isset($_POST['submit-serials'])){
 
 }
 
+if(isset($_POST['not_read'])){
+	if (UserHelpers::isUserAllowed($pdoUser,['94'])){
+		$dialDao->updateRead($_POST['id_dial'],0);
+		header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
+	}else{
+		$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
+	}
+}
+if(isset($_POST['read'])){
+	if (UserHelpers::isUserAllowed($pdoUser,['94'])){
+		$dialDao->updateRead($_POST['id_dial'],1);
+		header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
+	}else{
+		$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
 
+	}
+}
 if(isset($_GET['successpal']))
 {
 	$success[]='la palette a  été trouvée et la base de donnée mise à jour';

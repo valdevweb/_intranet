@@ -281,7 +281,6 @@ if(isset($mtFac) && isset($mtBlanc) && isset($mtGris) && isset($mtBrun) && $mtFa
 	}
 }
 
-
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
@@ -330,17 +329,19 @@ include('../view/_navbar.php');
 
 					</ul>
 					<?php
-					if($nbFac==0){
-						// si un seul fichier facture
+
+					if($nbFac==0 || empty($nbFac)){
+												// si un seul fichier facture
 						if(file_exists($uploadDir.'\FACTCASSE_'.date('dmy').'.csv')){
-							echo '<a href="'.URL_UPLOAD.'\casse\FACTCASSE_'.date('dmy').'.csv" class="flash"><button type="button" class="button btn-plus">Télécharger</button></a>';
+							echo '<a href="'.URL_UPLOAD.'casse\FACTCASSE_'.date('dmy').'.csv" class="flash"><button type="button" class="button btn-plus">Télécharger</button></a>';
 						}
 					}else{
-						echo '<button type="button" class="button btn-plus">Télécharger :<br>';
+					
+												echo '<button type="button" class="button btn-plus">Télécharger :<br>';
 
 						for($i=1;$i<=$nbFac;$i++){
 							if(file_exists($uploadDir.'\FACTCASSE_'.date('dmy').$i.'.csv')){
-								echo '<a href="'.URL_UPLOAD.'\casse\FACTCASSE_'.date('dmy').$i.'.csv" class="flash">Fichier '.$i.'</a>';
+								echo '<a href="'.URL_UPLOAD.'casse\FACTCASSE_'.date('dmy').$i.'.csv" class="flash">Fichier '.$i.'</a>';
 								echo ($i==$nbFac) ? '' : ' - ' ;
 
 							}
@@ -380,17 +381,17 @@ include('../view/_navbar.php');
 
 					</ul>
 					<?php
-					if($nbAvoir==0){
+					if($nbAvoir==0 || empty($nbAvoir)){
 						// si un seul fichier facture
 						if(file_exists($uploadDir.'\AVCASSE_'.date('dmy').'.csv')){
-							echo '<a href="'.URL_UPLOAD.'\casse\AVCASSE_'.date('dmy').'.csv" class="flash"><button type="button" class="button btn-plus">Télécharger</button></a>';
+							echo '<a href="'.URL_UPLOAD.'casse\AVCASSE_'.date('dmy').'.csv" class="flash"><button type="button" class="button btn-plus">Télécharger</button></a>';
 						}
 					}else{
 						echo '<button type="button" class="button btn-plus">Télécharger :<br>';
 
 						for($i=1;$i<=$nbAvoir;$i++){
 							if(file_exists($uploadDir.'\AVCASSE_'.date('dmy').$i.'.csv')){
-								echo '<a href="'.URL_UPLOAD.'\casse\AVCASSE_'.date('dmy').$i.'.csv" class="flash">Fichier '.$i.'</a>';
+								echo '<a href="'.URL_UPLOAD.'casse\AVCASSE_'.date('dmy').$i.'.csv" class="flash">Fichier '.$i.'</a>';
 								echo ($i==$nbAvoir) ? '' : ' - ' ;
 							}
 						}

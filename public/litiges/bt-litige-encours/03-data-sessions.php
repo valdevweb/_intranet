@@ -33,6 +33,14 @@ if(isset($_SESSION['form-data'])){
 	}
 	$paramList[]=$paramEtat;
 
+	if(isset($_SESSION['form-data']['typo'])){
+		$paramTypo=join(' OR ', array_map(function($value){return 'id_typo='.$value;},$_SESSION['form-data']['typo']));
+	}else{
+		$paramTypo='';
+	}
+	$paramList[]=$paramTypo;
+
+
 	if(isset($_SESSION['form-data']['centrale'])){
 		$paramCentrale=join(' OR ', array_map(function($value){return 'centrale='.$value;},$_SESSION['form-data']['centrale']));
 	}else{

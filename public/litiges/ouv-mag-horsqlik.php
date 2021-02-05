@@ -140,7 +140,7 @@ if(isset($_POST['submit']))
 			}
 			else
 			{
-				$mailBt=array('btlecest.portailweb.logistique@btlec.fr');
+				$mailBt=array('btlecest.portailweb.litiges@btlec.fr');
 			}
 			$msg=strip_tags($_POST['msg']);
 			$msg=nl2br($msg);
@@ -155,8 +155,8 @@ if(isset($_POST['submit']))
 			$message = (new Swift_Message($subject))
 			->setBody($btTemplate, 'text/html')
 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
-			->setTo($mailBt)
-			->setBcc(['valerie.montusclat@btlec.fr']);
+			->setTo($mailBt);
+
 			$delivered=$mailer->send($message);
 			if($delivered >0)
 			{

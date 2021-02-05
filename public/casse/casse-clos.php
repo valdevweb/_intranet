@@ -96,7 +96,6 @@ if(isset($_POST['clos'])){
 
 
 	$dirUpload=DIR_UPLOAD.'casse\\';
-
 	$uploader   =   new Uploader();
 	$uploader->setDir($dirUpload);
 	$uploader->allowAllFormats();
@@ -105,8 +104,9 @@ if(isset($_POST['clos'])){
 
 	if($uploader->uploadFile('file')){
 		$file =$uploader->getUploadName();
-
-
+			echo "<pre>";
+			print_r($file);
+			echo '</pre>';			
 	}
 	else{//upload failed
 		$errors[]=$uploader->getMessage();
@@ -125,7 +125,6 @@ if(isset($_POST['clos'])){
 		}else{
 		$to=['isabelle.richard@btlec.fr','clement.anciaux@btlec.fr', 'sandie.lejeune@btlec.fr']	;
 			$cc=['christelle.trousset@btlec.fr','nathalie.pazik@btlec.fr','luc.muller@btlec.fr'];
-			$bcc='valerie.montusclat@btlec.fr';
 
 		}
 		$htmlMail = file_get_contents('mail-compta.html');
@@ -144,7 +143,6 @@ if(isset($_POST['clos'])){
 
 		->setTo($to)
 		->setCc($cc)
-		->addBcc($bcc)
 		->attach(Swift_Attachment::fromPath($dirUpload.$file));
 		if (!$mailer->send($message, $failures)){
 			print_r($failures);

@@ -39,6 +39,8 @@ $magDbHelper=new MagDao($pdoMag);
 $listCentrale=$magDbHelper-> getDistinctCentraleDoris();
 $listType=$magDbHelper->getListType();
 $listCm=UserHelpers::getUserByService($pdoUser,17);
+
+
 $listTypePair=$magDbHelper->getListTypePair();
 $listCodeAcdlec=$magDbHelper->getListCodeAcdlecUtilise();
 $centraleName=Helpers::arrayFlatten($listCentrale,"centrale_doris","centrale");

@@ -19,20 +19,11 @@ require "../../functions/form.fn.php";
 require "../../functions/gazette.fn.php";
 require "../../functions/stats.fn.php";
 require_once '../../Class/OpportuniteDAO.php';
+require_once '../../Class/LitigeDialDao.php';
+require_once '../../Class/UserHelpers.php';
+require_once '../../Class/UserDao.php';
 
 // stats recup mdp
-function getnbRecupPwd($pdoUser){
-	$req=$pdoUser->prepare("SELECT count(id) as recup FROM  users WHERE date_maj_nohash IS NOT NULL");
-	$req->execute();
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
-
-
-function getnbCompte($pdoUser){
-	$req=$pdoUser->prepare("SELECT count(id) as compte FROM  users");
-	$req->execute();
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
 
 function rev($pdoBt){
 	$today=date('Y-m-d H:i:s');
@@ -47,23 +38,22 @@ function rev($pdoBt){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getFlashNews($pdoBt){
-	$req=$pdoBt->prepare("SELECT * FROM flash WHERE valid=1 AND date_start <= :today AND date_end >= :today ORDER BY id DESC");
-	$req->execute(array(
-		':today'		=>date('Y-m-d 00:00:00')
-	));
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
 
 $errors=[];
 $success=[];
+$oppDao=new OpportuniteDAO($pdoBt);
+$dialDao=new LitigeDialDao($pdoLitige);
+$userDao=new UserDao($pdoUser);
 
-$nbRecup=getnbRecupPwd($pdoUser);
-$nbCompte=getnbCompte($pdoUser);
 
-//recup gazette de la semaine en cours
+$nbRecup=$userDao->getNbPwd();
+$nbCompte=$userDao->getNbCompte();
+
+$listActiveOpp=$oppDao->getActiveOpp();
+
+$newDialLitige=$dialDao->getUnreadDossier();
+
 $gazettes=showThisWeek($pdoBt);
-
 
 $links=createLinks($pdoBt,$gazettes,$version);
 
@@ -72,16 +62,12 @@ $gazetteAppros=showLastGazettesAppros($pdoBt);
 $link=URL_UPLOAD."gazette/";
 $approHtml="";
 if($gazetteAppros){
-	foreach ($gazetteAppros as $gazette)
-	{
+	foreach ($gazetteAppros as $gazette){
 		//modif du 20/06
-		if(!empty($gazette['title']))
-		{
+		if(!empty($gazette['title'])){
 			$detail=" : <br>";
 			$detail.=str_replace("<br />"," - ",$gazette['title']);
-		}
-		else
-		{
+		}else{
 			$detail="";
 		}
 		$filename=$gazette['file'];
@@ -97,8 +83,7 @@ $gazetteSpe=showThisWeekSpe($pdoBt);
 $speHtml="";
 
 if($gazetteSpe){
-	foreach ($gazetteSpe as $gSpe)
-	{
+	foreach ($gazetteSpe as $gSpe){
 		$speHtml .= "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gSpe['file']."'><i class='fa fa-hand-o-right pr-3' aria-hidden='true'></i>" .$gSpe['title'] ."</a></li>";
 	}
 }
@@ -109,10 +94,8 @@ if($gazetteSpe){
 $descr="page d'accueil";
 $page=basename(__file__);
 $action="";
-if(!empty($_SERVER['HTTP_REFERER']))
-{
-	if((parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH) !='/'. VERSION .'btlecest/index.php'))
-	{
+if(!empty($_SERVER['HTTP_REFERER'])){
+	if((parse_url($_SERVER['HTTP_REFERER'], PHP_URL_PATH) !='/'. VERSION .'btlecest/index.php')){
 		$action="retour sur la page d'accueil";
 	}
 }
@@ -127,9 +110,7 @@ if($_SESSION['id_type']==2 || $_SESSION['id_type']==5){
 		$typeTitle="";
 		$nom="Bienvenue " .$_SESSION['nom'].',';
 	}
-		//---------------------------
-		//stats
-		//---------------------------
+
 		//si action est vide, le user vient de se connecté
 	$action = (empty($action)) ? "connexion mag" : $action;
 	addRecord($pdoStat,$page,$action, $descr);
@@ -137,56 +118,38 @@ if($_SESSION['id_type']==2 || $_SESSION['id_type']==5){
 elseif($_SESSION['id_type']==1){
 	$typeTitle="Bienvenue";
 	$nom=$_SESSION['nom'];
-		//---------------------------
-		//stats
-		//---------------------------
-		//si action est vide, le user vient de se connecté
 	$action = (empty($action)) ? "connexion BT" : $action;
 	addRecord($pdoStat,$page,$action, $descr);
 }
-elseif ($_SESSION['id_type']==3)
-{
+elseif ($_SESSION['id_type']==3){
 	$typeTitle="";
 	$nom="Bienvenue,";
-		//---------------------------
-		//stats
-		//---------------------------
 		//si action est vide, le user vient de se connecté
 	$action = (empty($action)) ? "connexion scapsav" : $action;
 	addRecord($pdoStat,$page,$action, $descr);
-}
-else
-{
+}else{
 		// si ni de type mag, ni de type bt, ni scapsav
 	$typeTitle="";
 	$nom="Bienvenue,";
-		//---------------------------
-		//stats
-		//---------------------------
-		//si action est vide, le user vient de se connecté
 	$action = (empty($action)) ? "connexion non mag - non BT" : $action;
 	addRecord($pdoStat,$page,$action, $descr);
 }
 // redirection si besoin
-if(!empty($_SESSION['goto']))
-{
+if(!empty($_SESSION['goto'])){
 		//si on a une query string, on la découpe et on vérif si la 1er partie est numerique ou pas
 		//si 1ere partie numérique, c'est un vieux lien donc on redirige sur page edit-msg(mag) ou page answer(btlec)
 		//sinon on recupère toute la query string
 	$goto=$_SESSION['goto'];
 	$redir=explode("&",$goto);
-	if(is_numeric($redir[0])){
+				if(is_numeric($redir[0])){
 		if($_SESSION['id_type']==1){
 			header('Location:'. ROOT_PATH. '/public/btlec/answer.php?msg='.$_SESSION['goto']);
 		}elseif($_SESSION['id_type']==2 || $_SESSION['id_type']==3 || $_SESSION['id_type']==4 || $_SESSION['id_type']==5){
-			header('Location:'. ROOT_PATH. '/public/mag/edit-msg.php?msg='.$_SESSION['goto']);
+			  header('Location:'. ROOT_PATH. '/public/mag/edit-msg.php?msg='.$_SESSION['goto']);
 		}
-	}else
-	{
+	}else{
 		header('Location:' .ROOT_PATH. '/public/' .$goto);
 	}
-
-
 }
 
 
@@ -219,28 +182,21 @@ if(!empty($revRes))
 }
 
 
-
-$flashNews=getFlashNews($pdoBt);
-
-$flashFilesDir=DIR_UPLOAD.'flash\\';
-// $flashFilesDir='..\..\..\upload\flash\\';
-
 // on réinitialise les filtres mémorisés par la page base mag
 if(isset($_SESSION['mag_filters'])){
 	unset($_SESSION['mag_filters']);
 }
 
-$oppDao=new OpportuniteDAO($pdoBt);
-$listActiveOpp=$oppDao->getActiveOpp();
+
 
 if(isset($_GET['access-denied'])){
     $errors[]="Vous avez été redirigé ici car vos droits d'accès ne vous permettent pas de consulter la page demandée";
 }
 
 
-	// echo "<pre>";
-	// print_r($_SESSION);
-	// echo '</pre>';
+
+
+
 include('../view/_head-bt.php');
 include ('../view/_navbar.php');
 

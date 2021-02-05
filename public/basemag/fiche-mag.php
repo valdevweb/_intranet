@@ -199,7 +199,7 @@ if(isset($_GET['id'])){
 
 if(isset($_POST['maj'])){
 	$up=updateSca($pdoMag);
-	if(count($up)==1){
+	if($up==1){
 		$successQ='success=maj';
 		unset($_POST);
 		header("Location: ".$_SERVER['PHP_SELF'].'?id='.$_GET['id'].'&'.$successQ,true,303);

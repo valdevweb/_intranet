@@ -3,11 +3,12 @@
 	$msg=getActionMsg($pdoLitige);
 
 	if(VERSION=='_'){
-		$cc=$dest='valerie.montusclat@btlec.fr';
+		$dest='valerie.montusclat@btlec.fr';
+		$cc=[];
 	}
 	else{
 		$dest='benoit.dubots@btlec.fr';
-		$cc='btlecest.portailweb.logistique@btlec.fr';
+		$cc=['btlecest.portailweb.litiges@btlec.fr'];
 	}
 	$footer='<table class="padding-table">';
 	$footer.='<tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>';
@@ -40,9 +41,7 @@
 
 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
 		->setTo($dest)
-		->addCc($cc)
-		// ->addCc('valerie.montusclat@btlec.fr')
-		->addBcc('valerie.montusclat@btlec.fr')
+		->setCc($cc)
 		->attach($attachmentPdf);
 
 

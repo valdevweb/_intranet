@@ -217,7 +217,7 @@ if(isset($_POST['submit']))
 			{
 				if($_SESSION['code_bt']!='4201')
 				{
-					$mailBt=array('litigelivraison@btlec.fr');
+					$mailBt=array('btlecest.portailweb.litiges@btlec.fr');
 				}
 				else
 				{

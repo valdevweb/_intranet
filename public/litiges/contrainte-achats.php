@@ -15,7 +15,7 @@ else{
 		$achatDest[]=$ld['email'];
 	}
 	$achatDest[]='stephane.wendling@btlec.fr';
-	$cc='btlecest.portailweb.logistique@btlec.fr';
+	$cc='btlecest.portailweb.litiges@btlec.fr';
 
 }
 
@@ -62,7 +62,6 @@ $message = (new Swift_Message($subject))
 ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
 ->setTo($achatDest)
 ->addCc($cc)
-->addBcc('valerie.montusclat@btlec.fr')
 ->attach($attachmentPdf);
 
 $delivered=$mailer->send($message);
