@@ -5,7 +5,7 @@ if(!isset($_SESSION['id'])){
 	exit();
 }
 if($_SESSION['id']==1531){
-	header('Location:../gtocc/occ-palette.php');
+	header('Location:../gtocc/offre-produit.php');
 }
 
 //----------------------------------------------------------------
@@ -22,6 +22,7 @@ require_once '../../Class/OpportuniteDAO.php';
 require_once '../../Class/LitigeDialDao.php';
 require_once '../../Class/UserHelpers.php';
 require_once '../../Class/UserDao.php';
+require_once '../../Class/FlashDao.php';
 
 // stats recup mdp
 
@@ -42,6 +43,7 @@ function rev($pdoBt){
 $errors=[];
 $success=[];
 $oppDao=new OpportuniteDAO($pdoBt);
+$flashDao=new FlashDao($pdoBt);
 $dialDao=new LitigeDialDao($pdoLitige);
 $userDao=new UserDao($pdoUser);
 
@@ -56,6 +58,7 @@ $newDialLitige=$dialDao->getUnreadDossier();
 $gazettes=showThisWeek($pdoBt);
 
 $links=createLinks($pdoBt,$gazettes,$version);
+$listFlashBt=$flashDao->getListFlashBySite((new DateTime())->format('Y-m-d'),'portail_bt');
 
 // les 2 dernière gazettes opportunités
 $gazetteAppros=showLastGazettesAppros($pdoBt);

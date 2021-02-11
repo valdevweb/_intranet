@@ -204,9 +204,9 @@ a.text-ctbt{
 }
 
 
-
-
-
+td.nowrap{
+  white-space: nowrap !important;
+}
 
 .bigger
 {

@@ -17,7 +17,7 @@ $d_occMag=isUserAllowed($pdoUser,$gtOccMagIds);
 	<ul>
 		<li class='active has-sub'><a href="<?= ROOT_PATH?>/public/gtocc/#"><span>Leclerc occasion</span></a>
 			<ul>
-				<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-palette.php'?>">Offres produits</a></li>
+				<li><a href="<?= ROOT_PATH. '/public/gtocc/offre-produit.php'?>">Offres produits</a></li>
 			</ul>
 		</li>
 		<li><a href="<?= ROOT_PATH ?>/public/logoff.php" class="tooltipped" data-position="bottom" data-tooltip="se déconnecter"><span><i class="fa fa-power-off"></i></span></a></li>

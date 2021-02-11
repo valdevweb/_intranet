@@ -3,6 +3,7 @@
 require('config/autoload.php');
 require 'functions/stats.fn.php';
 require('Class/CmRdvDao.php');
+require('Class/FlashDao.php');
 
 // on connecte l'utilisateur et recup $_SESSION['id']=$id (id web_user) et $_SESSION['user']=$_POST['login'];
 require('functions/login.fn.php');
@@ -47,9 +48,9 @@ if(!empty( $_SERVER['QUERY_STRING'])){
 // stats
 if(isset($_POST['connexion'])){
 	$loginExist=loginExist($pdoUser);
-		echo "<pre>";
-		print_r($loginExist);
-		echo '</pre>';
+	echo "<pre>";
+	print_r($loginExist);
+	echo '</pre>';
 
 
 	if($loginExist){
@@ -101,6 +102,10 @@ function rev($pdoBt)
 }
 $revRes=rev($pdoBt);
 $nbRev=count($revRes);
+
+$flashDao=new FlashDao($pdoBt);
+$listFlash=$flashDao->getListFlashBySite((new DateTime())->format('Y-m-d'),'portail_bt');
+
 
 if(!empty($revRes))
 {
@@ -169,62 +174,64 @@ if(!empty($revRes))
 					}
 				}
 				?>
-				<!-- flashs info -->
-<!--
-				<div class="row infos">
-					<div class="col-1"></div>
-					<i class="pin"></i>
-					<div class="col px-5 inside-infos">
-						<p class="center-text pt-2"><i class="fa fa-bell fa-lg" aria-hidden="true"></i></p>
-						<h4 class="orange-text text-darken-3 text-center">INFORMATION</h4>
-						<p class="text-left">
-							Nous vous informons que <span class="orange-text font-weight-bold">dimanche 17 janvier à 14h</span>, nous avons prévu une coupure d'exploitation d'environ 1 heure. Cette coupure bloquera l'accès à ce site et au site du portail SAV
-						</p>
+				<?php if (isset($listFlash) && !empty($listFlash)): ?>
+				<?php foreach ($listFlash as $key => $flash): ?>
+
+					<div class="row infos">
+						<div class="col-1"></div>
+						<i class="pin"></i>
+						<div class="col px-5 inside-infos">
+							<p class="center-text pt-2"><i class="fa fa-bell fa-lg" aria-hidden="true"></i></p>
+							<h4 class="orange-text text-darken-3 text-center"><?=$flash['title']?></h4>
+							<p class="text-left"><?=$flash['content']?></p>
+						</div>
+						<div class="col-1"></div>
 					</div>
-					<div class="col-1"></div>
-				</div> -->
+				<?php endforeach ?>
 
-				<!-- fin d'info1 -->
-				<!-- flash info auto si reversement -->
-				<?php echo isset($infoRev) ? $infoRev:"";?>
+			<?php endif ?>
+
+			<!-- fin d'info1 -->
+			<!-- flash info auto si reversement -->
+			<?php echo isset($infoRev) ? $infoRev:"";?>
 
 
-			</div>
 		</div>
-
 	</div>
-	<!-- ############################################################################################################################### -->
-	<!--  												./container 																			 -->
-	<!-- ############################################################################################################################### -->
 
-	<!-- ############################################################################################################################### -->
-	<!--  												MODAL CONNEXION FORM 																			 -->
-	<!-- ############################################################################################################################### -->
+</div>
+<!-- ############################################################################################################################### -->
+<!--  												./container 																			 -->
+<!-- ############################################################################################################################### -->
 
-	<div class="modal" id="connexion">
-		<div class="modal-content">
-			<p class="text-center text-primary">Portails BT et SAV</p>
-			<form action="<?php echo $_SERVER['PHP_SELF'];?>"  method="post">
-				<div class="modal-form-row">
-					<div class="input-field">
-						<input id="login" name="login" placeholder="identifiant" type="text" class="validate" autofocus >
-						<label for="login"></label>
-					</div>
+<!-- ############################################################################################################################### -->
+<!--  												MODAL CONNEXION FORM 																			 -->
+<!-- ############################################################################################################################### -->
+
+<div class="modal" id="connexion">
+	<div class="modal-content">
+		<p class="text-center text-primary">Portails BT et SAV</p>
+		<form action="<?php echo $_SERVER['PHP_SELF'];?>"  method="post">
+			<div class="modal-form-row">
+				<div class="input-field">
+					<input id="login" name="login" placeholder="identifiant" type="text" class="validate" autofocus >
+					<label for="login"></label>
 				</div>
-				<div class="modal-form-row">
-					<div class="input-field">
-						<input id="pwd" name="pwd" placeholder="mot de passe" type="password">
-						<label for="pwd"></label>
-					</div>
+			</div>
+			<div class="modal-form-row">
+				<div class="input-field">
+					<input id="pwd" name="pwd" placeholder="mot de passe" type="password">
+					<label for="pwd"></label>
 				</div>
-				<input type='hidden' name='goto' value='<?php if(!empty($gotoMsg)){echo $gotoMsg;} ?>'>
-				<div class="modal-form-row text-center">
-					<button class="btn waves-effect waves-light light-blue darken-3" type="submit" name="connexion">Connexion
-					</button>
-				</div>
-			</form>
-			<p class="identif"><a class="send-mail-to" href="pwd.php"> <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Demander mes identifiants</a></p>
-		</div>
+			</div>
+			<input type='hidden' name='goto' value='<?php if(!empty($gotoMsg)){echo $gotoMsg;} ?>'>
+			<div class="modal-form-row text-center">
+				<button class="btn waves-effect waves-light light-blue darken-3" type="submit" name="connexion">Connexion
+				</button>
+			</div>
+		</form>
+		<p class="identif"><a class="send-mail-to" href="pwd.php"> <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Demander mes identifiants</a></p>
+	</div>
 	<!-- 	<div class="modal-footer">
 			<p class=text-center><a href="#!" class="modal-action modal-close">fermer</a></p>
 		</div> -->

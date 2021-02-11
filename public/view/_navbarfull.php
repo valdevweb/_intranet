@@ -51,7 +51,7 @@
 
 			<li class='active has-sub'><a href="#"><span>Leclerc occasion</span></a>
 				<ul>
-					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-palette.php'?>">Offres produits</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/gtocc/offre-produit.php'?>">Offres produits</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-import-palette.php'?>">Gestion GT Occasion</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-expedie.php'?>">Palettes expédiées</a></li>
 
@@ -61,7 +61,7 @@
 
 			<li class='active has-sub'><a href="<?= ROOT_PATH?>/public/gtocc/#"><span>Leclerc occasion</span></a>
 				<ul>
-					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-palette.php'?>">Offres produits</a></li>
+					<li><a href="<?= ROOT_PATH. '/public/gtocc/offre-produit.php'?>">Offres produits</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/gtocc/occ-mag-cdes.php'?>">Vos Commandes</a></li>
 				</ul>
 			</li>
