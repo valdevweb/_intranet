@@ -81,11 +81,18 @@
 								$unreadMsg="<i class='fas fa-bell pl-1 text-yellow'></i>";
 							}
 						}
+						$unreadActionSavIco="";
+						if (!empty($unreadActionSav)) {
+							if(in_array($active['id_main'],$unreadActionSav)){
+								$unreadActionSavIco="<i class='fas fa-bell pl-1 text-green'></i>";
+							}
+						}
+
 						?>
 
 
 						<tr class="<?=$active['etat_dossier'] .' ' .$bgOccasion?>" id="<?=$active['id_main']?>">
-							<td class="nowrap"><a href="bt-detail-litige.php?id=<?=$active['id_main']?>"><?=$active['dossier'].$unreadMsg?></a></td>
+							<td class="nowrap"><a href="bt-detail-litige.php?id=<?=$active['id_main']?>"><?=$active['dossier'].$unreadMsg. $unreadActionSavIco?></a></td>
 							<td><?=$active['datecrea']?></td>
 							<td><a href="stat-litige-mag.php?galec=<?=$active['galec']?>"><?=$active['deno']?></a></td>
 							<td><?=$active['btlec']?></td>

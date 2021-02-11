@@ -346,7 +346,28 @@ if(isset($_POST['read'])){
 		header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
 	}else{
 		$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
+	}
+}
 
+
+
+if(isset($_POST['not_read_action'])){
+
+	if (UserHelpers::isUserAllowed($pdoUser,['94']) || $_SESSION['id_web_user']==1402){
+		$dialDao->updateReadAction($_POST['id_action'],0);
+		header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_action']);
+	}else{
+		$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
+	}
+}
+if(isset($_POST['read_action'])){
+
+
+	if (UserHelpers::isUserAllowed($pdoUser,['94'])  || $_SESSION['id_web_user']==1402){
+		$dialDao->updateReadAction($_POST['id_action'],1);
+		header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_action']);
+	}else{
+		$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
 	}
 }
 if(isset($_GET['successpal']))

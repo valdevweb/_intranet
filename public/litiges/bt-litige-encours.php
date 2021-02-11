@@ -179,6 +179,7 @@ $listVideoko=getListVideo($pdoLitige, 6);
 $arTypo=LitigeHelpers::listTypo($pdoLitige);
 $arMagOcc=MagHelpers::getListMagOcc($pdoMag);
 $unread=$dialDao->getUnreadDossierColumn();
+$unreadActionSav=$dialDao->getUnreadActionSavColumn();
 
 
 $sumValoMain=0;
