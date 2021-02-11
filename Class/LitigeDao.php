@@ -161,7 +161,7 @@ class LitigeDao{
 	}
 
 	public function getAction($idLitige){
-		$req=$this->pdo->prepare("SELECT libelle, action.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y')as dateFr, concat(prenom, ' ', nom) as name, pj, action.sav, achats FROM action LEFT JOIN web_users.intern_users ON action.id_web_user=web_users.intern_users.id_web_user WHERE action.id_dossier= :id ORDER BY date_action");
+		$req=$this->pdo->prepare("SELECT action.read_action, action.id as id_action, action.id_contrainte, libelle, action.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y')as dateFr, concat(prenom, ' ', nom) as name, pj, action.sav, achats FROM action LEFT JOIN web_users.intern_users ON action.id_web_user=web_users.intern_users.id_web_user WHERE action.id_dossier= :id ORDER BY date_action");
 		$req->execute(array(
 			':id'		=>$idLitige
 
