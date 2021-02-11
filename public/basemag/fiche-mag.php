@@ -19,6 +19,7 @@ require_once '../../Class/MagDao.php';
 require_once '../../Class/Mag.php';
 require_once '../../Class/Helpers.php';
 require_once '../../Class/UserHelpers.php';
+require_once '../../Class/UserDao.php';
 
 
 
@@ -112,6 +113,9 @@ function getCmtFiles($pdoMag,$idcmt){
 	return "";
 }
 
+$userDao=new UserDao($pdoUser);
+
+
 if(isset($_POST['clear_form'])){
 	$_POST=[];
 	header("Location: ".$_SERVER['PHP_SELF']);
@@ -128,6 +132,8 @@ if (isset($_GET['id'])){
 
 
 	$webuser=$magDbHelper->getWebUser($mag->getGalec());
+
+
 	$centreRei=$magDbHelper->centreReiToString($mag->getCentreRei());
 	$listTypesMag=$magDbHelper-> getListType();
 	$listBackOffice=$magDbHelper->getListBackOffice();
@@ -198,6 +204,18 @@ if(isset($_GET['id'])){
 }
 
 if(isset($_POST['maj'])){
+	if(isset($_POST['occasion']) && $_POST['occasion']==1){
+		$rightOccOk=$userDao->userHasThisRight($webuser['id_web_user'],84);
+		if(empty($rightOccOk)){
+			$userDao->addRight($webuser['id_web_user'],84);
+		}
+	}
+	if(isset($_POST['occasion']) && $_POST['occasion']==0){
+		$rightOccOk=$userDao->userHasThisRight($webuser['id_web_user'],84);
+		if(!empty($rightOccOk)){
+			$do=$userDao->removeRight($webuser['id_web_user'],84);
+		}
+	}
 	$up=updateSca($pdoMag);
 	if($up==1){
 		$successQ='success=maj';
@@ -591,7 +609,8 @@ DEBUT CONTENU CONTAINER
 					<h1 class="text-main-blue pt-5 ">F</span>iche magasin</h1>
 				</div>
 				<?php
-				include('search-form.php')
+
+				include('search-form/search-form.php')
 				?>
 				<div class="col-auto mt-4 pt-2">
 					<?=Helpers::returnBtn('base-mag.php','btn-kaki')?>
@@ -618,7 +637,7 @@ DEBUT CONTENU CONTAINER
 
 					</div>
 					<?php
-					include('search-form.php')
+					include('search-form/search-form.php')
 					?>
 					<div class="col-auto mt-3  pt-2">
 						<?=Helpers::returnBtn('base-mag.php','btn-kaki')?>
@@ -630,11 +649,11 @@ DEBUT CONTENU CONTAINER
 
 			<?php
 			if (isset($mag)){
-				include('fiche-mag-commun.php');
+				include('fiche-mag/01-commun.php');
 				if($d_strictAdmin){
-					include('fiche-mag-exploit.php');
+					include('fiche-mag/02-exploit.php');
 				}
-				include('fiche-mag-modal.php');
+				include('fiche-mag/03-modal-observation.php');
 
 			}
 			?>

@@ -70,12 +70,7 @@
 								<button class="btn btn-primary" name="submit-mod-add">Ajouter</button>
 							</div>
 						</div>
-
-
-
 					</form>
-
-
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button>

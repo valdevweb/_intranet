@@ -328,7 +328,7 @@ DEBUT CONTENU CONTAINER
 		<div class="col">
 			<h1 class="text-main-blue py-3 ">Base magasins</h1>
 		</div>
-		<?php include('search-form.php') ?>
+		<?php include('search-form/search-form.php') ?>
 	</div>
 
 	<div class="row">
