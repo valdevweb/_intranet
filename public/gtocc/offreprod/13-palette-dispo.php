@@ -20,7 +20,7 @@
 		<?php foreach ($paletteCommandable as $key => $palette): ?>
 			<?php
 			$montantPalette=0 ;
-			$nbPaletteDispo=$paletteMgr->getNbPaletteDispo($palette[0]['id_import']);
+			$nbPaletteDispo=$paletteDao->getNbPaletteDispo($palette[0]['id_import']);
 			?>
 
 			<!-- 1er élement du lot -->

@@ -39,7 +39,7 @@
 							<td colspan="6" class="mx-auto text-center">
 								<?php
 
-								$infoCde=$paletteMgr->getCdeByIdCde($palette['id_cde']);
+								$infoCde=$paletteDao->getCdeByIdCde($palette['id_cde']);
 
 								?>
 								<table class="table more w-auto ml-5" data-table-id="<?=$palette['id_cde']?>">

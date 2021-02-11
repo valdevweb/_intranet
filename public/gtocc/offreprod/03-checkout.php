@@ -15,15 +15,16 @@ if(isset($_POST['checkout'])){
 
 
 	foreach ($paletteEtArticleDansPanier as $key => $itemReserve) {
-		// si on a un numéro de palette, c'est que l'on travaille avec un aplette !
+		// si on a un numéro de palette, c'est que l'on travaille avec une palette !
 		if(!empty($itemReserve['id_palette'])){
 		//  on vérifie l'état des palettes si commandé ou expédié entre temps, on suppprile de temp et on averti le mag
-			$paletteStatut = getPaletteStatut($pdoOcc,$itemReserve['id_palette']);
+			$paletteStatut = $paletteDao->getPaletteStatut($pdoOcc,$itemReserve['id_palette']);
 
 			//  palette plus dispo
 			if($paletteStatut['statut'] !=1){
 				$errors[]="la palette ".$paletteStatut['palette'].' a été commandée entre temps par un autre magasin. Veuillez la supprimer';
 			}
+
 		}else{
 
 			// on vérfie le stock article
@@ -42,54 +43,10 @@ if(isset($_POST['checkout'])){
  // le statu de la palette en commandé
  // la table temporaire pourretirer toutes les palettes de cette commande
 	if(empty($errors)){
-
-			// on créé le numéro de commande statut 2 = comandé comme pour les palettes
-		$req=$pdoOcc->query("INSERT INTO cdes_numero (statut) VALUES (2)");
-		$lastinsertid=$pdoOcc->lastInsertId();
-
-
-		foreach ($paletteEtArticleDansPanier as $key => $itemReserve) {
-
-			// palette
-			if(!empty($itemReserve['id_palette'])){
-
-				$cdeOk=addToCmd($pdoOcc,$itemReserve['id_palette'],$lastinsertid, $itemReserve['article_occ'], $itemReserve['panf_occ'], $itemReserve['deee_occ'], $itemReserve['sorecop_occ'], $itemReserve['design_occ'], $itemReserve['fournisseur_occ'], $itemReserve['ean_occ'], $itemReserve['qte_cde'], $itemReserve['marque_occ'], $itemReserve['ppi_occ']);
-
-
-				if($cdeOk){
-					$statut=2;
-					$upPalette=$paletteMgr->updatePaletteStatut($pdoOcc,$itemReserve['id_palette'],$statut);
-				}else{
-					$errors[]="Une erreur est survenue avec la palette ".$itemReserve['palette'];
-				}
-				if($upPalette){
-					$deleteTemRow=deleteTempCmd($pdoOcc,$itemReserve['id']);
-				}
-
-			}else{
-				// article
-				$cdeOk=addToCmd($pdoOcc,$itemReserve['id_palette'],$lastinsertid, $itemReserve['article_occ'], $itemReserve['panf_occ'], $itemReserve['deee_occ'], $itemReserve['sorecop_occ'], $itemReserve['design_occ'], $itemReserve['fournisseur_occ'], $itemReserve['ean_occ'], $itemReserve['qte_cde'], $itemReserve['marque_occ'], $itemReserve['ppi_occ']);
-
-
-				if($cdeOk){
-					// on supprime la ligne temporaire
-					$deleteTemRow=deleteTempCmd($pdoOcc,$itemReserve['id']);
-					// on met à jour les quantité de la table cde
-					// donc on récupère la qte actuelle
-					$qteStock=getQteArticleQlik($pdoOcc, $itemReserve['article_occ']);
-					$qte=$qteStock - $itemReserve['qte_cde'];
-					$ok=updateQteArticle($pdoOcc,$itemReserve['article_occ'], $qte);
-					if(!$ok){
-						$errors[]="une erreur est survenue, impossible de passer votre commande 1";
-					}
-				}else{
-					$errors[]="une erreur est survenue, impossible de passer votre commande 2";
-				}
-			}
-		}
+		include('03b-checkout-insert-cde.php');
 	}
-
 	if(empty($errors)){
+
 			// envoi mail
 		$infoMag=UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $_SESSION['id_web_user']);
 
@@ -138,7 +95,7 @@ if(isset($_POST['checkout'])){
 		$sheet->setCellValue('J1', 'PVC');
 		$row=2;
 
-		$infoCde=$paletteMgr->getCdeByIdCde($lastinsertid);
+		$infoCde=$paletteDao->getCdeByIdCde($lastinsertid);
 
 		foreach ($infoCde as $key => $cde)
 		{
@@ -244,7 +201,8 @@ if(isset($_POST['checkout'])){
 			unset($_POST);
 			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 		}
-			// header("Location:occ-palette.php?success=cde");
+
+
 	}
 
 }

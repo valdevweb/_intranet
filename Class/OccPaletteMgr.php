@@ -18,7 +18,7 @@ class OccPaletteMgr{
 			LEFT JOIN palettes_articles ON palettes.id=palettes_articles.id_palette
 			LEFT JOIN import_excel ON palettes.import=import_excel.id
 			LEFT JOIN import_cmt ON palettes.import=import_cmt.id_import
-			WHERE statut=:statut ORDER BY palette");
+			WHERE statut=:statut ORDER BY palettes_articles.id_import, palette");
 		$req->execute([
 			':statut'		=>$statut
 		]);
@@ -131,6 +131,26 @@ class OccPaletteMgr{
 		$data=$req->fetch();
 		return $data['nb'];
 	}
+
+	public function getPaletteStatut($pdoOcc,$id){
+		$req=$this->pdoOcc->prepare("SELECT * FROM palettes WHERE id= :id ");
+		$req->execute([
+			':id'	=>$id
+
+		]);
+		return $req->fetch(PDO::FETCH_ASSOC);
+	}
+
+	public function getMaxPaletteImport($idPalette){
+		$req=$this->pdoOcc->prepare("SELECT * FROM palettes LEFT JOIN import_excel ON palettes.import=import_excel.id WHERE palettes.id= :id_palette");
+		$req->execute([
+			':id_palette'	=>$idPalette
+
+		]);
+		return $req->fetch(PDO::FETCH_ASSOC);
+	}
+
+	
 
 }
 

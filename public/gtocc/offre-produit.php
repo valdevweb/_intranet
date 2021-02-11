@@ -18,6 +18,7 @@ require_once '../../vendor/autoload.php';
 require_once '../../Class/OccPaletteMgr.php';
 require '../../Class/UserHelpers.php';
 require '../../Class/OccHelpers.php';
+require '../../Class/OccCdesDao.php';
 
 
 
@@ -34,10 +35,6 @@ require '../../Class/OccHelpers.php';
 
 
 
-// echo "<pre>";
-// print_r($paletteCommandable);
-// echo '</pre>';
-
 
 
 
@@ -52,23 +49,7 @@ function getListPanier($pdoOcc){
 	]);
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
-function addToTemp($pdoOcc){
-	$req=$pdoOcc->prepare("INSERT INTO cdes_temp (id_web_user, id_palette, date_insert) VALUES (:id_web_user, :id_palette, :date_insert) ");
-	$req->execute([
-		':id_web_user'		=>$_SESSION['id_web_user'],
-		':id_palette'		=>$_POST['id_palette'],
-		':date_insert'		=>date('Y-m-d H:i:s')
 
-	]);
-
-	$err=$req->errorInfo();
-
-
-	if(!empty($err[2])){
-		return false;
-	}
-	return true;
-}
 
 function addToTempArt($pdoOcc){
 	$req=$pdoOcc->prepare("INSERT INTO cdes_temp (id_web_user, id_palette, article_occ, design_occ, fournisseur_occ, ean_occ, panf_occ, deee_occ, sorecop_occ ,qte_cde, date_insert, marque_occ, ppi_occ) VALUES (:id_web_user, :id_palette, :article_occ, :design_occ, :fournisseur_occ, :ean_occ, :panf_occ, :deee_occ, :sorecop_occ , :qte_cde, :date_insert, :marque_occ, :ppi_occ) ");
@@ -115,15 +96,7 @@ function delPaletteCde($pdoOcc){
 }
 
 
-function getPaletteStatut($pdoOcc,$id){
-	$req=$pdoOcc->prepare("SELECT * FROM palettes WHERE id= :id ");
-	$req->execute([
-		':id'	=>$id
 
-	]);
-	// return $req->errorInfo();
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
 
 function updatePalette($pdoOcc,$idPalette,$statut){
 	$req=$pdoOcc->prepare("UPDATE palettes SET statut= :statut WHERE id= :id");
@@ -267,20 +240,21 @@ $errors=[];
 $success=[];
 $displayCart=false;
 
-$paletteMgr=new OccPaletteMgr($pdoOcc);
-$paletteCommandable=$paletteMgr->getListPaletteDetailByStatut(1);
+$paletteDao=new OccPaletteMgr($pdoOcc);
+$cdeDao=new OccCdesDao($pdoOcc);
+$paletteCommandable=$paletteDao->getListPaletteDetailByStatut(1);
 $importW="";
 
 
-$paletteEnPrepa=$paletteMgr->getListPaletteDetailByStatut(0);
-$paletteCommandees=$paletteMgr->getListCommandeByStatut(2);
+$paletteEnPrepa=$paletteDao->getListPaletteDetailByStatut(0);
+$paletteCommandees=$paletteDao->getListCommandeByStatut(2);
 
 $paletteEtArticleDansPanier=getListPanier($pdoOcc);
 
 $listAssortiment=getAssortiment($pdoOcc);
 $arrayListPalette=OccHelpers::arrayPalette($pdoOcc);
 
-$cmtPalette=$paletteMgr->getActiveListPaletteCmt();
+$cmtPalette=$paletteDao->getActiveListPaletteCmt();
 
 
 
@@ -298,38 +272,29 @@ if(!empty($paletteEtArticleDansPanier)){
 
 //  permet d'ajouter une palette au panier
 if(isset($_POST['addtocart'])){
-	$displayCart=addToTemp($pdoOcc);
-	if($displayCart){
-		$successQ='?success=cart';
-		unset($_POST);
-		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
-
-	}else{
-		$errors[]="erreur";
-	}
+	include 'offreprod/01-add-palette-to-cart.php';
 }
 
 // lien supprimer une palette du cart
 if(isset($_GET['idTempDel'])){
 	delTempCde($pdoOcc);
-	header("Location:occ-palette.php");
+	header("Location:offre-produit.php");
 }
 
 if(isset($_GET['idTempDelArticle'])){
 	delLine($pdoOcc,$_GET['idTempDelArticle']);
-	header("Location:occ-palette.php");
+	header("Location:offre-produit.php");
 }
+include 'offreprod/02-add-article-to-cart.php';
+include 'offreprod/03-checkout.php';
 
-include 'occ-palette-checkout.php';
-
-include 'occ-palette-addarticle.php';
 
 if(isset($_GET['del-palette'])){
 // supprimer la palette de la commande
 // remettre le statut de la palette à 1
 	delPaletteCde($pdoOcc);
 	updatePalette($pdoOcc, $_GET['del-palette'], 1);
-	header("Location:occ-palette.php#cde");
+	header("Location:offre-produit.php#cde");
 
 }
 
@@ -342,7 +307,7 @@ if(isset($_GET['expedier'])){
 		'date_exp'	=>date('Y-m-d H:i:s')
 	]);
 	// // mettre à jour les palette si palette !!!
-	$detailCde=$paletteMgr->getCdeByIdCde($_GET['expedier']);
+	$detailCde=$paletteDao->getCdeByIdCde($_GET['expedier']);
 	foreach ($detailCde as $detail) {
 		// on met les id palette à mettre à jour dans un tableau
 		// pour les produits unitaird par de mise à jour à faire
@@ -354,17 +319,17 @@ if(isset($_GET['expedier'])){
 	if($majStatutPalette){
 
 		// on n'utilise pas le nuémro de palette pour mettre à jour mais le numéro de commande mais
-		$upPalette=$paletteMgr->updatePaletteCdeStatut($pdoOcc,$_GET['expedier'],3);
+		$upPalette=$paletteDao->updatePaletteCdeStatut($pdoOcc,$_GET['expedier'],3);
 
 		if($upPalette>=1){
-			header("Location:occ-palette.php?success=expedie");
+			header("Location:offre-produit.php?success=expedie");
 		}else{
 			$errors[]="une erreur est survenue, impossible de mettre la palette à jour";
 
 		}
 
 	}else{
-		header("Location:occ-palette.php?success=expedie");
+		header("Location:offre-produit.php?success=expedie");
 	}
 }
 
@@ -410,21 +375,13 @@ DEBUT CONTENU CONTAINER
 
 
 
-	<div class="row">
-		<div class="col-lg-1"></div>
-		<div class="col">
-			<?php
-			include('../view/_errors.php');
-			?>
-		</div>
-		<div class="col-lg-1"></div>
-	</div>
+
 
 	<div class="row">
 		<div class="col-lg-2"></div>
 
 		<div class="col">
-			<div class="alert alert-danger text-center">
+			<div class="alert alert-primary text-center">
 				<h5><i class="fas fa-exclamation-circle pr-2"></i>INFORMATION</h5>
 				Dorénavant les nouvelles palettes occasion seront ajoutées <strong>seulement le mardi</strong><br>
 				Merci de votre compréhension.
@@ -463,36 +420,37 @@ DEBUT CONTENU CONTAINER
 	<?php
 	// affichage du panier si article en commande
 	if (!empty($paletteEtArticleDansPanier)){
-		include 'occ-palette-cart.php';
+		include 'offreprod/10-cart.php';
 	}
+	?>
+	<div class="row mt-3">
+		<div class="col-lg-1"></div>
+		<div class="col">
+			<?php
+			include('../view/_errors.php');
+			?>
+		</div>
+		<div class="col-lg-1"></div>
+	</div>
+	<?php 
 	// affichage de la liste des articles gt13 commandables
-	include 'occ-palette-artlist.php';
+	include 'offreprod/11-article-qlik.php';
 	// affich&age palettes en prepa pour bt
 	if ($_SESSION['type']=='btlec'){
-		include 'occ-palette-prepa.php';
+		include 'offreprod/12-bt-palette-enprepa.php';
 	}
 	// affichage palette terminées pour tout le monde
 
 
 
-	include 'occ-palette-dispo.php';
+	include 'offreprod/13-palette-dispo.php';
 	// affichage palettes commandéew et expédiées
 	if ($_SESSION['type']=='btlec'){
-		include 'occ-palette-cdes.php';
+		include 'offreprod/14-bt-palette-cdees.php';
 
 	}
 
 	?>
-
-
-
-
-
-
-
-
-
-
 
 	<!-- ./container -->
 </div>
