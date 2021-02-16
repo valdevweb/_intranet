@@ -32,7 +32,7 @@ $paletteMgr=new OccPaletteMgr($pdoOcc);
 
 $infoCde=$paletteMgr->getCdeByIdCde($_GET['id']);
 $arrayListPalette=OccHelpers::arrayPalette($pdoOcc);
-
+	$totalPa=$totalQte=0;
 	// génération du pdf
 $mpdf = new \Mpdf\Mpdf();
 ob_start();

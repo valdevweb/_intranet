@@ -8,7 +8,6 @@ if(isset($_POST["submit"])) {
 
     $target_dir= DIR_UPLOAD. 'flash\\';
 
-
     $temp = explode(".", $_FILES["file"]["name"]);
     $filename = $temp[0].date('YmdHis') . '.' . end($temp);
 

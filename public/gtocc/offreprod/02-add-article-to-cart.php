@@ -1,9 +1,7 @@
 <?php
 
 if(isset($_POST['add-article'])){
-		echo "<pre>";
-		print_r($_POST);
-		echo '</pre>';
+
 
 	// on vérifie que le magasin n'a pas ocmmandé un quantité supérieur à celle du stock
 	if($_POST['qte_cde']>$_POST['qte_qlik']){

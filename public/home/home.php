@@ -57,7 +57,7 @@ $newDialLitige=$dialDao->getUnreadDossier();
 
 $gazettes=showThisWeek($pdoBt);
 
-$links=createLinks($pdoBt,$gazettes,$version);
+$links=createLinks($pdoBt,$gazettes);
 $listFlashBt=$flashDao->getListFlashBySite((new DateTime())->format('Y-m-d'),'portail_bt');
 
 // les 2 dernière gazettes opportunités

@@ -30,11 +30,9 @@ require('../../Class/UserHelpers.php');
 //			DECLARATIONS
 //------------------------------------------------------
 
-if(VERSION=="_"){
-	$targetDir = "D:\\www\\_intranet\\upload\\flash\\";
-}else{
-	$targetDir = "D:\\www\\intranet\\upload\\flash\\";
-}
+
+$target_dir= DIR_UPLOAD. 'flash\\';
+
 $errors=[];
 $success=[];
 $infoDao=new OccInfoDao($pdoOcc);
@@ -350,73 +348,73 @@ DEBUT CONTENU CONTAINER
 
 
 <div class="row my-5">
+	<div class="col-xl-1"></div>
+	<div class="col">
+		<h5 class="text-main-blue text-center" id="active_news">Infos en ligne</h5>
+	</div>
+	<div class="col-xl-1"></div>
+</div>
+<?php if (!empty($activeNews)): ?>
+	<div class="row">
 		<div class="col-xl-1"></div>
 		<div class="col">
-			<h5 class="text-main-blue text-center" id="active_news">Infos en ligne</h5>
+			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
+
+				<table class="table bg-white">
+					<thead class="thead-dark">
+						<tr>
+							<th>#</th>
+							<th>Date de saisie</th>
+							<th>Prévisualisation</th>
+							<th>Date de début</th>
+							<th>Date de fin</th>
+							<th>Fichiers joints</th>
+							<th>Modifier</th>
+							<th>Supprimer</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($activeNews as $key => $new): ?>
+
+							<tr>
+								<td><?=$new['id']?></td>
+								<td><?=date('d-m-Y', strtotime($new['date_insert']))?></td>
+								<td><a href="preview.php?file=<?=$new['html_file']?>" target="_blank">voir</a></td>
+								<td>
+									<div class="form-group">
+										<input type="date" class="form-control" name="date_start[<?=$new['id']?>]" value="<?=isset($new['date_start'])? $new['date_start']: ''?>">
+									</div>
+								</td>
+								<td>
+									<div class="form-group">
+										<input type="date" class="form-control" name="date_end[<?=$new['id']?>]" value="<?=isset($new['date_end'])? $new['date_end']: ''?>">
+									</div>
+								</td>
+								<td>
+									<?php if (isset($topublishFiles[$new['id']])): ?>
+										<?php for ($i=0; $i<count($topublishFiles[$new['id']]['pj']);$i++): ?>
+											<?=$topublishFiles[$new['id']]['pj'][$i]?><a href="?delfile=<?=$topublishFiles[$new['id']]['id_file'][$i]?>"><i class="fas fa-trash-alt pl-3"></i></a><br>
+										<?php endfor ?>
+
+									<?php endif ?>
+								</td>
+								<td><a href="<?=$_SERVER['PHP_SELF']?>?modif=<?=$new['html_file']?>"><i class="fas fa-edit"></i></a></td>
+								<td><a href="<?=$_SERVER['PHP_SELF']?>?del=<?=$new['html_file']?>"><i class="fas fa-trash-alt"></i></a></td>
+
+							</tr>
+						<?php endforeach ?>
+
+					</tbody>
+				</table>
+				<div class="text-right pb-5">
+					<button class="btn btn-primary" name="submit">Valider</button>
+				</div>
+			</form>
 		</div>
 		<div class="col-xl-1"></div>
+
 	</div>
-	<?php if (!empty($activeNews)): ?>
-		<div class="row">
-			<div class="col-xl-1"></div>
-			<div class="col">
-				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
-
-					<table class="table bg-white">
-						<thead class="thead-dark">
-							<tr>
-								<th>#</th>
-								<th>Date de saisie</th>
-								<th>Prévisualisation</th>
-								<th>Date de début</th>
-								<th>Date de fin</th>
-								<th>Fichiers joints</th>
-								<th>Modifier</th>
-								<th>Supprimer</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php foreach ($activeNews as $key => $new): ?>
-
-								<tr>
-									<td><?=$new['id']?></td>
-									<td><?=date('d-m-Y', strtotime($new['date_insert']))?></td>
-									<td><a href="preview.php?file=<?=$new['html_file']?>" target="_blank">voir</a></td>
-									<td>
-										<div class="form-group">
-											<input type="date" class="form-control" name="date_start[<?=$new['id']?>]" value="<?=isset($new['date_start'])? $new['date_start']: ''?>">
-										</div>
-									</td>
-									<td>
-										<div class="form-group">
-											<input type="date" class="form-control" name="date_end[<?=$new['id']?>]" value="<?=isset($new['date_end'])? $new['date_end']: ''?>">
-										</div>
-									</td>
-									<td>
-										<?php if (isset($topublishFiles[$new['id']])): ?>
-											<?php for ($i=0; $i<count($topublishFiles[$new['id']]['pj']);$i++): ?>
-												<?=$topublishFiles[$new['id']]['pj'][$i]?><a href="?delfile=<?=$topublishFiles[$new['id']]['id_file'][$i]?>"><i class="fas fa-trash-alt pl-3"></i></a><br>
-											<?php endfor ?>
-
-										<?php endif ?>
-									</td>
-									<td><a href="<?=$_SERVER['PHP_SELF']?>?modif=<?=$new['html_file']?>"><i class="fas fa-edit"></i></a></td>
-									<td><a href="<?=$_SERVER['PHP_SELF']?>?del=<?=$new['html_file']?>"><i class="fas fa-trash-alt"></i></a></td>
-
-								</tr>
-							<?php endforeach ?>
-
-						</tbody>
-					</table>
-					<div class="text-right pb-5">
-						<button class="btn btn-primary" name="submit">Valider</button>
-					</div>
-				</form>
-			</div>
-			<div class="col-xl-1"></div>
-
-		</div>
-	<?php endif ?>
+<?php endif ?>
 
 </div>
 
@@ -428,12 +426,12 @@ DEBUT CONTENU CONTAINER
 		var myFrame = $("#richText").contents().find('body');
 		myFrame.html(modif);
 	}
-		$('#end').on('click',function(){
-			window.location.replace(location.pathname);
-			richText.document.getElementsByTagName('body')[0].innerHTML="";
-			$('#filename').empty();
+	$('#end').on('click',function(){
+		window.location.replace(location.pathname);
+		richText.document.getElementsByTagName('body')[0].innerHTML="";
+		$('#filename').empty();
 
-		});
+	});
 
 
 	var showingSourceCode=false;

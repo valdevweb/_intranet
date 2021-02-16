@@ -11,11 +11,9 @@ if(isset($_POST['iframe'])){
 
 	$file = $_POST['filename'].'.html';
 
-if(VERSION=="_"){
-	$target_dir = "D:\\www\\_intranet\\upload\\flash\\";
-}else{
-	$target_dir = "D:\\www\\intranet\\upload\\flash\\";
-}
+
+	$target_dir = DIR_UPLOAD."flash\\";
+
 	file_put_contents($target_dir.$file, $_POST['iframe']);
 	function alreadyInDb($pdoOcc){
 		$req=$pdoOcc->prepare("SELECT html_file FROM news WHERE html_file LIKE :html_file");

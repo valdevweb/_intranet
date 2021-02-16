@@ -22,8 +22,7 @@
 		@page{
 			margin-top: 4cm;
 			margin-bottom: 4cm;
-			header: myHeader;
-			footer: myFooter;
+		
 		}
 		.text-center{
 			text-align: center;

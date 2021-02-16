@@ -5,17 +5,6 @@
 		</div>
 	</div>
 
-
-	<?php
-
-	// echo "<pre>";
-	// print_r($paletteCommandable);
-	// echo '</pre>';
-
-
-	?>
-
-
 	<?php if (!empty($paletteCommandable)): ?>
 		<?php foreach ($paletteCommandable as $key => $palette): ?>
 			<?php

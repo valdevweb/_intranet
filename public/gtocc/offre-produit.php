@@ -432,7 +432,7 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
-	<?php 
+	<?php
 	// affichage de la liste des articles gt13 commandables
 	include 'offreprod/11-article-qlik.php';
 	// affich&age palettes en prepa pour bt

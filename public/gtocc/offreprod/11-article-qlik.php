@@ -63,6 +63,7 @@
 							<input type="hidden" name="deee_qlik" value="<?=$assor['deee_qlik']?>">
 							<input type="hidden" name="sorecop" value="<?=$assor['sorecop']?>">
 							<input type="hidden" name="qte_qlik" value="<?=$assor['qte_qlik']?>">
+							<input type="hidden" name="fournisseur_qlik" value="<?=$assor['fournisseur_qlik']?>">
 						</form>
 
 
