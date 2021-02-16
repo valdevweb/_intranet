@@ -1,12 +1,36 @@
 <?php
+
+define("SERVER_NAME", $_SERVER['SERVER_NAME']);
 if (preg_match('/_btlecest/', dirname(__FILE__))){
+	$version='_';
 	define("VERSION",'_');
-	// set_include_path("D:\www\_intranet\_btlecest\\");
-}
-else{
+	define("PORTAIL_FOU","http://".SERVER_NAME."/".VERSION."portail-fournisseurs/" );
+}else{
+	$version='';
 	define("VERSION",'');
-	// set_include_path("D:\www\intranet\btlecest\\");
+	define("PORTAIL_FOU","http://159.180.231.226:8000/".VERSION."portail-fournisseurs/" );
 }
+define("CONSEIL", "http://".SERVER_NAME."/".VERSION."conseil/");
+define("DIR_LOGFILES_CONSULT", "http://".SERVER_NAME."/batchlog/");
+define("DIR_UPLOAD","D:\www\\".VERSION."upload-main\\btlecest\\" );
+define("DIR_LOGFILES", "D:\www\batch_log\\");
+define("DIR_LOTUS_CSV", "D:\btlec\\".VERSION."lotus");
+define("DIR_EXPORT_CSV", "D:\btlec\csv");
+define("PORTAIL","Portail BTlec" );
+define("PORTAIL_CM","http://".SERVER_NAME."/".VERSION."cm/" );
+define("PORTAIL_SAV","http://".SERVER_NAME."/".VERSION."sav/" );
+define("PORTAIL_SAV_HOME","http://".SERVER_NAME."/".VERSION."sav/scapsav/home.php" );
+define("ROOT_PATH","/".VERSION."btlecest");
+define("SITE_ADDRESS", "http://".SERVER_NAME."/".VERSION."btlecest");
+define("URL_UPLOAD","http://".SERVER_NAME."/".VERSION."upload-main/btlecest/" );
+
+
+
+
+
+define("PDF_FOOTER", '<table class="padding-table"><tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>');
+define("PDF_FOOTER_PAGE", '<table class="padding-table full-width"><tr><td class="footer ">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td><td>{PAGENO}{nbpg}</td></tr></table>');
+$okko= 'version : ' . ROOT_PATH;
 
 function connectToDb($dbname) {
 	$host='localhost';
@@ -23,6 +47,7 @@ function connectToDb($dbname) {
 	return  $pdo;
 }
 
+// no dev
 if(!isset($pdoBt)){
 	$pdoBt=connectToDb(VERSION.'btlec');
 }
@@ -62,21 +87,3 @@ if(!isset($pdoExploit)){
 if(!isset($pdoFou)){
 	$pdoFou=connectToDb(VERSION.'fournisseurs');
 }
-
-
-// emplacement fichier csv gessica et ctbt
-define("DIR_IMPORT_GESSICA","D:\btlec\dumps\gessica\\");
-// emplcement enregistrement fichier de log
-define("DIR_LOGFILES", "D:\www\batch_log\\");
-// emplacement consultation fichiers de log
-define("DIR_LOGFILES_CONSULT", "http://172.30.92.53/batchlog/");
-
-define("DIR_LOTUS_CSV", "D:\btlec\\".VERSION."lotus");
-
-define("DIR_EXPORT_CSV", "D:\btlec\csv");
-
-
-define("SITE_ADDRESS", "http://172.30.92.53/".VERSION."btlecest");
-
-define("URL_UPLOAD","http://172.30.92.53/".VERSION."upload/" );
-define("DIR_UPLOAD","D:\www\\".VERSION."intranet\upload\\" );
