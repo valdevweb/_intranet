@@ -32,9 +32,11 @@
 							if($vEtat['occ_etat']==1){
 								$textColor="text-blue";
 								$sumValoOcc+=$vEtat['valo'];
+								$nbTotalDossierOcc+=$vEtat['nbEtat'];
 							}else{
 								$textColor="";
 								$sumValoMain+=$vEtat['valo'];
+								$nbTotalDossierMain+=$vEtat['nbEtat'];
 
 							}
 							$sumValoTotale=$sumValoOcc+ $sumValoMain;
@@ -45,7 +47,7 @@
 								<tr>
 									<td class="heavy bg-red">Valorisation hors occasion</td>
 									<td class="text-right heavy bg-red"><?= number_format((float)$sumValoMain,2,'.',' ')?>&euro;</td>
-									<td></td>
+									<td class="text-right heavy bg-red"><?=$nbTotalDossierMain?> dossiers</td>
 								</tr>
 							<?php endif ?>
 							<tr>
@@ -60,7 +62,7 @@
 							<tr>
 								<td class="bg-light-blue">Valorisation occasion</td>
 								<td class="text-right bg-light-blue"><?= number_format((float)$sumValoOcc,2,'.',' ')?>&euro;</td>
-								<td></td>
+								<td class="text-right bg-light-blue"><?=$nbTotalDossierOcc?> dossiers</td>
 							</tr>
 						<?php endif ?>
 						<tr class="bg-red heavy">
@@ -109,10 +111,9 @@
 		</div>
 	</div>
 
-	<div class="row mt-3">
-		<div class="col text-center">
-			<a href="xl-selected.php" class="btn btn-green"> <i class="fas fa-file-excel pr-3"></i>Exporter la sélection</a>
-			<a href="xl-encours.php" class="btn btn-red"> <i class="fas fa-file-excel pr-3"></i>Exporter la base entière</a>
+<div class="row">
+	<div class="col text-center">
+						<a href="xl-selected.php" class="btn btn-green"><i class="fas fa-file-excel pr-3"></i>Exporter la sélection</a>
 
-		</div>
 	</div>
+</div>

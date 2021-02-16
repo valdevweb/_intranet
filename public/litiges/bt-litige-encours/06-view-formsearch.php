@@ -52,7 +52,7 @@
 						<select class="form-control" name="typo[]" id="typo" multiple>
 							<option value="">Sélectionner</option>
 							<?php
-					
+
 							foreach ($arTypo as $keyTypo =>$value)
 							{
 								$selected="";
@@ -94,11 +94,11 @@
 						</select>
 					</div>
 				</div>
-
-				<div class="col align-self-center text-right">
+			</div>
+			<div class="row">
+				<div class="col text-right">
 					<button class="btn btn-black mr-5" type="submit"  name="search_one"><i class="fas fa-search pr-2"></i>Rechercher</button>
 				</div>
-
 			</div>
 			<div class="row">
 				<div class="col">

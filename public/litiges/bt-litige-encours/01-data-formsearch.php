@@ -9,7 +9,7 @@
 // pour retirer les filtres, l'utilisateur doit cliquer sur le bouton adéquat
 // on recharge la page après traitement des posts pour que les var de session soient utilisées par la requete
 
-if(isset($_POST['search_one'])){
+if(isset($_POST['search_one']) || isset($_POST['export_excel'])){
 	unset($_SESSION['form-data']);
 	unset($_SESSION['form-data-deux']);
 	// date début
@@ -54,8 +54,11 @@ if(isset($_POST['search_one'])){
 			unset($_SESSION['form-data']['centrale']);
 		}
 	}
-
-	header("Location: ".$_SERVER['PHP_SELF'],true,303);
+	if(isset($_POST['export_excel'])){
+		$_SESSION['form_data']['export_excel']=1;
+	}else{
+		header("Location: ".$_SERVER['PHP_SELF'],true,303);
+	}
 }
 
 if(isset($_POST['search_two'])){
