@@ -52,7 +52,7 @@
 							$pj='';
 						}
 						$notif="";
-						if ($action['read_action']==0){
+						if ($action['read_action']==0 && $action['id_contrainte']==5){
 							$notif="<i class='fas fa-bell pl-2 text-green'></i>";
 						}
 						?>

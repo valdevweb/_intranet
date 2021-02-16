@@ -1,10 +1,8 @@
 <?php
-
- // require('../../config/pdo_connect.php');
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
-	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
+	exit;
 }
 //			css dynamique
 //----------------------------------------------------------------
@@ -264,7 +262,7 @@ if(isset($_POST['submit'])){
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
 
-		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail SAV Leclerc'))
+		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
 		->setTo($dest);
 
 		$delivered=$mailer->send($message);

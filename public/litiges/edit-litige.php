@@ -309,13 +309,13 @@ DEBUT CONTENU CONTAINER
 			<h5 class="text-main-blue">Modification des détails articles du dossier :</h5>
 		</div>
 	</div>
-	<?php include 'edit-litige-modif-inc.php' ?>
+	<?php include 'edit-litige\01-modif.php' ?>
 	<div class="row mt-5">
 		<div class="col">
 			<h5 class="text-main-blue">Ajout d'articles à la déclaration :</h5>
 		</div>
 	</div>
-	<?php include 'edit-litige-add-inc.php' ?>
+	<?php include 'edit-litige\02-add.php' ?>
 
 
 	<!-- ./container -->

@@ -9,6 +9,7 @@
 		<?php endif ?>
 	</div>
 </div>
+
 <!-- start row -->
 <div class="row">
 	<div class="col">
@@ -24,7 +25,6 @@
 						<th class="align-top">Typo</th>
 						<th class="align-top text-right valo">Valo</th>
 						<th class="text-center align-top">GT13</th>
-
 						<th class="text-center align-top">Ctrl Stock</th>
 						<th class="text-center align-top">Statué</th>
 						<th class="text-center align-top"><input type="checkbox" name="title" id="main-check"></th>
@@ -76,9 +76,11 @@
 							$bgOccasion="";
 						}
 						$unreadMsg="";
+						$classUnreadMsg="read";
 						if (!empty($unread)) {
 							if(in_array($active['id_main'],$unread)){
 								$unreadMsg="<i class='fas fa-bell pl-1 text-yellow'></i>";
+								$classUnreadMsg="unread";
 							}
 						}
 						$unreadActionSavIco="";
@@ -91,7 +93,7 @@
 						?>
 
 
-						<tr class="<?=$active['etat_dossier'] .' ' .$bgOccasion?>" id="<?=$active['id_main']?>">
+						<tr class="<?=$active['etat_dossier'] .' ' .$bgOccasion .' '. $classUnreadMsg?>" id="<?=$active['id_main']?>">
 							<td class="nowrap"><a href="bt-detail-litige.php?id=<?=$active['id_main']?>"><?=$active['dossier'].$unreadMsg. $unreadActionSavIco?></a></td>
 							<td><?=$active['datecrea']?></td>
 							<td><a href="stat-litige-mag.php?galec=<?=$active['galec']?>"><?=$active['deno']?></a></td>
