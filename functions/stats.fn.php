@@ -75,9 +75,12 @@ function authStat($pdoStat,$page, $action, $err){
 //					page pwd.php
 // on n'a pas de var de session donc on récupère
 //-----------------------------------------------------------
-function pwdStat($pdoStat,$login,$page, $action, $descr, $version)
-{
-
+function pwdStat($pdoStat,$login,$page, $action, $descr){
+		if(VERSION=="_"){
+		$version="dev";
+	}else{
+		$version="prod";
+	}
 	$req=$pdoStat->prepare('INSERT INTO stats_logs (type_log,id_user,site,date_heure,page,action,description)
 		VALUE(:type_log,:id_user,:site,:date_heure,:page,:action,:description)');
 	$req->execute(array(
