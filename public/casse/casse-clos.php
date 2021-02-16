@@ -89,6 +89,8 @@ $success=[];
 
 
 $isFac=checkFac($pdoCasse);
+
+
 $mag=MagHelpers::deno($pdoMag,$isFac['galec']);
 
 
@@ -100,7 +102,7 @@ if(isset($_POST['clos'])){
 	$uploader->setDir($dirUpload);
 	$uploader->allowAllFormats();
 	$uploader->setMaxSize(5);
-	//                      //set max file size to be allowed in MB//
+
 
 	if($uploader->uploadFile('file')){
 		$file =$uploader->getUploadName();
