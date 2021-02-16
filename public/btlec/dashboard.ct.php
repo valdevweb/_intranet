@@ -16,7 +16,7 @@
 			<div class="col l4">
 				<!-- <p class="center">Choisir un service</p> -->
 				<select class="browser-default select-service"  name="services" id="services"  onchange="this.form.submit()">
-					<option name='service' value='' >toutes les demandes</option>
+					<option name='service' value="" >toutes les demandes</option>
 					<?php foreach ($listServicesContact as $key => $service): ?>
 						<option name='service' value='<?= $service['id']?>' <?= checkSelectedDash($service['id'])?>><?= $service['service']?></option>
 					<?php endforeach ?>
