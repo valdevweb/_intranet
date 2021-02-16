@@ -213,7 +213,10 @@ td.nowrap{
   font-size: 1.2rem;
 }
 
-
+.strikethrough{
+  text-decoration: line-through;
+  text-decoration-color: red;
+}
 
 .opacity-un{
   opacity: 0.8
