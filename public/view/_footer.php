@@ -28,9 +28,9 @@
 
   </footer>
 <!--  Scripts-->
-<script src="<?= $md_js ?>"></script>
-<script src="<?= $main_js ?>"></script>
-<script src="<?= $dashboard_js ?>"></script>
+<script src="<?=ROOT_PATH."/vendor/materialize/js/materialize.js" ?>"></script>
+<script src="<?=ROOT_PATH."/public/js/main.js"?>"></script>
+<script src="<?=ROOT_PATH."/public/js/dashboard-select.js"?>"></script>
 
 
 </body>

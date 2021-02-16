@@ -26,7 +26,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!--  Scripts-->
 	<!-- on charge jquery dès le début pour pouvoir ajouter dynamiquement des scripts qui utilisent jquery -->
-	<script src="<?=$jquery ?>"></script>
+	<script src="<?=ROOT_PATH."/vendor/jquery/jquery-3.2.1.js"?>"></script>
 	<title>Portail BTLec</title>
 </head>
 <body>
