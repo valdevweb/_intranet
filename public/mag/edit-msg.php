@@ -48,8 +48,8 @@ function formatPJ($incFileStrg){
 		// on transforme la chaine de carctère avec tous les liens (séparateur : ; ) en tableau
 		$incFileStrg=explode( '; ', $incFileStrg );
 		for ($i=0;$i<count($incFileStrg);$i++){
-		$ico="<i class='fa fa-paperclip fa-lg pl-5 pr-3 hvr-pop' aria-hidden='true'  ></i>";
-		$href.= "<a class='pj' href='".URL_UPLOAD."mag/" . $incFileStrg[$i] . "' target='blank'>" .$ico ."ouvrir</a>";
+			$ico="<i class='fa fa-paperclip fa-lg pl-5 pr-3 hvr-pop' aria-hidden='true'  ></i>";
+			$href.= "<a class='pj' href='".URL_UPLOAD."mag/" . $incFileStrg[$i] . "' target='blank'>" .$ico ."ouvrir</a>";
 		}
 		$href="<p>".$href."</p>";
 
@@ -136,9 +136,7 @@ if(isset($_POST['post-reply'])){
 	else{
 		$descr="succès envoi message mag";
 	}
-	$page=basename(__file__);
-	$action="ajout message mag à une demande existante";
-	addRecord($pdoStat,$page,$action, $descr);
+
 }
 
 // btn nav
@@ -264,6 +262,7 @@ include('../view/_navbar.php');
 						</div>
 						<div class="input-field text-right">
 							<button class="btn" type="submit" name="post-reply">Envoyer</button>
+							<div id="wait"></div>
 						</div>
 
 					</form>
@@ -291,19 +290,27 @@ include('../view/_navbar.php');
 				$('#p-add-more').prepend('<p><input type="file" name="file[]"></p>');
 				$('input[type="file"]').val();
 			});
-		});
-	</script>
+
+			$("#mag-msg").submit(function(e){
+				if($( $("#reply").val()!="")){
+					$('button[name="post-reply"]').hide();
+					$('#wait').text("Merci de patienter...");
+
+				}
+			});
+			});
+		</script>
 
 
 
-	<?php
+		<?php
 
 
-	include('../view/_footer.php');
-	?>
+		include('../view/_footer.php');
+		?>
 
-</body>
-</html>
+	</body>
+	</html>
 
 
 

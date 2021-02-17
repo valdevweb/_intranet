@@ -58,7 +58,7 @@
 							<h3 class="blue-text text-darken-2"><i class="fa fa-pencil" aria-hidden="true"></i>VOTRE DEMANDE</h3>
 						</div>
 
-						<form class='down' action="<?=htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'] ?>" method="post" enctype="multipart/form-data">
+						<form class='down' id="msg-form" action="<?=htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'] ?>" method="post" enctype="multipart/form-data">
 							<!-- <form class='down' action="" method="post" enctype="multipart/form-data"> -->
 
 								<!--OBJET -->
@@ -96,48 +96,65 @@
 								<div class="row">
 									<div class="col l12">
 										<!-- <div class="row align-right"> -->
-											<p class="align-right"><button class="btn" type="submit" name="post-msg">Envoyer</button></p>
+											<p class="align-right"><input class="btn" type="submit" name="post-msg" id="post-msg"></p>
+											<p class="align-right" id="wait"></p>
 											<!-- </div> -->
 										</div>
 									</div>
+								</form>
+							</div>
+						</div>
+					</div><!--fin row1 -->
+					<?php if (!empty($errors)): ?>
+						<div class='row'>
+							<div class='col l12'>
+								<?php foreach ($errors as $key => $err): ?>
+									<p class='warning-msg'><?=$err?></p>
+								<?php endforeach ?>
 
-									<!-- zone affichage erreurs -->
-									<?php
-									if(!empty($err)){
-										echo "<div class='row'><div class='col l12'><p class='warning-msg'>";
-										foreach ($errors as $error) {
-											echo  $error ."</p></div>";
-										}
-									}
-									?>
-								</p>
-								<?php
-								if(!empty($success)){
-									echo"<div class='row'><div class='col l12'><p class='success-msg'>";
-									foreach ($success as $s) {
-										echo  $s ."</p>";
+							</div>
+						</div>
+					<?php endif ?>
+					<?php if (!empty($success)): ?>
+						<div class='row'>
+							<div class='col l12'>
+								<?php foreach ($success as $key => $s): ?>
+									<p class='success-msg'><?=$s?></p>
+								<?php endforeach ?>
+
+							</div>
+						</div>
+					<?php endif ?>
+
+
+				</div> <!--container -->
+
+				<div class="down"></div>
+				<div class="down"></div>
+
+				<script type="text/javascript">
+					$(document).ready(function (){
+
+
+						$('#addmore').click(function(){
+							$('#p-add-more').prepend('<p><input type="file" name="file[]"></p>');
+							$('input[type="file"]').val();
+						});
+
+						$("#msg-form").submit(function(e){
+							if($("#email").val()!="" && $("#objet").val()!="" && $("#msg").val()!="" && $("#nom").val()!=""){
+								if ($("#email").val()) {
+
+									var email = $("#email").val();
+									var filter = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+									if (filter.test(email)) {
+										$('input[name="post-msg"]').hide();
+										$('#wait').text("Merci de patienter...");
 									}
 								}
-								?>
-							</form>
-						</div>
-					</div>
-				</div><!--fin row1 -->
-
-			</div> <!--container -->
-
-			<div class="down"></div>
-			<div class="down"></div>
-
-			<script type="text/javascript">
-				$(document).ready(function (){
-
-
-					$('#addmore').click(function(){
-						$('#p-add-more').prepend('<p><input type="file" name="file[]"></p>');
-						$('input[type="file"]').val();
+							}
+						});
 					});
-				});
-			</script>
+				</script>
 
 

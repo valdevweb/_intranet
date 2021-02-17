@@ -5,6 +5,7 @@ if(!isset($_SESSION['id'])){
 	exit();
 }
 //----------------------------------------------------------------
+require '../../vendor/autoload.php';
 
 require '../../Class/BtUserManager.php';
 
@@ -41,7 +42,7 @@ function addMsg($db,$id_service,$inc_file){
 		':code_bt'		=>$_SESSION['code_bt'],
 		':centrale'		=>$_SESSION['centrale']
 	));
-	$req->fetch(PDO::FETCH_ASSOC);
+
 	return $db->lastInsertId();
 }
 
@@ -56,48 +57,19 @@ $service=$userManager->getService($pdoUser,$_GET['id']);
 $serviceMembers=$userManager->getListUserService($pdoBt,$_GET['id']);
 
 
-$tplForBtlec="../mail/new_mag_msg.tpl.html";
-$tplForMag="../mail/ar_mag.tpl.html";
-mb_internal_encoding('UTF-8');
-$objBt="PORTAIL BTLec - nouvelle demande : " .$_SESSION['nom'] ." pour le service " . mb_encode_mimeheader($service['service']);
-$objMag="PORTAIL BTLec - demande envoyée";
-mb_internal_encoding('UTF-8');
-$objMag = mb_encode_mimeheader($objMag);
 
 $uploadDir= DIR_UPLOAD. 'mag\\';
 
-
-
-$descr="page demande mag au service ".$service['slug'] ;
-$page=basename(__file__);
-$action="consultation";
-addRecord($pdoStat,$page,$action, $descr);
-
-
-// templates et sujet des mails envoyés à la soumission du formulaire
-// un mail informer le service qu'une demande à été posté
-// un mail au mag pour lui confirmer que sa demande a été envoyé
-
-
-
-//test valeur $_FILE, si renvoi true => au moins un fichier à uploader
-
-//----------------------------------------------------------------
-//			traitement formulaire : ajout à db et upload si fichier
-//----------------------------------------------------------------
-//initialisation des tableau de message d'erreur de succès
 $errors=[];
 $success=[];
 $fileList="";
 //soumission du formulaire
 if(isset($_POST['post-msg'])){
-	extract($_POST);
-	// en dehors du file aucun champ ne doit être vide
-	if(empty($objet) || empty($msg) || empty($name) || empty($email)){
+	if(empty($_POST['objet']) || empty($_POST['msg']) || empty($_POST['name']) || empty($_POST['email'])){
 		$errors[]= "merci de remplir tous les champs";
 	}
 
-	if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+	if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
 		$errors[]='Veuillez indiquez une adresse email valide';
 	}
 	//formulaire conforme
@@ -125,55 +97,60 @@ if(isset($_POST['post-msg'])){
 			}
 		}
 	}
+	if(empty($errors)){
+		$lastId=addMsg($pdoBt,$_GET['id'], $fileList);
+		if($lastId>0){
 
-
-		//------------------------------
-		//			TRAITEMENT COMMUN
-		//			ajoute le msg dans db et
-		//			recup l'id du msg posté pour génération lien dans le mail : index.php?$lastId
-		//------------------------------
-
-	if(count($errors)==0){
-		if($lastId=addMsg($pdoBt,$_GET['id'], $fileList)){
 				//créa du lien pour le mail  BT
 			$link="Cliquez <a href='" .SITE_ADDRESS."/index.php?btlec/answer.php?msg=".$lastId."'>ici pour consulter le message</a>";
 			$linkMag="Cliquez <a href='".SITE_ADDRESS."/index.php?mag/edit-msg.php?msg=".$lastId."'>ici pour revoir votre demande</a>";
-				//------------------------------
-				//			ajout enreg dans stat
-				//------------------------------
-			$descr="demande mag au service ".$service['slug'] ;
-			$page=basename(__file__);
-			$action="envoi d'une demande";
-			addRecord($pdoStat,$page,$action, $descr);
-				//-----------------------------------------
-				//				envoi des mails
-				//-----------------------------------------
 			if(VERSION=="_"){
-				$dest="valerie.montusclat@btlec.fr";
+				$dest=["valerie.montusclat@btlec.fr"];
 			}else{
-				$dest=$service['mailing'];
-
+				$dest=[$service['mailing']];
 			}
-				// echo "<pre>";
-				// print_r($dest);
-				// echo '</pre>';
 
-			if(sendMail($dest,$objBt,$tplForBtlec,$name,$_SESSION['nom'], $link))
-			{
-				array_push($success,"Email envoyé avec succès");
-				$contentTwo="";
-				sendMail($email,$objMag,$tplForMag,$service['service'],$contentTwo,$linkMag);
-					//on vide le formulaire et on redirige sur la page histo demande mag
-				unset($objet,$msg,$name,$email);
+			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$mailer = new Swift_Mailer($transport);
+
+			$htmlMail = file_get_contents('../mail/new_mag_msg.tpl.html');
+			$htmlMail=str_replace('{DEMANDEUR}',$_POST['name'],$htmlMail);
+			$htmlMail=str_replace('{MAGASIN}',$_SESSION['nom'],$htmlMail);
+			$htmlMail=str_replace('{LINK}',$link,$htmlMail);
+			$subject="PORTAIL BTLec - nouvelle demande : " .$_SESSION['nom'] ." pour le service " . $service['service'];
+			$message = (new Swift_Message($subject))
+			->setBody($htmlMail, 'text/html')
+			->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec'))
+			->setTo($dest);
+
+			if (!$mailer->send($message, $failures)){
+				$errors[]='impossible d\'envoyer le mail à BTlec';
+				echo "erreur";
+
+			}else{
+				$success[]="mail envoyé avec succés";
+			}
+
+			$htmlMail = file_get_contents('../mail/ar_mag.tpl.html');
+			$htmlMail=str_replace('{SERVICE}',$service['service'],$htmlMail);
+			$htmlMail=str_replace('{LINK}',$linkMag,$htmlMail);
+			$subject="PORTAIL BTLec - demande envoyée";
+			$message = (new Swift_Message($subject))
+			->setBody($htmlMail, 'text/html')
+			->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec'))
+			->setTo(array($_POST['email']));
+
+			if (!$mailer->send($message, $failures)){
+				$errors[]='impossible d\'envoyer le mail au magasin';
+			}else{
+				$success[]="mail envoyé avec succés";
+			}
+
+			if(empty($errors)){
+				unset($_POST);
 				header('Location:'. ROOT_PATH. '/public/mag/histo-mag.php');
-
-
-
 			}
-			else
-			{
-				$errors[]= "Echec d'envoi d'email";
-			}
+
 		}
 		else{
 			$errors[]="Echec : votre demande n'a pas pu être enregistrée";
