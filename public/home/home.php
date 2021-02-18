@@ -7,6 +7,7 @@ if(!isset($_SESSION['id'])){
 if($_SESSION['id']==1531){
 	header('Location:../gtocc/offre-produit.php');
 }
+require '../../config/db-connect.php';
 
 //----------------------------------------------------------------
 //	css dynamique

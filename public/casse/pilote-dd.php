@@ -19,6 +19,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 // $action="";
 // // addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
 // addRecord($pdoStat,$page,$action, $descr, 208);
+require '../../config/db-connect.php';
 
 require_once '../../vendor/autoload.php';
 
@@ -74,7 +75,7 @@ $table.='</table>';
 	print_r($dest);
 	print_r($cc);
 	echo '</pre>';
-	
+
 $htmlMail = file_get_contents('mail-pilote-dd.php');
 $htmlMail=str_replace('{MAG}',$expInfo[0]['btlec'],$htmlMail);
 $htmlMail=str_replace('{NB}',$nb,$htmlMail);
@@ -116,7 +117,7 @@ if($delivered !=0)
 	}
 }
 
-	
+
 
 //------------------------------------------------------
 //			DECLARATIONS

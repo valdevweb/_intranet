@@ -16,26 +16,13 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //	DESCR
 //---------------------------------------
 /*
-
 Page qui sert à saisir une déclaration initiale => GET['idBa']= article slectionné dans bt-casse dashboard
 ou à modifier /enrichier une déclaration existante GET[idKc]
-
-
-
 */
 
 
-//---------------------------------------
-//	ajout enreg dans stat
-//---------------------------------------
-// require "../../functions/stats.fn.php";
-// $descr="saisie déclaration mag hors qlik" ;
-// $page=basename(__file__);
-// $action="";
-// // addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
-// addRecord($pdoStat,$page,$action, $descr, 208);
 
-// require_once '../../vendor/autoload.php';
+require '../../config/db-connect.php';
 
 require ('../../Class/Form/Select.php');
 require ('../../Class/Helpers.php');

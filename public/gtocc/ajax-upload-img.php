@@ -1,6 +1,7 @@
 <?php
 include('../../config/config.inc.php');
 
+require '../../config/db-connect.php';
 
 $response = ["success"=>false, "message"=>"Bad request"];
 if(isset($_POST["submit"])) {

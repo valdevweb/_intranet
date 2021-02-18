@@ -15,6 +15,8 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //			REQUIRES
 //------------------------------------------------------
 // require_once '../../vendor/autoload.php';
+include '../../config/db-connect.php';
+
 require_once '../../Class/MagDao.php';
 require_once '../../Class/Mag.php';
 require_once '../../Class/UserHelpers.php';

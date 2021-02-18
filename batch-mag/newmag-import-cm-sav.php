@@ -6,9 +6,11 @@ else{
 	set_include_path("D:\www\intranet\btlecest\\");
 }
 
-include 'config\config.inc.php';
-include 'functions\tasklog.fn.php';
-include 'batch-mag\utils.fn.php';
+
+include 'config/config.inc.php';
+include 'config/db-connect.php';
+include 'functions/tasklog.fn.php';
+include 'batch-mag/utils.fn.php';
 
 
 function getMagAttribution($pdoUser){

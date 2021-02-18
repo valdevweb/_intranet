@@ -1,11 +1,11 @@
 <?php
-// ---------------------------------------------------
-// SESSION & AUTOLOAD
-//----------------------------------------------------
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
+	exit();
 }
+require '../../config/db-connect.php';
+
 
 //----------------------------------------------
 // css dynamique

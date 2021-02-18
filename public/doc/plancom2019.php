@@ -6,6 +6,8 @@ require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
 }
+require '../../config/db-connect.php';
+
 require '../view/_head.php';
 require '../view/_navbar.php';
 

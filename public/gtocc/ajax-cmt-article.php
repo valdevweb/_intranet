@@ -1,5 +1,7 @@
 <?php
 include('../../config/autoload.php');
+require '../../config/db-connect.php';
+
 function alreadyCmt($pdoOcc){
 	$req=$pdoOcc->prepare("SELECT * FROM articles_qlik_cmt WHERE article= :article");
 	$req->execute([

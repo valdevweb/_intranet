@@ -1,5 +1,7 @@
 <?php
 include('../../config/config.inc.php');
+require '../../config/db-connect.php';
+
 // htmlfile
 function getFileNews($pdoOcc){
     $req=$pdoOcc->prepare("SELECT html_file, id FROM news WHERE html_file LIKE :html_file");

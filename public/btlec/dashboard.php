@@ -5,6 +5,9 @@ if(!isset($_SESSION['id'])){
 	exit();
 }
 //----------------------------------
+require '../../config/db-connect.php';
+
+
 require('../../functions/form.fn.php');
 require('../../Class/BtUserManager.php');
 require('../../Class/MsgManager.php');

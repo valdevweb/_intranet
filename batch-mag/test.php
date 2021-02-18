@@ -1,5 +1,6 @@
 <?php
 include 'config.inc.php';
+include 'config\db-connect.php';
 include 'functions\tasklog.fn.php';
 
 $fieldseparator = ",";

@@ -6,7 +6,9 @@ else{
 	set_include_path("D:\www\intranet\btlecest\\");
 }
 
-include 'config\config.inc.php';
+
+include 'config/config.inc.php';
+include 'config/db-connect.php';
 
 // penser à ajouter au batch le drop table fournisseurs.fournisseurs et la réinsertion
 // INSERT INTO _fournisseurs.fournisseurs (id, fournisseur) SELECT cnuf, qlik.fournisseurs.fournisseur FROM `fournisseurs` GROUP BY cnuf

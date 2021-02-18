@@ -1,5 +1,6 @@
 <?php
 require('../../config/autoload.php');
+require '../../config/db-connect.php';
 
 $id=$_POST['id'];
 // $arrayIdTr=explode("_",$idTr);

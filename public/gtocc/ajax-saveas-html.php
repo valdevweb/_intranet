@@ -1,5 +1,7 @@
 <?php
 include('../../config/autoload.php');
+require '../../config/db-connect.php';
+
 if(isset($_POST['iframe'])){
 
 

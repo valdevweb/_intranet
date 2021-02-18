@@ -8,6 +8,7 @@ if(!isset($_SESSION['id'])){
 unset($_SESSION['goto']);
 
 
+include '../../config/db-connect.php';
 
 require '../../functions/upload.fn.php';
 require '../../functions/mail.fn.php';

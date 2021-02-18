@@ -11,8 +11,10 @@ else{
 
 }
 
-include 'config\config.inc.php';
-include 'functions\tasklog.fn.php';
+
+include 'config/config.inc.php';
+include 'config/db-connect.php';
+include 'functions/tasklog.fn.php';
 
 function undoneImport($pdoMag){
 	$req=$pdoMag->query("SELECT * FROM lotus_imports WHERE done=0");

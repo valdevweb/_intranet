@@ -5,7 +5,10 @@
 require('../../config/autoload.php');
 if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
+	exit();
 }
+require '../../config/db-connect.php';
+
 include('../view/_head-bt.php');
 include('../view/_navbar.php');
 

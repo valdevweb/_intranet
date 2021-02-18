@@ -14,6 +14,8 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 //			REQUIRES
 //------------------------------------------------------
+require '../../config/db-connect.php';
+
 require_once '../../vendor/autoload.php';
 require '../../Class/Uploader.php';
 require '../../Class/MagHelpers.php';
@@ -108,7 +110,7 @@ if(isset($_POST['clos'])){
 		$file =$uploader->getUploadName();
 			echo "<pre>";
 			print_r($file);
-			echo '</pre>';			
+			echo '</pre>';
 	}
 	else{//upload failed
 		$errors[]=$uploader->getMessage();

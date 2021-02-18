@@ -1,5 +1,7 @@
 <?php
 require 'config/config.inc.php';
+require 'config/db-connect.php';
+
 //https://www.codexworld.com/dynamic-dependent-select-box-using-jquery-ajax-php/
 // $_POST['centrale']="SCADIF";
 

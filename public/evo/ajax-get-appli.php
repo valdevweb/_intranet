@@ -2,6 +2,8 @@
 
 
 include('../../config/autoload.php');
+require '../../config/db-connect.php';
+
 include('../../Class/EvoManager.php');
 require "../../functions/form.fn.php";
 require "../../Class/BtUserManager.php";

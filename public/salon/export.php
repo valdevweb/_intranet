@@ -1,5 +1,7 @@
 <?php
 require('../../config/autoload.php');
+require '../../config/db-connect.php';
+
 require '../../functions/Csv.php';
 
 

@@ -7,7 +7,8 @@ else{
 	set_include_path("D:\www\intranet\btlecest\\");
 }
 
-include 'config\config.inc.php';
+include 'config/config.inc.php';
+include 'config/db-connect.php';
 
 function getBasearticle($pdoQlik){
 	$req=$pdoQlik->query("SELECT * FROM basearticles LIMIT 1");

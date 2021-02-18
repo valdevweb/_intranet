@@ -6,8 +6,10 @@ else{
 	set_include_path("D:\www\intranet\btlecest\\");
 }
 
-include 'config\config.inc.php';
-include 'functions\tasklog.fn.php';
+
+include 'config/config.inc.php';
+include 'config/db-connect.php';
+include 'functions/tasklog.fn.php';
 
 /*
 vérif dans table imports si import avec done à 0 => si oui, la table lotus_ld a été changée donc :

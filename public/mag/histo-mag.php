@@ -4,6 +4,8 @@ if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
 	exit();
 }
+require '../../config/db-connect.php';
+
 //----------------------------------------------------------------
 require_once '../../functions/form.fn.php';
 require "../../functions/stats.fn.php";

@@ -15,6 +15,8 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //			REQUIRES
 //------------------------------------------------------
 require_once '../../vendor/autoload.php';
+require '../../config/db-connect.php';
+
 require('casse-getters.fn.php');
 require ('../../Class/Helpers.php');
 
@@ -336,7 +338,7 @@ include('../view/_navbar.php');
 							echo '<a href="'.URL_UPLOAD.'casse\FACTCASSE_'.date('dmy').'.csv" class="flash"><button type="button" class="button btn-plus">Télécharger</button></a>';
 						}
 					}else{
-					
+
 												echo '<button type="button" class="button btn-plus">Télécharger :<br>';
 
 						for($i=1;$i<=$nbFac;$i++){

@@ -5,6 +5,7 @@ if(!isset($_SESSION['id'])){
 	exit();
 }
 
+include '../../config/db-connect.php';
 
 
 require '../../functions/mail.fn.php';

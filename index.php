@@ -1,6 +1,7 @@
 <?php
 
 require('config/autoload.php');
+require 'config/db-connect.php';
 require 'functions/stats.fn.php';
 require('Class/CmRdvDao.php');
 require('Class/FlashDao.php');

@@ -11,6 +11,8 @@ $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
+require '../../config/db-connect.php';
+
 require('../../Class/MsgManager.php');
 require('../../Class/MagDao.php');
 

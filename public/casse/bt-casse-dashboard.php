@@ -14,6 +14,8 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 //			INCLUDES
 //------------------------------------------------------
+require '../../config/db-connect.php';
+
 require('../../Class/Table.php');
 require('../../Class/MagHelpers.php');
 require('casse-getters.fn.php');

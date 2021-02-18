@@ -4,6 +4,7 @@ if(!isset($_SESSION['id'])){
 	echo "pas de variable session";
 	header('Location:'. ROOT_PATH.'/index.php');
 }
+require '../../config/db-connect.php';
 
 
 

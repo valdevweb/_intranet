@@ -12,6 +12,9 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 $errors=[];
 $success=[];
+
+require '../../config/db-connect.php';
+
 require('casse-getters.fn.php');
 require ('../../Class/Helpers.php');
 require('../../Class/Table.php');

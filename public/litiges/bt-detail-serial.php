@@ -1,5 +1,6 @@
 <?php
 require('../../config/autoload.php');
+require '../../config/db-connect.php';
 
 if(!empty($_POST['idprod'])){
 	$req=$pdoLitige->prepare("SELECT serials FROM details WHERE id=:id");

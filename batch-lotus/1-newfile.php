@@ -11,8 +11,10 @@ else{
 
 }
 
-include 'config\config.inc.php';
-include 'functions\tasklog.fn.php';
+
+include 'config/config.inc.php';
+include 'config/db-connect.php';
+include 'functions/tasklog.fn.php';
 
 function addNewFile($pdoMag, $newFile){
 	$req=$pdoMag->prepare("INSERT INTO lotus_imports (date_import, file) VALUES (:date_import, :file)");

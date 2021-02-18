@@ -1,6 +1,7 @@
 <?php
 
 require '../../config/config.inc.php';
+include '../../config/db-connect.php';
 
 
 $req=$pdoMag->prepare("SELECT racine_list, btlec_sca,deno_sca FROM sca3 WHERE racine_list= :racine_list");

@@ -5,6 +5,7 @@ if(!isset($_SESSION['id'])){
 	exit();
 }
 
+require '../../config/db-connect.php';
 require('casse-getters.fn.php');
 require_once '../../vendor/autoload.php';
 

@@ -17,17 +17,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 // require_once '../../vendor/autoload.php';
 
-
-
-//---------------------------------------
-//	ajout enreg dans stat
-//---------------------------------------
-// require "../../functions/stats.fn.php";
-// $descr="saisie déclaration mag hors qlik" ;
-// $page=basename(__file__);
-// $action="";
-// // addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
-// addRecord($pdoStat,$page,$action, $descr, 208);
+require '../../config/db-connect.php';
 
 
  //------------------------------------------------------
