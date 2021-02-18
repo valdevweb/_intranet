@@ -83,6 +83,14 @@ class FlashDao{
 		]);
 		return $req->rowCount();
 	}
+
+	public function deleteFlash($id){
+		$req=$this->pdo->prepare("DELETE FROM flash_info WHERE id= :id");
+		$req->execute([
+			':id'		=>$id
+		]);
+	}
+
 }
 
 
