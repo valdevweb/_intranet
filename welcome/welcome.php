@@ -1,5 +1,6 @@
 <?php
 include('../config/config.inc.php');
+include('../config/db-connect.php');
 
 define('JOUR',array('dim','lun','mar','mer','jeu','vend','sam'));
 define('DAYS', array( 'sun' , 'mon' , 'tue' , 'wed' , 'thu' , 'fri' , 'sat'));
