@@ -341,11 +341,11 @@ DEBUT CONTENU CONTAINER
 		<div class="col-lg-1"></div>
 	</div>
 
-	<?php include 'base-mag-filtre.php' ?>
+	<?php include 'base-mag/01-filtre.php' ?>
 
-	<?php include 'base-mag-export.php' ?>
+	<?php include 'base-mag/02-export.php' ?>
 
-	<?php include 'base-mag-tableau.php' ?>
+	<?php include 'base-mag/03-tableau.php' ?>
 	<!-- ./container -->
 </div>
 
