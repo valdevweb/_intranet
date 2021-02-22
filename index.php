@@ -209,56 +209,43 @@ if(!empty($revRes))
 <!--  												MODAL CONNEXION FORM 																			 -->
 <!-- ############################################################################################################################### -->
 
-<div class="modal" id="connexion">
-	<div class="modal-content">
-		<p class="text-center text-primary">Portails BT et SAV</p>
-		<form action="<?php echo $_SERVER['PHP_SELF'];?>"  method="post">
-			<div class="modal-form-row">
-				<div class="input-field">
-					<input id="login" name="login" placeholder="identifiant" type="text" class="validate" autofocus >
-					<label for="login"></label>
-				</div>
-			</div>
-			<div class="modal-form-row">
-				<div class="input-field">
-					<input id="pwd" name="pwd" placeholder="mot de passe" type="password">
-					<label for="pwd"></label>
-				</div>
-			</div>
-			<input type='hidden' name='goto' value='<?php if(!empty($gotoMsg)){echo $gotoMsg;} ?>'>
-			<div class="modal-form-row text-center">
-				<button class="btn waves-effect waves-light light-blue darken-3" type="submit" name="connexion">Connexion
-				</button>
-			</div>
-		</form>
-		<p class="identif"><a class="send-mail-to" href="pwd.php"> <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Demander mes identifiants</a></p>
-	</div>
+
 	<!-- 	<div class="modal-footer">
 			<p class=text-center><a href="#!" class="modal-action modal-close">fermer</a></p>
 		</div> -->
-	</div>
-	<!--  Scripts-->
-	<script src="vendor/jquery/jquery-3.2.1.js"></script>
-	<script src="vendor/materialize/js/materialize.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function()
-		{
-		// ouverture fenetre modal en auto : dernier modal s'ouvre en 1er
-		$('#connexion').modal();
-		$('#connexion').modal('open');
-
-
-
-
-
-
-
-	});
-
-
-
-</script>
-
-
-</body>
-</html>
+		<div class="modal" id="connexion">
+			<div class="modal-content">
+				<p class="text-center text-primary">Portails BT et SAV</p>
+				<form action="<?php echo $_SERVER['PHP_SELF'];?>"  method="post">
+					<div class="modal-form-row">
+						<div class="input-field">
+							<input id="login" name="login" placeholder="identifiant" type="text" class="validate" autofocus >
+							<label for="login"></label>
+						</div>
+					</div>
+					<div class="modal-form-row">
+						<div class="input-field">
+							<input id="pwd" name="pwd" placeholder="mot de passe" type="password">
+							<label for="pwd"></label>
+						</div>
+					</div>
+					<input type='hidden' name='goto' value='<?php if(!empty($gotoMsg)){echo $gotoMsg;} ?>'>
+					<div class="modal-form-row text-center">
+						<button class="btn waves-effect waves-light light-blue darken-3" type="submit" name="connexion">Connexion
+						</button>
+					</div>
+				</form>
+				<p class="identif"><a class="send-mail-to" href="pwd.php"> <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>Demander mes identifiants</a></p>
+			</div>
+		</div>
+		<!--  Scripts-->
+		<script src="vendor/jquery/jquery-3.2.1.js"></script>
+		<script src="vendor/materialize/js/materialize.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$('#connexion').modal();
+				$('#connexion').modal('open');
+			});
+		</script>
+	</body>
+	</html>
