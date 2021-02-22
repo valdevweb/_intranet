@@ -5,6 +5,7 @@ if(!isset($_SESSION['id'])){
 	exit();
 }
 
+require '../../Class/Db.php';
 
 
 
