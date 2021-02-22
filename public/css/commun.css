@@ -440,7 +440,11 @@ border: 1px solid #0d47a1;
     border-color: #d6d8db;
 
 }
-
+.alert-orange{
+  background-color: #fde8cb;
+  color:  #da810a;
+  border:  #b76d09 1px solid;
+}
 
 .bg-verylight-blue{
     color: #004085;

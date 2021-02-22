@@ -111,17 +111,6 @@ function formatPJ($incFileStrg){
 
 
 
-// id du message auquel bt répond donc $_GET['msg']
-
-// if(isset($_POST['post-reply'])){
-// 		echo "<pre>";
-// 		print_r($_POST);
-// 		print_r($_FILES);
-// 		echo '</pre>';
-
-// }
-
-
 if(isset($_POST['post-reply'])){
 	if((empty($_POST['reply']))){
 		echo "merci de remplir tous les champs";
@@ -317,263 +306,260 @@ if(isset($_POST['closing'])){
 	}
 
 }
-include '../view/_head.php';
+include '../view/_head-bt.php';
 include '../view/_navbar.php';
 
 ?>
 <div class="container">
-	<!--nav -->
+
 	<div class="row">
-		<div class="col l12">
-			<p><a href="dashboard.php" onClick="javascript:document.location.reload(true)" class="orange-text text-darken-2"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
+		<div class="col">
+			<h1 class="text-main-blue py-5">Demande n° <?=$oneMsg['idMsg']?></h1>
+		</div>
+		<div class="col-auto pt-2">
+			<a href="dashboard.php"><div class="btn btn-primary">Retour</div></a>
+
 		</div>
 	</div>
 
-
-	<h1 class="blue-text text-darken-4">Service <?=$oneMsg['service']?></h1>
-	<br><br>
-	<div class='row' id='erreur'>
-		<p class="red">
+	<div class="row">
+		<div class="col-lg-1"></div>
+		<div class="col">
 			<?php
-			if(!empty($err)){
-
-				foreach ($err as $error) {
-					echo  $error ."</br>";
-				}
-			}
-			?>
-		</p>
-	</div>
-
-	<div class="row mag">
-		<div class="col l12 reply">
-			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Demande n° <?= $oneMsg['idMsg']. ' : '. $oneMsg['objet']?></h4>
-			<hr>
-			<br><br><br>
-			<div class="inside-mag">
-				<h5>Magasin : <?= $oneMsg['deno'] .' - ' .$oneMsg['galec']  ?></h5>
-				<p><span class="labelFor">Objet : </span><?=$oneMsg['objet'] ?></p>
-				<p><span class="labelFor">Interlocuteur : </span><?=$oneMsg['who'] ?></p>
-				<p><span class="labelFor">Date : </span><?= date('d-m-Y à H:i', strtotime($oneMsg['date_msg'])); ?></p>
-				<p><span class="labelFor">Message : </span><br><?=$oneMsg['msg'] ?></p>
-
-				<?php
-				if(formatPJ($oneMsg['inc_file']))
-				{
-					echo '<p class="pj"><span class="labelFor">Pièce(s) jointe(s)</span>'.formatPJ($oneMsg['inc_file']) .'</p>';
-				}
-
-				?>
-			</div>
-		</div>
-	</div>
-	<p>&nbsp;</p>
-	<?php foreach($replies as $reply): ?>
-		<?php
-	//reponse mag ou bt
-		if(empty($reply['fullname'])){
-			$magOrBt='mag';
-			$who= $oneMsg['who'];
-		}
-		else{
-			$who=$reply['fullname'];
-			$magOrBt='bt';
-		}
-
-
-		?>
-		<!-- affichage des échanges -->
-		<div class="row <?=$magOrBt?>">
-			<div class="col l12">
-				<h5 class="white-text">Réponse de <?= $who . ' le '. date('d-m-Y à H:i', strtotime($reply['date_reply'])) ?></h5>
-			</div>
-		</div>
-		<div class="row reply">
-			<div class="col l12">
-				<p><?= $reply['reply'] ?></p>
-			</div>
-			<?php
-		// pièces jointes
-			if(formatPJ($reply['inc_file'])){
-				echo '<div class="col l12">';
-				echo '<p><span class="labelFor">Pièce(s) jointe(s)</span>'.formatPJ($reply['inc_file']) .'</p>';
-				echo '</div>';
-			}
+			include('../view/_errors.php');
 			?>
 		</div>
-		<br>
-	<?php endforeach ?>
-	<br><br>
-	<!-- formulaire de réponse BT -->
-	<div class="row mag">
-		<div class="col l12 reply">
-			<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Envoyer une réponse :</h4>
-			<hr>
-			<br><br>
-<!-- 	<div class="row">
-	<div class="col l12 m12 frm"> -->
+		<div class="col-lg-1"></div>
+	</div>
 
-		<div class="inside-mag">
-			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?msg='.$_GET['msg'] ?>" method="post" enctype="multipart/form-data" id="answer">
-				<!--MESSAGE-->
 
-				<div class="input-field white">
-					<p><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i> Message :</p>
 
-					<label for="reply"></label>
-					<textarea class="browser-default" name="reply" id="reply" ><?=isset($_POST['reply'])? $_POST['reply']: false?></textarea>
+	<div class="row border rounded p-3">
+		<div class="col">
+			<div class="row text-grey">
+				<div class="col">
+					<span class="font-weight-bold">Magasin : </span><?= $oneMsg['deno'] .' - ' .$oneMsg['galec']?><i class="fas fa-user pl-5 pr-2"></i><?=$oneMsg['who'] ?>
 				</div>
-				<?php
-				ob_start();
-				?>
-				<br>
-				<div class="row">
-					<div class='col l12'>
-						<label for="mdp">Mot de passe du magasin :</label><br><br>
-						<input class="browser-default" name="mdp" type="text" id="mdp">
+				<div class="col-lg-3">
+
+					<i class="fas fa-calendar pr-2"></i><?= date('d-m-Y', strtotime($oneMsg['date_msg'])); ?>
+					<i class="fas fa-clock pr-2 pl-5"></i><?= date('H:i', strtotime($oneMsg['date_msg'])); ?>
+
+				</div>
+			</div>
+			<div class="row text-grey border-bottom pb-2">
+				<div class="col">
+					<span class="font-weight-bold">Objet : </span><?=$oneMsg['objet']?>
+				</div>
+				<div class="col-lg-3">
+					<span class="font-weight-bold">Service : </span><?=$oneMsg['service'] ?>
+				</div>
+			</div>
+			<div class="row mt-3">
+				<div class="col">
+					<?=$oneMsg['msg'] ?>
+				</div>
+			</div>
+			<?php if (!empty($oneMsg['inc_file'])): ?>
+				<?php $filesArr=explode( '; ', $oneMsg['inc_file'] );?>
+				<div class="row pt-3">
+					<div class="col">
+						<?php foreach ($filesArr as $keyfile => $value): ?>
+							<a class="link-main-blue pr-5" href="<?=URL_UPLOAD."mag/" . $filesArr[$keyfile]?>"><i class="fas fa-paperclip pr-2"></i>document</a>
+						<?php endforeach ?>
 					</div>
 				</div>
-				<?php
-				// ajout champ mdp quand demande d'identifiants
-				$identif=ob_get_contents();
-				ob_end_clean();
-				if($oneMsg['objet']=="demande d'identifiants"){
-					echo $identif;
-				}
-				?>
-				<br><br>
-				<div id="file-upload">
-					<p>Joindre un document à votre réponse:
-						<br><i>(pour ajouter plusieurs fichiers, maintenez la touche ctrl pendant que vous sélectionnez les fichiers)</i>
-					</p>
-					<div class="col l12">
-						<div id="upload-zone">
-
-							<input type='file' class='form-control-file' id='incfile' name='incfile[]' multiple="" >
-
-							<div id="filelist"></div>
+			<?php endif ?>
+		</div>
+	</div>
+	<div class="row mt-5">
+		<div class="col">
+			<h4 class="text-main-blue text-center">Echanges</h4>
+		</div>
+	</div>
+	<?php if (!empty($replies)): ?>
+		<div class="row  border rounded">
+			<div class="col">
+				<?php foreach($replies as $reply): ?>
+					<?php
+					if(empty($reply['fullname'])){
+						$magOrBt='mag';
+						$who= $oneMsg['deno'] .' - ' .$oneMsg['who'];
+						$bg='alert-orange';
+					}else{
+						$who="BTLec Est - ".$reply['fullname'];
+						$magOrBt='bt';
+						$bg='alert-primary';
+					}
+					?>
+					<div class="row font-italic <?=$magOrBt?>">
+						<div class="col">
+							<?= $who ?>
+						</div>
+						<div class="col-auto">
+							<i class="fas fa-calendar pr-2"></i><?=date('d-m-Y', strtotime($reply['date_reply'])) ?>
 						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class='col l3'></div>
-
-					<div class='col l3' id="wait">
-
+					<div class="row">
+						<div class="col mx-3 alert <?=$bg?>">
+							<?= $reply['reply'] ?>
+							<?php if (!empty($reply['inc_file'])): ?>
+								<?php $filesArr=explode( '; ', $reply['inc_file'] );?>
+								<div class="row">
+									<div class="col">
+										<?php foreach ($filesArr as $keyfile => $value): ?>
+											<a class="link-main-blue pr-5" href="<?=URL_UPLOAD."mag/" . $filesArr[$keyfile]?>"><i class="fas fa-paperclip pr-2"></i>document</a>
+										<?php endforeach ?>
+									</div>
+								</div>
+							<?php endif ?>
+						</div>
 					</div>
 
-					<div class='col l3'>
-						<p class="center">
-							<input type="checkbox" class="filled-in" id="clos" checked="checked" name="clos" />
-							<label for="clos">cloturer la demande</label>
-						</p>
-					</div>
 
-					<div class='col l3'>
-						<p class="center">
-							<button class="btn" type="submit" name="post-reply" >Répondre</button>
-						</p>
-					</div>
-
-				</div>
-			</form>
-		</div>
-	</div>
-</div>
-<br><br>
-<?php
-ob_start();
-?>
-<div class="row mag">
-	<div class="col l12 reply">
-		<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Clôturer la demande sans envoyer de réponse :</h4>
-		<hr>
-		<br><br>
-		<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?msg='.$_GET['msg'] ?>" method="post" >
-			<div class="row">
-				<div class='col l9'>
-					<p>
-						<input type="checkbox" class="filled-in"  checked="checked" name="close-no-msg" />
-						<label for="close-no-msg">cloturer la demande</label>
-					</p>
-				</div>
-				<div class='col l3'>
-					<p class="center">
-						<button class="btn" type="submit" name="closing">Cloturer</button>
-					</p>
-				</div>
+				<?php endforeach ?>
 			</div>
-		</form>
-	</div>
-</div>
-<br><br>
-<?php
-$formCloture=ob_get_contents();
-ob_end_clean();
-$idUser=$_SESSION['id'];
-if(isUserInGroup($pdoBt,$idUser,"admin")){
-	echo $formCloture;
-}
-?>
+		</div>
+	<?php endif ?>
 
+	<!-- formulaire de réponse BT -->
+	<div class="row mt-5">
+		<div class="col reply">
+			<h4 class="text-main-blue">Envoyer une réponse :</h4>
+			<div class="inside-mag">
+				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?msg='.$_GET['msg'] ?>" method="post" enctype="multipart/form-data" id="answer">
+					<div class="input-field white">
+						<div class="form-group">
 
+							<label for="reply">Message</label>
+							<textarea class="form-control" name="reply" id="reply" ><?=isset($_POST['reply'])? $_POST['reply']: false?></textarea>
+						</div>
+						<?php if($oneMsg['objet']=="demande d'identifiants"): ?>
+							<div class="row">
+								<div class='col'>
+									<label for="mdp">Mot de passe du magasin :</label><br><br>
+									<input class="browser-default" name="mdp" type="text" id="mdp">
+								</div>
+							</div>
+						<?php endif ?>
 
-<div class="row mag">
-	<div class="col l12 reply">
-		<h4 class="blue-text text-darken-4"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Réaffecter la demande :</h4>
-		<hr>
-		<br><br>
-		<?php if ( $_SESSION['id_service']== 5 || $_SESSION['id_service']== 16 || $_SESSION['id_service'] == 6 ||  $oneMsg['id_service'] == $_SESSION['id_service']): ?>
+						<div class="row">
+							<div class="col">
+								Joindre un document à votre réponse:
+								<br><i>(pour ajouter plusieurs fichiers, maintenez la touche ctrl pendant que vous sélectionnez les fichiers)</i>
+							</div>
+						</div>
+						<div class="row"  id="file-upload">
+							<div class="col">
+								<div id="upload-zone">
+									<input type='file' class='form-control-file' id='incfile' name='incfile[]' multiple="" >
+									<div id="filelist"></div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class='col' id="wait"></div>
+							<div class='col-auto'>
+								<div class="form-check">
+									<input class="form-check-input" type="checkbox" id="clos" checked="checked" name="clos" >
+									<label class="form-check-label" for="clos">Clôturer la demande</label>
+								</div>
+							</div>
+							<div class='col-auto'>
+								<button class="btn btn-primary" type="submit" name="post-reply" >Répondre</button>
+							</div>
+						</div>
 
-			<p>La demande ne concerne pas votre service ? <a href="chg.php?msg=<?=$_GET['msg']?>">Cliquez ici pour réaffecter la demande</a></p>
-
-			<?php else: ?>
-				<p>Cette demande ne concerne pas ou plus votre service, vous ne pouvez pas la réaffecter</p>
-			<?php endif ?>
-
-
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
 
+	<?php if (isUserInGroup($pdoBt,$_SESSION['id'],"admin")): ?>
+
+		<div class="row mt-5">
+			<div class="col reply">
+				<h4 class="text-main-blue">Clôturer la demande sans envoyer de réponse :</h4>
+				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?msg='.$_GET['msg'] ?>" method="post" >
+					<div class="row">
+						<div class='col'>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" checked="checked" name="close-no-msg">
+								<label class="form-check-label" for="close-no-msg">clôturer la demande</label>
+							</div>
+						</div>
+						<div class='col'>
+							<p class="center">
+								<button class="btn btn-primary" type="submit" name="closing">Cloturer</button>
+							</p>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	<?php endif ?>
 
 
-	<!-- affichage des messages d'erreur -->
+
+	<div class="row mt-5">
+		<div class="col reply">
+			<h4 class="text-main-blue">Réaffecter la demande :</h4>
+
+			<?php if ( $_SESSION['id_service']== 5 || $_SESSION['id_service']== 16 || $_SESSION['id_service'] == 6 ||  $oneMsg['id_service'] == $_SESSION['id_service']): ?>
+
+				<p>La demande ne concerne pas votre service ? <a href="chg.php?msg=<?=$_GET['msg']?>">Cliquez ici pour réaffecter la demande</a></p>
+
+				<?php else: ?>
+					<p>Cette demande ne concerne pas ou plus votre service, vous ne pouvez pas la réaffecter</p>
+				<?php endif ?>
 
 
-</div>
+			</div>
+		</div>
+		<div class="row pb-5">
+			<div class="col"></div>
+		</div>
 
-<script type="text/javascript">
-	$(document).ready(function(){
 
-		$("#answer").submit(function( event )
-		{
-			$("#wait" ).append('<i class="fa fa-spinner" aria-hidden="true"></i>&nbsp;&nbsp;<span class="pl-3">Merci de patienter</span>')
-		});
-		function getReadableFileSizeString(fileSizeInBytes) {
-			var i = -1;
-			var byteUnits = [' ko', ' Mo', ' Go'];
-			do {
-				fileSizeInBytes = fileSizeInBytes / 1024;
-				i++;
-			} while (fileSizeInBytes > 1024);
 
-			return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
-		};
 
-		var fileName='';
-		var fileList='';
-		var fileSize="";
-		var totalFileSize=0;
-		var fileSizeReadable="";
-		var warning="";
-		var resume="";
-		var warningTotal="";
-		$('input[type="file"]').change(function(e){
 
-			$('#filelist').empty();
-			var nbFiles=e.target.files.length;
-			for (var i = 0; i < nbFiles; i++)
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+
+			$("#answer").submit(function( event )
 			{
+				$("#wait" ).append('<i class="fa fa-spinner" aria-hidden="true"></i>&nbsp;&nbsp;<span class="pl-3">Merci de patienter</span>')
+			});
+			function getReadableFileSizeString(fileSizeInBytes) {
+				var i = -1;
+				var byteUnits = [' ko', ' Mo', ' Go'];
+				do {
+					fileSizeInBytes = fileSizeInBytes / 1024;
+					i++;
+				} while (fileSizeInBytes > 1024);
+
+				return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
+			};
+
+			var fileName='';
+			var fileList='';
+			var fileSize="";
+			var totalFileSize=0;
+			var fileSizeReadable="";
+			var warning="";
+			var resume="";
+			var warningTotal="";
+			$('input[type="file"]').change(function(e){
+
+				$('#filelist').empty();
+				var nbFiles=e.target.files.length;
+				for (var i = 0; i < nbFiles; i++)
+				{
         		    // var fileName = e.target.files[0].name;
         		    //5120000 = 5Mo
         		    fileSizeReadable=getReadableFileSizeString(e.target.files[i].size);
@@ -597,13 +583,13 @@ if(isUserInGroup($pdoBt,$idUser,"admin")){
      		   fileList="";
      		});
 
-	});
+		});
 
 
-</script>
-<?php
-include('../view/_footer.php');
-?>
+	</script>
+	<?php
+	include('../view/_footer-bt.php');
+	?>
 
 
 
