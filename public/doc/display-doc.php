@@ -50,7 +50,7 @@ $month=$months[$gfk["month"]];
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
-include('../view/_head-mig.php');
+include('../view/_head-bt.php');
 include('../view/_navbar.php');
 
 
@@ -62,6 +62,6 @@ include 'display-doc.ct.php';
 
 
 
-include('../view/_footer.php');
+include('../view/_footer-bt.php');
 
 ?>

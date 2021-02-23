@@ -107,7 +107,7 @@ if(isset($_POST['affect']))
 }
 
 
-include '../view/_head-mig-bis.php';
+include '../view/_head-bt.php';
 include '../view/_navbar.php';
 
 ?>
@@ -118,57 +118,50 @@ include '../view/_navbar.php';
 			<h1>Réaffectation d'une demande</h1>
 
 
-			<h4 id="modalite-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i> Demande n °: <?= $oneMsg['idMsg'] .' '.$oneMsg['objet']?></h4>
+			<h5><i class="far fa-hand-point-right pr-3"></i>Demande n °<?= $oneMsg['idMsg'] .' : '.$oneMsg['objet']?></h5>
 			<hr>
 			<br><br>
 			<form action="chg.php?msg=<?=$idMsg ?>" method="post" id="chg">
 				<div class="row">
 					<div class="col-3">
-						<?php
-						foreach ($listServicesContact as $key => $service)
-						{
-							if($lig < $nbServicesLine)
-							{
+						<?php foreach ($listServicesContact as $key => $service): ?>
+							<?php if ($lig < $nbServicesLine): ?>
 
-								echo '<div class="form-group form-check">';
-								echo "<input type='checkbox' class='form-check-input' id='".$service['id']."' name='service[]' value= '".$service['id']."' />";
-								echo "<label class='form-check-label' for='".$service['id']."'>".$service['service']."</label>";
-								echo "</div>";
-								$lig++;
-							}
-							else
-							{
-								$lig=0;
-								echo '</div><div class="col-3">';
-								echo '<div class="form-group form-check">';
-								echo "<input type='checkbox' class='form-check-input' id='".$service['id']."' name='service[]' value= '".$service['id']."' />";
-								echo "<label class='form-check-label' for='".$service['id']."'>".$service['service']."</label>";
-								echo "</div>";
-								$lig++;
+								<div class="form-group form-check">
+									<input type='checkbox' class='form-check-input' id='<?=$service['id']?>' name='service[]' value= '<?=$service['id']?>' />
+									<label class='form-check-label' for='<?=$service['id']?>'><?=$service['service']?></label>
+								</div>
+								<?php else: ?>
+									<?php $lig=0;?>
+								</div><div class="col-3">
+									<div class="form-group form-check">
+										<input type='checkbox' class='form-check-input' id='<?=$service['id']?>' name='service[]' value= '<?=$service['id']?>' />
+										<label class='form-check-label' for='<?=$service['id']?>'><?=$service['service']?></label>
+									</div>
+								<?php endif ?>
+								<?php $lig++; ?>
+							<?php endforeach ?>
 
-							}
 
-						}
-						?>
+						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col">
-						<p class="text-right">
-							<button class="btn btn-primary" type="submit" name="affect">Affecter</button>
-						</p>
+					<div class="row">
+						<div class="col">
+							<p class="text-right">
+								<button class="btn btn-primary" type="submit" name="affect">Affecter</button>
+							</p>
+						</div>
 					</div>
-				</div>
 
-			</form>
-			<?php include('../view/_errors.php') ?>
+				</form>
+				<?php include('../view/_errors.php') ?>
 
 
-			<p class="back"><a href="dashboard.php"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
+				<p class="back"><a href="dashboard.php"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
 
+			</div>
 		</div>
 	</div>
-</div>
 
 </div>  <!--container
 
@@ -177,7 +170,7 @@ include '../view/_navbar.php';
 
 
 
-include('../view/_footer-mig-bis.php');
+include('../view/_footer-bt.php');
  ?>
 
 

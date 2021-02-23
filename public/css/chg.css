@@ -24,19 +24,19 @@ h1{
     font-family: "Khand", sans-serif !important;
     color: #0D47A1 !important;
 }
-h4{
-    font-family: "Khand", sans-serif !important;
+h5{
+    /* font-family: "Khand", sans-serif !important; */
     margin: 0px !important;
     padding-bottom: 20px !important;
     color: #0D47A1 !important;
 }
-h4 + hr {
+h5 + hr {
   width: 50% !important;
   display: block !important;
   height: 1px !important;
   border: 0 !important;
   border-top: 1px solid #0D47A1 !important;
-  margin: 0.6em 0 0 0 !important;
+  margin: 0.2em 0 0 0 !important;
   padding: 0 !important;
 }
 
