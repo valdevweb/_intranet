@@ -151,12 +151,16 @@ if(isset($_POST['submit']))
 		}
 	}
 	// menu déroulante avec les actions préexistante et qui peuvant avoir des contrainte et/ou un texte préécrit
-	if(!empty($_POST['pretxt']))
-	{
+	if(!empty($_POST['pretxt'])){
 		$help=getHelpInfo($pdoLitige);
+		$contrainte=null;
+		if ($_SESSION['id_type']==3) {
+			$contrainte=5;
+		}
 	// si l'action pré-écrite à une contrainte, on l'execute
 		if($help['id_contrainte'] ==NULL){
-			$newAction=addAction($pdoLitige, $allfilename,$contrainte=null);
+
+			$newAction=addAction($pdoLitige, $allfilename,$contrainte);
 			if($newAction>0){
 				header('Location:bt-action-add.php?id='.$_GET['id']);
 			}
@@ -191,10 +195,12 @@ if(isset($_POST['submit']))
 			}
 		}
 	}
-	else
-	{
-		$newAction=addAction($pdoLitige, $allfilename,$contrainte=null);
-
+	else{
+		$contrainte="";
+		if ($_SESSION['id_type']==3) {
+			$contrainte=5;
+		}
+		$newAction=addAction($pdoLitige, $allfilename,$contrainte);
 		if($newAction>0)
 		{
 			header('Location:bt-action-add.php?id='.$_GET['id']);
