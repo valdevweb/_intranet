@@ -1,0 +1,17 @@
+.five-col{
+    -webkit-column-count:5; /* Opera, Safari, Google Chrome */
+    -moz-column-count: 5; /* Firefox */
+    column-count: 5; /* Internet Explorer */
+    -webkit-column-rule: 2px dashed #555;
+    -moz-column-rule: 2px dashed #555;
+    column-rule: 2px dashed #555;
+}
+
+.four-col{
+    -webkit-column-count:4; /* Opera, Safari, Google Chrome */
+    -moz-column-count: 4; /* Firefox */
+    column-count: 4; /* Internet Explorer */
+    -webkit-column-rule: 2px dashed #555;
+    -moz-column-rule: 2px dashed #555;
+    column-rule: 2px dashed #555;
+}
