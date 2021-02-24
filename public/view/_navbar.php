@@ -11,69 +11,17 @@ function isUserAllowed($pdoUser, $params){
 	return true;
 
 }
+$dBtlec=isUserAllowed($pdoUser,[4]);
+$dMag=isUserAllowed($pdoUser, [2]);
 
-
-
-// accès reversement : admin, compta, rev
-$revIds=array(5,7,8);
-$d_rev=isUserAllowed($pdoUser, $revIds);
-// accès comm : admin, comm
-$comIds=array(5,6);
-$d_comm=isUserAllowed($pdoUser, $comIds);
-
-$btlecIds=array(4);
-$d_btlec=isUserAllowed($pdoUser, $btlecIds);
-
-
-// accès exploit + : admin
-$exploitIds=array(5);
-$d_exploit=isUserAllowed($pdoUser, $exploitIds);
-
-//accès restreint exploit (dsy, cde, luc, moi)
-$strictAdminIds=array(82);
-$d_strictAdmin=isUserAllowed($pdoUser, $strictAdminIds);
-
-//accès restreint exploit (dsy, cde, luc, moi)
-$restraintAdminIds=array(87);
-$d_restraintAdmin=isUserAllowed($pdoUser, $restraintAdminIds);
-
-// accès exploit stat : admin + chargé de mission
-$exploitStatIds=array(5,78);
-$d_exploitStat=isUserAllowed($pdoUser, $exploitStatIds);
-
-$searchMagIds=array(5,78);
-$d_searchMag=isUserAllowed($pdoUser,  $searchMagIds);
-// accès conseil : admin, consultation conseil,exploit conseil, inscription
-$conseilIds=array(5,9,10,27);
-$d_conseil=isUserAllowed($pdoUser, $conseilIds);
-// accès contactez nos services : compte mag
-$magIds=array(2);
-$d_mag=isUserAllowed($pdoUser, $magIds);
-//accès lcom user (lecture uniquement)
-$lcomUserIds=array(43,44);
-$d_lcomUser=isUserAllowed($pdoUser, $lcomUserIds);
-//accès lcom admin : luc et amenet
-$lcomAdminIds=array(44);
-$d_lcomAdmin=isUserAllowed($pdoUser, $lcomAdminIds);
-
-$tempSavIds=array(62);
-$d_tempSav=isUserAllowed($pdoUser, $tempSavIds);
-
-$magSocamilIds=array(66,5);
-$d_Socamil=isUserAllowed($pdoUser, $magSocamilIds);
-
-$litigeBtIds=array(29,69,78,7,79,80);
-$d_litigeBt=isUserAllowed($pdoUser, $litigeBtIds);
-
-
-$missionIds=array(78,5);
-$d_mission=isUserAllowed($pdoUser,  $missionIds);
-
-$gtOccBtIds=array(83);
-$d_occBt=isUserAllowed($pdoUser, $gtOccBtIds);
-
-$gtOccMagIds=array(84);
-$d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
+$dLitigeBt=isUserAllowed($pdoUser,[69]);
+$dExploit=isUserAllowed($pdoUser, [5]);
+$dEvo=isUserAllowed($pdoUser, [87]);
+$dConseil=isUserAllowed($pdoUser, [9,10,27]);
+$dLcommerce=isUserAllowed($pdoUser, [43,44]);
+$dMission=isUserAllowed($pdoUser,  [78,5]);
+$dOccasionBt=isUserAllowed($pdoUser, [83]);
+$dOccasionMag=isUserAllowed($pdoUser, [84]);
 
 
 
@@ -97,7 +45,7 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 				<li>
 					<a class="less-padding"  href='<?= ROOT_PATH ?>/public/home/home.php' data-tooltip="Accueil"><span><i class="fa fa-home fa-2x" aria-hidden="true"></i></span></a>
 				</li>
-				<?php if ($d_mag): ?>
+				<?php if ($dMag): ?>
 					<li><a href="<?=ROOT_PATH?>/public/mag/histo-mag.php"><span>Vos demandes</span></a></li>
 					<li class='active has-sub'><a href='#'><span>Contacter nos services</span></a>
 						<ul>
@@ -117,7 +65,6 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 							<li data-module="17"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=11">qualité</a></li>
 						</ul>
 					</li>
-
 					<li class='has-sub'><a href="#"><span>Litiges</span></a>
 						<ul>
 							<li><a href="<?=ROOT_PATH?>/public/litiges/declaration-stepone.php">Déclaration de litige</a></li>
@@ -130,6 +77,15 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 							<li><a href="<?=ROOT_PATH?>/public/cm/rdv.php">Vos rendez-vous</a></li>
 						</ul>
 					</li>
+					<?php if ($dOccasionMag): ?>
+						<li class='active has-sub'><a href="<?=ROOT_PATH?>/public/gtocc/#"><span>Leclerc occasion</span></a>
+							<ul>
+								<li><a href="<?= ROOT_PATH?>/public/gtocc/offre-produit.php">Offres produits</a></li>
+								<li><a href="<?= ROOT_PATH?>/public/gtocc/occ-mag-cdes.php">Vos Commandes</a></li>
+								<li><a href="<?= ROOT_PATH?>/public/gtocc/occ-news.php">Informations Leclerc occasion</a></li>
+							</ul>
+						</li>
+					<?php endif ?>
 				<?php endif ?>
 
 				<?php if (isset($_SESSION['type']) && $_SESSION['type']=="btlec"): ?>
@@ -142,7 +98,7 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 						</ul>
 					</li>
 				<?php endif ?>
-				<?php if ($d_occBt): ?>
+				<?php if ($dOccasionBt): ?>
 					<li class='active has-sub'><a href="#"><span>Leclerc occasion</span></a>
 						<ul>
 							<li><a href="<?=ROOT_PATH?>/public/gtocc/offre-produit.php">Offres produits</a></li>
@@ -154,17 +110,9 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 						</ul>
 					</li>
 				<?php endif ?>
-				<?php if ($d_occMag): ?>
-					<li class='active has-sub'><a href="<?=ROOT_PATH?>/public/gtocc/#"><span>Leclerc occasion</span></a>
-						<ul>
-							<li><a href="<?= ROOT_PATH?>/public/gtocc/offre-produit.php">Offres produits</a></li>
-							<li><a href="<?= ROOT_PATH?>/public/gtocc/occ-mag-cdes.php">Vos Commandes</a></li>
-							<li><a href="<?= ROOT_PATH?>/public/gtocc/occ-news.php">Informations Leclerc occasion</a></li>
-						</ul>
-					</li>
-				<?php endif ?>
 
-				<?php if ($d_btlec || $d_litigeBt): ?>
+
+				<?php if ($dBtlec || $dLitigeBt): ?>
 
 					<li class='has-sub'><a href="#"><span>Litiges</span></a>
 						<ul>
@@ -178,18 +126,9 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 							<li><a href="<?=ROOT_PATH?>/public/litiges/stat-litige-mag.php">Réclamations par magasin</a></li>
 							<li><a href="<?=ROOT_PATH?>/public/litiges/exploit-ltg.php">Exploitation</a></li>
 							<li><a href="<?=ROOT_PATH?>/public/litiges/ctrl-stock.php">Contrôle de stock</a></li>
-							<?php if (isUserAllowed($pdoUser, [5,80])): ?>
-								<li><a href="<?=ROOT_PATH?>/public/litiges/intervention-commission-sav.php">Retour Commission SAV</a></li>
-							<?php endif ?>
-
-							<?php if (isUserAllowed($pdoUser, [29,5])): ?>
-								<li><a href="<?=ROOT_PATH?>/public/litiges/intervention-sav.php">Retour SAV</a></li>
-							<?php endif ?>
-
-							<?php if (isUserAllowed($pdoUser, [79,5])): ?>
-								<li><a href="<?=ROOT_PATH?>/public/litiges/intervention-achats.php">Retour Service achats</a></li>
-							<?php endif ?>
-
+							<li><a href="<?=ROOT_PATH?>/public/litiges/intervention-commission-sav.php">Retour Commission SAV</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/litiges/intervention-sav.php">Retour SAV</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/litiges/intervention-achats.php">Retour Service achats</a></li>
 							<li><a href="<?=ROOT_PATH?>/public/casse/bt-casse-dashboard.php" class="lighter-blue">Traitement casse</a></li>
 							<li><a href="<?=ROOT_PATH?>/public/casse/histo-casse.php" class="lighter-blue">Historique casse</a></li>
 
@@ -197,12 +136,9 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 					</li>
 				<?php endif ?>
 				<li  class='active has-sub'><a href="<?= ROOT_PATH?>/public/gazette/gazette.php" >Les gazettes</a>
-					<?php if (isset($_SESSION['type']) && $_SESSION['type']=="btlec"): ?>
-						<ul>
-							<li><a href="<?= ROOT_PATH?>/public/gazette/opp-exploit.php">Ajout opportunités</a></li>
-						</ul>
-					<?php endif?>
-
+					<ul>
+						<li><a href="<?= ROOT_PATH?>/public/gazette/opp-exploit.php">Ajout opportunités</a></li>
+					</ul>
 				</li>
 				<li  class='active has-sub'><a href="#" >documents</a>
 					<ul>
@@ -229,91 +165,88 @@ $d_occMag=isUserAllowed($pdoUser, $gtOccMagIds);
 							</li>
 							<li class='has-sub'><a href="#">Comptabilité</a>
 								<ul>
-									<?php if ($d_rev): ?>
-										<li><a href='<?=ROOT_PATH?>/public/doc/exploit_rev.php'>Exploit reversements</a></li>
-									<?php endif ?>
+
+									<li><a href='<?=ROOT_PATH?>/public/doc/exploit_rev.php'>Exploit reversements</a></li>
 									<li><a href="<?=ROOT_PATH?>/public/doc/histo_rev.php">Reversements</a></li>
 								</ul>
 							</li>
 							<li><a href="<?=ROOT_PATH?>/public/doc/doris.php">Doris</a></li>
 							<li><a href="<?=ROOT_PATH?>/public/doc/extralec.php">Application Extralec</a></li>
 							<li><a href="<?=ROOT_PATH?>/public/salon/presentation-salon-2020.php">Convention 2020</a></li>
-							<?php if ($d_comm): ?>
-								<li><a href='<?=ROOT_PATH?>/public/doc/upload-main.php'>Ajouter des documents</a></li>
-							<?php endif ?>
+							<li><a href='<?=ROOT_PATH?>/public/doc/upload-main.php'>Ajouter des documents</a></li>
 						</ul>
 					</li>
-					<?php if ($d_btlec): ?>
+					<?php if ($dBtlec): ?>
 						<li  class='active has-sub'><a href="#" >Magasins</a>
 							<ul>
 								<li><a href="<?=ROOT_PATH?>/public/basemag/base-mag.php">Base magasins</a></li>
 								<li><a href="<?=ROOT_PATH?>/public/basemag/fiche-mag.php"><span>Fiches magasins</span></a></li>
 							</ul>
 						</li>
-					<?php endif ?>
-					<?php if ($d_exploit || $d_exploitStat): ?>
 						<li class='active has-sub'><a href='".ROOT_PATH. "/public/exploit/connexion.php' ><span>Exploit</span></a>
 							<ul>
+								<li><a href='<?=ROOT_PATH?>/public/salon/stats-salon-2019.php'><span>Stats Salon 2019</span></a></li>
 								<li><a href='<?=ROOT_PATH?>/public/salon/stats-salon-2020.php'><span>Stats Salon 2020</span></a></li>
 								<li><a href='<?=ROOT_PATH?>/public/salon/exploit-2020.php'><span>Exploit salon 2020</span></a></li>
-								<li><a href='<?=ROOT_PATH?>/public/salon/stats-salon-2019.php'><span>Stats Salon 2019</span></a></li>
 								<li><a href='<?=ROOT_PATH?>/public/exploit/connexion.php'><span>Suivi magasins</span></a></li>
-								<li><a href='<?=ROOT_PATH?>/public/exploit/ld-exploit.php'><span>Listes de diffu BTLec</span></a></li>
-								<li><a href='<?=ROOT_PATH?>/public/exploit/add-flash.php'><span>Saisie d'info urgente</span></a></li>
-								<?php if ($d_exploit): ?>
+								<?php if ($dExploit): ?>
+									<li><a href='<?=ROOT_PATH?>/public/exploit/ld-exploit.php'><span>Listes de diffu BTLec</span></a></li>
+
+									<li><a href='<?=ROOT_PATH?>/public/exploit/add-flash.php'><span>Saisie d'info urgente</span></a></li>
 									<li><a href='<?=ROOT_PATH?>/public/exploit/upload-adh.php'><span>Upload documents Adhérents</span></a></li>
 								<?php endif ?>
 
-							</ul>
-						</li>
-					<?php endif ?>
-					<?php if ($d_lcomUser || $d_lcomAdmin): ?>
-						<li class='active has-sub'><a href='#' title='espace LCommerce - documents' ><span>LCommerce</span></a>
-							<ul><li><a href='<?=ROOT_PATH?>/public/lcom/doc-lcom.php'><span>Documents</span></a></li>
-								<?php if ($d_lcomAdmin): ?>
-
-									<li><a href='<?=ROOT_PATH?>/public/lcom/upload-lcom.php'><span>Ajout de documents</span></a></li>
-									<li><a href='<?=ROOT_PATH?>/public/lcom/move-lcom.php'><span>Gérer les documents</span></a></li>
+								<?php if ($_SESSION['id_web_user']==981): ?>
+									<li><a href="<?=ROOT_PATH?>/public/exploit/droit.php" class="red-nav">Droits</a></li>
 								<?php endif ?>
 
-							</ul>
-						</li>
-					<?php endif ?>
+						</ul>
+					</li>
+				<?php endif ?>
+				<?php if ($dLcommerce): ?>
+					<li class='active has-sub'><a href='#' title='espace LCommerce - documents' ><span>LCommerce</span></a>
+						<ul><li><a href='<?=ROOT_PATH?>/public/lcom/doc-lcom.php'><span>Documents</span></a></li>
+							<li><a href='<?=ROOT_PATH?>/public/lcom/upload-lcom.php'><span>Ajout de documents</span></a></li>
+							<li><a href='<?=ROOT_PATH?>/public/lcom/move-lcom.php'><span>Gérer les documents</span></a></li>
+						</ul>
+					</li>
+				<?php endif ?>
 
-					<?php if ($d_conseil): ?>
-						<li class='has-sub'><a href='<?=CONSEIL?>home.php' class='tooltipped' data-position='bottom' data-tooltip='Réservé adhérents / conseil'><span>adhérents</span></a>
-							<ul>
-								<li><a href='<?=CONSEIL?>home.php' class='tooltipped' data-position='bottom' data-tooltip='Conseil'><span>Conseil</span></a></li>
-								<li><a href='<?=ROOT_PATH?>/public/exploit/doc-adh.php' class='tooltipped' data-position='bottom' data-tooltip='documents réservés adhérents'><span>Documents</span></a></li>
-								<li><a href='<?=ROOT_PATH?>/public/pres/home-pres.php' ><span>Présentations</span></a></li>
-							</ul>
-						</li>
-					<?php endif ?>
-					<?php if ($d_mission): ?>
-						<li class='has-sub'><a href='<?=PORTAIL_CM?>cm/index.php' ><span>CHARGES DE MISSION</span></a>
-							<ul>
-								<li><a href='<?=PORTAIL_CM?>cm/index.php' ><span>Portail CM</span></a></li>
-								<li><a href='<?=ROOT_PATH?>/public/cm/cm-news.php' ><span>Fil d'actu</span></a></li>
-							</ul>
-						</li>
-					<?php endif ?>
+				<?php if ($dConseil): ?>
+					<li class='has-sub'><a href='<?=CONSEIL?>home.php' class='tooltipped' data-position='bottom' data-tooltip='Réservé adhérents / conseil'><span>adhérents</span></a>
+						<ul>
+							<li><a href='<?=CONSEIL?>home.php' class='tooltipped' data-position='bottom' data-tooltip='Conseil'><span>Conseil</span></a></li>
+							<li><a href='<?=ROOT_PATH?>/public/exploit/doc-adh.php' class='tooltipped' data-position='bottom' data-tooltip='documents réservés adhérents'><span>Documents</span></a></li>
+							<li><a href='<?=ROOT_PATH?>/public/pres/home-pres.php' ><span>Présentations</span></a></li>
+						</ul>
+					</li>
+				<?php endif ?>
+				<?php if ($dMission): ?>
+					<li class='has-sub'><a href='<?=PORTAIL_CM?>cm/index.php' ><span>CHARGES DE MISSION</span></a>
+						<ul>
+							<li><a href='<?=PORTAIL_CM?>cm/index.php' ><span>Portail CM</span></a></li>
+							<li><a href='<?=ROOT_PATH?>/public/cm/cm-news.php' ><span>Fil d'actu</span></a></li>
+						</ul>
+					</li>
+				<?php endif ?>
 
-					<li><a href="<?=PORTAIL_SAV?>scapsav/home.php" class="tooltipped" data-position="bottom" data-tooltip="site du portail SAV">Portail SAV</a></li>
-					<?php if ($d_restraintAdmin): ?>
-						<li  class='active has-sub red-nav'><a href="#" >Evolutions</a>
-							<ul>
-								<li><a href="<?=ROOT_PATH?>/public/evo/dde-evo.php" class="red-nav">Demande d'évo</a></li>
-								<li><a href="<?=ROOT_PATH?>/public/evo/dashboard-evo.php" class="red-nav">Supervision</a></li>
-								<li><a href="<?=ROOT_PATH?>/public/evo/vosdemandes-evo.php" class="red-nav">Vos demandes</a></li>
-							</ul>
-						</li>
-					<?php endif ?>
+				<li><a href="<?=PORTAIL_SAV?>scapsav/home.php" class="tooltipped" data-position="bottom" data-tooltip="site du portail SAV">Portail SAV</a></li>
+				<?php if ($dEvo): ?>
+					<li  class='active has-sub red-nav'><a href="#" >Evolutions</a>
+						<ul>
+							<li><a href="<?=ROOT_PATH?>/public/evo/dde-evo.php" class="red-nav">Demande d'évo</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/evo/dashboard-evo.php" class="red-nav">Supervision</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/evo/vosdemandes-evo.php" class="red-nav">Vos demandes</a></li>
 
-					<?php if ($d_mag): ?>
-						<li><a href="<?=ROOT_PATH ?>/public/user/profil.php" class="tooltipped" data-position="bottom" data-tooltip="Votre compte"><span>Votre magasin<i class="fa fa-user pl-3"></i></span></a></li>
-					<?php endif ?>
-					<li><a href="<?=ROOT_PATH ?>/public/logoff.php" class="tooltipped" data-position="bottom" data-tooltip="se déconnecter"><span><i class="fa fa-power-off"></i></span></a></li>
-				</ul>
-			</div>
+						</ul>
+					</li>
+				<?php endif ?>
 
-		<?php endif ?>
+				<?php if ($dMag): ?>
+					<li><a href="<?=ROOT_PATH ?>/public/user/profil.php" class="tooltipped" data-position="bottom" data-tooltip="Votre compte"><span>Votre magasin<i class="fa fa-user pl-3"></i></span></a></li>
+				<?php endif ?>
+				<li><a href="<?=ROOT_PATH ?>/public/logoff.php" class="tooltipped" data-position="bottom" data-tooltip="se déconnecter"><span><i class="fa fa-power-off"></i></span></a></li>
+			</ul>
+		</div>
+
+	<?php endif ?>

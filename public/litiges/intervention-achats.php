@@ -14,7 +14,14 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require_once  '../../vendor/autoload.php';
 require('../../Class/UserHelpers.php');
+require '../../Class/UserDao.php';
 
+$userDao=new UserDao($pdoUser);
+$droitAccess=$userDao->isUserAllowed([79,5]);
+
+if(!$droitAccess){
+	header('Location:../home/home.php?access-denied');
+}
 
 
 //---------------------------------------

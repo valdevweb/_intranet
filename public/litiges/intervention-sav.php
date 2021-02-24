@@ -13,7 +13,14 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require_once  '../../vendor/autoload.php';
+require '../../Class/UserDao.php';
 
+$userDao=new UserDao($pdoUser);
+$droitAccess=$userDao->isUserAllowed([5,29]);
+
+if(!$droitAccess){
+	header('Location:../home/home.php?access-denied');
+}
 
 //---------------------------------------
 //	ajout enreg dans stat

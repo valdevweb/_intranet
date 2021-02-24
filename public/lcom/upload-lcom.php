@@ -22,9 +22,18 @@ $pageCss=explode(".php",$page);
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
-//header et nav bar
-include ('../view/_head-mig-bis.php');
-include ('../view/_navbar.php');
+require '../../Class/UserDao.php';
+
+$userDao=new UserDao($pdoUser);
+$droitExploitLcom=$userDao->isUserAllowed([44]);
+
+if(!$droitExploitLcom){
+	header('Location:../home/home.php?access-denied');
+}
+
+
+
+
 
 //----------------------------------------------------------------
 //			functions
@@ -89,7 +98,8 @@ if(isset($_POST['submit']))
 
 	}
 }
-
+include ('../view/_head-mig-bis.php');
+include ('../view/_navbar.php');
 ?>
 
 <div class="container white-container shadow">

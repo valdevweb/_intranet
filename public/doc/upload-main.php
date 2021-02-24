@@ -5,7 +5,7 @@ if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
 }
 require '../../config/db-connect.php';
-
+require '../../Class/UserDao.php';
 //----------------------------------------------
 // css dynamique
 //----------------------------------------------
@@ -133,14 +133,19 @@ function insertIntoDbDocCm($pdoBt,$filename,$title){
 /* principe
 on affiche les document tagé communication dans la liste déroulante du 1er formulaire
 on recherche les infos du type de document sélectionné pour afficher les bons champ de formulaire
-ex date_deb à 1 cad à oui, on met la var $dateDeb à oui pour l'afficher
-
-
-
-*/
+ex date_deb à 1 cad à oui, on met la var $dateDeb à oui pour l'afficher*/
 
 $errors=[];
 $success=[];
+
+$userDao=new UserDao($pdoUser);
+$droitCommunication=$userDao->isUserAllowed([5,6]);
+
+if(!$droitCommunication){
+	header('Location:../home/home.php?access-denied');
+}
+
+
 
 $dateDeb=$dateFin=$libelle=$descr=false;
 

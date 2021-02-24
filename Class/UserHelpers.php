@@ -65,6 +65,23 @@ class UserHelpers{
 		return $data;
 	}
 
+	public static function listUserType($pdoUser){
+		$req=$pdoUser->query("SELECT id, type FROM users_type ORDER BY type");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+	public static function listDroit($pdoUser){
+		$req=$pdoUser->query("SELECT id, fonction FROM droits ORDER BY id");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+	public static function listService($pdoUser){
+		$req=$pdoUser->query("SELECT id, service FROM services ORDER BY service");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+	public static function listServiceGroup($pdoUser){
+		$req=$pdoUser->query("SELECT id, groupe FROM services_groupe ORDER BY groupe");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+
 
 
 	public static function getManyUser($pdoUser,$ids){

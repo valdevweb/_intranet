@@ -6,6 +6,17 @@ if(!isset($_SESSION['id'])){
 }
 require '../../config/db-connect.php';
 
+require '../../Class/UserDao.php';
+
+$userDao=new UserDao($pdoUser);
+$droitExploitLcom=$userDao->isUserAllowed([44]);
+
+if(!$droitExploitLcom){
+	header('Location:../home/home.php?access-denied');
+}
+
+
+
 //----------------------------------------------------------------
 // require "../../functions/stats.fn.php";
 // $descr="signaler la mise à dispo de nouveaux reversements";

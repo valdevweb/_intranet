@@ -16,7 +16,14 @@ require_once  '../../vendor/autoload.php';
 require('../../Class/UserHelpers.php');
 require('../../Class/MagHelpers.php');
 
+require '../../Class/UserDao.php';
 
+$userDao=new UserDao($pdoUser);
+$droitAccess=$userDao->isUserAllowed([5,80]);
+
+if(!$droitAccess){
+	header('Location:../home/home.php?access-denied');
+}
 //---------------------------------------
 //	ajout enreg dans stat
 //---------------------------------------
