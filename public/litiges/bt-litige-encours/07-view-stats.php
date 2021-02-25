@@ -68,7 +68,7 @@
 						<tr class="bg-red heavy">
 
 							<td>Valorisation totale</td>
-							<td class="text-right"><?= number_format((float)$sumValoTotale,2,'.',' ')?>&euro;</td>
+							<td class="text-right"><?= isset($sumValoTotale)?number_format((float)$sumValoTotale,2,'.',' '):"0"?>&euro;</td>
 							<td class="text-right"><?= $nbTotalDossierStatut?> dossiers</td>
 
 						</tr>
