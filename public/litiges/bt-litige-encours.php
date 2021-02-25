@@ -87,7 +87,7 @@ function updateCommission($pdoLitige,$iddossier, $etat){
 		':id'		=>$iddossier
 
 	]);
-	return $req->rowCount($pdoLitige);
+	return $req->rowCount();
 }
 
 
