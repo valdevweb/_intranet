@@ -167,12 +167,11 @@ if(isset($_POST['submit']))
 			else{
 				$errors[]="Une erreur est survenue, impossible d'enregistrer votre action";
 			}
-		}
-
+		}else{
 	// si contrainte
 	// => pour la contrainte 4 demande d'inter sav, on a besoin de vérifier que le mag a bien un pôle SAV, si ce n'est pas le cas, on bloque le traitement
 	// si pas de bloquage, on ajoute l'action avec son numéro de contrainte et on redirige vers la page contrainte qui fait le traitement approprié
-		else{
+
 			if($help['id_contrainte'] ==4){
 				$galec=$fLitige['galec'];
 				$sav=getMagSav($pdoSav,$galec);
@@ -196,7 +195,7 @@ if(isset($_POST['submit']))
 		}
 	}
 	else{
-		$contrainte="";
+		$contrainte=null;
 		if ($_SESSION['id_type']==3) {
 			$contrainte=5;
 		}
