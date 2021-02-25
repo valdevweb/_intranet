@@ -26,6 +26,8 @@
 			</div>
 		</div>
 	</footer>
+	<script src="<?=ROOT_PATH?>/public/js/session.js "></script>
+
 	<!--  Scripts-->
 	<script src="<?=ROOT_PATH."/vendor/materialize/js/materialize.js" ?>"></script>
 	<script src="<?=ROOT_PATH."/public/js/main.js"?>"></script>
