@@ -24,7 +24,7 @@ $jMoinsUnLastYear=$dayToDisplayPrev;
 //variable qui seront videq si $jMoinsUnLastYear vide
 $jMoinsUnLastYearAll="";
 $moisEnCoursLastYearAll="";
-	$premierJourMoisLastYear="";
+$premierJourMoisLastYear="";
 
 
 
@@ -99,11 +99,13 @@ $moisEnCoursColis=$moisEnCoursAll['colis'];
 
 $moisEnCoursDiff=$moisEnCoursCa-$moisEnCoursLastYearCa;
 $moisEnCoursPourcent=pourcentage($moisEnCoursCa,$moisEnCoursLastYearCa,$moisEnCoursDiff);
-
-$moisFinCa=$moisFinAll['somme'];
-$moisFinColis=$moisFinAll['colis'];
-$moisFinPalettes=$moisFinAll['palettes'];
-
+if(!empty($moisFin)){
+	$moisFinCa=$moisFinAll['somme'];
+	$moisFinColis=$moisFinAll['colis'];
+	$moisFinPalettes=$moisFinAll['palettes'];
+}else{
+	$moisFinCa=$moisFinColis=$moisFinPalettes=0;
+}
 
 $moisFinLastYearCa=$moisFinLastYearAll['somme'];
 $moisFinLastYearColis=$moisFinLastYearAll['colis'];
