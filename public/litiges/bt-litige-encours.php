@@ -114,9 +114,15 @@ include 'bt-litige-encours\01-data-formsearch.php';
 include 'bt-litige-encours\02-data-filtres.php';
 include 'bt-litige-encours\03-data-sessions.php';
 include 'bt-litige-encours\03b-data-build-query.php';
+// SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp, dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, dossiers.occasion, dossiers.id_robbery, dossiers.id_typo, magasin.mag.deno, magasin.mag.centrale, magasin.mag.id as btlec, etat.etat FROM dossiers LEFT JOIN etat ON id_etat=etat.id LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE
+// 	echo "<pre>";
+// 	print_r($_SESSION);
+// 	echo '</pre>';
 
-
-
+// echo $litigeQuery;
+// echo "<br>";
+// echo $litigeParam;
+// echo $litigeMod;
 $litigeDao=new LitigeDao($pdoLitige);
 $listLitige=makeQuery($pdoLitige, $litigeQuery, $litigeParam, $litigeMod);
 $valoEtat=makeQuery($pdoLitige, $statutQuery, $statutParam);
