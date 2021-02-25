@@ -117,6 +117,9 @@ function getCmtFiles($pdoMag,$idcmt){
 }
 
 $userDao=new UserDao($pdoUser);
+$droitExploit=$userDao->isUserAllowed([5]);
+
+
 
 
 if(isset($_POST['clear_form'])){
@@ -653,7 +656,7 @@ DEBUT CONTENU CONTAINER
 			<?php
 			if (isset($mag)){
 				include('fiche-mag/01-commun.php');
-				if($d_strictAdmin){
+				if($droitExploit && $_SESSION['id_web_user']!=1040){
 					include('fiche-mag/02-exploit.php');
 				}
 				include('fiche-mag/03-modal-observation.php');
