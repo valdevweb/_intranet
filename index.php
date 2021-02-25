@@ -49,9 +49,6 @@ if(!empty( $_SERVER['QUERY_STRING'])){
 // stats
 if(isset($_POST['connexion'])){
 	$loginExist=loginExist($pdoUser);
-	echo "<pre>";
-	print_r($loginExist);
-	echo '</pre>';
 
 
 	if($loginExist){
@@ -59,7 +56,7 @@ if(isset($_POST['connexion'])){
 	}else{
 		$msg[]="le login n'existe pas";
 	}
-	if($pwdOk){
+	if(isset($pwdOk)){
 		initSession($pdoBt, $pdoSav, $pdoMag, $pdoCm, $pdoUser, $loginExist);
 		if(isset($_SESSION['id_web_user']) && !empty($_SESSION['id_web_user'])){
 			$action="user authentification";
