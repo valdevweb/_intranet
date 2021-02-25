@@ -25,6 +25,8 @@ require_once '../../Class/UserHelpers.php';
 require_once '../../Class/UserDao.php';
 require_once '../../Class/FlashDao.php';
 
+
+
 // stats recup mdp
 
 function rev($pdoBt){
@@ -47,6 +49,10 @@ $oppDao=new OpportuniteDAO($pdoBt);
 $flashDao=new FlashDao($pdoBt);
 $dialDao=new LitigeDialDao($pdoLitige);
 $userDao=new UserDao($pdoUser);
+
+$droitExploit=$userDao->isUserAllowed([5]);
+
+
 
 
 $nbRecup=$userDao->getNbPwd();

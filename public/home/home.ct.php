@@ -1,5 +1,5 @@
 <div class="container-fluid bg-white">
-	<?php if ($d_exploit): ?>
+	<?php if($droitExploit): ?>
 		<div class="row">
 			<div class="col-s-12 col-m-4">
 				<p class="bg-alert bg-alert-primary">
