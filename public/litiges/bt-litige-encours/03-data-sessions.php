@@ -75,7 +75,7 @@ if(isset($_SESSION['filter-data'])){
 
 	if (isset($_SESSION['filter-data']['pending']) && $_SESSION['filter-data']['pending']==1) {
 		$paramCommission= " commission=1 ";
-	}elseif (isset($_SESSION['filter-data']['pending']) && $_SESSION['filter-data']['pending']==0){
+	}elseif (isset($_SESSION['filter-data']['pending']) && $_SESSION['filter-data']['pending']=="pending"){
 		$paramCommission= " commission=0 ";
 	}else{
 		$paramCommission= "";
