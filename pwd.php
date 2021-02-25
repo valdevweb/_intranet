@@ -4,7 +4,7 @@
 //----------------------------------------------------
 $path=dirname(__FILE__);
 require "config/config.inc.php";
-require '../../config/db-connect.php';
+require 'config/db-connect.php';
 
 
 
