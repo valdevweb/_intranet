@@ -21,26 +21,7 @@
 		</div>
 	</div>
 </footer>
+<script src="<?=ROOT_PATH?>/public/js/session.js "></script>
 
-<script type="text/javascript">
-	$(document).ready(function(){
-		function checkSession(){
-			$.ajax({
-				url:"../../config/checksession.php",
-				method:"POST",
-				success:function(data){
-					if(data==1){
-						alert("Votre session a expirée, vous allez être déconnecté");
-						window.location.href='../../index.php';
-					}
-				}
-			});
-		}
-
-		setInterval(function(){
-			checkSession();
-		},10000);
-	});
-</script>
 </body>
 </html>
