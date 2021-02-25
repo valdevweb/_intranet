@@ -153,7 +153,7 @@ function updateCommission($pdoLitige,$etat)
 		':id'		=>$_GET['id']
 
 	]);
-	return $req->rowCount($pdoLitige);
+	return $req->rowCount();
 }
 
 function addAction($pdoLitige, $idContrainte){
