@@ -1,6 +1,6 @@
 <?php
-
-define("SERVER_NAME", $_SERVER['SERVER_NAME']);
+define("SERVER_NAME", "172.30.92.53");
+// on définit manuellement car lancé par batch, php n'a pas de variable de session server_name
 if (preg_match('/_btlecest/', dirname(__FILE__))){
 	$version='_';
 	define("VERSION",'_');
@@ -23,7 +23,7 @@ define("PORTAIL_SAV_HOME","http://".SERVER_NAME."/".VERSION."sav/scapsav/home.ph
 define("ROOT_PATH","/".VERSION."btlecest");
 define("SITE_ADDRESS", "http://".SERVER_NAME."/".VERSION."btlecest");
 define("URL_UPLOAD","http://".SERVER_NAME."/".VERSION."upload-main/btlecest/" );
-
+define("DIR_IMPORT_GESSICA","D:\btlec\dumps\gessica\\");
 
 
 
