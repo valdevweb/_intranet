@@ -162,7 +162,6 @@ if(isset($_POST['submit'])){
 			$contentTwo=$_GET['id_msg'];
 			$contentThree=$link;
 			$contentFour=$msg['objet'];
-				// $mailingList=$infoMsg['mailing'];
 
 			if(VERSION=="_"){
 				$mailingList='valerie.montusclat@btlec.fr';
@@ -170,7 +169,7 @@ if(isset($_POST['submit'])){
 
 			}else{
 				$mailingList= $msg['mailing'] ;
-				$dest=$infoMsg['email'];
+				$dest=$msg['email'];
 
 			}
 
