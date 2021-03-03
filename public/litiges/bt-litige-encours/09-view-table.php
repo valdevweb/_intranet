@@ -64,9 +64,11 @@
 							$class='validated';
 						}
 
+
 						$icoDemandeVideo="";
 						if(isset($listVideoOk[$active['id_main']])){
 							$icoDemandeVideo='<i class="fas fa-video text-green pl-3"></i>';
+
 						}elseif (isset($listVideoKo[$active['id_main']])) {
 							$icoDemandeVideo='<i class="fas fa-video text-red pl-3"></i>';
 						}
