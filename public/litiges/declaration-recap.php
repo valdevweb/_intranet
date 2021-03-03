@@ -254,7 +254,7 @@ DEBUT CONTENU CONTAINER
 
 		$exploitLitigeContent=ob_get_contents();
 		ob_end_clean();
-		if($d_litigeBt)
+		if($dLitigeBt)
 		{
 			echo $exploitLitigeContent;
 		}
