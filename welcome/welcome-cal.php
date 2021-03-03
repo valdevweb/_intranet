@@ -60,6 +60,8 @@ if(isset($forceDay)){
 }else{
 	$today=new DateTime();
 }
+
+
 $dayToDisplay=getLaVeille($today);
 			//renvoie le tableau des 1er jours du mois calculés suivant les regles excel de David - logique reprise mais pas comprise
 
