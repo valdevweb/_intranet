@@ -150,7 +150,7 @@
 						<div class="col-3">
 							<span class="text-orange">Chargé de mission :</span>
 
-							<?= UserHelpers::getFullname($pdoUser, $mag->getIdCmWebUser())?>
+							<?=($mag->getIdCmWebUser()!==null)? UserHelpers::getFullname($pdoUser, $mag->getIdCmWebUser()):""?>
 						</div>
 					</div>
 				</div>
@@ -175,9 +175,9 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td class="text-right px-3"><?=number_format((float)$financeN['CA_Annuel'],0,'',' ')?>&euro;</td>
-								<td class="text-right px-3"><?=number_format((float)$financeNUn['CA_Annuel'],0,'',' ')?>&euro;</td>
-								<td class="text-right px-3"><?=number_format((float)$financeNDeux['CA_Annuel'],0,'',' ')?>&euro;</td>
+								<td class="text-right px-3"><?=isset($financeN['CA_Annuel'])?number_format((float)$financeN['CA_Annuel'],0,'',' '):""?>&euro;</td>
+								<td class="text-right px-3"><?=isset($financeNUn['CA_Annuel'])?number_format((float)$financeNUn['CA_Annuel'],0,'',' '):""?>&euro;</td>
+								<td class="text-right px-3"><?=isset($financeNDeux['CA_Annuel'])?number_format((float)$financeNDeux['CA_Annuel'],0,'',' '):""?>&euro;</td>
 							</tr>
 						</tbody>
 					</table>
