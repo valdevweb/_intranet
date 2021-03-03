@@ -37,7 +37,7 @@ On commence à 1 car le 0 n'est pas pris en compte dans le name
 //			FONCTION
 //------------------------------------------------------
 function getLitigeTemp($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT dossiers_temp.id as id, details_temp.id as detail_id,details_temp.dossier,palette,facture, date_facture,DATE_FORMAT(date_facture,'%d-%m-%Y')as datefac,article, ean, dossier_gessica, descr,qte_cde,tarif, fournisseur,details_temp.box_tete, details_temp.box_art FROM dossiers_temp LEFT JOIN details_temp ON dossiers_temp.id=details_temp.id_dossier WHERE dossiers_temp.id= :id");
+	$req=$pdoLitige->prepare("SELECT dossiers_temp.id as id, details_temp.id as detail_id,details_temp.dossier,palette,facture, date_facture,DATE_FORMAT(date_facture,'%d-%m-%Y')as datefac,article, ean, dossier_gessica, descr,qte_cde,tarif, fournisseur,details_temp.box_tete, details_temp.box_art, dossiers_temp.occasion FROM dossiers_temp LEFT JOIN details_temp ON dossiers_temp.id=details_temp.id_dossier WHERE dossiers_temp.id= :id");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 	));
@@ -133,8 +133,6 @@ $valoTotal=0;
 
 if(isset($_GET['id'])){
 	$fLitige=getLitigeTemp($pdoLitige);
-
-
 }
 
 // si on vient de la page bt-ouv-saisie, la var de $_SESSION['dd_ouv'] conteint le numéro de la demande d'ouverture temporaire
