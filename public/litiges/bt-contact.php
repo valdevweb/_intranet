@@ -183,7 +183,7 @@ if(isset($_POST['submit']) ||isset($_POST['submit_mail']))
 
 	}
 	if(isset($_POST['not_read'])){
-		if (UserHelpers::isUserAllowed($pdoUser,['94'])){
+		if (UserHelpers::isUserAllowed($pdoUser,['94']) || $_SESSION['id_web_user']==1402){
 			$dialDao->updateRead($_POST['id_dial'],0);
 			header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
 		}else{
@@ -191,7 +191,7 @@ if(isset($_POST['submit']) ||isset($_POST['submit_mail']))
 		}
 	}
 	if(isset($_POST['read'])){
-		if (UserHelpers::isUserAllowed($pdoUser,['94'])){
+		if (UserHelpers::isUserAllowed($pdoUser,['94']) || $_SESSION['id_web_user']==1402){
 			$dialDao->updateRead($_POST['id_dial'],1);
 			header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
 		}else{
@@ -295,20 +295,18 @@ DEBUT CONTENU CONTAINER
 					<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" enctype="multipart/form-data">
 						<p class="heavy">Réponses préparées :</p>
 						<div class="form-group">
-							<select name="pretxt" id="pretxt" class="form-control">
+							<select name="pretxt" id="pretxt" class="form-control dropdown">
 								<option value="">Sélectionnez une réponse préparée</option>
-								<?php
-								foreach($allPreTxt as $pretxt)
-								{
-									echo '<option value="'.$pretxt['id'].'">'.$pretxt['nom'].' ('. $pretxt['pretxt'].')</option>';
+								<?php foreach ($allPreTxt as $key => $pretxt): ?>
+									<option class="font-weight-bold" value="<?=$pretxt['id']?>" data-title="<?=$pretxt['id']?>"><?=$pretxt['nom']?></option>
+									<option class="text-italic pl-3" value="<?=$pretxt['id']?>" data-sentence="<?=$pretxt['id']?>"><?=$pretxt['pretxt']?></option>
 
-								}
+								<?php endforeach ?>
 
-
-								?>
 							</select>
 
 						</div>
+
 						<div class="form-group">
 							<label for="action" class="heavy">Votre message :</label>
 							<textarea type="text" class="form-control" row="6" name="msg" placeholder="Message" id="msg" required><?=$defaultTxt?></textarea>
@@ -350,14 +348,19 @@ DEBUT CONTENU CONTAINER
 		$(document).ready(function (){
 
 			$('#pretxt').on('change',function(){
-				var txt=$('#pretxt option:selected').text();
-				txt=txt.split(' (');
-				var pretxt=txt[1].split(')');
+				var attr=$(this).find(':selected').attr('data-title');
+				if(attr){
+					var nextOption=$('option[data-sentence="'+attr+'"]');
+					var pretxt=nextOption.text();
+				}else{
+					var pretxt=$('#pretxt option:selected').text();
+				}
+
 				var bjr="Bonjour,\n\n";
 				var cdlt="\n\n"+"Cordialement,\n";
 				var name='<?php echo $_SESSION['nom'];?>';
  						// console.log(name);
- 						$('#msg').val(bjr + pretxt[0] + cdlt + name);
+ 						$('#msg').val(bjr + pretxt + cdlt + name);
  					});
 			var fileName='';
 			var fileList='';

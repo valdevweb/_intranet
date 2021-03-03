@@ -278,7 +278,7 @@ if($infoLitige[0]['flag_valo']==2){
 
 if(isset($_POST['validate']))
 {
-	if($_SESSION['id_web_user'] !=959 && $_SESSION['id_web_user'] !=981)
+	if($_SESSION['id_web_user'] !=959 && $_SESSION['id_web_user'] !=981 )
 	{
 		header('Location:bt-detail-litige.php?notallowed&id='.$_GET['id']);
 
@@ -335,7 +335,7 @@ if(isset($_POST['submit-serials'])){
 }
 
 if(isset($_POST['not_read'])){
-	if (UserHelpers::isUserAllowed($pdoUser,['94'])){
+	if (UserHelpers::isUserAllowed($pdoUser,['94']) || $_SESSION['id_web_user']==1402){
 		$dialDao->updateRead($_POST['id_dial'],0);
 		header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
 	}else{
@@ -343,7 +343,7 @@ if(isset($_POST['not_read'])){
 	}
 }
 if(isset($_POST['read'])){
-	if (UserHelpers::isUserAllowed($pdoUser,['94'])){
+	if (UserHelpers::isUserAllowed($pdoUser,['94']) || $_SESSION['id_web_user']==1402){
 		$dialDao->updateRead($_POST['id_dial'],1);
 		header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
 	}else{
