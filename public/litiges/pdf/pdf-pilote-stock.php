@@ -185,10 +185,13 @@ h2{
 <?php
 
 $sumValo=0;
-foreach ($litige as $prod)
-{
-	$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
+foreach ($litige as $prod){
+	if($prod['qte_cde']!=0){
+		$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
+	}else{
+		$valo=round(($prod['tarif'])*$prod['qte_litige'],2);
 
+	}
 	if($prod['inversion'] !="")
 	{
 		$valoInv=round( $prod['qte_cde']*$prod['inv_tarif'],2);
@@ -287,7 +290,13 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 		$sumValo=0;
 		foreach ($litige as $prod)
 		{
-			$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
+
+			if($prod['qte_cde']!=0){
+				$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
+			}else{
+				$valo=round(($prod['tarif'])*$prod['qte_litige'],2);
+
+			}
 			echo '<tr>';
 			echo'<td>'.$prod['article'].'</td>';
 			echo'<td>'.$prod['descr'].'</td>';
