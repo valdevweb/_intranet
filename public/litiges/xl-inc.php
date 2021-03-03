@@ -2,6 +2,7 @@
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+\PhpOffice\PhpSpreadsheet\Shared\File::setUseUploadTempDirectory(true);
 
 // ------------------------------------
 // JULIE
@@ -182,7 +183,7 @@ foreach ($listLitige as $key => $dossier){
 		$mtMag=nullToZero($dossier['mt_mag']);
 	}
 	if(!empty($dossier['occ_article_palette'])){
-			$article="Palette ".OccHelpers::getPaletteNameByArticlePalette($pdoOcc,$dossier['occ_article_palette']);
+		$article="Palette ".OccHelpers::getPaletteNameByArticlePalette($pdoOcc,$dossier['occ_article_palette']);
 	}else{
 		$article=$dossier['article'];
 	}
@@ -250,12 +251,12 @@ $sheet->setTitle('litiges');
 
 
 
-
+$filename="export-litiges-".date("YmdHis").".xlsx";
 // pour lancer le téléchargement sur le poste client
 $writer = new Xlsx($spreadsheet);
-$writer->save('export-litiges.xlsx');
+$writer->save($filename);
 header('Content-Type: application/vnd.ms-excel');
-header('Content-Disposition: attachment; filename="export-litiges.xlsx"');
+header('Content-Disposition: attachment; filename="'.$filename.'"');
 $writer->save("php://output");
 exit;
 
