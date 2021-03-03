@@ -53,31 +53,32 @@ foreach ($_POST['form_id'] as $postKey => $idDetail) {
 
 
 	if(empty($errors)){
-	// inversion de ref
+		//pas d'inversion de ref
 		if(!isset($_POST['radio-inv'][$postKey]) || $_POST['radio-inv'][$postKey]!=1){
-			$valoLig=($fLitige[$postKey]['tarif']/$fLitige[$postKey]['qte_cde'])*$_POST['form_qte'][$postKey];
+			if($fLitige[$postKey]['occasion']==1){
+				$valoLig=$fLitige[$postKey]['tarif']*$_POST['form_qte'][$postKey];
+			}else{
+				$valoLig=($fLitige[$postKey]['tarif']/$fLitige[$postKey]['qte_cde'])*$_POST['form_qte'][$postKey];
+			}
+
 			if($_POST['form_motif'][$postKey]==6)	{
 				$valoLig= -$valoLig;
 			}
 			$ean="";
 			$do=updateDetail($pdoLitige,$_POST['form_motif'][$postKey], $_POST['form_qte'][$postKey],$_POST['form_id'][$postKey],$allfilename,$ean, $valoLig);
 		}else{
+			// inversion de ref
 			if(empty($_POST['qte_inv'][$postKey]) && empty($_POST['ean_inv'][$postKey])){
 				$errors[]='merci de renseigner l\'EAN reçu et la quantité';
 			}else{
-
 				$prodFound=getProdInversion($pdoQlik,$_POST['ean_inv'][$postKey]);
-
-
 				$ean=$_POST['ean_inv'][$postKey];
 				// si prod en excédent trouve, on l'ajoute (nvelle ligne detail)
 				if(count($prodFound)>=1){
 					$valoLig=$prodFound[0]['pfnp']*$_POST['qte_inv'][$postKey];
 					$valoLig=-1*$valoLig;
-				$litigeDao->addDetailsExcedent($fLitige[0]['id'], $fLitige[0]['dossier'], $prodFound[0]['article'], $_POST['ean_inv'][$postKey], $prodFound[0]['dossier'], $prodFound[0]['libelle'], 0, $prodFound[0]['pfnp'], $prodFound[0]['fournisseur'], $prodFound[0]['cnuf'], $_POST['qte_inv'][$postKey],6, $valoLig);
+					$litigeDao->addDetailsExcedent($fLitige[0]['id'], $fLitige[0]['dossier'], $prodFound[0]['article'], $_POST['ean_inv'][$postKey], $prodFound[0]['dossier'], $prodFound[0]['libelle'], 0, $prodFound[0]['pfnp'], $prodFound[0]['fournisseur'], $prodFound[0]['cnuf'], $_POST['qte_inv'][$postKey],6, $valoLig);
 					// pas besoin d'inserer lean dans inversion étatn donné que l'on a trouvé le produit
-
-
 					$ean="";
 				}
 			// dans tous les cas, on met à jour  l'article detail
@@ -91,7 +92,6 @@ foreach ($_POST['form_id'] as $postKey => $idDetail) {
 	$addCom=addDial($pdoLitige);
 	if(empty($errors)){
 		header('Location:declaration-validation.php?id='.$_GET['id']);
-
 	}
 
 }
