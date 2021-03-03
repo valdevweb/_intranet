@@ -21,6 +21,14 @@ include 'welcome-cal.php';
 $jMoinsUn=$dayToDisplay;
 $jMoinsUnLastYear=$dayToDisplayPrev;
 
+
+	// echo "<pre>";
+	// print_r($jMoinsUn);
+	// print_r($jMoinsUnLastYear);
+	// echo '</pre>';
+
+
+
 //variable qui seront videq si $jMoinsUnLastYear vide
 $jMoinsUnLastYearAll="";
 $moisEnCoursLastYearAll="";
@@ -31,6 +39,7 @@ $premierJourMoisLastYear="";
 $annee=$jMoinsUn->format('Y');
 $anneeLastYear=$annee -1;
 $mois=$jMoinsUn->format('n');
+
 
 $premierJourMois=clone $jMoinsUn;
 $premierJourMois=$premierJourMois->modify('first day of this month');
@@ -70,6 +79,7 @@ if($moisEnCoursLastYearAll!=""){
 $jMoinsUnAll=caJour($pdoQlik, $jMoinsUn);
 $moisEnCoursAll=sommeCaJour($pdoQlik,$premierJourMois,$jMoinsUn);
 $moisFinAll=caMois($pdoQlik, $mois, $annee);
+
 $moisFinLastYearAll=caMois($pdoQlik, $mois, $anneeLastYear);
 $anneeEnCoursAll=caAnnee($pdoQlik,$mois, $annee);
 $anneeEnCoursLastYearAll=caAnnee($pdoQlik,$mois, $anneeLastYear);
@@ -99,7 +109,7 @@ $moisEnCoursColis=$moisEnCoursAll['colis'];
 
 $moisEnCoursDiff=$moisEnCoursCa-$moisEnCoursLastYearCa;
 $moisEnCoursPourcent=pourcentage($moisEnCoursCa,$moisEnCoursLastYearCa,$moisEnCoursDiff);
-if(!empty($moisFin)){
+if(!empty($moisFinAll)){
 	$moisFinCa=$moisFinAll['somme'];
 	$moisFinColis=$moisFinAll['colis'];
 	$moisFinPalettes=$moisFinAll['palettes'];
