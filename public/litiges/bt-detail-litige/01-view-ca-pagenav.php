@@ -9,9 +9,9 @@
 			</tr>
 			<tr>
 				<td class="text-main-blue heavy"> Chiffres d'affaire :</td>
-				<td><?=number_format((float)$financeN['CA_Annuel'],2,'.',' ')?>&euro;</td>
-				<td><?=number_format((float)$financeNUn['CA_Annuel'],2,'.',' ')?>&euro;</td>
-				<td><?=number_format((float)$financeNDeux['CA_Annuel'],2,'.',' ')?>&euro;</td>
+				<td><?=isset($financeN['CA_Annuel'])?number_format((float)$financeN['CA_Annuel'],2,'.',' '):""?>&euro;</td>
+				<td><?=isset($financeNUn['CA_Annuel'])?number_format((float)$financeNUn['CA_Annuel'],2,'.',' '):0?>&euro;</td>
+				<td><?=isset($financeNDeux['CA_Annuel'])?number_format((float)$financeNDeux['CA_Annuel'],2,'.',' '):"0"?>&euro;</td>
 			</tr>
 			<tr>
 				<td class="text-main-blue heavy">Réclamé :</td>
