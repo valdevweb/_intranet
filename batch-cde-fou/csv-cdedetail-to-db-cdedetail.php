@@ -29,7 +29,7 @@ if (($handle = fopen($detailFile, "r")) !== FALSE) {
 			$row++;
 		}else{
 			if($data[0]!=0){
-
+echo $row." ". $data[0]."      deux :".$data[1]."<br>";
 				$req=$pdoQlik->prepare("INSERT INTO cdes_fou_details (id_cde, num_cde, num_liv, article, dossier, qte_cde, cond_carton, uv_cde, date_import )
 					VALUES (:id_cde, :num_cde, :num_liv, :article, :dossier, :qte_cde, :cond_carton, :uv_cde, :date_import)");
 				$req->execute([
