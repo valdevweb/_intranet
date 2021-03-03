@@ -120,7 +120,7 @@ include 'bt-litige-encours\03b-data-build-query.php';
 // 	echo '</pre>';
 
 // echo $litigeQuery;
-// echo "<br>";
+// // echo "<br>";
 // echo $litigeParam;
 // echo $litigeMod;
 $litigeDao=new LitigeDao($pdoLitige);
@@ -142,7 +142,9 @@ $valoTotalDefault=getSumValo($pdoLitige, $listLitige);
 
 $listReclamations=$litigeDao->getReclamation();
 $listVideoOk=getListVideo($pdoLitige, 7);
-$listVideoko=getListVideo($pdoLitige, 6);
+$listVideoKo=getListVideo($pdoLitige, 6);
+
+
 $arTypo=LitigeHelpers::listTypo($pdoLitige);
 $arMagOcc=MagHelpers::getListMagOcc($pdoMag);
 $unread=$dialDao->getUnreadDossierColumn();
