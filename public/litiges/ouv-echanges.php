@@ -56,7 +56,7 @@
 			}
 			else{
 				$alertColor='alert-primary';
-				$from=$thisOuv['mag'];
+				$from=$thisOuv['deno'];
 			}
 			if(!empty($rep['pj']))
 			{
