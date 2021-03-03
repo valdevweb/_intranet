@@ -117,6 +117,7 @@
 							<!-- // upload filename -->
 							<div class="col" id="<?=$litige['detail_id']?>"></div>
 						</div>
+
 					</div>
 				</div>
 			<?php endif ?>

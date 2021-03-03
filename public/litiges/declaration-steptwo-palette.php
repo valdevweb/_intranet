@@ -82,6 +82,7 @@ function getPaletteInversion($pdoQlik)
 if(isset($_GET['id']))
 {
 	$fLitige=getLitigeTemp($pdoLitige);
+
 }
 // $paletteFound['palette'],$paletteFound['facture'],$paletteFound['article'],$paletteFound['gencod'],$paletteFound['dossier'],$paletteFound['libelle'],$paletteFound['qte'],$paletteFound['tarif'],$paletteFound['fournisseur'],$paletteFound['cnuf']
 // qd inversion de palette on enregistre dans la table palette inv le contenu de la palette qui a été reçue
