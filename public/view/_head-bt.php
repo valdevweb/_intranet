@@ -10,6 +10,10 @@
 
 	<!-- nouvelle page pour style commun qui remplacera main  05/02/2019 -->
 	<link rel="stylesheet" href="../css/commun.css?<?= filemtime('../css/commun.css');?>">
+	<link rel="stylesheet" href="../css/_box.css?<?= filemtime('../css/commun.css');?>">
+	<link rel="stylesheet" href="../css/_btn.css?<?= filemtime('../css/commun.css');?>">
+	<link rel="stylesheet" href="../css/_font.css?<?= filemtime('../css/commun.css');?>">
+	<link rel="stylesheet" href="../css/_txt.css?<?= filemtime('../css/commun.css');?>">
 	<link rel="stylesheet" href="../css/nav.css">
 	<link rel="stylesheet" type="text/css" href="../css/footer.css">
 	<!-- style propre  -->
