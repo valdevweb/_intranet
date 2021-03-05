@@ -2,7 +2,6 @@
 
 if(is_numeric($_POST['montant'])){
 	$montant =number_format( $_POST['montant'] ,2 , "." ," " );
-
 }else{
 	$errors[]="Veuillez saisir un montant correct (ex : 150, 10.52, etc.)";
 }
