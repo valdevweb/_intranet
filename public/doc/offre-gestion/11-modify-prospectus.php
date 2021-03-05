@@ -14,19 +14,19 @@
 						<div class="col-lg-3">
 							<div class="form-group">
 								<label for="prospectus">Prospectus : </label>
-								<input type="text" class="form-control" name="prospectus" value="<?=$prospMod['prospectus']?>" id="prospectus" title="Veuillez supprimer les espaces"  pattern="[^' ']+">
+								<input type="text" class="form-control form-primary" name="prospectus" value="<?=$prospMod['prospectus']?>" id="prospectus" title="Veuillez supprimer les espaces"  pattern="[^' ']+">
 							</div>
 						</div>
 						<div class="col-lg-3">
 							<div class="form-group">
 								<label>Date de début : </label>
-								<input type="date" class="form-control" name="date_start" value="<?=$prospMod['date_start']?>" >
+								<input type="date" class="form-control form-primary" name="date_start" value="<?=$prospMod['date_start']?>" >
 							</div>
 						</div>
 						<div class="col-lg-3">
 							<div class="form-group">
 								<label>Date de fin : </label>
-								<input type="date" class="form-control" name="date_end" value="<?=$prospMod['date_end']?>">
+								<input type="date" class="form-control form-primary" name="date_end" value="<?=$prospMod['date_end']?>">
 							</div>
 						</div>
 					</div>
@@ -34,7 +34,7 @@
 						<div class="col">
 							<div class="label pb-3">Uploader le fichier ficWOPC :</div>
 							<div class="form-group">
-								<label class="btn btn-upload btn-file text-center">
+								<label class="btn btn-upload-primary btn-file text-center">
 									<input type="file" name="fic-mod" class='form-control-file'>
 									<i class="fas fa-file pr-3"></i>Sélectionner
 								</label>
@@ -43,7 +43,7 @@
 						<div class="col mt-3" id="filenames-mod">
 							<?php if (!empty($prospMod['fic'])): ?>
 								<div class="text-danger">Si le fichier <?=$prospMod['fic']?> a été modifié, merci de l'uploader à nouveau</div>
-								<input type="hidden" class="form-control" name="previous_fic" id="previous_fic" value="<?=$prospMod['fic']?>">
+								<input type="hidden" class="form-control form-primary" name="previous_fic" id="previous_fic" value="<?=$prospMod['fic']?>">
 							<?php endif ?>
 						</div>
 					</div>
