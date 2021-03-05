@@ -1,0 +1,185 @@
+h1{
+  font-family: "Khand", sans-serif !important;
+}
+
+/* text modifier */
+.heavy{
+  font-weight: 600;
+}
+
+.heavier{
+  font-weight: 800;
+}
+
+.light{
+  font-weight: 200;
+}
+.strikethrough{
+  text-decoration: line-through;
+  text-decoration-color: red;
+}
+.text-small{
+  font-size: 0.8rem;
+}
+.bigger{
+  font-size: 1.2rem;
+}
+
+/* -------------------------------- */
+/*        text-color               */
+/* -------------------------------- */
+.text-main-blue{
+ color: #0D47A1 !important;
+}
+.text-blue{
+  color: #007bff;
+}
+
+.text-light-blue{
+  color:  #EBF2FA;
+}
+.text-blue-lighter{
+  color:#3d6bb3;
+}
+.text-blue-flashy{
+  color: #007bff;
+}
+.text-dark-grey{
+  color:#343a40;
+}
+.text-light-grey{
+  color:#a7a7a7;
+}
+.text-red{
+  color:#c1292e;
+}
+.text-reddish{
+  color: #a63446;
+}
+.text-orange{
+  color:#f57c00;
+}
+.text-yellow{
+  color: #ffc107;
+}
+.text-yellow-dark{
+  color: #e4ac02 !important;
+}
+.text-yellow-darker{
+  color: #4e3b03 !important;
+}
+.text-kaki{
+  color:#43493f !important;
+}
+.text-green{
+  color: #008C1C;
+}
+.text-grey{
+  color: #7b7a7a;
+}
+.text-gessica{
+ color:  #007bff;
+}
+.text-sca{
+  color: #212529 !important;
+}
+
+a.text-gessica{
+  color: #007bff !important;
+}
+a.text-sca{
+  color: #212529 !important;
+}
+.text-ctbt{
+  color: #f18f0b;
+}
+a.text-ctbt{
+  color: #f18f0b !important;
+}
+
+
+
+
+
+
+
+a.link-blue{
+  color: #1976D2 !important;
+  font-weight: bold;
+}
+
+a:hover.link-blue{
+  color: #1976D2 !important;
+  font-weight: bold;
+  letter-spacing: 0.2px;
+  text-decoration: underline;
+
+}
+
+a.link-main-blue{
+  color: #0D47A1 !important;
+  font-weight: bold;
+}
+
+a:hover.link-main-blue{
+  color: #0D47A1 !important;
+  font-weight: bold;
+  letter-spacing: 0.2px;
+  text-decoration: underline;
+
+}
+
+a.red-link{
+  color: #a63446 !important;
+  font-weight: bold;
+
+}
+
+
+a.red-link:hover{
+  color: #616161 !important;
+  text-decoration: none;
+
+}
+
+a.grey-link{
+  color: #999 !important;
+  /* font-weight: bold; */
+
+}
+
+a.grey-link:hover{
+  color: #5c5c5c !important;
+  text-decoration: none;
+
+}
+
+a.green-link{
+  color: green !important;
+  font-weight: bold;
+
+}
+
+a.green-link:hover{
+  color: #616161 !important;
+  text-decoration: none;
+}
+a.nounderline-link{
+  font-weight: bold;
+}
+
+a.nounderline-link:hover{
+  text-decoration : none;
+  color: #616161 !important;
+}
+
+a.link-white{
+  color: #fff !important;
+}
+
+a:hover.link-white{
+  color: #fff !important;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+
+}
