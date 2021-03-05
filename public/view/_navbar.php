@@ -138,6 +138,8 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 				<li  class='active has-sub'><a href="<?= ROOT_PATH?>/public/gazette/gazette.php" >Les gazettes</a>
 					<ul>
 						<li><a href="<?= ROOT_PATH?>/public/gazette/opp-exploit.php">Ajout opportunités</a></li>
+						<li><a href="<?= ROOT_PATH?>/public/gazette/gestion-gazette.php">Ajout de gazettes</a></li>
+
 					</ul>
 				</li>
 				<li  class='active has-sub'><a href="#" >documents</a>
