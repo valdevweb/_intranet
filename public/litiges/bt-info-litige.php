@@ -670,7 +670,7 @@ DEBUT CONTENU CONTAINER
 							<div class="col">
 								<div class="form-group">
 									<?php
-									if(isset($fLitige['date_prepa']))
+									if(!empty($fLitige['date_prepa']))
 									{
 										$datePrepa=date('Y-m-d',strtotime($fLitige['date_prepa']));
 									}
