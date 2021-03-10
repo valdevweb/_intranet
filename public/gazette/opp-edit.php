@@ -162,10 +162,12 @@ if(isset($_POST['add_new_files'])){
 	if(empty($errors)){
 		$idOpp=$_GET['id'];
 		if(isset($idOpp)&& ($idOpp>0)){
-			for ($i=0; $i < count($listFilenameOpp); $i++) {
-				$ext = pathinfo($listFilenameOpp[$i], PATHINFO_EXTENSION);
-				$image=(in_array(strtolower($ext),$imgExt))? 1:0;
-				$oppDao->addMainFile($idOpp,$listFilenameOpp[$i],$image,$i);
+			if(isset($listFilenameOpp)){
+				for ($i=0; $i < count($listFilenameOpp); $i++) {
+					$ext = pathinfo($listFilenameOpp[$i], PATHINFO_EXTENSION);
+					$image=(in_array(strtolower($ext),$imgExt))? 1:0;
+					$oppDao->addMainFile($idOpp,$listFilenameOpp[$i],$image,$i);
+				}
 			}
 			if(!empty($listFilenameAddons)){
 				for ($i=0; $i < count($listFilenameAddons); $i++) {
@@ -182,9 +184,7 @@ if(isset($_POST['add_new_files'])){
 }
 
 if(isset($_POST['new-name'])){
-	echo "<pre>";
-	print_r($_POST);
-	echo '</pre>';
+
 	for($i=0; $i<count($_POST['id_addon']); $i++){
 		$oppDao->updateAddonName($_POST['id_addon'][$i],$_POST['name'][$i]);
 	}
