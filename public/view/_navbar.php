@@ -178,6 +178,7 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 							<li><a href='<?=ROOT_PATH?>/public/doc/upload-main.php'>Ajouter des documents</a></li>
 							<li><a href='<?=ROOT_PATH?>/public/doc/offre-gestion.php'>Gestion des offres produits</a></li>
 							<li><a href='<?=ROOT_PATH?>/public/doc/odr-gestion.php'>Gestion des odr</a></li>
+							<li><a href='<?=ROOT_PATH?>/public/doc/suivi-liv-gestion.php'>Gestion Suivi livraison</a></li>
 						</ul>
 					</li>
 					<?php if ($dBtlec): ?>
