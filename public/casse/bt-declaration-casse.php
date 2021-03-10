@@ -482,7 +482,7 @@ DEBUT CONTENU CONTAINER
 					<div class="col-4">
 						<div class="form-group">
 							<label for="nb_colis">Nombre de colis</label>
-							<input type="text" name="nb_colis" class="form-control" id="nb_colis" required >
+							<input type="text" name="nb_colis" class="form-control" pattern="[0-9]+" title="Seuls les chiffres sont autorisés" id="nb_colis" required >
 						</div>
 					</div>
 					<div class="col-4">
