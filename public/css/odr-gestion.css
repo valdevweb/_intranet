@@ -1,0 +1,12 @@
+label{
+    color: #0D47A1;
+}
+.sub-title:after{
+  position: absolute;
+  left: calc(50% - 35px);
+  display: block;
+  width: 70px;
+  border-bottom: 2px solid  #f18e0b;
+  content: "";
+  padding-top: 10px;
+}

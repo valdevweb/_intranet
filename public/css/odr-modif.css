@@ -1,0 +1,34 @@
+
+.bg-blue-input{
+    background-color: #dbebfd59 !important;
+    border:  1px solid #b4d4f7 !important;
+}
+
+label{
+    color: #0D47A1;
+}
+
+
+
+.bg-grey-table{
+    background: #dee2e6;
+}
+
+
+.wider{
+    width:  350px !important;
+}
+
+.table-bordered-special th, .table-bordered-special td {
+    border: 1px solid #dee2e6;
+}
+
+.sub-title:after{
+  position: absolute;
+  left: calc(50% - 35px);
+  display: block;
+  width: 70px;
+  border-bottom: 2px solid  #f18e0b;
+  content: "";
+  padding-top: 10px;
+}
