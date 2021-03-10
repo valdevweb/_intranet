@@ -49,7 +49,10 @@ function addMsg($db,$id_service,$inc_file){
 }
 
 
-
+if(!isset($_GET['id'])){
+	echo "aucun message sélectionné";
+	exit();
+}
 
 //----------------------------------------------------------------
 //			affichage : infos du services
