@@ -17,7 +17,6 @@ foreach ($_POST['form_id'] as $postKey => $idDetail) {
 
 foreach ($_POST['form_id'] as $postKey => $idDetail) {
 
-
 	if(empty($errors)){
 		if(isset($_FILES['form_file']['name'][$postKey][0]) && !empty($_FILES['form_file']['name'][$postKey][0])){
 
@@ -40,7 +39,7 @@ foreach ($_POST['form_id'] as $postKey => $idDetail) {
 					$filename = str_replace(' ', '_', $filename_without_ext) . '_' . time() . '.' . $ext;
 					$uploaded=move_uploaded_file($_FILES['form_file']['tmp_name'][$postKey][$f],$uploadDir.$filename );
 				}
-				if($uploaded==false){
+				if(!isset($uploaded)){
 					$errors[]="impossible de télécharger le fichier";
 				}
 				else{
