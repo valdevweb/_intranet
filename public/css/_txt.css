@@ -183,3 +183,7 @@ a:hover.link-white{
   text-decoration: none;
 
 }
+
+.font-weight-boldless{
+  font-weight: 500;
+}

@@ -335,42 +335,51 @@ if(isset($_POST['submit-serials'])){
 }
 
 if(isset($_POST['not_read'])){
+	foreach ($_POST['not_read'] as $idDial => $value) {
 	if (UserHelpers::isUserAllowed($pdoUser,['94']) || $_SESSION['id_web_user']==1402){
-		$dialDao->updateRead($_POST['id_dial'],0);
+		$dialDao->updateRead($idDial,0);
 		header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
 	}else{
 		$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
 	}
 }
+}
 if(isset($_POST['read'])){
+	foreach ($_POST['read'] as $idDial => $value) {
+
 	if (UserHelpers::isUserAllowed($pdoUser,['94']) || $_SESSION['id_web_user']==1402){
-		$dialDao->updateRead($_POST['id_dial'],1);
+		$dialDao->updateRead($idDial,1);
 		header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
 	}else{
 		$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
 	}
+}
 }
 
 
 
 if(isset($_POST['not_read_action'])){
+	foreach ($_POST['not_read_action'] as $idAction => $value) {
 
-	if (UserHelpers::isUserAllowed($pdoUser,['94']) || $_SESSION['id_web_user']==1402){
-		$dialDao->updateReadAction($_POST['id_action'],0);
-		header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_action']);
-	}else{
-		$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
+		if (UserHelpers::isUserAllowed($pdoUser,['94']) || $_SESSION['id_web_user']==1402){
+			$dialDao->updateReadAction($idAction ,0);
+			header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_action']);
+		}else{
+			$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
+		}
 	}
 }
 if(isset($_POST['read_action'])){
 
-
-	if (UserHelpers::isUserAllowed($pdoUser,['94'])  || $_SESSION['id_web_user']==1402){
-		$dialDao->updateReadAction($_POST['id_action'],1);
-		header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_action']);
-	}else{
-		$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
+	foreach ($_POST['read_action'] as $idAction => $value) {
+		if (UserHelpers::isUserAllowed($pdoUser,['94'])  || $_SESSION['id_web_user']==1402){
+			$dialDao->updateReadAction($idAction,1);
+			header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_action']);
+		}else{
+			$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
+		}
 	}
+
 }
 if(isset($_GET['successpal']))
 {

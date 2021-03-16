@@ -176,6 +176,12 @@ span.step {
 	background-color: #dbebfd59 !important;
 	border:  1px solid #b4d4f7 !important;
 }
+
+.form-warning{
+	background-color: #fd7e1421 !important;
+	border:  1px solid #f5ceae  !important;
+}
+
 .bg-blue-input{
     background-color: #dbebfd59 !important;
     border:  1px solid #b4d4f7 !important;

@@ -135,24 +135,20 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 						</ul>
 					</li>
 				<?php endif ?>
-				<li  class='active has-sub'><a href="<?= ROOT_PATH?>/public/gazette/gazette.php" >Les gazettes</a>
+				<li  class='active has-sub'><a href="<?= ROOT_PATH?>/public/doc/accueil-document.php" >Achats</a>
 					<ul>
-						<li><a href="<?= ROOT_PATH?>/public/gazette/opp-exploit.php">Ajout opportunités</a></li>
-						<li><a href="<?= ROOT_PATH?>/public/gazette/gestion-gazette.php">Ajout de gazettes</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/achats-gazette/gazette.php">La gazette</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/achats-gesap/gesap.php">Les gesaps</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/achats-odr/odr.php">Les ODR</a></li>
+						<li><a href="<?=ROOT_PATH?>">Les offres produits (TEL - BRII)</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/gazette/opp-encours.php">Les offres spéciales</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/achats-suvi-livraison/suivi-livraison.php">Le suivi des livraison</a></li>
+						<li><a href="<?= ROOT_PATH?>/public/gazette/gazette.php" >Les gazettes old</a></li>
 
 					</ul>
 				</li>
 				<li  class='active has-sub'><a href="#" >documents</a>
 					<ul>
-						<li class='has-sub'><a href="<?= ROOT_PATH. '/public/doc/display-doc.php'?>">Achats</a>
-							<ul>
-								<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#odr-title'?>">ODR</a></li>
-								<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#tel-title'?>">TEL/BRII</a></li>
-								<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#assortiment-title'?>">Assortiment et panier Promo</a></li>
-								<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#mdd-title'?>">MDD</a></li>
-								<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#gfk-title'?>">GFK</a></li>
-							</ul>
-						</li>
 						<li class='has-sub'><a href="<?= ROOT_PATH. '/public/doc/com_menu.php'?>">Communication</a>
 							<ul>
 								<li><a href="<?= ROOT_PATH. '/public/doc/plancom2020.php'?>">Plan de Comm OP BTLec 2020</a></li>
@@ -175,10 +171,26 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 							<li><a href="<?=ROOT_PATH?>/public/doc/doris.php">Doris</a></li>
 							<li><a href="<?=ROOT_PATH?>/public/doc/extralec.php">Application Extralec</a></li>
 							<li><a href="<?=ROOT_PATH?>/public/salon/presentation-salon-2020.php">Convention 2020</a></li>
-							<li><a href='<?=ROOT_PATH?>/public/doc/upload-main.php'>Ajouter des documents</a></li>
-							<li><a href='<?=ROOT_PATH?>/public/doc/offre-gestion.php'>Gestion des offres produits</a></li>
-							<li><a href='<?=ROOT_PATH?>/public/doc/odr-gestion.php'>Gestion des odr</a></li>
-							<li><a href='<?=ROOT_PATH?>/public/doc/suivi-liv-gestion.php'>Gestion Suivi livraison</a></li>
+							<li class='has-sub'><a href="#">Exploitation</a>
+								<ul>
+									<li><a href='<?=ROOT_PATH?>/public/doc/upload-main.php'>Ajouter des documents</a></li>
+									<li><a href='<?=ROOT_PATH?>/public/achats-offres/offre-gestion.php'>Gestion des offres produits</a></li>
+									<li><a href='<?=ROOT_PATH?>/public/achats-odr/odr-gestion.php'>Gestion des odr</a></li>
+									<li><a href='<?=ROOT_PATH?>/public/achats-suivi-livraison/suivi-liv-gestion.php'>Gestion Suivi livraison</a></li>
+									<li><a href='<?=ROOT_PATH?>/public/achats-gesap/gesap-gestion.php'>Gestion des GESAP</a></li>
+									<li><a href="<?= ROOT_PATH?>/public/gazette/opp-exploit.php">Ajout opportunités</a></li>
+									<li><a href="<?= ROOT_PATH?>/public/achats-gazette/gestion-gazette.php">Ajout de gazettes</a></li>
+								</ul>
+							</li>
+							<li class='has-sub'><a href="<?= ROOT_PATH. '/public/doc/display-doc.php'?>">Achats old</a>
+								<ul>
+									<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#odr-title'?>">ODR</a></li>
+									<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#tel-title'?>">TEL/BRII</a></li>
+									<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#assortiment-title'?>">Assortiment et panier Promo</a></li>
+									<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#mdd-title'?>">MDD</a></li>
+									<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#gfk-title'?>">GFK</a></li>
+								</ul>
+							</li>
 						</ul>
 					</li>
 					<?php if ($dBtlec): ?>
@@ -205,53 +217,53 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 									<li><a href="<?=ROOT_PATH?>/public/exploit/droit.php" class="red-nav">Droits</a></li>
 								<?php endif ?>
 
-						</ul>
-					</li>
-				<?php endif ?>
-				<?php if ($dLcommerce): ?>
-					<li class='active has-sub'><a href='#' title='espace LCommerce - documents' ><span>LCommerce</span></a>
-						<ul><li><a href='<?=ROOT_PATH?>/public/lcom/doc-lcom.php'><span>Documents</span></a></li>
-							<li><a href='<?=ROOT_PATH?>/public/lcom/upload-lcom.php'><span>Ajout de documents</span></a></li>
-							<li><a href='<?=ROOT_PATH?>/public/lcom/move-lcom.php'><span>Gérer les documents</span></a></li>
-						</ul>
-					</li>
-				<?php endif ?>
+							</ul>
+						</li>
+					<?php endif ?>
+					<?php if ($dLcommerce): ?>
+						<li class='active has-sub'><a href='#' title='espace LCommerce - documents' ><span>LCommerce</span></a>
+							<ul><li><a href='<?=ROOT_PATH?>/public/lcom/doc-lcom.php'><span>Documents</span></a></li>
+								<li><a href='<?=ROOT_PATH?>/public/lcom/upload-lcom.php'><span>Ajout de documents</span></a></li>
+								<li><a href='<?=ROOT_PATH?>/public/lcom/move-lcom.php'><span>Gérer les documents</span></a></li>
+							</ul>
+						</li>
+					<?php endif ?>
 
-				<?php if ($dConseil): ?>
-					<li class='has-sub'><a href='<?=CONSEIL?>home.php' class='tooltipped' data-position='bottom' data-tooltip='Réservé adhérents / conseil'><span>adhérents</span></a>
-						<ul>
-							<li><a href='<?=CONSEIL?>home.php' class='tooltipped' data-position='bottom' data-tooltip='Conseil'><span>Conseil</span></a></li>
-							<li><a href='<?=ROOT_PATH?>/public/exploit/doc-adh.php' class='tooltipped' data-position='bottom' data-tooltip='documents réservés adhérents'><span>Documents</span></a></li>
-							<li><a href='<?=ROOT_PATH?>/public/pres/home-pres.php' ><span>Présentations</span></a></li>
-						</ul>
-					</li>
-				<?php endif ?>
-				<?php if ($dMission): ?>
-					<li class='has-sub'><a href='<?=PORTAIL_CM?>cm/index.php' ><span>CHARGES DE MISSION</span></a>
-						<ul>
-							<li><a href='<?=PORTAIL_CM?>cm/index.php' ><span>Portail CM</span></a></li>
-							<li><a href='<?=ROOT_PATH?>/public/cm/cm-news.php' ><span>Fil d'actu</span></a></li>
-						</ul>
-					</li>
-				<?php endif ?>
+					<?php if ($dConseil): ?>
+						<li class='has-sub'><a href='<?=CONSEIL?>home.php' class='tooltipped' data-position='bottom' data-tooltip='Réservé adhérents / conseil'><span>adhérents</span></a>
+							<ul>
+								<li><a href='<?=CONSEIL?>home.php' class='tooltipped' data-position='bottom' data-tooltip='Conseil'><span>Conseil</span></a></li>
+								<li><a href='<?=ROOT_PATH?>/public/exploit/doc-adh.php' class='tooltipped' data-position='bottom' data-tooltip='documents réservés adhérents'><span>Documents</span></a></li>
+								<li><a href='<?=ROOT_PATH?>/public/pres/home-pres.php' ><span>Présentations</span></a></li>
+							</ul>
+						</li>
+					<?php endif ?>
+					<?php if ($dMission): ?>
+						<li class='has-sub'><a href='<?=PORTAIL_CM?>cm/index.php' ><span>CHARGES DE MISSION</span></a>
+							<ul>
+								<li><a href='<?=PORTAIL_CM?>cm/index.php' ><span>Portail CM</span></a></li>
+								<li><a href='<?=ROOT_PATH?>/public/cm/cm-news.php' ><span>Fil d'actu</span></a></li>
+							</ul>
+						</li>
+					<?php endif ?>
 
-				<li><a href="<?=PORTAIL_SAV?>scapsav/home.php" class="tooltipped" data-position="bottom" data-tooltip="site du portail SAV">Portail SAV</a></li>
-				<?php if ($dEvo): ?>
-					<li  class='active has-sub red-nav'><a href="#" >Evolutions</a>
-						<ul>
-							<li><a href="<?=ROOT_PATH?>/public/evo/dde-evo.php" class="red-nav">Demande d'évo</a></li>
-							<li><a href="<?=ROOT_PATH?>/public/evo/dashboard-evo.php" class="red-nav">Supervision</a></li>
-							<li><a href="<?=ROOT_PATH?>/public/evo/vosdemandes-evo.php" class="red-nav">Vos demandes</a></li>
+					<li><a href="<?=PORTAIL_SAV?>scapsav/home.php" class="tooltipped" data-position="bottom" data-tooltip="site du portail SAV">Portail SAV</a></li>
+					<?php if ($dEvo): ?>
+						<li  class='active has-sub red-nav'><a href="#" >Evolutions</a>
+							<ul>
+								<li><a href="<?=ROOT_PATH?>/public/evo/dde-evo.php" class="red-nav">Demande d'évo</a></li>
+								<li><a href="<?=ROOT_PATH?>/public/evo/dashboard-evo.php" class="red-nav">Supervision</a></li>
+								<li><a href="<?=ROOT_PATH?>/public/evo/vosdemandes-evo.php" class="red-nav">Vos demandes</a></li>
 
-						</ul>
-					</li>
-				<?php endif ?>
+							</ul>
+						</li>
+					<?php endif ?>
 
-				<?php if ($dMag): ?>
-					<li><a href="<?=ROOT_PATH ?>/public/user/profil.php" class="tooltipped" data-position="bottom" data-tooltip="Votre compte"><span>Votre magasin<i class="fa fa-user pl-3"></i></span></a></li>
-				<?php endif ?>
-				<li><a href="<?=ROOT_PATH ?>/public/logoff.php" class="tooltipped" data-position="bottom" data-tooltip="se déconnecter"><span><i class="fa fa-power-off"></i></span></a></li>
-			</ul>
-		</div>
+					<?php if ($dMag): ?>
+						<li><a href="<?=ROOT_PATH ?>/public/user/profil.php" class="tooltipped" data-position="bottom" data-tooltip="Votre compte"><span>Votre magasin<i class="fa fa-user pl-3"></i></span></a></li>
+					<?php endif ?>
+					<li><a href="<?=ROOT_PATH ?>/public/logoff.php" class="tooltipped" data-position="bottom" data-tooltip="se déconnecter"><span><i class="fa fa-power-off"></i></span></a></li>
+				</ul>
+			</div>
 
-	<?php endif ?>
+		<?php endif ?>

@@ -51,11 +51,11 @@
 							<div class="col text-right">Marquer le message comme :</div>
 							<div class="col-auto">
 								<?php if ($dial['read_dial']==0): ?>
-									<button class="btn btn-sm btn-kaki" name="read">Lu</button>
+									<button class="btn btn-sm btn-kaki" name="read[<?=$dial['id']?>]">Lu</button>
 									<?php else: ?>
-										<button class="btn btn-sm btn-kaki" name="not_read">Non lu</button>
+										<button class="btn btn-sm btn-kaki" name="not_read[<?=$dial['id']?>]">Non lu</button>
 									<?php endif ?>
-									<input type="hidden" class="form-control" name="id_dial"  value="<?=$dial['id']?>">
+									<input type="hidden" class="form-control" name="id_dial[<?=$dial['id']?>]"  value="<?=$dial['id']?>">
 								</div>
 							</div>
 						<?php endif ?>

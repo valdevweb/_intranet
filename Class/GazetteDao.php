@@ -240,4 +240,17 @@ class GazetteDao{
 		]);
 		return $req->errorInfo();
 	}
+
+	public function getGazetteByParam($param){
+		$req=$this->pdo->query("SELECT * FROM gazette WHERE $param");
+		return $req->fetchAll();
+	}
+		public function getFilesByParam($param){
+		$req=$this->pdo->query("SELECT gazette.id, gazette_files.* FROM gazette_files LEFT JOIN gazette ON gazette_files.id_gazette= gazette.id WHERE $param");
+		return $req->fetchAll(PDO::FETCH_GROUP);
+	}
+		public function getLinksByParam($param){
+		$req=$this->pdo->query("SELECT gazette.id, gazette_links.* FROM gazette_links LEFT JOIN gazette ON gazette_links.id_gazette= gazette.id WHERE $param");
+		return $req->fetchAll(PDO::FETCH_GROUP);
+	}
 }

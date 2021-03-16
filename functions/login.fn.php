@@ -2,11 +2,7 @@
 
 // hash du pwd
 function pwdHash($pwd){
-	// définition du salt
-	$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
-	$salt = base64_encode($salt);
-	$options = ['salt' => $salt];
-	$pwdHash = password_hash($pwd, PASSWORD_BCRYPT, $options);
+	$pwdHash=password_hash($pwd, PASSWORD_BCRYPT);
 	return $pwdHash;
 }
 
@@ -124,11 +120,8 @@ function checkPwd($webUser,$pdoMag,$pdoUser){
 			return false;
 
 		}else{
+			$pwdHash=password_hash($_POST['pwd'], PASSWORD_BCRYPT);
 
-			$salt = mcrypt_create_iv(22, MCRYPT_DEV_URANDOM);
-			$salt = base64_encode($salt);
-			$options = ['salt' => $salt];
-			$pwdHash = password_hash($_POST['pwd'], PASSWORD_BCRYPT, $options);
 			$req=$pdoUser->prepare('UPDATE users SET pwd=:convertedPwd, old_pwd=:old_pwd  WHERE login= :postLogin');
 			$result=$req->execute(array(
 				':convertedPwd'		=> $pwdHash,

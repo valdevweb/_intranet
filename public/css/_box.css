@@ -213,6 +213,18 @@
   margin-left: -15px !important;
   margin-right: -15px !important;
 }
+.bg-green{
+  background: #8bc34a;
+  color: #fff;
+}
 
+.badge-galec{
+  color: #fff;
+  background-color: #0D47A1;
+}
 
+.badge-btlec{
+  background: #F18E0B;
+  color: #fff;
 
+}
