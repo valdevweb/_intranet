@@ -1,0 +1,27 @@
+<?php
+$paramList=[];
+
+$dateParam=" (date_start BETWEEN '".$_POST['date_start'] ."' AND '". $_POST['date_end']."') ";
+$paramList[]=$dateParam;
+if(!empty($_POST['strg'])){
+	$strParam="titre LIKE '%".$_POST['strg']."%'";
+	$paramList[]=$strParam;
+
+}
+if(!empty($_POST['main_cat'])){
+	$mainCatParam="main_cat=".$_POST['main_cat'];
+	$paramList[]=$mainCatParam;
+
+}
+if(!empty($_POST['cat'])){
+	$catParam="cat=".$_POST['cat'];
+	$paramList[]=$catParam;
+}
+$params= join(' AND ', $paramList);
+
+$results=$gazetteDao->getGazetteByParam($params);
+
+if(!empty($results)){
+	$resultsLink=$gazetteDao->getLinksByParam($params);
+	$resultsFiles=$gazetteDao->getFilesByParam($params);
+}

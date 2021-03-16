@@ -64,7 +64,7 @@
 				</div>
 			</div>
 			<div class="row ml-1">
-				<div class="col-8 bg-blue-input rounded pt-2" id="filenames">
+				<div class="col-8 bg-blue-input rounded pt-2" id="filenames-ga">
 					<p><span class="text-main-blue font-weight-bold">Fichier sélectionné : <br></span></p>
 
 				</div>
