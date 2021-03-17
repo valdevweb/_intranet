@@ -35,17 +35,17 @@ class ProspectusDao{
 		]);
 		return $req->fetch();
 	}
-	public function addProspectus(){
+	public function addProspectus($dateStart, $dateEnd, $prosp, $file){
 		$req=$this->pdo->prepare("INSERT INTO prospectus(date_start, date_end, prospectus, date_insert, by_insert, fic) VALUES (:date_start, :date_end, :prospectus, :date_insert, :by_insert, :fic)");
 		$req->execute([
-			':date_start'		=>$_POST['date_start'],
-			':date_end'		=>$_POST['date_end'],
-			':prospectus'		=>strtoupper($_POST['prospectus']),
+			':date_start'		=>$dateStart,
+			':date_end'		=>$dateEnd,
+			':prospectus'		=>$prosp,
 			':date_insert'		=>date('Y-m-d H:i:s'),
 			':by_insert'		=>$_SESSION['id_web_user'],
-			':fic'		=>isset($_FILES['fic']['name'])?$_FILES['fic']['name']:"",
+			':fic'		=>$file,
 		]);
-		return $req->rowCount();
+		return $this->pdo->lastInsertId();
 	}
 
 	public function updateProspectus($idProsp){

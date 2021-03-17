@@ -18,7 +18,7 @@
 						<td><?=date('d-m-Y', strtotime($prosp['date_start']))?></td>
 						<td><?=date('d-m-Y', strtotime($prosp['date_end']))?></td>
 						<td><a href="<?=URL_UPLOAD.'ficwopc/'.$prosp['fic']?>" download><?=$prosp['fic']?></a></td>
-						<td class="text-center"><a href="?prosp-id-mod=<?=$prosp['id']?>"><i class="fas fa-edit"></i></a></td>
+						<td class="text-center"><a href="?prosp-id-mod=<?=$prosp['id']?>#modif-prosp"><i class="fas fa-edit"></i></a></td>
 						<td class="text-center"><a href="offre-delete-prosp.php?id=<?=$prosp['id']?>"><i class="fas fa-trash-alt"></i></a></td>
 					</tr>
 				<?php endforeach ?>

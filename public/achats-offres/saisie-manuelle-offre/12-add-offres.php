@@ -1,10 +1,6 @@
 
 <?php if (!empty($listProsp)): ?>
-	<div class="row" id="add-offre">
-		<div class="col">
-			<div class="alert alert-primary">Les montants et le PVC doivent être saisis avec des points pour les décimales et sans le sigle euro<br>Exemple : 10.51, 55, etc</div>
-		</div>
-	</div>
+
 	<div class="row" >
 		<div class="col">
 			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">

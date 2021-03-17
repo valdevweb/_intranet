@@ -14,19 +14,21 @@ class OffreDao{
 		return $pdo;
 	}
 
-	public function addOffre($montant, $montantF,$pvc){
-		$req=$this->pdo->prepare("INSERT INTO prospectus_offres (id_prosp, gt, marque, produit, reference, ean, pvc, offre, montant, montant_finance, by_insert, date_insert) VALUES ( :id_prosp, :gt, :marque, :produit, :reference, :ean, :pvc, :offre, :montant, :montant_finance, :by_insert, :date_insert)");
+	public function addOffre($idProsp, $gt, $marque, $produit, $ref, $ean, $pvc, $offre, $montant, $montantF,$euro, $cmt){
+		$req=$this->pdo->prepare("INSERT INTO prospectus_offres (id_prosp, gt, marque, produit, reference, ean, pvc, offre, montant, montant_finance, euro, cmt, by_insert, date_insert) VALUES ( :id_prosp, :gt, :marque, :produit, :reference, :ean, :pvc, :offre, :montant, :montant_finance, :euro, :cmt, :by_insert, :date_insert)");
 		$req->execute([
-			':id_prosp'	=>$_POST['id_prosp'],
-			':gt'	=>$_POST['gt'],
-			':marque'	=>strtoupper(trim($_POST['marque'])),
-			':produit'	=>$_POST['produit'],
-			':reference'	=>$_POST['reference'],
-			':ean'	=>$_POST['ean'],
+			':id_prosp'	=>$idProsp,
+			':gt'	=>$gt,
+			':marque'	=>$marque,
+			':produit'	=>$produit,
+			':reference'	=>$ref,
+			':ean'	=>$ean,
 			':pvc'	=>$pvc,
-			':offre'	=>$_POST['offre'],
+			':offre'	=>$offre,
 			':montant'	=>$montant,
 			':montant_finance'	=>$montantF,
+			':euro'				=>$euro,
+			':cmt'				=>$cmt,
 			':by_insert'	=>$_SESSION['id_web_user'],
 			':date_insert'	=>date('Y-m-d H:i:s')
 		]);
@@ -49,22 +51,28 @@ class OffreDao{
 			':id'	=>$id
 		]);
 	}
-		public function deleteOffreByProsp($idProsp){
+	public function deleteOffreByProsp($idProsp){
 		$req=$this->pdo->prepare("DELETE FROM prospectus_offres WHERE id_prosp= :id_prosp");
 		$req->execute([
 			':id_prosp'	=>$idProsp
 		]);
 
 	}
-		public function getOffre($id){
+	public function getOffre($id){
 		$req=$this->pdo->prepare("SELECT * FROM prospectus_offres WHERE id= :id");
 		$req->execute([
-			':id'	=>date($id)
-
+			':id'	=>$id
 		]);
-
 		return $req->fetch();
 	}
+	public function getOffresByIdProsp($idProsp){
+		$req=$this->pdo->prepare("SELECT * FROM prospectus_offres LEFT JOIN prospectus ON prospectus_offres.id_prosp=prospectus.id WHERE id_prosp= :id_prosp");
+		$req->execute([
+			':id_prosp'	=>$idProsp
+		]);
+		return $req->fetch();
+	}
+
 	public function updateOffre($id, $montant, $montantF,$pvc){
 		$req=$this->pdo->prepare("UPDATE prospectus_offres SET id_prosp= :id_prosp, gt= :gt, marque= :marque, produit= :produit, reference= :reference, ean= :ean, pvc= :pvc, offre= :offre, montant= :montant, montant_finance= :montant_finance, by_insert= :by_insert, date_insert= :date_insert WHERE id= :id ");
 		$req->execute([

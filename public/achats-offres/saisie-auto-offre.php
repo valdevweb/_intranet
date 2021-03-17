@@ -34,50 +34,23 @@ $listOffre=$offreDao->getOffreEncours();
 $inProspectus=1;
 
 if (isset($_POST['search_by_week'])) {
-
 	$listArticle=$cataDao->getArticleByCodeOp($_POST['op']);
-
 }
 
 if (isset($_POST['search_by_cata'])) {
-
 	$listArticle=$cataDao->getArticleByCodeOp(strtoupper($_POST['code_op']));
 }
 
 
-if(isset($_POST['add_prosp'])){
-	require 'offre-gestion/01-add-prospectus.php';
-}
+
 if(isset($_POST['add_offre_gessica'])){
-	require 'offre-gestion/03-add-offre-gessica.php';
+	require 'saisie-auto-offre/01-post-add-offre.php';
 }
 
-if(isset($_POST['modify_prosp'])){
-	require 'offre-gestion/02-modify-prospectus.php';
-
-}
-if(isset($_POST['add_offre'])){
-	require 'offre-gestion/03-add-offre.php';
-}
-if(isset($_POST['update_offre'])){
-	require 'offre-gestion/04-update-offre.php';
-}
-if(isset($_GET['prosp-id-mod'])){
-	$prospMod=$prospDao->getProspectusById($_GET['prosp-id-mod']);
-}
-if(isset($_GET['prosp-id-add'])){
-	$prospMod=$prospDao->getProspectusById($_GET['prosp-id-add']);
-}
-
-if(isset($_GET['offre-modif'])){
-	$offreMod=$offreDao->getOffre($_GET['offre-modif']);
-}
 if(isset($_GET['success'])){
 	$arrSuccess=[
-		'prosp-add'=>'Prospectus ajouté avec succès',
-		'prosp-mod'=>'Prospectus mis à jour',
-		'add-offre'=>'Offre ajoutée',
-		'update-offre'=>'Offre modifiée',
+		'offres-add'=>'Offres ajoutées avec succès. Pour voir les offres, <a href="offre-gestion.php">cliquez ici</a>',
+
 	];
 	$success[]=$arrSuccess[$_GET['success']];
 }
@@ -88,7 +61,7 @@ include('../view/_navbar.php');
 ?>
 
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Gestion des offres - tickets et BRII</h1>
+	<h1 class="text-main-blue py-5 ">Saisie automatique des offres</h1>
 	<div class="row">
 		<div class="col-lg-1"></div>
 		<div class="col">
@@ -98,82 +71,36 @@ include('../view/_navbar.php');
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
-
 	<div class="row">
-		<div class="col">
-			<h5 class="text-main-blue border-bottom pb-3 my-3"><i class="fas fa-edit pr-3 text-orange"></i>Saisie des offres</h5>
+		<div class="col pb-3">
+			<h6 class="text-main-blue"><span class="step">1</span>Sélection du prospectus</h6>
 		</div>
 	</div>
+	<?php include '../achats-commun/10-form-search-cata.php' ?>
 	<div class="row">
 		<div class="col">
-			<div class="alert alert-primary">Il existe deux modes de saisie pour les offres :<br>
-				<strong>- la saisie guidée : </strong> elle vous permet d'afficher la liste des articles d'une opération et de saisir pour les articles concernés les offres<br>
-				<strong>- la saisie manuelle : </strong>elle vous permet de créer vous même un prospectus et les articles concernés par les offres
+			<h6 class="text-main-blue">
+				<span class="step">2</span>Saisie des offres sur le prospectus
+				<?=($_POST['op'])??""?>
+				<?=($_POST['code_op'])??""?>
+			</h6>
+		</div>
+	</div>
+	<?php if (!isset($listArticle)): ?>
+
+		<div class="row pb-5">
+			<div class="col">
+				Pas de prospectus sélectionné. Veuillez utiliser le formulaire de recherche pour afficher les articles et saisir les offres
 			</div>
 		</div>
-	</div>
-	<div class="row  pb-5">
-		<div class="col text-center">
-			<a href="saisie-auto-offre.php" class="btn btn-pink">Saisie guidée</a>
-		</div>
-		<div class="col text-center">
-			<a href="saisie-manuelle-offre.php" class="btn btn-cyan">Saisie manuelle</a>
-		</div>
-	</div>
-	<div class="bg-separation"></div>
-	<div class="row">
-		<div class="col">
-			<h5 class="text-main-blue border-bottom pb-3 my-3"><i class="fas fa-edit pr-3 text-orange"></i>Gérer les prospectus</h5>
-		</div>
-	</div>
-	<?php if (!empty($listProsp)): ?>
-		<?php include 'offre-gestion/13-list-prosp.php'; ?>
 		<?php else: ?>
-			<div class="row">
-				<div class="col">
-					<div class="alert alert-primary">Aucun prospectus à afficher</div>
-				</div>
-			</div>
-		<?php endif ?>
-
-		<?php if (isset($_GET['prosp-id-mod'])): ?>
-			<?php include 'offre-gestion/11-modify-prospectus.php'; ?>
-		<?php endif ?>
-		<div class="bg-separation"></div>
-
-	<!-- Start of floating navigation -->
-	<div class="row py-3">
-		<div class="col">
-			<h5 class="text-main-blue" id="list-prosp">Gérer les offres</h5>
-		</div>
-	</div>
-
-
-		<?php if (!empty($listOffre)): ?>
-			<?php include 'offre-gestion/14-list-offre.php' ?>
-			<?php else: ?>
-				<div class="row">
-					<div class="col">
-						<div class="alert alert-primary">Aucune offre à afficher</div>
-					</div>
-				</div>
+			<?php if (!empty($listArticle)): ?>
+				<?php include 'saisie-auto-offre/12-form-add-offres.php' ?>
+				<?php else: ?>
+					<div class="alert alert-danger">Aucun article à afficher pour ce prospectus</div>
+				<?php endif ?>
 			<?php endif ?>
-			<?php if (isset($_GET['offre-modif'])): ?>
-				<?php include 'offre-gestion/15-modify-offre.php' ?>
-			<?php endif ?>
-
-			<div id="floating-nav">
-				<h6 class="text-main-blue text-center">Aller à</h6>
-				<div class="pb-2"><i class="fas fa-newspaper fa-sm circle-icon-blue mr-3"></i><a href="#list-prosp">Listes des prospectus</a></div>
-				<div class="pb-2"><i class="fas fa-euro-sign fa-sm circle-icon-blue mr-3 p-euro"></i><a href="#list-offre">Listes des offres en cours ou à venir</a></div>
-				<div class="pb-2"><i class="fas fa-newspaper fa-sm circle-icon-orange mr-3"></i><a href="#add-prosp-title">Créer un prospectus</a></div>
-				<div class="pb-2"><i class="fas fa-plus fa-sm circle-icon-orange mr-3 p-add"></i><a href="#add-offre-title">Ajouter une offre</a></div>
-			</div>
-
-
-
 		</div>
-		<script src="../js/excel-filter.js"></script>
 
 		<script type="text/javascript">
 
@@ -202,7 +129,6 @@ include('../view/_navbar.php');
 						}
 					});
 				});
-				$('#offre-table').excelTableFilter();
 
 				$("#circle_trigger").click(function() {
 					$("#floating_nav_choices").fadeIn(600);
@@ -298,9 +224,9 @@ include('../view/_navbar.php');
 					titre='<p><span class="text-main-blue font-weight-bold">Fichier(s) sélectionnés: <br></span>'
 					end='</p>';
 					all=titre+fileList+end;
-					$('#file-name-mod').empty();
+					$('#filenames-mod').empty();
 
-					$('#file-name-mod').append(all);
+					$('#filenames-mod').append(all);
 					fileList="";
 				});
 

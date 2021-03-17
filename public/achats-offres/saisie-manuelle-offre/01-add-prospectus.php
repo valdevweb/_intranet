@@ -16,7 +16,9 @@ $ficFile="";
 		if(!empty($allreadyExist)){
 			$errors[]="Ce prospectus existe déjà, vous ne pouvez pas le recréer<br> Pour ajouter des offres, veuillez aller dans la rubrique dédiée";
 		}else{
-			$done=$prospDao->addProspectus();
+
+			$file=isset($_FILES['fic']['name'])?$_FILES['fic']['name']:"";
+			$done=$prospDao->addProspectus($_POST['date_start'],$_POST['date_end'],strtoupper($_POST['prospectus']),$file);
 			if($done==1){
 				$successQ='?success=prosp-add';
 				unset($_POST);
