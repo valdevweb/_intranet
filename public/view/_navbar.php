@@ -171,7 +171,7 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 							<li><a href="<?=ROOT_PATH?>/public/doc/doris.php">Doris</a></li>
 							<li><a href="<?=ROOT_PATH?>/public/doc/extralec.php">Application Extralec</a></li>
 							<li><a href="<?=ROOT_PATH?>/public/salon/presentation-salon-2020.php">Convention 2020</a></li>
-							<li class='has-sub'><a href="#">Exploitation</a>
+							<li class='has-sub'><a href="#">Exploitation achats</a>
 								<ul>
 									<li><a href='<?=ROOT_PATH?>/public/doc/upload-main.php'>Ajouter des documents</a></li>
 									<li><a href='<?=ROOT_PATH?>/public/achats-offres/offre-gestion.php'>Gestion des offres produits</a></li>
