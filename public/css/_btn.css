@@ -43,7 +43,6 @@
   background: #ffc107;
   box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
   transition: all 4s;
-  transition-timing: ease-in-out;
   color: #3a231a;
 }
 .btn-yellow:hover{
@@ -56,7 +55,6 @@
   background: #43493f;
   box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
   transition: all 4s;
-  transition-timing: ease-in-out;
   color: #fff;
 }
 .btn-kaki:hover{
@@ -69,7 +67,6 @@
   background: #000;
   box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
   transition: all 4s;
-  transition-timing: ease-in-out;
   color: #fff;
 }
 .btn-black:hover{
@@ -82,7 +79,6 @@
   background: #008C1C;
   box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
   transition: all 4s;
-  transition-timing: ease-in-out;
   color: #fff;
 }
 .btn-green:hover{
@@ -95,7 +91,6 @@
   background: #1367ea;
   box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
   transition: all 4s;
-  transition-timing: ease-in-out;
   color: #fff;
 }
 .btn-light-blue:hover{
@@ -104,6 +99,34 @@
  color: #fff;
 }
 
+.btn-pink{
+ background: #e83e8c;
+ border:  #d83d84 !important;
+ color: #fff;
+ box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
+ transition: all 4s ease-in-out;
+}
+.btn-pink:hover{
+ transform: scale(1.01);
+ background-color: #d83d84;
+ color: #fff !important;
+ text-decoration: none !important;
+
+}
+.btn-cyan{
+  background:#17a2b8;
+  border: #1394a9 !important;
+  color: #fff;
+  box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
+  transition: all 4s ease-in-out;
+}
+
+.btn-cyan:hover{
+ transform: scale(1.01);
+ background: #1394a9;
+ color: #fff !important;
+ text-decoration: none !important;
+}
 .btn-file {
   position: relative;
   overflow: hidden;
@@ -135,3 +158,4 @@
   transform: scale(1.01);
   background: #0c3f8f;
 }
+
