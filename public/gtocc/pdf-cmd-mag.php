@@ -22,7 +22,7 @@
 		@page{
 			margin-top: 4cm;
 			margin-bottom: 4cm;
-		
+
 		}
 		.text-center{
 			text-align: center;
@@ -146,7 +146,7 @@
 						$qte=$cde['qte_cde'];
 						$palette="";
 						$tarif=$cde['panf_occ'];
-						$ppi=$cde['ppi_occ'];
+						$ppi=$cde['ppi_occ']*$cde['qte_cde'];
 						$marque=$cde['marque_occ'];
 
 					}

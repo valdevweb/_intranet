@@ -37,7 +37,7 @@
   background-color: #fffbf0
 }
 .bg-dark-blue{
-  background: #004085;
+  background: #004085 !important;
   color: #fff;
 }
 .bg-kaki-light{
@@ -227,4 +227,8 @@
   background: #F18E0B;
   color: #fff;
 
+}
+
+.w-80{
+  width: 80px;
 }

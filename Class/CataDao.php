@@ -27,7 +27,7 @@ class CataDao{
 	}
 
 	public function getArticleByCodeOp($codeOp){
-		$req=$this->pdo->prepare("SELECT cata_dossiers.dossier,cata_dossiers.code_op, ba.* FROM ba LEFT JOIN cata_dossiers ON ba.dossier=cata_dossiers.dossier WHERE code_op LIKE :code_op order by gt, marque");
+		$req=$this->pdo->prepare("SELECT cata_dossiers.dossier,cata_dossiers.code_op, ba.* FROM ba LEFT JOIN cata_dossiers ON ba.dossier=cata_dossiers.dossier WHERE code_op LIKE :code_op order by gt, marque, article ");
 		$req->execute([
 			':code_op'	=>$codeOp,
 

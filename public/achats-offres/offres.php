@@ -33,7 +33,7 @@ include('../view/_navbar.php');
 <div class="container">
 	<div class="row py-5">
 		<div class="col">
-			<h1 class="text-main-blue">Les offres produit</h1>
+			<h1 class="text-main-blue">Les offres TEL/BRII</h1>
 		</div>
 	</div>
 	<div class="row">

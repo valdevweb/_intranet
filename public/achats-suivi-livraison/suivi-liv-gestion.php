@@ -15,6 +15,8 @@ require '../../Class/CataDao.php';
 require '../../Class/InfoLivDao.php';
 require '../../Class/ArticleAchatsDao.php';
 require '../../Class/FournisseursHelpers.php';
+require '../../Class/DateHelpers.php';
+
 // require_once '../../vendor/autoload.php';
 
 
@@ -36,82 +38,106 @@ $articleDao=new ArticleAchatsDao($pdoDAchat);
 
 // pour le bouton slect
 $listOpAVenir=$infoLivDao->getOpAVenir();
-$opToDisplay=$infoLivDao->getOpAVenir();
+$opToDisplay=$listOpAVenir;
 
 $listGt=FournisseursHelpers::getGts($pdoFou, "libelle","id");
 $gt="";
 
 
-if (isset($_POST['filter_op'])) {
-	$param=join(' OR ',array_map(
-    function($value){return "code_op='".$value."'";},
-    $_POST['select_op']));
-	// $param= "code_op='".$_POST['select_op']."'";
-	$opToDisplay=$infoLivDao->getOpByCode($param);
-}
+include 'suivi-livraison-commun/01-filter-op.php';
 
 if (isset($_POST['search_by_week'])) {
-	// récup article de la base doc_achats => si rien c'est qu'on a pas encore saisi d'info sur ce cata donc on cherche dans qlik
-	$listArticle=$infoLivDao->getInfoLivByOp($_POST['op']);
-	if(empty($listArticle)){
-		$listArticle=$cataDao->getArticleByCodeOp($_POST['op']);
-		$inInfoLiv=0;
-	}
+	$listArticle=$cataDao->getArticleByCodeOp($_POST['op']);
+	$listInfoLivraison=$infoLivDao->getInfoLivByOpKeyArticle($_POST['op']);
 }
 
 if (isset($_POST['search_by_cata'])) {
-	$listArticle=$infoLivDao->getInfoLivByOp(strtoupper($_POST['code_op']));
-	if(empty($listArticle)){
-		$listArticle=$cataDao->getArticleByCodeOp(strtoupper($_POST['code_op']));
-		$inInfoLiv=0;
-	}
+
+	$listArticle=$cataDao->getArticleByCodeOp(strtoupper($_POST['code_op']));
+	$listInfoLivraison=$infoLivDao->getInfoLivByOpKeyArticle($_POST['code_op']);
 }
+if(isset($_GET['code_op'])){
+	$listArticle=$cataDao->getArticleByCodeOp(strtoupper($_GET['code_op']));
+	$listInfoLivraison=$infoLivDao->getInfoLivByOpKeyArticle($_GET['code_op']);
+}
+
+
+
+
 if(isset($_POST['save'])){
-	if($_POST['update']==1){
-		foreach ($_POST['article'] as $idArticle => $value) {
-			$articleR=null;
+	$idArticle= key($_POST['save']);
+	$erratumFilename="";
+	if(isset($_FILES['file_erratum']['tmp_name'][$idArticle]) && !empty($_FILES['file_erratum']['tmp_name'][$idArticle])){
 
-			$recu=null;
-			$recuDeux=null;
+		$orginalFilename=$_FILES['file_erratum']['name'][$idArticle];
+		$ext = pathinfo($orginalFilename, PATHINFO_EXTENSION);
 
-			if (!empty($_POST['article_remplace'][$idArticle])) {
-				$articleR=$_POST['article_remplace'][$idArticle];
-			}
-
-			if (!empty($_POST['recu'][$idArticle])) {
-				$recu=$_POST['recu'][$idArticle];
-			}
-			if (!empty($_POST['recu_deux'][$idArticle])) {
-				$recuDeux=$_POST['recu_deux'][$idArticle];
-			}
-			$infoLivDao->updateInfoLiv($idArticle, $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],$recuDeux, $_POST['info_livraison_deux'][$idArticle]);
+		$filenameNoExt = basename($orginalFilename, '.'.$ext);
+		$erratumFilename = $filenameNoExt . time() . '.' . $ext;
+		$uploaded=move_uploaded_file($_FILES['file_erratum']['tmp_name'][$idArticle],DIR_UPLOAD.'erratum\\'.$erratumFilename );
+		if($uploaded==false){
+			$errors[]="Nous avons rencontré un problème avec votre fichier, impossible de l'uploader vers le serveur";
 		}
-	}else{
-		$infoOp=$cataDao->getOpByCode($_POST['code_op']);
-		$idOp=$infoLivDao->insertOp($infoOp['code_op'], $infoOp['libelle'], $infoOp['cata'], $infoOp['origine'], $infoOp['date_start'], $infoOp['date_end']);
-		foreach ($_POST['article'] as $idArticle => $value) {
+	}
+	$articleR=null;
+	$recu=null;
+	$recuDeux=null;
+	if (!empty($_POST['article_remplace'][$idArticle])) {
+		$articleR=$_POST['article_remplace'][$idArticle];
+	}
 
-			$idNewArticle=$articleDao->insertArticle($idOp, $_POST['article'][$idArticle], $_POST['dossier'][$idArticle], $_POST['libelle'][$idArticle], $_POST['ean'][$idArticle], $_POST['gt'][$idArticle], $_POST['marque'][$idArticle], $_POST['fournisseur'][$idArticle], $_POST['cnuf'][$idArticle], $_POST['deee'][$idArticle], $_POST['ppi'][$idArticle]);
-			$articleR=null;
-			$recu=null;
-			$recuDeux=null;
+	if (!empty($_POST['recu'][$idArticle])) {
+		$recu=$_POST['recu'][$idArticle];
+	}
+	if (!empty($_POST['recu_deux'][$idArticle])) {
+		$recuDeux=$_POST['recu_deux'][$idArticle];
 
-			if (!empty($_POST['article_remplace'][$idArticle])) {
-				$articleR=$_POST['article_remplace'][$idArticle];
-			}
+	}
 
-			if (!empty($_POST['recu'][$idArticle])) {
-				$recu=$_POST['recu'][$idArticle];
-			}
-			if (!empty($_POST['recu_deux'][$idArticle])) {
-				$recuDeux=$_POST['recu_deux'][$idArticle];
-			}
-			$infoLivDao->insertInfoLiv($idNewArticle, $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],  $recu, $_POST['info_livraison_deux'][$idArticle], );
+	if ($_POST['exist'][$idArticle]=="false") {
+		// pas encore d'info article donc on ajoute l'article et on ajoute l'info livraison
+		// on verifie si on a déja l'op dans la base doc_achats, table operation
+		$opExist=$infoLivDao->getOpByOp($_POST['code_op']);
 
+		if(empty($opExist)){
+			$infoOp=$cataDao->getOpByCode($_POST['code_op']);
+			$idOp=$infoLivDao->insertOp($infoOp['code_op'], $infoOp['libelle'], $infoOp['cata'], $infoOp['origine'], $infoOp['date_start'], $infoOp['date_end']);
+		}else{
+			$idOp=$opExist['id'];
+		}
+		$idNewArticle=$articleDao->insertArticle($idOp, $_POST['article'][$idArticle], $_POST['dossier'][$idArticle], $_POST['libelle'][$idArticle], $_POST['ean'][$idArticle], $_POST['gt'][$idArticle], $_POST['marque'][$idArticle], $_POST['fournisseur'][$idArticle], $_POST['cnuf'][$idArticle], $_POST['deee'][$idArticle], $_POST['ppi'][$idArticle]);
+
+		$infoLivDao->insertInfoLiv($idNewArticle, $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],  $recuDeux, $_POST['info_livraison_deux'][$idArticle], $erratumFilename);
+
+
+
+	}elseif($_POST['exist'][$idArticle]=="true"){
+		// déjà une info article donc on n'ajoute pas l'article et on met à jour l'info livraison
+		if(empty($erratumFilename)){
+			$infoLivDao->updateInfoLiv($_POST['id_article_table_article'][$idArticle], $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],$recuDeux, $_POST['info_livraison_deux'][$idArticle]);
+		}else{
+			$infoLivDao->updateInfoLivErratum($_POST['id_article_table_article'][$idArticle], $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],$recuDeux, $_POST['info_livraison_deux'][$idArticle], $erratumFilename);
+		}
+
+		$idOp=$_POST['id_op'];
+	}
+
+
+	if(isset($erratumFilename)){
+		if(isset($idNewArticle)){
+			$infoLivDao->updateErratum($idNewArticle, $erratumFilename);
+		}else{
+			$infoLivDao->updateErratum($idArticle, $erratumFilename);
 
 		}
 	}
+
+	$successQ='?code_op='.$_POST['code_op']."#".$idArticle;
+	unset($_POST);
+	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+
 }
+
 
 
 //------------------------------------------------------
@@ -148,7 +174,7 @@ include('../view/_navbar.php');
 	<?php include '../achats-commun/10-form-search-cata.php' ?>
 	<?php if (isset($listArticle)): ?>
 		<?php if (!empty($listArticle)): ?>
-			<?php include 'suivi-liv-gestion/form-info-liv.php' ?>
+			<?php include 'suivi-liv-gestion/10-form-info-liv.php' ?>
 			<?php else: ?>
 				<div class="alert alert-danger">Aucun article trouvé pour votre sélection</div>
 			<?php endif ?>
@@ -162,8 +188,8 @@ include('../view/_navbar.php');
 		<div class="row">
 			<div class="col">
 				<?php if (!empty($listOpAVenir)): ?>
-					<?php include 'suivi-liv-gestion/select-info-liv.php' ?>
-					<?php include 'suivi-liv-gestion/table-info-liv.php' ?>
+					<?php include 'suivi-livraison-commun/11-select-info-liv.php' ?>
+					<?php include 'suivi-livraison-commun/12-table-info-liv.php' ?>
 					<?php else: ?>
 						<div class="alert alert-primary">Aucune information livraison n'a été saisie pour les opérations à venir</div>
 					<?php endif ?>
@@ -171,6 +197,17 @@ include('../view/_navbar.php');
 			</div>
 		</div>
 		<script type="text/javascript">
+			function getReadableFileSizeString(fileSizeInBytes) {
+				var i = -1;
+				var byteUnits = [' ko', ' Mo', ' Go'];
+				do {
+					fileSizeInBytes = fileSizeInBytes / 1024;
+					i++;
+				} while (fileSizeInBytes > 1024);
+
+				return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
+			};
+
 			$(document).ready(function() {
 				$('#week').on('change', function() {
 					var week=$('#week').val();
@@ -184,9 +221,87 @@ include('../view/_navbar.php');
 						}
 					});
 				});
-			});
-		</script>
 
+				$('.hidden-form').hide();
+				$('.hidden-form-erratum').hide();
+				$('.show-form').on("click", function(){
+					var id= $(this).data("btn-id");
+					if($('div[data-form-id="'+id+'"]').is(":visible")){
+						$('div[data-form-id="'+id+'"]').hide();
+
+					}else{
+						$('div[data-form-id="'+id+'"]').show();
+					}
+				});
+				$('.show-form-erratum').on("click", function(){
+					var id= $(this).data("btn-erratum-id");
+					if($('div[data-form-erratum-id="'+id+'"]').is(":visible")){
+						$('div[data-form-erratum-id="'+id+'"]').hide();
+
+					}else{
+						$('div[data-form-erratum-id="'+id+'"]').show();
+					}
+				});
+				var url = window.location + '';
+				var splited=url.split("#");
+				if(splited[1]==undefined){
+					var line='';
+				}
+				else if(splited.length==2){
+					var line=splited[1];
+					console.log(line);
+					$("div#"+line).addClass("anim");
+				}
+
+				function offsetAnchor() {
+					if (window.location.hash.length !== 0) {
+						window.scrollTo(window.scrollX, window.scrollY - 500 );
+					}
+				}
+
+				window.setTimeout(offsetAnchor, 0);
+
+
+
+
+				$('input[name="file_erratum"]').change(function(){
+					var fileList='';
+					var warning  ="";
+					var fileSize=$(this).get(0).files[0].size;
+					var fileName=$(this).get(0).files[0].name;
+					var extension=fileName.replace(/^.*\./, '');
+
+					fileList += fileName + warning+'<br>';
+					if(fileSize <= 52428800 ){
+						$("#file-erratum-msg").text("");
+						$("#file-erratum-msg").append("<div class='text-success'>Taille totale : "+ getReadableFileSizeString(fileSize)+"</div>");
+						$('button[type="submit"]').removeAttr('disabled','disabled');
+					}
+
+					if(fileSize > 52428800){
+						$("#file-erratum-msg").text("");
+						$('button[type="submit"]').attr('disabled','disabled');
+						$("#file-erratum-msg").append("<div class='text-danger'>Taille totale : "+getReadableFileSizeString(fileSize)+".<br>La taille est limitée à 50Mo, votre ODR ne pourra pas être enregistrée</div>");
+					}
+
+					titre='<p><span class="text-main-blue font-weight-bold">Fichier sélectionné: <br></span>'
+					end='</p>';
+					all=titre+fileList+end;
+					$('#filename-erratum').empty();
+					$('#filename-erratum').append(all);
+					fileList="";
+				});
+
+
+
+
+
+
+			});
+
+
+
+		</script>
 
 		<?php
 		require '../view/_footer-bt.php';

@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row pb-5">
 	<div class="col">
 		<table class="table table-sm" id="offre-table">
 			<thead class="thead-dark">
@@ -19,8 +19,18 @@
 			</thead>
 			<tbody>
 				<?php foreach ($listOffre as $key => $offre): ?>
-					<tr>
-						<td><?=$offre['prospectus']?></td>
+					<?php if ($offre['id']!=$listIdProsp): ?>
+						<?php
+						$ancreProsp="prosp-".$offre['id'];
+						$listIdProsp=$offre['id'];
+						?>
+						<?php else: ?>
+							<?php
+							$ancreProsp="";
+							 ?>
+					<?php endif ?>
+					<tr id="offre-<?=$offre['id_offre']?>">
+						<td id="<?=$ancreProsp?>"><?=$offre['prospectus']?></td>
 						<td><?=$offre['marque']?></td>
 						<td><?=$offre['produit']?></td>
 						<td><?=$offre['reference']?></td>
@@ -30,7 +40,7 @@
 						<td class="text-right"><?=$offre['montant']?></td>
 						<td class="text-right"><?=$offre['montant_finance']?></td>
 						<td><?=($offre['offre']==1)?"BRII":"TEL"?></td>
-						<td class="text-center"><a href="?offre-modif=<?=$offre['id_offre']?>#offre-delete"><i class="fas fa-edit"></i></a></td>
+						<td class="text-center"><a href="?offre-modif=<?=$offre['id_offre']?>#modif-offre"><i class="fas fa-edit"></i></a></td>
 						<td class="text-center"><a href="offre-delete.php?id=<?=$offre['id_offre']?>"><i class="fas fa-trash-alt"></i></a></td>
 					</tr>
 				<?php endforeach ?>

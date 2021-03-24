@@ -20,7 +20,14 @@ class DateHelpers{
 		return $jour=self::JOURSHORT[$date->format('N')];
 
 	}
+	public static function convertDateTimeToStringJour($date,$size=null){
 
+		if(isset($size)){
+			return $jour=self::JOURLONG[$date->format('N')];
+		}
+		return $jour=self::JOURSHORT[$date->format('N')];
+
+	}
 
 	public static function convertDateToStringMois($date,$size=null){
 		$date=new DateTime($date);
@@ -30,6 +37,7 @@ class DateHelpers{
 		return	$mois=self::MONTHSHORT[$date->format('n')];
 	}
 
+
 	public static function convertDateTimeToStringMois($datetime,$size=null){
 		if(isset($size)){
 			return	$mois=self::MONTHLONG[$datetime->format('n')];
@@ -37,6 +45,11 @@ class DateHelpers{
 		return	$mois=self::MONTHSHORT[$datetime->format('n')];
 	}
 
+	public static function concatJourMoisDateTime($date, $size=null){
+		$jour=self::convertDateTimeToStringJour($date, $size);
+		$mois=self::convertDateTimeToStringMois($date, $size);
+		return $jour .' ' .$date->format('j').' ' .$mois;
+	}
 	public static function getDateJourDuMois($date){
 		$date=new DateTime($date);
 		return	$jourDate=$date->format('j');

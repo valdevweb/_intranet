@@ -23,20 +23,65 @@
 					</div>
 					<div class="row">
 						<div class="col">
-							<div class="label pb-3">Uploader le fichier ficWOPC :</div>
 							<div class="form-group">
-								<label class="btn btn-upload-primary btn-file text-center">
-									<input type="file" name="fic" class='form-control-file'>
-									<i class="fas fa-file pr-3"></i>Sélectionner
-								</label>
+								<label for="link">Liens :</label>
+								<div class="font-italic"><i class="fas fa-lightbulb pr-2"></i>Pour ajouter plusieurs liens, veuillez les séparer par une virgule et un espace</div>
+								<input type="text" class="form-control form-primary" name="link" id="link" value="<?=($_POST['link'])??""?>" >
 							</div>
 						</div>
-						<div class="col" id="filenames">
+					</div>
 
+					<div class="row">
+						<div class="col">
+							<div class="label pb-3">Fichier ficWOPC :</div>
+						</div>
+					</div>
+					<div class="row ml-1">
+						<div class="col-lg-6 bg-blue-input rounded pt-2">
+							<div class="row">
+								<div class="col" id="fic-name">
+									<p><span class="text-main-blue font-weight-bold">Fichier sélectionné : <br></span></p>
+								</div>
+								<div class="col-auto">
+
+									<div class="form-group">
+										<label class="btn btn-upload-primary btn-file">
+											<input type="file" name="fic" class='form-control-file'>
+											<i class="fas fa-file pr-3"></i>Sélectionner
+										</label>
+									</div>
+								</div>
+
+							</div>
+							<div class="row">
+								<div class="col" id="fic-msg"></div>
+							</div>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col" id="file-msg"></div>
+						<div class="col">
+							<div class="label pb-3">Autres fichiers joints :</div>
+						</div>
+					</div>
+					<div class="row ml-1">
+						<div class="col bg-blue-input rounded pt-2">
+							<div class="row">
+								<div class="col"  id="filename-other">
+									<p><span class="text-main-blue font-weight-bold">Fichier sélectionné : <br></span></p>
+								</div>
+								<div class="col-auto">
+									<div class="form-group">
+										<label class="btn btn-upload-primary btn-file text-center">
+											<input type="file" name="file_other[]" class='form-control-file' multiple>
+											Sélectionner
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col" id="file-other-msg"></div>
+							</div>
+						</div>
 					</div>
 					<div class="row pb-5">
 						<div class="col text-right">

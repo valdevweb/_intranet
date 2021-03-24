@@ -29,9 +29,6 @@ $prospDao=new ProspectusDao($pdoDAchat);
 $offreDao=new OffreDao($pdoDAchat);
 $cataDao=new CataDao($pdoQlik);
 
-$listProsp=$prospDao->getComingProspectus((new DateTime())->format('Y-m-d'));
-$listOffre=$offreDao->getOffreEncours();
-$inProspectus=1;
 
 if (isset($_POST['search_by_week'])) {
 	$listArticle=$cataDao->getArticleByCodeOp($_POST['op']);

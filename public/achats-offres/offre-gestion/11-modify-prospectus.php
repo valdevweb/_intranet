@@ -30,7 +30,15 @@
 							</div>
 						</div>
 					</div>
-
+					<div class="row">
+						<div class="col">
+							<div class="form-group">
+								<label for="link">Liens :</label>
+								<div class="font-italic"><i class="fas fa-lightbulb pr-2"></i>Pour ajouter plusieurs liens, veuillez les séparer par une virgule et un espace</div>
+								<input type="text" class="form-control form-primary" name="link" id="link" value="<?=($_POST['link'])??""?>" >
+							</div>
+						</div>
+					</div>
 
 					<div class="row">
 						<div class="col">
@@ -38,7 +46,7 @@
 						</div>
 					</div>
 					<div class="row ml-1">
-						<div class="col-lg-6 bg-blue-input rounded ">
+						<div class="col-lg-6 bg-blue-input rounded pt-2">
 							<div class="row">
 								<div class="col" id="file-name-mod">
 									<p><span class="text-main-blue font-weight-bold">Fichier sélectionné : <br></span></p>
@@ -65,7 +73,7 @@
 						</div>
 					</div>
 					<div class="row ml-1">
-						<div class="col bg-blue-input  rounded pt-2">
+						<div class="col bg-blue-input rounded pt-2">
 							<div class="row">
 								<div class="col"  id="filename-other">
 									<p><span class="text-main-blue font-weight-bold">Fichier sélectionné : <br></span></p>
@@ -84,12 +92,7 @@
 							</div>
 						</div>
 					</div>
-
-
-
-
-
-					<div class="row">
+					<div class="row mt-3">
 						<div class="col text-right">
 							<button class="btn btn-primary" name="modify_prosp">Valider</button>
 

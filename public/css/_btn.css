@@ -139,7 +139,6 @@
   min-height: 100%;
   font-size: 100px;
   text-align: right;
-  filter: alpha(opacity=0);
   opacity: 0;
   outline: none;
   background: white;
@@ -151,7 +150,6 @@
   background: #0D47A1;
   box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
   transition: all 4s;
-  transition-timing: ease-in-out;
   color: #fff;
 }
 .btn-upload-primary:hover{
@@ -159,3 +157,14 @@
   background: #0c3f8f;
 }
 
+
+.btn-upload-orange{
+  background: #f18f0b;
+  box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
+  transition: all 4s;
+  color: #fff;
+}
+.btn-upload-orange:hover{
+  transform: scale(1.01);
+  background: #f3a53b;
+}

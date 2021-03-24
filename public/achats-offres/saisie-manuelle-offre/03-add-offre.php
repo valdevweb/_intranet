@@ -21,7 +21,7 @@ if(empty($_POST['offre'])){
 	$errors[]="Merci de sélectionner le type d'offre";
 }
 if(empty($errors)){
-	$done=$offreDao->addOffre($_POST['id_prosp'], $_POST['gt'], strtoupper(trim($_POST['marque'])), $_POST['produit'], $_POST['reference'],$_POST['ean'], $pvc,$_POST['offre'], $_POST['montant'], $_POST['montant_finance'],"euro", "cmt" );
+	$done=$offreDao->addOffre($_POST['id_prosp'], $_POST['gt'], strtoupper(trim($_POST['marque'])), $_POST['produit'], $_POST['reference'],$_POST['ean'],$_POST['pvc'],$_POST['offre'], $_POST['montant'], $_POST['montant_finance'],$_POST['euro'], $_POST['cmt'] );
 	if($done==1){
 		$successQ='?success=add-offre#add-offre';
 		unset($_POST);

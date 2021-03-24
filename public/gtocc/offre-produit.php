@@ -22,8 +22,8 @@ require '../../Class/UserHelpers.php';
 require '../../Class/OccHelpers.php';
 require '../../Class/OccCdesDao.php';
 
-
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
 
@@ -233,7 +233,15 @@ function getQteArticleQlik($pdoOcc, $article){
 	return $data['qte_qlik'];
 }
 
+function getQuantiteActuelle($pdoOcc,$article){
+	$req=$pdoOcc->prepare("SELECT * FROM articles_qlik WHERE article_qlik= :article_qlik");
+	$req->execute([
+		':article_qlik'	=>$article
 
+	]);
+	return $req->fetch(PDO::FETCH_ASSOC);
+
+}
 
 //------------------------------------------------------
 //			DECLARATIONS
@@ -288,7 +296,12 @@ if(isset($_GET['idTempDelArticle'])){
 	header("Location:offre-produit.php");
 }
 include 'offreprod/02-add-article-to-cart.php';
-include 'offreprod/03-checkout.php';
+
+
+
+if(isset($_POST['checkout'])){
+	include 'offreprod/03-checkout.php';
+}
 
 
 if(isset($_GET['del-palette'])){

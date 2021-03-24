@@ -14,12 +14,29 @@ class ProspectusDao{
 		return $pdo;
 	}
 
-	public function getComingProspectus($today){
+	public function getComingProspectus(){
 		$req=$this->pdo->prepare("SELECT * FROM prospectus WHERE date_end>= :date_end");
 		$req->execute([
-			':date_end'		=>$today
+			':date_end'		=>date('Y-m-d')
 		]);
 		return $req->fetchAll();
+	}
+
+	public function getComingProspectusFiles(){
+		$req=$this->pdo->prepare("SELECT id_prosp, prospectus_files.* FROM prospectus_files LEFT JOIN prospectus ON prospectus_files.id_prosp=prospectus.id WHERE date_end>= :date_end");
+		$req->execute([
+			':date_end'		=>date('Y-m-d')
+		]);
+		return $req->fetchAll(PDO::FETCH_GROUP);
+	}
+
+
+	public function getComingProspectusLinks(){
+		$req=$this->pdo->prepare("SELECT id_prosp, prospectus_links.* FROM prospectus_links LEFT JOIN prospectus ON prospectus_links.id_prosp=prospectus.id WHERE date_end>= :date_end");
+		$req->execute([
+			':date_end'		=>date('Y-m-d')
+		]);
+		return $req->fetchAll(PDO::FETCH_GROUP);
 	}
 	public function getProspectusById($idProspectus){
 		$req=$this->pdo->prepare("SELECT * FROM prospectus WHERE id= :id");
@@ -48,34 +65,59 @@ class ProspectusDao{
 		return $this->pdo->lastInsertId();
 	}
 
-	public function updateProspectus($idProsp){
-		$fic="";
-		if(isset($_FILES['fic-mod']['name']) && !empty($_FILES['fic-mod']['name'])){
-			$fic=$_FILES['fic-mod']['name'];
+	public function updateProspectusWithFic($idProsp){
 
-		}else{
-			if(!empty($_POST['previous_fic'])){
-				$fic=$_POST['previous_fic'];
-			}
-		}
-		$req=$this->pdo->prepare("UPDATE prospectus SET date_start= :date_start, date_end= :date_end, prospectus= :prospectus, fic= :fic WHERE id= :id ");
+		$req=$this->pdo->prepare("UPDATE prospectus SET date_start= :date_start, date_end= :date_end, prospectus= :prospectus, fic= :fic, date_insert= :date_insert WHERE id= :id ");
 		$req->execute([
 			':date_start'		=>$_POST['date_start'],
 			':date_end'		=>$_POST['date_end'],
 			':prospectus'		=>strtoupper($_POST['prospectus']),
-			':fic'		=>$fic,
+			':fic'		=>$_FILES['fic-mod']['name'],
 			':id'		=>$idProsp,
+			':date_insert'		=>date('Y-m-d H:i:s'),
+
 		]);
 		return $req->rowCount();
 
 	}
+	public function updateProspectusWithoutFic($idProsp){
 
-		public function deleteProsp($id){
+		$req=$this->pdo->prepare("UPDATE prospectus SET date_start= :date_start, date_end= :date_end, prospectus= :prospectus, date_insert= :date_insert  WHERE id= :id ");
+		$req->execute([
+			':date_start'		=>$_POST['date_start'],
+			':date_end'		=>$_POST['date_end'],
+			':prospectus'		=>strtoupper($_POST['prospectus']),
+			':id'		=>$idProsp,
+			':date_insert'		=>date('Y-m-d H:i:s'),
+
+		]);
+		return $req->rowCount();
+
+	}
+	public function deleteProsp($id){
 		$req=$this->pdo->prepare("DELETE FROM prospectus WHERE id= :id");
 		$req->execute([
 			':id'	=>$id
 		]);
 
+	}
+
+
+	public function insertFile($idProsp, $file){
+		$req=$this->pdo->prepare("INSERT INTO prospectus_files (id_prosp, file) VALUES (:id_prosp, :file)");
+		$req->execute([
+			':id_prosp'		=>$idProsp,
+			':file'			=>$file
+		]);
+		return $req->rowCount();
+	}
+		public function insertLink($idProsp, $link){
+		$req=$this->pdo->prepare("INSERT INTO prospectus_links (id_prosp, link) VALUES (:id_prosp, :link)");
+		$req->execute([
+			':id_prosp'		=>$idProsp,
+			':link'			=>$link
+		]);
+		return $req->rowCount();
 	}
 
 }

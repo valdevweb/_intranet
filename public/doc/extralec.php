@@ -20,7 +20,7 @@ require '../view/_navbar.php';
 
 
 <p>Pour toute information ou inscription, rendez-vous sur <a href="http://www.extralecbtlec.fr" class="blue-link"> http://www.extralecbtlec.fr</a></p>
- <embed src="<?=SITE_ADDRESS ."/public/doc/plaquetteCommercialeEXTRALEC-ZEPLV.pdf" ?>" type='application/pdf' width=100% height=900px/>
+ <embed src="../doc-doc/extralec_v6.pdf" type='application/pdf' width=100% height=900px/>
 </div>
 
 <?php

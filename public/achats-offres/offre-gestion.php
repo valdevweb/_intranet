@@ -29,10 +29,12 @@ $prospDao=new ProspectusDao($pdoDAchat);
 $offreDao=new OffreDao($pdoDAchat);
 $cataDao=new CataDao($pdoQlik);
 
-$listProsp=$prospDao->getComingProspectus((new DateTime())->format('Y-m-d'));
+$listProsp=$prospDao->getComingProspectus();
+$listFiles=$prospDao->getComingProspectusFiles();
+$listLinks=$prospDao->getComingProspectusLinks();
 $listOffre=$offreDao->getOffreEncours();
 $inProspectus=1;
-
+$listIdProsp="";
 if (isset($_POST['search_by_week'])) {
 
 	$listArticle=$cataDao->getArticleByCodeOp($_POST['op']);
@@ -45,20 +47,11 @@ if (isset($_POST['search_by_cata'])) {
 }
 
 
-if(isset($_POST['add_prosp'])){
-	require 'offre-gestion/01-add-prospectus.php';
-}
-if(isset($_POST['add_offre_gessica'])){
-	require 'offre-gestion/03-add-offre-gessica.php';
-}
-
 if(isset($_POST['modify_prosp'])){
 	require 'offre-gestion/02-modify-prospectus.php';
 
 }
-if(isset($_POST['add_offre'])){
-	require 'offre-gestion/03-add-offre.php';
-}
+
 if(isset($_POST['update_offre'])){
 	require 'offre-gestion/04-update-offre.php';
 }
@@ -141,12 +134,12 @@ include('../view/_navbar.php');
 		<?php endif ?>
 		<div class="bg-separation"></div>
 
-	<!-- Start of floating navigation -->
-	<div class="row py-3">
-		<div class="col">
-			<h5 class="text-main-blue" id="list-prosp">Gérer les offres</h5>
+		<!-- Start of floating navigation -->
+		<div class="row py-3">
+			<div class="col">
+				<h5 class="text-main-blue border-bottom pb-3 my-3" id="list-prosp"><i class="fas fa-edit pr-3 text-orange"></i>Gérer les offres</h5>
+			</div>
 		</div>
-	</div>
 
 
 		<?php if (!empty($listOffre)): ?>
@@ -161,17 +154,6 @@ include('../view/_navbar.php');
 			<?php if (isset($_GET['offre-modif'])): ?>
 				<?php include 'offre-gestion/15-modify-offre.php' ?>
 			<?php endif ?>
-
-			<div id="floating-nav">
-				<h6 class="text-main-blue text-center">Aller à</h6>
-				<div class="pb-2"><i class="fas fa-newspaper fa-sm circle-icon-blue mr-3"></i><a href="#list-prosp">Listes des prospectus</a></div>
-				<div class="pb-2"><i class="fas fa-euro-sign fa-sm circle-icon-blue mr-3 p-euro"></i><a href="#list-offre">Listes des offres en cours ou à venir</a></div>
-				<div class="pb-2"><i class="fas fa-newspaper fa-sm circle-icon-orange mr-3"></i><a href="#add-prosp-title">Créer un prospectus</a></div>
-				<div class="pb-2"><i class="fas fa-plus fa-sm circle-icon-orange mr-3 p-add"></i><a href="#add-offre-title">Ajouter une offre</a></div>
-			</div>
-
-
-
 		</div>
 		<script src="../js/excel-filter.js"></script>
 
@@ -189,6 +171,17 @@ include('../view/_navbar.php');
 			};
 
 			$(document).ready(function(){
+				var url = window.location + '';
+				var splited=url.split("#");
+				if(splited[1]==undefined){
+					var line='';
+				}
+				else if(splited.length==2){
+					var line=splited[1];
+					line=line.replace("offre-", "");
+					$("tr#offre-"+line).addClass("anim");
+				}
+
 
 				$('#week').on('change', function() {
 					var week=$('#week').val();
@@ -214,50 +207,7 @@ include('../view/_navbar.php');
 						$("#floating_nav_choices").fadeOut(300);
 					}
 				});
-				$('input[name="fic"]').change(function(){
-					var fileList='';
-					var fileExtension = ['xml'];
-					var warning  ="";
-					var interdit=false;
-					var fileSize=$(this).get(0).files[0].size;
-					var fileName=$(this).get(0).files[0].name;
-					var extension=fileName.replace(/^.*\./, '');
-					if ($.inArray(extension, fileExtension)==-1) {
-						warning="<i class='fas fa-times px-3 text-danger'></i>";
-						interdit=true;
-					}else{
-						warning="<i class='fas fa-check px-3 text-success'></i>";
 
-					}
-					fileList += fileName + warning+'<br>';
-
-
-					if(fileSize <= 52428800 && interdit==false){
-						$("#file-msg").text("");
-						$("#file-msg").append("<div class='text-success'>Taille totale : "+ getReadableFileSizeString(fileSize)+"</div>");
-						$('button[type="submit"]').removeAttr('disabled','disabled');
-
-					}
-					if(interdit==true){
-						$("#file-msg").text("");
-						$('button[type="submit"]').attr('disabled','disabled');
-						$("#file-msg").append("<div class='text-danger'>Vous devez télécharger un fichier xml(<i class='fas fa-times px-1 text-danger'></i>)</div>");
-					}
-					if(fileSize > 52428800 && interdit==false){
-						$("#file-msg").text("");
-						$('button[type="submit"]').attr('disabled','disabled');
-						$("#file-msg").append("<div class='text-danger'>Taille totale : "+getReadableFileSizeString(fileSize)+".<br>La taille est limitée à 50Mo, votre message ne pourra pas être envoyé</div>");
-
-					}
-
-					titre='<p><span class="text-main-blue font-weight-bold">Fichier(s) sélectionnés: <br></span>'
-					end='</p>';
-					all=titre+fileList+end;
-					$('#filenames').empty();
-
-					$('#filenames').append(all);
-					fileList="";
-				});
 
 				$('input[name="fic-mod"]').change(function(){
 					var fileList='';
@@ -305,6 +255,45 @@ include('../view/_navbar.php');
 				});
 
 
+				$('input[name="file_other[]"]').change(function(){
+					var totalSize=0;
+					var fileName='';
+					var fileList='';
+					var nbFiles = $(this).get(0).files.length;
+
+
+
+					for (var i = 0; i < nbFiles; ++i) {
+						var fileSize=$(this).get(0).files[i].size;
+						fileName=$(this).get(0).files[i].name;
+						totalSize = totalSize+fileSize;
+						var extension=fileName.replace(/^.*\./, '');
+
+						fileList += fileName +'<br>';
+					}
+
+					if(totalSize <= 52428800){
+						$("#file-other-msg").text("");
+						$("#file-other-msg").append("<div class='text-success'>Taille totale : "+ getReadableFileSizeString(totalSize)+"</div>");
+						$('button[type="submit"]').removeAttr('disabled','disabled');
+
+					}
+
+					if(totalSize > 52428800){
+						$("#file-other-msg").text("");
+						$('button[type="submit"]').attr('disabled','disabled');
+						$("#file-other-msg").append("<div class='text-danger'>Taille totale : "+getReadableFileSizeString(totalSize)+".<br>La taille est limitée à 50Mo, votre ODR ne pourra pas être enregistrée</div>");
+
+					}
+
+					titre='<p><span class="text-main-blue font-weight-bold">Fichier(s) sélectionnés: <br></span>'
+					end='</p>';
+					all=titre+fileList+end;
+					$('#filename-other').empty();
+
+					$('#filename-other').append(all);
+					fileList="";
+				});
 			});
 		</script>
 

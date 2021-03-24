@@ -9,7 +9,10 @@ class Db{
 
 
 	public function getPdo($dbName){
-		if($dbName!='web_users' && $dbName!='qlik' && $dbName!='stats'){
+		if($dbName=='_qlik'){
+			$this->dbName=$dbName;
+		}
+		elseif($dbName!='web_users' && $dbName!='qlik' && $dbName!='stats'){
 			$this->dbName=VERSION . $dbName;
 		}else{
 			$this->dbName=$dbName;

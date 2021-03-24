@@ -32,7 +32,7 @@ if(empty($_POST['offre'])){
 if(empty($errors)){
 	$done=$offreDao->updateOffre($_GET['offre-modif'], $montant, $montantF, $pvc);
 	if($done==1){
-		$successQ='?success=update-offre#list-offre';
+		$successQ='?success=update-offre#offre-'.$_GET['offre-modif'];
 		unset($_POST);
 		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 	}

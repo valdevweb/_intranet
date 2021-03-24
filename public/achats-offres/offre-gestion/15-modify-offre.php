@@ -2,7 +2,7 @@
 	<div class="col border p-5">
 		<?php if (isset($offreMod) && !empty($offreMod)): ?>
 
-		<div class="row my-3">
+		<div class="row my-3" id="modif-offre">
 			<div class="col">
 				<h6 class="text-main-blue">Modifier l'offre</h6>
 			</div>

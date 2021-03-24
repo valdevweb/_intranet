@@ -93,6 +93,7 @@ class OffreDao{
 		]);
 		return $req->rowCount();
 	}
+
 }
 
 
