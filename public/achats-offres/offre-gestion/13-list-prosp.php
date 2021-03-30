@@ -3,6 +3,7 @@
 		<table class="table table-sm">
 			<thead class="thead-dark">
 				<tr>
+					<th>Code op</th>
 					<th>Prospectus</th>
 					<th>Date de début</th>
 					<th>Date de fin</th>
@@ -16,14 +17,15 @@
 			<tbody>
 				<?php foreach ($listProsp as $key => $prosp): ?>
 					<tr>
-						<td><a href="#prosp-<?=$prosp['id']?>"><?=$prosp['prospectus']?></a></td>
+						<td><?=$prosp['code_op']?></td>
+						<td><?=$prosp['prospectus']?></td>
 						<td class="nowrap"><?=date('d-m-Y', strtotime($prosp['date_start']))?></td>
 						<td class="nowrap"><?=date('d-m-Y', strtotime($prosp['date_end']))?></td>
 						<td><a href="<?=URL_UPLOAD.'ficwopc/'.$prosp['fic']?>" download><?=$prosp['fic']?></a></td>
 						<td>
 							<?php if (isset($listFiles[$prosp['id']])): ?>
 								<?php foreach ($listFiles[$prosp['id']] as $key => $file): ?>
-									<a href="<?=URL_UPLOAD.'offres/'.$file['file']?>" download><?=($file['filename'])??'<i class="fas fa-file"></i>'?></a><br>
+									<a href="<?=URL_UPLOAD.'offres/'.$file['file']?>" download><?=!empty($file['filename'])?$file['filename']:'<i class="fas fa-file"></i>'?></a><br>
 								<?php endforeach ?>
 							<?php endif ?>
 						</td>
@@ -34,7 +36,7 @@
 								<?php endforeach ?>
 							<?php endif ?>
 						</td>
-						<td class="text-center"><a href="?prosp-id-mod=<?=$prosp['id']?>#modif-prosp"><i class="fas fa-edit"></i></a></td>
+						<td class="text-center"><a href="modify-prosp.php?id=<?=$prosp['id']?>"><i class="fas fa-edit"></i></a></td>
 						<td class="text-center"><a href="offre-delete-prosp.php?id=<?=$prosp['id']?>"><i class="fas fa-trash-alt"></i></a></td>
 					</tr>
 				<?php endforeach ?>

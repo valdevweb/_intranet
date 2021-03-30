@@ -7,6 +7,7 @@ if(!isset($_SESSION['id'])){
 if($_SESSION['id']==1531){
 	header('Location:../gtocc/offre-produit.php');
 }
+require '../../Class/Db.php';
 require '../../config/db-connect.php';
 
 //----------------------------------------------------------------
@@ -24,8 +25,17 @@ require_once '../../Class/LitigeDialDao.php';
 require_once '../../Class/UserHelpers.php';
 require_once '../../Class/UserDao.php';
 require_once '../../Class/FlashDao.php';
+require '../../Class/GazetteDao.php';
 
 
+
+
+$db=new Db();
+$pdoUser=$db->getPdo('web_users');
+$pdoStat=$db->getPdo('stats');
+$pdoBt=$db->getPdo('btlec');
+$pdoLitige=$db->getPdo('litige');
+$pdoDAchat=$db->getPdo('doc_achats');
 
 // stats recup mdp
 
@@ -49,6 +59,7 @@ $oppDao=new OpportuniteDAO($pdoBt);
 $flashDao=new FlashDao($pdoBt);
 $dialDao=new LitigeDialDao($pdoLitige);
 $userDao=new UserDao($pdoUser);
+$gazetteDao=new GazetteDao($pdoDAchat);
 
 $droitExploit=$userDao->isUserAllowed([5]);
 
@@ -62,41 +73,54 @@ $listActiveOpp=$oppDao->getActiveOpp();
 
 $newDialLitige=$dialDao->getUnreadDossier();
 
-$gazettes=showThisWeek($pdoBt);
+// $gazettes=showThisWeek($pdoBt);
 
-$links=createLinks($pdoBt,$gazettes);
+// $links=createLinks($pdoBt,$gazettes);
 $listFlashBt=$flashDao->getListFlashBySite((new DateTime())->format('Y-m-d'),'portail_bt');
 
+$catBt=$gazetteDao->getCatByMain(1);
+$catGalec=$gazetteDao->getCatByMain(2);
+$mainCat=[1 =>"btlec", 2 =>"galec"];
+
+$listCat=$gazetteDao->getCat();
+$listGazette=$gazetteDao->getGazetteThisWeek();
+$gazetteDate="";
+if(!empty($listGazette)){
+	$listFiles=[];
+	$listLinks=[];
+	$listFiles=$gazetteDao->getFilesEncours();
+	$listLinks=$gazetteDao->getLinkEncours();
+}
 // les 2 dernière gazettes opportunités
-$gazetteAppros=showLastGazettesAppros($pdoBt);
-$link=URL_UPLOAD."gazette/";
-$approHtml="";
-if($gazetteAppros){
-	foreach ($gazetteAppros as $gazette){
-		//modif du 20/06
-		if(!empty($gazette['title'])){
-			$detail=" : <br>";
-			$detail.=str_replace("<br />"," - ",$gazette['title']);
-		}else{
-			$detail="";
-		}
-		$filename=$gazette['file'];
-		$filename=explode(".",$filename);
-		$approFilename=$filename[0];
-		$approHtml .= "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'><i class='fa fa-hand-o-right pr-3' aria-hidden='true'></i>".$approFilename."</a>"  . $detail."</li>";
-	}
-}
-$gazetteSpe=showThisWeekSpe($pdoBt);
+// $gazetteAppros=showLastGazettesAppros($pdoBt);
+// $link=URL_UPLOAD."gazette/";
+// $approHtml="";
+// if($gazetteAppros){
+// 	foreach ($gazetteAppros as $gazette){
+// 		//modif du 20/06
+// 		if(!empty($gazette['title'])){
+// 			$detail=" : <br>";
+// 			$detail.=str_replace("<br />"," - ",$gazette['title']);
+// 		}else{
+// 			$detail="";
+// 		}
+// 		$filename=$gazette['file'];
+// 		$filename=explode(".",$filename);
+// 		$approFilename=$filename[0];
+// 		$approHtml .= "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'><i class='fa fa-hand-o-right pr-3' aria-hidden='true'></i>".$approFilename."</a>"  . $detail."</li>";
+// 	}
+// }
+// $gazetteSpe=showThisWeekSpe($pdoBt);
 
 
 
-$speHtml="";
+// $speHtml="";
 
-if($gazetteSpe){
-	foreach ($gazetteSpe as $gSpe){
-		$speHtml .= "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gSpe['file']."'><i class='fa fa-hand-o-right pr-3' aria-hidden='true'></i>" .$gSpe['title'] ."</a></li>";
-	}
-}
+// if($gazetteSpe){
+// 	foreach ($gazetteSpe as $gSpe){
+// 		$speHtml .= "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gSpe['file']."'><i class='fa fa-hand-o-right pr-3' aria-hidden='true'></i>" .$gSpe['title'] ."</a></li>";
+// 	}
+// }
 
 
 
@@ -214,7 +238,25 @@ include ('../view/_navbar.php');
 include('home.ct.php');
 
 ?>
-<script type="text/javascript"></script>
+	<script type="text/javascript">
+
+		$(document).ready(function() {
+
+
+			$('div.more').hide();
+			$('.show-link').on("click", function(){
+				var id= $(this).data("gazette-id");
+				if($('div[data-content-id="'+id+'"]').is(":visible")){
+					$('div[data-content-id="'+id+'"]').hide();
+
+				}else{
+					$('div[data-content-id="'+id+'"]').show();
+				}
+			});
+
+		});
+
+	</script>
 
 <!-- <script src="js/slider.js"></script> -->
 <?php

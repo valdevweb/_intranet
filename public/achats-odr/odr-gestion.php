@@ -87,7 +87,7 @@ include('../view/_navbar.php');
 		<div class="bg-separation"></div>
 		<div class="row">
 			<div class="col">
-			<h5 class="text-main-blue border-bottom pb-3 mt-3 mb-5"><i class="fas fa-pencil-alt pr-3"></i>Saisie d'ODR</h5>
+				<h5 class="text-main-blue border-bottom pb-3 mt-3 mb-5"><i class="fas fa-pencil-alt pr-3"></i>Saisie d'ODR</h5>
 
 			</div>
 		</div>
@@ -149,7 +149,14 @@ include('../view/_navbar.php');
 				var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'pdf', 'xls', 'xlsx'];
 				var warning  ="";
 				var interdit=false;
+				var formGroup="<div class='form-group'>";
+				var endDiv="</div>";
+				var titre="<div class='text-main-blue heavy'>Nommer  ";
+				var titreOrdre="<div class='text-main-blue heavy'>Ordre d'affichage:</div>";
 
+
+				$("#zone-noms").empty();
+				$("#zone-ordre").empty();
 				for (var i = 0; i < nbFiles; ++i) {
 					var fileSize=$(this).get(0).files[i].size;
 					fileName=$(this).get(0).files[i].name;
@@ -163,6 +170,13 @@ include('../view/_navbar.php');
 
 					}
 					fileList += fileName + warning+'<br>';
+					var input="<input type='text' class='form-control form-primary'  name='filename[" +i +"]'>";
+					var label="<div class='text-main-blue'>Ordre :</div>";
+					var ordre=i+1;
+					var inputOrdre="<input type='text' class='form-control form-primary'  name='ordre[" +i +"]' value='"+ordre+"'>";
+
+					$("#zone-noms").append(titre+fileName+formGroup+input+endDiv);
+					$("#zone-ordre").append(label+formGroup +inputOrdre+endDiv);
 				}
 
 				if(totalSize <= 52428800 && interdit==false){

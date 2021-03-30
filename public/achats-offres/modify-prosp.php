@@ -29,27 +29,45 @@ $prospDao=new ProspectusDao($pdoDAchat);
 $offreDao=new OffreDao($pdoDAchat);
 $cataDao=new CataDao($pdoQlik);
 
-$listProsp=$prospDao->getComingProspectus();
-if (isset($_POST['search_by_week'])) {
-	$listArticle=$cataDao->getArticleByCodeOp($_POST['op']);
+if(isset($_GET['id'])){
+	$prosp=$prospDao->getProspectusById($_GET['id']);
+	$listFiles=$prospDao->getOneProspectusFiles($_GET['id']);
+	$listLinks=$prospDao->getOneProspectusLinks($_GET['id']);
+}else{
+	echo "pas de prospectus sélectionné";
+	exit();
 }
 
-if (isset($_POST['search_by_cata'])) {
-	$listArticle=$cataDao->getArticleByCodeOp(strtoupper($_POST['code_op']));
+$listIdProsp="";
+
+if(isset($_POST['modify_prosp'])){
+	require 'modify-prosp/01-modify-prospectus.php';
+
 }
 
 
-if(isset($_POST['add_prosp'])){
-	require 'saisie-manuelle-offre/01-add-prospectus.php';
+if(isset($_POST['modif_link'])){
+	foreach ($_POST['linkname'] as $idLink => $value) {
+		$offreDao->updateLinks($idLink,$_POST['linkname'][$idLink]);
+	}
+	$successQ='?id='.$_GET['id'].'#modif-link';
+	unset($_POST);
+	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 }
 
-if(isset($_POST['add_offre'])){
-	require 'saisie-manuelle-offre/03-add-offre.php';
+if(isset($_POST['modif_file'])){
+	foreach ($_POST['filename'] as $idFile => $value) {
+		$offreDao->updateFiles($idFile,$_POST['filename'][$idFile],$_POST['ordre'][$idFile] );
+	}
+	$successQ='?id='.$_GET['id'].'#modif-file';
+	unset($_POST);
+	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 }
 
 if(isset($_GET['success'])){
 	$arrSuccess=[
 		'prosp-add'=>'Prospectus ajouté avec succès',
+		'prosp-mod'=>'Prospectus mis à jour',
 		'add-offre'=>'Offre ajoutée',
 		'update-offre'=>'Offre modifiée',
 	];
@@ -62,12 +80,13 @@ include('../view/_navbar.php');
 ?>
 
 <div class="container">
-	<div class="row  py-5">
+	<div class="row  pt-5 pb-2">
 		<div class="col">
-			<h1 class="text-main-blue  ">Saisie manuelle d'offre</h1>
+			<h1 class="text-main-blue  ">Gestion des offres - tickets et BRII</h1>
+
 		</div>
 		<div class="col-auto">
-			<a href="offre-gestion.php" class="btn btn-primary">Gestion des offres</a>
+			<a href="offre-gestion.php" class="btn btn-primary">Retour</a>
 		</div>
 	</div>
 	<div class="row">
@@ -79,26 +98,18 @@ include('../view/_navbar.php');
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
-	<div class="row my-3">
+
+	<div class="row">
 		<div class="col">
-			<h5 class="text-main-blue border-bottom pb-3 my-3"><i class="fas fa-edit pr-3 text-orange"></i>Création du prospectus</h5>
+			<h5 class="text-main-blue border-bottom pb-3 my-3"><i class="fas fa-edit pr-3 text-orange"></i>Modification du prospectus <?= ($prosp['prospectus'])??""?></h5>
 		</div>
 	</div>
-	<?php include 'saisie-manuelle-offre/10-add-prospectus.php' ?>
+	<?php include 'modify-prosp/10-modify-prospectus.php'; ?>
 
 	<div class="bg-separation"></div>
-	<div class="row my-3">
-		<div class="col">
-			<h5 class="text-main-blue border-bottom pb-3 my-3"><i class="fas fa-edit pr-3 text-orange"></i>saisie des offres</h5>
-		</div>
-	</div>
-	<?php include 'saisie-manuelle-offre/12-add-offres.php'; ?>
-	<div class="bg-separation"></div>
-
-
-
 </div>
 
+<script src="../js/excel-filter.js"></script>
 
 <script type="text/javascript">
 
@@ -114,8 +125,45 @@ include('../view/_navbar.php');
 	};
 
 	$(document).ready(function(){
+		var url = window.location + '';
+		var splited=url.split("#");
+		if(splited[1]==undefined){
+			var line='';
+		}
+		else if(splited.length==2){
+			var line=splited[1];
+			line=line.replace("offre-", "");
+			$("tr#offre-"+line).addClass("anim");
+		}
 
-		$('input[name="fic"]').change(function(){
+
+		$('#week').on('change', function() {
+			var week=$('#week').val();
+			$.ajax({
+				type:'POST',
+				url:'../achats-commun/ajax-get-cata-week.php',
+				data:{week:week},
+				success: function(html){
+					$("#op").empty();
+					$("#op").append(html);
+				}
+			});
+		});
+		$('#offre-table').excelTableFilter();
+
+		$("#circle_trigger").click(function() {
+			$("#floating_nav_choices").fadeIn(600);
+			$("#floating_nav_choices").toggleClass("visible");
+			if ($("#floating_nav_choices").hasClass("visible")) {
+				$("#circle_trigger").css({ transform: "rotate(45deg)" });
+			} else {
+				$("#circle_trigger").css({ transform: "rotate(0deg)" });
+				$("#floating_nav_choices").fadeOut(300);
+			}
+		});
+
+
+		$('input[name="fic-mod"]').change(function(){
 			var fileList='';
 			var fileExtension = ['xml'];
 			var warning  ="";
@@ -134,29 +182,29 @@ include('../view/_navbar.php');
 
 
 			if(fileSize <= 52428800 && interdit==false){
-				$("#fic-msg").text("");
-				$("#fic-msg").append("<div class='text-success'>Taille totale : "+ getReadableFileSizeString(fileSize)+"</div>");
+				$("#file-msg-mod").text("");
+				$("#file-msg-mod").append("<div class='text-success'>Taille totale : "+ getReadableFileSizeString(fileSize)+"</div>");
 				$('button[type="submit"]').removeAttr('disabled','disabled');
 
 			}
 			if(interdit==true){
-				$("#fic-msg").text("");
+				$("#file-msg-mod").text("");
 				$('button[type="submit"]').attr('disabled','disabled');
-				$("#fic-msg").append("<div class='text-danger'>Vous devez télécharger un fichier xml(<i class='fas fa-times px-1 text-danger'></i>)</div>");
+				$("#file-msg-mod").append("<div class='text-danger'>Vous devez télécharger un fichier xml(<i class='fas fa-times px-1 text-danger'></i>)</div>");
 			}
 			if(fileSize > 52428800 && interdit==false){
-				$("#fic-msg").text("");
+				$("#file-msg-mod").text("");
 				$('button[type="submit"]').attr('disabled','disabled');
-				$("#fic-msg").append("<div class='text-danger'>Taille totale : "+getReadableFileSizeString(fileSize)+".<br>La taille est limitée à 50Mo, votre message ne pourra pas être envoyé</div>");
+				$("#file-msg-mod").append("<div class='text-danger'>Taille totale : "+getReadableFileSizeString(fileSize)+".<br>La taille est limitée à 50Mo, votre message ne pourra pas être envoyé</div>");
 
 			}
 
 			titre='<p><span class="text-main-blue font-weight-bold">Fichier(s) sélectionnés: <br></span>'
 			end='</p>';
 			all=titre+fileList+end;
-			$('#fic-name').empty();
+			$('#file-name-mod').empty();
 
-			$('#fic-name').append(all);
+			$('#file-name-mod').append(all);
 			fileList="";
 		});
 
@@ -171,8 +219,7 @@ include('../view/_navbar.php');
 			var titre="<div class='text-main-blue heavy'>Nommer  ";
 			var titreOrdre="<div class='text-main-blue heavy'>Ordre d'affichage:</div>";
 
-			$("#zone-noms").empty();
-			$("#zone-ordre").empty();
+
 			for (var i = 0; i < nbFiles; ++i) {
 				var fileSize=$(this).get(0).files[i].size;
 				fileName=$(this).get(0).files[i].name;
@@ -213,7 +260,6 @@ include('../view/_navbar.php');
 		});
 	});
 </script>
-
 
 
 <?php

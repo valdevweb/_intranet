@@ -88,10 +88,7 @@ if (($handle = fopen($file, "r")) !== FALSE) {
 				$id=getArticle($pdoQlik, $data[1], $data[0]);
 				if(!empty($id)){
 					updateBa($pdoQlik, $id['id'], $data[20]);
-					echo $id['id'];
 				}
-			}else{
-				echo "no        ";
 			}
 		}
 		$row++;

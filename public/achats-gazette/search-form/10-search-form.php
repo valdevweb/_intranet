@@ -3,7 +3,7 @@
 		<div class="col">
 			<div class="alert alert-primary">
 				<i class="fas fa-lightbulb pr-3"></i>Vous pouvez ne renseigner que les champs que vous trouvez utiles pour faire votre recherche.<br>
-				<i class="fas fa-lightbulb pr-3"></i>Les gazettes ne sont conservées que 60 jours
+
 			</div>
 		</div>
 		<div class="col-lg-2"></div>

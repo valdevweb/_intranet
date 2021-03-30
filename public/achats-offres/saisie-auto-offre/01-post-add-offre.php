@@ -8,7 +8,8 @@ if(!empty($prosp)){
 
 }else{
 	$prosp=$cataDao->getOpByCode($_POST['code_op']);
-	$idProsp=$prospDao->addProspectus($prosp['date_start'], $prosp['date_end'],$prosp['code_op'],"");
+	$idProsp=$prospDao->addProspectus($prosp['date_start'], $prosp['date_end'],$prosp['code_op'],$prosp['libelle'],"");
+
 }
 
 foreach ($_POST['montant_gessica'] as $idArticle => $value) {

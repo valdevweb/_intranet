@@ -23,21 +23,27 @@ $pdoDAchat=$db->getPdo('doc_achats');
 
 $gazetteDao=new GazetteDao($pdoDAchat);
 
-if (!isset($_GET['id']) || empty($_GET['id'])) {
+if (!isset($_GET['link']) && !isset($_GET['file']) && !isset($_GET['id'])) {
 	echo "pas de gazette sélectionnée, impossible d'afficher la page. <a href='gestion-gazette.php'>Retour</a>";
 	exit();
 }
 
 if(isset($_GET['link'])){
-	$gazetteDao->deleteLink($_GET['id']);
+	$gazetteDao->deleteLink($_GET['link']);
 	$successQ='?id='.$_GET['id_gazette'].'#linkformtitle';
 	header("Location: modif-gazette.php".$successQ,true,303);
 }
 
 if(isset($_GET['file'])){
-	$gazetteDao->deleteFile($_GET['id']);
+	$gazetteDao->deleteFile($_GET['file']);
 	$successQ='?id='.$_GET['id_gazette'].'#fileformtitle';
 	header("Location: modif-gazette.php".$successQ,true,303);
+}
+
+if(isset($_GET['id'])){
+	$gazetteDao->deleteGazette($_GET['id']);
+	$successQ='';
+	header("Location: gestion-gazette.php".$successQ,true,303);
 }
 
 //------------------------------------------------------

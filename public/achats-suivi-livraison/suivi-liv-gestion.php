@@ -16,6 +16,8 @@ require '../../Class/InfoLivDao.php';
 require '../../Class/ArticleAchatsDao.php';
 require '../../Class/FournisseursHelpers.php';
 require '../../Class/DateHelpers.php';
+require '../../Class/FormHelpers.php';
+
 
 // require_once '../../vendor/autoload.php';
 
@@ -107,16 +109,16 @@ if(isset($_POST['save'])){
 		}
 		$idNewArticle=$articleDao->insertArticle($idOp, $_POST['article'][$idArticle], $_POST['dossier'][$idArticle], $_POST['libelle'][$idArticle], $_POST['ean'][$idArticle], $_POST['gt'][$idArticle], $_POST['marque'][$idArticle], $_POST['fournisseur'][$idArticle], $_POST['cnuf'][$idArticle], $_POST['deee'][$idArticle], $_POST['ppi'][$idArticle]);
 
-		$infoLivDao->insertInfoLiv($idNewArticle, $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],  $recuDeux, $_POST['info_livraison_deux'][$idArticle], $erratumFilename);
+		$infoLivDao->insertInfoLiv($idNewArticle, $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],  $recuDeux, $_POST['info_livraison_deux'][$idArticle], $_POST['recu_remplace'][$idArticle],$_POST['info_livraison_remplace'][$idArticle],$_POST['recu_deux_remplace'][$idArticle],$_POST['info_livraison_deux_remplace'][$idArticle],$erratumFilename);
 
 
 
 	}elseif($_POST['exist'][$idArticle]=="true"){
 		// déjà une info article donc on n'ajoute pas l'article et on met à jour l'info livraison
 		if(empty($erratumFilename)){
-			$infoLivDao->updateInfoLiv($_POST['id_article_table_article'][$idArticle], $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],$recuDeux, $_POST['info_livraison_deux'][$idArticle]);
+			$infoLivDao->updateInfoLiv($_POST['id_article_table_article'][$idArticle], $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],$recuDeux, $_POST['info_livraison_deux'][$idArticle], $_POST['recu_remplace'][$idArticle],$_POST['info_livraison_remplace'][$idArticle],$_POST['recu_deux_remplace'][$idArticle],$_POST['info_livraison_deux_remplace'][$idArticle]);
 		}else{
-			$infoLivDao->updateInfoLivErratum($_POST['id_article_table_article'][$idArticle], $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],$recuDeux, $_POST['info_livraison_deux'][$idArticle], $erratumFilename);
+			$infoLivDao->updateInfoLivErratum($_POST['id_article_table_article'][$idArticle], $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],$recuDeux, $_POST['info_livraison_deux'][$idArticle],  $_POST['recu_remplace'][$idArticle],$_POST['info_livraison_remplace'][$idArticle],$_POST['recu_deux_remplace'][$idArticle],$_POST['info_livraison_deux_remplace'][$idArticle],$erratumFilename);
 		}
 
 		$idOp=$_POST['id_op'];
@@ -137,6 +139,7 @@ if(isset($_POST['save'])){
 	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 
 }
+
 
 
 
@@ -264,45 +267,79 @@ include('../view/_navbar.php');
 
 
 
-				$('input[name="file_erratum"]').change(function(){
+				$('input[type="file"]').change(function(){
+					console.log("djfhsf");
+					console.log($(this).get(0).files[0]);
 					var fileList='';
 					var warning  ="";
 					var fileSize=$(this).get(0).files[0].size;
 					var fileName=$(this).get(0).files[0].name;
+					var articleId=$(this).attr("data-id-input");
+
 					var extension=fileName.replace(/^.*\./, '');
 
 					fileList += fileName + warning+'<br>';
 					if(fileSize <= 52428800 ){
-						$("#file-erratum-msg").text("");
-						$("#file-erratum-msg").append("<div class='text-success'>Taille totale : "+ getReadableFileSizeString(fileSize)+"</div>");
-						$('button[type="submit"]').removeAttr('disabled','disabled');
+
+						// $(".file-erratum-msg").find(`[data-id-msg='${articleId}']`).append("<div class='text-success'>Taille totale : "+ getReadableFileSizeString(fileSize)+"</div>");
+						$(".file-erratum-msg").text("");
+						$(".file-erratum-msg").append("<div class='text-success'>Taille totale : "+ getReadableFileSizeString(fileSize)+"</div>");
+						// $('button[type="submit"]').removeAttr('disabled','disabled');
 					}
 
 					if(fileSize > 52428800){
-						$("#file-erratum-msg").text("");
+						$(".file-erratum-msg").text("");
 						$('button[type="submit"]').attr('disabled','disabled');
-						$("#file-erratum-msg").append("<div class='text-danger'>Taille totale : "+getReadableFileSizeString(fileSize)+".<br>La taille est limitée à 50Mo, votre ODR ne pourra pas être enregistrée</div>");
+						$(".file-erratum-msg").append("<div class='text-danger'>Taille totale : "+getReadableFileSizeString(fileSize)+".<br>La taille est limitée à 50Mo, votre ODR ne pourra pas être enregistrée</div>");
 					}
 
 					titre='<p><span class="text-main-blue font-weight-bold">Fichier sélectionné: <br></span>'
 					end='</p>';
 					all=titre+fileList+end;
-					$('#filename-erratum').empty();
-					$('#filename-erratum').append(all);
+					$('.filename-erratum').empty();
+					$('.filename-erratum').append(all);
 					fileList="";
 				});
 
-
-
-
-
-
 			});
 
+			var emplacement = null;
 
+			function findString(str) {
+				if (parseInt(navigator.appVersion) < 4) return;
+				var strFound;
+				if (window.find) {
+					strFound = self.find(str);
+					if (strFound && self.getSelection && !self.getSelection().anchorNode) {
+						strFound = self.find(str)
+					}
+					if (!strFound) {
+						strFound = self.find(str, 0, 1)
+						while (self.find(str, 0, 1)) continue
+					}
+			}else if(navigator.appName.indexOf("Microsoft") != -1) {
+				if (emplacement != null) {
+					emplacement.collapse(false)
+					strFound = emplacement.findText(str)
+					if (strFound) emplacement.select()
+				}
+			if (emplacement == null || strFound == 0) {
+				emplacement = self.document.body.createTextRange()
+				strFound = emplacement.findText(str)
+				if (strFound) emplacement.select()
+			}
+	}
+	if (!strFound) alert("String '" + str + "' non trouvé!")
+		return;
+};
 
-		</script>
+document.getElementById('search_form').onsubmit = function() {
+	findString(this.str.value);
+	return false;
+};
 
-		<?php
-		require '../view/_footer-bt.php';
-		?>
+</script>
+
+<?php
+require '../view/_footer-bt.php';
+?>

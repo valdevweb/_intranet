@@ -57,6 +57,16 @@ class FormHelpers{
         return "";
     }
 
+    public static function checkSelectedArray($value,$array){
+        if(isset($array)){
+            for ($i=0; $i < count($array); $i++) {
+                if($array[$i]==$value)
+                    return "selected";
+            }
+        }
+
+    }
+
  // case à cocher, btn radio
     public static function checkCheckedArray($value,$postName){
         if(isset($_POST[$postName])){
@@ -67,15 +77,7 @@ class FormHelpers{
         }
 
     }
-    public static function checkSelectedArray($value,$postName){
-        if(isset($_POST[$postName])){
-            for ($i=0; $i < count($_POST[$postName]); $i++) {
-                if($_POST[$postName][$i]==$value)
-                    return "checked";
-            }
-        }
 
-    }
 //  liste déroulante
     public static function checkSelectedSession($value,$field){
         if(isset($_SESSION[$field])){

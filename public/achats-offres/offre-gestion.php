@@ -55,8 +55,32 @@ if(isset($_POST['modify_prosp'])){
 if(isset($_POST['update_offre'])){
 	require 'offre-gestion/04-update-offre.php';
 }
+
+if(isset($_POST['modif_link'])){
+	foreach ($_POST['linkname'] as $idLink => $value) {
+		$offreDao->updateLinks($idLink,$_POST['linkname'][$idLink]);
+	}
+	$successQ='?modify_prosp='.$_GET['modify_prosp'];
+	unset($_POST);
+	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+}
+
+if(isset($_POST['modif_file'])){
+	foreach ($_POST['filename'] as $idFile => $value) {
+		$offreDao->updateFiles($idFile,$_POST['filename'][$idFile],$_POST['ordre'][$idFile] );
+	}
+	$successQ='?modify_prosp='.$_GET['modify_prosp'];
+	unset($_POST);
+	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+}
+
+
 if(isset($_GET['prosp-id-mod'])){
 	$prospMod=$prospDao->getProspectusById($_GET['prosp-id-mod']);
+	$listFilesModif=$prospDao->getOneProspectusFiles($_GET['prosp-id-mod']);
+	$listLinksModif=$prospDao->getOneProspectusLinks($_GET['prosp-id-mod']);
+
+
 }
 if(isset($_GET['prosp-id-add'])){
 	$prospMod=$prospDao->getProspectusById($_GET['prosp-id-add']);
@@ -260,7 +284,10 @@ include('../view/_navbar.php');
 					var fileName='';
 					var fileList='';
 					var nbFiles = $(this).get(0).files.length;
-
+					var formGroup="<div class='form-group'>";
+					var endDiv="</div>";
+					var titre="<div class='text-main-blue heavy'>Nommer  ";
+					var titreOrdre="<div class='text-main-blue heavy'>Ordre d'affichage:</div>";
 
 
 					for (var i = 0; i < nbFiles; ++i) {
@@ -270,6 +297,13 @@ include('../view/_navbar.php');
 						var extension=fileName.replace(/^.*\./, '');
 
 						fileList += fileName +'<br>';
+						var input="<input type='text' class='form-control form-primary'  name='filename[" +i +"]'>";
+						var label="<div class='text-main-blue'>Ordre :</div>";
+						var ordre=i+1;
+						var inputOrdre="<input type='text' class='form-control form-primary'  name='ordre[" +i +"]' value='"+ordre+"'>";
+
+						$("#zone-noms").append(titre+fileName+formGroup+input+endDiv);
+						$("#zone-ordre").append(label+formGroup +inputOrdre+endDiv);
 					}
 
 					if(totalSize <= 52428800){

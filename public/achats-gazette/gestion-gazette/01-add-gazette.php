@@ -4,7 +4,6 @@ if(empty($_POST['main_cat']) || empty($_POST['cat']) || empty($_POST['date_start
 	$errors[]="Les champs non étoilés sont obligatoires, merci de vérifier qu'ils sont tous renseignés";
 }
 if(empty($errors)){
-
 	if(isset($_FILES['gazette_files']['tmp_name'][0]) && !empty($_FILES['gazette_files']['tmp_name'][0])){
 		for ($i=0; $i <count($_FILES['gazette_files']['tmp_name']) ; $i++) {
 			$orginalFilename=$_FILES['gazette_files']['name'][$i];
@@ -28,7 +27,7 @@ if(empty($errors)){
 	$idGazette=$gazetteDao->addGazette();
 	if(isset($gazetteFilenames) && !empty($gazetteFilenames)){
 		for ($i=0; $i <count($gazetteFilenames) ; $i++) {
-			$gazetteDao->addFiles($idGazette, $gazetteFilenames[$i]);
+			$gazetteDao->addFiles($idGazette, $gazetteFilenames[$i], $_POST['filename'][$i], $_POST['ordre'][$i]);
 		}
 	}
 	if(!empty($_POST['link'])){
@@ -47,3 +46,4 @@ if(empty($errors)){
 	unset($_POST);
 	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 }
+

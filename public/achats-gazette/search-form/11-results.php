@@ -11,7 +11,6 @@
 		</div>
 	</div>
 	<div class="col-lg-2"></div>
-
 </div>
 	<div class="row mb-5">
 		<div class="col">
@@ -28,10 +27,10 @@
 				<?=(ucwords($listCat[$gazette['cat']]))??""?>
 			</div>
 			<div class="col">
-				<h6 class="text-main-blue show-link" data-gazette-id="<?=$gazette['id']?>"><?=$gazette['titre']?></h6>
+				<h6 class="text-main-blue show-link-search" data-gazette-search-id="<?=$gazette['id']?>"><?=$gazette['titre']?></h6>
 			</div>
 		</div>
-		<div class="row more" data-content-id="<?=$gazette['id']?>">
+		<div class="row more-search" data-content-search-id="<?=$gazette['id']?>">
 			<div class="col-lg-5"></div>
 			<div class="col">
 				<?=$gazette['description']?>

@@ -23,14 +23,21 @@ $pdoDAchat=$db->getPdo('doc_achats');
 
 $offreDao=new OffreDao($pdoDAchat);
 
+
 if(isset($_GET['id'])){
 	$offreDao->deleteOffre($_GET['id']);
 	header("Location: offre-gestion.php#list-offre",true,303);
 
 }
 
-
-
+if(isset($_GET['file'])){
+	$offreDao->deleteFile($_GET['file']);
+	header("Location: modify-prosp.php?id=".$_GET['id-prosp']."#modif-file",true,303);
+}
+if(isset($_GET['link'])){
+	$offreDao->deleteLink($_GET['link']);
+	header("Location: modify-prosp.php?id=".$_GET['id-prosp']."#modif-link",true,303);
+}
 //------------------------------------------------------
 include('../view/_head-bt.php');
 include('../view/_navbar.php');

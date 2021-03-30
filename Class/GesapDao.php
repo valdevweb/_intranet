@@ -15,10 +15,11 @@ class GesapDao{
 	}
 
 	public function getListGesap(){
-
+		$today=new DateTime();
+		$today->modify("-3 day");
 		$req=$this->pdo->prepare("SELECT * FROM gesap WHERE date_remonte >= :date_remonte");
 		$req->execute([
-			':date_remonte'		=>date("Y-m-d")
+			':date_remonte'		=>$today->format("Y-m-d")
 		]);
 		return $req->fetchAll();
 
@@ -26,9 +27,11 @@ class GesapDao{
 
 
 	public function getListFiles(){
-		$req=$this->pdo->prepare("SELECT gesap_files.id_gesap, file, filename FROM gesap_files LEFT JOIN gesap ON id_gesap= gesap.id WHERE date_remonte >= :date_remonte");
+		$today=new DateTime();
+		$today->modify("-3 day");
+		$req=$this->pdo->prepare("SELECT gesap_files.id_gesap, file, filename FROM gesap_files LEFT JOIN gesap ON id_gesap= gesap.id WHERE date_remonte >= :date_remonte ORDER BY ordre");
 		$req->execute([
-			':date_remonte'		=>date("Y-m-d")
+			':date_remonte'		=>$today->format("Y-m-d")
 		]);
 		return $req->fetchAll(PDO::FETCH_GROUP);
 
@@ -44,7 +47,7 @@ class GesapDao{
 
 	}
 
-		public function getFiles($idGesap){
+	public function getFiles($idGesap){
 
 		$req=$this->pdo->prepare("SELECT * FROM gesap_files WHERE id_gesap >= :id_gesap");
 		$req->execute([
@@ -97,6 +100,18 @@ class GesapDao{
 		return $req->rowCount();
 	}
 
+	public function insertFileWithOrdre($idGesap, $file, $filename, $ordre){
+		$req=$this->pdo->prepare("INSERT INTO gesap_files (id_gesap, file, filename, ordre) VALUES (:id_gesap, :file, :filename, :ordre)");
+		$req->execute([
+			':id_gesap'		=>$idGesap,
+			':file'			=>$file,
+			':filename'		=>$filename,
+			':ordre'		=>$ordre
+		]);
+		return $req->rowCount();
+	}
+
+
 	public function deleteGesap($id){
 		$req=$this->pdo->prepare("DELETE FROM gesap WHERE id= :id");
 		$req->execute([
@@ -108,7 +123,7 @@ class GesapDao{
 
 
 
-		public function updateGesapWithGa($file){
+	public function updateGesapWithGa($file){
 		$req=$this->pdo->prepare("UPDATE gesap SET op= :op, salon= :salon, cata= :cata, code_op= :code_op, date_remonte= :date_remonte, ga_file= :ga_file, ga_num= :ga_num, cmt= :cmt, date_insert= :date_insert, by_insert= :by_insert WHERE id= :id");
 		$req->execute([
 			':id'		=>$_GET['id'],
@@ -152,13 +167,13 @@ class GesapDao{
 		return $req->rowCount();
 	}
 
-public function deleteFile($idFile){
-	$req=$this->pdo->prepare("DELETE FROM gesap_files WHERE id=:id");
-	$req->execute([
-		':id'		=>$idFile
-	]);
-	return $req->errorInfo();
-}
+	public function deleteFile($idFile){
+		$req=$this->pdo->prepare("DELETE FROM gesap_files WHERE id=:id");
+		$req->execute([
+			':id'		=>$idFile
+		]);
+		return $req->errorInfo();
+	}
 }
 
 

@@ -224,3 +224,7 @@ span.step {
 	padding-left: 0.6rem;
 	padding-right: 0.6rem;
 }
+
+.no-margin{
+	margin: 0 !important;
+}

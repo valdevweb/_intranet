@@ -96,7 +96,11 @@
 			</div>
 		</div>
 	</div>
-
+	<div class="row mt-3">
+		<div class="col-4" id="zone-noms"></div>
+		<div class="col-3" id="zone-ordre"></div>
+		<div class="col"></div>
+	</div>
 	<div class="row mt-3">
 		<div class="col text-right">
 			<button class="btn btn-primary" name="add">Ajouter</button>

@@ -51,9 +51,7 @@
 										<th>EAN</th>
 										<th>Désignation</th>
 										<th class="text-right">Quantité</th>
-										<?php if ($_SESSION['id_web_user']==981 || $_SESSION['id_web_user']==1402): ?>
 											<th>Supprimer</th>
-										<?php endif ?>
 									</tr>
 									<tbody>
 										<?php foreach ($infoCde as $key => $cde): ?>
@@ -80,11 +78,9 @@
 												<td ><?=$ean?></td>
 												<td ><?=$designation?></td>
 												<td class="text-right"><?=$qte?></td>
-												<?php if ($_SESSION['id_web_user']==981 || $_SESSION['id_web_user']==1402): ?>
 													<td>
 														<a href="<?=$_SERVER['PHP_SELF'].'?del-palette='.$cde['id_palette']?>" class="btn btn-primary">Supprimer</a>
 													</td>
-												<?php endif ?>
 											</tr>
 										<?php endforeach ?>
 									</tbody>

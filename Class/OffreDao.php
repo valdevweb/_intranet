@@ -35,22 +35,52 @@ class OffreDao{
 		return $req->rowCount();
 	}
 
+	public function getOffreEncoursByProsp(){
+		$dateStart=new DateTime();
+		$dateEnd=new DateTime();
+		$dateStart=$dateStart->modify('+ 15 day');
+		$dateEnd=$dateEnd->modify('- 7 day');
+		$req=$this->pdo->prepare("SELECT prospectus_offres.id_prosp, prospectus_offres.id as id_offre, prospectus_offres.* FROM prospectus_offres LEFT JOIN prospectus ON id_prosp= prospectus.id WHERE date_start<= :date_start AND date_end>= :date_end ORDER BY id_prosp");
+		$req->execute([
+			':date_end'		=>$dateEnd->format("Y-m-d"),
+			':date_start'	=>$dateStart->format("Y-m-d"),
+
+		]);
+
+		return $req->fetchAll(PDO::FETCH_GROUP);
+	}
 	public function getOffreEncours(){
+		$today=new DateTime();
+		$today->modify('- 3 day');
+
+
 		$req=$this->pdo->prepare("SELECT *, prospectus_offres.id as id_offre FROM prospectus_offres LEFT JOIN prospectus ON id_prosp= prospectus.id WHERE date_end>=:date_end ORDER BY id_prosp");
 		$req->execute([
-			':date_end'	=>date("Y-m-d")
+			':date_end'	=>$today->format("Y-m-d")
 
 		]);
 
 		return $req->fetchAll();
 	}
-
 	public function deleteOffre($id){
 		$req=$this->pdo->prepare("DELETE FROM prospectus_offres WHERE id= :id");
 		$req->execute([
 			':id'	=>$id
 		]);
 	}
+	public function deleteLink($id){
+		$req=$this->pdo->prepare("DELETE FROM prospectus_links WHERE id= :id");
+		$req->execute([
+			':id'	=>$id
+		]);
+	}
+	public function deleteFile($id){
+		$req=$this->pdo->prepare("DELETE FROM prospectus_files WHERE id= :id");
+		$req->execute([
+			':id'	=>$id
+		]);
+	}
+
 	public function deleteOffreByProsp($idProsp){
 		$req=$this->pdo->prepare("DELETE FROM prospectus_offres WHERE id_prosp= :id_prosp");
 		$req->execute([
@@ -93,6 +123,25 @@ class OffreDao{
 		]);
 		return $req->rowCount();
 	}
+
+	public function updateFiles($idFile, $filename, $ordre){
+		$req=$this->pdo->prepare("UPDATE prospectus_files SET filename= :filename, ordre= :ordre WHERE id= :id");
+		$req->execute([
+			':id'		=>$idFile,
+			':filename'		=>$filename,
+			':ordre'		=>$ordre,
+		]);
+		return $req->errorInfo();
+	}
+	public function updateLinks($idLink, $linkname){
+		$req=$this->pdo->prepare("UPDATE prospectus_links SET linkname= :linkname WHERE id= :id");
+		$req->execute([
+			':id'		=>$idLink,
+			':linkname'		=>$linkname,
+		]);
+		return $req->errorInfo();
+	}
+
 
 }
 

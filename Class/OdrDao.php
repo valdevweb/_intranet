@@ -36,7 +36,7 @@ class OdrDao{
 	public function getOdrFilesEncours(){
 		$req=$this->pdo->prepare("SELECT odr.id as id_odr, odr_files.file, odr_files.filename FROM odr_files
 			LEFT JOIN odr ON odr_files.id_odr=odr.id
-			WHERE date_end>=:date_end ORDER BY odr.date_insert DESC");
+			WHERE date_end>=:date_end ORDER BY odr.date_insert DESC, ordre ");
 		$req->execute([
 			':date_end'	=>date("Y-m-d")
 
@@ -87,6 +87,18 @@ class OdrDao{
 		$req->execute([
 			':id_odr'		=>$idOdr,
 			':file'		=>$filename
+		]);
+		return ($req->errorInfo());
+
+	}
+
+	public function addOdrFileWithName($idOdr, $file, $filename, $ordre){
+		$req=$this->pdo->prepare("INSERT INTO odr_files (id_odr, file, filename, ordre) VALUES (:id_odr, :file, :filename, :ordre)");
+		$req->execute([
+			':id_odr'		=>$idOdr,
+			':file'		=>$file,
+			':filename'		=>$filename,
+			':ordre'		=>$ordre
 		]);
 		return ($req->errorInfo());
 
@@ -173,7 +185,7 @@ class OdrDao{
 
 	public function deleteOdrFile($id){
 		$req=$this->pdo->prepare("DELETE FROM odr_files WHERE id= :id");
-				$req->execute([
+		$req->execute([
 			':id'				=>$id,
 
 		]);

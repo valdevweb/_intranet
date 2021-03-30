@@ -27,11 +27,12 @@ if(empty($errors)){
 	$gazetteDao->updateGazette($_GET['id']);
 	if(isset($gazetteFilenames) && !empty($gazetteFilenames)){
 		for ($i=0; $i <count($gazetteFilenames) ; $i++) {
-			$gazetteDao->addFiles($_GET['id'], $gazetteFilenames[$i]);
+			$gazetteDao->addFiles($_GET['id'], $gazetteFilenames[$i], $_POST['filename'][$i], $_POST['ordre'][$i]);
 		}
 	}
-	$gazetteDao->deleteLinkByGazette($_GET['id']);
 	if(!empty($_POST['link'])){
+		$gazetteDao->deleteLinkByGazette($_GET['id']);
+
 		$arrayLink=explode(', ',$_POST['link']);
 		if(!empty($arrayLink)){
 			for ($i=0; $i < count($arrayLink) ; $i++) {

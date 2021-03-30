@@ -58,7 +58,7 @@ if(isset($_POST['modif_link'])){
 
 if(isset($_POST['modif_file'])){
 	foreach ($_POST['filename'] as $idFile => $value) {
-		$gazetteDao->updateFiles($idFile,$_POST['filename'][$idFile]);
+		$gazetteDao->updateFiles($idFile,$_POST['filename'][$idFile],$_POST['ordre'][$idFile] );
 	}
 	$successQ='?id='.$_GET['id'].'&success=file#fileformtitle';
 	unset($_POST);
@@ -200,6 +200,12 @@ include('../view/_navbar.php');
 					</div>
 				</div>
 			</div>
+			<div class="row mt-3">
+				<div class="col-4" id="zone-noms"></div>
+				<div class="col-3" id="zone-ordre"></div>
+				<div class="col"></div>
+			</div>
+
 			<div class="row">
 				<div class="col text-right">
 					<button class="btn btn-primary" name="modif-gazette" type="submit">Modifier</button>
@@ -237,7 +243,7 @@ include('../view/_navbar.php');
 									</div>
 								</td>
 								<td>
-									<a href="delete-gazette.php?id=<?=$link['id'].'&id_gazette='.$_GET['id'].'&link'?>" class="btn btn-orange" onclick="return confirm('Etes vous sûr de vouloir supprimer ce lien ?')">Supprimer</a>
+									<a href="delete-gazette.php?link=<?=$link['id'].'&id_gazette='.$_GET['id']?>" class="btn btn-orange" onclick="return confirm('Etes vous sûr de vouloir supprimer ce lien ?')">Supprimer</a>
 
 								</td>
 
@@ -272,8 +278,9 @@ include('../view/_navbar.php');
 					<table class="table w-auto table-sm">
 						<thead class="thead-light">
 							<tr>
-								<th class="px-5 text-center">Liens</th>
+								<th class="px-5 text-center">Fichiers</th>
 								<th class="px-5 text-center">Nom</th>
+								<TH>Ordre</TH>
 								<th class="px-5 text-center">Supprimer</th>
 							</tr>
 						</thead>
@@ -281,14 +288,19 @@ include('../view/_navbar.php');
 							<?php foreach ($listFiles as $key => $file): ?>
 
 								<tr>
-									<td><a href="<?=$file['file']?>"><?=$file['file']?></a></td>
+									<td><a href="<?=$file['file']?>" target="_blank"><?=$file['file']?></a></td>
 									<td>
 										<div class="form-group">
 											<input type="text" class="form-control wider" name="filename[<?=$file['id']?>]" value="<?=(!empty($file['filename'])) ? $file['filename']:''?>">
 										</div>
 									</td>
 									<td>
-										<a href="delete-gazette.php?id=<?=$file['id'].'&id_gazette='.$_GET['id'].'&file'?>" class="btn btn-orange" onclick="return confirm('Etes vous sûr de vouloir supprimer ce fichier ?')">Supprimer</a>
+										<div class="form-group">
+											<input type="text" class="form-control" name="ordre[<?=$file['id']?>]" value="<?=(!empty($file['ordre'])) ? $file['ordre']:''?>">
+										</div>
+									</td>
+									<td>
+										<a href="delete-gazette.php?file=<?=$file['id'].'&id_gazette='.$_GET['id']?>" class="btn btn-orange" onclick="return confirm('Etes vous sûr de vouloir supprimer ce fichier ?')">Supprimer</a>
 
 									</td>
 
@@ -309,6 +321,12 @@ include('../view/_navbar.php');
 				<?php endif ?>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col text-right py-5">
+				<a href="gestion-gazette.php" class="btn btn-primary">Retour</a>
+			</div>
+		</div>
+
 
 	</div>
 	<script type="text/javascript">
@@ -346,7 +364,12 @@ include('../view/_navbar.php');
 				var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'pdf', 'xls', 'xlsx'];
 				var warning  ="";
 				var interdit=false;
-
+				var formGroup="<div class='form-group'>";
+				var endDiv="</div>";
+				var titre="<div class='text-main-blue heavy'>Nommer  ";
+				var titreOrdre="<div class='text-main-blue heavy'>Ordre d'affichage:</div>";
+				$("#zone-noms").empty();
+				$("#zone-ordre").empty();
 				for (var i = 0; i < nbFiles; ++i) {
 					var fileSize=$(this).get(0).files[i].size;
 					fileName=$(this).get(0).files[i].name;
@@ -360,6 +383,13 @@ include('../view/_navbar.php');
 
 					}
 					fileList += fileName + warning+'<br>';
+					var input="<input type='text' class='form-control form-primary'  name='filename[" +i +"]'>";
+					var label="<div class='text-main-blue'>Ordre :</div>";
+					var ordre=i+1;
+					var inputOrdre="<input type='text' class='form-control form-primary'  name='ordre[" +i +"]' value='"+ordre+"'>";
+
+					$("#zone-noms").append(titre+fileName+formGroup+input+endDiv);
+					$("#zone-ordre").append(label+formGroup +inputOrdre+endDiv);
 				}
 
 				if(totalSize <= 52428800 && interdit==false){

@@ -7,7 +7,28 @@
 		</div>
 	</div>
 </div>
-<div class="alert alert-danger">Dans le champ "reçu", merci de ne saisir que le chiffre, pas le sigle %</div>
+
+
+<div class="row">
+	<div class="col font-italic">
+		Pour aller directement sur l'article recherché, saisissez n'importe quelle partie de texte relative à l'article et faites entrée
+
+	</div>
+	<div class="col-auto font-weight-boldless text-main-blue">
+		Aller à :
+	</div>
+	<div class="col-auto">
+
+		<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post" id="search_form">
+			<div class="form-group text-center">
+				<input type="text" class="form-control w-160" name="str" id="str" style="font-family:'Font Awesome 5 Free',sans-serif !important; font-weight: 900 !important;" type="text" placeholder="&#xf002">
+			</div>
+		</form>
+	</div>
+</div>
+
+
+
 <div class="row pb-5">
 	<div class="col">
 		<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post" enctype="multipart/form-data">
@@ -34,8 +55,13 @@
 					</div>
 
 					<?php foreach ($listArticle as $key => $article): ?>
+						<?php
+						$lundiUn=(new DateTime($listArticle[0]['date_start']))->modify("monday this week");
+						$lundiDeux=clone($lundiUn);
+						$lundiDeux=$lundiDeux->modify("- 7 days");
+						?>
 
-					<input type="hidden" class="form-control" name="id_op" value="<?=$listInfoLivraison[$article['article']][0]['id_op']??""?>">
+						<input type="hidden" class="form-control" name="id_op" value="<?=$listInfoLivraison[$article['article']][0]['id_op']??""?>">
 
 						<div class="row py-2 border-bottom test" id="<?=$article['id']?>">
 							<div class="col-lg-2">
@@ -65,7 +91,7 @@
 											<div class="col py-3 mr-1">
 												<div class="row">
 													<div class="col text-center text-main-blue font-weight-boldless pb-2">
-														Deux lundis avant :
+														<?=DateHelpers::concatJourMoisDateTime($lundiDeux, "long")?>
 													</div>
 												</div>
 												<div class="row">
@@ -86,7 +112,8 @@
 											<div class="col py-3  ml-1">
 												<div class="row">
 													<div class="col text-center text-orange font-weight-boldless pb-2">
-														Un lundi avant :
+														<?=DateHelpers::concatJourMoisDateTime($lundiUn, "long")?>
+
 													</div>
 												</div>
 												<div class="row">
@@ -105,8 +132,9 @@
 												</div>
 											</div>
 										</div>
-										<div class="row">
-											<div class="col mt-1 mb-3">
+										<div class="row border-white border-top">
+											<div class="col"></div>
+											<div class="col-lg-6 mt-1 mb-1">
 												<div class="row">
 													<div class="col font-weight-boldless">
 														Article de remplacement :
@@ -114,90 +142,138 @@
 												</div>
 
 												<div class="row">
-													<div class="col-lg-3">
+													<div class="col">
 														<div class="form-group">
 															<label class="font-italic">Code article :</label>
 															<input type="text" class="form-control" name="article_remplace[<?=$article['id']?>]" value="<?=$listInfoLivraison[$article['article']][0]['article_remplace']??''?>" >
 														</div>
 													</div>
-													<div class="col-lg-3">
+													<div class="col">
 														<div class="form-group">
 															<label class="font-italic">Ean :</label>
 															<input type="text" class="form-control" name="ean_remplace[<?=$article['id']?>]" value="<?=$listInfoLivraison[$article['article']][0]['ean_remplace']??''?>">
 														</div>
 													</div>
 
+												</div>
+											</div>
+											<div class="col"></div>
 
+										</div>
+										<div class="row border-white border-bottom">
+											<div class="col pb-3 mr-1">
+												<div class="row">
+													<div class="col text-center text-main-blue font-weight-boldless pb-2">
+														<?=DateHelpers::concatJourMoisDateTime($lundiDeux, "long")?>
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-lg-2">
+														<div class="form-group">
+															<label class="font-italic">Reçu :</label>
+															<input type="text" class="form-control form-primary" pattern="[0-9]+" title="Merci de ne saisir que des chiffres" name="recu_deux_remplace[<?=$article['id']?>]" value="<?=$listInfoLivraison[$article['article']][0]['recu_deux_remplace']??""?>">
+														</div>
+													</div>
+													<div class="col">
+														<div class="form-group">
+															<label class="font-italic">Information livraison :</label>
+															<input type="text" class="form-control form-primary" name="info_livraison_deux_remplace[<?=$article['id']?>]" value="<?=$listInfoLivraison[$article['article']][0]['info_livraison_deux_remplace']??""?>">
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col py-3  ml-1">
+												<div class="row">
+													<div class="col text-center text-orange font-weight-boldless pb-2">
+														<?=DateHelpers::concatJourMoisDateTime($lundiUn, "long")?>
+
+													</div>
+												</div>
+												<div class="row">
+													<div class="col-lg-2">
+														<div class="form-group">
+															<label class="font-italic">Reçu :</label>
+															<input type="text" class="form-control form-warning" pattern="[0-9]+" title="Merci de ne saisir que des chiffres" name="recu_remplace[<?=$article['id']?>]" value="<?=$listInfoLivraison[$article['article']][0]['recu_remplace']??""?>">
+														</div>
+													</div>
+													<div class="col">
+														<div class="form-group">
+															<label class="font-italic">Information livraison :</label>
+															<input type="text" class="form-control form-warning" name="info_livraison_remplace[<?=$article['id']?>]" value="<?=$listInfoLivraison[$article['article']][0]['info_livraison_remplace']??""?>">
+														</div>
+													</div>
 												</div>
 											</div>
 										</div>
+
+
 										<div class="row">
 											<div class="col font-weight-boldless">
 												Erratum :
 											</div>
 										</div>
 										<div class="row">
-											<div class="col-9 bg-white rounded pt-2">
+											<div class="col-9 bg-white rounded pt-2 ml-2">
 												<div class="row ">
-													<div class="col"  id="filename-erratum">
+													<div class="col filename-erratum" data-id-filename="<?=$article['id']?>">
 														<?php if (isset($listInfoLivraison[$article['article']][0]['erratum'])): ?>
-														<p><span class="font-weight-bold">Fichier uploadé : <?=$listInfoLivraison[$article['article']][0]['erratum']?><br></span></p>
+															<p><span class="font-weight-bold">Fichier uploadé : <?=$listInfoLivraison[$article['article']][0]['erratum']?><br></span></p>
 
 															<?php else: ?>
-														<p><span class="font-weight-bold">Fichier sélectionné : <br></span></p>
+																<p><span class="font-weight-bold">Fichier sélectionné : <br></span></p>
 
 
-														<?php endif ?>
-													</div>
-													<div class="col-auto">
-														<div class="form-group">
-															<label class="btn btn-upload-orange btn-file text-center">
-																<input type="file" name="file_erratum[<?=$article['id']?>]" class='form-control-file'>
-																Sélectionner
-															</label>
+															<?php endif ?>
+														</div>
+														<div class="col-auto">
+															<div class="form-group">
+																<label class="btn btn-upload-orange btn-file text-center">
+																	<input type="file" name="file_erratum[<?=$article['id']?>]" class='form-control-file'  data-id-input="<?=$article['id']?>">
+																	Sélectionner
+																</label>
+															</div>
 														</div>
 													</div>
-												</div>
-												<div class="row">
-													<div class="col" id="file-erratum-msg"></div>
+													<div class="row">
+														<div class="col file-erratum-msg" data-id-msg="<?=$article['id']?>"></div>
+													</div>
 												</div>
 											</div>
-										</div>
-										<div class="row">
-											<div class="col text-right mt-4 pt-2">
-												<button class="btn btn-orange" name="save[<?=$article['id']?>]">Enregistrer</button>
+											<div class="row">
+												<div class="col text-right mt-4 pt-2">
+													<button class="btn btn-orange" name="save[<?=$article['id']?>]">Enregistrer</button>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
 
-						<input type="hidden" class="form-control" name="article[<?=$article['id']?>]" value="<?=$article['article']?>">
+							<input type="hidden" class="form-control" name="article[<?=$article['id']?>]" value="<?=$article['article']?>">
 							<input type="hidden" class="form-control" name="code_op" value="<?=$listArticle[0]['code_op']?>">
 
-						<!-- pas d'info livraison saisie pour l'article donc absent de la table article -->
-						<?php if (!isset($listInfoLivraison[$article['article']][0])): ?>
+							<!-- pas d'info livraison saisie pour l'article donc absent de la table article -->
+							<?php if (!isset($listInfoLivraison[$article['article']][0])): ?>
 
-							<input type="hidden" class="form-control" name="dossier[<?=$article['id']?>]" value="<?=$article['dossier']?>">
-							<input type="hidden" class="form-control" name="libelle[<?=$article['id']?>]" value="<?=$article['libelle']?>">
-							<input type="hidden" class="form-control" name="ean[<?=$article['id']?>]" value="<?=$article['ean']?>">
-							<input type="hidden" class="form-control" name="gt[<?=$article['id']?>]" value="<?=$article['gt']?>">
-							<input type="hidden" class="form-control" name="marque[<?=$article['id']?>]" value="<?=$article['marque']?>">
-							<input type="hidden" class="form-control" name="fournisseur[<?=$article['id']?>]" value="<?=$article['fournisseur']?>">
-							<input type="hidden" class="form-control" name="cnuf[<?=$article['id']?>]" value="<?=$article['cnuf']?>">
-							<input type="hidden" class="form-control" name="deee[<?=$article['id']?>]" value="<?=$article['deee']?>">
-							<input type="hidden" class="form-control" name="ppi[<?=$article['id']?>]" value="<?=$article['ppi']?>">
-							<input type="hidden" class="form-control" name="exist[<?=$article['id']?>]" value="false">
-							<?php else: ?>
-							<input type="hidden" class="form-control" name="exist[<?=$article['id']?>]" value="true">
-							<input type="hidden" class="form-control" name="id_article_table_article[<?=$article['id']?>]" value="<?=$listInfoLivraison[$article['article']][0]['id']??''?>">
-						<?php endif ?>
-					<?php endforeach ?>
+								<input type="hidden" class="form-control" name="dossier[<?=$article['id']?>]" value="<?=$article['dossier']?>">
+								<input type="hidden" class="form-control" name="libelle[<?=$article['id']?>]" value="<?=$article['libelle']?>">
+								<input type="hidden" class="form-control" name="ean[<?=$article['id']?>]" value="<?=$article['ean']?>">
+								<input type="hidden" class="form-control" name="gt[<?=$article['id']?>]" value="<?=$article['gt']?>">
+								<input type="hidden" class="form-control" name="marque[<?=$article['id']?>]" value="<?=$article['marque']?>">
+								<input type="hidden" class="form-control" name="fournisseur[<?=$article['id']?>]" value="<?=$article['fournisseur']?>">
+								<input type="hidden" class="form-control" name="cnuf[<?=$article['id']?>]" value="<?=$article['cnuf']?>">
+								<input type="hidden" class="form-control" name="deee[<?=$article['id']?>]" value="<?=$article['deee']?>">
+								<input type="hidden" class="form-control" name="ppi[<?=$article['id']?>]" value="<?=$article['ppi']?>">
+								<input type="hidden" class="form-control" name="exist[<?=$article['id']?>]" value="false">
+								<?php else: ?>
+									<input type="hidden" class="form-control" name="exist[<?=$article['id']?>]" value="true">
+									<input type="hidden" class="form-control" name="id_article_table_article[<?=$article['id']?>]" value="<?=$listInfoLivraison[$article['article']][0]['id']??''?>">
+								<?php endif ?>
+							<?php endforeach ?>
 
-				</div>
+						</div>
+					</div>
+
+				</form>
 			</div>
-
-		</form>
-	</div>
-</div>
+		</div>

@@ -1,7 +1,14 @@
 <?php
 $paramList=[];
+$today=(new DateTime())->setTime(23,59);
+
+if($today<new DateTime($_POST['date_end'])){
+	$_POST['date_end']=$today->format('Y-m-d');
+}
 
 $dateParam=" (date_start BETWEEN '".$_POST['date_start'] ."' AND '". $_POST['date_end']."') ";
+
+
 $paramList[]=$dateParam;
 if(!empty($_POST['strg'])){
 	$strParam="titre LIKE '%".$_POST['strg']."%'";

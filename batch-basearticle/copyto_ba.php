@@ -11,12 +11,11 @@ include 'config/config.inc.php';
 require 'Class/Db.php';
 
 $db=new Db();
-$pdoQlik=$db->getPdo('_qlik');
+$pdoQlik=$db->getPdo('qlik');
 
 $file=DIR_IMPORT_GESSICA."SCEBFART.csv";
 
-$req=$pdoQlik->query("SELECT * FROM test_import");
-$data=$req->fetchAll();
+
 
 $row=0;
 
@@ -64,17 +63,17 @@ function updateBa($pdoQlik){
 //
 
 
-// $qlikBa=getBasearticle($pdoQlik);
-// $qlikRef=getRef($pdoQlik);
-// if(isset($qlikBa['DateExecutionScriptQlik'])){
-// 	$dateImport=new DateTime($qlikBa['DateExecutionScriptQlik']);
-// 	$today=(new DateTime())->setTime(0,0);
-// 	if($dateImport==$today){
-// 		$pdoQlik->query("DELETE FROM `ba`");
-// 		copyBa($pdoQlik);
+$qlikBa=getBasearticle($pdoQlik);
+$qlikRef=getRef($pdoQlik);
+if(isset($qlikBa['DateExecutionScriptQlik'])){
+	$dateImport=new DateTime($qlikBa['DateExecutionScriptQlik']);
+	$today=(new DateTime())->setTime(0,0);
+	if($dateImport==$today){
+		$pdoQlik->query("DELETE FROM `ba`");
+		copyBa($pdoQlik);
 
-// 	}
-// }
+	}
+}
 
 
 

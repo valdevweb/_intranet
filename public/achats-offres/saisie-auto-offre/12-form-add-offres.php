@@ -8,6 +8,9 @@
 					<div class="col">
 						<?=$article['marque']?>
 					</div>
+						<div class="col">
+						<?=$article['ref']?>
+					</div>
 					<div class="col">
 						<?=$article['libelle']?>
 					</div>
@@ -72,7 +75,7 @@
 				<input type="hidden" class="form-control form-primary" name="gt_gessica[<?=$article['id']?>]" value="<?=$article['gt']?>">
 				<input type="hidden" class="form-control form-primary" name="ean_gessica[<?=$article['id']?>]" value="<?=$article['ean']?>">
 				<input type="hidden" class="form-control form-primary" name="ppi_gessica[<?=$article['id']?>]" value="<?=$article['ppi']?>">
-				<input type="hidden" class="form-control form-primary" name="reference_gessica[<?=$article['id']?>]" value="na">
+				<input type="hidden" class="form-control form-primary" name="reference_gessica[<?=$article['id']?>]" value="<?=$article['ref']?>">
 			<?php endforeach ?>
 
 

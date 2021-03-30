@@ -80,22 +80,14 @@
 						<img src="../img/home/home-gazette-o.png">
 					</div>
 					<p class="text-orange subtitle">LES GAZETTES DE LA SEMAINE :</p>
-					<ul class='links'>
-						<?php foreach ($links as $link): ?>
-							<?= $link ?>
-						<?php endforeach ?>
-					</ul>
-					<?php if(isset($speHtml)): ?>
-						<p class="text-orange subtitle">LA GAZETTE SPECIALE :</p>
-						<ul class='links'>
-							<?= $speHtml?>
-						</ul>
-					<?php endif	?>
-					<p class="text-orange subtitle">LES GAZETTES SUIVI LIVRAISON CATALOGUE :</p>
-					<ul class='links'>
-						<?= isset($approHtml)? $approHtml: ''?>
-					</ul>
-					<P class="text-orange subtitle">LES OFFRES SPECIALES</p>
+
+					<?php include 'gazette-list.php' ?>
+					<div class="text-right pr-5 mr-5"><a class="stat-link " href="../achats-gazette/gazette.php">la page des gazettes</a></div>
+
+					<p class="text-orange subtitle mt-3">LES GAZETTES SUIVI LIVRAISON CATALOGUE :</p>
+					Retrouvez le suivi livraison dans le menu achat ou en <a class="stat-link" href="../achats-suivi-livraison/suivi-livraison.php">cliquant ici</a>
+
+					<P class="text-orange subtitle mt-3">LES OFFRES SPECIALES</p>
 
 						<ul class='links leaders'>
 							<?php foreach ($listActiveOpp as $activeOpp): ?>

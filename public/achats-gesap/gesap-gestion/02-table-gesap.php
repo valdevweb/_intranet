@@ -8,6 +8,7 @@
 			<th>Code op</th>
 			<th>Date de remonté</th>
 			<th>Guide d'achat</th>
+			<th>Commentaires</th>
 			<th>Fichiers</th>
 			<th><i class="fas fa-edit"></i></th>
 			<th><i class="fas fa-trash"></i></th>
@@ -25,6 +26,8 @@
 				<td><?=$gesap['code_op']?></td>
 				<td><?=date('d-m-Y', strtotime($gesap['date_remonte']))?></td>
 				<td><a href="<?=URL_UPLOAD.'gesap/'.$gesap['ga_file']?>"><?=$gesap['ga_num']?></a></td>
+				<td><?=$gesap['cmt']?></td>
+
 				<?php if (!empty($listFiles) && isset($listFiles[$gesap['id']])): ?>
 					<td>
 

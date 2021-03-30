@@ -58,7 +58,14 @@ include('../view/_navbar.php');
 ?>
 
 <div class="container">
-	<h1 class="text-main-blue py-5 ">Saisie automatique des offres</h1>
+	<div class="row py-5">
+		<div class="col">
+			<h1 class="text-main-blue  ">Saisie automatique des offres</h1>
+		</div>
+		<div class="col text-right">
+			<a href="offre-gestion.php" class="btn btn-primary">Gestion des offres</a>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-lg-1"></div>
 		<div class="col">

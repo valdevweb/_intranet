@@ -127,76 +127,12 @@ include('../view/_navbar.php');
 		<?php include 'gestion-gazette/11-form-add-gazette.php' ?>
 		<div class="bg-separation"></div>
 
-		<div class="row" id="quatre">
-			<div class="col">
-				<h5 class="text-main-blue border-bottom pb-3 my-3"><i class="fas fa-plus-circle pr-3"></i>Ajout de type d'information</h5>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-auto">
-				<table class="table table-sm w-auto">
-					<thead class="thead-light">
-						<tr>
-							<th>Catégorie</th>
-							<th>Type d'info</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php if (!empty($catBt)): ?>
-							<?php foreach ($catBt as $keyBt => $value): ?>
-								<tr>
-									<td>BTLec</td>
-									<td><?=$catBt[$keyBt]?></td>
-								</tr>
-							<?php endforeach ?>
-						<?php endif ?>
-						<?php if (!empty($catGalec)): ?>
-							<?php foreach ($catGalec as $keyGalec => $value): ?>
-								<tr>
-									<td>Galec</td>
-									<td><?=$catGalec[$keyGalec]?></td>
-								</tr>
-							<?php endforeach ?>
-						<?php endif ?>
-					</tbody>
-				</table>
-			</div>
-			<div class="col">
-				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
-					<div class="row">
-						<div class="col">
-							<div class="form-group">
-								<label for="main_cat">Catégorie :</label>
-								<select class="form-control form-primary" name="main_cat" id="main_cat" required>
-									<option value="">Sélectionner</option>
-									<option value="1">BTLEC</option>
-									<option value="2">GALEC</option>
-								</select>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col">
-							<div class="form-group">
-								<label for="cat">Type d'information : </label>
-								<input type="text" class="form-control  form-primary" name="cat" id="cat">
-							</div>
-						</div>
-					</div>
-					<div class="row pb-5">
-						<div class="col text-right">
-							<button class="btn btn-primary" name="add_cat">Ajouter</button>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
+
 		<div id="floating-nav">
 			<h6 class="text-main-blue text-center">Aller à</h6>
 			<div class="pb-2"><i class="fas fa-newspaper fa-sm circle-icon-blue mr-3"></i><a href="#un">Gazettes de la semaine</a></div>
 			<div class="pb-2"><i class="fas fa-search fa-sm circle-icon-blue mr-3 p-euro"></i><a href="#deux">Recherche de gazette</a></div>
 			<div class="pb-2"><i class="fas fa-pencil-alt fa-sm circle-icon-orange mr-3"></i><a href="#trois">Ajout de gazette</a></div>
-			<div class="pb-2"><i class="fas fa-plus fa-sm circle-icon-orange mr-3 p-add"></i><a href="#quatre">Ajout de type d'information</a></div>
 		</div>
 
 	</div>
@@ -235,7 +171,13 @@ include('../view/_navbar.php');
 				var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'pdf', 'xls', 'xlsx'];
 				var warning  ="";
 				var interdit=false;
+				var formGroup="<div class='form-group'>";
+				var endDiv="</div>";
+				var titre="<div class='text-main-blue heavy'>Nommer  ";
+				var titreOrdre="<div class='text-main-blue heavy'>Ordre d'affichage:</div>";
 
+				$("#zone-noms").empty();
+				$("#zone-ordre").empty();
 				for (var i = 0; i < nbFiles; ++i) {
 					var fileSize=$(this).get(0).files[i].size;
 					fileName=$(this).get(0).files[i].name;
@@ -249,6 +191,13 @@ include('../view/_navbar.php');
 
 					}
 					fileList += fileName + warning+'<br>';
+					var input="<input type='text' class='form-control form-primary'  name='filename[" +i +"]'>";
+					var label="<div class='text-main-blue'>Ordre :</div>";
+					var ordre=i+1;
+					var inputOrdre="<input type='text' class='form-control form-primary'  name='ordre[" +i +"]' value='"+ordre+"'>";
+
+					$("#zone-noms").append(titre+fileName+formGroup+input+endDiv);
+					$("#zone-ordre").append(label+formGroup +inputOrdre+endDiv);
 				}
 
 				if(totalSize <= 52428800 && interdit==false){

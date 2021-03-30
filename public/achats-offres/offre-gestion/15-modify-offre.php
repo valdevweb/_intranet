@@ -20,7 +20,7 @@
 										<option value="<?=$prosp['id']?>" <?= FormHelpers::restoreSelected($prosp['id'],$offreMod['id_prosp'])?>>
 											<?=$prosp['prospectus']?>
 
-											</option>
+										</option>
 									<?php endforeach ?>
 
 								</select>
@@ -97,9 +97,11 @@
 				</form>
 			</div>
 		</div>
-		<?php else: ?>
-			<div class="alert alert-danger">Ce prospectus n'existe pas</div>
-		<?php endif ?>
 
-	</div>
-</div>
+
+				<?php else: ?>
+					<div class="alert alert-danger">Ce prospectus n'existe pas</div>
+				<?php endif ?>
+
+			</div>
+		</div>

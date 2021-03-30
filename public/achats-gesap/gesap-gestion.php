@@ -75,8 +75,8 @@ if(isset($_POST['add'])){
 		}
 		if(isset($otherFilename) && !empty($otherFilename)){
 			for ($i=0; $i < count($otherFilename); $i++) {
-				$filename="";
-				$gesapDao->insertFile($idGesap, $otherFilename[$i], $filename);
+
+				$gesapDao->insertFileWithOrdre($idGesap, $otherFilename[$i], $_POST['filename'][$i], $_POST['ordre'][$i]);
 			}
 
 		}
@@ -130,7 +130,7 @@ include('../view/_navbar.php');
 	<div class="row pb-5">
 		<div class="col">
 			<?php if (!empty($listGesap)): ?>
-			<?php include 'gesap-gestion/02-table-gesap.php' ?>
+				<?php include 'gesap-gestion/02-table-gesap.php' ?>
 
 			<?php endif ?>
 		</div>
@@ -180,7 +180,7 @@ include('../view/_navbar.php');
 			fileList="";
 		});
 		$('input[name="file_other[]"]').change(function(){
-			console.log("ici");
+
 			var totalSize=0;
 			var fileName='';
 			var fileList='';
@@ -188,7 +188,13 @@ include('../view/_navbar.php');
 			var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'pdf', 'xls', 'xlsx'];
 			var warning  ="";
 			var interdit=false;
+			var formGroup="<div class='form-group'>";
+			var endDiv="</div>";
+			var titre="<div class='text-main-blue heavy'>Nommer  ";
+			var titreOrdre="<div class='text-main-blue heavy'>Ordre d'affichage:</div>";
 
+			$("#zone-noms").empty();
+			$("#zone-ordre").empty();
 			for (var i = 0; i < nbFiles; ++i) {
 				var fileSize=$(this).get(0).files[i].size;
 				fileName=$(this).get(0).files[i].name;
@@ -202,6 +208,13 @@ include('../view/_navbar.php');
 
 				}
 				fileList += fileName + warning+'<br>';
+				var input="<input type='text' class='form-control form-primary'  name='filename[" +i +"]'>";
+				var label="<div class='text-main-blue'>Ordre :</div>";
+				var ordre=i+1;
+				var inputOrdre="<input type='text' class='form-control form-primary'  name='ordre[" +i +"]' value='"+ordre+"'>";
+
+				$("#zone-noms").append(titre+fileName+formGroup+input+endDiv);
+				$("#zone-ordre").append(label+formGroup +inputOrdre+endDiv);
 			}
 
 			if(totalSize <= 52428800 && interdit==false){

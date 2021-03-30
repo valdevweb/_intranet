@@ -218,17 +218,33 @@
   color: #fff;
 }
 
-.badge-galec{
+.badge-galec, .badge-primary{
   color: #fff;
-  background-color: #0D47A1;
+  background-color: #0D47A1 !important;
 }
 
-.badge-btlec{
+.badge-btlec, .badge-orange{
   background: #F18E0B;
   color: #fff;
 
 }
 
 .w-80{
-  width: 80px;
+  width: 80px !important;
+}
+.w-100{
+  width: 100px !important;
+}
+.w-120{
+  width: 120px !important;
+}
+.w-160{
+  width: 160px !important;
+}
+
+.w-180{
+  width: 180px !important;
+}
+.w-200{
+  width: 200px !important;
 }

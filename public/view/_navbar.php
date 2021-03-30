@@ -140,7 +140,7 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 						<li><a href="<?=ROOT_PATH?>/public/achats-gazette/gazette.php">La gazette</a></li>
 						<li><a href="<?=ROOT_PATH?>/public/achats-gesap/gesap.php">Les gesaps</a></li>
 						<li><a href="<?=ROOT_PATH?>/public/achats-odr/odr.php">Les offres ODR</a></li>
-						<li><a href="<?=ROOT_PATH?>">Les offres TEL - BRII</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/achats-offres/offres.php">Les offres TEL - BRII</a></li>
 						<li><a href="<?=ROOT_PATH?>/public/gazette/opp-encours.php">Les offres spéciales</a></li>
 						<li><a href="<?=ROOT_PATH?>/public/achats-suivi-livraison/suivi-livraison.php">Le suivi des livraisons</a></li>
 						<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#assortiment-title'?>">Assortiment et panier Promo</a></li>

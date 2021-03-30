@@ -1,37 +1,26 @@
 <?php foreach ($listGazette as $key => $gazette): ?>
-	<div class="row mb-3">
+	<div class="row">
 		<div class="col">
 			<?php if ($gazette['date_start']!=$gazetteDate): ?>
-				<div class="bg-separation-thin"></div>
-				<div class="row my-3">
+				<div class="row ">
 					<div class="col">
-						<h5 class="text-center text-main-blue">la gazette du <?=FR_DAYS[date('w', strtotime($gazette['date_start']))].' '.date('j', strtotime($gazette['date_start'])).' '.FR_MONTHS[date('n', strtotime($gazette['date_start']))]?></h5>
+						<h6 class="text-center text-main-blue"><?= ucfirst(FR_DAYS[date('w', strtotime($gazette['date_start']))]).' '.date('j', strtotime($gazette['date_start'])).' '.FR_MONTHS[date('n', strtotime($gazette['date_start']))].' '.date('Y',strtotime($gazette['date_start']))?></h6>
 					</div>
 				</div>
 			<?php endif ?>
 			<div class="row">
-				<div class="col-lg-1">
-					<div class="badge badge-<?=($mainCat[$gazette['main_cat']])??""?>">
-						<?=(strtoupper($mainCat[$gazette['main_cat']]))??""?>
-
-					</div>
-				</div>
-				<div class="col-lg-2">
-					<?=(ucwords($listCat[$gazette['cat']]))??""?>
-				</div>
 				<div class="col show-link">
-					<h6 class="text-main-blue show-link" data-gazette-id="<?=$gazette['id']?>"><?=$gazette['titre']?></h6>
+					<div class="text-dark show-link" >- <?=$gazette['titre']?></div>
 				</div>
+				<div class="col-auto pr-5 mr-5 text-dark show-link" data-gazette-id="<?=$gazette['id']?>"><u>ouvrir/fermer</u></div>
 			</div>
 			<div class="more" data-content-id="<?=$gazette['id']?>">
 				<div class="row">
-					<div class="col-lg-3"></div>
 					<div class="col">
 						<?=$gazette['description']?>
 					</div>
 				</div>
 				<div class="row mt-2">
-					<div class="col-lg-3"></div>
 					<div class="col">
 						<div class="row border mx-1 py-3">
 							<div class="col">

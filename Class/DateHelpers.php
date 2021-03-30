@@ -67,4 +67,22 @@ class DateHelpers{
 		return $date->format("H:i");
 	}
 
+	public static function testDate($dateStartProsp, $dateEndProsp){
+		$today=new DateTime();
+		$today2=new DateTime();
+		$todayStart=$today->modify('+ 15 day');
+		$todayEnd=$today2->modify('- 7 day');
+		if($dateStartProsp <=$todayStart && $dateEndProsp >= $todayEnd){
+			echo 'la date de début de prospectus '.$dateStartProsp->format('d-m-Y') .' est inférieur à aujourd\'hui + 15 ('.$todayStart->format('d-m-Y') .')<br>';
+			echo 'la date de fin de prospectus '.$dateEndProsp->format('d-m-Y') .' est inférieur à aujourd\'hui -7 ('.$todayEnd->format('d-m-Y') .')<br>';
+			echo "on affhiche";
+		}else{
+			echo 'la date de début de prospectus '.$dateStartProsp->format('d-m-Y') .' n\'est pas inférieur à aujourd\'hui + 15 ('.$todayStart->format('d-m-Y') .')<br>';
+			echo ' ou la date de fin de prospectus '.$dateEndProsp->format('d-m-Y') .' n\'est pas inférieur à aujourd\'hui -7 ('.$todayEnd->format('d-m-Y') .')<br>';
+
+			echo "hors période";
+		}
+
+	}
+
 }

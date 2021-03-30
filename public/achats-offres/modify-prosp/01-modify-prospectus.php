@@ -35,26 +35,27 @@ if(empty($_POST['prospectus']) ||empty($_POST['date_start'])||empty($_POST['date
 if(empty($errors)){
 	if(!empty($otherFilename)){
 		for ($i=0; $i < count($otherFilename) ; $i++) {
-			$prospDao->insertFile($_GET['prosp-id-mod'], $otherFilename[$i]);
+			$prospDao->insertFileWithName($_GET['id'], $otherFilename[$i], $_POST['filename'][$i], $_POST['ordre'][$i]);
 		}
 	}
 	if(!empty($_POST['link'])){
+		$prospDao->deleteLinks($_GET['id']);
 		$arrayLink=explode(', ',$_POST['link']);
 		if(!empty($arrayLink)){
 			for ($i=0; $i < count($arrayLink) ; $i++) {
-				$prospDao->insertLink($_GET['prosp-id-mod'], $arrayLink[$i]);
+				$prospDao->insertLink($_GET['id'], $arrayLink[$i]);
 			}
 		}else{
-			$prospDao->insertLink($_GET['prosp-id-mod'], $_POST['link']);
+			$prospDao->insertLink($_GET['id'], $_POST['link']);
 		}
 	}
 	if(!empty($_FILES['fic-mod']['tmp_name'])){
-		$done=$prospDao->updateProspectusWithFic($_GET['prosp-id-mod']);
+		$done=$prospDao->updateProspectusWithFic($_GET['id']);
 	}else{
-		$done=$prospDao->updateProspectusWithoutFic($_GET['prosp-id-mod']);
+		$done=$prospDao->updateProspectusWithoutFic($_GET['id']);
 	}
 	if($done==1){
-		$successQ='?success=prosp-mod';
+		$successQ='?id='.$_GET['id'].'&success=prosp-mod';
 		unset($_POST);
 		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 	}else{

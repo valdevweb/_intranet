@@ -24,13 +24,26 @@ class GazetteDao{
 		return $req->fetchAll();
 
 	}
+	public function getGazetteThisWeek(){
+		$monday=new DateTime();
+		$sunday=new DateTime();
+		$monday->modify("monday this week");
+		$sunday->modify("sunday this week");
 
+		$req=$this->pdo->prepare("SELECT * FROM gazette WHERE DATE_FORMAT(date_start, '%Y-%m-%d')>= :monday AND DATE_FORMAT(date_start, '%Y-%m-%d')<= :sunday ORDER BY date_start DESC");
+		$req->execute([
+			':monday'		=>$monday->format('Y-m-d'),
+			':sunday'		=>$sunday->format('Y-m-d')
+		]);
+		return $req->fetchAll();
+
+	}
 
 
 	public function getFilesEncours(){
 		$today=new DateTime();
 		$monday=$today->modify("monday this week");
-		$req=$this->pdo->prepare("SELECT id_gazette, file, filename, gazette_files.id as id FROM gazette_files LEFT JOIN gazette ON id_gazette= gazette.id WHERE DATE_FORMAT(date_start, '%Y-%m-%d')>= :monday ORDER BY date_start DESC");
+		$req=$this->pdo->prepare("SELECT id_gazette, file, filename, gazette_files.id as id FROM gazette_files LEFT JOIN gazette ON id_gazette= gazette.id WHERE DATE_FORMAT(date_start, '%Y-%m-%d')>= :monday ORDER BY date_start, ordre DESC");
 		$req->execute([
 			':monday'		=>$monday->format('Y-m-d')
 		]);
@@ -139,11 +152,13 @@ class GazetteDao{
 		return $this->pdo->lastInsertId();
 	}
 
-	public function addFiles($idGazette, $file){
-		$req=$this->pdo->prepare("INSERT INTO gazette_files (id_gazette, file) VALUES (:id_gazette, :file)");
+	public function addFiles($idGazette, $file, $name, $ordre){
+		$req=$this->pdo->prepare("INSERT INTO gazette_files (id_gazette, file, filename, ordre) VALUES (:id_gazette, :file, :filename, :ordre)");
 		$req->execute([
 			':id_gazette'		=>$idGazette,
 			':file'		=>$file,
+			':filename'	=>$name,
+			':ordre'	=>$ordre
 		]);
 		return $req->errorInfo();
 	}
@@ -155,11 +170,12 @@ class GazetteDao{
 		]);
 		return $req->errorInfo();
 	}
-	public function updateFiles($idFile, $filename){
-		$req=$this->pdo->prepare("UPDATE gazette_files SET filename= :filename WHERE id= :id");
+	public function updateFiles($idFile, $filename, $ordre){
+		$req=$this->pdo->prepare("UPDATE gazette_files SET filename= :filename, ordre= :ordre WHERE id= :id");
 		$req->execute([
 			':id'		=>$idFile,
 			':filename'		=>$filename,
+			':ordre'		=>$ordre,
 		]);
 		return $req->errorInfo();
 	}
@@ -212,7 +228,7 @@ class GazetteDao{
 	}
 	public function getFiles($idGazette){
 
-		$req=$this->pdo->prepare("SELECT * FROM gazette_files WHERE id_gazette= :id_gazette");
+		$req=$this->pdo->prepare("SELECT * FROM gazette_files WHERE id_gazette= :id_gazette ORDER BY ordre");
 		$req->execute([
 			':id_gazette'	=> $idGazette
 
@@ -245,11 +261,11 @@ class GazetteDao{
 		$req=$this->pdo->query("SELECT * FROM gazette WHERE $param");
 		return $req->fetchAll();
 	}
-		public function getFilesByParam($param){
+	public function getFilesByParam($param){
 		$req=$this->pdo->query("SELECT gazette.id, gazette_files.* FROM gazette_files LEFT JOIN gazette ON gazette_files.id_gazette= gazette.id WHERE $param");
 		return $req->fetchAll(PDO::FETCH_GROUP);
 	}
-		public function getLinksByParam($param){
+	public function getLinksByParam($param){
 		$req=$this->pdo->query("SELECT gazette.id, gazette_links.* FROM gazette_links LEFT JOIN gazette ON gazette_links.id_gazette= gazette.id WHERE $param");
 		return $req->fetchAll(PDO::FETCH_GROUP);
 	}

@@ -60,7 +60,7 @@ if(empty($errors)){
 		}
 		if(!empty($odrFilenames)){
 			for ($i=0; $i <count($odrFilenames) ; $i++) {
-				$do=$odrDao->addOdrFile($idOdr, $odrFilenames[$i]);
+				$do=$odrDao->addOdrFileWithName($idOdr, $odrFilenames[$i], $_POST['filename'][$i], $_POST['ordre'][$i]);
 			}
 
 		}

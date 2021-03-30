@@ -39,11 +39,11 @@ if(empty($errors)){
 if(empty($errors)){
 
 	$file=isset($_FILES['fic']['name'])?$_FILES['fic']['name']:"";
-	$idProsp=$prospDao->addProspectus($_POST['date_start'],$_POST['date_end'],strtoupper($_POST['prospectus']),$file);
+	$idProsp=$prospDao->addProspectus($_POST['date_start'],$_POST['date_end'],strtoupper($_POST['code_op']),$_POST['prospectus'],$file);
 
 	if(!empty($otherFilename)){
 		for ($i=0; $i < count($otherFilename) ; $i++) {
-			$prospDao->insertFile($idProsp, $otherFilename[$i]);
+			$prospDao->insertFileWithName($idProsp, $otherFilename[$i], $_POST['filename'][$i], $_POST['ordre'][$i]);
 		}
 	}
 	if(!empty($_POST['link'])){

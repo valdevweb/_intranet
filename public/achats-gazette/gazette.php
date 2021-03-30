@@ -29,7 +29,7 @@ $catGalec=$gazetteDao->getCatByMain(2);
 $mainCat=[1 =>"btlec", 2 =>"galec"];
 
 $listCat=$gazetteDao->getCat();
-$listGazette=$gazetteDao->getGazetteEnCours();
+$listGazette=$gazetteDao->getGazetteThisWeek();
 $gazetteDate="";
 $dayOne=(new DateTime())->modify('- 60 days');
 $dayOneStr=$dayOne->format('Y-m-d');
@@ -117,6 +117,7 @@ include('../view/_navbar.php');
 				});
 			});
 
+			$('div.more-search').hide();
 			$('div.more').hide();
 			$('.show-link').on("click", function(){
 				var id= $(this).data("gazette-id");
@@ -125,6 +126,15 @@ include('../view/_navbar.php');
 
 				}else{
 					$('div[data-content-id="'+id+'"]').show();
+				}
+			});
+			$('.show-link-search').on("click", function(){
+				var id= $(this).data("gazette-search-id");
+				if($('div[data-content-search-id="'+id+'"]').is(":visible")){
+					$('div[data-content-search-id="'+id+'"]').hide();
+
+				}else{
+					$('div[data-content-search-id="'+id+'"]').show();
 				}
 			});
 		});

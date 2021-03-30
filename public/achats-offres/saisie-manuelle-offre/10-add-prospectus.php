@@ -4,8 +4,14 @@
 					<div class="row">
 						<div class="col-lg-3">
 							<div class="form-group">
-								<label for="prospectus">Prospectus : </label>
-								<input type="text" class="form-control form-primary" name="prospectus" id="prospectus" title="Veuillez supprimer les espaces"  pattern="[^' ']+">
+								<label for="code_op">Code op : </label>
+								<input type="text" class="form-control form-primary" name="code_op" id="code_op" placeholder="exemple : 21G304">
+							</div>
+						</div>
+						<div class="col-lg-3">
+							<div class="form-group">
+								<label for="prospectus">Nom du prospectus : </label>
+								<input type="text" class="form-control form-primary" name="prospectus" id="prospectus" placeholder="Exemple : évenement 4">
 							</div>
 						</div>
 						<div class="col-lg-3">
@@ -82,6 +88,11 @@
 								<div class="col" id="file-other-msg"></div>
 							</div>
 						</div>
+					</div>
+					<div class="row mt-3">
+						<div class="col-4" id="zone-noms"></div>
+						<div class="col-3" id="zone-ordre"></div>
+						<div class="col"></div>
 					</div>
 					<div class="row pb-5">
 						<div class="col text-right">
