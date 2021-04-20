@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=320, target-densitydpi=device-dpi">
+    <style type="text/css">
+        a.home{
+            color: #f18e0b;
+            font-weight:  bold;
+            text-decoration: none;
+
+        }
+        .footer{
+            font-size: 0.9em;
+        }
+        th{
+            background: #0d47a1;
+            color : #fff;
+        }
+        tr, td, th{
+            border: 1px solid #999;
+        }
+        td, th{
+            padding:  5px;
+        }
+
+    </style>
+</head>
+
+<body style="font-family:arial,helvetica, 'sans serif'; color:dimGray; font-size:14pt">
+
+    <p>Bonjour,</p>
+
+    <p>A date, aucun rendez-vous n'est positionné pour la livraison des commandes opérations suivantes :</p>
+    <table cellpadding="0" cellspacing="0" >
+       <tr>
+        <th>Commande</th>
+        <th>Opération</th>
+        <th>Date de début d'opération</th>
+        <th>Référence</th>
+        <th>EAN</th>
+        <th>Désignation</th>
+        <th>PCB</th>
+        <th>Qte UV commandée</th>
+        <th>Qte colis commandée</th>
+        <th>Reste à recevoir</th>
+        <th>Commentaire</th>
+    </tr>
+    {LIGNE}
+</table>
+<p>{CMT}</p>
+<p>Pouvez-vous s'il vous plait nous communiquer quels sont les délais de livraison à date ? <br>
+
+    Et voir pour organiser au plus vite la livraison en prenant rendez-vous à l'adresse <a href="">{REPLYTO}</a></p>
+    {DEST}
+
+    <p>Vous en remerciant par avance,</p>
+    <p>Cordialement,</p>
+    <p style="color:darkblue;">------------------<br>
+    Portail BTLec EST - Service achats</p>
+    <p style="color:firebrick;">*** Merci de ne pas répondre à ce mail, cette boîte mail n'est pas consultée ***</p>
+</body>
+</html>
+

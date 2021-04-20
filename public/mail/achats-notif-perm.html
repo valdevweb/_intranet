@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=320, target-densitydpi=device-dpi">
+    <style type="text/css">
+        a.home{
+            color: #f18e0b;
+            font-weight:  bold;
+            text-decoration: none;
+
+        }
+        .footer{
+            font-size: 0.9em;
+        }
+        th{
+            background: #0d47a1;
+            color : #fff;
+        }
+        tr, td, th{
+            border: 1px solid #999;
+        }
+        td, th{
+            padding:  5px;
+        }
+
+    </style>
+</head>
+
+<body style="font-family:arial,helvetica, 'sans serif'; color:dimGray; font-size:14pt">
+
+    <p>Bonjour,</p>
+
+    <p>Ci-dessous la liste des articles du permanent pour lesquels la date de livraison était prévue à aujourd'hui</p>
+    <table cellpadding="0" cellspacing="0" >
+        <tr>
+            <th>GT</th>
+            <th>Fournisseur</th>
+            <th>Article</th>
+            <th>Dossier</th>
+            <th>Référence</th>
+            <th>Libelle</th>
+            <th>date cde</th>
+            <th>Qte cde</th>
+            <th>PCB</th>
+            <th>Qte UV</th>
+        </tr>
+        {LIGNE}
+    </table>
+    <p>{DEST}</p>
+        <p>Cordialement,</p>
+        <p style="color:darkblue;">------------------<br>
+        Portail BTLec EST</p>
+        <p style="color:firebrick;">*** Merci de ne pas répondre à ce mail, cette boîte mail n'est pas consultée ***</p>
+    </body>
+    </html>
+
