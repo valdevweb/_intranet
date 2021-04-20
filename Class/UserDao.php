@@ -83,4 +83,20 @@ class UserDao{
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 
+	public function getUserGts($idwebuser){
+
+		$req=$this->pdo->prepare("SELECT gt FROM gts_users WHERE id_web_user=:id_web_user");
+		$req->execute([
+			':id_web_user'		=>$idwebuser
+		]);
+		return $req->fetchAll(PDO::FETCH_COLUMN);
+
+	}
+	public function getUserParam($param){
+
+		$req=$this->pdo->query("SELECT * FROM intern_users WHERE $param");
+
+		return $req->fetchAll();
+	}
+
 }

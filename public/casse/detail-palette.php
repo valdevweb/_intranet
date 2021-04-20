@@ -75,8 +75,7 @@ function updatePal($pdoCasse,$lastExp){
 
 
 
-if(isset($_GET['id']))
-{
+if(isset($_GET['id'])){
 	// info de la palette
 	$paletteInfo=getPaletteInfo($pdoCasse, $_GET['id']);
 
@@ -84,6 +83,8 @@ if(isset($_GET['id']))
 	// recupère les expéditions en cours => normalement une seule expédition en cours possible
 	// permet l'affichage du bouton adpaté : ajouter à une nvelle expé / ajouter l'expé du magasin X / positionnée sur l'exp du magasin x
 	$existingExp=getActiveExp($pdoCasse);
+	$serials=getSerialsPalette($pdoCasse, $_GET['id']);
+
 }
 else{
 	$loc='Location:bt-casse-dashboard.php?error=1';
@@ -178,20 +179,45 @@ DEBUT CONTENU CONTAINER
 
 	<div class="row">
 		<div class="col">
-			<?php
-			$th=['N° casse','Article','Désignation','nb colis','pcb','valo'];
-			$fields=['idcasse','article','designation','nb_colis','pcb','valo'];
-			$tablePalette=new Table(['table', 'table-bordered', 'table-sm' ],'palette');
-			$arrLink=[
-				'href'	=>'detail-casse.php',
-				'text'	=>'',
-				'col'	=>'1',
-				'param'	=>'id',
 
-			];
-			$link=$tablePalette->addLink($arrLink);
-			$tablePalette->createBasicTable($th,$paletteInfo,$fields, $link);
-			?>
+
+			<table class="table table-sm">
+				<thead class="thead-dark">
+					<tr>
+						<th>Casse</th>
+						<th>Article</th>
+						<th>Désignation</th>
+						<th>Nb colis</th>
+						<th>SN</th>
+						<th>PCB</th>
+						<th>Valo</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($paletteInfo as $key => $detail): ?>
+
+						<tr>
+							<td><a href="detail-casse.php?id=<?=$detail['idcasse']?>"><?=$detail['idcasse']?></a></td>
+							<td><?=$detail['article']?></td>
+							<td><?=$detail['designation']?></td>
+							<td><?=$detail['nb_colis']?></td>
+							<?php if (isset($serials[$detail['idcasse']])): ?>
+								<td>
+								<?php foreach ($serials[$detail['idcasse']] as $key => $sn): ?>
+									<?=$sn['serial_nb']?><br>
+								<?php endforeach ?>
+								</td>
+								<?php else: ?>
+									<td></td>
+							<?php endif ?>
+							<td><?=$detail['pcb']?></td>
+							<td><?=$detail['valo']?></td>
+						</tr>
+					<?php endforeach ?>
+
+				</tbody>
+			</table>
+
 
 
 
@@ -318,8 +344,8 @@ DEBUT CONTENU CONTAINER
 						<div class="col-md"></div>
 					</div>
 
-			<?php endif ?>
-				</div>
+				<?php endif ?>
+			</div>
 		<?php endif ?>
 
 

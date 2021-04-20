@@ -39,28 +39,22 @@ if (($handle = fopen($enteteFile, "r")) !== FALSE) {
 		if($row==0){
 			$row++;
 		}else{
-			// array_push($data,date('Y-m-d H:i:s'));
-			$req=$pdoQlik->prepare("INSERT INTO cdes_fou (id, num_cde, num_liv,cnuf, gt, date_cde, nb_palettes, date_import)
-				VALUES (:id, :num_cde, :num_liv, :cnuf, :gt, :date_cde,  :nb_palettes, :date_import)");
-			$req->execute([
-				':id'	=>$data[0].$data[1],
-				':num_cde'	=>$data[0],
-				':num_liv'	=>$data[1],
-				':cnuf'	=>$data[2],
-				':gt'	=>$data[4],
-				':date_cde'	=>(!empty($data[5]))?convertTodate($data[5]):null,
-				':nb_palettes'	=>$data[12],
-				':date_import'	=>date('Y-m-d')
 
-			]);
+			if($data[1]==1 && $data[15]!=3){
+				$req=$pdoQlik->prepare("INSERT INTO cdes_fou (id, num_cde, cnuf, gt, date_cde, date_liv, nb_palettes, date_import)
+					VALUES (:id, :num_cde, :cnuf, :gt, :date_cde, :date_liv, :nb_palettes, :date_import)");
+				$req->execute([
+					':id'	=>$data[0],
+					':num_cde'	=>$data[0],
+					':cnuf'	=>$data[2],
+					':gt'	=>$data[4],
+					':date_cde'	=>(!empty($data[5]))?convertTodate($data[5]):null,
+					':date_liv'	=>(!empty($data[6]))?convertTodate($data[6]):null,
+					':nb_palettes'	=>$data[12],
+					':date_import'	=>date('Y-m-d')
 
-
-			$err=$req->errorInfo();
-				echo "<pre>";
-				print_r($err);
-				echo '</pre>';
-
-
+				]);
+			}
 
 		}
 		$row++;

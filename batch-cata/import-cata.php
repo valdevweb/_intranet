@@ -56,6 +56,8 @@ de la table dossier
 if (($handle = fopen($op, "r")) !== FALSE) {
 	$errArr=[];
 	$i=0;
+	$req=$pdoQlik->query("DELETE FROM cata_op");
+
 	while (($data = fgetcsv($handle, 10000, ",")) !== FALSE) {
 		if($row==0){
 			$entete=$data;
@@ -85,6 +87,8 @@ if (($handle = fopen($op, "r")) !== FALSE) {
 if (($handle = fopen($dossier, "r")) !== FALSE) {
 	$errArr=[];
 	$i=0;
+	$req=$pdoQlik->query("DELETE FROM cata_dossiers");
+
 	while (($data = fgetcsv($handle, 10000, ",")) !== FALSE) {
 		if($row==0){
 			$entete=$data;
@@ -108,4 +112,5 @@ if (($handle = fopen($dossier, "r")) !== FALSE) {
 	$row=0;
 	fclose($handle);
 }
-?>
+
+

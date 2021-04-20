@@ -215,26 +215,37 @@ h2{
 			<td class="six bg-black text-white heavy">ARTICLE</td>
 			<td class="six bg-black text-white heavy">DESIGNATION</td>
 			<td class="six bg-black text-white heavy">NB COLIS</td>
+			<td class="six bg-black text-white heavy">SN</td>
+
 			<td class="six bg-black text-white heavy">PCB</td>
 			<td class="six bg-black text-white heavy">VALO</td>
 		</tr>
-	<?php foreach ($paletteInfo as $palette): ?>
-		<tr>
-			<td class="six"><?=$palette['idcasse']?></td>
-			<td class="six"><?=$palette['article']?></td>
-			<td class="six"><?=$palette['designation']?></td>
-			<td class="six"><?=$palette['nb_colis']?></td>
-			<td class="six"><?=$palette['pcb']?></td>
-			<td class="six"><?=$palette['valo']?></td>
-		</tr>
-	<?php endforeach ?>
+		<?php foreach ($paletteInfo as $palette): ?>
+			<tr>
+				<td class="six"><?=$palette['idcasse']?></td>
+				<td class="six"><?=$palette['article']?></td>
+				<td class="six"><?=$palette['designation']?></td>
+				<td class="six"><?=$palette['nb_colis']?></td>
+				<?php if (isset($serials[$palette['idcasse']])): ?>
+					<td class="six">
+						<?php foreach ($serials[$palette['idcasse']] as $key => $sn): ?>
+							<?=$sn['serial_nb']?><br>
+						<?php endforeach ?>
+					</td>
+					<?php else: ?>
+						<td class="six"></td>
+					<?php endif ?>
+					<td class="six"><?=$palette['pcb']?></td>
+					<td class="six"><?=$palette['valo']?></td>
+				</tr>
+			<?php endforeach ?>
 
-	</table>
-	<div class="spacing-m"></div>
+		</table>
+		<div class="spacing-m"></div>
 
 
-</body>
-</html>
+	</body>
+	</html>
 
 
 

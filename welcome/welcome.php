@@ -23,6 +23,7 @@ $jMoinsUnLastYear=$dayToDisplayPrev;
 
 
 	// echo "<pre>";
+	// print_r($dayToDisplay);
 	// print_r($jMoinsUn);
 	// print_r($jMoinsUnLastYear);
 	// echo '</pre>';

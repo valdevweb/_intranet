@@ -215,24 +215,34 @@ h2{
 			<td class="cinq bg-black text-white heavy">ARTICLE</td>
 			<td class="cinq bg-black text-white heavy">DESIGNATION</td>
 			<td class="cinq bg-black text-white heavy">NB COLIS</td>
+			<td class="cinq bg-black text-white heavy">SN</td>
 			<td class="cinq bg-black text-white heavy">PCB</td>
 		</tr>
-	<?php foreach ($paletteInfo as $palette): ?>
-		<tr>
-			<td class="cinq"><?=$palette['idcasse']?></td>
-			<td class="cinq"><?=$palette['article']?></td>
-			<td class="cinq"><?=$palette['designation']?></td>
-			<td class="cinq"><?=$palette['nb_colis']?></td>
-			<td class="cinq"><?=$palette['pcb']?></td>
-		</tr>
-	<?php endforeach ?>
+		<?php foreach ($paletteInfo as $palette): ?>
+			<tr>
+				<td class="cinq"><?=$palette['idcasse']?></td>
+				<td class="cinq"><?=$palette['article']?></td>
+				<td class="cinq"><?=$palette['designation']?></td>
+				<td class="cinq"><?=$palette['nb_colis']?></td>
+				<?php if (isset($serials[$palette['idcasse']])): ?>
+					<td class="six">
+						<?php foreach ($serials[$palette['idcasse']] as $key => $sn): ?>
+							<?=$sn['serial_nb']?><br>
+						<?php endforeach ?>
+					</td>
+					<?php else: ?>
+						<td class="six"></td>
+					<?php endif ?>
+					<td class="cinq"><?=$palette['pcb']?></td>
+				</tr>
+			<?php endforeach ?>
 
-	</table>
-	<div class="spacing-m"></div>
+		</table>
+		<div class="spacing-m"></div>
 
 
-</body>
-</html>
+	</body>
+	</html>
 
 
 

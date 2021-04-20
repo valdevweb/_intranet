@@ -91,8 +91,24 @@ function getPaletteInfo($pdoCasse, $id){
 
 }
 
-
-
+function getSerialsPalette($pdoCasse, $idPalette){
+	$req=$pdoCasse->prepare("SELECT id_casse, serial_nb FROM serials
+		LEFT JOIN casses ON id_casse = casses.id
+		LEFT JOIN palettes ON casses.id_palette=palettes.id
+		WHERE id_palette=:id");
+	$req->execute([
+		':id'			=>$idPalette,
+	]);
+	return $req->fetchAll(PDO::FETCH_GROUP);
+}
+function getSerialsCasse($pdoCasse, $idCasse){
+	$req=$pdoCasse->prepare("SELECT id_casse, serial_nb FROM serials
+		WHERE id_casse=:id");
+	$req->execute([
+		':id'			=>$idCasse,
+	]);
+	return $req->fetchAll(PDO::FETCH_GROUP);
+}
 function getActiveExp($pdoCasse){
 	$req=$pdoCasse->query("SELECT * FROM exps WHERE exp=0");
 	if($req){

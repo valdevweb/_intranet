@@ -10,10 +10,7 @@
 		<!-- colonne gauche -->
 		<div class="col-auto p-5">
 			<h1 class="text-main-blue  text-center">Vos documents</h1>
-			<h5 class="text-main-blue" id="odr-title"><i class="far fa-hand-point-right pr-3"></i>listing des ODR :</h5>
-			<p>- <a href="<?= $path .$odr['file']."?".date("Y-m-d H:i:s")?>" target="_blank">Listing ODR mise à jour du <?= $odr['datefull']?></a> </p>
-			<h5 class="text-main-blue" id="tel-title"><i class="far fa-hand-point-right pr-3"></i>Les tickets et BRII :</h5>
-			<p>- <a href="<?= $path .$tel['file']."?".date("Y-m-d H:i:s")?>" target="_blank">Tickets et BRII du <?= $tel['datefull']?></a> </p>
+
 			<?php
 			ob_start()
 			?>

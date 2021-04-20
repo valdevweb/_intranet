@@ -15,8 +15,8 @@
 	<tbody>
 		<?php foreach ($listOdr as $key => $odr): ?>
 			<tr>
-				<td class="nowrap"><?=$odr['date_start']?></td>
-				<td class="nowrap"><?=$odr['date_end']?></td>
+				<td class="nowrap"><?=date('d-m-Y', strtotime($odr['date_start']))?></td>
+				<td class="nowrap"><?=date('d-m-Y', strtotime($odr['date_end']))?></td>
 				<td><?=$odr['gt']?></td>
 				<td><?=$odr['famille']?></td>
 				<td><?=$odr['marque']?></td>

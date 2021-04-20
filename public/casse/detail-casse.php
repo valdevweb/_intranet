@@ -90,7 +90,9 @@ if(isset($_GET['id']))
 {
 	$idCasse=$_GET['id'];
 	$casseInfo=getCasse($pdoCasse, $idCasse);
-	// $sansSuite=false;
+	$serials=getSerialsCasse($pdoCasse, $idCasse);
+
+
 	$mtMag= ($casseInfo['mt_mag']!=null) ? $casseInfo['mt_mag'] : '0.00';
 	$mtDecote= ($casseInfo['mt_decote']!=null) ? $casseInfo['mt_decote'] : '0.00';
 	$mtNdd= ($casseInfo['mt_ndd']!=null) ? $casseInfo['mt_ndd'] : '0.00';
@@ -189,6 +191,7 @@ if($_GET['id']>$pagination[0])
 else{
 	$prev=$pagination[0];
 }
+
 
 
 
@@ -302,83 +305,92 @@ DEBUT CONTENU CONTAINER
 
 					<div class="col-2 heavy">Nb colis : </div>
 					<div class="col-1 text-right"><?=$casseInfo['nb_colis']?></div>
-				</div>
-				<div class="row">
-					<div class="col-1 heavy">PU : </div>
-					<div class="col-2 text-right"><?=$casseInfo['pfnp']?>&euro;</div>
-					<div class="col-1 heavy">Valo : </div>
-					<div class="col-2 text-right bg-light-blue"><?=$casseInfo['valo']?>&euro;</div>
-				</div>
-				<div class="row">
-					<div class="col heavy pb-2">
-						Commentaires :
+					<div class="col-1 heavy">SN : </div>
+					<?php if (isset($serials[$casseInfo['cassesid']])): ?>
+						<div class="col text-right">
+							<?php foreach ($serials[$casseInfo['cassesid']] as $key => $sn): ?>
+								<?=$sn['serial_nb']?><br>
+							<?php endforeach ?>
+						</div>
+						<?php endif ?>
+
 					</div>
-				</div>
-				<?php if ($cmts): ?>
-					<?php foreach ($cmts as $cmt): ?>
-						<div class="row pb-2">
-							<div class="col-auto pl-5">
-								<?= $cmt['dateCmt'] ?> :
+					<div class="row">
+						<div class="col-1 heavy">PU : </div>
+						<div class="col-2 text-right"><?=$casseInfo['pfnp']?>&euro;</div>
+						<div class="col-1 heavy">Valo : </div>
+						<div class="col-2 text-right bg-light-blue"><?=$casseInfo['valo']?>&euro;</div>
+					</div>
+					<div class="row">
+						<div class="col heavy pb-2">
+							Commentaires :
+						</div>
+					</div>
+					<?php if ($cmts): ?>
+						<?php foreach ($cmts as $cmt): ?>
+							<div class="row pb-2">
+								<div class="col-auto pl-5">
+									<?= $cmt['dateCmt'] ?> :
+								</div>
+								<div class="col patrick-hand text-main-blue">
+									<?= $cmt['cmt'] ?>
+								</div>
 							</div>
-							<div class="col patrick-hand text-main-blue">
-								<?= $cmt['cmt'] ?>
+						<?php endforeach ?>
+					<?php endif ?>
+
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" >
+						<div class="row mb-3 border p-2 bg-grey">
+							<div class="col">
+								<div class="form-group">
+									<label><i class="fas fa-comments pr-3"></i>Ajouter un commentaire : </label>
+									<textarea class="form-control" name="cmt"></textarea>
+								</div>
+							</div>
+							<div class="col-4 d-flex align-items-end pb-3">
+								<button class="btn btn-black" name="add-cmt">Enregistrer</button>
 							</div>
 						</div>
-					<?php endforeach ?>
+					</form>
+
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-3">Montant Vente Magasin :</div><div class="col-2 text-right"> <?=$mtMag?> &euro;</div>
+			</div>
+			<div class="row">
+				<div class="col-3">Décote /avoir :</div><div class="col-2 text-right"> <?=$mtDecote?> &euro;</div>
+			</div>
+			<div class="row">
+				<div class="col-3">Note de débit fournisseur :</div><div class="col-2 text-right"> <?=$mtNdd?> &euro;</div>
+			</div>
+			<div class="row pb-5">
+				<div class="col-3">Numéro de la note de débit :</div><div class="col-2 text-right"> <?=$numNdd?></div>
+			</div>
+			<!-- si dossier clos -->
+			<?php if ($casseInfo['etat']==1): ?>
+				<div class="row pb-5">
+					<div class="col">
+						<?php if ($casseInfo['detruit'] ==1): ?>
+							<p class="alert alert-primary ">Ce ou ces produits ont été détruits</p>
+							<?php else: ?>
+								<p class="alert alert-primary ">Ce ou ces produits ont été expédiés</p>
+							<?php endif ?>
+						</div>
+					</div>
 				<?php endif ?>
 
+
+
+
+
+				<!-- ./container -->
 			</div>
-		</div>
-		<div class="row">
-			<div class="col">
-				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" >
-					<div class="row mb-3 border p-2 bg-grey">
-						<div class="col">
-							<div class="form-group">
-								<label><i class="fas fa-comments pr-3"></i>Ajouter un commentaire : </label>
-								<textarea class="form-control" name="cmt"></textarea>
-							</div>
-						</div>
-						<div class="col-4 d-flex align-items-end pb-3">
-							<button class="btn btn-black" name="add-cmt">Enregistrer</button>
-						</div>
-					</div>
-				</form>
 
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-3">Montant Vente Magasin :</div><div class="col-2 text-right"> <?=$mtMag?> &euro;</div>
-		</div>
-		<div class="row">
-			<div class="col-3">Décote /avoir :</div><div class="col-2 text-right"> <?=$mtDecote?> &euro;</div>
-		</div>
-		<div class="row">
-			<div class="col-3">Note de débit fournisseur :</div><div class="col-2 text-right"> <?=$mtNdd?> &euro;</div>
-		</div>
-		<div class="row pb-5">
-			<div class="col-3">Numéro de la note de débit :</div><div class="col-2 text-right"> <?=$numNdd?></div>
-		</div>
-		<!-- si dossier clos -->
-		<?php if ($casseInfo['etat']==1): ?>
-			<div class="row pb-5">
-				<div class="col">
-					<?php if ($casseInfo['detruit'] ==1): ?>
-						<p class="alert alert-primary ">Ce ou ces produits ont été détruits</p>
-						<?php else: ?>
-							<p class="alert alert-primary ">Ce ou ces produits ont été expédiés</p>
-						<?php endif ?>
-					</div>
-				</div>
-			<?php endif ?>
-
-
-
-
-
-			<!-- ./container -->
-		</div>
-
-		<?php
-		require '../view/_footer-bt.php';
-		?>
+			<?php
+			require '../view/_footer-bt.php';
+			?>

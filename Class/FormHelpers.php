@@ -57,6 +57,22 @@ class FormHelpers{
         return "";
     }
 
+        public static function restoreSelectedArray($value,$array){
+            if(in_array($value,$array)){
+                return "selected";
+            }
+            return "";
+
+    }
+
+           public static function restoreCheckedArray($value,$array){
+            if(in_array($value,$array)){
+                return "checked";
+            }
+            return "";
+
+    }
+
     public static function checkSelectedArray($value,$array){
         if(isset($array)){
             for ($i=0; $i < count($array); $i++) {

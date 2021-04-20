@@ -24,7 +24,7 @@ define("ROOT_PATH","/".VERSION."btlecest");
 define("SITE_ADDRESS", "http://".SERVER_NAME."/".VERSION."btlecest");
 define("URL_UPLOAD","http://".SERVER_NAME."/".VERSION."upload-main/btlecest/" );
 define("DIR_IMPORT_GESSICA","D:\btlec\dumps\gessica\\");
-
+define("DIR_SITE","D:\www\\".VERSION."intranet\\".VERSION."btlecest\\");
 
 
 define("PDF_FOOTER", '<table class="padding-table"><tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>');

@@ -72,11 +72,16 @@ $firstDayOfMonthPrev=$firstDayPrevList[$monthForCalcul];
 
 // on vérfie si on est inférieur ou supèrieur à la date de début de mois
 
+
 if($dayToDisplay<$firstDayOfMonthActu){
 	$dayToDisplayPrev="";
 }else{
 	// calcul du nb de jourss passé depuis le 1er du mois du tableau
-	$depuisLePremierDuMois=(date_diff($dayToDisplay,$firstDayOfMonthActu))->format('%d');
+	// $depuisLePremierDuMois=(date_diff($dayToDisplay,$firstDayOfMonthActu))->format('%d');
+	// $depuisLePremierDuMois=(date_diff($firstDayOfMonthActu,$dayToDisplay))->format('d');
+	$depuisLePremierDuMois=(date_diff($firstDayOfMonthActu,$dayToDisplay))->days;
+
+	// echo "nb  jours " .$depuisLePremierDuMois;
 	$dayToDisplayPrev=$firstDayOfMonthPrev->modify($depuisLePremierDuMois .' day');
 
 }

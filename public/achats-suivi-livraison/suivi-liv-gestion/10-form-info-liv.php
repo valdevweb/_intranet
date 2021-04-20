@@ -164,7 +164,7 @@
 											<div class="col pb-3 mr-1">
 												<div class="row">
 													<div class="col text-center text-main-blue font-weight-boldless pb-2">
-														<?=DateHelpers::concatJourMoisDateTime($lundiDeux, "long")?>
+														<?=DateHelpers::concatJourMoisDateTime($lundiDeux, "long")?>  - article de remplacement
 													</div>
 												</div>
 												<div class="row">
@@ -185,7 +185,7 @@
 											<div class="col py-3  ml-1">
 												<div class="row">
 													<div class="col text-center text-orange font-weight-boldless pb-2">
-														<?=DateHelpers::concatJourMoisDateTime($lundiUn, "long")?>
+														<?=DateHelpers::concatJourMoisDateTime($lundiUn, "long")?>  - article de remplacement
 
 													</div>
 												</div>

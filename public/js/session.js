@@ -1,11 +1,12 @@
 function redirect(){
 	window.location.href ='../logoff.php';
 }
+// 2880
 window.onload = function(){
 	setInterval(function(){
 		alert("Votre session est inactive depuis 23 minutes, sans action de votre part, vous allez être déconnecté");
-	}, 1380000);
+	}, 2870000);
 	setInterval(function(){
 		redirect();
-	}, 1440000);
+	}, 2880000);
 };

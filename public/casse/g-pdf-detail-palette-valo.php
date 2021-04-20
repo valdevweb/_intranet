@@ -13,6 +13,7 @@ require_once '../../vendor/autoload.php';
 // $footer='<table class="padding-table"><tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>';
 
 	$paletteInfo=getPaletteInfo($pdoCasse, $_GET['id']);
+	$serials=getSerialsPalette($pdoCasse, $_GET['id']);
 
 
 	ob_start();

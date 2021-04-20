@@ -194,9 +194,12 @@ h2{
 <?php
 
 $sumValo=0;
-foreach ($litige as $prod)
-{
-	$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
+foreach ($litige as $prod){
+	$valo=0;
+	if($prod['qte_cde']!=0){
+
+		$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
+	}
 
 	if($prod['inversion'] !="")
 	{
@@ -293,7 +296,7 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 		echo '</tr>';
 		foreach ($dials as $dial) {
 			if($dial['mag']==1){
-					$personn=UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $dial['id_web_user'],'deno');
+				$personn=UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $dial['id_web_user'],'deno');
 
 			}else{
 				$personn=UserHelpers::getInternUser($pdoUser, $dial['id_web_user']);

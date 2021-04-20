@@ -135,30 +135,43 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 						</ul>
 					</li>
 				<?php endif ?>
-				<li  class='active has-sub'><a href="<?= ROOT_PATH?>/public/achats-commun/accueil-achats.php" >Achats</a>
-					<ul>
-						<li><a href="<?=ROOT_PATH?>/public/achats-gazette/gazette.php">La gazette</a></li>
-						<li><a href="<?=ROOT_PATH?>/public/achats-gesap/gesap.php">Les gesaps</a></li>
-						<li><a href="<?=ROOT_PATH?>/public/achats-odr/odr.php">Les offres ODR</a></li>
-						<li><a href="<?=ROOT_PATH?>/public/achats-offres/offres.php">Les offres TEL - BRII</a></li>
-						<li><a href="<?=ROOT_PATH?>/public/gazette/opp-encours.php">Les offres spéciales</a></li>
-						<li><a href="<?=ROOT_PATH?>/public/achats-suivi-livraison/suivi-livraison.php">Le suivi des livraisons</a></li>
-						<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#assortiment-title'?>">Assortiment et panier Promo</a></li>
-						<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#mdd-title'?>">MDD</a></li>
-						<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#gfk-title'?>">GFK</a></li>
-						<li class='has-sub'><a href="#" class="lighter-blue">Exploitation achats</a>
-							<ul>
-								<li><a href='<?=ROOT_PATH?>/public/doc/upload-main.php'  class="lighter-blue" >Ajouter des documents</a></li>
-								<li><a href='<?=ROOT_PATH?>/public/achats-offres/offre-gestion.php'  class="lighter-blue" >Gestion des offres TEL BRII</a></li>
-								<li><a href='<?=ROOT_PATH?>/public/achats-odr/odr-gestion.php'  class="lighter-blue" >Gestion des odr</a></li>
-								<li><a href='<?=ROOT_PATH?>/public/achats-suivi-livraison/suivi-liv-gestion.php'  class="lighter-blue" >Gestion Suivi livraison</a></li>
-								<li><a href='<?=ROOT_PATH?>/public/achats-gesap/gesap-gestion.php'  class="lighter-blue" >Gestion des GESAP</a></li>
-								<li><a href="<?= ROOT_PATH?>/public/gazette/opp-exploit.php"  class="lighter-blue" >Ajout opportunités</a></li>
-								<li><a href="<?= ROOT_PATH?>/public/achats-gazette/gestion-gazette.php"  class="lighter-blue" >Ajout de gazettes</a></li>
-							</ul>
-						</li>
-					</ul>
-				</li>
+				<?php if ($dBtlec ): ?>
+
+					<li  class='active has-sub'><a href="#" >Achats</a>
+						<ul>
+							<li class='has-sub'><a href="#" class="lighter-blue">Exploitation achats</a>
+								<ul>
+									<li><a href='<?=ROOT_PATH?>/public/doc/upload-main.php'  class="lighter-blue" >Ajouter des documents</a></li>
+									<li><a href='<?=ROOT_PATH?>/public/achats-offres/offre-gestion.php'  class="lighter-blue" >Gestion des offres TEL BRII</a></li>
+									<li><a href='<?=ROOT_PATH?>/public/achats-odr/odr-gestion.php'  class="lighter-blue" >Gestion des odr</a></li>
+									<li><a href='<?=ROOT_PATH?>/public/achats-suivi-livraison/suivi-liv-gestion.php'  class="lighter-blue" >Gestion Suivi livraison</a></li>
+									<li><a href='<?=ROOT_PATH?>/public/achats-gesap/gesap-gestion.php'  class="lighter-blue" >Gestion des GESAP</a></li>
+									<li><a href="<?= ROOT_PATH?>/public/gazette/opp-exploit.php"  class="lighter-blue" >Ajout opportunités</a></li>
+									<li><a href="<?= ROOT_PATH?>/public/achats-gazette/gestion-gazette.php"  class="lighter-blue" >Ajout de gazettes</a></li>
+
+
+								</ul>
+							</li>
+							<li class='has-sub'><a href="#" class="lighter-blue">Commandes en cours</a>
+								<ul>
+									<li><a href="<?= ROOT_PATH?>/public/achats-cdes-encours/cdes-encours.php"  class="lighter-blue" >Commandes en cours</a></li>
+									<li><a href="<?= ROOT_PATH?>/public/achats-cdes-encours/encours-relances.php"  class="lighter-blue" >Relances</a></li>
+								</ul>
+							</li>
+							<li><a href="<?=ROOT_PATH?>/public/achats-gazette/gazette.php">La gazette</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/achats-gesap/gesap.php">Les gesaps</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/achats-odr/odr.php">Les offres ODR</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/achats-offres/offres.php">Les offres TEL - BRII</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/gazette/opp-encours.php">Les offres spéciales</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/achats-suivi-livraison/suivi-livraison.php">Le suivi des livraisons</a></li>
+							<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#assortiment-title'?>">Assortiment et panier Promo</a></li>
+							<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#mdd-title'?>">MDD</a></li>
+							<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#gfk-title'?>">GFK</a></li>
+
+						</ul>
+					</li>
+				<?php endif ?>
+
 				<li  class='active has-sub'><a href="#" >documents</a>
 					<ul>
 						<li class='has-sub'><a href="<?= ROOT_PATH. '/public/doc/com_menu.php'?>">Communication</a>
@@ -215,6 +228,7 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 
 								<?php if ($_SESSION['id_web_user']==981): ?>
 									<li><a href="<?=ROOT_PATH?>/public/exploit/droit.php" class="red-nav">Droits</a></li>
+									<li><a href="<?=ROOT_PATH?>/public/exploit/script-auto.php" class="red-nav">Scripts</a></li>
 								<?php endif ?>
 
 							</ul>

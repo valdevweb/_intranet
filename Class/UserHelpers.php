@@ -81,7 +81,13 @@ class UserHelpers{
 		$req=$pdoUser->query("SELECT id, groupe FROM services_groupe ORDER BY groupe");
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
-
+	public static function getLdGt($pdoUser, $gt){
+		$req=$pdoUser->prepare("SELECT * FROM gts_ld WHERE id_gt= :id_gt");
+			$req->execute([
+			':id_gt'	=>$gt
+		]);
+		return $req->fetch();
+	}
 
 
 	public static function getManyUser($pdoUser,$ids){

@@ -68,7 +68,7 @@ include('../view/_navbar.php');
 
 	<div class="row">
 		<div class="col">
-			<h5 class="text-main-blue border-bottom pb-3 my-3"><i class="fas fa-table pr-3"></i>ODR en cours</h5>
+			<h5 class="text-main-blue border-bottom pb-3 my-3" id="un"><i class="fas fa-table pr-3"></i>ODR en cours</h5>
 		</div>
 	</div>
 
@@ -87,7 +87,7 @@ include('../view/_navbar.php');
 		<div class="bg-separation"></div>
 		<div class="row">
 			<div class="col">
-				<h5 class="text-main-blue border-bottom pb-3 mt-3 mb-5"><i class="fas fa-pencil-alt pr-3"></i>Saisie d'ODR</h5>
+				<h5 class="text-main-blue border-bottom pb-3 mt-3 mb-5" id="deux"><i class="fas fa-pencil-alt pr-3"></i>Saisie d'ODR</h5>
 
 			</div>
 		</div>
@@ -96,7 +96,11 @@ include('../view/_navbar.php');
 				<?php include 'odr-gestion/11-form-add-odr.php' ?>
 			</div>
 		</div>
-
+		<div id="floating-nav">
+			<h6 class="text-main-blue text-center">Aller à</h6>
+			<div class="pb-2"><i class="fas fa-table fa-sm circle-icon-blue mr-3"></i><a href="#un">ODR en cours</a></div>
+			<div class="pb-2"><i class="fas fa-pencil-alt fa-sm circle-icon-orange mr-3"></i><a href="#deux">Saisie ODR</a></div>
+		</div>
 
 
 	</div>
