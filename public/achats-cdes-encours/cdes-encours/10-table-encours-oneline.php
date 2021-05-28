@@ -42,6 +42,7 @@
 						<th class="align-top bg-light-grey text-right ">Qte colis</th>
 						<th class="align-top bg-light-grey text-right ">Qte UV</th>
 						<th class="align-top bg-light-grey text-right ">PCB</th>
+						<th class="align-top bg-light-grey text-right ">% reçu</th>
 						<th class="align-top bg-light-grey ">Date réception</th>
 						<th class="align-top bg-blue">Date début op</th>
 						<th class="align-top bg-blue apply-filter">Op</th>
@@ -70,7 +71,23 @@
 
 				</tr>
 				<?php foreach ($listCdes as $key => $cdes): ?>
+					<?php
+					$recu=$cdes['qte_init']-$cdes['qte_cde'];
+					if($recu!=0){
+						$percentRecu=$recu/100*$cdes['qte_init'];
+						$percentRecu=floor ($percentRecu);
+					}else{
+						$percentRecu=0;
+					}
+					if($percentRecu<50){
+						$bgColor="bg-red";
+					}elseif($percentRecu>=50 && $percentRecu<90){
+						$bgColor="bg-yellow";
+					}elseif($percentRecu>=90){
+						$bgColor="bg-green";
+					}
 
+					?>
 					<tr class="gt-<?=$cdes['gt']?>" id="<?=$cdes['id']?>">
 						<td class="bg-verylight-blue"><?=$cdes['gt']?></td>
 						<td class="bg-verylight-blue" class="text-right"><?=($cdes['date_cde']!=null)?date('d/m/y', strtotime($cdes['date_cde'])):""?></td>
@@ -85,8 +102,8 @@
 						<td class="text-right"><?=$cdes['qte_cde']?></td>
 						<td class="text-right"><?=$cdes['qte_uv_cde']?></td>
 						<td class="text-right"><?=$cdes['cond_carton']?></td>
+						<td class="text-right <?=$bgColor?>"><?=$percentRecu?></td>
 						<td  class=""><?=($cdes['date_liv']!=null)?date('d/m/y', strtotime($cdes['date_liv'])):""?></td>
-
 						<td class="bg-verylight-blue text-right"><?=($cdes['date_start']!=null)?date('d/m/y', strtotime($cdes['date_start'])):""?></td>
 						<td class="bg-verylight-blue"><?=strtolower($cdes['libelle_op'])?></td>
 						<td  class="text-center">
@@ -94,9 +111,6 @@
 								<input class="form-check-input" type="checkbox" value="<?=$cdes['id']?>"  name="id_encours[]">
 
 							</div>
-
-
-
 						</td>
 						<?php if (!empty($listInfos)): ?>
 							<?php if (isset($listInfos[$cdes['id']])): ?>

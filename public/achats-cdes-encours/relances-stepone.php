@@ -66,7 +66,7 @@ if(isset($_SESSION['temp_relance']) || isset($_SESSION['temp_relance_perm'])){
 	exit();
 }
 
-if(isset($_POST['send'])){
+if(isset($_POST['send_to_me']) || isset($_POST['send_to_fou'])){
 
 	foreach ($_POST['id_contact'] as $keyCnufContact => $value) {
 		if(isset($_POST['id_contact_email'][$keyCnufContact])){
@@ -126,15 +126,28 @@ if(isset($_POST['send'])){
 
 	if(empty($errors)){
 		if(isset($_SESSION['temp_relance'])){
-			header('Location:relances-synthese.php?op');
+			if (isset($_POST['send_to_fou'])) {
+				header('Location:relances-synthese.php?op&dest=fou');
+
+			}elseif(isset($_POST['send_to_me'])){
+				header('Location:relances-synthese.php?op&dest=me');
+
+			}
 		}
 		elseif(isset($_SESSION['temp_relance_perm'])){
+			if (isset($_POST['send_to_fou'])) {
+				header('Location:relances-synthese.php?perm&dest=fou');
 
-			header('Location:relances-synthese.php?perm');
+			}elseif(isset($_POST['send_to_me'])){
+				header('Location:relances-synthese.php?perm&dest=me');
+
+			}
 		}
 
 	}
 }
+
+
 //------------------------------------------------------
 include('../view/_head-bt.php');
 include('../view/_navbar.php');
@@ -239,8 +252,10 @@ include('../view/_navbar.php');
 					</div>
 				<?php endforeach ?>
 				<div class="row mb-5">
-					<div class="col text-right">
-						<button class="btn btn-primary" name="send">Envoyer</button>
+					<div class="col text-right align-self-end">Envoyer les relances :</div>
+					<div class="col-auto text-right">
+						<button class="btn btn-primary" name="send_to_me">A moi</button>
+						<button class="btn btn-orange" name="send_to_fou">Au fournisseur</button>
 					</div>
 				</div>
 			</form>

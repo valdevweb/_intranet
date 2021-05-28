@@ -13,6 +13,7 @@ function isUserAllowed($pdoUser, $params){
 }
 $dBtlec=isUserAllowed($pdoUser,[4]);
 $dMag=isUserAllowed($pdoUser, [2]);
+$dBaseMag=isUserAllowed($pdoUser, [95]);
 
 $dLitigeBt=isUserAllowed($pdoUser,[69]);
 $dExploit=isUserAllowed($pdoUser, [5]);
@@ -71,12 +72,7 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 							<li><a href="<?=ROOT_PATH?>/public/litiges/mag-litige-listing.php">Mes litiges</a></li>
 						</ul>
 					</li>
-					<li>
-						<a href="#" class="">Chargé de mission <?=isset($_SESSION['rdv_cm'])?"<i class='fas fa-bell text-danger nav-bg-icon'></i>" :""?></a>
-						<ul>
-							<li><a href="<?=ROOT_PATH?>/public/cm/rdv.php">Vos rendez-vous</a></li>
-						</ul>
-					</li>
+
 					<?php if ($dOccasionMag): ?>
 						<li class='active has-sub'><a href="<?=ROOT_PATH?>/public/gtocc/#"><span>Leclerc occasion</span></a>
 							<ul>
@@ -135,10 +131,11 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 						</ul>
 					</li>
 				<?php endif ?>
-				<?php if ($dBtlec ): ?>
 
-					<li  class='active has-sub'><a href="#" >Achats</a>
-						<ul>
+				<li  class='active has-sub'><a href="#" >Achats</a>
+					<ul>
+						<?php if ($dBtlec ): ?>
+
 							<li class='has-sub'><a href="#" class="lighter-blue">Exploitation achats</a>
 								<ul>
 									<li><a href='<?=ROOT_PATH?>/public/doc/upload-main.php'  class="lighter-blue" >Ajouter des documents</a></li>
@@ -148,8 +145,6 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 									<li><a href='<?=ROOT_PATH?>/public/achats-gesap/gesap-gestion.php'  class="lighter-blue" >Gestion des GESAP</a></li>
 									<li><a href="<?= ROOT_PATH?>/public/gazette/opp-exploit.php"  class="lighter-blue" >Ajout opportunités</a></li>
 									<li><a href="<?= ROOT_PATH?>/public/achats-gazette/gestion-gazette.php"  class="lighter-blue" >Ajout de gazettes</a></li>
-
-
 								</ul>
 							</li>
 							<li class='has-sub'><a href="#" class="lighter-blue">Commandes en cours</a>
@@ -158,20 +153,20 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 									<li><a href="<?= ROOT_PATH?>/public/achats-cdes-encours/encours-relances.php"  class="lighter-blue" >Relances</a></li>
 								</ul>
 							</li>
-							<li><a href="<?=ROOT_PATH?>/public/achats-gazette/gazette.php">La gazette</a></li>
-							<li><a href="<?=ROOT_PATH?>/public/achats-gesap/gesap.php">Les gesaps</a></li>
-							<li><a href="<?=ROOT_PATH?>/public/achats-odr/odr.php">Les offres ODR</a></li>
-							<li><a href="<?=ROOT_PATH?>/public/achats-offres/offres.php">Les offres TEL - BRII</a></li>
-							<li><a href="<?=ROOT_PATH?>/public/gazette/opp-encours.php">Les offres spéciales</a></li>
-							<li><a href="<?=ROOT_PATH?>/public/achats-suivi-livraison/suivi-livraison.php">Le suivi des livraisons</a></li>
-							<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#assortiment-title'?>">Assortiment et panier Promo</a></li>
-							<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#mdd-title'?>">MDD</a></li>
-							<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#gfk-title'?>">GFK</a></li>
+						<?php endif ?>
 
-						</ul>
-					</li>
-				<?php endif ?>
+						<li><a href="<?=ROOT_PATH?>/public/achats-gazette/gazette.php">La gazette</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/achats-gesap/gesap.php">Les gesaps</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/achats-odr/odr.php">Les offres ODR</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/achats-offres/offres.php">Les offres TEL - BRII</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/gazette/opp-encours.php">Les offres spéciales</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/achats-suivi-livraison/suivi-livraison.php">Le suivi des livraisons</a></li>
+						<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#assortiment-title'?>">Assortiment et panier Promo</a></li>
+						<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#mdd-title'?>">MDD</a></li>
+						<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#gfk-title'?>">GFK</a></li>
 
+					</ul>
+				</li>
 				<li  class='active has-sub'><a href="#" >documents</a>
 					<ul>
 						<li class='has-sub'><a href="<?= ROOT_PATH. '/public/doc/com_menu.php'?>">Communication</a>
@@ -196,28 +191,34 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 							<li><a href="<?=ROOT_PATH?>/public/doc/doris.php">Doris</a></li>
 							<li><a href="<?=ROOT_PATH?>/public/doc/extralec.php">Application Extralec</a></li>
 							<li><a href="<?=ROOT_PATH?>/public/salon/presentation-salon-2020.php">Convention 2020</a></li>
-
-							<li class='has-sub'><a href="<?= ROOT_PATH. '/public/doc/display-doc.php'?>">Achats old</a>
-								<ul>
-									<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#odr-title'?>">ODR</a></li>
-									<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#tel-title'?>">TEL/BRII</a></li>
-
-								</ul>
-							</li>
+							<li><a href='<?=ROOT_PATH?>/public/doc/upload-main.php'>Ajouter des documents</a></li>
 						</ul>
 					</li>
-					<?php if ($dBtlec): ?>
+								<li>
+						<a href="#" class="">Chargé de mission <?=isset($_SESSION['rdv_cm'])?"<i class='fas fa-bell text-danger nav-bg-icon'></i>" :""?></a>
+						<ul>
+							<li><a href="<?=ROOT_PATH?>/public/cm/rdv.php">Vos rendez-vous</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/cm/rapport-accueil.php">Vos comptes rendu</a></li>
+						</ul>
+					</li>
+					<?php if ($dBtlec || $dBaseMag): ?>
 						<li  class='active has-sub'><a href="#" >Magasins</a>
 							<ul>
 								<li><a href="<?=ROOT_PATH?>/public/basemag/base-mag.php">Base magasins</a></li>
 								<li><a href="<?=ROOT_PATH?>/public/basemag/fiche-mag.php"><span>Fiches magasins</span></a></li>
 							</ul>
 						</li>
+					<?php endif ?>
+					<?php if ($dBtlec):?>
+
 						<li class='active has-sub'><a href='".ROOT_PATH. "/public/exploit/connexion.php' ><span>Exploit</span></a>
 							<ul>
 								<li><a href='<?=ROOT_PATH?>/public/salon/stats-salon-2019.php'><span>Stats Salon 2019</span></a></li>
 								<li><a href='<?=ROOT_PATH?>/public/salon/stats-salon-2020.php'><span>Stats Salon 2020</span></a></li>
-								<li><a href='<?=ROOT_PATH?>/public/salon/exploit-2020.php'><span>Exploit salon 2020</span></a></li>
+								<li><a href='<?=ROOT_PATH?>/public/salon/exploit-2020.php'><span>Exploit salon magasin 2020</span></a></li>
+								<li><a href="<?=PORTAIL_SALON?>home/home.php" >Salon fournisseurs</a></li>
+								<li><a href="<?=ROOT_PATH?>/public/salon/inscription-2020.php" >Inscription 2020</a></li>
+
 								<li><a href='<?=ROOT_PATH?>/public/exploit/connexion.php'><span>Suivi magasins</span></a></li>
 								<?php if ($dExploit): ?>
 									<li><a href='<?=ROOT_PATH?>/public/exploit/ld-exploit.php'><span>Listes de diffu BTLec</span></a></li>
@@ -228,7 +229,6 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 
 								<?php if ($_SESSION['id_web_user']==981): ?>
 									<li><a href="<?=ROOT_PATH?>/public/exploit/droit.php" class="red-nav">Droits</a></li>
-									<li><a href="<?=ROOT_PATH?>/public/exploit/script-auto.php" class="red-nav">Scripts</a></li>
 								<?php endif ?>
 
 							</ul>

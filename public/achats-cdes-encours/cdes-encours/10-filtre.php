@@ -114,7 +114,7 @@
 			<?php foreach ($listGt as $keyGt => $value): ?>
 				<div class="form-check">
 					<input class="form-check-input form-primary" type="checkbox" value="<?=$keyGt?>" id="<?=$listGt[$keyGt]?>" name="gt[]"  <?=isset($_SESSION['encours_filter']['gt'])?FormHelpers::restoreCheckedArray($keyGt,$_SESSION['encours_filter']['gt']):""?>>
-					<label class="form-check-label gt-<?=$keyGt?>" for="<?=$listGt[$keyGt]?>"><?=ucfirst(strtolower($listGt[$keyGt]))?></label>
+					<label class="form-check-label" for="<?=$listGt[$keyGt]?>"><?=ucfirst(strtolower($listGt[$keyGt]))?></label>
 				</div>
 			<?php endforeach ?>
 		</div>

@@ -137,7 +137,7 @@ if(isset($_SESSION['encours_filter'])){
 	}
 
 	$param='AND ' .join(' AND ',$paramList);
-	// echo $param;
+
 	$listCdes=$cdesDao->getCdes($param);
 	$nbArt=count($listCdes);
 	$listInfos=$cdesAchatDao->getInfos($param);
@@ -150,15 +150,7 @@ if(isset($_SESSION['encours_filter'])){
 }
 
 
-// if(isset($_POST['save'])){
-// 	$idDetail=key($_POST['save']);
-// 	$update=$cdesAchatDao->insertInfos($idDetail,$_POST['date_previ'][$idDetail], $_POST['qte_previ'][$idDetail], $_POST['cmt'][$idDetail]);
-// 	if($update==1){
-// 		$successQ='#'.$idDetail;
-// 		unset($_POST);
-// 		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
-// 	}
-// }
+
 if(isset($_POST['save_all'])){
 	$_SESSION['temp']=$_POST['id_encours'];
 	header("Location: edit-encours.php");
@@ -166,16 +158,21 @@ if(isset($_POST['save_all'])){
 
 $listGt=FournisseursHelpers::getGts($pdoFou, "GT","id");
 
-$tableCol=["GT", "Date cde", "Fournisseur", "Marque", "Article", "Dossier", "Ref", "Désignation", "Cde", "Qte init colis", "Qte colis", "Qte UV", "PCB", "Date réception", "Date début op", "Op", "Semaine prévi", "Date prévi rdv", "Qte prévi", "Commentaire"];
+$tableCol=["GT", "Date cde", "Fournisseur", "Marque", "Article", "Dossier", "Ref", "EAN", "Désignation", "Cde", "Qte init colis", "Colis à recevoir", "UV à recevoir", "PCB", "% reçu", "date livraison initiale","Date livraison", "Date début op", "Op"];
 
 $listOp=array_unique(array_column($listCdes, 'libelle_op'));
 $listNumCde=array_unique(array_column($listCdes, 'id_cde'));
+// 634703
+
+
 $listMarque=array_unique(array_column($listCdes, 'marque'));
 $listFou=array_unique(array_column($listCdes, 'fournisseur'));
 // fou manque cnuf
 // op manque code op
 //
 $listOp=array_filter($listOp);
+
+
 sort($listOp);
 $listNumCde=array_filter($listNumCde);
 sort($listNumCde);
@@ -304,6 +301,19 @@ include('../view/_navbar.php');
 				findString(this.str.value);
 				return false;
 			};
+			$(document).ready(function(){
+				$('#checkall').change(function(){
+					if($(this).prop("checked")){
+						$('.select-checkbox').prop('checked',true);
+					}else{
+						$('.select-checkbox').prop('checked',false);
+
+					}
+				});
+
+			});
+
+
 		</script>
 
 		<?php

@@ -1,0 +1,161 @@
+.star-green{
+  color:#cddc39;
+}
+.star-blue{
+  color:#00bcd4
+}
+.star-orange{
+  color:#ffc107
+}
+.star-red{
+  color:#f44336;
+}
+
+.img-cat img{
+  max-width: 220px;
+  max-height: 190px;
+  height: auto;
+
+  padding:  10px;
+}
+.img-container{
+  background-color: #e8e8e8;
+  text-align: center;
+  border-radius: 10px;
+  padding-bottom: 10px;
+}
+.titre-gt{
+  text-transform: uppercase;
+  color: #ffc107 !important;
+  text-align: center;
+}
+
+.title-cat{
+  background-color:rgba(0,123,255,0.25);
+  border-radius: 5px;
+  padding: 5px;
+  text-transform: uppercase;
+}
+.text-rap-grey-green{
+  color:#b4c132;
+}
+.text-rap-green{
+  color: #cddc39;
+}
+.text-rap-orange{
+  color:#ffc107 !important;
+}
+
+.text-rap-red{
+  color: #f44336;
+}
+
+.text-rap-blue{
+  color: #00bcd4;
+}
+
+
+
+.prod-img{
+  border : 1px solid #fff;
+  background-color: #fff;
+  margin-right: 2px
+}
+
+
+.img-cat img:hover{
+  transform: scale(1.5);
+}
+
+.cmt{
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  position: relative;
+}
+
+.cmt .cmt-text{
+  padding: 40px 20px;
+  border: 8px #fff solid;
+  border-radius: 8px;
+
+  background-color: #e8e8e8;
+  margin-bottom: 0 !important;
+}
+
+
+
+
+
+
+/*blockquote p::before {
+    content: "\f095";
+    font-family: FontAwesome;
+   display: inline-block;
+   padding-right: 6px;
+   vertical-align: middle;
+  font-size: 180px;
+  }*/
+
+
+
+  .thead-blue{
+    color: #fff;
+    background-color: #4e4e4e;
+    border-color: #4e4e4e;
+  }
+
+
+  .thead-orange{
+    color: #fff;
+    background-color: #4e4e4e;
+    border-color: #4e4e4e
+  }
+  .table-sm td, .table-sm th {
+    padding: 0.2rem;
+  }
+
+  .doc-cmt-box{
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 8px;
+  }
+  .doc-cmt{
+    /* border-radius: 8px; */
+    padding-left: 8px;
+    margin-left: 8px;
+    /* background-color:  #e8e8e8; */
+    border-left : 4px solid  #00bcd4;
+  }
+  .ico-web{
+    /* background-color: #fff; */
+    /* padding: 20px; */
+    /* border: 1px #757373 solid; */
+  }
+
+  .cmt-gen{
+    margin:  auto;
+    max-width: 800px;
+    border-left: 5px solid #ccc;
+    border-right: 5px solid #ccc;
+    padding:0 20px;
+  }
+
+h5.text-rap-blue{
+  font-size: 1rem;
+}
+
+
+  @media screen and (max-width: 1300px) {
+
+    table{
+      font-size: 0.9rem;
+    }
+  }
+
+
+img.signature{
+  width: 200px;
+}
+.no-margin > .form-group {
+  margin :  0 !important;
+}

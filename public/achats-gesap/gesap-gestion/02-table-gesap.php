@@ -6,7 +6,7 @@
 			<th>Salon</th>
 			<th>Catalogue</th>
 			<th>Code op</th>
-			<th>Date de remonté</th>
+			<th>Date de remontée</th>
 			<th>Guide d'achat</th>
 			<th>Commentaires</th>
 			<th>Fichiers</th>

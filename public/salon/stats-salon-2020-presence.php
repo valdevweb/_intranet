@@ -104,7 +104,7 @@
 
 
           echo '<tr>';
-          echo '<td class="'.strtolower($part['centrale']).'">'.$part['mag'].'</td>';
+          echo '<td class="'.strtolower($part['centrale']).'">'.$part['deno'].'</td>';
           echo '<td>'.$part['centrale'].'</td>';
           echo '<td>'.$part['nom'].'</td>';
           echo '<td>'.$part['prenom'].'</td>';

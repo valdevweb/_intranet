@@ -175,11 +175,11 @@ if(!empty($_SESSION['goto'])){
 		//sinon on recupère toute la query string
 	$goto=$_SESSION['goto'];
 	$redir=explode("&",$goto);
-				if(is_numeric($redir[0])){
+	if(is_numeric($redir[0])){
 		if($_SESSION['id_type']==1){
 			header('Location:'. ROOT_PATH. '/public/btlec/answer.php?msg='.$_SESSION['goto']);
 		}elseif($_SESSION['id_type']==2 || $_SESSION['id_type']==3 || $_SESSION['id_type']==4 || $_SESSION['id_type']==5){
-			  header('Location:'. ROOT_PATH. '/public/mag/edit-msg.php?msg='.$_SESSION['goto']);
+			header('Location:'. ROOT_PATH. '/public/mag/edit-msg.php?msg='.$_SESSION['goto']);
 		}
 	}else{
 		header('Location:' .ROOT_PATH. '/public/' .$goto);
@@ -224,7 +224,7 @@ if(isset($_SESSION['mag_filters'])){
 
 
 if(isset($_GET['access-denied'])){
-    $errors[]="Vous avez été redirigé ici car vos droits d'accès ne vous permettent pas de consulter la page demandée";
+	$errors[]="Vous avez été redirigé ici car vos droits d'accès ne vous permettent pas de consulter la page demandée";
 }
 
 
@@ -238,25 +238,25 @@ include ('../view/_navbar.php');
 include('home.ct.php');
 
 ?>
-	<script type="text/javascript">
+<script type="text/javascript">
 
-		$(document).ready(function() {
+	$(document).ready(function() {
 
 
-			$('div.more').hide();
-			$('.show-link').on("click", function(){
-				var id= $(this).data("gazette-id");
-				if($('div[data-content-id="'+id+'"]').is(":visible")){
-					$('div[data-content-id="'+id+'"]').hide();
+		$('div.more').hide();
+		$('.show-link').on("click", function(){
+			var id= $(this).data("gazette-id");
+			if($('div[data-content-id="'+id+'"]').is(":visible")){
+				$('div[data-content-id="'+id+'"]').hide();
 
-				}else{
-					$('div[data-content-id="'+id+'"]').show();
-				}
-			});
-
+			}else{
+				$('div[data-content-id="'+id+'"]').show();
+			}
 		});
 
-	</script>
+	});
+
+</script>
 
 <!-- <script src="js/slider.js"></script> -->
 <?php

@@ -44,7 +44,7 @@ class CdesDao{
 			WHERE date_cde IS NOT NULL AND qte_cde !=0  $param ORDER BY date_cde");
 		return $req->fetchAll();
 	}
-
+// AND (gt=9) AND id_cde=634703
 	public function getEncours($id){
 		$req=$this->pdo->prepare("SELECT * FROM cdes_encours  WHERE id= :id");
 		$req->execute([

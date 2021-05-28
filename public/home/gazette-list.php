@@ -39,7 +39,7 @@
 
 								<?php if (isset($listLinks[$gazette['id']])): ?>
 									<?php foreach ($listLinks[$gazette['id']] as $key => $link): ?>
-										<a href="<?=$link['link']?>"><?=($link['linkname'])??$link['link']?></a><br>
+										<a href="<?=$link['link']?>"><?=($link['linkname'])?$link['linkname']:'cliquez-ici'?></a><br>
 									<?php endforeach ?>
 								<?php endif ?>
 							</div>

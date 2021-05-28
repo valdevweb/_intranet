@@ -111,10 +111,10 @@ class ProspectusDao{
 		]);
 		return $req->fetch();
 	}
-	public function getProspectusByProspectus($prospectus){
-		$req=$this->pdo->prepare("SELECT * FROM prospectus WHERE prospectus= :prospectus");
+	public function getProspectusByProspectus($codeOp){
+		$req=$this->pdo->prepare("SELECT * FROM prospectus WHERE code_op= :code_op");
 		$req->execute([
-			':prospectus'		=>$prospectus
+			':code_op'		=>$codeOp
 		]);
 		return $req->fetch();
 	}

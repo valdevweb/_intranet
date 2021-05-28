@@ -15,6 +15,7 @@ require '../../Class/CdesDao.php';
 require '../../Class/CdesAchatDao.php';
 require '../../Class/FournisseursHelpers.php';
 require '../../Class/UserDao.php';
+require '../../Class/FormHelpers.php';
 // require_once '../../vendor/autoload.php';
 
 
@@ -85,7 +86,6 @@ if (isset($_POST['filter_gt'])) {
 		$queryString.=$i.'='.$userGts[$i].'&';
 	}
 	$queryString=substr($queryString,0,-1);
-
 }
 
 
@@ -108,6 +108,7 @@ if(isset($_POST['launch_relance_perm'])){
 
 
 $relancesOne=$cdesDao->getCdesOpRelances($dateStartOne, $dateEndOne, $param);
+
 $relancesOneInfos=$cdesAchatDao->getInfosOpRelances($dateStartOne, $dateEndOne, $param);
 // on retire des relance les articles avec une date de livraison prévi saisie par les achats
 $relancesOnePrevi=$cdesAchatDao->getInfosOpRelancesWithDatePrevi($dateStartOne, $dateEndOne, $param);
@@ -159,103 +160,45 @@ include('../view/_navbar.php');
 		<div class="col-lg-1"></div>
 	</div>
 
-	<div class="row" id="un">
-		<div class="col-auto align-self-center no-padding ml-4">
-			<i class="fas fa-filter pr-3 text-orange fa-3x"></i>
-		</div>
-		<div class="col">
-			<div class="row">
-				<div class="col">
-					<h5 class="text-main-blue  my-3">Filtrer
-						<div class="text-small"></div>
-					</h5>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row mb-5">
-		<div class="col">
-			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
+
+	<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
+		<div class="row" id="un">
+			<div class="col-lg-3"></div>
+			<div class="col p-3 border rounded">
 				<div class="row">
-					<div class="col-lg-4"></div>
-
-					<div class="col text-center">
-						<div class="text-main-blue">Sélectionnez un ou plusieurs GT :</div>
-
+					<div class="col-auto align-self-center no-padding ml-4">
+						<i class="fas fa-filter pr-3 text-orange fa-3x"></i>
 					</div>
-					<div class="col-lg-4"></div>
+					<div class="col">
+						<div class="row">
+							<div class="col">
+								<h5 class="text-main-blue  my-3">Filtrer
+									<div class="text-small"></div>
+								</h5>
+							</div>
+						</div>
+					</div>
 
-				</div>
-				<div class="row">
-					<div class="col-lg-4"></div>
-					<div class="col cols-four border rounded">
+					<div class="col cols-four">
 						<?php foreach ($listGt as $keyGt => $value): ?>
-
 							<div class="form-check">
-
 								<input class="form-check-input" type="checkbox" value="<?=$keyGt?>" id="<?=$listGt[$keyGt]?>" name="gt[]">
 								<label class="form-check-label" for="<?=$listGt[$keyGt]?>"><?=ucfirst(strtolower($listGt[$keyGt]))?></label>
-
 							</div>
-
 						<?php endforeach ?>
 					</div>
-					<div class="col-lg-4"></div>
-
-				</div>
-
-				<div class="row mb-3">
-					<div class="col-lg-4"></div>
-					<div class="col text-right">
+					<div class="col-lg-4 align-self-end">
 						<button class="btn btn-primary" name="filter_gt">Valider</button>
 					</div>
-					<div class="col-lg-4"></div>
-
-				</div>
-			</form>
-		</div>
-	</div>
-	<div class="row" id="zero">
-		<div class="col-auto align-self-center no-padding ml-4">
-			<i class="fas fa-mail-bulk pr-3 text-orange fa-3x"></i>
-		</div>
-		<div class="col">
-			<div class="row">
-				<div class="col">
-					<h5 class="text-main-blue  my-3">Relances automatiques
-					</h5>
 				</div>
 			</div>
+			<div class="col-lg-3"></div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col"></div>
+	</form>
 
-		<div class="col-auto border rounded">
-			<form action="<?= htmlspecialchars('relances-auto.php').$queryString?>" method="post" id="relance-auto">
-
-				<div class="row">
-					<div class="col-auto text-center auto my-5">
-						<button class="btn btn-primary" name="launch_relance_one_auto" type="submit">Relances op à 7 semaines</button>
-					</div>
-					<div class="col-auto text-center auto my-5">
-						<button class="btn btn-primary" name="launch_relance_two_auto" type="submit">Relances op à 5 semaines</button>
-						<div id="wait"></div>
-
-					</div>
-					<div class="col-auto text-center auto my-5">
-						<button class="btn btn-primary" name="launch_relance_perm_auto" type="submit">Relances du permanent</button>
-					</div>
-				</div>
-			</form>
-
-		</div>
-		<div class="col"></div>
-
-	</div>
 
 	<!-- titre relance à 7 semaines -->
-	<div class="row" id="deux">
+	<div class="row mt-5" id="deux">
 		<div class="col-auto align-self-center no-padding ml-4">
 			<i class="fas fa-edit pr-3 text-orange fa-3x"></i>
 		</div>
@@ -352,7 +295,6 @@ include('../view/_navbar.php');
 				<div id="floating-nav">
 					<h6 class="text-main-blue text-center">Aller à</h6>
 					<div class="pb-2"><i class="fas fa-filter fa-sm circle-icon-blue mr-3"></i><a href="#un">Filtres</a></div>
-					<div class="pb-2"><i class="fas fa-mail-bulk fa-sm circle-icon-orange mr-3"></i><a href="#zero">Relances auto</a></div>
 					<div class="pb-2"><i class="fas fa-angle-double-right fa-sm circle-icon-orange mr-3"></i><a href="#deux">Relances à 7 semaines</a></div>
 					<div class="pb-2"><i class="fas fa-angle-double-right fa-sm circle-icon-orange mr-3"></i><a href="#trois">Relances à 5 semaines</a></div>
 					<div class="pb-2"><i class="fas fa-angle-double-right fa-sm circle-icon-orange mr-3"></i><a href="#quatre">Relances sur le 1000</a></div>
@@ -391,10 +333,10 @@ include('../view/_navbar.php');
 				});
 
 				$("#relance-auto").submit(function(e){
-						$('button[name="launch_relance_one_auto"]').hide();
-						$('button[name="launch_relance_two_auto"]').hide();
-						$('button[name="launch_relance_perm_auto"]').hide();
-						$('#wait').text("Merci de patienter...");
+					$('button[name="launch_relance_one_auto"]').hide();
+					$('button[name="launch_relance_two_auto"]').hide();
+					$('button[name="launch_relance_perm_auto"]').hide();
+					$('#wait').text("Merci de patienter...");
 
 				});
 			});

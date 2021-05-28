@@ -67,6 +67,7 @@ include('../view/_navbar.php');
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
+
 	<div class="row">
 		<div class="col">
 			<h4 class="text-main-blue text-center pb-3">Les gazettes de la semaine</h4>

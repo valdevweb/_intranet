@@ -26,7 +26,6 @@
 		</thead>
 		<tbody>
 			<?php foreach ($relancesPerm as $key => $cdes): ?>
-				<?php if (!isset($relancesPermPrevi[$cdes['id']])): ?>
 
 					<tr>
 						<td class="bg-verylight-blue"><?=$cdes['gt']?></td>
@@ -69,6 +68,8 @@
 						</td>
 						<td>
 							<?php foreach ($relancesPermInfo[$cdes['id']] as $key => $value): ?>
+								<?=($relancesPermInfo[$cdes['id']][$key]['date_insert']!=null)?date('d/m/y', strtotime($relancesPermInfo[$cdes['id']][$key]['date_insert']))." : ":""?>
+
 								<?=$relancesPermInfo[$cdes['id']][$key]['cmt']?><br>
 							<?php endforeach ?>
 						</td>
@@ -80,7 +81,6 @@
 
 						<?php endif ?>
 					</tr>
-				<?php endif ?>
 
 			<?php endforeach ?>
 			<tr class="border-bottom">

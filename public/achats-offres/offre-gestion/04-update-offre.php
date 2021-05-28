@@ -1,14 +1,21 @@
 <?php
 
 if(is_numeric($_POST['montant'])){
+	if (strpos('.', $_POST['montant']) !== false) {
 	$montant =number_format( $_POST['montant'] ,2 , "." ," " );
+	}else{
+	$montant =$_POST['montant'];
+	}
 
 }else{
 	$errors[]="Veuillez saisir un montant correct (ex : 150, 10.52, etc.)";
 }
 if(is_numeric($_POST['montant_finance'])){
+	if (strpos('.', $_POST['montant_finance']) !== false) {
 	$montantF =number_format( $_POST['montant_finance'] ,2 , "." ," " );
-
+	}else{
+	$montantF =$_POST['montant_finance'];
+	}
 }else{
 	$errors[]="Veuillez saisir un montant correct (ex : 150, 10.52, etc.)";
 }

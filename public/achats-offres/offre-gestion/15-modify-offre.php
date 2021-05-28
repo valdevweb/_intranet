@@ -66,19 +66,29 @@
 								<input type="text" class="form-control form-primary" name="pvc" id="pvc" value="<?=$offreMod['pvc']?>" pattern="^\d+(\.\d{1,2})?$" title="Seuls les chiffres sont autorisés">
 							</div>
 						</div>
-						<div class="col-lg-3">
+						<div class="col-lg-2">
 							<div class="form-group">
 								<label for="montant">Montant</label>
 								<input type="text" class="form-control form-primary"  value="<?=$offreMod['montant']?>" pattern="^\d+(\.\d{1,2})?$" title="Seuls les chiffres sont autorisés" name="montant" id="montant">
 							</div>
 						</div>
+
 						<div class="col-lg-3">
 							<div class="form-group">
 								<label for="montant_finance">Montant financé</label>
 								<input type="text" class="form-control form-primary" name="montant_finance" value="<?=$offreMod['montant_finance']?>" pattern="^\d+(\.\d{1,2})?$" title="Seuls les chiffres sont autorisés"  id="montant_finance">
 							</div>
 						</div>
-						<div class="col-lg-3">
+						<div class="col-lg-2">
+							<div class="form-group">
+								<label for="euro">Unité :</label>
+								<select class="form-control form-primary" name="euro">
+									<option value="1"  <?= FormHelpers::restoreSelected(1,$offreMod['euro'])?>>Euro</option>
+									<option value="0"  <?= FormHelpers::restoreSelected(0,$offreMod['euro'])?>>Pourcentage</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-2">
 							<div class="form-group">
 								<label for="offre">Offre</label>
 								<select class="form-control form-primary" name="offre" id="offre">
@@ -99,9 +109,9 @@
 		</div>
 
 
-				<?php else: ?>
-					<div class="alert alert-danger">Ce prospectus n'existe pas</div>
-				<?php endif ?>
+		<?php else: ?>
+			<div class="alert alert-danger">Ce prospectus n'existe pas</div>
+		<?php endif ?>
 
-			</div>
-		</div>
+	</div>
+</div>

@@ -111,9 +111,8 @@ include('../view/_navbar.php');
 					</div>
 					<div class="col text-center border-left border-right ">
 						<?php if (isset($listFiles[$prosp['id']])): ?>
-
 							<?php foreach ($listFiles[$prosp['id']] as $key => $file): ?>
-								<a class="grey-link" href="<?=URL_UPLOAD?>offres/$file['file']"  target="_blank"><?=isset($file['filename'])?$file['filename']:$file['file']?></a><br>
+								<a class="grey-link" href="<?=URL_UPLOAD?>offres/<?=$file['file']?>"  target="_blank"><?=!empty($file['filename'])?$file['filename']:$file['file']?></a><br>
 							<?php endforeach ?>
 
 						<?php endif ?>
@@ -122,7 +121,7 @@ include('../view/_navbar.php');
 						<?php if (isset($listLinks[$prosp['id']])): ?>
 
 							<?php foreach ($listLinks[$prosp['id']] as $key => $link): ?>
-								<a class="grey-link" href="<?=$link['link']?>" target="_blank"><?=isset($link['linkname'])?$link['linkname']:$link['link']?></a><br>
+								<a class="grey-link" href="<?=$link['link']?>" target="_blank"><?=!empty($link['linkname'])?$link['linkname']:$link['link']?></a><br>
 							<?php endforeach ?>
 
 						<?php endif ?>
@@ -201,11 +200,17 @@ include('../view/_navbar.php');
 		}
 	});
 
-	show-instruction
+
 	document.getElementById('search_form').onsubmit = function() {
 		findString(this.str.value);
 		return false;
 	};
+
+
+
+
+
+
 </script>
 <?php
 require '../view/_footer-bt.php';

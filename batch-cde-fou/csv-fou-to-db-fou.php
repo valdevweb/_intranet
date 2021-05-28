@@ -15,7 +15,9 @@ include 'config/db-connect.php';
 // chemin+ nom des 3 fichiers
 $fouFile=DIR_IMPORT_GESSICA."SCEBFADR.csv";
 // $fouFile=DIR_IMPORT_GESSICA."test.csv";
-
+if(!isset($pdoQlik)){
+	$pdoQlik= connectToDb('qlik');
+}
 $row=0;
 function notEmptyQlikFou($pdoQlik){
 	$req=$pdoQlik->query("SELECT * FROM fournisseurs");
@@ -24,6 +26,18 @@ function notEmptyQlikFou($pdoQlik){
 		return false;
 	}
 	return true;
+}
+
+function importInFou($pdoFou){
+	$req=$pdoFou->query("INSERT INTO fournisseurs (id, fournisseur, date_import)  SELECT cnuf, fournisseur, date_import FROM qlik.fournisseurs WHERE `majcod`<>3 AND `adrcod`=0 AND adrcif=0 GROUP BY cnuf");
+	// $data=$req->rowCount();
+	// return $data;
+
+	return $req->errorInfo();
+}
+
+function addNotInGessica($pdoQlik){
+	$req=$pdoQlik->query("INSERT INTO fournisseurs (fournisseur, cnuf, cif, interlocuteur, ad1, ad2, cp, ville, pays, tel, fax, mobile, email, adrcod, majcod, adrcif, date_import) SELECT fournisseur, cnuf, cif, interlocuteur, ad1, ad2, cp, ville, pays, tel, fax, mobile, email, adrcod, majcod, adrcif, date_import FROM fournisseurs_nongessica");
 }
 
 if (($handle = fopen($fouFile, "r")) !== FALSE) {
@@ -77,15 +91,16 @@ if (($handle = fopen($fouFile, "r")) !== FALSE) {
 	$row=0;
 	fclose($handle);
 }
-function import($pdoFou){
-	$req=$pdoFou->query("INSERT INTO fournisseurs (id, fournisseur, date_import)  SELECT cnuf, fournisseur, date_import FROM qlik.fournisseurs WHERE `majcod`<>3 AND `adrcod`=0 AND adrcif=0 GROUP BY cnuf");
-	$data=$req->rowCount();
-	return $data;
-}
+
+
+ addNotInGessica($pdoQlik);
+
 if(notEmptyQlikFou($pdoQlik)){
 	$req=$pdoFou->query("DELETE FROM fournisseurs");
 
-	$data=import($pdoFou);
+	$data=importInFou($pdoFou);
+
+
 
 
 

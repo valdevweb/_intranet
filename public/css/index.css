@@ -246,7 +246,10 @@ input[type="text"].msg::placeholder {
   height : 25% !important;
 }
 
+.modal-overlay{
+  background: transparent !important;
 
+}
 /* -------------------------------------
           media query
  --------------------------------------*/

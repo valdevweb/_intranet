@@ -4,7 +4,7 @@
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title" id="myModalLabel">Convention et Salon BTLEC Est 2020</h4>
+				<h4 class="modal-title" id="myModalLabel">Convention et Salon BTLEC Est <?=YEAR_SALON?></h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>

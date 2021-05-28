@@ -20,8 +20,12 @@
 					<?=(ucwords($listCat[$gazette['cat']]))??""?>
 				</div>
 				<div class="col show-link">
-					<h6 class="text-main-blue show-link" data-gazette-id="<?=$gazette['id']?>"><?=$gazette['titre']?></h6>
+					<h6 class="text-main-blue show-link" data-gazette-id="<?=$gazette['id']?>"><?=$gazette['titre']?>
+						<br><a class="text-small" href="#">Voir l'info</a>
+					</h6>
 				</div>
+
+
 			</div>
 			<div class="more" data-content-id="<?=$gazette['id']?>">
 				<div class="row">
@@ -39,7 +43,7 @@
 
 								<?php if (isset($listFiles[$gazette['id']])): ?>
 									<?php foreach ($listFiles[$gazette['id']] as $key => $file): ?>
-										<a href="<?=URL_UPLOAD.'gazette\\'.$file['file']?>"><?=($file['filename'])??'<i class="fas fa-file pb-3"></i>'?></a><br>
+										<a href="<?=URL_UPLOAD.'gazette\\'.$file['file']?>"><?=($file['filename'])?$file['filename']:'<i class="fas fa-file pb-3"></i>'?></a><br>
 
 									<?php endforeach ?>
 
@@ -50,7 +54,7 @@
 
 								<?php if (isset($listLinks[$gazette['id']])): ?>
 									<?php foreach ($listLinks[$gazette['id']] as $key => $link): ?>
-										<a href="<?=$link['link']?>"><?=($link['linkname'])??$link['link']?></a><br>
+										<a href="<?=$link['link']?>"><?=($link['linkname'])?$link['linkname']:'cliquez-ici'?></a><br>
 									<?php endforeach ?>
 								<?php endif ?>
 							</div>

@@ -67,7 +67,12 @@
 		</div>
 	<?php endif ?>
 
+		<div class="row">
+			<div class="col">
+				<?php include 'salon-modal.php'?>
 
+			</div>
+		</div>
 
 
 

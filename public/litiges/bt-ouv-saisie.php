@@ -320,8 +320,8 @@ if(isset($_POST['choose'])){
 		if($added>0)
 		{
 			// si la délcaration provient d'une demande magasin, on memorise l'id de cette demande pour ensuite pouvoir mettre ç jour la demande
-			if(isset($_GET['id_ouv']))
-			{
+			if(isset($_GET['id_ouv'])){
+				unset($_SESSION['dd_ouv']);
 				$_SESSION['dd_ouv']=$_GET['id_ouv'];
 
 			}

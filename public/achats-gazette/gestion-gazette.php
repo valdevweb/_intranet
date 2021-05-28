@@ -168,7 +168,7 @@ include('../view/_navbar.php');
 				var fileName='';
 				var fileList='';
 				var nbFiles = $(this).get(0).files.length;
-				var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'pdf', 'xls', 'xlsx'];
+				// var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'pdf', 'xls', 'xlsx'];
 				var warning  ="";
 				var interdit=false;
 				var formGroup="<div class='form-group'>";
@@ -183,13 +183,13 @@ include('../view/_navbar.php');
 					fileName=$(this).get(0).files[i].name;
 					totalSize = totalSize+fileSize;
 					var extension=fileName.replace(/^.*\./, '');
-					if ($.inArray(extension, fileExtension)==-1) {
-						warning="<i class='fas fa-times px-3 text-danger'></i>";
-						interdit=true;
-					}else{
-						warning="<i class='fas fa-check px-3 text-success'></i>";
+					// if ($.inArray(extension, fileExtension)==-1) {
+					// 	warning="<i class='fas fa-times px-3 text-danger'></i>";
+					// 	interdit=true;
+					// }else{
+					// 	warning="<i class='fas fa-check px-3 text-success'></i>";
 
-					}
+					// }
 					fileList += fileName + warning+'<br>';
 					var input="<input type='text' class='form-control form-primary'  name='filename[" +i +"]'>";
 					var label="<div class='text-main-blue'>Ordre :</div>";

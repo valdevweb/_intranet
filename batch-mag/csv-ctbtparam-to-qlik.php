@@ -42,7 +42,7 @@ if (($handle = fopen($ctbtParamFile, "r")) !== FALSE) {
 		if($row==0){
 			$row++;
 		}else{
-			if(!empty($data[0])){
+			if(!empty($data[0])  && is_numeric($data[0])){
 				array_push($data,date("Y-m-d H:i:s"));
 				$req=$pdoQlik->prepare("INSERT INTO mag_ctbt_param($ctbtParamFields) VALUES ($ctbtParamArgs)");
 				if(!$req->execute($data)){

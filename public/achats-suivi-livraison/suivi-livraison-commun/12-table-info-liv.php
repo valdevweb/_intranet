@@ -146,7 +146,7 @@
 								<td></td>
 								<td class="text-danger font-weight-boldless"><?=DateHelpers::concatJourMoisDateTime($lundiUn, "long")?></td>
 								<td class="text-right pr-2">Reçu :</td>
-								<td class="<?=$bg?> text-right"><?=$info['recu_remplace']?><?=$pourcent?></td>
+								<td class="<?=$bgRemplace?> text-right"><?=$info['recu_remplace']?><?=$pourcentRemplace?></td>
 								<td class="pl-3"><?=$info['info_livraison_remplace']?></td>
 								<td class="text-center"></td>
 							</tr>

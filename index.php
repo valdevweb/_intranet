@@ -163,7 +163,8 @@ if(!empty($revRes))
 			<div class="col-sm-12 col-lg-6">
 				<h1>BTLec Est - Centrale d'Achat</h1>
 				<h3 class="mb-4 text-white pb-3">Bazar Technique E.Leclerc </h3>
-				<p><img id="photo-bt" class="boxshadow" src="public/img/index/front-bt-800.jpg"></p>
+				<!-- <p><img id="photo-bt" class="boxshadow" src="public/img/index/front-bt-800.jpg"></p> -->
+				<p><img id="photo-bt" class="boxshadow" src="public/img/index/pano.jpg"></p>
 				<?php
 				if(!empty($msg)){
 					foreach ($msg as $msgStrg)

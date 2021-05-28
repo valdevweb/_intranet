@@ -27,10 +27,10 @@ addRecord($pdoStat,$page,$action, $descr, 101);
 function getParticipantYear($pdoBt, $year){
   $table="salon_".$year;
 
-  $req=$pdoBt->prepare("SELECT mag, $table.galec, centrale, nom, prenom, fonction, DATE_FORMAT(date_saisie,'%d-%m-%Y') as datesaisie, mardi, mercredi,repas_mardi, repas_mercredi, date_passage, DATE_FORMAT(date_passage,'%H:%i') as heure FROM $table
-    LEFT JOIN sca3 ON $table.galec=sca3.galec
+  $req=$pdoBt->prepare("SELECT deno, $table.galec, centrale, nom, prenom, fonction, DATE_FORMAT(date_saisie,'%d-%m-%Y') as datesaisie, mardi, mercredi,repas_mardi, repas_mercredi, date_passage, DATE_FORMAT(date_passage,'%H:%i') as heure FROM $table
+    LEFT JOIN magasin.mag ON $table.galec=magasin.mag.galec
     LEFT JOIN salon_fonction ON $table.id_fonction=salon_fonction.id
-    WHERE $table.galec !='' ORDER BY sca3.mag");
+    WHERE $table.galec !='' ORDER BY magasin.mag.deno");
   $req->execute();
 
   return $req->fetchAll(PDO::FETCH_ASSOC);
@@ -84,7 +84,8 @@ function getNbMagInscritMercredi($pdoBt, $year){
 function nbMagCentrale($pdoBt,$year){
   $table="salon_".$year;
 
-  $req=$pdoBt->prepare("SELECT count(galec) as nb,centrale FROM (SELECT DISTINCT {$table}.galec, centrale FROM {$table} LEFT JOIN sca3 ON {$table}.galec=sca3.galec WHERE {$table}.galec !='' AND mask=0) sousreq GROUP BY centrale");
+  $req=$pdoBt->prepare("SELECT count(galec) as nb, centrale FROM
+    (SELECT DISTINCT {$table}.galec, centrale FROM {$table} LEFT JOIN magasin.mag ON {$table}.galec=magasin.mag.galec WHERE {$table}.galec !='' AND mask=0) sousreq GROUP BY centrale");
   $req->execute();
   return $req->fetchAll(PDO::FETCH_ASSOC);
 
@@ -381,7 +382,7 @@ DEBUT CONTENU CONTAINER
                 $bgMercredi=$part['mercredi'] +$part['repas_mercredi'];
                 $bgMercredi=$class[$bgMercredi];
                 echo '<tr>';
-                echo '<td class="'.strtolower($part['centrale']).'">'.$part['mag'].'</td>';
+                echo '<td class="'.strtolower($part['centrale']).'">'.$part['deno'].'</td>';
                 echo '<td>'.$part['galec'].'</td>';
                 echo '<td>'.$part['centrale'].'</td>';
                 echo '<td>'.$part['nom'].'</td>';

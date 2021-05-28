@@ -27,7 +27,6 @@
 		</thead>
 		<tbody>
 			<?php foreach ($relancesTwo as $key => $cdes): ?>
-				<?php if (!isset($relancesTwoPrevi[$cdes['id']])): ?>
 
 					<tr>
 						<td class="bg-verylight-blue"><?=$cdes['gt']?></td>
@@ -71,6 +70,8 @@
 						</td>
 						<td>
 							<?php foreach ($relancesTwoInfos[$cdes['id']] as $key => $value): ?>
+								<?=($relancesTwoInfos[$cdes['id']][$key]['date_insert']!=null)?date('d/m/y', strtotime($relancesTwoInfos[$cdes['id']][$key]['date_insert']))." : ":""?>
+
 								<?=$relancesTwoInfos[$cdes['id']][$key]['cmt']?><br>
 							<?php endforeach ?>
 						</td>
@@ -82,7 +83,6 @@
 
 						<?php endif ?>
 					</tr>
-				<?php endif ?>
 
 			<?php endforeach ?>
 			<tr class="border-bottom">

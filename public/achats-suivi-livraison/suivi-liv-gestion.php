@@ -67,6 +67,8 @@ if(isset($_GET['code_op'])){
 
 
 if(isset($_POST['save'])){
+
+
 	$idArticle= key($_POST['save']);
 	$erratumFilename="";
 	if(isset($_FILES['file_erratum']['tmp_name'][$idArticle]) && !empty($_FILES['file_erratum']['tmp_name'][$idArticle])){
@@ -84,6 +86,8 @@ if(isset($_POST['save'])){
 	$articleR=null;
 	$recu=null;
 	$recuDeux=null;
+	$recuRemplace=null;
+	$recuRemplaceDeux=null;
 	if (!empty($_POST['article_remplace'][$idArticle])) {
 		$articleR=$_POST['article_remplace'][$idArticle];
 	}
@@ -95,7 +99,13 @@ if(isset($_POST['save'])){
 		$recuDeux=$_POST['recu_deux'][$idArticle];
 
 	}
-
+	if (!empty($_POST['recu_remplace'][$idArticle])) {
+		$recuRemplace=$_POST['recu_remplace'][$idArticle];
+	}
+	if(!empty($_POST['recu_deux_remplace'][$idArticle])){
+		$recuRemplaceDeux=$_POST['recu_deux_remplace'][$idArticle];
+	}
+echo $recuRemplaceDeux;
 	if ($_POST['exist'][$idArticle]=="false") {
 		// pas encore d'info article donc on ajoute l'article et on ajoute l'info livraison
 		// on verifie si on a déja l'op dans la base doc_achats, table operation
@@ -109,16 +119,16 @@ if(isset($_POST['save'])){
 		}
 		$idNewArticle=$articleDao->insertArticle($idOp, $_POST['article'][$idArticle], $_POST['dossier'][$idArticle], $_POST['libelle'][$idArticle], $_POST['ean'][$idArticle], $_POST['gt'][$idArticle], $_POST['marque'][$idArticle], $_POST['fournisseur'][$idArticle], $_POST['cnuf'][$idArticle], $_POST['deee'][$idArticle], $_POST['ppi'][$idArticle]);
 
-		$infoLivDao->insertInfoLiv($idNewArticle, $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],  $recuDeux, $_POST['info_livraison_deux'][$idArticle], $_POST['recu_remplace'][$idArticle],$_POST['info_livraison_remplace'][$idArticle],$_POST['recu_deux_remplace'][$idArticle],$_POST['info_livraison_deux_remplace'][$idArticle],$erratumFilename);
+		$infoLivDao->insertInfoLiv($idNewArticle, $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],  $recuDeux, $_POST['info_livraison_deux'][$idArticle], $recuRemplace,$_POST['info_livraison_remplace'][$idArticle],$recuRemplaceDeux,$_POST['info_livraison_deux_remplace'][$idArticle],$erratumFilename);
 
 
 
 	}elseif($_POST['exist'][$idArticle]=="true"){
 		// déjà une info article donc on n'ajoute pas l'article et on met à jour l'info livraison
 		if(empty($erratumFilename)){
-			$infoLivDao->updateInfoLiv($_POST['id_article_table_article'][$idArticle], $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],$recuDeux, $_POST['info_livraison_deux'][$idArticle], $_POST['recu_remplace'][$idArticle],$_POST['info_livraison_remplace'][$idArticle],$_POST['recu_deux_remplace'][$idArticle],$_POST['info_livraison_deux_remplace'][$idArticle]);
+			$infoLivDao->updateInfoLiv($_POST['id_article_table_article'][$idArticle], $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],$recuDeux, $_POST['info_livraison_deux'][$idArticle], $recuRemplace,$_POST['info_livraison_remplace'][$idArticle],$recuRemplaceDeux,$_POST['info_livraison_deux_remplace'][$idArticle]);
 		}else{
-			$infoLivDao->updateInfoLivErratum($_POST['id_article_table_article'][$idArticle], $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],$recuDeux, $_POST['info_livraison_deux'][$idArticle],  $_POST['recu_remplace'][$idArticle],$_POST['info_livraison_remplace'][$idArticle],$_POST['recu_deux_remplace'][$idArticle],$_POST['info_livraison_deux_remplace'][$idArticle],$erratumFilename);
+			$infoLivDao->updateInfoLivErratum($_POST['id_article_table_article'][$idArticle], $recu, $_POST['info_livraison'][$idArticle], $articleR,$_POST['ean_remplace'][$idArticle],$recuDeux, $_POST['info_livraison_deux'][$idArticle],  $recuRemplace,$_POST['info_livraison_remplace'][$idArticle],$recuRemplaceDeux,$_POST['info_livraison_deux_remplace'][$idArticle],$erratumFilename);
 		}
 
 		$idOp=$_POST['id_op'];

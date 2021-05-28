@@ -86,7 +86,7 @@ class UserHelpers{
 			$req->execute([
 			':id_gt'	=>$gt
 		]);
-		return $req->fetch();
+		return $req->fetchAll();
 	}
 
 

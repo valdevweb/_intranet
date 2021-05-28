@@ -3,6 +3,7 @@
 		<table class="table table-sm" id="offre-table">
 			<thead class="thead-dark">
 				<tr>
+					<th>Code op</th>
 					<th class="filter">Prospectus</th>
 					<th>Marque</th>
 					<th>Produit</th>
@@ -31,6 +32,7 @@
 							?>
 						<?php endif ?>
 						<tr id="offre-<?=$offre['id_offre']?>">
+							<td><?=$offre['code_op']?></td>
 							<td id="<?=$ancreProsp?>"><?=$offre['prospectus']?></td>
 							<td><?=$offre['marque']?></td>
 							<td><?=$offre['produit']?></td>

@@ -44,19 +44,18 @@ if(isset($_SESSION['temp'])){
 	exit();
 }
 
-if(isset($_POST['submit'])){
+if(isset($_POST['save'])){
 	$idDetail=key($_POST['qte_previ']);
 	foreach ($_POST['qte_previ'] as $idDetail => $value) {
-		$date=(empty($_POST['date_previ'][$idDetail]))?null:$_POST['date_previ'][$idDetail];
-		$qte=(empty($_POST['qte_previ'][$idDetail]))?null:$_POST['qte_previ'][$idDetail];
-		$cmt=(empty($_POST['cmt'][$idDetail]))?"":$_POST['cmt'][$idDetail];
-		$update=$cdesAchatDao->insertInfos($idDetail,$date, $qte, $cmt);
-	}
+		if($_POST['date_previ'][$idDetail]!=null || $_POST['qte_previ'][$idDetail]!=null || $_POST['cmt'][$idDetail] !=null ){
+			$dateGlobale=(empty($_POST['date_globale']))?null:$_POST['date_globale'];
 
-	$successQ='?success=updated';
-	unset($_POST);
-	// unset($_SESSION['temp']);
-	// header("Location: cdes-encours.php".$successQ,true,303);
+			$date=(empty($_POST['date_previ'][$idDetail]))?$dateGlobale:$_POST['date_previ'][$idDetail];
+			$qte=(empty($_POST['qte_previ'][$idDetail]))?null:$_POST['qte_previ'][$idDetail];
+			$cmt=(empty($_POST['cmt'][$idDetail]))?"":$_POST['cmt'][$idDetail];
+			$cdesAchatDao->insertInfos($idDetail,$date, $qte, $cmt);
+		}
+	}
 	$successQ='?success=saved';
 	unset($_POST);
 	header("Location:".$_SERVER['PHP_SELF'].$successQ,true,303);
@@ -111,132 +110,128 @@ include('../view/_navbar.php');
 	<div class="row">
 		<div class="col">
 			<form action="<?=htmlspecialchars($_SERVER['PHP_SELF']).$paramForm?>" method="post">
+				<div class="row">
+					<div class="col">
+						Pour ne pas avoir à saisir une date prévisionnelle de livraison pour tous les articles, vous pouvez la saisir ci-dessous. Elle sera ajoutée automatiquement aux articles pour lesquels vous aurez saisi une quantité et/ou un commentaire
+					</div>
+				</div>
+				<div class="row">
+					<div class="col"></div>
+					<div class="col-auto text-center">
+						<div class="form-group form-inline">
+							<label for="date_globale" class="text-orange font-weight-bold">Date prévisionnelle globale : </label>
+							<input type="date" class="form-control ml-2" name="date_globale" id="date_globale">
+						</div>
+					</div>
+					<div class="col"></div>
+				</div>
+
 				<?php if (!empty($listProd)): ?>
 					<?php foreach ($listProd as $key => $prod): ?>
-						<div class="row bg-blue py-2">
-							<div class="col-lg-2">
-								Article :
-							</div>
-							<div class="col-lg-2">
-								Dossier :
-							</div>
-							<div class="col-lg-2">
-								Marque :
-							</div>
-							<div class="col-lg-2">
-								Référence :
-							</div>
-							<div class="col">
-								Libellé :
-							</div>
-						</div>
 						<div class="row">
-							<div class="col-lg-2 py-2">
-								<?=$prod['article']?>
-							</div>
-							<div class="col-lg-2 py-2">
-								<?=$prod['dossier']?>
-							</div>
-							<div class="col-lg-2 py-2">
-								<?=$prod['marque']?>
-							</div>
-							<div class="col-lg-2 py-2">
-								<?=$prod['ref']?>
-							</div>
-							<div class="col">
-								<?=strtolower($prod['libelle_art'])?>
+							<div class="col border-left border-right border-top pb-3">
+								<div class="row bg-dark-grey py-2">
+									<div class="col">
+										<?=$prod['libelle_art']?>
+
+									</div>
+								</div>
+								<div class="row ">
+									<div class="col-lg-2">
+										<span class="font-weight-bold">Article :</span>
+										<?=$prod['article']?>
+									</div>
+									<div class="col-lg-2">
+										<span class="font-weight-bold">Dossier :</span>
+										<?=$prod['dossier']?>
+									</div>
+									<div class="col-lg-2">
+										<span class="font-weight-bold">Marque :</span>
+										<?=$prod['marque']?>
+
+									</div>
+									<div class="col-lg-2">
+										<span class="font-weight-bold">Référence :</span>
+										<?=$prod['ref']?>
+									</div>
+									<div class="col">
+										<span class="font-weight-bold">EAN :</span>
+										<?=$prod['ean']?>
+									</div>
+								</div>
+								<div class="row ">
+									<div class="col-auto">
+										<span class="font-weight-bold">Date commande : </span>
+										<?=($prod['date_cde']!=null)?date('d/m/y', strtotime($prod['date_cde'])):""?>
+
+									</div>
+									<div class="col-auto">
+										<span class="font-weight-bold">Numéro : </span>
+										<?=$prod['id_cde']?>
+
+									</div>
+									<div class="col-auto">
+										<span class="font-weight-bold">Qte init. :</span>
+										<?=$prod['qte_init']?>
+
+									</div>
+									<div class="col-auto">
+										<span class="font-weight-bold"> Colis restants: </span>
+										<?=$prod['qte_cde']?>
+									</div>
+									<div class="col-auto">
+										<span class="font-weight-bold">UV restants : </span>
+										<?=$prod['qte_uv_cde']?>
+									</div>
+									<div class="col-auto">
+										<span class="font-weight-bold">PCB : </span>
+										<?=$prod['cond_carton']?>
+									</div>
+									<div class="col-auto">
+										<span class="font-weight-bold">Date livraison : </span>
+										<?=($prod['date_liv']!=null)?date('d/m/y', strtotime($prod['date_liv'])):""?>
+
+									</div>
+								</div>
 							</div>
 						</div>
 
-						<div class="row ">
-							<div class=" py-2 col-lg-2">
-								Date commande :
-							</div>
-							<div class=" py-2 col-lg-2">
-								Numéro :
-							</div>
-							<div class=" py-2 col-lg-1">
-								Qte init. :
-							</div>
-							<div class=" py-2 col-lg-1">
-								Qte art. :
-							</div>
-							<div class=" py-2 col-lg-1">
-								Qte colis :
-							</div>
-							<div class=" py-2 col-lg-1">
-								PCB :
-							</div>
-							<div class="py-2 col">
-								Date livraison :
-							</div>
-						</div>
-
-						<div class="row">
-							<div class="col-lg-2">
-								<?=($prod['date_cde']!=null)?date('d/m/y', strtotime($prod['date_cde'])):""?>
-							</div>
-							<div class="col-lg-2 ">
-								<?=$prod['id_cde']?>
-							</div>
-							<div class="col-lg-1 text-right pr-4">
-								<?=$prod['qte_init']?>
-							</div>
-							<div class="col-lg-1 text-right pr-4">
-								<?=$prod['qte_cde']?>
-							</div>
-							<div class="col-lg-1 text-right pr-4">
-								<?=$prod['qte_uv_cde']?>
-							</div>
-							<div class="col-lg-1 text-right pr-4">
-								<?=$prod['cond_carton']?>
-							</div>
-							<div class="col">
-								<?=($prod['date_liv']!=null)?date('d/m/y', strtotime($prod['date_liv'])):""?>
-							</div>
-						</div>
-						<div class="row mt-4 mb-1">
-							<div class="col">
-								<h6 class="text-main-blue">Informations livraison :</h6>
-							</div>
-						</div>
 						<?php if (!empty($listInfos)): ?>
 							<?php if(isset($listInfos[$prod['id']])):?>
-								<div class="row mb-2">
-									<div class="col-lg-2">
-										Date prévi :
-									</div>
-									<div class="col-lg-1">
-										Qte prévi :
-									</div>
-									<div class="col-lg-6">
-										Commentaires :
-									</div>
-									<div class="col-lg-1"></div>
-									<div class="col-lg-1"></div>
-									<div class="col"></div>
-								</div>
-								<?php foreach ($listInfos[$prod['id']] as $keyInfo => $value): ?>
-									<div class="row mb-2">
-										<div class="col-lg-2">
-											<?=$listInfos[$prod['id']][$keyInfo]['date_previ']?>
+								<div class="row">
+									<div class="col border-left border-right border-bottom">
+										<div class="row">
+											<div class="col text-center">
+												<h6 class="text-orange">Informations livraison :</h6>
+											</div>
 										</div>
-										<div class="col-lg-1">
-											<?=$listInfos[$prod['id']][$keyInfo]['qte_previ']?>
+										<?php foreach ($listInfos[$prod['id']] as $keyInfo => $value): ?>
 
-										</div>
-										<div class="col-lg-6">
-											<?=$listInfos[$prod['id']][$keyInfo]['cmt']?>
-										</div>
-										<div class="col-lg-1">
-											<a href="?update=<?=$listInfos[$prod['id']][$keyInfo]['id']?>" class="btn btn-secondary">Modifier</a>
-										</div>
-										<div class="col-lg-1">
-											<a href="?del=<?=$listInfos[$prod['id']][$keyInfo]['id']?>" class="btn btn-danger">Supprimer</a>
-										</div>
-										<div class="col"></div>
+											<div class="row">
+												<div class="col font-weight-bold text-orange">
+													<i class="fas fa-arrow-alt-circle-right pr-2"></i>Infos du <?=date('d/m/y', strtotime($listInfos[$prod['id']][$keyInfo]['date_insert']))?>
+												</div>
+											</div>
+											<div class="row mb-2">
+												<div class="col-lg-2">
+													<span class="font-weight-bold">Date prévi : </span><?=($listInfos[$prod['id']][$keyInfo]['date_previ']!=null)?date('d/m/y', strtotime($listInfos[$prod['id']][$keyInfo]['date_previ'])):""?>
+												</div>
+												<div class="col-lg-2">
+													<span class="font-weight-bold">Qte prévi : </span><?=$listInfos[$prod['id']][$keyInfo]['qte_previ']?>
+
+												</div>
+												<div class="col-lg-5">
+													<span class="font-weight-bold">Commentaires : </span><?=$listInfos[$prod['id']][$keyInfo]['cmt']?>
+												</div>
+												<div class="col text-right">
+													<a href="?update=<?=$listInfos[$prod['id']][$keyInfo]['id']?>" class="btn btn-secondary">Modifier</a>
+													<a href="?del=<?=$listInfos[$prod['id']][$keyInfo]['id']?>" class="btn btn-danger">Supprimer</a>
+												</div>
+
+											</div>
+										<?php endforeach ?>
 									</div>
-								<?php endforeach ?>
+								</div>
 							<?php endif ?>
 						<?php endif ?>
 						<?php if (isset($infoLiv)): ?>
@@ -301,7 +296,7 @@ include('../view/_navbar.php');
 
 				<div class="row mb-5">
 					<div class="col text-right">
-						<button class="btn btn-primary" name="submit">Enregistrer</button>
+						<button class="btn btn-primary" name="save">Enregistrer</button>
 					</div>
 				</div>
 			</form>

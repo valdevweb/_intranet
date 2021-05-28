@@ -27,7 +27,6 @@
 		</thead>
 		<tbody>
 			<?php foreach ($relancesOne as $key => $cdes): ?>
-				<?php if (!isset($relancesOnePrevi[$cdes['id']])): ?>
 
 					<tr>
 						<td class="bg-verylight-blue"><?=$cdes['gt']?></td>
@@ -72,6 +71,7 @@
 						</td>
 						<td>
 							<?php foreach ($relancesOneInfos[$cdes['id']] as $key => $value): ?>
+								<?=($relancesOneInfos[$cdes['id']][$key]['date_insert']!=null)?date('d/m/y', strtotime($relancesOneInfos[$cdes['id']][$key]['date_insert']))." : ":""?>
 								<?=$relancesOneInfos[$cdes['id']][$key]['cmt']?><br>
 							<?php endforeach ?>
 						</td>
@@ -83,7 +83,7 @@
 
 						<?php endif ?>
 					</tr>
-				<?php endif ?>
+
 
 			<?php endforeach ?>
 			<tr class="border-bottom">

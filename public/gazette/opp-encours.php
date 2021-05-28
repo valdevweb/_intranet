@@ -62,20 +62,30 @@ DEBUT CONTENU CONTAINER
 					<li><span>
 						<a href="#<?=$opp['id']?>" class="mini-nav"><?=$opp['title']?></a>
 						<?=($opp['date_start']==date('Y-m-d') ||  $opp['date_start']==(new DateTime('yesterday'))->format('Y-m-d'))?
-									"<span class='badge badge-warning ml-3'>Nouveau</span>" :""
-									?>
+						"<span class='badge badge-warning ml-3'>Nouveau</span>" :""
+						?>
 					</span>
-						<span>jusqu'au <?=date('d/m/Y', strtotime($opp['date_end']))?></span>
-					</li>
-					<?php $oppIds[]=$opp['id'];?>
-				<?php endforeach ?>
-			</ul>
-		</div>
-		<div class="col-lg-2 col-xl-3"></div>
+					<span>jusqu'au <?=date('d/m/Y', strtotime($opp['date_end']))?></span>
+				</li>
+				<?php $oppIds[]=$opp['id'];?>
+			<?php endforeach ?>
+		</ul>
 	</div>
-	<?php
-	include 'opp-display-inc.php'
-	?>
+	<div class="col-lg-2 col-xl-3"></div>
+</div>
+
+<?php if(!empty($listOpp)):?>
+	<?php include 'opp-display-inc.php';?>
+	<?php else: ?>
+
+		<div class="row mb-5">
+			<div class="col">
+				<div class="alert alert-primary">
+					Aucune offre spéciale à afficher
+				</div>
+			</div>
+		</div>
+	<?php endif ?>
 
 	<!-- ./container -->
 </div>

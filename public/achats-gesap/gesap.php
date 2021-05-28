@@ -53,7 +53,9 @@ include('../view/_navbar.php');
 	</div>
 		<div class="row">
 			<div class="col">
-				<div class="alert alert-primary"><i class="fas fa-lightbulb pr-3"></i>Vous pouvez filtrer le tableau en utilisant les flèches qui sont sur l'entête du tableau. Les filtres sont cumulables</div>
+				<div class="alert alert-primary"><i class="fas fa-lightbulb pr-3"></i>Vous pouvez filtrer le tableau en utilisant les flèches qui sont sur l'entête du tableau. Les filtres sont cumulables<br>
+				<i class="fas fa-lightbulb pr-3"></i>Pour afficher le guide d'achat, cliquez sur le lien qui est dans la colonne guide d'achat
+				</div>
 			</div>
 		</div>
 	<div class="row">
@@ -67,9 +69,9 @@ include('../view/_navbar.php');
 							<th>Salon</th>
 							<th>Catalogue</th>
 							<th>Code op</th>
-							<th>Date de remonté</th>
+							<th>Date de remontée</th>
 							<th>Guide d'achat</th>
-							<th>Commenaire</th>
+							<th>Commentaire</th>
 							<th>Fichiers</th>
 
 						</tr>

@@ -7,10 +7,10 @@ else{
 }
 include 'config/config.inc.php';
 include 'config/db-connect.php';
-function getEncours($pdoQlik, $yesterday){
+function getCdes($pdoQlik, $yesterday){
 
-	$req=$pdoQlik->prepare("INSERT INTO cdes_fou_qte_init (id_detail, qte_cde_init, qte_uv_cde_init, date_cde)
-		SELECT cdes_fou_details.id, cdes_fou_details.qte_cde, cdes_fou_details.qte_uv_cde, cdes_fou.date_cde
+	$req=$pdoQlik->prepare("INSERT INTO cdes_fou_qte_init (id_detail, qte_cde_init, qte_uv_cde_init, date_cde, date_liv_init)
+		SELECT cdes_fou_details.id, cdes_fou_details.qte_cde, cdes_fou_details.qte_uv_cde, cdes_fou.date_cde, cdes_fou.date_liv
 		FROM cdes_fou_details
 		LEFT JOIN cdes_fou ON cdes_fou_details.id_cde=cdes_fou.num_cde
 		WHERE cdes_fou.date_cde= :date_cde AND cdes_fou_details.qte_cde!=0");
@@ -29,7 +29,7 @@ function getEncours($pdoQlik, $yesterday){
 
 $yesterday=((new DateTime())->modify('- 1 day'))->format('Y-m-d');
 
-$encours=getEncours($pdoQlik, $yesterday);
+$encours=getCdes($pdoQlik, $yesterday);
 
 // foreach ($encours as $key => $enc) {
 // 	$enc['id_cdesartdos']

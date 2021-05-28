@@ -19,7 +19,10 @@ require '../../Class/UserDao.php';
 require '../../Class/UserHelpers.php';
 require '../../Class/FouDao.php';
 require_once '../../vendor/autoload.php';
-
+if(!isset($_GET['dest'])){
+	echo "le destinataire du mail n'a pas été pris en cmpte. Impossibe de traiter les relances";
+	exit;
+}
 
 $errors=[];
 $success=[];
@@ -62,9 +65,9 @@ foreach ($listRelances as $key => $relance) {
 		$qteUv=$prod['qte_init']*$prod['cond_carton'];
 		if (isset($_GET['op'])) {
 
-			$ligne.="<tr><td>".$prod['id_cde']."</td><td>" .$prod['libelle_op']."</td><td>" . $prod['date_start'] ."</td><td>" . $prod['ref'] ."</td><td>" . $prod['ean'] ."</td><td>" . $prod['libelle_art'] ."</td><td>" . $prod['cond_carton'] ."</td><td>"  . $qteUv ."</td><td>" . $prod['qte_init']  ."</td><td>" . $encours['qte_restante'] ."</td><td>" . $cmts. "</td></tr>";
+			$ligne.="<tr><td>".$prod['id_cde']."</td><td>" .$prod['libelle_op']."</td><td>" . $prod['date_start'] ."</td><td>" . $prod['ref'] ."</td><td>" . $prod['ean'] ."</td><td>" . $prod['libelle_art'] ."</td><td>" . $prod['cond_carton'] ."</td><td>"  . $qteUv ."</td><td>" . $prod['qte_init']  ."</td><td>" . $encours['qte_restante'] . "</td></tr>";
 		}elseif(isset($_GET['perm'])){
-			$ligne.="<tr><td>".$prod['id_cde']."</td><td>" . $prod['ref'] ."</td><td>" . $prod['ean'] ."</td><td>" . $prod['libelle_art'] ."</td><td>" . $prod['cond_carton'] ."</td><td>"  . $qteUv ."</td><td>" . $prod['qte_init']  ."</td><td>" . $encours['qte_restante'] ."</td><td>" . $cmts. "</td></tr>";
+			$ligne.="<tr><td>".$prod['id_cde']."</td><td>" . $prod['ref'] ."</td><td>" . $prod['ean'] ."</td><td>" . $prod['libelle_art'] ."</td><td>" . $prod['cond_carton'] ."</td><td>"  . $qteUv ."</td><td>" . $prod['qte_init']  ."</td><td>" . $encours['qte_restante']  . $cmts. "</td></tr>";
 		}
 
 	}

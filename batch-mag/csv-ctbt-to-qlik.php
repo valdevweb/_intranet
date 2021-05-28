@@ -37,14 +37,17 @@ if (($handle = fopen($ctbtFile, "r")) !== FALSE) {
 		if($row==0){
 			$row++;
 		}else{
-			array_push($data,date('Y-m-d H:i:s'));
-			$req=$pdoQlik->prepare("INSERT INTO mag_ctbt($ctbtFields) VALUES ($ctbtArgs)");
-			if(!$req->execute($data)){
-				$err=$req->errorInfo();
-				$errArr[$row]['btlec']=$data[0];
-				$errArr[$row]['code']=$err[1];
-				$errArr[$row]['message']=$err[2];
-				$errArr[$row]['db']="mag_ctbt";
+			if(!empty($data[0])  && is_numeric($data[0])){
+
+				array_push($data,date('Y-m-d H:i:s'));
+				$req=$pdoQlik->prepare("INSERT INTO mag_ctbt($ctbtFields) VALUES ($ctbtArgs)");
+				if(!$req->execute($data)){
+					$err=$req->errorInfo();
+					$errArr[$row]['btlec']=$data[0];
+					$errArr[$row]['code']=$err[1];
+					$errArr[$row]['message']=$err[2];
+					$errArr[$row]['db']="mag_ctbt";
+				}
 			}
 		}
 		$row++;
@@ -71,6 +74,6 @@ if(empty($errArr)){
 	insertTaskLog($pdoExploit,$idTask, $ko, $logfileName);
 }
 
-	echo "<pre>";
-	print_r($errArr);
-	echo '</pre>';
+echo "<pre>";
+print_r($errArr);
+echo '</pre>';

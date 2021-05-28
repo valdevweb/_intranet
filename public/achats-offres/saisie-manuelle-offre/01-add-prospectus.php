@@ -1,6 +1,7 @@
 <?php
 
-$allreadyExist=$prospDao->getProspectusByProspectus(strtoupper($_POST['prospectus']));
+
+$allreadyExist=$prospDao->getProspectusByProspectus(strtoupper($_POST['code_op']));
 if(!empty($allreadyExist)){
 	$errors[]="Ce prospectus existe déjà, vous ne pouvez pas le recréer<br>Pour y ajouter des offres, veuillez le sélectionner dans la liste déroulante de la section saisie des offres";
 }
@@ -8,11 +9,13 @@ if(!empty($allreadyExist)){
 
 if(empty($errors)){
 	$otherFilename=[];
-	if(isset($_FILES['fic-mod']['tmp_name']) && !empty($_FILES['fic-mod']['tmp_name'])){
-		$uploaded=move_uploaded_file($_FILES['fic-mod']['tmp_name'],DIR_UPLOAD.'ficwopc\\'.$_FILES['fic-mod']['name'] );
+	if(isset($_FILES['fic']['tmp_name']) && !empty($_FILES['fic']['tmp_name'])){
+		$uploaded=move_uploaded_file($_FILES['fic']['tmp_name'],DIR_UPLOAD.'ficwopc\\'.$_FILES['fic']['name'] );
 		if($uploaded==false){
 			$errors[]="Nous avons rencontré un problème avec votre fichier, la clôture n'a pas pu se faire";
 		}
+
+
 	}
 	if(isset($_FILES['file_other']['tmp_name'][0]) && !empty($_FILES['file_other']['tmp_name'][0])){
 

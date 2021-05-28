@@ -21,16 +21,17 @@
 				<td><?=$gazette['titre']?></td>
 				<td><?=$gazette['description']?></td>
 				<td>
+
 					<?php if (isset($listFiles[$gazette['id']])): ?>
 						<?php foreach ($listFiles[$gazette['id']] as $key => $file): ?>
-							<a href="<?=URL_UPLOAD.'gazette\\'.$file['file']?>"><?=($file['filename'])??'<i class="fas fa-file pb-3"></i>'?></a><br>
+							<a href="<?=URL_UPLOAD.'gazette\\'.$file['file']?>"><?=($file['filename'])?$file['filename']:'<i class="fas fa-file pb-3"></i>'?></a><br>
 						<?php endforeach ?>
 					<?php endif ?>
 				</td>
 				<td>
 					<?php if (isset($listLinks[$gazette['id']])): ?>
 						<?php foreach ($listLinks[$gazette['id']] as $key => $link): ?>
-							<a href="<?=$link['link']?>"><?=($link['linkname'])??$link['link']?></a><br>
+							<a href="<?=$link['link']?>"><?=($link['linkname'])?$link['linkname']:'cliquez ici'?></a><br>
 						<?php endforeach ?>
 					<?php endif ?>
 				</td>

@@ -103,8 +103,8 @@ class OffreDao{
 		return $req->fetch();
 	}
 
-	public function updateOffre($id, $montant, $montantF,$pvc){
-		$req=$this->pdo->prepare("UPDATE prospectus_offres SET id_prosp= :id_prosp, gt= :gt, marque= :marque, produit= :produit, reference= :reference, ean= :ean, pvc= :pvc, offre= :offre, montant= :montant, montant_finance= :montant_finance, by_insert= :by_insert, date_insert= :date_insert WHERE id= :id ");
+	public function updateOffre($id, $montant, $montantF, $pvc){
+		$req=$this->pdo->prepare("UPDATE prospectus_offres SET id_prosp= :id_prosp, gt= :gt, marque= :marque, produit= :produit, reference= :reference, ean= :ean, pvc= :pvc, offre= :offre, montant= :montant, montant_finance= :montant_finance, euro= :euro, by_insert= :by_insert, date_insert= :date_insert WHERE id= :id ");
 		$req->execute([
 			':id_prosp'	=>$_POST['id_prosp'],
 			':gt'	=>$_POST['gt'],
@@ -116,6 +116,7 @@ class OffreDao{
 			':offre'	=>$_POST['offre'],
 			':montant'	=>$montant,
 			':montant_finance'	=>$montantF,
+			':euro'				=>$_POST['euro'],
 			':by_insert'	=>$_SESSION['id_web_user'],
 			':date_insert'	=>date('Y-m-d H:i:s'),
 			':id'	=>$id,

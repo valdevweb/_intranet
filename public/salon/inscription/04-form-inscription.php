@@ -26,13 +26,13 @@
 						</div>
 						<div class="col">
 							<div class="form-group">
-								<input type="text" name="nom" placeholder="nom*" class="form-control" value="<?=$nom?>" required >
+								<input type="text" name="nom" placeholder="nom*" class="form-control" value="<?=FormHelpers::restorePost('nom')?>" required >
 							</div>
 
 						</div>
 						<div class="col">
 							<div class="form-group">
-								<input type="text" name="prenom" placeholder="prenom*" class="form-control" value="<?=$prenom?>" required>
+								<input type="text" name="prenom" placeholder="prenom*" class="form-control" value="<?=FormHelpers::restorePost('prenom')?>" required>
 							</div>
 						</div>
 					</div>
@@ -40,19 +40,17 @@
 					<div class="row">
 						<div class="col-4">
 							<div class="form-group">
-								<input type="email" class="form-control" placeholder="email*" value="<?=$email?>" name="email" required>
+								<input type="email" class="form-control" placeholder="email*" value="<?=FormHelpers::restorePost('email')?>" name="email" required>
 							</div>
 						</div>
 						<div class="col-4">
 							<div class="form-group">
 								<select name="fonction" id="fonction" class="form-control" required>
 									<option value="">fonction*</option>
-									<?php
-									foreach ($fonctionList as $fonction) {
-										echo '<option value="'.$fonction['id'].'">'.$fonction['fonction'].'</option>';
-									}
 
-									?>
+									<?php foreach ($fonctionList as $fonction): ?>
+										<option value="<?=$fonction['id']?>" <?=FormHelpers::checkSelected($fonction['id'],'fonction')?>><?=$fonction['fonction']?></option>
+									<?php endforeach	?>
 								</select>
 							</div>
 						</div>
@@ -140,7 +138,7 @@
 			</div>
 			<div class="row mt-5">
 				<div class="col text-center">
-					<button class="btn btn-primary" type="submit" name="submit">Ajouter</button>
+					<button class="btn btn-primary" type="submit" name="add-participant">Ajouter</button>
 				</div>
 			</div>
 
