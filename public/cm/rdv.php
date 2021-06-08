@@ -30,10 +30,26 @@ $magDao=new MagDao($pdoMag);
 $pendingRdv=$rdvDao->getLastPendingRdv($pdoCm);
 
 $magInfo=MagHelpers::magInfo($pdoMag, $_SESSION['id_galec']);
+// $magInfo=MagHelpers::magInfo($pdoMag, '0751');
+
+
 $magLdAdh=$magDao->getMagLdEmails($magInfo['id'],'-ADH');
+
 $magLdDir=$magDao->getMagLdEmails($magInfo['id'],'-DIR');
 
-$destAdhDir=array_merge($magLdAdh,$magLdDir);
+$destAdhDir="";
+if(!empty($magLdDir) && !empty($magLdAdh)){
+	$destAdhDir=array_merge($magLdAdh,$magLdDir);
+}elseif(!empty($magLdDir) || !empty($magLdAdh)){
+
+	if(!empty($magLdDir)){
+		$destAdhDir=$magLdDir;
+
+	}elseif(!empty($magLdAdh)){
+		$destAdhDir=$magLdAdh;
+
+	}
+}
 
 
 $deno=MagHelpers::deno($pdoMag, $_SESSION['id_galec']);
@@ -272,6 +288,8 @@ DEBUT CONTENU CONTAINER
 
 		<?php endif ?>
 		<div class="col"></div>
+		<?php if (!empty($cm)): ?>
+
 		<div class="col-lg-3 light-shadow mb-5 py-3">
 			<img src="../img/logo_bt/bt-rond-30.jpg" class="float-right">
 			<div class="name">M. <?=$cm['fullname']?></div>
@@ -279,6 +297,8 @@ DEBUT CONTENU CONTAINER
 				<i class="fas fa-envelope pr-3 text-orange"></i><?=$cm['email']?>
 			</div>
 		</div>
+		<?php endif ?>
+
 		<div class="col-lg-1"></div>
 
 	</div>
@@ -356,8 +376,7 @@ DEBUT CONTENU CONTAINER
 
 
 
-		$('#validation').submit(function()
-		{
+		$('#validation').submit(function(){
 
 			if(buttonpressed=="accept"){
 				boxState="Confirmez-vous que vous acceptez le rendez-vous ?";
@@ -367,6 +386,8 @@ DEBUT CONTENU CONTAINER
 			}
 			return confirm(boxState);
 		});
+
+
 
 	});
 </script>
