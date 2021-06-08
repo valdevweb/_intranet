@@ -96,7 +96,7 @@ include('../view/_navbar.php');
 	</div>
 	<div class="row" id="un">
 		<div class="col">
-			<h5 class="text-main-blue border-bottom pb-3 my-3"><i class="fas fa-newspaper pr-3"></i>Gazettes de la semaine</h5>
+			<h5 class="text-main-blue border-bottom pb-3 my-3"><i class="fas fa-newspaper pr-3"></i>Gazettes en cours</h5>
 		</div>
 	</div>
 	<div class="row">

@@ -95,7 +95,7 @@ include('../view/_navbar.php');
 							<td>
 								<?php if (isset($listFiles[$odr['id']])): ?>
 									<?php for ($i=0; $i < count($listFiles[$odr['id']]); $i++): ?>
-										<a href="<?=URL_UPLOAD.'odr/'.$listFiles[$odr['id']][$i]['file']?>"><?=(empty($listFiles[$odr['id']][$i]['filename']))?'<i class="fas fa-file-alt"></i>':$listFiles[$odr['id']][$i]['filename']?></a><br>
+										<a href="<?=URL_UPLOAD.'odr/'.$listFiles[$odr['id']][$i]['file']?>"><?=(empty($listFiles[$odr['id']][$i]['filename']))?'<i class="fas fa-file-alt pr-3"></i>':$listFiles[$odr['id']][$i]['filename']?></a>
 
 									<?php endfor ?>
 								<?php endif ?>

@@ -2,10 +2,7 @@
 	<div class="col">
 		<h4 class="text-main-blue"><i class="fas fa-hand-point-right pr-3" id="badge-lk"></i>VOS BADGES</h4>
 		<p>Cette année, afin d'assurer la sécurité de tous et de limiter les regroupements de personnes notamment au niveau de l'accueil, nous mettons à votre disposition un document pdf vous permettant d'imprimer vos badges. Ces badges sont munis d'un qrcode qu'il vous suffira de scanner à l'accueil du salon.</p>
-		<p><b>Aucun badge ne sera délivré sur le salon, en revanche, nous vous fournirons le support de badge</b></p>
-
-		<p class="pb-3">Lors de votre venue au salon, vous devrez <span class="text-blue">Scanner votre badge</span> à l'accueil.</p>
-
+		<p><b>Aucun badge ne sera délivré sur le salon, en revanche nous vous fournirons le support de badge</b></p>
 	</div>
 </div>
 
@@ -79,3 +76,8 @@
 		</form>
 	</div>
 </div>
+	<div class="row mt-3">
+		<div class="col">
+			<p class="text-right"><a href="#up" class="blue-link">retour</a></p>
+		</div>
+	</div>

@@ -13,7 +13,7 @@
 				$lundiDeux=clone($lundiUn);
 				$lundiDeux=$lundiDeux->modify("- 7 days");
 				?>
-				<table class="table table-sm shadow table-borderless">
+				<table class="table table-sm shadow table-borderless mr-2">
 					<thead class="thead-light">
 
 						<tr>
@@ -95,25 +95,35 @@
 									<td class="text-center font-weight-bold bg-light-blue" colspan="9"><?=mb_strtoupper($listGt[$info['gt']])??""?></td>
 								</tr>
 							<?php endif ?>
+							<?php
+							if($key%2==0){
+								$lineColor="bg-light-grey";
+							}else{
+								$lineColor="";
 
-							<tr class="font-weight-boldless border">
+							}
+							?>
+
+
+
+							<tr class="font-weight-boldless border-top-blue border-left-blue border-right-blue <?=$lineColor?>">
 								<td><?=$info['marque']?></td>
 								<td><?=$info['article']?></td>
 								<td colspan="2"><?=$info['ean']?></td>
 								<td><?=$info['libelle']?></td>
 								<td></td>
 							</tr>
-							<tr>
-								<td></td>
-								<td class="text-main-blue font-weight-boldless"><?=DateHelpers::concatJourMoisDateTime($lundiDeux, "long")?></td>
+							<tr class="border-right-blue border-left-blue <?=$lineColor?>">
+
+								<td colspan="2" class="text-right">Info livraison au <span class="text-main-blue font-weight-boldless "><?=DateHelpers::concatJourMoisDateTime($lundiDeux, "long")?></span></td>
 								<td class="text-right pr-2">Reçu :</td>
 								<td class="<?=$bgDeux?> text-right w-80"><?=$info['recu_deux']?><?=$pourcentDeux?></td>
 								<td class="pl-3"><?=$info['info_livraison_deux']?></td>
 								<td></td>
 							</tr>
-							<tr>
-								<td></td>
-								<td class="text-main-blue font-weight-boldless"><?=DateHelpers::concatJourMoisDateTime($lundiUn, "long")?></td>
+							<tr  class="border-right-blue border-left-blue <?=$lineColor?>">
+
+								<td colspan="2" class="text-main-blue font-weight-boldless text-right"><?=DateHelpers::concatJourMoisDateTime($lundiUn, "long")?></td>
 								<td class="text-right pr-2">Reçu :</td>
 								<td class="<?=$bg?> text-right"><?=$info['recu']?><?=$pourcent?></td>
 								<td class="pl-3"><?=$info['info_livraison']?></td>
@@ -125,7 +135,7 @@
 								</td>
 							</tr>
 							<?php if (!empty($info['article_remplace']) || !empty($info['ean_remplace'])): ?>
-							<tr>
+							<tr class="border-right-blue border-left-blue <?=$lineColor?>">
 								<td> </td>
 								<td colspan="5">
 									<span class="text-danger font-weight-boldless">Article de remplacement : </span><?=$info['article_remplace']?>
@@ -134,7 +144,7 @@
 								</td>
 
 							</tr>
-							<tr>
+							<tr  class="border-right-blue border-left-blue <?=$lineColor?>">
 								<td></td>
 								<td class="text-danger font-weight-boldless"><?=DateHelpers::concatJourMoisDateTime($lundiDeux, "long")?></td>
 								<td class="text-right pr-2">Reçu :</td>
@@ -142,7 +152,7 @@
 								<td class="pl-3"><?=$info['info_livraison_deux_remplace']?></td>
 								<td></td>
 							</tr>
-							<tr>
+							<tr  class="border-right-blue border-left-blue <?=$lineColor?>">
 								<td></td>
 								<td class="text-danger font-weight-boldless"><?=DateHelpers::concatJourMoisDateTime($lundiUn, "long")?></td>
 								<td class="text-right pr-2">Reçu :</td>
@@ -154,10 +164,10 @@
 						<?php endif ?>
 						<?php $gt=$info['gt'] ?>
 
-				<?php endforeach ?>
-			</tbody>
-		</table>
+					<?php endforeach ?>
+				</tbody>
+			</table>
 
+		</div>
 	</div>
-</div>
-<?php endforeach ?>
+	<?php endforeach ?>

@@ -5,8 +5,7 @@ if(!isset($_SESSION['id'])){
 	exit();
 }
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 
 //------------------------------------------------------
@@ -58,21 +57,17 @@ $sheet->setCellValue('f1', 'article');
 $sheet->setCellValue('g1', 'dossier');
 $sheet->setCellValue('h1', 'libellé');
 $sheet->setCellValue('i1', 'ean');
-$sheet->setCellValue('j1', 'gt');
-$sheet->setCellValue('k1', 'marque');
-$sheet->setCellValue('l1', 'fournisseur');
-$sheet->setCellValue('m1', 'ppi');
-$sheet->setCellValue('n1', 'deee');
-$sheet->setCellValue('o1', 'reçu 2 avant lundi');
-$sheet->setCellValue('p1', 'commentaire 2 avant lundi');
-$sheet->setCellValue('q1', 'reçu 1 avant lundi');
-$sheet->setCellValue('r1', 'commentaire 1 avant lundi');
-$sheet->setCellValue('s1', 'article de remplacement');
-$sheet->setCellValue('t1', 'ean article de remplacement');
-$sheet->setCellValue('u1', 'art remplacement, reçu 2 avant lundi');
-$sheet->setCellValue('v1', 'art remplacement, commentaire 2 avant lundi');
-$sheet->setCellValue('w1', 'art remplacement, reçu 1 avant lundi');
-$sheet->setCellValue('x1', 'art remplacement, commentaire 1 avant lundi');
+$sheet->setCellValue('j1', 'marque');
+$sheet->setCellValue('k1', 'reçu 2 lundi avant');
+$sheet->setCellValue('l1', 'commentaire 2 lundi avant');
+$sheet->setCellValue('m1', 'reçu 1 lundi avant');
+$sheet->setCellValue('n1', 'commentaire 1 lundi avant');
+$sheet->setCellValue('o1', 'article de remplacement');
+$sheet->setCellValue('p1', 'ean article de remplacement');
+$sheet->setCellValue('q1', 'art remplacement, reçu 2 lundi avant');
+$sheet->setCellValue('r1', 'art remplacement, commentaire 2 lundi avant');
+$sheet->setCellValue('s1', 'art remplacement, reçu 1 lundi avant');
+$sheet->setCellValue('t1', 'art remplacement, commentaire 1 lundi avant');
 
 $row=2;
 foreach ($listOpAVenir as $key => $op) {
@@ -88,21 +83,26 @@ foreach ($listOpAVenir as $key => $op) {
 			$sheet->setCellValue('g'.$row, $info['dossier']);
 			$sheet->setCellValue('h'.$row, $info['libelle']);
 			$sheet->setCellValue('i'.$row, $info['ean']);
-			$sheet->setCellValue('j'.$row, $info['gt']);
-			$sheet->setCellValue('k'.$row, $info['marque']);
-			$sheet->setCellValue('l'.$row, $info['fournisseur']);
-			$sheet->setCellValue('m'.$row, $info['ppi']);
-			$sheet->setCellValue('n'.$row, $info['deee']);
-			$sheet->setCellValue('o'.$row, $info['recu_deux']);
-			$sheet->setCellValue('p'.$row, $info['info_livraison_deux']);
-			$sheet->setCellValue('q'.$row, $info['recu']);
-			$sheet->setCellValue('r'.$row, $info['info_livraison']);
-			$sheet->setCellValue('s'.$row, $info['article_remplace']);
-			$sheet->setCellValue('t'.$row, $info['ean_remplace']);
-			$sheet->setCellValue('u'.$row, $info['recu_deux_remplace']);
-			$sheet->setCellValue('v'.$row, $info['info_livraison_deux_remplace']);
-			$sheet->setCellValue('w'.$row, $info['recu_remplace']);
-			$sheet->setCellValue('x'.$row, $info['info_livraison_remplace']);
+			$sheet->setCellValue('j'.$row, $info['marque']);
+			if (!empty($info['recu_deux'])) {
+				$sheet->setCellValue('k'.$row, $info['recu_deux'].'%');
+			}
+			$sheet->setCellValue('l'.$row, $info['info_livraison_deux']);
+			if (!empty($info['recu'])) {
+				$sheet->setCellValue('m'.$row, $info['recu'].'%');
+			}
+
+			$sheet->setCellValue('n'.$row, $info['info_livraison']);
+			$sheet->setCellValue('o'.$row, $info['article_remplace']);
+			$sheet->setCellValue('p'.$row, $info['ean_remplace']);
+			if (!empty($info['recu_deux_remplace'])) {
+				$sheet->setCellValue('q'.$row, $info['recu_deux_remplace'].'%');
+			}
+			$sheet->setCellValue('r'.$row, $info['info_livraison_deux_remplace']);
+			if (!empty($info['recu_remplace'])) {
+				$sheet->setCellValue('s'.$row, $info['recu_remplace'].'%');
+			}
+			$sheet->setCellValue('t'.$row, $info['info_livraison_remplace']);
 			$row++;
 		}
 	}
@@ -117,13 +117,21 @@ $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFrom
 
 
 for ($i=0; $i < $highestColumnIndex ; $i++){
-    $sheet->getColumnDimension(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($i))->setAutoSize(true);
+	$sheet->getColumnDimension(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($i))->setAutoSize(true);
 }
 $sheet->getStyle('I2:I'.$highestRow)
 ->getNumberFormat()
 ->setFormatCode(
-    '0000000000000'
+	'0000000000000'
 );
+
+$sheet->getStyle('i:i')->getAlignment()->setHorizontal('right');
+$sheet->getStyle('k:k')->getAlignment()->setHorizontal('center');
+$sheet->getStyle('m:m')->getAlignment()->setHorizontal('center');
+$sheet->getStyle('q:q')->getAlignment()->setHorizontal('center');
+$sheet->getStyle('s:s')->getAlignment()->setHorizontal('center');
+
+
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 header('Content-Disposition: attachment;filename="info-livraison.xlsx"');
 header('Cache-Control: max-age=0');

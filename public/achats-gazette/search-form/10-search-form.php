@@ -15,17 +15,23 @@
 
 			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>#results" method="post">
 				<div class="row">
-					<div class="col">
+					<div class="col"></div>
+					<div class="col-5">
 						<div class="form-group">
 							<label for="strg">Mot clé : </label>
 							<input type="text" class="form-control form-primary" name="strg" id="strg">
 						</div>
 					</div>
-					<div class="col-lg-2">
+					<div class="col"></div>
+
+				</div>
+				<div class="row">
+
+					<div class="col-lg-3">
 						<div class="form-group">
 							<label for="main_cat">Catégorie :</label>
 							<select class="form-control form-primary" name="main_cat" id="main_cat" >
-								<option value="">Sélectionner</option>
+								<option value="">Catégorie</option>
 								<option value="1">BTLEC</option>
 								<option value="2">GALEC</option>
 							</select>
@@ -36,17 +42,18 @@
 						<div class="form-group">
 							<label for="cat">Type d'information :</label>
 							<select class="form-control form-primary" name="cat" id="cat" >
-								<option value="">Sélectionner</option>
+								<option value="">Type d'information</option>
+								<option value="">Sélectionnez une catégorie</option>
 							</select>
 						</div>
 					</div>
-					<div class="col-lg-2">
+					<div class="col-lg-3">
 						<div class="form-group">
 							<label for="date_start">Du :</label>
 							<input type="date" class="form-control form-primary" name="date_start" id="date_start" value=<?=$dayOneStr?>>
 						</div>
 					</div>
-					<div class="col-lg-2">
+					<div class="col-lg-3">
 						<div class="form-group">
 							<label for="date_end">Au : </label>
 							<input type="date" class="form-control form-primary" name="date_end" id="date_end" value="<?=date('Y-m-d')?>">

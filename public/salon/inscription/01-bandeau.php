@@ -17,10 +17,10 @@
 		<!-- galerie -->
 		<div class="gallery cf">
 			<div>
-				<img src="../img/salon/bandeau-aerien.jpg" />
+				<img src="../img/salon/2021-500.jpg" />
 			</div>
 			<div>
-				<img src="../img/salon/bandeau-one.jpg" />
+				<img src="../img/salon/2021-500-2.jpg" />
 			</div>
 			<div>
 				<img src="../img/salon/bandeau-convention.jpg" />

@@ -42,7 +42,7 @@ $success=[];
 //------------------------------------------------------
 //			VIEW
 //------------------------------------------------------
-include('../view/_head-bt.php');
+// include('../view/_head-bt.php');
 include('../view/_navbarfull.php');
 ?>
 <!--********************************
@@ -60,6 +60,25 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
+	<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
+
+		<div class="row">
+			<div class="col-4">
+				<div class="form-group">
+					<label for="model"></label>
+					<input type="text" class="form-control" name="model" id="model">
+				</div>
+
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col text-right">
+				<button class="btn btn-primary" name="submit">Valider</button>
+			</div>
+		</div>
+	</form>
+
 
 
 	<!-- ./container -->

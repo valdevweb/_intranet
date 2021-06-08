@@ -267,6 +267,9 @@ require '../view/_navbar.php';
 	<div class="bg-separation"></div>
 	<?php include 'inscription/02-salon.php' ?>
 	<div class="bg-separation"></div>
+
+	<?php include 'inscription/02-salon-presentation.php' ?>
+	<div class="bg-separation"></div>
 	<?php include 'inscription/03-badges.php' ?>
 	<div class="bg-separation"></div>
 	<div class="row">
@@ -354,7 +357,11 @@ require '../view/_navbar.php';
 			</form>
 		</div>
 	</div>
-
+	<div class="row mt-3">
+		<div class="col">
+			<p class="text-right"><a href="#up" class="blue-link">retour</a></p>
+		</div>
+	</div>
 
 
 

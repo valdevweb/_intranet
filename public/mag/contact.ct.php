@@ -95,66 +95,64 @@
 								</div>
 								<div class="row">
 									<div class="col l12">
-										<!-- <div class="row align-right"> -->
-											<p class="align-right"><input class="btn" type="submit" name="post-msg" id="post-msg"></p>
-											<p class="align-right" id="wait"></p>
-											<!-- </div> -->
-										</div>
+										<p class="align-right"><input class="btn" type="submit" name="post-msg" id="post-msg"></p>
+										<p class="align-right" id="wait"></p>
 									</div>
-								</form>
-							</div>
+								</div>
+							</form>
 						</div>
-					</div><!--fin row1 -->
-					<?php if (!empty($errors)): ?>
-						<div class='row'>
-							<div class='col l12'>
-								<?php foreach ($errors as $key => $err): ?>
-									<p class='warning-msg'><?=$err?></p>
-								<?php endforeach ?>
+					</div>
+				</div><!--fin row1 -->
+				<?php if (!empty($errors)): ?>
+					<div class='row'>
+						<div class='col l12'>
+							<?php foreach ($errors as $key => $err): ?>
+								<p class='warning-msg'><?=$err?></p>
+							<?php endforeach ?>
 
-							</div>
 						</div>
-					<?php endif ?>
-					<?php if (!empty($success)): ?>
-						<div class='row'>
-							<div class='col l12'>
-								<?php foreach ($success as $key => $s): ?>
-									<p class='success-msg'><?=$s?></p>
-								<?php endforeach ?>
+					</div>
+				<?php endif ?>
+				<?php if (!empty($success)): ?>
+					<div class='row'>
+						<div class='col l12'>
+							<?php foreach ($success as $key => $s): ?>
+								<p class='success-msg'><?=$s?></p>
+							<?php endforeach ?>
 
-							</div>
 						</div>
-					<?php endif ?>
+					</div>
+				<?php endif ?>
 
 
-				</div> <!--container -->
+			</div> <!--container -->
 
-				<div class="down"></div>
-				<div class="down"></div>
+			<div class="down"></div>
+			<div class="down"></div>
 
-				<script type="text/javascript">
-					$(document).ready(function (){
+			<script type="text/javascript">
+				$(document).ready(function (){
 
 
-						$('#addmore').click(function(){
-							$('#p-add-more').prepend('<p><input type="file" name="file[]"></p>');
-							$('input[type="file"]').val();
-						});
+					$('#addmore').click(function(){
+						$('#p-add-more').prepend('<p><input type="file" name="file[]"></p>');
+						$('input[type="file"]').val();
+					});
 
-						$("#msg-form").submit(function(e){
-							if($("#email").val()!="" && $("#objet").val()!="" && $("#msg").val()!="" && $("#nom").val()!=""){
-								if ($("#email").val()) {
+					$("#msg-form").submit(function(e){
+						if($("#email").val()!="" && $("#objet").val()!="" && $("#msg").val()!="" && $("#nom").val()!=""){
+							if ($("#email").val()) {
 
-									var email = $("#email").val();
-									var filter = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-									if (filter.test(email)) {
-										$('input[name="post-msg"]').hide();
-										$('#wait').text("Merci de patienter...");
-									}
+								var email = $("#email").val();
+								var filter = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+								if (filter.test(email)) {
+									$('input[name="post-msg"]').hide();
+									$('#wait').text("Merci de patienter...");
 								}
 							}
-						});
+						}
 					});
-				</script>
+				});
+			</script>
 
 

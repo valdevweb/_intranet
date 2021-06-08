@@ -12,9 +12,10 @@
 				<div class="col show-link">
 					<div class="text-dark show-link" >- <?=$gazette['titre']?></div>
 				</div>
-				<div class="col-auto pr-5 mr-5 text-dark show-link" data-gazette-id="<?=$gazette['id']?>"><u>ouvrir/fermer</u></div>
+				<div class="col-auto pr-5 mr-5 text-dark show-link" data-gazette-id="<?=$gazette['id']?>" ><u>ouvrir/fermer</u></div>
 			</div>
-			<div class="more" data-content-id="<?=$gazette['id']?>">
+
+			<div class="more"  data-content-id="<?=$gazette['id']?>">
 				<div class="row">
 					<div class="col">
 						<?=$gazette['description']?>
@@ -28,7 +29,7 @@
 
 								<?php if (isset($listFiles[$gazette['id']])): ?>
 									<?php foreach ($listFiles[$gazette['id']] as $key => $file): ?>
-										<a href="<?=URL_UPLOAD.'gazette\\'.$file['file']?>"><?=($file['filename'])??'<i class="fas fa-file pb-3"></i>'?></a><br>
+										<a href="<?=URL_UPLOAD.'gazette\\'.$file['file']?>"><i class="fas fa-file pb-3"></i></a><br>
 
 									<?php endforeach ?>
 

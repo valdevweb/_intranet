@@ -17,8 +17,9 @@ require '../../Class/FournisseursHelpers.php';
 require '../../Class/FormHelpers.php';
 require '../../Class/UserDao.php';
 
-// require_once '../../vendor/autoload.php';
-
+require_once '../../vendor/autoload.php';
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 $errors=[];
 $success=[];
@@ -191,7 +192,12 @@ if(isset($_POST['kill_session'])){
 
 	}
 }
+if(isset($_GET['export-xls'])){
 
+	include 'cdes-encours/01-export-xls.php';
+
+
+}
 
 
 
@@ -235,87 +241,87 @@ include('../view/_navbar.php');
 						<?php for ($j=0; $j <count($tableCol) ; $j++) : ?>
 							<?php if (isset($_SESSION['encours_col'])): ?>
 								<?php $checked=(in_array($j,$_SESSION['encours_col']))?"checked":""	 ?>
-								<?php else: ?>
-									<?php $checked="checked"?>
-								<?php endif ?>
-								<div class="form-check">
-									<input class="form-check-input" type="checkbox" value="<?=$j?>"  name="cols[]" <?=$checked?>>
-									<label class="form-check-label" for="model"><?=$tableCol[$j]?></label>
-								</div>
-							<?php endfor ?>
-						</div>
-						<div class="col-auto">
-							<button class="btn btn-primary" name="display">Afficher</button><br><br>
-							<button class="btn btn-secondary" name="kill_session">Afficher tout</button>
-						</div>
+							<?php else: ?>
+								<?php $checked="checked"?>
+							<?php endif ?>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" value="<?=$j?>"  name="cols[]" <?=$checked?>>
+								<label class="form-check-label" for="model"><?=$tableCol[$j]?></label>
+							</div>
+						<?php endfor ?>
 					</div>
-				</form>
-			</div>
-			<div class="col-lg-2"></div>
-
-		</div>
-		<!-- filtres -->
-		<div class="row mb-5">
-			<div class="col-lg-2"></div>
-			<div class="col border rounded p-3">
-				<?php include 'cdes-encours/10-filtre.php' ?>
-			</div>
-			<div class="col-lg-2"></div>
-		</div>
-		<!-- tableau commandes en cours -->
-		<div class="row">
-			<div class="col text-center">
-				<h5 class="text-main-blue">Nombre de ligne de commandes : <?=$nbArt??""?></h5>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col font-italic">
-
-			</div>
-			<div class="col-auto font-weight-boldless text-main-blue">
-				Rechercher sur la page :
-			</div>
-			<div class="col-lg-3">
-
-				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post" id="search_form">
-					<div class="form-group text-center">
-						<input type="text" class="form-control " name="str" id="str" style="font-family:'Font Awesome 5 Free',sans-serif !important; font-weight: 900 !important;" type="text" placeholder="&#xf002">
+					<div class="col-auto">
+						<button class="btn btn-primary" name="display">Afficher</button><br><br>
+						<button class="btn btn-secondary" name="kill_session">Afficher tout</button>
 					</div>
-				</form>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col">
-				<?php if (!empty($listCdes)): ?>
-					<?php include 'cdes-encours/11-table-encours.php' ?>
-					<?php else: ?>
-						<div class="alert alert-info">Aucune commande à afficher</div>
-					<?php endif ?>
 				</div>
-			</div>
+			</form>
 		</div>
+		<div class="col-lg-2"></div>
 
-		<script src="../js/search-in-window.js"></script>
-		<script type="text/javascript">
-			document.getElementById('search_form').onsubmit = function() {
-				findString(this.str.value);
-				return false;
-			};
-			$(document).ready(function(){
-				$('#checkall').change(function(){
-					if($(this).prop("checked")){
-						$('.select-checkbox').prop('checked',true);
-					}else{
-						$('.select-checkbox').prop('checked',false);
+	</div>
+	<!-- filtres -->
+	<div class="row mb-5">
+		<div class="col-lg-2"></div>
+		<div class="col border rounded p-3">
+			<?php include 'cdes-encours/10-filtre.php' ?>
+		</div>
+		<div class="col-lg-2"></div>
+	</div>
+	<!-- tableau commandes en cours -->
+	<div class="row">
+		<div class="col text-center">
+			<h5 class="text-main-blue">Nombre de ligne de commandes : <?=$nbArt??""?></h5>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col font-italic">
+			<a href="?export-xls" class="btn btn-success">Export Excel</a>
+		</div>
+		<div class="col-auto font-weight-boldless text-main-blue">
+			Rechercher sur la page :
+		</div>
+		<div class="col-lg-3">
 
-					}
-				});
+			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post" id="search_form">
+				<div class="form-group text-center">
+					<input type="text" class="form-control " name="str" id="str" style="font-family:'Font Awesome 5 Free',sans-serif !important; font-weight: 900 !important;" type="text" placeholder="&#xf002">
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<?php if (!empty($listCdes)): ?>
+				<?php include 'cdes-encours/11-table-encours.php' ?>
+			<?php else: ?>
+				<div class="alert alert-info">Aucune commande à afficher</div>
+			<?php endif ?>
+		</div>
+	</div>
+</div>
 
-			});
+<script src="../js/search-in-window.js"></script>
+<script type="text/javascript">
+	document.getElementById('search_form').onsubmit = function() {
+		findString(this.str.value);
+		return false;
+	};
+	$(document).ready(function(){
+		$('#checkall').change(function(){
+			if($(this).prop("checked")){
+				$('.select-checkbox').prop('checked',true);
+			}else{
+				$('.select-checkbox').prop('checked',false);
+
+			}
+		});
+
+	});
 
 
-		</script>
+</script>
 
-		<?php
-		require '../view/_footer-bt.php';
-		?>
+<?php
+require '../view/_footer-bt.php';
+?>

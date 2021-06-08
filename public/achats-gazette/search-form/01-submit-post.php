@@ -24,9 +24,11 @@ if(!empty($_POST['cat'])){
 	$catParam="cat=".$_POST['cat'];
 	$paramList[]=$catParam;
 }
-$params= join(' AND ', $paramList);
+$params= join(' AND ', $paramList). " ORDER BY date_start DESC";
 
 $results=$gazetteDao->getGazetteByParam($params);
+
+
 
 if(!empty($results)){
 	$resultsLink=$gazetteDao->getLinksByParam($params);

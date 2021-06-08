@@ -17,6 +17,8 @@ class GazetteDao{
 	public function getGazetteEnCours(){
 		$today=new DateTime();
 		$monday=$today->modify("monday this week");
+		$monday->modify("- 7 day");
+
 		$req=$this->pdo->prepare("SELECT * FROM gazette WHERE DATE_FORMAT(date_start, '%Y-%m-%d')>= :monday ORDER BY date_start DESC");
 		$req->execute([
 			':monday'		=>$monday->format('Y-m-d')
@@ -28,6 +30,8 @@ class GazetteDao{
 		$monday=new DateTime();
 		$sunday=new DateTime();
 		$monday->modify("monday this week");
+		$monday->modify("- 7 day");
+
 		$sunday->modify("sunday this week");
 
 		$req=$this->pdo->prepare("SELECT * FROM gazette WHERE DATE_FORMAT(date_start, '%Y-%m-%d')>= :monday AND DATE_FORMAT(date_start, '%Y-%m-%d')<= :sunday ORDER BY date_start DESC");
@@ -43,6 +47,8 @@ class GazetteDao{
 	public function getFilesEncours(){
 		$today=new DateTime();
 		$monday=$today->modify("monday this week");
+		$monday->modify("- 7 day");
+
 		$req=$this->pdo->prepare("SELECT id_gazette, file, filename, gazette_files.id as id FROM gazette_files LEFT JOIN gazette ON id_gazette= gazette.id WHERE DATE_FORMAT(date_start, '%Y-%m-%d')>= :monday ORDER BY date_start, ordre DESC");
 		$req->execute([
 			':monday'		=>$monday->format('Y-m-d')
@@ -53,6 +59,8 @@ class GazetteDao{
 	public function getLinkEncours(){
 		$today=new DateTime();
 		$monday=$today->modify("monday this week");
+		$monday->modify("- 7 day");
+
 		$req=$this->pdo->prepare("SELECT id_gazette, link, linkname, gazette_links.id as id FROM gazette_links LEFT JOIN gazette ON id_gazette= gazette.id WHERE DATE_FORMAT(date_start, '%Y-%m-%d')>= :monday ORDER BY date_start DESC");
 		$req->execute([
 			':monday'		=>$monday->format('Y-m-d')

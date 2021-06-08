@@ -21,13 +21,13 @@
 				</div>
 				<div class="col show-link">
 					<h6 class="text-main-blue show-link" data-gazette-id="<?=$gazette['id']?>"><?=$gazette['titre']?>
-						<br><a class="text-small" href="#">Voir l'info</a>
+						<br><a class="text-small" href="#<?=$gazette['id']?>">Voir l'info</a>
 					</h6>
 				</div>
-
-
 			</div>
-			<div class="more" data-content-id="<?=$gazette['id']?>">
+
+
+			<div class="more" data-content-id="<?=$gazette['id']?>" id="<?=$gazette['id']?>">
 				<div class="row">
 					<div class="col-lg-3"></div>
 					<div class="col">
@@ -44,7 +44,6 @@
 								<?php if (isset($listFiles[$gazette['id']])): ?>
 									<?php foreach ($listFiles[$gazette['id']] as $key => $file): ?>
 										<a href="<?=URL_UPLOAD.'gazette\\'.$file['file']?>"><?=($file['filename'])?$file['filename']:'<i class="fas fa-file pb-3"></i>'?></a><br>
-
 									<?php endforeach ?>
 
 								<?php endif ?>
