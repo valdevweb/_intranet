@@ -41,9 +41,8 @@
 							$pourcentDeux="";
 							$pourcentDeuxRemplace="";
 							$pourcentRemplace="";
-							if (!empty($info['recu_deux'])) {
+							if (!empty($info['recu_deux']) || $info['recu_deux']==0 && $info['recu_deux']!=null) {
 								$pourcentDeux=' %';
-
 								if($info['recu_deux']<50){
 									$bgDeux="bg-red";
 								}elseif($info['recu_deux']>=50 && $info['recu_deux']<90){
@@ -52,9 +51,7 @@
 									$bgDeux="bg-green";
 								}
 							}
-
-
-							if (!empty($info['recu'])) {
+							if (!empty($info['recu']) || $info['recu']==0 && $info['recu']!=null) {
 								$pourcent=' %';
 								if($info['recu']<50){
 									$bg="bg-red";
@@ -65,7 +62,7 @@
 								}
 							}
 
-							if (!empty($info['recu_deux_remplace'])) {
+							if (!empty($info['recu_deux_remplace'])|| $info['recu_deux_remplace']==0 && $info['recu_deux_remplace']!=null) {
 								$pourcentDeuxRemplace=' %';
 
 								if($info['recu_deux_remplace']<50){
@@ -77,7 +74,7 @@
 								}
 							}
 
-							if (!empty($info['recu_remplace'])) {
+							if (!empty($info['recu_remplace'])|| $info['recu_remplace']==0 && $info['recu_remplace']!=null) {
 								$pourcentRemplace=' %';
 								if($info['recu_remplace']<50){
 									$bgRemplace="bg-red";

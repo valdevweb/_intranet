@@ -12,6 +12,8 @@
 if(isset($_POST['search_one']) || isset($_POST['export_excel'])){
 	unset($_SESSION['form-data']);
 	unset($_SESSION['form-data-deux']);
+	unset($_SESSION['filter-notif']);
+
 	// date début
 	if (isset($_POST['date_start']) && !empty($_POST['date_start'])) {
 		$_SESSION['form-data']['date_start']=$_POST['date_start'];
@@ -64,6 +66,8 @@ if(isset($_POST['search_one']) || isset($_POST['export_excel'])){
 if(isset($_POST['search_two'])){
 	unset($_SESSION['form-data']);
 	unset($_SESSION['form-data-deux']);
+	unset($_SESSION['filter-notif']);
+
 
 	// article
 	// si article est coché, on fait une requete avec une jointure sur la table détail
@@ -89,5 +93,6 @@ if(isset($_POST['clear_form'])){
 	unset($_SESSION['form-data']);
 	unset($_SESSION['form-data-deux']);
 	unset($_SESSION['filter-data']);
+	unset($_SESSION['filter-notif']);
 	header("Location: ".$_SERVER['PHP_SELF'],true,303);
 }

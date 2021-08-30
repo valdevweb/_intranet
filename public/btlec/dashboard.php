@@ -59,13 +59,18 @@ function checkSelectedDash($idService){
 
 
 if(isset($_POST['services'])){
+	if(!empty($_POST['services'])){
+		$msg=$msgManager->getListDdeEncoursService($pdoBt, $_POST['services']);
 
-	$msg=$msgManager->getListDdeEncoursService($pdoBt, $_POST['services']);
+	}else{
+		$msg=$msgManager->getListDdeEncours($pdoBt);
+	}
+
 }elseif(!empty($_SESSION['id_service'])){
+
 	$msg=$msgManager->getListDdeEncoursService($pdoBt, $_SESSION['id_service']);
 }else{
 	$msg=$msgManager->getListDdeEncours($pdoBt);
-
 }
 
 
@@ -104,10 +109,13 @@ function nbRep($pdoBt, $idMsg)
 {
 	$req=$pdoBt->prepare("SELECT count(t_replies.id_msg) AS nb_rep, t_replies.id_msg, max(t_replies.date_reply)  AS last_reply_date, t_replies.replied_by FROM replies t_replies WHERE t_replies.id_msg= :id_msg GROUP BY t_replies.id_msg");
 	$req->execute(array(
-	':id_msg' =>$idMsg
-	 ));
+		':id_msg' =>$idMsg
+	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
+
+
+
 
 //----------------------------------------------------
 // VIEW - HEADER

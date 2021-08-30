@@ -4,7 +4,7 @@ if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
 	exit();
 }
-require '../../config/db-connect.php';
+require '../../Class/Db.php';
 
 //			css dynamique
 //----------------------------------------------------------------
@@ -18,9 +18,14 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //------------------------------------------------------
 require_once '../../vendor/autoload.php';
 
-require "../../Class/EvoManager.php";
-require "../../Class/EvoHelpers.php";
+require "../../Class/evo/EvoDao.php";
+require "../../Class/evo/PlateformeDao.php";
+require "../../Class/evo/EvoDocDao.php";
+require "../../Class/evo/AffectationDao.php";
+require "../../Class/evo/EvoHelpers.php";
 require "../../Class/UserHelpers.php";
+require "../../Class/Helpers.php";
+require "../../Class/UserDao.php";
 require "../../functions/form.fn.php";
 //---------------------------------------
 //	ajout enreg dans stat
@@ -32,31 +37,6 @@ require "../../functions/form.fn.php";
 //			FONCTION
 //------------------------------------------------------
 
-function insertEvo($pdoEvo, $resp){
-
-	$req=$pdoEvo->prepare("INSERT INTO evos (id_from, id_resp, objet, evo, id_etat, date_dde, id_prio, id_plateforme, id_appli, id_module)
-		VALUES (:id_from, :id_resp, :objet, :evo, :id_etat, :date_dde, :id_prio, :id_plateforme, :id_appli, :id_module)");
-	$req->execute([
-		':id_from'		=>$_SESSION['id_web_user'],
-		':id_resp'		=>$resp,
-		':objet'		=>$_POST['objet'],
-		':evo'		=>nl2br($_POST['evo']),
-		':id_etat'		=>1,
-		':date_dde'		=>date('Y-m-d H:i:s'),
-		':id_prio'		=>$_POST['prio'],
-		':id_plateforme'		=>$_POST['pf'],
-		':id_appli'		=>$_POST['appli'],
-		':id_module'		=>empty($_POST['module'])? null: $_POST['module']
-
-	]);
-	$err=$req->errorInfo();
-	if(empty($err[2])){
-		return false;
-	}else{
-		return $err[2];
-	}
-
-}
 
  //------------------------------------------------------
 //			DECLARATIONS
@@ -64,68 +44,137 @@ function insertEvo($pdoEvo, $resp){
 $errors=[];
 $success=[];
 
-$evoMgr=new EvoManager($pdoEvo);
-$listPF=$evoMgr->getListPlateforme();
+define("UPLOAD_DIR_EVO",DIR_UPLOAD.'evo-doc/' );
+define("UPLOAD_URL_EVO",URL_UPLOAD.'evo-doc\\' );
+
+$db= new Db();
+$pdoEvo= $db->getPdo('evo');
+$pdoUser= $db->getPdo('web_users');
+
+
+$evoDao=new EvoDao($pdoEvo);
+$plateformeDao=new PlateformeDao($pdoEvo);
+$userDao=new UserDao($pdoUser);
+$affectationDao=new AffectationDao($pdoEvo);
+$docDao= new EvoDocDao($pdoEvo);
+
+
+
+$listPF=$plateformeDao->getListPlateforme();
 $arrPf=EvoHelpers::arrayPlateformeName($pdoEvo);
 $arrAppli=EvoHelpers::arrayAppliName($pdoEvo);
 $arrModule=EvoHelpers::arrayModuleName($pdoEvo);
 $arrDevMail=EvoHelpers::arrayAppliRespEmail($pdoEvo);
 
+$listUsers=$userDao->getBtlecUserEvo();
+$listServices=$userDao->getServicesMailing();
+$affectionEmail=[];
+
+
 if(isset($_POST['submit'])){
+
 	$arrAppliRespId=EvoHelpers::arrayAppliRespId($pdoEvo);
 	$idResp=$arrAppliRespId[$_POST['appli']];
-	$err=insertEvo($pdoEvo,$idResp);
-	if(!$err){
-		if(VERSION!="_"){
-			$dest=['valerie.montusclat@btlec.fr'];
-			$cc=[];
-			$hidden=[];
-		}else{
-			$devMail=$arrDevMail[$idResp];
-			$dest=[$devMail, 'luc.muller@btlec.fr', 'david.syllebranque@btlec.fr'];
-			$dest=array_unique($dest);
-			$cc=[];
-			$hidden=['valerie.montusclat@btlec.fr'];
+	$idEvo=$evoDao->insertEvo($idResp);
+	if(!empty($_POST['users'])){
+		for ($i=0; $i < count($_POST['users']); $i++) {
+			$user=$userDao->getUserById($_POST['users'][$i]);
+			$affectionEmail[$i]['email']=$user['email'];
+			$affectionEmail[$i]['id_web_user']=$user['id_web_user'];
+			$affectionEmail[$i]['id_service']=$user['id_service'];
 		}
-		$htmlMail = file_get_contents('mail-new-dd.html');
-		$htmlMail=str_replace('{OBJET}',$_POST['objet'],$htmlMail);
-		if(isset($_POST['module']) && !empty($_POST['module'])){
-			$module=' - '.$arrModule[$_POST['module']];
-		}else{
-			$module="";
+	}
+
+
+	if(!empty($_POST['services'])){
+		$affectationSize=count($affectionEmail);
+		for ($i=0; $i < count($_POST['services']); $i++) {
+			$users=$userDao->getUserByServiceById($_POST['services'][$i], true);
+			foreach ($users as $key => $user) {
+				$affectionEmail[$affectationSize]['email']=$user['email'];
+				$affectionEmail[$affectationSize]['id_service']=$user['id_service'];
+				$affectionEmail[$affectationSize]['id_web_user']=$user['id_web_user'];
+				$affectationSize++;
+			}
+
 		}
-		$demandeur=UserHelpers::getFullname($pdoUser, $_SESSION['id_web_user']);
-		$htmlMail=str_replace('{WHAT}',$arrPf[$_POST['pf']]. ' - ' .$arrAppli[$_POST['appli']].$module,$htmlMail);
-		$htmlMail=str_replace('{EVO}',$_POST['evo'],$htmlMail);
-		$htmlMail=str_replace('{OBJET}',$_POST['objet'],$htmlMail);
-		$htmlMail=str_replace('{DDEUR}',$demandeur,$htmlMail);
-		$subject="Portail BTLec Est - Demandes d'évo - nouvelle demande" ;
+	}
 
-// ---------------------------------------
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
-		$mailer = new Swift_Mailer($transport);
-		$message = (new Swift_Message($subject))
-		->setBody($htmlMail, 'text/html')
-		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
-		->setTo($dest)
-		->setCc($cc)
-		->setBcc($hidden);
-
-		if (!$mailer->send($message, $failures)){
-			print_r($failures);
-			$errors[]="erreur envoi mail";
-		}else{
-			$successQ='?success=cree';
-			unset($_POST);
-			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+	if(!empty($affectionEmail)){
+		$affectionEmail=Helpers::arrayUniqueMultiCol($affectionEmail,'email');
+		foreach ($affectionEmail as $key => $email) {
+			$affectationDao->insertAffectation($idEvo, $email['id_web_user'], $email['id_service'], $email['email']);
+			$cc[]=$email['email'];
 		}
+	}
 
 
+	if(isset($_FILES['files_doc']['tmp_name'][0]) &&  !empty($_FILES['files_doc']['tmp_name'][0])){
+		for ($i=0; $i <count($_FILES['files_doc']['tmp_name']) ; $i++) {
+			$orginalFilename=$_FILES['files_doc']['name'][$i];
+			$ext = pathinfo($orginalFilename, PATHINFO_EXTENSION);
+			$filenameNoExt = basename($orginalFilename, '.'.$ext);
+			$filename = str_replace(' ', '_', $filenameNoExt) . '_' . time() . '.' . $ext;
+			$uploaded=move_uploaded_file($_FILES['files_doc']['tmp_name'][$i],UPLOAD_DIR_EVO.$filename );
+			if($uploaded==false){
+				$errors[]="Nous avons rencontré avec votre fichier, votre demande n'a pas pu être enregistrée 2";
+			}else{
+				$listFilename[]=$filename;
+			}
+		}
+	}
+
+
+	if(!empty($listFilename)){
+		for ($i=0; $i < count($listFilename); $i++) {
+			$docDao->insertDoc($idEvo, $listFilename[$i], $_POST['filename'][$i]);
+		}
+	}
+
+	$cc=[];
+
+
+	if(VERSION=="_"){
+		$dest=['valerie.montusclat@btlec.fr'];
+		$cc=[];
 
 	}else{
+		$devMail=$arrDevMail[$idResp];
+		$dest=[$devMail, 'luc.muller@btlec.fr', 'david.syllebranque@btlec.fr'];
+		$dest=array_unique($dest);
 
-		$errors[]=$err;
+	}
 
+	$htmlMail = file_get_contents('mail/mail-new-dd.html');
+	$htmlMail=str_replace('{OBJET}',$_POST['objet'],$htmlMail);
+	if(isset($_POST['module']) && !empty($_POST['module'])){
+		$module=' - '.$arrModule[$_POST['module']];
+	}else{
+		$module="";
+	}
+	$demandeur=UserHelpers::getFullname($pdoUser, $_SESSION['id_web_user']);
+	$htmlMail=str_replace('{WHAT}',$arrPf[$_POST['pf']]. ' - ' .$arrAppli[$_POST['appli']].$module,$htmlMail);
+	$htmlMail=str_replace('{EVO}',$_POST['evo'],$htmlMail);
+	$htmlMail=str_replace('{OBJET}',$_POST['objet'],$htmlMail);
+	$htmlMail=str_replace('{DDEUR}',$demandeur,$htmlMail);
+	$subject="Portail BTLec Est - Demandes d'évo - nouvelle demande" ;
+
+// ---------------------------------------
+	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+	$mailer = new Swift_Mailer($transport);
+	$message = (new Swift_Message($subject))
+	->setBody($htmlMail, 'text/html')
+	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+	->setTo($dest)
+	->setCc($cc);
+
+	if (!$mailer->send($message, $failures)){
+		print_r($failures);
+		$errors[]="erreur envoi mail";
+	}else{
+		$successQ='?success=cree';
+		unset($_POST);
+		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 	}
 }
 
@@ -161,7 +210,7 @@ DEBUT CONTENU CONTAINER
 	</div>
 	<div class="row">
 		<div class="col">
-			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
+			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post"  enctype="multipart/form-data">
 
 				<div class="row">
 					<div class="col-auto">
@@ -223,7 +272,7 @@ DEBUT CONTENU CONTAINER
 									<label class="form-check-label pr-5 text-red" for="urgent"><b>urgent</b></label>
 								</div>
 								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" value="2" id="normal" name="prio">
+									<input class="form-check-input" type="radio" value="2" id="normal" name="prio" checked>
 									<label class="form-check-label pr-5 text-main-blue" for="normal"><b>normal</b></label>
 								</div>
 								<div class="form-check form-check-inline">
@@ -234,6 +283,37 @@ DEBUT CONTENU CONTAINER
 						</div>
 					</div>
 				</div>
+				<div class="row">
+					<div class="col">
+						Affecter la demande à des utilisateurs et/ou à des services
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="form-group">
+							<label for="users">A des personnes :</label>
+							<select class="form-control" name="users[]" id="users" multiple>
+								<option value="">Sélectionner</option>
+								<?php foreach ($listUsers as $key => $user): ?>
+									<option value="<?=$user['id']?>"><?=$user['fullname']?></option>
+								<?php endforeach ?>
+							</select>
+						</div>
+					</div>
+					<div class="col">
+						<div class="form-group">
+							<label for="services">A des services : </label>
+							<select class="form-control" name="services[]" id="services" multiple>
+								<option value="">Sélectionner</option>
+								<?php foreach ($listServices as $key => $service): ?>
+									<option value="<?=$service['id']?>"><?=$service['service']?></option>
+								<?php endforeach ?>
+							</select>
+						</div>
+
+					</div>
+				</div>
+
 				<div class="row">
 					<div class="col">
 						<div class="form-group">
@@ -250,8 +330,32 @@ DEBUT CONTENU CONTAINER
 						</div>
 					</div>
 				</div>
-
-				<div class="row pb-5">
+				<div class="row">
+					<div class="col">
+						<div class="row">
+							<div class="col mb-3 text-main-blue text-center sub-title font-weight-bold ">
+								Fichiers  :
+							</div>
+						</div>
+						<div class="row">
+							<div class="col  bg-blue-input rounded pt-2">
+								<div class="form-group text-right">
+									<label class="btn btn-upload-primary btn-file text-center">
+										<input type="file" name="files_doc[]" class='form-control-file' multiple id="files-doc">
+										Sélectionner
+									</label>
+								</div>
+								<div class="row mt-3">
+									<div class="col" id="form-zone"></div>
+								</div>
+								<div class="row mt-3">
+									<div class="col" id="warning-zone"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row py-5">
 					<div class="col text-right">
 						<button class="btn btn-black" name="submit">Valider</button>
 					</div>
@@ -263,13 +367,14 @@ DEBUT CONTENU CONTAINER
 
 	<!-- ./container -->
 </div>
+<script src="../../public/js/upload-helpers.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("input:radio[name='pf']").click(function () {
 			var plateforme=$('input[name="pf"]:checked').val();
 			$.ajax({
 				type:'POST',
-				url:'ajax-get-appli.php',
+				url:'dde-evo/ajax-get-appli.php',
 				data:{id_plateforme:plateforme},
 				success: function(html){
 					$("#appli").html(html)
@@ -281,12 +386,16 @@ DEBUT CONTENU CONTAINER
 			console.log("appli" + appli);
 			$.ajax({
 				type:'POST',
-				url:'ajax-get-appli.php',
+				url:'dde-evo/ajax-get-appli.php',
 				data:{id_appli:appli},
 				success: function(html){
 					$("#module").html(html)
 				}
 			});
+		});
+
+		$('#files-doc').change(function(){
+			multipleWithName('files-doc','warning-zone', 'form-zone')
 		});
 	});
 

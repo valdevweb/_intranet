@@ -19,9 +19,12 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //----------------------------------------------------------------
 
 require_once  '../../vendor/autoload.php';
-require "../../Class/EvoManager.php";
-require "../../Class/EvoHelpers.php";
-// require "../../functions/form.fn.php";
+require "../../Class/evo/EvoDao.php";
+require "../../Class/evo/PlanningDao.php";
+require "../../Class/evo/AppliDao.php";
+require "../../Class/evo/ModuleDao.php";
+require "../../Class/evo/EvoHelpers.php";
+require '../../Class/evo/AffectationDao.php';
 
 
 
@@ -77,26 +80,18 @@ function getNewEvo($pdoEvo){
 }
 
 
-function statuer($pdoEvo){
-
-	$req=$pdoEvo->prepare("UPDATE evos SET id_etat= :id_etat,cmt_dd= :cmt_dd,cmt_dev= :cmt_dev,date_validation= :date_validation, deadline= :deadline,id_prio= :id_prio WHERE id= :id");
-	$req->execute([
-		':id'		=>$_POST['id_evo'],
-		':id_etat'		=>$_POST['statut'],
-		':cmt_dd'		=>$_POST['cmt_dd'],
-		":cmt_dev"		=>$_POST['cmt_dev'],
-		':date_validation'	=>date('Y-m-d H:i:s'),
-		':deadline'			=>!empty($_POST['deadline'])? $_POST['deadline'] : NULL,
-		':id_prio'			=>$_POST['prio']
-
-	]);
-	return $req->errorInfo();
-}
 
 
-$evoMgr=new EvoManager($pdoEvo);
-$listResp=$evoMgr->getListResp();
-$listEtat=$evoMgr-> getListEtat();
+$evoDao=new EvoDao($pdoEvo);
+$appliDao=new AppliDao($pdoEvo);
+$moduleDao=new ModuleDao($pdoEvo);
+$planningDao=new PlanningDao($pdoEvo);
+$affectationDao= new AffectationDao($pdoEvo);
+
+$listResp=$evoDao->getListResp();
+$listEtat=$evoDao-> getListEtat();
+
+
 $arrDevMail=EvoHelpers::arrayAppliRespEmail($pdoEvo);
 
 
@@ -160,15 +155,17 @@ if(!empty($paramList)){
 	$params= " WHERE id_etat=1 " ;
 }
 
-
-
+$listPlanning=[];
+if(isset($_SESSION['evo_filters']['etat'])){
+	$listPlanning=$planningDao->getPlanningByEvo($_SESSION['evo_filters']['etat']);
+}
 
 $query="SELECT evos.*, plateforme, module, id_web_user, CONCAT(prenom, ' ', nom) as ddeur, appli FROM evos
 LEFT JOIN web_users.intern_users ON id_from= web_users.intern_users.id_web_user
 LEFT JOIN plateformes ON evos.id_plateforme=plateformes.id
 LEFT JOIN modules ON evos.id_module=modules.id
 LEFT JOIN appli ON evos.id_appli=appli.id
-$params ORDER BY date_dde DESC";
+$params ORDER BY id_plateforme, id_appli, id_module DESC";
 
 
 $req=$pdoEvo->query($query);
@@ -177,16 +174,16 @@ $listEvo=$req->fetchAll(PDO::FETCH_ASSOC);
 
 
 if(isset($_POST['statuer'])){
-	include('dashboard-post-statuer.php');
+	include('dashboard-evo\01-post-statuer.php');
 }
 
 if(isset($_POST['cloturer'])){
-	include('dashboard-post-cloturer.php');
+	include('dashboard-evo\02-post-cloturer.php');
 }
 
 
 if(isset($_GET['start'])){
-	$up=$evoMgr->startEvo($_GET['start'],3);
+	$up=$evoDao->startEvo($_GET['start'],3);
 
 	header("Location: ".$_SERVER['PHP_SELF'],true,303);
 }
@@ -213,80 +210,49 @@ include('../view/_navbar.php');
 	<!-- main title -->
 	<div class="row">
 		<div class="col">
-			<h1 class="text-main-blue py-5 text-center">Supervision des demandes d'évolution</h1>
+			<h1 class="text-main-blue pt-5 pb-3 text-center">Supervision des demandes d'évolution</h1>
 		</div>
 	</div>
 
 	<!-- filtres -->
 	<div class="row">
-		<div class="col-xl-1"></div>
+		<div class="col-xl-2"></div>
 		<div class="col">
 			<form name="filtrer-evo" action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
 				<fieldset>
+					<div class="row justify-content-center mb-2">
 
-					<div class="row justify-content-center mb-4">
-						<div class="col-xl-1"></div>
-
-						<div class="col-xl-4 text-main-blue">
-							Sélectionnez un statut
-						</div>
-						<div class="col-xl-7">
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" <?= checkChecked(1,'etat')?> value="1" id="etat" name="etat">
-								<label class="form-check-label pr-5" for="etat">En attente de validation</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio"  <?= checkChecked(2,'etat')?>  value="2" id="etat" name="etat">
-								<label class="form-check-label pr-5" for="etat">Validées</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio"  <?= checkChecked(3,'etat')?>  value="3" id="etat" name="etat">
-								<label class="form-check-label pr-5" for="etat">En cours</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio"  <?= checkChecked(4,'etat')?> value="4" id="etat" name="etat">
-								<label class="form-check-label pr-5" for="etat">Terminées</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio"  <?= checkChecked(5,'etat')?> value="5" id="etat" name="etat">
-								<label class="form-check-label pr-5" for="etat">Refusées</label>
-							</div>
-						</div>
-					</div>
-
-
-					<div class="row mb-4">
-						<div class="col-xl-1"></div>
-						<div class="col-xl-4 text-main-blue">
-							Sélectionnez un salarié
-						</div>
-						<div class="col-xl-7">
+						<div class="col-auto">
+							Salarié :
 							<?php foreach ($listResp as $key => $resp): ?>
-								<div class="form-check form-check-inline">
+								<div class="form-check">
 									<input class="form-check-input" type="radio" <?= checkChecked($resp['id'],'resp')?>   value="<?=$resp['id']?>" id="resp" name="resp">
 									<label class="form-check-label pr-5" for="resp"><?=$resp['resp']?></label>
 								</div>
 							<?php endforeach ?>
 						</div>
-					</div>
+						<div class="col-auto">
+							Statut :
 
-
-					<div class="row">
-						<div class="col-xl-1"></div>
-
-						<div class="col-xl-4 mt-3 pt-2 text-main-blue">
-							Sélectionnez une application :
+							<?php foreach ($listEtat as $key => $etat): ?>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" <?= checkChecked($etat['id'],'etat')?> value="<?=$etat['id']?>" id="etat" name="etat">
+									<label class="form-check-label pr-5" for="etat"><?=$etat['etat']?></label>
+								</div>
+							<?php endforeach ?>
 						</div>
-						<div class="col-xl-4">
+
+
+						<div class="col">
 							<div class="form-group">
-								<label for="appli"></label>
+								<label for="appli">Application :</label>
 								<select class="form-control" name="appli" id="appli">
 									<option value="">Sélectionner</option>
 									<?php if (isset($_POST['resp'])){
-										$listAppli=$evoMgr->getListAppliResp($_POST['resp']);
+										$listAppli=$appliDao->getListAppliResp($_POST['resp']);
 									}
 									elseif((isset($_SESSION['evo_filters']['resp']) && !empty($_SESSION['evo_filters']['resp']))){
-										$listAppli=$evoMgr->getListAppliResp($_SESSION['evo_filters']['resp']);
+										$listAppli=$appliDao->getListAppliResp($_SESSION['evo_filters']['resp']);
 									}
 									?>
 
@@ -299,163 +265,203 @@ include('../view/_navbar.php');
 
 							</select>
 						</div>
-
 					</div>
-				</div>
-				<div class="row ">
-					<div class="col-xl-1"></div>
-
-					<div class="col-xl-4 mt-3 pt-2 text-main-blue">
-						Sélectionnez un module :
-					</div>
-					<div class="col-xl-4">
+					<div class="col">
 						<div class="form-group">
-							<label for="module"></label>
+							<label for="module">Module</label>
 							<select class="form-control" name="module" id="module">
 								<option value="">Veuillez sélectionner une application</option>
 								<?php
 								if (isset($_POST['appli'])){
-									$listModule=$evoMgr->getListModule($_POST['appli']);
+									$listModule=$moduleDao->getListModule($_POST['appli']);
 								}elseif((isset($_SESSION['evo_filters']['appli']) && !empty($_SESSION['evo_filters']['appli']))){
-									$listModule=$evoMgr->getListModule($_SESSION['evo_filters']['appli']);
+									$listModule=$moduleDao->getListModule($_SESSION['evo_filters']['appli']);
 								}
 								?>
 								<?php if (isset($listModule) && !empty($listModule)): ?>
-									<?php foreach ($listModule as $key => $module): ?>
-										<option value="<?=$module['id']?>" <?=checkSelected($module['id'],'module')?>><?=$module['module']?></option>
-									<?php endforeach ?>
-								<?php endif ?>
+								<?php foreach ($listModule as $key => $module): ?>
+									<option value="<?=$module['id']?>" <?=checkSelected($module['id'],'module')?>><?=$module['module']?></option>
+								<?php endforeach ?>
+							<?php endif ?>
 						</select>
 					</div>
 
+					<div class="text-right mt-3"><button class="btn btn-primary" name="filtrer">Filtrer</button></div>
 				</div>
 			</div>
 
-			<div class="row justify-content-center">
-				<div class="col-xl-9 pt-3 text-right">
-					<button class="btn btn-primary" name="filtrer">Filtrer</button>
-				</div>
-			</div>
 		</fieldset>
 	</form>
 </div>
-<div class="col-xl-1"></div>
-
+<div class="col-xl-2"></div>
 </div>
+
+
 <div class="row mt-5">
-	<div class="col-lg-1"></div>
+	<div class="col-lg-2"></div>
 	<div class="col">
 		<?php
 		include('../view/_errors.php');
 		?>
 	</div>
-	<div class="col-lg-1"></div>
+	<div class="col-lg-2"></div>
 </div>
 
 <div class="row mb-3">
-	<div class="col-lg-1"></div>
+	<div class="col-xl-2"></div>
 	<div class="col sub">
-		<h4 class="text-orange marvel mt-5"><i class="fas fa-check-double pr-4"></i>Listing des demandes d'évolution :</h4>
+		<h4 class="text-orange marvel mt-3"><i class="fas fa-check-double pr-4"></i>Demandes d'évolution :</h4>
 	</div>
-	<div class="col-lg-1"></div>
+
+	<div class="col-xl-1"></div>
 </div>
-<div class="mt-4"></div>
 
 
+<div class="row">
+	<div class="col-lg-1"></div>
+	<div class="col"></div>
+	<div class="col-auto font-weight-boldless text-main-blue">
+		Rechercher  :
+	</div>
+	<div class="col-2">
+
+		<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post" id="search_form">
+			<div class="form-group text-center">
+				<input type="text" class="form-control" name="str" id="str"  style="font-family:'Font Awesome 5 Free',sans-serif !important; font-weight: 900 !important;" type="text" placeholder="&#xf002">
+			</div>
+		</form>
+	</div>
+	<div class="col-lg-2"></div>
+
+</div>
 
 
 <div class="row mt-3 mb-5">
-	<div class="col-lg-1"></div>
+	<div class="col-lg-1 col-xl-2"></div>
 	<div class="col">
-		<!-- Evo en cours -->
-		<table class="table shadow mt-4" id="listing-evo">
-			<thead class="thead-dark">
-				<tr>
-					<th>N°</th>
+		<?php foreach ($listEvo as $evo):?>
+			<div class="row mb-3">
+				<div class="col  rounded">
+					<div class="row py-2  border-dark bg-light-grey">
+						<div class="col-lg-3">
+							Application :
+						</div>
+						<div class="col-lg-4">
+							Module :
+						</div>
 
-					<th>Appli</th>
-					<th>Module</th>
-					<th>Objet</th>
-					<th>Détail</th>
-					<th>Date demande</th>
-					<th>Demandeur</th>
-					<th class="text-center">Action</th>
-				</tr>
-			</thead>
-			<tbody>
-
-				<?php foreach ($listEvo as $evo):?>
-
-					<tr>
-						<td><?=$evo['id']?></td>
-
-						<td><?=$evo['appli']?></td>
-						<td><?=$evo['module']?></td>
-						<td><?=$evo['objet']?></td>
-						<td>
-							<?=$evo['evo']?>
-							<div class="text-right hide-btn" data-btn-id="<?=$evo['id']?>">
-								<?php if (!empty($evo['cmt_dd']) || !empty($evo['cmt_dev'])): ?>
-								<i class="fas fa-angle-double-down pr-2 align-text-bottom"></i>afficher/masquer les commentaires
-							<?php endif ?>
+						<div class="col-lg-3 ">
+							<i class="fas fa-user text-orange pr-3"></i><?=$evo['ddeur']?>
+						</div>
+						<div class="col-lg-2 text-right">
+							<div class="row">
+								<div class="col">
+									<i class="fas fa-calendar-alt text-orange pr-3"></i><?=date('d-m-Y', strtotime($evo['date_dde']))?>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row bg-light-grey border-bottom border-dark">
+						<div class="col-lg-3">
+							<div class="badge badge-btlec"><?=$evo['appli']?></div>
 
 						</div>
-					</td>
-					<td><?=$evo['date_dde']?></td>
-					<td><?=$evo['ddeur']?></td>
-					<td class="text-center">
-						<?php if ($evo['id_etat']==1): ?>
-							<a href="#modal-statuer" data-toggle="modal" data-prio="<?=$evo['id_prio']?>" data-id="<?=$evo['id']?>">
-								<button class="btn btn-primary">Statuer</button>
-							</a>
+						<div class="col-lg-4">
+							<div class="badge badge-btlec"><?=$evo['module']?></div>
+						</div>
+
+						<div class="col text-right">
+							<?php if (isset($listPlanning[$evo['id']])): ?>
+								Développement du
+								<?php foreach ($listPlanning[$evo['id']] as $key => $planning): ?>
+									<span class="badge badge-success"><?=date('d-m-Y', strtotime($planning['date_start'])) . '</span> au <span class="badge badge-success">'.date('d-m-Y', strtotime($planning['date_end']))?></span><br>
+								<?php endforeach ?>
+							<?php endif ?>
+						</div>
+					</div>
+
+
+					<div class="row text-orange">
+						<div class="col my-2 ">
+							<h6><a href="evo-detail.php?id=<?=$evo['id']?>" class="link-orange">Objet : <?=$evo['objet']?></a></h6>
+						</div>
+						<div class="col-1 text-right"><h6>#<?=$evo['id']?></h6></div>
+					</div>
+
+
+
+					<div class="row">
+						<div class="col-lg-10">
+							<div class="row">
+								<div class="col">
+									<div class="alert alert-secondary"><?=nl2br($evo['evo'])?></div>
+								</div>
+							</div>
+							<?php if (!empty($evo['cmt_dd'])): ?>
+
+								<div class="row">
+									<div class="col">
+										Commentaire à l'intention du demandeur :
+
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="alert alert-light"><?=nl2br($evo['cmt_dd'])?></div>
+									</div>
+								</div>
+							<?php endif ?>
+
+							<?php if (!empty($evo['cmt_dev'])): ?>
+								<div class="row">
+									<div class="col">
+										Commentaires à l'intension du développeur :
+									</div>
+								</div>
+								<div class="row">
+									<div class="col">
+										<div class="alert alert-light"><?=nl2br($evo['cmt_dev'])?></div>
+									</div>
+								</div>
+							<?php endif ?>
+						</div>
+						<div class="col-lg-2 align-self-end ">
+							<?php if ($evo['id_etat']==1): ?>
+								<div class="text-center pb-3">
+									<a href="#modal-statuer" data-toggle="modal" data-prio="<?=$evo['id_prio']?>" data-id="<?=$evo['id']?>">
+										<button class="btn btn-primary">Statuer</button>
+									</a>
+								</div>
+
 							<?php elseif($evo['id_etat']==2):?>
-								<a href="?start=<?=$evo['id']?>" >
-									<button class="btn btn-primary">Démarrer</button>
-								</a>
-								<?php elseif($evo['id_etat']==3):?>
+								<div class="text-center  pb-3">
 									<a href="#modal-cloturer" data-toggle="modal" data-prio="<?=$evo['id_prio']?>" data-id="<?=$evo['id']?>">
 										<button class="btn btn-primary">Cloturer</button>
 									</a>
-								<?php endif ?>
-
-							</td>
-						</tr>
-						<?php if (!empty($evo['cmt_dd'])): ?>
-							<tr class="bg-verylight-blue cmt" data-cmt-id="<?=$evo['id']?>">
-								<td  colspan="4">Commentaire à l'intention du demandeur : </td>
-								<td><?=$evo['cmt_dd']?></td>
-								<td colspan="3"></td>
-							</tr>
-						<?php endif ?>
-
-						<?php if (!empty($evo['cmt_dev'])): ?>
-							<tr class="bg-verylight-blue cmt" data-cmt-id="<?=$evo['id']?>">
-								<td colspan="4" >Commentaires à l'intension du développeur : </td>
-								<td><?=$evo['cmt_dev']?></td>
-								<td colspan="3"></td>
-							</tr>
-						<?php endif ?>
-					<?php endforeach?>
-
-					<!-- $currentEvo=getCurrentEvo($pdoSav); -->
-					<!-- $todoEvo=getTodoEvo($pdoSav); -->
-
-				</tbody>
-			</table>
-			<!-- ./evo en cours -->
-		</div>
-		<div class="col-lg-1"></div>
+								</div>
+							<?php endif ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php endforeach?>
 	</div>
-
-	<?php
-	include('dashboard-modal-statuer.php');
-	include('dashboard-modal-cloturer.php');
-	?>
-
-	<!-- fin container -->
+	<div class="col-lg-1 col-xl-2"></div>
 </div>
+</div>
+<?php
+include('dashboard-evo\10-modal-statuer.php');
+include('dashboard-evo\11-modal-cloturer.php');
+?>
 
+<!-- fin container -->
+</div>
+<script src="../js/search-in-window.js"></script>
 <script type="text/javascript">
+	document.getElementById('search_form').onsubmit = function() {
+		findString(this.str.value);
+		return false;
+	};
 	$(document).ready(function() {
 		$('#appli').on("change",function(){
 			$(this).closest("form").submit();
@@ -526,4 +532,4 @@ include('../view/_navbar.php');
 
 	<?php
 	require '../view/_footer-bt.php';
-	?>
+?>

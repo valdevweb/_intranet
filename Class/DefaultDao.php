@@ -1,9 +1,7 @@
 <?php
 
-
 class DefaultDao{
 
-	// pdoOcc
 	private $pdo;
 
 	public function __construct($pdo){

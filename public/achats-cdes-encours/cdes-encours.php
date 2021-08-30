@@ -11,8 +11,8 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 
 require '../../Class/Db.php';
-require '../../Class/CdesDao.php';
-require '../../Class/CdesAchatDao.php';
+require '../../Class/achats/CdesDao.php';
+require '../../Class/achats/CdesAchatDao.php';
 require '../../Class/FournisseursHelpers.php';
 require '../../Class/FormHelpers.php';
 require '../../Class/UserDao.php';
@@ -43,7 +43,6 @@ if(isset($_POST['reset'])){
 	header("Location: ".$_SERVER['PHP_SELF'],true,303);
 }
 if (isset($_POST['filter'])) {
-
 	if(!empty($_POST['date_start']) && empty($_POST['date_end'])){
 		$errors[]="Merci de sélectionner une fin de période";
 	}
@@ -53,8 +52,12 @@ if (isset($_POST['filter'])) {
 	if((!empty($_POST['date_start']) || !empty($_POST['date_end'])) && (!isset($_POST['date_type']) && empty($_POST['date_type']))){
 		$errors[]="Merci de sélectionner le type de date pour la période sélectionnée";
 	}
+	if(!empty($_POST['search_strg']) && empty($_POST['type_of_strg'])){
+		$errors[]="Merci de préciser sur quel champ vous souhaitez chercher";
+	}
 
 	if(empty($errors)){
+
 		$_SESSION['encours_filter']=$_POST;
 	}
 	// if(!empty($_POST['gt'][0])){
@@ -69,9 +72,7 @@ if (isset($_POST['filter'])) {
 		$_SESSION['encours_filter']['gt']=$userGts;
 	}
 
-	// $defaultParam='AND (gt='.join(' OR gt=',$userGts). ')';
-	// $listCdes=$cdesDao->getCdes($defaultParam);
-	// $nbArt=count($listCdes);
+
 }
 
 if(isset($_SESSION['encours_filter'])){
@@ -87,8 +88,10 @@ if(isset($_SESSION['encours_filter'])){
 	if(!empty($_SESSION['encours_filter']['fou'])){
 		$paramFou='fournisseur="'.$_SESSION['encours_filter']['fou'].'"';
 		$paramList[]=$paramFou;
-
 	}
+
+
+
 	if(!empty($_SESSION['encours_filter']['marque'])){
 		$paramMarque='marque="'.$_SESSION['encours_filter']['marque'].'"';
 		$paramList[]=$paramMarque;
@@ -99,6 +102,14 @@ if(isset($_SESSION['encours_filter'])){
 			function($value){return "libelle_op='".$value."'";},
 			$_SESSION['encours_filter']['op']));
 		$paramList[]=$paramOp;
+
+	}
+	if(isset($_SESSION['encours_filter']['other_num_cde']) && !empty($_SESSION['encours_filter']['other_num_cde'])){
+		if(isset($_SESSION['encours_filter']['num_cde'])){
+			unset($_SESSION['encours_filter']['num_cde']);
+			$_SESSION['encours_filter']['num_cde']=$_SESSION['encours_filter']['other_num_cde'];
+			unset($_SESSION['encours_filter']['other_num_cde']);
+		}
 
 	}
 	if(isset($_SESSION['encours_filter']['num_cde']) && !empty($_SESSION['encours_filter']['num_cde'])){
@@ -134,12 +145,26 @@ if(isset($_SESSION['encours_filter'])){
 		}
 		$paramDate.= 'BETWEEN "'. $_SESSION['encours_filter']['date_start']. '" AND "'. $_SESSION['encours_filter']['date_end'].'"';
 		$paramList[]=$paramDate;
+	}
+
+	if(!empty($_SESSION['encours_filter']['search_strg'])){
+
+		$paramSearch=$_SESSION['encours_filter']['type_of_strg']. " LIKE '%".$_SESSION['encours_filter']['search_strg']. "%'";
+		$paramList[]=$paramSearch;
 
 	}
 
 	$param='AND ' .join(' AND ',$paramList);
 
 	$listCdes=$cdesDao->getCdes($param);
+	if(isset($_SESSION['encours_filter']['fou'])){
+		if(isset($paramGt)){
+			$paramGt= ' AND (' . $paramGt .')';
+			$listCdesByFou=$cdesDao->getCdesByFou($_SESSION['encours_filter']['fou'], $paramGt);
+		}
+
+	}
+// echo $_SESSION['encours_filter']['fou'];
 	$nbArt=count($listCdes);
 	$listInfos=$cdesAchatDao->getInfos($param);
 
@@ -159,7 +184,10 @@ if(isset($_POST['save_all'])){
 
 $listGt=FournisseursHelpers::getGts($pdoFou, "GT","id");
 
-$tableCol=["GT", "Date cde", "Fournisseur", "Marque", "Article", "Dossier", "Ref", "EAN", "Désignation", "Cde", "Qte init colis", "Colis à recevoir", "UV à recevoir", "PCB", "% reçu", "date livraison initiale","Date livraison", "Date début op", "Op"];
+$tableCol=["GT", "Date cde", "Fournisseur", "Marque", "Article", "Dossier", "Date début op", "Op", "Ref", "EAN", "Désignation", "Cde", "Qte init colis", "Colis à recevoir", "UV à recevoir", "PCB", "% reçu", "Restant prévi", "date livraison initiale","Date livraison"];
+
+$tableColTh=["GT", "Date cde", "Fournisseur", "Marque", "Article", "Dossier", "Début op", "Op", "Ref", "EAN", "Désignation", "Cde", "Qte init colis", "Colis à<br> recevoir", "UV<br>à recevoir", "PCB", "% reçu", "Restant prévi", "date livraison initiale","Date livraison"];
+
 
 $listOp=array_unique(array_column($listCdes, 'libelle_op'));
 $listNumCde=array_unique(array_column($listCdes, 'id_cde'));
@@ -193,10 +221,7 @@ if(isset($_POST['kill_session'])){
 	}
 }
 if(isset($_GET['export-xls'])){
-
 	include 'cdes-encours/01-export-xls.php';
-
-
 }
 
 
@@ -212,15 +237,7 @@ include('../view/_navbar.php');
 			<h1 class="text-main-blue">Commandes en cours</h1>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-lg-1"></div>
-		<div class="col">
-			<?php
-			include('../view/_errors.php');
-			?>
-		</div>
-		<div class="col-lg-1"></div>
-	</div>
+
 	<!-- perso affichage -->
 	<div class="row mb-5">
 		<div class="col-lg-2"></div>
@@ -275,8 +292,12 @@ include('../view/_navbar.php');
 		</div>
 	</div>
 	<div class="row">
-		<div class="col font-italic">
+		<div class="col-auto font-italic">
 			<a href="?export-xls" class="btn btn-success">Export Excel</a>
+		</div>
+		<div class="col font-italic">
+			<a href="import-cdesinfos.php" class="btn btn-success">Import Excel</a>
+
 		</div>
 		<div class="col-auto font-weight-boldless text-main-blue">
 			Rechercher sur la page :
@@ -302,6 +323,7 @@ include('../view/_navbar.php');
 </div>
 
 <script src="../js/search-in-window.js"></script>
+<script src="../js/upload-helpers.js"></script>
 <script type="text/javascript">
 	document.getElementById('search_form').onsubmit = function() {
 		findString(this.str.value);

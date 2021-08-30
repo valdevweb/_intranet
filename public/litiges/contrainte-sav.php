@@ -16,7 +16,7 @@ else{
 
 
 
-if(!empty($ldSav)){
+if(!empty($savDest)){
 
 		// génération du pdf
 	$footer='<table class="padding-table">';

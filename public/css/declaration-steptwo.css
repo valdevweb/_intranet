@@ -100,7 +100,7 @@ font-weight: bold;
     text-decoration-color: #a63446;
 }
 
-textarea{
+textarea.cmt{
     height:  150px !important;
     background:  #fff7df !important;
 }

@@ -8,6 +8,7 @@
 	<link rel="icon" href="http://172.30.92.53/btlecest/favicon.ico" />
 	<link rel="stylesheet" href="<?=ROOT_PATH ."/public/css/main.css"?>">
     <link rel="stylesheet" href="<?= ROOT_PATH ."/public/css/nav.css"?>">
+
     <?php
     if(isset($cssFile)){
     	echo '<link rel="stylesheet" href="' .$cssFile .'">';

@@ -63,3 +63,9 @@ function pourcentage($chiffreActuel,$chiffrePrecedent,$diff){
 	return 0;
 
 }
+
+function valoStock($pdoQlik){
+	$req=$pdoQlik->query("SELECT * FROM statsstockvalo  order by id desc LIMIT 1");
+
+	return $req->fetch(PDO::FETCH_ASSOC);
+}

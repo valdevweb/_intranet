@@ -17,14 +17,15 @@ require '../../Class/Db.php';
 
 require '../../Class/CataDao.php';
 require '../../Class/InfoLivDao.php';
-require '../../Class/ArticleAchatsDao.php';
+require '../../Class/achats/ArticleAchatsDao.php';
 require '../../Class/FournisseursHelpers.php';
 require '../../Class/Helpers.php';
 
 
 
 // require_once '../../vendor/autoload.php';
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 $errors=[];
 $success=[];

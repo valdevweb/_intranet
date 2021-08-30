@@ -7,8 +7,7 @@ class Helpers{
 
 	private $color;
 
-	public static function returnBtn($page,$color=null)
-	{
+	public static function returnBtn($page,$color=null){
 		if(!$color){
 			return '<div class="row py-3"><div class="col"><p class="text-right"><a href="'.$page.'" class="btn btn-primary">Retour</a></p></div></div>';
 		}else{
@@ -68,6 +67,13 @@ class Helpers{
 		}
 		return $string;
 	}
+
+	public static function arrayUniqueMultiCol($array,$col){
+		$tempArr = array_unique(array_column($array, $col));
+		$result=array_intersect_key($array, $tempArr);
+		return $result;
+	}
+
 
 
 }

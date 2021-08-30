@@ -43,23 +43,17 @@
 				<input type="text" class="form-control form-primary" name="ga_name" id="ga_name">
 			</div>
 		</div>
-		<div class="col-9 bg-blue-input rounded pt-2">
+		<div class="col-9">
 			<div class="row">
-				<div class="col"  id="filename-ga">
-					<p><span class="text-main-blue font-weight-bold">Fichier sélectionné : <br></span></p>
-				</div>
-				<div class="col-auto">
-					<div class="form-group">
-						<label class="btn btn-upload-primary btn-file text-center">
-							<input type="file" name="file_ga" class='form-control-file'>
-							Sélectionner
-						</label>
+				<div class="col" id="ga">
+					<input type="file" name="file" class="dragndropfile" multiple="multiple">
+					<div class="upload-area uploadfile">
+						<p>Glisser/déposer le guide d'achat<br/>ou<br/>cliquez ici pour le sélectionner</p>
 					</div>
+					<div class="filename"></div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col" id="file-ga-msg"></div>
-			</div>
+
 		</div>
 	</div>
 
@@ -77,30 +71,20 @@
 		</div>
 	</div>
 	<div class="row ml-1">
-		<div class="col bg-blue-input  rounded pt-2">
+		<div class="col">
 			<div class="row">
-				<div class="col"  id="filename-other">
-					<p><span class="text-main-blue font-weight-bold">Fichier sélectionné : <br></span></p>
-				</div>
-				<div class="col-auto">
-					<div class="form-group">
-						<label class="btn btn-upload-primary btn-file text-center">
-							<input type="file" name="file_other[]" class='form-control-file' multiple>
-							Sélectionner
-						</label>
+				<div class="col" id="otherfile">
+					<input type="file" name="file" class="dragndropfile" multiple="multiple">
+					<div class="upload-area uploadfile">
+						<p>Glisser/déposer les fichiers<br/>ou<br/>cliquez ici pour les sélectionner</p>
 					</div>
+					<div class="filename"></div>
+					<div class="readablename"></div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col" id="file-other-msg"></div>
 			</div>
 		</div>
 	</div>
-	<div class="row mt-3">
-		<div class="col-4" id="zone-noms"></div>
-		<div class="col-3" id="zone-ordre"></div>
-		<div class="col"></div>
-	</div>
+
 	<div class="row mt-3">
 		<div class="col text-right">
 			<button class="btn btn-primary" name="add">Ajouter</button>

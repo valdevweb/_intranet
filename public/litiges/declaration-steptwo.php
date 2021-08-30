@@ -37,7 +37,7 @@ On commence à 1 car le 0 n'est pas pris en compte dans le name
 //			FONCTION
 //------------------------------------------------------
 function getLitigeTemp($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT dossiers_temp.id as id, details_temp.id as detail_id,details_temp.dossier,palette,facture, date_facture,DATE_FORMAT(date_facture,'%d-%m-%Y')as datefac,article, ean, dossier_gessica, descr,qte_cde,tarif, fournisseur,details_temp.box_tete, details_temp.box_art, dossiers_temp.occasion FROM dossiers_temp LEFT JOIN details_temp ON dossiers_temp.id=details_temp.id_dossier WHERE dossiers_temp.id= :id");
+	$req=$pdoLitige->prepare("SELECT dossiers_temp.id as id, details_temp.id as detail_id,details_temp.dossier,palette,facture, date_facture,DATE_FORMAT(date_facture,'%d-%m-%Y')as datefac,article, ean, dossier_gessica, descr,qte_cde,tarif, fournisseur,details_temp.box_tete, details_temp.box_art, dossiers_temp.occasion, details_temp.gt FROM dossiers_temp LEFT JOIN details_temp ON dossiers_temp.id=details_temp.id_dossier WHERE dossiers_temp.id= :id");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 	));
@@ -50,9 +50,9 @@ function getReclamation($pdoLitige){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 // pour les vols, il faut ajouter les GESSICA.PoidsBrutUV et GESSICA.PoidsBrutUL
-function updateDetail($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean, $valoLig){
+function updateDetail($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean, $valoLig, $serials){
 
-	$req=$pdoLitige->prepare("UPDATE details_temp SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, valo_line= :valo_line WHERE id= :id");
+	$req=$pdoLitige->prepare("UPDATE details_temp SET id_reclamation = :reclamation, qte_litige= :qte_litige, pj= :pj, inversion= :ean, valo_line= :valo_line, serials= :serials WHERE id= :id");
 	$req->execute(array(
 		':reclamation' =>$reclamation,
 		':qte_litige'	=>$qteLitige,
@@ -60,6 +60,7 @@ function updateDetail($pdoLitige,$reclamation,$qteLitige,$id, $pj,$ean, $valoLig
 		':pj'			=>$pj,
 		':ean'			=>$ean,
 		':valo_line'			=>$valoLig,
+		':serials'			=>$serials
 	));
 	return $req->rowCount();
 	// return $req->errorInfo();
@@ -154,7 +155,7 @@ if(isset($_SESSION['dd_ouv'])){
 
 if(isset($_POST['submit'])){
 
-	include 'declaration-steptwo-exec-inc.php';
+	include 'declaration-steptwo\exec-inc.php';
 
 }
 // on va utiliser l'id pour enregistrer les produits sélectionnés sachant qu'à chaque import de la base, il changera
@@ -184,7 +185,7 @@ DEBUT CONTENU CONTAINER
 		<div class="col-lg-1 col-xxl-2"></div>
 		<div class="col">
 			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" enctype="multipart/form-data" class="light-shadow border-top-big">
-				<?php include'declaration-steptwo-form-inc.php' ?>
+				<?php include'declaration-steptwo\form-inc.php' ?>
 			</form>
 		</div>
 		<div class="col-lg-1 col-xxl-2"></div>
@@ -221,19 +222,33 @@ DEBUT CONTENU CONTAINER
 		$('select').on('change',function(e){
 			var selectId=e.target.id;
 			var value=$(this).val();
+			var gt=$(this).attr('data-gt');
 			sizeStrg=selectId.length;
 			selectId=selectId.substring(5,sizeStrg);
 
 			var toShowMissing="#toggleMissing"+selectId;
-				// var centrale = ;
-				if($(this).val()==8){
-					$(toShowMissing).attr('class','show');
+
+			if($(this).val()==8){
+				$(toShowMissing).attr('class','show');
+			}
+			else{
+				$(toShowMissing).attr('class','hidden');
+			}
+			var toShowSerial="#toggleSerial"+selectId;
+			var textarea="#textarea"+selectId;
+			if(gt!=8){
+				if($(this).val()==2){
+					$(toShowSerial).attr('class','show');
+					$(textarea).attr('required', true);
 				}
 				else{
-					$(toShowMissing).attr('class','hidden');
-				}
+					$(toShowSerial).attr('class','hidden');
+					$(textarea).attr('required', false);
 
-			});
+				}
+			}
+		});
+
 
 		$('.form-check-input').click(function() {
 			var radioId=this.id;

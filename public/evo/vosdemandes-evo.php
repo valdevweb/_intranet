@@ -4,52 +4,43 @@ if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
 	exit();
 }
-require '../../config/db-connect.php';
 
-//			css dynamique
-//----------------------------------------------------------------
+
+
 $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
+require '../../Class/Db.php';
+require '../../Class/evo/EvoDao.php';
+require '../../Class/evo/PlanningDao.php';
+require '../../Class/evo/EvoHelpers.php';
+
+$errors=[];
+$success=[];
+$db=new Db();
+
+$pdoUser=$db->getPdo('web_users');
+$pdoEvo=$db->getPdo('evo');
+
+$evoDao=new EvoDao($pdoEvo);
+$planningDao=new PlanningDao($pdoEvo);
 
 
-//------------------------------------------------------
-//			REQUIRES
-//------------------------------------------------------
-require_once '../../Class/EvoManager.php';
-
-$evoMgr=new EvoManager($pdoEvo);
-$listEvo=$evoMgr->getListEvoDdeur($_SESSION['id_web_user']);
-	// echo "<pre>";
-	// print_r($listEvo);
-	// echo '</pre>';
+$listEtat=EvoHelpers::arrayEtat($pdoEvo);
 
 
+$listEvo=$evoDao->getListEvoUser($_SESSION['id_web_user']);
 
-//---------------------------------------
-//	ajout enreg dans stat
-//---------------------------------------
-// require "../../functions/stats.fn.php";
-// addRecord($pdoStat,basename(__file__),'consultation', "fichiers d'info du service achats", 101);
+$listPlanning=$planningDao->getPlanningEvoUserByEvo($_SESSION['id_web_user']);
 
 
- //------------------------------------------------------
-//			DECLARATIONS
-//------------------------------------------------------
 $errors=[];
 $success=[];
 
 
 
 
-//------------------------------------------------------
-//			FONCTION
-//------------------------------------------------------
 
-
-//------------------------------------------------------
-//			VIEW
-//------------------------------------------------------
 include('../view/_head-bt.php');
 include('../view/_navbar.php');
 ?>
@@ -68,44 +59,78 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
-	<div class="row">
-		<div class="col">
-			<h2>Vos demandes</h2>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col">
-			<div class="alert alert-danger">
-				EN COURS DE DEVELOPPEMENT
 
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col">
+	<div class="row pb-5">
+		<div class="col ">
+			<table class="table table-sm shadow" id="list-evo">
+				<thead class="thead-light">
+					<tr>
+						<th class="text-right pr-5">#</th>
+						<th>Application / module</th>
+						<th>Objet</th>
+						<th>Etat</th>
+						<th>Planification</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($listEvo as $key => $evo): ?>
 
-				<table class="table">
-					<thead class="thead-dark">
 						<tr>
-							<th>Numéro</th>
-							<th>Objet</th>
-							<th>Date</th>
-							<th>Etat</th>
-							<th>Commentaire valideur</th>
+							<td class="text-right"><?=$evo['id']?></td>
+							<td><?=$evo['appli'] ?><?= (!empty($evo['module']))?"/".$evo['module']:""?></td>
+							<td><a href="evo-detail.php?id=<?=$evo['id']?>"><?=$evo['objet']?></a></td>
+							<td><?=$listEtat[$evo['id_etat']]?></td>
+							<td>
+								<?php if (isset($listPlanning[$evo['id']])): ?>
+									<?php foreach ($listPlanning[$evo['id']] as $key => $planning): ?>
+										du <?=date('d/m/Y', strtotime($planning['date_start']))?> au <?=date('d/m/Y', strtotime($planning['date_end']))?> <br>
+									<?php endforeach ?>
+								<?php endif ?>
+							</td>
 						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td></td>
-						</tr>
-					</tbody>
-				</table>
+					<?php endforeach ?>
+
+				</tbody>
+			</table>
 		</div>
 	</div>
 
 	<!-- ./container -->
 </div>
+<script src="../js/datatables.min.js"></script>
+<!-- si besoin filter colonne date -->
+<script src="../js/datatables-dates.js"></script>
+<script type="text/javascript">
 
+	$(document).ready(function(){
+		$('#list-evo').DataTable({
+			language: {
+				processing:     "Traitement en cours...",
+				search:         "Rechercher&nbsp;:",
+				lengthMenu:    "Afficher _MENU_ &eacute;l&eacute;ments",
+				info:           "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+				infoEmpty:      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+				infoFiltered:   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+				infoPostFix:    "",
+				loadingRecords: "Chargement en cours...",
+				zeroRecords:    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+				emptyTable:     "Aucune donnée disponible dans le tableau",
+				paginate: {
+					first:      "Premier",
+					previous:   "Pr&eacute;c&eacute;dent",
+					next:       "Suivant",
+					last:       "Dernier"
+				},
+				aria: {
+					sortAscending:  ": activer pour trier la colonne par ordre croissant",
+					sortDescending: ": activer pour trier la colonne par ordre décroissant"
+				}
+			},
+			"pageLength": 25,
+
+		});
+	});
+</script>
 <?php
 require '../view/_footer-bt.php';
 ?>

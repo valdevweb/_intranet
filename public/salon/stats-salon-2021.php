@@ -5,7 +5,7 @@ if(!isset($_SESSION['id'])){
   exit();
 }
 require '../../Class/Db.php';
-require '../../Class/StatsSalonDao.php';
+require '../../Class/salon/StatsSalonDao.php';
 require '../../Class/MagHelpers.php';
 
 
@@ -113,9 +113,22 @@ DEBUT CONTENU CONTAINER
     </div>
     <div class="col-lg-1"></div>
   </div>
+  <div class="row mt-5">
+    <div class="col-auto">
+      <p><a href="pdf-bt-multiple.php"><button class="btn btn-primary" id="generate-bt">Générer les badges BT</button></a></p>
+    </div>
+    <div class="col" id="msg">
+
+    </div>
+  </div>
+    <div class="row mt-5">
+      <div class="col">
+         <h3 class="text-main-blue">Les inscriptions magasin:</h3>
+      </div>
+    </div>
   <div class="row pb-3">
     <div class="col">
-      <div class="text-main-blue heavy"> Récapitulatif :</div>
+      <div class="text-main-blue heavy"> Récapitulatif</div>
     </div>
   </div>
 
@@ -172,7 +185,7 @@ DEBUT CONTENU CONTAINER
               <?=$magMardiLastYear .'/'.$nbLastYear['p_mardi']?><br>
               <?=$nbLastYear['repas_mardi']?>
             </td>
-         <td class="text-right">
+            <td class="text-right">
               &nbsp;<br>
               <?=$magMardiTwo .'/'.$nbTwo['p_mardi']?><br>
               <?=$nbTwo['repas_mardi']?>
@@ -251,6 +264,7 @@ if($nbMagPresent!=0){
   </div>
   <div class="col text-right">
     <a href="xl-generate-salon-2021.php" class="btn btn-green"><i class="fas fa-file-excel pr-3"></i>Export</a>
+    <!-- <a href="../achats-offres/xl-offres.php" class="btn btn-green"><i class="fas fa-file-excel pr-3"></i>Export o</a> -->
   </div>
 </div>
 

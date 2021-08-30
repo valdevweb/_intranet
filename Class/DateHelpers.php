@@ -85,4 +85,11 @@ class DateHelpers{
 
 	}
 
+	public static function frenchMonth($month, $size=null){
+		if(isset($size)){
+			return	$mois=self::MONTHLONG[$month];
+		}
+		return	$mois=self::MONTHSHORT[$month];
+	}
+
 }

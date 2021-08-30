@@ -21,7 +21,7 @@
 				</div>
 				<div class="col show-link">
 					<h6 class="text-main-blue show-link" data-gazette-id="<?=$gazette['id']?>"><?=$gazette['titre']?>
-						<br><a class="text-small" href="#<?=$gazette['id']?>">Voir l'info</a>
+						<br><div class="text-small" href="#<?=$gazette['id']?>">Voir l'info</div>
 					</h6>
 				</div>
 			</div>

@@ -58,9 +58,7 @@ function getFinance($pdoQlik, $btlec, $year){
 // 	echo '</pre>';
 $litigeDao=new LitigeDao($pdoLitige);
 $listLitige=$litigeDao->getLitigesByGalec($_GET['galec']);
-	// echo "<pre>";
-	// print_r($listLitigeM);
-	// echo '</pre>';
+
 
 
 $nbLitiges=count($listLitige);

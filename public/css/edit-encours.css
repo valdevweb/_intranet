@@ -1,4 +1,11 @@
 
+.btn-light{
+  border-color: #dae0e5 !important;
+  background-color: #fff !important;
+}
+
+
+
 @media (min-width: 1600px){
   .container {
     max-width: 1500px !important;

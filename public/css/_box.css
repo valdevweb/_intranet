@@ -12,7 +12,7 @@
   color: #fff;
 }
 .bg-light-grey{
-  background:rgba(0, 0, 0, 0.05)
+  background:#e2e3e5;
 }
 .bg-dust-light{
   background: #A9AABC;
@@ -210,7 +210,13 @@
   margin-right: -15px !important;
   height:  5px;
 }
-
+.hr-orange-small{
+  background-color: #f18e0b;
+  width: 20%;
+  height:  2px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 .no-bg{
   margin-left: -15px !important;
@@ -229,8 +235,9 @@
 .badge-btlec, .badge-orange{
   background: #F18E0B;
   color: #fff;
-
 }
+
+
 .w-50{
   width: 50px !important;
 }
@@ -302,4 +309,10 @@
 
 .no-margin{
   margin: 0 !important;
+}
+.hidden{
+ display: none;
+}
+.shown{
+display: block;
 }

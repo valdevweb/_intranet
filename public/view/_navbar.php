@@ -9,8 +9,16 @@ function isUserAllowed($pdoUser, $params){
 		return false;
 	}
 	return true;
+}
+
+function getListServiceContact($pdoUser){
+	$req=$pdoUser->query("SELECT * FROM services WHERE  mask_contact= 0 Order by service");
+	return $req->fetchAll(PDO::FETCH_ASSOC);
 
 }
+
+$listServiceContact=getListServiceContact($pdoUser);
+
 $dBtlec=isUserAllowed($pdoUser,[4]);
 $dMag=isUserAllowed($pdoUser, [2]);
 $dBaseMag=isUserAllowed($pdoUser, [95]);
@@ -50,20 +58,10 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 				<li><a href="<?=ROOT_PATH?>/public/mag/histo-mag.php"><span>Vos demandes</span></a></li>
 				<li class='active has-sub'><a href='#'><span>Contacter nos services</span></a>
 					<ul>
-						<li data-module="7"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=1 ">achats brun</a></li>
-						<li data-module="8"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=2 ">achats gris</a></li>
-						<li data-module="9"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=3 ">achats PEM/GEM</a></li>
-						<li data-module="16"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=10 ">comptabilité</a></li>
-						<li data-module="10"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=4 ">communication</a></li>
-						<li data-module="10"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=14 ">contre-marque</a></li>
-						<li data-module="10"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=13">contrôle de gestion</a></li>
-						<li data-module="11"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=5 ">direction</a></li>
-						<li data-module="12"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=6 ">direction commerciale</a></li>
-						<li data-module="13"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=7">exploitation informatique</a></li>
-						<li data-module="13"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=27">Leclerc Occasion</a></li>
-						<li data-module="14"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=8">logistique</a></li>
-						<li data-module="15"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=9">social</a></li>
-						<li data-module="17"><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=11">qualité</a></li>
+						<?php foreach ($listServiceContact as $key => $serviceNav): ?>
+							<li><a href="<?=ROOT_PATH?>/public/mag/contact.php?id=<?=$serviceNav['id']?> "><?=$serviceNav['service']?></a></li>
+						<?php endforeach ?>
+
 					</ul>
 				</li>
 				<li class='has-sub'><a href="#"><span>Litiges</span></a>
@@ -143,7 +141,7 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 								<li><a href='<?=ROOT_PATH?>/public/achats-odr/odr-gestion.php'  class="lighter-blue" >Gestion des odr</a></li>
 								<li><a href='<?=ROOT_PATH?>/public/achats-suivi-livraison/suivi-liv-gestion.php'  class="lighter-blue" >Gestion Suivi livraison</a></li>
 								<li><a href='<?=ROOT_PATH?>/public/achats-gesap/gesap-gestion.php'  class="lighter-blue" >Gestion des GESAP</a></li>
-								<li><a href="<?= ROOT_PATH?>/public/gazette/opp-exploit.php"  class="lighter-blue" >Ajout opportunités</a></li>
+								<li><a href="<?= ROOT_PATH?>/public/achats-opp/opp-exploit.php"  class="lighter-blue" >Ajout opportunités</a></li>
 								<li><a href="<?= ROOT_PATH?>/public/achats-gazette/gestion-gazette.php"  class="lighter-blue" >Ajout de gazettes</a></li>
 							</ul>
 						</li>
@@ -159,8 +157,8 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 					<li><a href="<?=ROOT_PATH?>/public/achats-gesap/gesap.php">Les gesaps</a></li>
 					<li><a href="<?=ROOT_PATH?>/public/achats-odr/odr.php">Les offres ODR</a></li>
 					<li><a href="<?=ROOT_PATH?>/public/achats-offres/offres.php">Les offres TEL - BRII</a></li>
-					<li><a href="<?=ROOT_PATH?>/public/gazette/opp-encours.php">Les offres spéciales</a></li>
-					<li><a href="<?=ROOT_PATH?>/public/achats-suivi-livraison/suivi-livraison.php">Le suivi des livraisons</a></li>
+					<li><a href="<?=ROOT_PATH?>/public/achats-opp/opp-encours.php">Les offres spéciales</a></li>
+					<li><a href="<?=ROOT_PATH?>/public/achats-suivi-livraison/suivi-livraison.php">Suivi livraisons catalogues</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#assortiment-title'?>">Assortiment et panier Promo</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#mdd-title'?>">MDD</a></li>
 					<li><a href="<?= ROOT_PATH. '/public/doc/display-doc.php#gfk-title'?>">GFK</a></li>
@@ -171,7 +169,7 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 				<ul>
 					<li class='has-sub'><a href="<?= ROOT_PATH. '/public/doc/com_menu.php'?>">Communication</a>
 						<ul>
-							<li><a href="<?= ROOT_PATH. '/public/doc/plancom2020.php'?>">Plan de Comm OP BTLec 2020</a></li>
+							<li><a href="<?= ROOT_PATH. '/public/doc/plancom2022.php'?>">Plan de Comm OP BTLec 2022</a></li>
 							<li><a href="<?= ROOT_PATH. '/public/doc/plancom2021.php'?>">Plan de Comm OP BTLec 2021</a></li>
 							<li><a href="<?= ROOT_PATH. '/public/doc/kitaffiche.php'?>">Kit affiches OP BTLec</a></li>
 							<?php if (!isset($_SESSION['centrale'])): ?>
@@ -194,13 +192,17 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 					<li><a href='<?=ROOT_PATH?>/public/doc/upload-main.php'>Ajouter des documents</a></li>
 				</ul>
 			</li>
-			<li>
-				<a href="#" class="">Chargé de mission <?=isset($_SESSION['rdv_cm'])?"<i class='fas fa-bell text-danger nav-bg-icon'></i>" :""?></a>
-				<ul>
-					<li><a href="<?=ROOT_PATH?>/public/cm/rdv.php">Vos rendez-vous</a></li>
-					<li><a href="<?=ROOT_PATH?>/public/cm/rapport-accueil.php">Vos comptes rendu</a></li>
-				</ul>
-			</li>
+			<?php if ($dMag): ?>
+
+				<li>
+					<a href="#" class="">Chargé de mission <?=isset($_SESSION['rdv_cm'])?"<i class='fas fa-bell text-danger nav-bg-icon'></i>" :""?></a>
+					<ul>
+						<li><a href="<?=ROOT_PATH?>/public/cm/rdv.php">Vos rendez-vous</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/cm/rapport-accueil.php">Vos comptes rendu</a></li>
+					</ul>
+				</li>
+			<?php endif ?>
+
 			<?php if ($dBtlec || $dBaseMag): ?>
 				<li  class='active has-sub'><a href="#" >Magasins</a>
 					<ul>
@@ -231,9 +233,7 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 							<li><a href='<?=ROOT_PATH?>/public/exploit/upload-adh.php'><span>Upload documents Adhérents</span></a></li>
 						<?php endif ?>
 
-						<?php if ($_SESSION['id_web_user']==981): ?>
-							<li><a href="<?=ROOT_PATH?>/public/exploit/droit.php" class="red-nav">Droits</a></li>
-						<?php endif ?>
+
 
 					</ul>
 				</li>
@@ -266,12 +266,27 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 			<?php endif ?>
 
 			<li><a href="<?=PORTAIL_SAV?>scapsav/home.php" class="tooltipped" data-position="bottom" data-tooltip="site du portail SAV">Portail SAV</a></li>
-			<?php if ($dEvo): ?>
+			<?php if ($dBtlec): ?>
+				<li><a href="http://172.30.92.53/_pilotage" >Pilotage</a></li>
+			<?php endif ?>
+
+			<?php if ($dBtlec): ?>
 				<li  class='active has-sub red-nav'><a href="#" >Evolutions</a>
 					<ul>
-						<li><a href="<?=ROOT_PATH?>/public/evo/dde-evo.php" class="red-nav">Demande d'évo</a></li>
-						<li><a href="<?=ROOT_PATH?>/public/evo/dashboard-evo.php" class="red-nav">Supervision</a></li>
+						<?php if ($dEvo): ?>
+
+							<li><a href="<?=ROOT_PATH?>/public/evo/dde-evo.php" class="red-nav">Demande d'évo</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/evo/dashboard-evo.php" class="red-nav">Supervision</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/evo/exploit-main.php" class="red-nav">Exploitation</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/evo/planning-evo.php" class="red-nav">Planning</a></li>
+							<?php if ($_SESSION['id_web_user']==981): ?>
+								<li><a href="<?=ROOT_PATH?>/public/batch-exploit/batch-monitoring.php" class="red-nav">Batch monitoring</a></li>
+								<li><a href="<?=ROOT_PATH?>/public/exploit/droit.php" class="red-nav">Droits</a></li>
+							<?php endif ?>
+						<?php endif ?>
+
 						<li><a href="<?=ROOT_PATH?>/public/evo/vosdemandes-evo.php" class="red-nav">Vos demandes</a></li>
+
 
 					</ul>
 				</li>

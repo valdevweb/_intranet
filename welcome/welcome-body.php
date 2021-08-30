@@ -67,7 +67,10 @@
 				</section>
 			</div>
 			<!-- COLONNE DROITE LIGNE 1 -->
-			<div class="col"></div>
+			<div class="col text-center">
+				<div class="norm-text">Stock valorisé : </div>
+				<div class="main-text"><?=!empty($valoStock)? number_format($valoStock['valo'],0," "," "): ""?>&euro;</div>
+			</div>
 		</div>
 		<!-- FIN 1 LIGNE COMPLETE ********************************************************************************************************************************************* -->
 		<!-- 2 LIGNE COMPLETE **********************************************************************************************************************************************************-->

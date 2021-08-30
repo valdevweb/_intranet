@@ -23,8 +23,8 @@ $jMoinsUnLastYear=$dayToDisplayPrev;
 
 
 	// echo "<pre>";
-	// print_r($dayToDisplay);
-	// print_r($jMoinsUn);
+	// // print_r($dayToDisplay);
+	// // print_r($jMoinsUn);
 	// print_r($jMoinsUnLastYear);
 	// echo '</pre>';
 
@@ -214,6 +214,7 @@ if($anneeFinPourcent>=0){
 	$yearEndText="Reste à faire :";
 }
 
+$valoStock=valoStock($pdoQlik);
 
 
 include 'welcome-body.php';

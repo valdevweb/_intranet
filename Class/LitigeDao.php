@@ -90,7 +90,7 @@ class LitigeDao{
 	// return $req->errorInfo();
 	}
 
-		public function getLitigeDossierDetailById($idLitige){
+	public function getLitigeDossierDetailById($idLitige){
 		$req=$this->pdo->prepare("
 			SELECT *, details.id as id_detail, magasin.mag.id as btlec FROM dossiers	LEFT JOIN details ON dossiers.id=details.id_dossier	LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE dossiers.id= :id ");
 		$req->execute(array(
@@ -232,9 +232,7 @@ class LitigeDao{
 			':puv'			=>$puv,
 			':pul'			=>$pul
 		));
-	// return $req->errorInfo();
-		$row=$req->rowCount();
-		return	$row;
+		return	$this->pdo->lastInsertId();
 	}
 
 	public function addDetailsExcedent($idDossier,$numDossier, $article, $ean,$dossierG, $descr, $qteC,	$tarif, $fou, $cnuf, $qteLitige, $idReclamation, $valo){
@@ -343,16 +341,24 @@ class LitigeDao{
 	}
 
 	public function getDdeOuverture($statut){
-	$req=$this->pdo->prepare("SELECT ouv.id as id_ouv, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, magasin.mag.deno, magasin.mag.id  as btlec, etat, ouv.galec, dossiers.dossier,  dossiers.id as id_dossier_litige FROM ouv
-		LEFT JOIN magasin.mag ON ouv.galec=magasin.mag.galec
-		LEFT JOIN dossiers ON ouv.id_litige=dossiers.id
-		WHERE ouv.etat= :etat
-		ORDER BY date_saisie DESC ");
-	$req->execute([
-		':etat'	=>$statut
-	]);
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
+		$req=$this->pdo->prepare("SELECT ouv.id as id_ouv, DATE_FORMAT(date_saisie, '%d-%m-%Y') as datesaisie, msg, pj, magasin.mag.deno, magasin.mag.id  as btlec, etat, ouv.galec, dossiers.dossier,  dossiers.id as id_dossier_litige FROM ouv
+			LEFT JOIN magasin.mag ON ouv.galec=magasin.mag.galec
+			LEFT JOIN dossiers ON ouv.id_litige=dossiers.id
+			WHERE ouv.etat= :etat
+			ORDER BY date_saisie DESC ");
+		$req->execute([
+			':etat'	=>$statut
+		]);
+		return $req->fetchAll(PDO::FETCH_ASSOC);
+	}
 
+	public function updateDetailTemp($id,$gt){
+		$req=$this->pdo->prepare("UPDATE details_temp SET gt= :gt WHERE id=:id");
+		$req->execute([
+			':id'		=>$id,
+			':gt'		=>$gt
+		]);
+		return $req->rowCount();
+	}
 
 }

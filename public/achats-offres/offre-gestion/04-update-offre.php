@@ -2,7 +2,7 @@
 
 if(is_numeric($_POST['montant'])){
 	if (strpos('.', $_POST['montant']) !== false) {
-	$montant =number_format( $_POST['montant'] ,2 , "." ," " );
+	$montant =number_format( $_POST['montant'] ,2 , "." ,"" );
 	}else{
 	$montant =$_POST['montant'];
 	}
@@ -12,7 +12,7 @@ if(is_numeric($_POST['montant'])){
 }
 if(is_numeric($_POST['montant_finance'])){
 	if (strpos('.', $_POST['montant_finance']) !== false) {
-	$montantF =number_format( $_POST['montant_finance'] ,2 , "." ," " );
+	$montantF =number_format( $_POST['montant_finance'] ,2 , "." ,"" );
 	}else{
 	$montantF =$_POST['montant_finance'];
 	}
@@ -20,8 +20,8 @@ if(is_numeric($_POST['montant_finance'])){
 	$errors[]="Veuillez saisir un montant correct (ex : 150, 10.52, etc.)";
 }
 if(is_numeric($_POST['pvc'])){
-	$pvc =number_format( $_POST['pvc'] ,2 , "." ," " );
-
+	$pvc =number_format( $_POST['pvc'] ,2 , "." ,"" );
+	echo $pvc;
 }else{
 	$errors[]="Veuillez saisir un prix de vente conseillé correct (ex : 150, 10.52, etc.)";
 }

@@ -97,14 +97,16 @@ if (($handle = fopen($fouFile, "r")) !== FALSE) {
 
 if(notEmptyQlikFou($pdoQlik)){
 	$req=$pdoFou->query("DELETE FROM fournisseurs");
-
 	$data=importInFou($pdoFou);
-
-
-
-
 
 }else{
 	echo "vide";
 }
 
+
+
+
+
+
+	$req=$pdoFou->query("DELETE FROM fournisseurs");
+	$data=importInFou($pdoFou);

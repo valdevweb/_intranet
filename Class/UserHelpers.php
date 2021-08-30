@@ -11,6 +11,18 @@ class UserHelpers{
 		$data=$req->fetch(PDO::FETCH_ASSOC);
 		return $data;
 	}
+	public static function getUserByIdWebuser($pdoUser,$idwebuser){
+		$req=$pdoUser->prepare("SELECT * FROM intern_users WHERE id_web_user= :id_web_user");
+		$req->execute([
+			':id_web_user'	=>$idwebuser
+		]);
+		$data=$req->fetch(PDO::FETCH_ASSOC);
+		return $data;
+	}
+	public static function getFullnameIdwebuser($pdoUser,$idwebuser){
+		$data=self::getUserByIdWebuser($pdoUser,$idwebuser);
+		return $data['fullname'];
+	}
 
 
 	public static function getMagInfoByIdWebUser($pdoUser, $pdoMag, $idwebuser,$field=null){
@@ -83,7 +95,7 @@ class UserHelpers{
 	}
 	public static function getLdGt($pdoUser, $gt){
 		$req=$pdoUser->prepare("SELECT * FROM gts_ld WHERE id_gt= :id_gt");
-			$req->execute([
+		$req->execute([
 			':id_gt'	=>$gt
 		]);
 		return $req->fetchAll();

@@ -96,7 +96,6 @@ include('../view/_navbar.php');
 	<div class="bg-separation"></div>
 
 
-
 </div>
 
 
@@ -114,6 +113,8 @@ include('../view/_navbar.php');
 	};
 
 	$(document).ready(function(){
+
+
 
 		$('input[name="fic"]').change(function(){
 			var fileList='';
@@ -211,7 +212,75 @@ include('../view/_navbar.php');
 			$('#filename-other').append(all);
 			fileList="";
 		});
-	});
+
+		var x_timer=0.5;
+		$('#search').keyup(function(){
+            // clearTimeout(x_timer);
+            var search = $(this).val();
+            $.ajax({
+            	url:"saisie-manuelle-offre/ajax-get-article.php",
+            	method:"POST",
+            	data:{search:search},
+            	success:function(data)
+            	{
+            		$('#result').fadeIn();
+            		$('#result').html(data);
+            	}
+            });
+
+        });
+		$(document).on('click','.selected-art',function(){
+			var id= $(this).attr("data-id-ba");
+			console.log("id "+id);
+			$.ajax({
+				url:"saisie-manuelle-offre/ajax-get-selected-article.php",
+				method:"POST",
+				data:{id:id},
+				success:function(data){
+					// $('#result').fadeIn();
+					// $('#result').html(data);
+					console.log(data);
+					//
+					json = $.parseJSON(data);
+					console.log(json);
+
+					console.log(json.marque);
+
+					$('#marque').val(json.marque);
+					$('#ean').val(json.ean);
+					$('#produit').val(json.libelle);
+					$('#reference').val(json.libelle);
+					$('#gt').val(json.gt);
+					$('#pvc').val(json.ppi);
+					$('#result').empty();
+
+				}
+			});
+		});
+
+
+
+
+
+
+		$(document).on('click', 'li', function(){
+			$('#search_term').val($(this).text());
+			$('#magList').fadeOut();
+		});
+
+		$(document).on('keypress', '#search_term', function(e){
+			if(e.which == 13){
+				e.preventDefault();
+				var url=$('.result-item').first().attr('href');
+				var goto="./"+url;
+				$(location).attr('href',goto);
+			}
+
+		});
+
+
+// 4712900497045
+});
 </script>
 
 

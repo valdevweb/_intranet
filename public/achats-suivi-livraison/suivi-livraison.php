@@ -46,7 +46,7 @@ include('../view/_navbar.php');
 <div class="container">
 	<div class="row py-5">
 		<div class="col">
-			<h1 class="text-main-blue">Le suivi livraison</h1>
+			<h1 class="text-main-blue">Suivi livraisons catalogues</h1>
 		</div>
 	</div>
 	<div class="row">

@@ -194,9 +194,12 @@ h2{
 <?php
 
 $sumValo=0;
-foreach ($litige as $prod)
-{
-	$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
+foreach ($litige as $prod){
+	if($prod['qte_cde']!=0){
+		$valo=round(($prod['tarif'] / $prod['qte_cde'])*$prod['qte_litige'],2);
+	}else{
+		$valo=round(($prod['tarif'] )*$prod['qte_litige'],2);
+	}
 
 	if($prod['inversion'] !="")
 	{

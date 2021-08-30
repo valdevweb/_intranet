@@ -34,45 +34,6 @@ require('../../Class/OccHelpers.php');
 
 
 
-function getFinance($pdoQlik, $btlec, $year){
-	$req=$pdoQlik->prepare("SELECT CA_Annuel FROM statsventesadh WHERE CodeBtlec= :btlec AND AnneeCA= :year");
-	$req->execute(array(
-		':btlec' =>$btlec,
-		':year'	=>$year
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
-
-
-function getSumDeclare($pdoLitige,$galec,$year){
-	$req=$pdoLitige->prepare("SELECT sum(valo) as sumValo FROM dossiers WHERE galec=:galec AND DATE_FORMAT(date_crea, '%Y')=:year");
-	$req->execute([
-		':galec'		=>$galec,
-		':year'			=>$year
-	]);
-	return $req->fetch(PDO::FETCH_ASSOC);
-
-}
-
-function getMtMag($pdoLitige,$galec,$year){
-	$req=$pdoLitige->prepare("SELECT sum(mt_mag) as sumMtMag FROM dossiers WHERE galec=:galec AND DATE_FORMAT(date_crea, '%Y')=:year");
-	$req->execute([
-		':galec'		=>$galec,
-		':year'			=>$year
-	]);
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
-
-
-function getCoutTotalYear($pdoLitige,$galec,$year){
-	$req=$pdoLitige->prepare("SELECT sum(mt_mag) as mtMag, sum(mt_assur) as mtassur, sum(mt_transp) as mttransp, sum(mt_fourn) as mtfourn FROM dossiers WHERE galec=:galec AND DATE_FORMAT(date_crea, '%Y')=:year");
-	$req->execute([
-		':galec'		=>$galec,
-		':year'			=>$year
-	]);
-	return $req->fetch(PDO::FETCH_ASSOC);
-
-}
 
 
 function updateValo($pdoLitige, $valo,$flag){
@@ -120,8 +81,7 @@ function searchPalette($pdoQlik,$palette)
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 // maj si recherche palette
-function addPaletteInv($pdoLitige,$palette,$facture,$date_facture,$article,$ean,$dossier_gessica,$descr,$qte_cde,$tarif,$fournisseur, $cnuf)
-{
+function addPaletteInv($pdoLitige,$palette,$facture,$date_facture,$article,$ean,$dossier_gessica,$descr,$qte_cde,$tarif,$fournisseur, $cnuf){
 	$req=$pdoLitige->prepare("INSERT INTO palette_inv (id_dossier, palette, facture, date_facture, article, ean, dossier_gessica, descr, qte_cde, tarif, fournisseur, cnuf, found)
 		VALUES (:id_dossier, :palette, :facture, :date_facture, :article, :ean, :dossier_gessica, :descr, :qte_cde, :tarif, :fournisseur, :cnuf, :found)");
 	$req->execute(array(
@@ -226,7 +186,12 @@ $actionList=$litigeDao->getAction($_GET['id']);
 $coutTotal=$infos['mt_transp']+$infos['mt_assur']+$infos['mt_fourn']+$infos['mt_mag'];
 $arMagOcc=MagHelpers::getListMagOcc($pdoMag);
 
+if(isset($infoLitige[0])){
+	$codeBt=$infoLitige[0]['btlec'];
+	$codeGalec=$infoLitige[0]['galec'];
 
+	include 'ca/01-caphp.php';
+}
 if($infos['ctrl_ok']==0){
 	$ctrl="non contrôlé";
 }
@@ -243,29 +208,7 @@ if($coutTotal!=0){
 
 $articleAZero='';
 
-$yearN=date('Y');
-$yearNUn= date("Y",strtotime("-1 year"));
-$yearNDeux= date("Y",strtotime("-2 year"));
 
-$financeN=getFinance($pdoQlik,$infoLitige[0]['btlec'],$yearN);
-$financeNUn=getFinance($pdoQlik,$infoLitige[0]['btlec'],$yearNUn);
-$financeNDeux=getFinance($pdoQlik,$infoLitige[0]['btlec'],$yearNDeux);
-$reclameN=getSumDeclare($pdoLitige,$infoLitige[0]['galec'],$yearN);
-$reclameNUn=getSumDeclare($pdoLitige,$infoLitige[0]['galec'],$yearNUn);
-$reclameNDeux=getSumDeclare($pdoLitige,$infoLitige[0]['galec'],$yearNDeux);
-
-$rembourseN=getMtMag($pdoLitige,$infoLitige[0]['galec'],$yearN);
-$rembourseNUn=getMtMag($pdoLitige,$infoLitige[0]['galec'],$yearNUn);
-$rembourseNDeux=getMtMag($pdoLitige,$infoLitige[0]['galec'],$yearNDeux);
-
-$coutN=getCoutTotalYear($pdoLitige,$infoLitige[0]['galec'],$yearN);
-$coutN=$coutN['mtMag']+$coutN['mtfourn']+$coutN['mttransp']+$coutN['mtassur'];
-$coutNUn=getCoutTotalYear($pdoLitige,$infoLitige[0]['galec'],$yearNUn);
-$coutNUn=$coutNUn['mtMag']+$coutNUn['mtfourn']+$coutNUn['mttransp']+$coutNUn['mtassur'];
-
-$coutNDeux=getCoutTotalYear($pdoLitige,$infoLitige[0]['galec'],$yearNDeux);
-
-$coutNDeux=$coutNDeux['mtMag']+$coutNDeux['mtfourn']+$coutNDeux['mttransp']+$coutNDeux['mtassur'];
 
 
 if($infoLitige[0]['flag_valo']==2){
@@ -336,24 +279,24 @@ if(isset($_POST['submit-serials'])){
 
 if(isset($_POST['not_read'])){
 	foreach ($_POST['not_read'] as $idDial => $value) {
-	if (UserHelpers::isUserAllowed($pdoUser,['94']) || $_SESSION['id_web_user']==1402){
-		$dialDao->updateRead($idDial,0);
-		header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
-	}else{
-		$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
+		if (UserHelpers::isUserAllowed($pdoUser,['94']) || $_SESSION['id_web_user']==1402){
+			$dialDao->updateRead($idDial,0);
+			header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
+		}else{
+			$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
+		}
 	}
-}
 }
 if(isset($_POST['read'])){
 	foreach ($_POST['read'] as $idDial => $value) {
 
-	if (UserHelpers::isUserAllowed($pdoUser,['94']) || $_SESSION['id_web_user']==1402){
-		$dialDao->updateRead($idDial,1);
-		header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
-	}else{
-		$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
+		if (UserHelpers::isUserAllowed($pdoUser,['94']) || $_SESSION['id_web_user']==1402){
+			$dialDao->updateRead($idDial,1);
+			header("Location: ".$_SERVER['PHP_SELF']."?id=".$_GET['id']."#".$_POST['id_dial']);
+		}else{
+			$errors[]="vos droits ne vous permettent pas d'utiliser cette fonctionnalité";
+		}
 	}
-}
 }
 
 
@@ -411,6 +354,7 @@ else{
 	$prev=0;
 }
 
+
 	// echo "<pre>";
 	// print_r($infoLitige);
 	// echo '</pre>';
@@ -429,8 +373,28 @@ DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
 
+	<div class="row pb-3">
+		<div class="col-8">
+			<?php include('ca\10-cahtml.php');?>
+		</div>
+		<div class="col text-right">
+				<?php if ($prev!=0): ?>
+					<a href="bt-detail-litige.php?id=<?=$prev?>" class="grey-link"><i class="fas fa-angle-left pr-2 pt-2"></i>Litige précédent</a>
+				<?php endif ?>
+				<?php if ($next!=$last): ?>
+					<a href="bt-detail-litige.php?id=<?=$next?>" class="grey-link"><i class="fas fa-angle-right pl-5 pr-2 pt-1"></i>Litige suivant</a>
+
+				<?php endif ?>
+			<p class="text-right mt-5"><a href="bt-litige-encours.php" class="btn btn-primary">Retour</a></p>
+
+
+		</div>
+		<div class="col-auto align-self-end pt-5">
+		</div>
+	</div>
+
 	<?php
-	include('bt-detail-litige\01-view-ca-pagenav.php');
+
 	include('bt-detail-litige\02-view-head-dossier.php');
 	?>
 

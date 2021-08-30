@@ -25,6 +25,7 @@ addRecord($pdoStat,$page,$action, $descr, 101);
 
 
 require '../../Class/LitigeDao.php';
+require '../../Class/BaDao.php';
 require '../../Class/MagDao.php';
 require '../../Class/Mag.php';
 require '../../Class/OccPaletteMgr.php';
@@ -39,7 +40,6 @@ function getMagIdwebuser($pdoUser)
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
-
 
 
 // création du dossier dans la table ($idRobbery = 0 si pas vol, 1 si vol)
@@ -66,7 +66,6 @@ function insertDossier($pdoLitige, $numDossier,$magId, $idRobbery){
 }
 
 
-// recupère les infos articles dans la base statventes
 function getSelectedDetails($pdoQlik,$id){
 	$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges WHERE id= :id");
 	$req->execute(array(
@@ -75,9 +74,6 @@ function getSelectedDetails($pdoQlik,$id){
 	));
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
-
-
-
 
 
 
@@ -115,7 +111,7 @@ $magDao=new MagDao($pdoMag);
 $occDao=new OccPaletteMgr($pdoOcc);
 $magInfo=$magDao->getMagAndScaTroisInfoByGalec($_SESSION['id_galec']);
 $magUser=$magDao->getWebUser($_SESSION['id_galec']);
-
+$baDao= new BaDao($pdoQlik);
 
 
 // ajoute nom du mag au titre si declaration faite par btlec
@@ -123,7 +119,6 @@ $magtxt="";
 if($_SESSION['type']=='btlec'){
 	$magtxt="<span class='text-reddish'>pour ".$magInfo['deno']."</span>";
 }
-
 
 // si on vient de la page déclaration de vol et que l'on a récupéré les numéros de palettes volées, on lance la recherche directement
 if(isset($_SESSION['palette'])){
@@ -133,25 +128,20 @@ if(isset($_SESSION['palette'])){
 // initialisation des variables suivant le user connecté
 if($_SESSION['type']=='btlec'){
 	$magId=$magUser['id_web_user'];
-
-
-	// echo $magId=$magId['id_web_user'];
 }else{
 	$magId=$_SESSION['id_web_user'];
 }
 
 
-
 // AFFICHAGE RESULTAT DE LA RECHERCHE DE PALETTE/FACTURE
 if(isset($_POST['submit'])){
-
-	include 'declaration-stepone-search-inc.php';
+	include 'declaration-stepone\search-inc.php';
 }
 
 
 // TRAITEMENT VALIDATION FORMUALIRE SELECTION ARTICLE
 if(isset($_POST['choose'])){
-	include 'declaration-stepone-insert-inc.php';
+	include 'declaration-stepone\insert-inc.php';
 }
 
 
@@ -241,45 +231,50 @@ DEBUT CONTENU CONTAINER
 	<?php
 	ob_start();
 	?>
-	<div class="row">
-		<div class="col-lg-1 col-xxl-2"></div>
-		<div class="col bg-alert bg-alert-grey">
-			<form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" id="submit">
-				<p class="text-center alert-title-grey"><span class="text-main-blue"><?=  isset($searchStr) ? 'Votre recherche : '.$searchStr : '' ?></span></p>
-				<p  class="text-center heavy alert-title-grey">Résultats :</p>
-				<p class="text-main-blue heavy">
-					<span class="step step-bg-blue mr-3">1</span>Sélectionnez le ou les articles sur lesquels vous avez un litige à déclarer
-				</p>
-				<div class="alert alert-light">
-					<p class="text-main-blue">Dans le cas d'une <span class="text-reddish">inversion de palette ou d'une palette manquante ou en excédent,</span> merci de cocher ci dessous l'option "palette entière"</p>
-					<div class="form-check">
-						<input type="checkbox" class="form-check-input" id="checkpalette" name="palette_complete">
-						<label class="form-check-label" for="checkAll">Palette entière</label>
+
+
+	<?php if (isset($dataSearch)): ?>
+
+
+		<div class="row">
+			<div class="col-lg-1 col-xxl-2"></div>
+			<div class="col bg-alert bg-alert-grey">
+				<form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" id="submit">
+					<p class="text-center alert-title-grey"><span class="text-main-blue"><?=  isset($searchStr) ? 'Votre recherche : '.$searchStr : '' ?></span></p>
+					<p  class="text-center heavy alert-title-grey">Résultats :</p>
+					<p class="text-main-blue heavy">
+						<span class="step step-bg-blue mr-3">1</span>Sélectionnez le ou les articles sur lesquels vous avez un litige à déclarer
+					</p>
+					<div class="alert alert-light">
+						<p class="text-main-blue">Dans le cas d'une <span class="text-reddish">inversion de palette ou d'une palette manquante ou en excédent,</span> merci de cocher ci dessous l'option "palette entière"</p>
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input" id="checkpalette" name="palette_complete">
+							<label class="form-check-label" for="checkAll">Palette entière</label>
+						</div>
 					</div>
-				</div>
 
 
 
 
 
-				<!-- <p class="text-main-blue font-italic closer"><i class="fas fa-info-circle"></i>Vous pouvez trier les résultats en cliquant sur les entêtes de colonne</p> -->
-				<!-- <div class="alert alert-light"><i class="fas fa-info-circle pr-3"></i>Vous pouvez trier les résultats en cliquant sur les entêtes de colonne</div> -->
+					<!-- <p class="text-main-blue font-italic closer"><i class="fas fa-info-circle"></i>Vous pouvez trier les résultats en cliquant sur les entêtes de colonne</p> -->
+					<!-- <div class="alert alert-light"><i class="fas fa-info-circle pr-3"></i>Vous pouvez trier les résultats en cliquant sur les entêtes de colonne</div> -->
 
-				<table class="table table-striped border border-white">
-					<thead class="thead-dark">
-						<tr>
-							<th>Date facture</th>
-							<th>Facture</th>
-							<th>Palette</th>
-							<th>ean</th>
-							<th>Article</th>
-							<th>Désignation</th>
-							<th><i class="fas fa-times-circle"></i></th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php if (empty($dataSearch)): ?>
-							<p>La palette que vous recherchez n'a pas été trouvée ? Elle ne vous était pas destinée ? Veuillez vous rendre sur <a href="dde-ouv-dossier.php">cette page</a></p>
+					<table class="table table-striped border border-white">
+						<thead class="thead-dark">
+							<tr>
+								<th>Date facture</th>
+								<th>Facture</th>
+								<th>Palette</th>
+								<th>ean</th>
+								<th>Article</th>
+								<th>Désignation</th>
+								<th><i class="fas fa-times-circle"></i></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php if (empty($dataSearch)): ?>
+								<p>La palette que vous recherchez n'a pas été trouvée ? Elle ne vous était pas destinée ? Veuillez vous rendre sur <a href="dde-ouv-dossier.php">cette page</a></p>
 
 							<?php else : ?>
 								<?php foreach ($dataSearch as  $sResult): ?>
@@ -332,92 +327,92 @@ DEBUT CONTENU CONTAINER
 											<input type="hidden" class="form-check-input" name="hidden_boxdetail[]" value="">
 											<input type="hidden" class="form-check-input" name="hidden_occasion[]" value="<?=$sResult['article']?>">
 										<?php endforeach ?>
-										<?php else: ?>
-											<tr class="<?=$boxClass.' '. $classBoxDetail?>">
-												<td><?=$sResult['date_mvt']?></td>
-												<td><?=$sResult['facture']?></td>
-												<td><?=$sResult['palette']?></td>
-												<td><?=$sResult['gencod']?></td>
-												<td><?=$sResult['article']?></td>
-												<td><?=$sResult['libelle']?></td>
-												<td>
-													<div class="form-check article">
-														<input class="form-check-input checkarticle <?=$sResult['palette']?>" type="checkbox"
-														data-id="<?=$idBox?>" name="article_id[]" value="<?=$sResult['id']?>" id="<?=$idBox?>">
-													</div>
-												</td>
-											</tr>
-											<input type="hidden" class="form-check-input" name="hidden_id[]" value="<?=$sResult['id']?>">
-											<input type="hidden" class="form-check-input" name="hidden_palette[]" value="<?=$sResult['palette']?>">
-											<input type="hidden" class="form-check-input" name="hidden_facture[]" value="<?=$sResult['facture']?>">
-											<input type="hidden" class="form-check-input" name="hidden_date_facture[]" value="<?=$sResult['date_mvt']?>">
-											<input type="hidden" class="form-check-input" name="hidden_article[]" value="<?=$sResult['article']?>">
-											<input type="hidden" class="form-check-input" name="hidden_ean[]" value="<?=$sResult['gencod']?>">
-											<input type="hidden" class="form-check-input" name="hidden_dossier[]" value="<?=$sResult['dossier']?>">
-											<input type="hidden" class="form-check-input" name="hidden_descr[]" value="<?=$sResult['libelle']?>">
-											<input type="hidden" class="form-check-input" name="hidden_qte[]" value="<?=$sResult['qte']?>">
-											<input type="hidden" class="form-check-input" name="hidden_tarif[]" value="<?=$sResult['tarif']?>">
-											<input type="hidden" class="form-check-input" name="hidden_fou[]" value="<?=$sResult['fournisseur']?>">
-											<input type="hidden" class="form-check-input" name="hidden_cnuf[]" value="<?=$sResult['cnuf']?>">
-											<input type="hidden" class="form-check-input" name="hidden_boxhead[]" value="<?=$sResult['box-tete']?>">
-											<input type="hidden" class="form-check-input" name="hidden_boxdetail[]" value="<?=$sResult['box-detail']?>">
-											<input type="hidden" class="form-check-input" name="hidden_occasion[]" value="">
+									<?php else: ?>
+										<tr class="<?=$boxClass.' '. $classBoxDetail?>">
+											<td><?=$sResult['date_mvt']?></td>
+											<td><?=$sResult['facture']?></td>
+											<td><?=$sResult['palette']?></td>
+											<td><?=$sResult['gencod']?></td>
+											<td><?=$sResult['article']?></td>
+											<td><?=$sResult['libelle']?></td>
+											<td>
+												<div class="form-check article">
+													<input class="form-check-input checkarticle <?=$sResult['palette']?>" type="checkbox"
+													data-id="<?=$idBox?>" name="article_id[]" value="<?=$sResult['id']?>" id="<?=$idBox?>">
+												</div>
+											</td>
+										</tr>
+										<input type="hidden" class="form-check-input" name="hidden_id[]" value="<?=$sResult['id']?>">
+										<input type="hidden" class="form-check-input" name="hidden_palette[]" value="<?=$sResult['palette']?>">
+										<input type="hidden" class="form-check-input" name="hidden_facture[]" value="<?=$sResult['facture']?>">
+										<input type="hidden" class="form-check-input" name="hidden_date_facture[]" value="<?=$sResult['date_mvt']?>">
+										<input type="hidden" class="form-check-input" name="hidden_article[]" value="<?=$sResult['article']?>">
+										<input type="hidden" class="form-check-input" name="hidden_ean[]" value="<?=$sResult['gencod']?>">
+										<input type="hidden" class="form-check-input" name="hidden_dossier[]" value="<?=$sResult['dossier']?>">
+										<input type="hidden" class="form-check-input" name="hidden_descr[]" value="<?=$sResult['libelle']?>">
+										<input type="hidden" class="form-check-input" name="hidden_qte[]" value="<?=$sResult['qte']?>">
+										<input type="hidden" class="form-check-input" name="hidden_tarif[]" value="<?=$sResult['tarif']?>">
+										<input type="hidden" class="form-check-input" name="hidden_fou[]" value="<?=$sResult['fournisseur']?>">
+										<input type="hidden" class="form-check-input" name="hidden_cnuf[]" value="<?=$sResult['cnuf']?>">
+										<input type="hidden" class="form-check-input" name="hidden_boxhead[]" value="<?=$sResult['box-tete']?>">
+										<input type="hidden" class="form-check-input" name="hidden_boxdetail[]" value="<?=$sResult['box-detail']?>">
+										<input type="hidden" class="form-check-input" name="hidden_occasion[]" value="">
 
-										<?php endif ?>
-
-
+									<?php endif ?>
 
 
 
-									<?php endforeach ?>
 
-								<?php endif ?>
 
-							</tbody>
-						</table>
-						<div class="alert alert-light">
-							<div class="row">
-								<div class="col"></div>
-								<div class="col">
-									<div class="form-check">
-										<input type="checkbox" class="form-check-input" id="checkAll">
-										<label class="form-check-label" for="checkAll">Sélectionner tout / désélectionner tout</label>
-									</div>
-								</div>
-							</div>
+								<?php endforeach ?>
 
-							<?php if (!empty($dataSearch)): ?>
-								<?php
-								$arPalettesCheckBox = array_column($dataSearch, 'palette');
-								$arPalettesCheckBox=array_unique($arPalettesCheckBox);
-								$arPalettesCheckBox=array_values($arPalettesCheckBox);
-								?>
-								<?php for ($i=0; $i < count($arPalettesCheckBox) ; $i++):?>
-									<div class="row">
-										<div class="col"></div>
-										<div class="col">
-											<div class="form-check">
-												<input type="checkbox" class="form-check-input list-palette" id="<?=$arPalettesCheckBox[$i]?>">
-												<label class="form-check-label" for="checkAll">Sélectionner tous les articles de la palette <?= $arPalettesCheckBox[$i]?></label>
-											</div>
-										</div>
-									</div>
-
-								<?php endfor?>
 							<?php endif ?>
 
-							<p><i class="fas fa-info-circle  pr-3"></i>Le produit que vous avez reçu n'apparaît pas dans la liste et vous avez bien reçu tous les autres produits commandés ? Veuillez vous rendre sur <a href="dde-ouv-dossier.php">cette page</a></p>
-
-
+						</tbody>
+					</table>
+					<div class="alert alert-light">
+						<div class="row">
+							<div class="col"></div>
+							<div class="col">
+								<div class="form-check">
+									<input type="checkbox" class="form-check-input" id="checkAll">
+									<label class="form-check-label" for="checkAll">Sélectionner tout / désélectionner tout</label>
+								</div>
+							</div>
 						</div>
-						<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">2</span>Nom de l'interlocuteur</p>
-						<div class="form-group">
-							<input type="text" class="form-control"  name="nom" required>
-						</div>
 
-						<?php
-						ob_start();
-						?>
+						<?php if (!empty($dataSearch)): ?>
+							<?php
+							$arPalettesCheckBox = array_column($dataSearch, 'palette');
+							$arPalettesCheckBox=array_unique($arPalettesCheckBox);
+							$arPalettesCheckBox=array_values($arPalettesCheckBox);
+							?>
+							<?php for ($i=0; $i < count($arPalettesCheckBox) ; $i++):?>
+								<div class="row">
+									<div class="col"></div>
+									<div class="col">
+										<div class="form-check">
+											<input type="checkbox" class="form-check-input list-palette" id="<?=$arPalettesCheckBox[$i]?>">
+											<label class="form-check-label" for="checkAll">Sélectionner tous les articles de la palette <?= $arPalettesCheckBox[$i]?></label>
+										</div>
+									</div>
+								</div>
+
+							<?php endfor?>
+						<?php endif ?>
+
+						<p><i class="fas fa-info-circle  pr-3"></i>Le produit que vous avez reçu n'apparaît pas dans la liste et vous avez bien reçu tous les autres produits commandés ? Veuillez vous rendre sur <a href="dde-ouv-dossier.php">cette page</a></p>
+
+
+					</div>
+					<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">2</span>Nom de l'interlocuteur</p>
+					<div class="form-group">
+						<input type="text" class="form-control"  name="nom" required>
+					</div>
+
+					<?php if ($_SESSION['type']=="btlec"): ?>
+
+
 						<div class="row">
 							<div class="col">
 								<p class="text-main-blue heavy"><span class="step step-bg-blue mr-3">3</span>Date de déclaration</p>
@@ -444,93 +439,91 @@ DEBUT CONTENU CONTAINER
 
 							</div>
 						</div>
+					<?php endif ?>
 
 
-						<?php
-						$datebtform=ob_get_contents();
-						ob_end_clean();
-						if($_SESSION['type']=="btlec"){
-							echo $datebtform;
-						}
-
-						?>
-
-						<p class="text-right"><button class="btn btn-primary" type="submit" name="choose" id="choose">Valider</button></p>
 
 
-					</form>
-				</div>
-				<div class="col-lg-1 col-xxl-2"></div>
+					<p class="text-right"><button class="btn btn-primary" type="submit" name="choose" id="choose">Valider</button></p>
+
+
+				</form>
 			</div>
-			<?php
-			$dataMag=ob_get_contents();
-			ob_end_clean();
-			if(isset($_POST['submit'])){
-				echo $dataMag;
-			}
-			?>
-			<!-- ./row -->
+			<div class="col-lg-1 col-xxl-2"></div>
 		</div>
-		<script src="../js/sorttable.js"></script>
-		<script type="text/javascript">
-
-			$("#checkAll").click(function () {
-				$('.article input:checkbox').not(this).prop('checked', this.checked);
-			});
-
-			$("#checkpalette").click(function () {
-
-				$('input:checkbox').not(this).prop('checked', this.checked);
-			});
+	<?php endif ?>
 
 
-			$(".list-palette").click(function(){
-				var palette=$(this).attr('id');
-				$('.'+ palette).prop('checked', this.checked);
-			});
 
 
-			$("#search").submit(function( event )
-			{
-				$("#waitun" ).append('<i class="fas fa-spinner fa-spin"></i><span class="pl-3">Merci de patienter pendant la recherche</span>')
-			});
 
-			$("#submit").submit(function( event )
-			{
-				$("#waitdeux" ).append('<i class="fas fa-spinner fa-spin"></i><span class="pl-3">Merci de patienter</span>')
 
-			});
 
-			$('.checkarticle').click(function(e)
-			{
-				var test=$(e.target).closest('tr');
+
+
+	<!-- ./row -->
+</div>
+<script src="../js/sorttable.js"></script>
+<script type="text/javascript">
+
+
+	$("#checkAll").click(function () {
+		$('.article input:checkbox').not(this).prop('checked', this.checked);
+	});
+
+	$("#checkpalette").click(function () {
+
+		$('input:checkbox').not(this).prop('checked', this.checked);
+	});
+
+
+	$(".list-palette").click(function(){
+		var palette=$(this).attr('id');
+		$('.'+ palette).prop('checked', this.checked);
+	});
+
+
+	$("#search").submit(function( event )
+	{
+		$("#waitun" ).append('<i class="fas fa-spinner fa-spin"></i><span class="pl-3">Merci de patienter pendant la recherche</span>')
+	});
+
+	$("#submit").submit(function( event )
+	{
+		$("#waitdeux" ).append('<i class="fas fa-spinner fa-spin"></i><span class="pl-3">Merci de patienter</span>')
+
+	});
+
+	$('.checkarticle').click(function(e)
+	{
+		var test=$(e.target).closest('tr');
 			// console.log(test);
 		});
 
-			var boxText='<tr><td class="heavy text-red"colspan="7"><i class="fas fa-exclamation-triangle pr-3"></i>Vous avez sélectionné un BOX, veuillez cocher parmi les articles du box (en bleu),ceux sur lesquels vous avez un litige </td>/<tr>';
+	var boxText='<tr><td class="heavy text-red"colspan="7"><i class="fas fa-exclamation-triangle pr-3"></i>Vous avez sélectionné un BOX, veuillez cocher parmi les articles du box (en bleu),ceux sur lesquels vous avez un litige </td>/<tr>';
 
-			$('input[type=checkbox]').click(function(){
-				var id=$(this).data("id");
-				if($(this).is(":checked")) {
-					$('#'+id).closest('tr').after(boxText);
-					$('.'+id).show();
-					$('.'+id).addClass('text-blue');
-				}
-				else
-				{
-					$('.'+id).hide();
-					var thistr=$('#'+id).closest('tr');
-					thistr.next().remove();
-				}
+	$('input[type=checkbox]').click(function(){
+		var id=$(this).data("id");
+		if($(this).is(":checked")) {
+			$('#'+id).closest('tr').after(boxText);
+			$('.'+id).show();
+			$('.'+id).addClass('text-blue');
+		}
+		else
+		{
+			$('.'+id).hide();
+			var thistr=$('#'+id).closest('tr');
+			thistr.next().remove();
+		}
 
-			});
-
-
-		</script>
+	});
 
 
-		<?php
+</script>
 
-		require '../view/_footer-bt.php';
 
-		?>
+<?php
+
+require '../view/_footer-bt.php';
+
+?>

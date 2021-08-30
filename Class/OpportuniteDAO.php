@@ -33,11 +33,12 @@ class OpportuniteDAO{
 		return $this->pdoBt->lastInsertId();
 	}
 
-	public function addMainFile($idOpp, $filename, $image, $ordre){
-		$req=$this->pdoBt->prepare("INSERT INTO opp_files_main (id_opp, filename, image, ordre) VALUES (:id_opp, :filename, :image, :ordre)");
+	public function addMainFile($idOpp, $filename, $name, $image, $ordre){
+		$req=$this->pdoBt->prepare("INSERT INTO opp_files_main (id_opp, filename, name, image, ordre) VALUES (:id_opp, :filename, :name, :image, :ordre)");
 		$req->execute([
 			':id_opp'		=>$idOpp,
 			':filename'	=>$filename,
+			':name'	=>$name,
 			':image'		=>$image,
 			':ordre'	 =>$ordre
 		]);

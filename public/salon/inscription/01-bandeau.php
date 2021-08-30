@@ -7,6 +7,7 @@
 				<li><a href="#inscription-lk">Inscription</a></li>
 				<li><a href="#formation-lk">Formations</a></li>
 				<li><a href="#modalite-lk">Modalités</a></li>
+				<li><a href="#sanitaire-lk">Protocole sanitaire</a></li>
 			</ul>
 			<div class="text-secondary"><i class="fab fa-ravelry"></i><i class="fab fa-ravelry"></i><i class="fab fa-ravelry"></i></div>
 		</div>

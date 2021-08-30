@@ -35,7 +35,7 @@
 						<div class="col">
 							<?php foreach ($listFlashBt as $key => $flash): ?>
 								<h3 class="text-main-blue mt-5"><?=$flash['title']?></h3>
-								<p><?=$flash['content']?></p>
+								<p><?=nl2br($flash['content'])?></p>
 							<?php endforeach ?>
 
 						</div>

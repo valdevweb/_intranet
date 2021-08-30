@@ -30,8 +30,12 @@ if(isset($_POST['occasion'])){
 
 	}
 }
-
-
+if(isset($_POST['dial_notif'])){
+	$_SESSION['filter-notif']='dial';
+}
+if(isset($_POST['action_notif'])){
+	$_SESSION['filter-notif']='action';
+}
 if(isset($_POST['reset-pending'])){
 	unset($_POST['pending']);
 	unset($_SESSION['filter-data']);

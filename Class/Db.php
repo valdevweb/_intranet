@@ -1,6 +1,5 @@
 <?php
 class Db{
-
 	private $dbName="";
 	private $dbUser="sql";
 	private $host='172.30.92.53';
@@ -26,11 +25,12 @@ class Db{
 		}
 		catch(Exception $e)
 		{
-			die('Erreur : '.$e->getMessage());
+			// die('Erreur : '.$e->getMessage());
 		}
 		return  $pdo;
 	}
 
 }
 
-?>
+
+

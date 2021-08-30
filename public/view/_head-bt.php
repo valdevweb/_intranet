@@ -14,6 +14,8 @@
 	<link rel="stylesheet" href="../css/_btn.css?<?= filemtime('../css/commun.css');?>">
 	<link rel="stylesheet" href="../css/_font.css?<?= filemtime('../css/commun.css');?>">
 	<link rel="stylesheet" href="../css/_txt.css?<?= filemtime('../css/commun.css');?>">
+    <link rel="stylesheet" type="text/css" href="../css/datatables.css">
+
 	<link rel="stylesheet" href="../css/nav.css">
 	<link rel="stylesheet" type="text/css" href="../css/footer.css">
 	<!-- style propre  -->
@@ -33,11 +35,13 @@
 	?>
 
 	<link rel="stylesheet" href="../../vendor/bootstrap/css/bootstrap.css">
+	<link rel="stylesheet" href="../../vendor/jquery-ui/jquery-ui.css">
 	<link href="../../vendor/fontawesome5/css/all.css" rel="stylesheet">
 
 	<!--  Scripts-->
 	<!-- on charge jquery dès le début pour pouvoir ajouter dynamiquement des scripts qui utilisent jquery -->
 	<script src="../../vendor/jquery/jquery-3.2.1.min_ex.js"></script>
+	<script src="../../vendor/jquery-ui/jquery-ui.js"></script>
 	<script src="../../vendor/bootstrap/js/bootstrap.js"></script>
 	<script src="../../vendor/igorescobar/jquery-mask-plugin/src/jquery.mask.js"></script>
 

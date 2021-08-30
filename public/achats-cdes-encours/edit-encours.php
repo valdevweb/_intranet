@@ -10,8 +10,8 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require '../../Class/Db.php';
-require '../../Class/CdesDao.php';
-require '../../Class/CdesAchatDao.php';
+require '../../Class/achats/CdesDao.php';
+require '../../Class/achats/CdesAchatDao.php';
 
 require '../../Class/FormHelpers.php';
 
@@ -43,17 +43,24 @@ if(isset($_SESSION['temp'])){
 	echo "Aucun article sélectionné. Veuillez cocher les articles sur lesquels vous souhaitez saisir des informations.<a href='cdes-encours.php'>Retour</a>";
 	exit();
 }
+$totalColis=0;
+$totalUv=0;
+foreach ($listProd as $key => $prod) {
+	$totalUv+=$prod['qte_uv_cde'];
+	$totalColis+=$prod['qte_cde'];
+
+}
 
 if(isset($_POST['save'])){
 	$idDetail=key($_POST['qte_previ']);
 	foreach ($_POST['qte_previ'] as $idDetail => $value) {
 		if($_POST['date_previ'][$idDetail]!=null || $_POST['qte_previ'][$idDetail]!=null || $_POST['cmt'][$idDetail] !=null ){
-			$dateGlobale=(empty($_POST['date_globale']))?null:$_POST['date_globale'];
 
-			$date=(empty($_POST['date_previ'][$idDetail]))?$dateGlobale:$_POST['date_previ'][$idDetail];
+
+			$date=(empty($_POST['date_previ'][$idDetail]))?null:$_POST['date_previ'][$idDetail];
 			$qte=(empty($_POST['qte_previ'][$idDetail]))?null:$_POST['qte_previ'][$idDetail];
 			$cmt=(empty($_POST['cmt'][$idDetail]))?"":$_POST['cmt'][$idDetail];
-			$cdesAchatDao->insertInfos($idDetail,$date, $qte, $cmt);
+			$cdesAchatDao->insertInfos(null, $idDetail,$date, $qte, $cmt);
 		}
 	}
 	$successQ='?success=saved';
@@ -88,7 +95,7 @@ include('../view/_navbar.php');
 ?>
 
 <div class="container">
-	<div class="row py-5">
+	<div class="row pt-5">
 		<div class="col">
 			<h1 class="text-main-blue">Saisie d'info livraison</h1>
 		</div>
@@ -108,35 +115,62 @@ include('../view/_navbar.php');
 
 
 	<div class="row">
+		<div class="col text-orange font-weight-bold">
+			Saisie globale :
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-auto ">
+			<div class="form-group">
+				<label for="date_globale" >Date prévisionnelle globale : </label>
+				<input type="date" class="form-control ml-2" name="date_globale" id="date_globale">
+			</div>
+		</div>
+		<div class="col">
+			<div class="form-group">
+				<label for="text_global">Commentaire globale :</label>
+				<textarea class="form-control" name="text_global" id="text_global"></textarea>
+			</div>
+		</div>
+
+	</div>
+	<div class="row mb-3">
+		<div class="col"></div>
+		<div class="col-auto text-center border-right">
+			Nb de références :
+			<div class="text-orange font-weight-bold"><?=count($listProd)?></div>
+		</div>
+		<div class="col-auto text-center border-right">
+			Total colis restants :
+			<div class="text-orange font-weight-bold"><?=$totalColis?></div>
+		</div>
+		<div class="col-auto text-center">
+			Total UV restantes : <br>
+			<div class="text-orange font-weight-bold"><?=$totalUv?></div>
+
+		</div>
+		<div class="col"></div>
+	</div>
+
+	<div class="row">
 		<div class="col">
 			<form action="<?=htmlspecialchars($_SERVER['PHP_SELF']).$paramForm?>" method="post">
-				<div class="row">
-					<div class="col">
-						Pour ne pas avoir à saisir une date prévisionnelle de livraison pour tous les articles, vous pouvez la saisir ci-dessous. Elle sera ajoutée automatiquement aux articles pour lesquels vous aurez saisi une quantité et/ou un commentaire
-					</div>
-				</div>
-				<div class="row">
-					<div class="col"></div>
-					<div class="col-auto text-center">
-						<div class="form-group form-inline">
-							<label for="date_globale" class="text-orange font-weight-bold">Date prévisionnelle globale : </label>
-							<input type="date" class="form-control ml-2" name="date_globale" id="date_globale">
-						</div>
-					</div>
-					<div class="col"></div>
-				</div>
 
 				<?php if (!empty($listProd)): ?>
 					<?php foreach ($listProd as $key => $prod): ?>
 						<div class="row">
-							<div class="col border-left border-right border-top pb-3">
+							<div class="col border-left border-right border-top">
 								<div class="row bg-dark-grey py-2">
 									<div class="col">
 										<?=$prod['libelle_art']?>
-
 									</div>
 								</div>
-								<div class="row ">
+								<div class="row bg-orange">
+									<div class="col-lg-2">
+										<span class="font-weight-bold">Référence :</span>
+										<?=$prod['ref']?>
+									</div>
 									<div class="col-lg-2">
 										<span class="font-weight-bold">Article :</span>
 										<?=$prod['article']?>
@@ -145,15 +179,7 @@ include('../view/_navbar.php');
 										<span class="font-weight-bold">Dossier :</span>
 										<?=$prod['dossier']?>
 									</div>
-									<div class="col-lg-2">
-										<span class="font-weight-bold">Marque :</span>
-										<?=$prod['marque']?>
 
-									</div>
-									<div class="col-lg-2">
-										<span class="font-weight-bold">Référence :</span>
-										<?=$prod['ref']?>
-									</div>
 									<div class="col">
 										<span class="font-weight-bold">EAN :</span>
 										<?=$prod['ean']?>
@@ -181,7 +207,7 @@ include('../view/_navbar.php');
 									</div>
 									<div class="col-auto">
 										<span class="font-weight-bold">UV restants : </span>
-										<?=$prod['qte_uv_cde']?>
+										<span data-uv="<?=$prod['id']?>" data-nb-uv="<?=$prod['qte_uv_cde']?>"><?=$prod['qte_uv_cde']?></span>
 									</div>
 									<div class="col-auto">
 										<span class="font-weight-bold">PCB : </span>
@@ -190,7 +216,10 @@ include('../view/_navbar.php');
 									<div class="col-auto">
 										<span class="font-weight-bold">Date livraison : </span>
 										<?=($prod['date_liv']!=null)?date('d/m/y', strtotime($prod['date_liv'])):""?>
-
+									</div>
+									<div class="col-auto">
+										<span class="font-weight-bold">Date début op : </span>
+										<?=($prod['date_start']!=null)?date('d/m/y', strtotime($prod['date_start'])):""?>
 									</div>
 								</div>
 							</div>
@@ -200,11 +229,11 @@ include('../view/_navbar.php');
 							<?php if(isset($listInfos[$prod['id']])):?>
 								<div class="row">
 									<div class="col border-left border-right border-bottom">
-										<div class="row">
+						<!-- 				<div class="row">
 											<div class="col text-center">
 												<h6 class="text-orange">Informations livraison :</h6>
 											</div>
-										</div>
+										</div> -->
 										<?php foreach ($listInfos[$prod['id']] as $keyInfo => $value): ?>
 
 											<div class="row">
@@ -212,19 +241,21 @@ include('../view/_navbar.php');
 													<i class="fas fa-arrow-alt-circle-right pr-2"></i>Infos du <?=date('d/m/y', strtotime($listInfos[$prod['id']][$keyInfo]['date_insert']))?>
 												</div>
 											</div>
-											<div class="row mb-2">
+											<div class="row ">
+												<div class="col-lg-1"></div>
 												<div class="col-lg-2">
 													<span class="font-weight-bold">Date prévi : </span><?=($listInfos[$prod['id']][$keyInfo]['date_previ']!=null)?date('d/m/y', strtotime($listInfos[$prod['id']][$keyInfo]['date_previ'])):""?>
 												</div>
 												<div class="col-lg-2">
 													<span class="font-weight-bold">Qte prévi : </span><?=$listInfos[$prod['id']][$keyInfo]['qte_previ']?>
-
 												</div>
-												<div class="col-lg-5">
+												<div class="col-lg-4">
 													<span class="font-weight-bold">Commentaires : </span><?=$listInfos[$prod['id']][$keyInfo]['cmt']?>
 												</div>
 												<div class="col text-right">
 													<a href="?update=<?=$listInfos[$prod['id']][$keyInfo]['id']?>" class="btn btn-secondary">Modifier</a>
+												</div>
+												<div class="col-auto text-right">
 													<a href="?del=<?=$listInfos[$prod['id']][$keyInfo]['id']?>" class="btn btn-danger">Supprimer</a>
 												</div>
 
@@ -249,10 +280,10 @@ include('../view/_navbar.php');
 												<input type="date" class="form-control" name="date_previ_update" value="<?=$infoLiv['date_previ']?>">
 											</div>
 										</div>
-										<div class="col-auto">
+										<div class="col-3">
 											<div class="form-group">
 												<label>Quantité prévisionnelle :</label>
-												<input type="text" class="form-control w-60" name="qte_previ_update" placeholder="qte prévi" value="<?=$infoLiv['qte_previ']?>">
+												<input type="text" class="form-control" name="qte_previ_update" placeholder="qte prévi" value="<?=$infoLiv['qte_previ']?>">
 											</div>
 										</div>
 										<div class="col">
@@ -261,7 +292,7 @@ include('../view/_navbar.php');
 												<textarea class="form-control" name="cmt_update"  row="3"><?=$infoLiv['cmt']?></textarea>
 											</div>
 										</div>
-										<div class="col-lg-2 mt-5">
+										<div class="col-lg-auto mt-5">
 											<button class="btn btn-primary" name="update">Mettre à jour</button>
 
 										</div>
@@ -273,19 +304,20 @@ include('../view/_navbar.php');
 							<div class="col-auto">
 								<div class="form-group">
 									<label>Date de livraison prévisionnelle :</label>
-									<input type="date" class="form-control" name="date_previ[<?=$prod['id']?>]" >
+									<input type="date" class="form-control date" name="date_previ[<?=$prod['id']?>]" >
 								</div>
 							</div>
-							<div class="col-auto">
+							<div class="col-3">
 								<div class="form-group">
 									<label>Quantité prévisionnelle :</label>
-									<input type="text" class="form-control w-60" name="qte_previ[<?=$prod['id']?>]" placeholder="qte prévi">
+									<input type="text" class="form-control qte-saisie" name="qte_previ[<?=$prod['id']?>]" placeholder="qte prévi" data-id="<?=$prod['id']?>">
+									<div class="restant" data-restant="<?=$prod['id']?>"></div>
 								</div>
 							</div>
 							<div class="col">
 								<div class="form-group">
 									<label>Commentaires :</label>
-									<textarea class="form-control" name="cmt[<?=$prod['id']?>]"  row="3"></textarea>
+									<textarea class="form-control cmt" name="cmt[<?=$prod['id']?>]"  row="3"></textarea>
 								</div>
 							</div>
 						</div>
@@ -304,7 +336,44 @@ include('../view/_navbar.php');
 	</div>
 
 </div>
+<script>
 
+
+	$(document).ready(function(){
+
+		$('#date_globale').on("change", function(){
+			var date=$('#date_globale').val();
+			$(".date").val(date);
+		});
+		$('#text_global').keyup(function(){
+			var cmt=$('#text_global').val();
+
+			$(".cmt").val(cmt);
+
+		});
+		$('.qte-saisie').keyup(function(){
+			var saisie=$(this).val();
+			var id=$(this).data('id');
+
+			var div=$("div").find(`[data-restant='${id}']`)
+			var uv=$('[data-uv="'+id+'"]');
+			var nbUv=uv.text();
+
+			var restant = nbUv -saisie;
+			div.empty();
+			div.append("Restant : <span class='text-success font-weight-bold'>"+restant+"</span>");
+
+		})
+	});
+	document.addEventListener("DOMContentLoaded", function(event) {
+		var scrollpos = localStorage.getItem('scrollpos');
+		if (scrollpos) window.scrollTo(0, scrollpos);
+	});
+
+	window.onbeforeunload = function(e) {
+		localStorage.setItem('scrollpos', window.scrollY);
+	};
+</script>
 <?php
 require '../view/_footer-bt.php';
 ?>

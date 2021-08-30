@@ -26,6 +26,7 @@ define("ROOT_PATH","/".VERSION."btlecest");
 define("SITE_ADDRESS", "http://".SERVER_NAME."/".VERSION."btlecest");
 define("URL_UPLOAD","http://".SERVER_NAME."/".VERSION."upload-main/btlecest/" );
 define("DIR_IMPORT_GESSICA","D:\btlec\dumps\gessica\\");
+define("DIR_IMPORT_DUMP","D:\btlec\dumps\\");
 define("DIR_SITE","D:\www\\".VERSION."intranet\\".VERSION."btlecest\\");
 define("CM_UPLOAD_URL","http://".SERVER_NAME."/".VERSION."upload-main/cm/" );
 define("ANDROID_UPLOAD","http://".SERVER_NAME."/".VERSION."android/upload/" );

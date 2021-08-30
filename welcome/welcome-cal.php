@@ -14,33 +14,34 @@ function getLaVeille($today){
 function getFirstDayOfEachMonth($thisYear){
 
 	$lastYear=$thisYear-1;
+	//créa tableau date du 1er de chaque mois pour année en cours, année suivante
 	for ($i=1; $i <=12 ; $i++) {
-		if($i<10){
-			$strdateActu=$thisYear."/0".$i."/01";
-			$strdatePrev=$lastYear."/0".$i."/01";
-
-		}else{
-			$strdateActu=$thisYear."/".$i."/01";
-			$strdatePrev=$lastYear."/".$i."/01";
-		}
-
+		$strdateActu=$thisYear."/".$i."/01";
+		$strdatePrev=$lastYear."/".$i."/01";
 		$firstDayActuList[$i]=new DateTimeImmutable($strdateActu);
 		$firstDayPrevList[$i]=new DateTimeImmutable($strdatePrev);
-
 	}
-
+// modifie le 1er jour du mois en fonction du jour (lundi, mardi, etc) de ce 1er jour du mois
 	for ($i=1; $i <=12 ; $i++) {
-		if(($firstDayActuList[$i]->format('N')==7)  ){
-			$diff=-(0-$firstDayPrevList[$i]->format('N'));
-			$firstDayActuList[$i]=$firstDayActuList[$i]->modify('+ '.$diff.'day');
-		}elseif($firstDayPrevList[$i]->format('N')==6){
+		// if(($firstDayActuList[$i]->format('N')==7)  ){
+		// 	// echo "jour de la semaine" .$firstDayPrevList[$i]->format('N');
+		// 	$diff=-(1-$firstDayPrevList[$i]->format('N'));
+		// 	$firstDayActuList[$i]=$firstDayActuList[$i]->modify('+ '.$diff.'day');
+		// 	// echo"cas 1 pour le mois de ".$i ." on a ".$firstDayActuList[$i]->format('d-m-Y');
+		// 	// echo "<br>";
+
+
+		// }else
+		if($firstDayPrevList[$i]->format('N')==6){
+
 			$diff=-($firstDayActuList[$i]->format('N')-$firstDayPrevList[$i]->format('N'));
-			$firstDayActuList[$i]=$firstDayActuList[$i]->modify('+ '.$diff.'day');
+			$firstDayActuList[$i]=$firstDayActuList[$i]->modify(' '.$diff.'day');
+			// 		echo " cas 2 pour le mois de ".$i ." on a ".$firstDayActuList[$i]->format('d-m-Y');
+			// echo "<br>";
 		}elseif($firstDayPrevList[$i]->format('N')==7){
 			$diff=$firstDayActuList[$i]->format('N')- 0;
 			$firstDayPrevList[$i]=$firstDayPrevList[$i]->modify($diff .' day');
-		}
-		else{
+		}else{
 			$diff=$firstDayActuList[$i]->format('N')-$firstDayPrevList[$i]->format('N');
 			$firstDayPrevList[$i]=$firstDayPrevList[$i]->modify($diff .' day');
 		}
@@ -63,23 +64,37 @@ if(isset($forceDay)){
 
 
 $dayToDisplay=getLaVeille($today);
+
+
 			//renvoie le tableau des 1er jours du mois calculés suivant les regles excel de David - logique reprise mais pas comprise
 
 list($firstDayActuList, $firstDayPrevList)= getFirstDayOfEachMonth($dayToDisplay->format('Y'));
+
+
 $monthForCalcul=$dayToDisplay->format('n');
 $firstDayOfMonthActu=$firstDayActuList[$monthForCalcul];
+// echo "<pre>";
+// print_r($firstDayPrevList);
+// echo '</pre>';
+
 $firstDayOfMonthPrev=$firstDayPrevList[$monthForCalcul];
 
 // on vérfie si on est inférieur ou supèrieur à la date de début de mois
 
 
 if($dayToDisplay<$firstDayOfMonthActu){
+	// echo "jour à afficher inférieur au 1er jour du mois calculé";
+	// echo $dayToDisplay;
 	$dayToDisplayPrev="";
+
 }else{
+
+
 	// calcul du nb de jourss passé depuis le 1er du mois du tableau
 	// $depuisLePremierDuMois=(date_diff($dayToDisplay,$firstDayOfMonthActu))->format('%d');
 	// $depuisLePremierDuMois=(date_diff($firstDayOfMonthActu,$dayToDisplay))->format('d');
 	$depuisLePremierDuMois=(date_diff($firstDayOfMonthActu,$dayToDisplay))->days;
+
 
 	// echo "nb  jours " .$depuisLePremierDuMois;
 	$dayToDisplayPrev=$firstDayOfMonthPrev->modify($depuisLePremierDuMois .' day');

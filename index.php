@@ -10,7 +10,6 @@ require('Class/FlashDao.php');
 require('functions/login.fn.php');
 
 
-
 /*---------------------------------------------------------------------*/
 /* 						détection navigateur     							*/
 /*---------------------------------------------------------------------*/
@@ -182,7 +181,7 @@ if(!empty($revRes))
 						<div class="col px-5 inside-infos">
 							<p class="center-text pt-2"><i class="fa fa-bell fa-lg" aria-hidden="true"></i></p>
 							<h4 class="orange-text text-darken-3 text-center"><?=$flash['title']?></h4>
-							<p class="text-left"><?=$flash['content']?></p>
+							<p class="text-left"><?=nl2br($flash['content'])?></p>
 						</div>
 						<div class="col-1"></div>
 					</div>

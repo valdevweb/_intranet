@@ -99,4 +99,46 @@ class UserDao{
 		return $req->fetchAll();
 	}
 
+	public function getServicesMailing(){
+
+		$req=$this->pdo->prepare("SELECT * FROM services WHERE mailing is not null order by service");
+		$req->execute([
+
+		]);
+		return $req->fetchAll();
+	}
+	public function getBtlecUserEvo(){
+		$req=$this->pdo->prepare("SELECT * FROM intern_users WHERE ld_evo=1 AND email !='' order by fullname");
+		$req->execute([
+
+		]);
+		return $req->fetchAll();
+	}
+	public function getUserById($id){
+		$req=$this->pdo->prepare("SELECT intern_users.*, services.mailing FROM intern_users LEFT JOIN services ON intern_users.id_service =services.id WHERE intern_users.id=:id");
+		$req->execute([
+			':id'	=>$id
+		]);
+		return $req->fetch();
+	}
+
+	public function getServiceById($id){
+		$req=$this->pdo->prepare("SELECT * FROM services WHERE id=:id");
+		$req->execute([
+			':id'	=>$id
+		]);
+		return $req->fetch();
+	}
+	public function getUserByServiceById($idService, $withMail){
+		$param="";
+		if($withMail){
+			$param= " AND email IS NOT NULL";
+		}
+		$req=$this->pdo->prepare("SELECT * FROM intern_users WHERE id_service=:id_service {$param} ORDER BY fullname");
+		$req->execute([
+			':id_service'	=>$idService
+		]);
+		return $req->fetchAll();
+	}
+
 }

@@ -11,9 +11,9 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 
 require '../../Class/Db.php';
-require '../../Class/CdesDao.php';
-require '../../Class/CdesAchatDao.php';
-require '../../Class/CdesRelancesDao.php';
+require '../../Class/achats/CdesDao.php';
+require '../../Class/achats/CdesAchatDao.php';
+require '../../Class/achats/CdesRelancesDao.php';
 require '../../Class/FournisseursHelpers.php';
 require '../../Class/UserDao.php';
 require '../../Class/UserHelpers.php';

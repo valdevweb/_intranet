@@ -15,7 +15,7 @@
 						<?php foreach ($files as $key => $file): ?>
 							<tr>
 								<td class="px-5 text-center">
-									<a href="<?=URL_UPLOAD.'gsap/'.$file['file']?>"><?= $file['file']?></a><br>
+									<a href="<?=URL_UPLOAD.'gesap/'.$file['file']?>"><?= $file['file']?></a><br>
 								</td>
 								<td>
 

@@ -22,7 +22,6 @@
 		@page{
 			margin-top: 4cm;
 			margin-bottom: 4cm;
-
 		}
 		.text-center{
 			text-align: center;

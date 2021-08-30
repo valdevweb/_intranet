@@ -15,8 +15,25 @@
 							</select>
 						</div>
 					</div>
+					<div class="col">
+						<div class="row">
+							<div class="col-5">
+								<div class="form-group">
+									<label for="search"> EAN de l'article : </label>
+									<input type="text" class="form-control  form-primary" name="search" id="search" placeholder="ean">
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
+
 				<div class="row">
+					<div class="col" id="result">
+
+					</div>
+				</div>
+
+				<div class="row mt-5">
 					<div class="col-lg-3">
 						<div class="form-group">
 							<label for="marque">Marque</label>
@@ -105,6 +122,6 @@
 		</div>
 	</div>
 
-	<?php else: ?>
-		<div class="alert alert-danger">Pour ajouter des offres, vous devez au préalable créer le prospectus auquel celles-ci se rattachent</div>
-		<?php endif ?>
+<?php else: ?>
+	<div class="alert alert-danger">Pour ajouter des offres, vous devez au préalable créer le prospectus auquel celles-ci se rattachent</div>
+	<?php endif ?>

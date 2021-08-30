@@ -58,6 +58,27 @@ class BatchDao{
 		]);
 		return $req->rowCount();
 	}
+
+
+	public function getBatchError($param){
+
+		$req=$this->pdo->query("SELECT batch_error.*, appli, page, dir FROM batch_error
+			LEFT JOIN appli ON id_appli=appli.id
+			LEFT JOIN batch ON id_batch=batch.id
+			LEFT JOIN batch_dir ON batch_error.id_dir=batch_dir.id
+			WHERE done = 0 $param");
+		return $req->fetchAll();
+	}
+
+	public function updateError($id, $done, $cmt){
+		$req=$this->pdo->prepare("UPDATE batch_error SET done= :done, cmt= :cmt WHERE id= :id");
+		$req->execute([
+			':done'		=>$done,
+			':cmt'		=>$cmt,
+			':id'		=>$id
+		]);
+		return $req->rowCount();
+	}
 }
 
 

@@ -10,6 +10,7 @@ else{
 include 'config/config.inc.php';
 include 'config/db-connect.php';
 include 'functions/tasklog.fn.php';
+require 'Class/mag/LotusDao.php';
 
 /*
 vérif dans table imports si import avec done à 0 => si oui, la table lotus_ld a été changée donc :
@@ -90,6 +91,13 @@ function updateImport($pdoMag,$id){
 }
 // regarde si import non traité => done à 0
 $newData=undoneImport($pdoMag);
+
+$lotusDao= new LotusDao($pdoMag);
+
+
+
+
+
 if(!$newData){
 	exit;
 }
@@ -128,9 +136,44 @@ foreach ($allLdEmails as $key => $ld) {
 echo "nb de maj " . $updatedIds;
 echo "<br>";
 
-	echo "<pre>";
-	print_r($errors);
-	echo '</pre>';
+echo "<pre>";
+print_r($errors);
+echo '</pre>';
+
+//  ajout adresses réachemeniement
+$listEmails=$lotusDao->getAllMailFromLd();
+
+$lotusCon=ldap_connect('217.0.222.26',389);
+$ldaptree    = "OU=galec,o=e-leclerc,c=fr";
+$ldapuser="ADMIN_BTLEC";
+$lpappass="toronto";
+$ldapbind = ldap_bind($lotusCon, $ldapuser, $lpappass) or die ("Error trying to bind: ".ldap_error($ldapbind));
+$justThese = array( "mail","displayname", "mailaddress");
+
+foreach ($listEmails as $email) {
+
+			// echo $email['contenu'];
+	$name=explode('@',$email['email']);
+
+	if (count($name)>1) {
+		$name=trim($name[0]);
+
+
+		$result=ldap_search($lotusCon, $ldaptree, "(CN=*".$name."*)",$justThese);
+		$data = ldap_get_entries($lotusCon, $result);
+
+		if(isset($data[0]['mailaddress'])){
+			if(str_contains($data[0]['mailaddress'][0],'.leclerc')){
+				$lotusDao->updateRouting($email['id'], $data[0]['mailaddress'][0]);
+				echo "OUI pour " .$name ."et k'adresse mail ".$email['email'] ." REDIRECTION " .$data[0]['mailaddress'][0];
+				echo "<br>";
+			}
+		}
+	}
+}
+
+
+
 
 // maj import => traité
 $over=updateImport($pdoMag, $newData[0]['id']);

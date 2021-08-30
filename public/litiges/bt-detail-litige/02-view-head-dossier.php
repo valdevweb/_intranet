@@ -55,7 +55,7 @@
 							</h4>
 						</div>
 						<div class="col-auto">
-							<h4 class="khand pt-2 text-right pr-3"><?= MagHelpers::centraleToSTring($pdoMag,$infoLitige[0]['centrale']) ?></h4>
+							<h4 class="khand pt-2 text-right pr-3"><?= ($infoLitige[0]['centrale']!=0)?MagHelpers::centraleToSTring($pdoMag,$infoLitige[0]['centrale']):"" ?></h4>
 						</div>
 					</div>
 					<div class="row">

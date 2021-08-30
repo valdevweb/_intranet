@@ -89,7 +89,7 @@ function updateSca($pdoMag){
 		':racine_list'		=>$_POST['racine_list'],
 		':affilie'		=>$_POST['affilie'],
 		':occasion'		=>$_POST['occasion'],
-		':backoffice_sca'		=>$_POST['backoffice_sca'],
+		':backoffice_sca'		=>(empty($_POST['backoffice_sca']))?NULL :$_POST['backoffice_sca'],
 		':date_update'	=>date('Y-m-d H:i:s')
 	]);
 	return $req->rowCount();

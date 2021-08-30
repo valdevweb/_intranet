@@ -99,8 +99,18 @@ a.text-ctbt{
 
 
 
+a.link-orange{
+  color: #f18e0b !important;
+  font-weight: bold;
+}
 
+a:hover.link-orange{
+  color: #f18e0b !important;
+  font-weight: bold;
+  letter-spacing: 0.2px;
+  text-decoration: none;
 
+}
 
 
 a.link-blue{
@@ -186,4 +196,71 @@ a:hover.link-white{
 
 .font-weight-boldless{
   font-weight: 500;
+}
+
+
+.tooltiplaunch {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  width: 240px;
+  background-color: rgba(248, 248, 248, 0.8);
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
+}
+
+.tooltiplaunch:hover .tooltiptext, .tooltiplaunch:hover .tooltiptext-yellow {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+
+
+
+.tooltiptext-yellow {
+  visibility: hidden;
+  width: 240px;
+  background-color: #ffc107;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltiptext-yellow::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
 }

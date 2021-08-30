@@ -5,29 +5,28 @@ if(!isset($_SESSION['id'])){
 	exit();
 }
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-
-
-//------------------------------------------------------
-//			REQUIRES
-//------------------------------------------------------
-require_once '../../vendor/autoload.php';
 
 require '../../Class/Db.php';
+
+require_once '../../vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+// require '../../config/db-connect.php';
+
 require '../../Class/ProspectusDao.php';
 require '../../Class/OffreDao.php';
 
-$errors=[];
-$success=[];
+
+
 $db=new Db();
 $pdoUser=$db->getPdo('web_users');
+
 $pdoDAchat=$db->getPdo('doc_achats');
 
 
 $prospDao=new ProspectusDao($pdoDAchat);
 $offreDao=new OffreDao($pdoDAchat);
-
 
 
 $listFiles=$prospDao->getComingProspectusFiles();
@@ -40,7 +39,7 @@ $spreadsheet = new Spreadsheet();
 $sheet = $spreadsheet->getActiveSheet();
 $sheet->setCellValue('A1', 'Code op');
 $sheet->setCellValue('b1', 'Nom opération');
-
+$sheet->setCellValue('c1', 'Nom opération');
 $sheet->setCellValue('d1', 'Date de début');
 $sheet->setCellValue('e1', 'Date de fin');
 $sheet->setCellValue('f1', 'fic');
@@ -54,15 +53,15 @@ $sheet->setCellValue('m1', 'offre');
 $sheet->setCellValue('n1', 'montant');
 $sheet->setCellValue('o1', 'montant financé');
 $sheet->setCellValue('p1', 'commentaire');
-$sheet->setCellValue('q1', 'fichiers');
-$sheet->setCellValue('r1', 'liens');
 
 $row=2;
+
 foreach ($listProsp as $key => $prosp) {
 	if (isset($listOffre[$prosp['id']])){
 		foreach ($listOffre[$prosp['id']] as $key => $offre){
 			$sheet->setCellValue('A'.$row, $prosp['code_op']);
 			$sheet->setCellValue('b'.$row, $prosp['prospectus']);
+			$sheet->setCellValue('c'.$row, $prosp['prospectus']);
 
 			$sheet->setCellValue('d'.$row, date('d/m/Y',strtotime($prosp['date_start'])));
 			$sheet->setCellValue('e'.$row, date('d/m/Y',strtotime($prosp['date_end'])));
@@ -114,12 +113,12 @@ foreach ($listProsp as $key => $prosp) {
 		}
 	}
 }
+
 $highestRow = $sheet->getHighestRow();
 
 
 $highestColumn = $sheet->getHighestColumn();
 $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
-
 
 for ($i=0; $i < $highestColumnIndex ; $i++){
 	$sheet->getColumnDimension(\PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($i))->setAutoSize(true);
@@ -129,19 +128,37 @@ $sheet->getStyle('I2:I'.$highestRow)
 ->setFormatCode(
 	'0000000000000'
 );
+
 $sheet->getStyle('q2:q'.$highestRow)->getAlignment()->setWrapText(true);
 $sheet->getStyle('r2:r'.$highestRow)->getAlignment()->setWrapText(true);
 
+$filename="offres-tel-brii.xls";
 
-header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="offres-tel-brii.xlsx"');
+// $writer = new Xlsx($spreadsheet);
+// header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+// header('Content-Disposition: attachment;filename="'.$filename.'"');
+// header('Cache-Control: max-age=0');
+
+// $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+// $writer->save('php://output');
+// // $writer->save($filename);
+// exit();
+
+
+
+// header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+// header('Content-Disposition: attachment;filename="myfile.xlsx"');
+// header('Cache-Control: max-age=0');
+
+// $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+// $writer->save('php://output');
+
+
+
+
+header('Content-Type: application/vnd.ms-excel');
+header('Content-Disposition: attachment;filename="'.$filename.'"');
 header('Cache-Control: max-age=0');
 
-$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+$writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xls');
 $writer->save('php://output');
-exit();
-
-
-
-
-

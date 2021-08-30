@@ -166,6 +166,7 @@ include('../view/_navbar.php');
 					fileName=$(this).get(0).files[i].name;
 					totalSize = totalSize+fileSize;
 					var extension=fileName.replace(/^.*\./, '');
+					extension=extension.toLowerCase();
 					if ($.inArray(extension, fileExtension)==-1) {
 						warning="<i class='fas fa-times px-3 text-danger'></i>";
 						interdit=true;

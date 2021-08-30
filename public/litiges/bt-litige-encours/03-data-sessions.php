@@ -91,6 +91,10 @@ if(isset($_SESSION['filter-data'])){
 		$paramOccasion= "";
 	}
 	$paramList[]=$paramOccasion;
+// unset($_SESSION['filter-data']);
 
 }
 
+if(isset($_SESSION['filter-notif'])){
+	$notifQuery=$_SESSION['filter-notif'];
+}

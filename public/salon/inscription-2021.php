@@ -14,9 +14,9 @@ require '../../Class/Db.php';
 // require_once '../../vendor/autoload.php';
 require_once '../../vendor/autoload.php';
 require_once '../../Class/MagHelpers.php';
-require_once '../../Class/FormationDAO.php';
+require_once '../../Class/salon/FormationDAO.php';
 require_once '../../Class/FormHelpers.php';
-require_once '../../Class/SalonDao.php';
+require_once '../../Class/salon/SalonDao.php';
 
 
 
@@ -125,10 +125,11 @@ if(isset($_POST['more-info'])){
 		$dest=["salonbtlecest@btlec.fr"];
 		if(VERSION=="_"){
 			$dest=["valerie.montusclat@btlec.fr"];
+
 		}
 
 
-		$infosMag="<p><strong>Demande du magasin : " . $_SESSION['nom'] ." - " .$_SESSION['id_galec'] ."</strong></p>";
+		$infosMag="<p><strong>Demande du magasin : " . $_SESSION['nom'] ." - " .$_SESSION['id_galec'] .' email :'.$_POST['email'].  "</strong></p>";
 
 		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
 		$mailer = new Swift_Mailer($transport);
@@ -362,9 +363,18 @@ require '../view/_navbar.php';
 			<p class="text-right"><a href="#up" class="blue-link">retour</a></p>
 		</div>
 	</div>
+	<div class="bg-separation"></div>
+	<div class="row pt-3">
+		<div class="col">
+			<h4 class="text-main-blue"><i class="fas fa-hand-point-right pr-3" id="sanitaire-lk"></i>PROTOCOLE SANITAIRE</h4>
+		</div>
+	</div>
 
-
-
+	<div class="row">
+		<div class="col">
+			<div class="iframe"><iframe src="../pdf/consignes_sanitaires.pdf?#view=FitH" height="100%" width="100%"></iframe></div>
+		</div>
+	</div>
 
 
 

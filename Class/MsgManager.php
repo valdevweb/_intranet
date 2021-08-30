@@ -15,7 +15,7 @@ class MsgManager{
 
 	public function getListDemandeByGalec($pdoBt,$galec){
 
-		$req=$pdoBt->prepare("SELECT *, msg.id as idMsg FROM msg LEFT JOIN services ON msg.id_service=services.id LEFT JOIN magasin.mag ON id_galec=magasin.mag.galec WHERE  msg.id_galec= :galec");
+		$req=$pdoBt->prepare("SELECT *, msg.id as idMsg FROM msg LEFT JOIN services ON msg.id_service=services.id LEFT JOIN magasin.mag ON id_galec=magasin.mag.galec WHERE  msg.id_galec= :galec ORDER BY msg.id DESC ");
 		$req->execute([
 			':galec'		=>$galec
 		]);
@@ -32,14 +32,16 @@ class MsgManager{
 	}
 
 	public function getListDdeEncours($pdoBt){
-		$req=$pdoBt->prepare("SELECT * FROM msg LEFT JOIN services ON msg.id_service=services.id  WHERE etat <> :clos ORDER BY id_service, date_msg DESC");
+		$req=$pdoBt->prepare("SELECT *, msg.id as idMsg FROM msg
+			LEFT JOIN web_users.services ON msg.id_service=web_users.services.id  WHERE etat <> :clos ORDER BY id_service, date_msg DESC");
 		$req->execute(array(
 			':clos' =>'clos'
 		));
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 	public function getListDdeEncoursService($pdoBt,$idservice){
-		$req=$pdoBt->prepare("SELECT  *,msg.id as idMsg FROM msg LEFT JOIN services ON msg.id_service=services.id  WHERE etat <> :clos AND id_service= :id_service ORDER BY id_service, date_msg DESC");
+		$req=$pdoBt->prepare("SELECT  *, msg.id as idMsg FROM msg
+			LEFT JOIN web_users.services ON msg.id_service=web_users.services.id  WHERE etat <> :clos AND id_service= :id_service ORDER BY id_service, date_msg DESC");
 		$req->execute(array(
 			':clos' =>'clos',
 			':id_service' =>$idservice

@@ -146,6 +146,11 @@
   display: block;
 }
 
+
+
+
+
+
 .btn-upload-primary{
   background: #0D47A1;
   box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
@@ -167,4 +172,15 @@
 .btn-upload-orange:hover{
   transform: scale(1.01);
   background: #f3a53b;
+}
+
+.btn-upload-grey{
+  background: #343a40;
+  box-shadow: 3px 3px 2px -2px rgba(0,0,0,0.4);
+  transition: all 4s;
+  color: #fff;
+}
+.btn-upload-grey:hover{
+  transform: scale(1.01);
+  background: #343a40;
 }

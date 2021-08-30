@@ -35,13 +35,17 @@
 				</form>
 			</div>
 			<div class="col-auto  border-right ">
+				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
+
 				<div class="row mb-3">
 					<div class="col px-5">
 						<p class="text-center text-grey">Messages :</p>
-						<button class="btn btn-filter"><i class='fas fa-bell text-yellow'></i></button>
-						<button class="btn btn-filter"><i class='fas fa-bell text-grey '></i></button>
+						<button class="btn btn-filter" name="dial_notif"><i class='fas fa-bell text-yellow'></i></button>
+						<button class="btn btn-filter" name="action_notif"><i class='fas fa-bell text-green'></i></button>
 					</div>
 				</div>
+				</form>
+
 			</div>
 			<div class="col-auto">
 				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">

@@ -33,8 +33,7 @@ function getLitige($pdoLitige)
 $fLitige=getLitige($pdoLitige);
 
 
-function getAction($pdoLitige)
-{
+function getAction($pdoLitige){
 	$req=$pdoLitige->prepare("SELECT libelle, action.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y')as dateFr, concat(prenom, ' ', nom) as name, pj FROM action LEFT JOIN btlec.btlec ON action.id_web_user=btlec.btlec.id_webuser WHERE action.id_dossier= :id ORDER BY date_action");
 	$req->execute(array(
 		':id'		=>$_GET['id']
@@ -44,8 +43,7 @@ function getAction($pdoLitige)
 }
 $actionList=getAction($pdoLitige);
 
-function addAction($pdoLitige, $fileList, $contrainte)
-{
+function addAction($pdoLitige, $fileList, $contrainte){
 	$action=strip_tags($_POST['action']);
 	$action=nl2br($action);
 	$req=$pdoLitige->prepare("INSERT INTO action (id_dossier,libelle,id_contrainte,id_web_user,pj,date_action) VALUES (:id_dossier,:libelle,:id_contrainte,:id_web_user,:pj,:date_action)");
@@ -61,8 +59,7 @@ function addAction($pdoLitige, $fileList, $contrainte)
 	// return $req->errorInfo();
 }
 
-function getPretxt($pdoLitige)
-{
+function getPretxt($pdoLitige){
 	$req=$pdoLitige->prepare("SELECT action_help.id, nom, pretxt FROM action_help LEFT JOIN action_contrainte ON id_contrainte=action_contrainte.id ORDER BY nom");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
@@ -88,8 +85,7 @@ function getMagSav($pdoSav,$galec){
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
 
-function createFileLink($filelist)
-{
+function createFileLink($filelist){
 	$rValue='';
 	$filelist=explode(';',$filelist);
 

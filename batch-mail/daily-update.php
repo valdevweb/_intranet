@@ -8,8 +8,11 @@ else{
 
 
 include 'config/config.inc.php';
-include 'config/db-connect.php';
 include 'vendor/autoload.php';
+
+
+include 'Class/Db.php';
+include 'Class/DailymailDao.php';
 
 
 
@@ -72,6 +75,22 @@ else{
 
 }
 
+$db=new Db();
+
+$pdoBt=$db->getPdo('btlec');
+$pdoDAchat=$db->getPdo('doc_achats');
+
+$dailyDao=new DailymailDao($pdoDAchat);
+
+
+$newGazette=$dailyDao->newGazetteToday();
+$newGesap=$dailyDao->newGesapToday();
+$newInfoLiv=$dailyDao->newInfoLivToday();
+$newOdr=$dailyDao->newOdrToday();
+$newOffre=$dailyDao->newTelBriiToday();
+
+
+
 
 
 //------------------------------------------------------
@@ -112,74 +131,31 @@ if(!empty($newOpp)){
 $req=$pdoBt->prepare("SELECT * FROM documents");
 $req->execute();
 $files=$req->fetchAll(PDO::FETCH_ASSOC);
-if($files>=1){
+if(count($files)>=1){
 	foreach ($files as $dbFile) {
 		$docDate=new DateTime($dbFile['date_modif']);
-		if($docDate > $deadLine)
-		{
+		if($docDate > $deadLine){
 			//si résultat GFK
-			if($dbFile['id_doc_type']==5)
-			{
+			if($dbFile['id_doc_type']==5){
 				$fileList[]="les nouveaux " . $dbFile['type'];
-			}
-			elseif($dbFile['id_doc_type']==9)
-			{
+			}elseif($dbFile['id_doc_type']==9){
 				$fileList[]="le " . $dbFile['type'] ." ". $dbFile['name'];
-			}
-			elseif($dbFile['id_doc_type']==10)
-			{
+			}elseif($dbFile['id_doc_type']==10){
 				$fileList[]="la " . $dbFile['type'];
 			}
-			elseif($dbFile['id_doc_type']==7)
-			{
-				$fileList[]="les " . $dbFile['type'];
-			}
-			elseif($dbFile['id_doc_type']==6 || $dbFile['id_doc_type']==11)
-			{
+			elseif($dbFile['id_doc_type']==11){
 				$fileList[]="le " . $dbFile['type'];
 			}
-			elseif($dbFile['id_doc_type']==4)
-			{
+			elseif($dbFile['id_doc_type']==4){
 				$fileList[]= $dbFile['type'];
-			}
-			else
-			{
+			}else{
 				$fileList[]=$dbFile['type'];
 			}
 		}
 	}
 }
-//------------------------------------------------------
-//			GAZETTES
-//------------------------------------------------------
-// pour la gazette normal et la gazette speciale, on prend le champ date
-// gazette quotidienne => date = date sélectionnée par la personne donc normalement date du jour (si on a modifié une ancienne gazette, on ne veut pas l'afficher)
-// gazette spéciale => date de dépot ( pas de champ date pour la modifier dans le formulaire)
-$req=$pdoBt->prepare("SELECT * FROM gazette WHERE date= :today AND (id_doc_type = 1 OR id_doc_type = 8)");
-$req->execute(array(
-	':today'	=> date('Y-m-d')
-));
-$files=$req->fetchAll(PDO::FETCH_ASSOC);
-if($files>=1)
-{
-	foreach ($files as $g)
-	{
-		$fileList[]="la " . $g['category'];
-	}
-}
 
-// pour la gazette appro, c'est la date de modif qu'il faut prendre en compte (date de dépot)
-$req=$pdoBt->prepare("SELECT * FROM gazette WHERE id_doc_type = 2 AND DATE_FORMAT(date_modif, '%Y-%m-%d')= :today");
-$req->execute(array(
-	':today'	=> date('Y-m-d')
-));
-$files=$req->fetch(PDO::FETCH_ASSOC);
-if($files>=1)
-{
-	$filename=explode('.',$files['file']);
-	$filename=$filename[0];
-	$fileList[]="la " . $files['category'] . " - " .$filename;
-}
+
 //------------------------------------------------------
 //			DORIS
 //------------------------------------------------------
@@ -221,6 +197,22 @@ if($newdoris>0){
 }
 
 
+
+if(!empty($newGazette)){
+	$fileList[]="de nouvelles gazettes";
+}
+if(!empty($newGesap)){
+	$fileList[]="de nouveaux Gesap";
+}
+if(!empty($newInfoLiv)){
+	$fileList[]="de nouvelles info livraison";
+}
+if(!empty($newOdr)){
+	$fileList[]="de nouvelles ODR";
+}
+if(!empty($newOffre)){
+	$fileList[]="de nouveaux TEL/BRII";
+}
 
 
 

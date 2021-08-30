@@ -13,7 +13,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 require '../../Class/Db.php';
 require '../../Class/CataDao.php';
 require '../../Class/InfoLivDao.php';
-require '../../Class/ArticleAchatsDao.php';
+require '../../Class/achats/ArticleAchatsDao.php';
 require '../../Class/FournisseursHelpers.php';
 require '../../Class/DateHelpers.php';
 require '../../Class/FormHelpers.php';
@@ -92,20 +92,24 @@ if(isset($_POST['save'])){
 		$articleR=$_POST['article_remplace'][$idArticle];
 	}
 
-	if (!empty($_POST['recu'][$idArticle])) {
+	if (!empty($_POST['recu'][$idArticle]) || ($_POST['recu'][$idArticle])==0) {
 		$recu=$_POST['recu'][$idArticle];
+
 	}
-	if (!empty($_POST['recu_deux'][$idArticle])) {
+
+	if (!empty($_POST['recu_deux'][$idArticle]) || ($_POST['recu_deux'][$idArticle])==0) {
 		$recuDeux=$_POST['recu_deux'][$idArticle];
 
 	}
-	if (!empty($_POST['recu_remplace'][$idArticle])) {
+	if (!empty($_POST['recu_remplace'][$idArticle]) || ($_POST['recu_remplace'][$idArticle])==0) {
 		$recuRemplace=$_POST['recu_remplace'][$idArticle];
 	}
-	if(!empty($_POST['recu_deux_remplace'][$idArticle])){
+	if(!empty($_POST['recu_deux_remplace'][$idArticle]) || ($_POST['recu_deux_remplace'][$idArticle])==0){
 		$recuRemplaceDeux=$_POST['recu_deux_remplace'][$idArticle];
 	}
-echo $recuRemplaceDeux;
+
+
+
 	if ($_POST['exist'][$idArticle]=="false") {
 		// pas encore d'info article donc on ajoute l'article et on ajoute l'info livraison
 		// on verifie si on a déja l'op dans la base doc_achats, table operation
