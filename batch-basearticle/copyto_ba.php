@@ -51,7 +51,7 @@ function insertRef($pdoQlik, $article, $dossier, $ref){
 }
 
 function copyBa($pdoQlik){
-	$req=$pdoQlik->query("INSERT INTO ba (`id`, id_ba, `date_import`, `article`, `dossier`, `panf`, `deee`, `codif_deee`, `sorecop`, `pnfp`, `ppi`, `pvp`, `pvi`, `gt`, `lib_gt`, `libelle`, `marque`, `pcb`, `cnuf`, `fournisseur`, `ean`, `poids_colis`, `poids_brut_uv`, `poids_brut_ul`, `stock_entrepot`)  SELECT concat(`GESSICA.CodeArticle`, `GESSICA.CodeDossier`), `id`, `DateExecutionScriptQlik`, `GESSICA.CodeArticle`, `GESSICA.CodeDossier`, `GESSICA.PANF`, `GESSICA.D3E`, `GESSICA.CodifD3E`, `GESSICA.SORECOP`, `GESSICA.PFNP`, `GESSICA.PPI`, `GESSICA.PVP`, `GESSICA.PVI`, `GESSICA.GT`, `GESSICA.LibGT`, `GESSICA.LibelleArticle`, `GESSICA.Marque`, `GESSICA.PCB`, `GESSICA.CodeFournisseur`, `GESSICA.NomFournisseur`, `GESSICA.Gencod`, `GESSICA.PoidsColis`, `GESSICA.PoidsBrutUV`, `GESSICA.PoidsBrutUL`, `CTBT.StkEnt` FROM basearticles");
+	$req=$pdoQlik->query("INSERT INTO ba (`id`, id_ba, `date_import`, `article`, `dossier`, `panf`, `deee`, `codif_deee`, `sorecop`, `pfnp`, `ppi`, `pvp`, `pvi`, `gt`, `lib_gt`, `libelle`, `marque`, `pcb`, `cnuf`, `fournisseur`, `ean`, `poids_colis`, `poids_brut_uv`, `poids_brut_ul`, `stock_entrepot`)  SELECT concat(`GESSICA.CodeArticle`, `GESSICA.CodeDossier`), `id`, `DateExecutionScriptQlik`, `GESSICA.CodeArticle`, `GESSICA.CodeDossier`, `GESSICA.PANF`, `GESSICA.D3E`, `GESSICA.CodifD3E`, `GESSICA.SORECOP`, `GESSICA.PFNP`, `GESSICA.PPI`, `GESSICA.PVP`, `GESSICA.PVI`, `GESSICA.GT`, `GESSICA.LibGT`, `GESSICA.LibelleArticle`, `GESSICA.Marque`, `GESSICA.PCB`, `GESSICA.CodeFournisseur`, `GESSICA.NomFournisseur`, `GESSICA.Gencod`, `GESSICA.PoidsColis`, `GESSICA.PoidsBrutUV`, `GESSICA.PoidsBrutUL`, `CTBT.StkEnt` FROM basearticles");
 }
 
 
