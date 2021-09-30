@@ -1,0 +1,23 @@
+.info-bulle{
+  position: relative;
+  cursor: pointer;
+}
+
+.info-bulle-text{
+  visibility: hidden;
+  position: absolute;
+  left: 0px;
+  top: -20px;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  background-color:#004085;
+  font-size: 1rem;
+  font-family: arial;
+  font-weight: normal;
+}
+.info-bulle:hover .info-bulle-text{
+  visibility: visible;
+
+}
