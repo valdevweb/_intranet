@@ -2,7 +2,7 @@
 	<div class="col">
 		<div class="d-flex justify-content-between">
 			<div class="align-self-center">
-				<img class="img-fluid max-width height-auto" src="year.png">
+				<img class="img-fluid max-width height-auto" src="<?=IMG_DIR?>year.png">
 			</div>
 			<div class="main-text text-right pr-5">
 				<?=number_format((float)$anneeEnCoursCa,0,'',' ')?><span class="third-text">&euro;</span></div>
@@ -16,7 +16,7 @@
 		<div class="col">
 			<div class="d-flex justify-content-between">
 				<div class="align-self-center">
-					<img src="lastyear.png">
+					<img src="<?=IMG_DIR?>lastyear.png">
 				</div>
 				<div class="secondary-text text-right pr-5">
 					<?=number_format((float)$anneeEnCoursLastYearCa,0,'',' ')?> <span class="third-text">&euro;</span>

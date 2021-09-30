@@ -2,7 +2,7 @@
 	<div class="col">
 		<div class="d-flex justify-content-between">
 			<div class="align-self-center">
-				<img class="img-fluid max-width height-auto" src="today.png">
+				<img class="img-fluid max-width height-auto" src="<?=IMG_DIR?>today.png">
 			</div>
 			<div class="main-text text-right pr-5">
 				<?=number_format((float)$jMoinsUnCa,0,'',' ')?><span class="third-text">&euro;</span>
@@ -18,7 +18,7 @@
 	<div class="col">
 		<div class="d-flex justify-content-between">
 			<div class="align-self-center">
-				<img src="yesterday.png">
+				<img src="<?=IMG_DIR?>yesterday.png">
 			</div>
 			<div class="secondary-text text-right pr-5">
 				<?=number_format((float)$jMoinsUnLastYearCa,0,'',' ')?> <span class="third-text">&euro;</span>

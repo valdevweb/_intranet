@@ -2,7 +2,7 @@
 	<div class="col">
 		<div class="d-flex justify-content-between">
 			<div class="align-self-center">
-				<img class="img-fluid max-width height-auto" src="thismonth.png">
+				<img class="img-fluid max-width height-auto" src="<?=IMG_DIR?>thismonth.png">
 			</div>
 			<div class="main-text text-right pr-5">
 				<?=  number_format((float)$moisFinCa,0,'',' ')?><span class="third-text">&euro;</span>
@@ -17,7 +17,7 @@
 		<div class="col">
 			<div class="d-flex justify-content-between">
 				<div class="align-self-center">
-					<img src="lastmonth.png">
+					<img src="<?=IMG_DIR?>lastmonth.png">
 				</div>
 				<div class="secondary-text text-right pr-5">
 					<?=number_format((float)$moisFinLastYearCa,0,'', ' ')?><span class="third-text">&euro;</span>
