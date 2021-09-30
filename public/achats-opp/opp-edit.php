@@ -126,12 +126,14 @@ if(isset($_POST['add_new_files'])){
 
 	$idOpp=$_GET['id'];
 	if(isset($idOpp)&& ($idOpp>0)){
-
-		for ($i=0; $i <count($_POST['file_opp_files']) ; $i++) {
-			$ext = pathinfo($_POST['file_opp_files'][$i], PATHINFO_EXTENSION);
-			$image=(in_array(strtolower($ext),$imgExt))? 1:0;
-			$oppDao->addMainFile($idOpp,$_POST['file_opp_files'][$i],$_POST['readable_opp_files'][$i], $image,$_POST['ordre_opp_files'][$i]);
+		if(isset($_POST['file_opp_files'])){
+			for ($i=0; $i <count($_POST['file_opp_files']) ; $i++) {
+				$ext = pathinfo($_POST['file_opp_files'][$i], PATHINFO_EXTENSION);
+				$image=(in_array(strtolower($ext),$imgExt))? 1:0;
+				$oppDao->addMainFile($idOpp,$_POST['file_opp_files'][$i],$_POST['readable_opp_files'][$i], $image,$_POST['ordre_opp_files'][$i]);
+			}
 		}
+
 
 		if(isset($_POST['icons'])){
 			$oppDao->addIcons($idOpp,$_POST['icons']);
