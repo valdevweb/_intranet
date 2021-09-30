@@ -17,7 +17,18 @@
   }
 }
 
+.fixed-zone {
+    padding: 10px;
+    width: 100%;
+    background: #6c757d87;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    /* right: 400px; */
+    z-index: 10;
 
+    /* border-radius: 10px !important; */
+}
 
 @media (min-width: 1400px){
   .container {
