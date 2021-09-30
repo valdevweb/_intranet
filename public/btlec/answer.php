@@ -7,11 +7,12 @@ if(!isset($_SESSION['id'])){
 //on supprime la var qui mémorise le lien
 unset($_SESSION['goto']);
 
+require_once  '../../vendor/autoload.php';
 
 include '../../config/db-connect.php';
 
 require '../../functions/upload.fn.php';
-require '../../functions/mail.fn.php';
+
 require "../../functions/stats.fn.php";
 
 require "../../Class/BtUserManager.php";
@@ -210,76 +211,77 @@ if(isset($_POST['post-reply'])){
 				//-----------------------------------------
 				$tpl="../mail/new_reply_from_bt.tpl.html";
 				$tplpwd="../mail/identifiant.tpl.html";
-				$objet="PORTAIL BTLec - réponse à votre demande";
-				mb_internal_encoding('UTF-8');
-				$objet = mb_encode_mimeheader($objet);
 
-				$objetdde=$oneMsg['objet'];
+
 				if(VERSION!="_"){
-					$to = $oneMsg['email'];
+					$dest[] = $oneMsg['email'];
 				}else{
-					$to = "valerie.montusclat@btlec.fr";
+					$dest[] = "valerie.montusclat@btlec.fr";
 
 				}
 				$etat="";
 				$vide="";
 				$link="Cliquez <a href='".SITE_ADDRESS."/index.php?mag/edit-msg.php?msg=".$_GET['msg']."'>ici pour revoir votre demande</a>";
 
-				if(!empty($_POST['mdp']))
-				{
-					$mail=sendMail($to,$objet,$tplpwd,$oneMsg['deno'],$mdp,$link);
-				}
-				else
-				{
-					$mail=sendMail($to,$objet,$tpl,$objetdde,$vide,$link);
+				if(!empty($_POST['mdp'])){
+
+					$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+					$mailer = new Swift_Mailer($transport);
+					// $mail=sendMail($to,$objet,$tplpwd,$oneMsg['deno'],$mdp,$link);
+
+					$htmlMail = file_get_contents("../mail/identifiant.tpl.html");
+					$htmlMail=str_replace('{LINK}',$link,$htmlMail);
+					$htmlMail=str_replace('{CONTENT1}',$oneMsg['deno'],$htmlMail);
+					$htmlMail=str_replace('{CONTENT2}',$mdp,$htmlMail);
+					$subject="PORTAIL BTLec - réponse à votre demande";
+					$message = (new Swift_Message($subject))
+					->setBody($htmlMail, 'text/html')
+					->setFrom(EXPEDITEUR_MAIL)
+					->setTo($dest);
+					if (!$mailer->send($message, $failures)){
+						print_r($failures);
+					}else{
+						header('Location:'. ROOT_PATH.'/public/btlec/dashboard.php?success=1');
+					}
+
+				}else{
+					$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+					$mailer = new Swift_Mailer($transport);
+					$htmlMail = file_get_contents("../mail/new_reply_from_bt.tpl.html");
+					$htmlMail=str_replace('{LINK}',$link,$htmlMail);
+					$htmlMail=str_replace('{CONTENT1}',$oneMsg['objet'],$htmlMail);
+
+					$subject="PORTAIL BTLec - réponse à votre demande ".$oneMsg['objet'];
+					$message = (new Swift_Message($subject))
+					->setBody($htmlMail, 'text/html')
+					->setFrom(EXPEDITEUR_MAIL)
+					->setTo($dest);
+					if (!$mailer->send($message, $failures)){
+						print_r($failures);
+					}else{
+						header('Location:'. ROOT_PATH.'/public/btlec/dashboard.php?success=1');
+					}
+
 				}
 
 
-				if($mail==1)
-				{
-					header('Location:'. ROOT_PATH.'/public/btlec/dashboard.php?success='.$mail);
-				}
-				else
-				{
-					array_push($err, "Echec d'envoi de l'email");
-				}
+
 
 
 			}
 
 			//checkbox 'clos' =>  checked or not checked => majEtat
-			if(isset($_POST['clos']))
-			{
+			if(isset($_POST['clos'])){
 				$etat="clos";
-			}
-			else
-			{
+			}else{
 				$etat="en cours";
 			}
 
-			if(!majEtat($pdoBt,$_GET['msg'], $etat))
-			{
+			if(!majEtat($pdoBt,$_GET['msg'], $etat)){
 				array_push($err, "votre réponse n'a pas pu être enregistrée (err 02)");
 			}
 
 		}
-
-
-		//------------------------------------------
-		//	ajout enreg ection dans stat
-		//-----------------------------------------<
-		if(count($err)==0)
-		{
-			$descr="succès envoi réponse ";
-		}
-		else
-		{
-			$descr="erreur de traitement";
-		}
-		$page=basename(__file__);
-		$action="envoi réponse BT => mag";
-		addRecord($pdoStat,$page,$action, $descr);
-
 
 	}
 }
@@ -338,7 +340,7 @@ include '../view/_navbar.php';
 		<div class="col">
 			<div class="row text-grey">
 				<div class="col">
-					<span class="font-weight-bold">Magasin : </span><?= $oneMsg['deno'] .' - ' .$oneMsg['galec']?><i class="fas fa-user pl-5 pr-2"></i><?=$oneMsg['who'] ?>
+					<span class="font-weight-bold">Magasin : </span><?= $oneMsg['deno'] .' - ' .$oneMsg['code_bt'].'/'.$oneMsg['galec']?><i class="fas fa-user pl-5 pr-2"></i><?=$oneMsg['who'] ?>
 				</div>
 				<div class="col-lg-3">
 
@@ -507,59 +509,59 @@ include '../view/_navbar.php';
 		<div class="col reply">
 			<h4 class="text-main-blue">Réaffecter la demande :</h4>
 
-			<?php if ( $_SESSION['id_service']== 5 || $_SESSION['id_service']== 16 || $_SESSION['id_service'] == 6 ||  $oneMsg['id_service'] == $_SESSION['id_service']): ?>
+			<?php if ( $_SESSION['id_service']== 5 || $_SESSION['id_service']== 16 || $_SESSION['id_service'] == 6 ||  $oneMsg['id_service'] == $_SESSION['id_service'] || ($_SESSION['id_service']==4 && $oneMsg['id_service']==14 )): ?>
 
 				<p>La demande ne concerne pas votre service ? <a href="chg.php?msg=<?=$_GET['msg']?>">Cliquez ici pour réaffecter la demande</a></p>
 
-				<?php else: ?>
-					<p>Cette demande ne concerne pas ou plus votre service, vous ne pouvez pas la réaffecter</p>
-				<?php endif ?>
+			<?php else: ?>
+				<p>Cette demande ne concerne pas ou plus votre service, vous ne pouvez pas la réaffecter</p>
+			<?php endif ?>
 
 
-			</div>
 		</div>
-		<div class="row pb-5">
-			<div class="col"></div>
-		</div>
-
-
-
-
-
+	</div>
+	<div class="row pb-5">
+		<div class="col"></div>
 	</div>
 
-	<script type="text/javascript">
-		$(document).ready(function(){
 
-			$("#answer").submit(function( event )
+
+
+
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+
+		$("#answer").submit(function( event )
+		{
+			$("#wait" ).append('<i class="fa fa-spinner" aria-hidden="true"></i>&nbsp;&nbsp;<span class="pl-3">Merci de patienter</span>')
+		});
+		function getReadableFileSizeString(fileSizeInBytes) {
+			var i = -1;
+			var byteUnits = [' ko', ' Mo', ' Go'];
+			do {
+				fileSizeInBytes = fileSizeInBytes / 1024;
+				i++;
+			} while (fileSizeInBytes > 1024);
+
+			return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
+		};
+
+		var fileName='';
+		var fileList='';
+		var fileSize="";
+		var totalFileSize=0;
+		var fileSizeReadable="";
+		var warning="";
+		var resume="";
+		var warningTotal="";
+		$('input[type="file"]').change(function(e){
+
+			$('#filelist').empty();
+			var nbFiles=e.target.files.length;
+			for (var i = 0; i < nbFiles; i++)
 			{
-				$("#wait" ).append('<i class="fa fa-spinner" aria-hidden="true"></i>&nbsp;&nbsp;<span class="pl-3">Merci de patienter</span>')
-			});
-			function getReadableFileSizeString(fileSizeInBytes) {
-				var i = -1;
-				var byteUnits = [' ko', ' Mo', ' Go'];
-				do {
-					fileSizeInBytes = fileSizeInBytes / 1024;
-					i++;
-				} while (fileSizeInBytes > 1024);
-
-				return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
-			};
-
-			var fileName='';
-			var fileList='';
-			var fileSize="";
-			var totalFileSize=0;
-			var fileSizeReadable="";
-			var warning="";
-			var resume="";
-			var warningTotal="";
-			$('input[type="file"]').change(function(e){
-
-				$('#filelist').empty();
-				var nbFiles=e.target.files.length;
-				for (var i = 0; i < nbFiles; i++)
-				{
         		    // var fileName = e.target.files[0].name;
         		    //5120000 = 5Mo
         		    fileSizeReadable=getReadableFileSizeString(e.target.files[i].size);
@@ -583,13 +585,13 @@ include '../view/_navbar.php';
      		   fileList="";
      		});
 
-		});
+	});
 
 
-	</script>
-	<?php
-	include('../view/_footer-bt.php');
-	?>
+</script>
+<?php
+include('../view/_footer-bt.php');
+?>
 
 
 

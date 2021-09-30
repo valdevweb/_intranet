@@ -11,7 +11,7 @@ require '../../vendor/autoload.php';
 
 require '../../Class/BtUserManager.php';
 
-require '../../functions/mail.fn.php';
+
 require "../../functions/stats.fn.php";
 
 
@@ -122,6 +122,8 @@ if(isset($_POST['post-msg'])){
 			$htmlMail = file_get_contents('../mail/new_mag_msg.tpl.html');
 			$htmlMail=str_replace('{DEMANDEUR}',$_POST['name'],$htmlMail);
 			$htmlMail=str_replace('{MAGASIN}',$_SESSION['nom'],$htmlMail);
+			$htmlMail=str_replace('{OBJET}',$_POST['objet'],$htmlMail);
+			$htmlMail=str_replace('{MSG}',$_POST['msg'],$htmlMail);
 			$htmlMail=str_replace('{LINK}',$link,$htmlMail);
 			$subject="PORTAIL BTLec - nouvelle demande : " .$_SESSION['nom'] ." pour le service " . $service['service'];
 			$message = (new Swift_Message($subject))

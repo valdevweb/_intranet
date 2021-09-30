@@ -48,7 +48,7 @@ if(!empty($notifs)){
 		$subject='[Demande d\'evo] - '.$notif['title'];
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
-		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTlec'))
+		->setFrom(EXPEDITEUR_MAIL)
 		->setTo($dest);
 
 		if (!$mailer->send($message, $failures)){

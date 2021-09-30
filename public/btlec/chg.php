@@ -6,9 +6,10 @@ if(!isset($_SESSION['id'])){
 }
 
 include '../../config/db-connect.php';
+require_once  '../../vendor/autoload.php';
 
 
-require '../../functions/mail.fn.php';
+
 //affichage de l'historique des réponses
 require "../../functions/stats.fn.php";
 require('../../Class/BtUserManager.php');
@@ -39,11 +40,13 @@ $idMsg=$_GET['msg'];
 $oneMsg=$msgManager->getDemande($pdoBt,$_GET['msg']);
 
 
-if ($_SESSION['id_service']!= 5 && $_SESSION['id_service']!= 16 && $_SESSION['id_service'] != 6 &&  $oneMsg['id_service'] != $_SESSION['id_service']){
-	echo "vous ne pouvez pas réaffecter cette demande, elle n'est plus destinée à votre service";
 
-	exit();
-
+if ($_SESSION['id_service']!= 5 && $_SESSION['id_service']!= 16 && $_SESSION['id_service'] != 6 &&  $oneMsg['id_service'] != $_SESSION['id_service'] ){
+	if($_SESSION['id_service']==4 && $oneMsg['id_service']==14 ){
+	}else{
+		echo "vous ne pouvez pas réaffecter cette demande, elle n'est plus destinée à votre service";
+		exit();
+	}
 }
 
 
@@ -54,10 +57,8 @@ $lig=0;
 
 
 // info msg
-$link="Cliquez <a href='".SITE_ADDRESS."/index.php?".$idMsg."'>ici pour consulter la demande magasin</a>";
 
-$tplt="../mail/reaffectation.html";
-mb_internal_encoding('UTF-8');
+
 
 
 
@@ -67,13 +68,10 @@ $errors=[];
 
 if(isset($_POST['affect']))
 {
-	if(!isset($_POST['service']))
-	{
+	if(!isset($_POST['service'])){
 		$errors[]="veuillez sélectionner un service";
 
-	}
-	else
-	{
+	}else{
 
 		$newServiceInfo=$userManager-> getServiceById($pdoUser,$_POST['service'][0]);
 		$msgManager->affectation($pdoBt,$idMsg,$_POST['service'][0]);
@@ -82,27 +80,34 @@ if(isset($_POST['affect']))
 
 
 		if (VERSION =="_"){
-			$mailingList='valerie.montusclat@btlec.fr';
+			$dest[]='valerie.montusclat@btlec.fr';
 		}else{
-			$mailingList=$newServiceInfo['mailing'];
+			$dest[]=$newServiceInfo['mailing'];
 		}
-		$objet="PORTAIL BTLec - demande magasin réaffectée au service " . $newServiceInfo['service'];
-		$objet = mb_encode_mimeheader($objet);
-		$done=sendMail($mailingList,$objet,$tplt,$username,$oneMsg['deno'],$link);
+
+
+		$link="Cliquez <a href='".SITE_ADDRESS."/index.php?".$idMsg."'>ici pour consulter la demande magasin</a>";
 
 
 
-			// $msg ="demande réaffectée au service " . $serviceInfo['full_name'];
-		$success[] ="demande réaffectée au service " . $newServiceInfo['mailing'];
-			//------------------------------
-			//	ajout enreg dans stat
-			//------------------------------<
-		$descr="reaffectation d'une demande à " .$newServiceInfo['mailing'];
-		$page=basename(__file__);
-		$action="consultation";
-		addRecord($pdoStat,$page,$action, $descr);
-			//------------------------------>
+		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$mailer = new Swift_Mailer($transport);
 
+		$htmlMail = file_get_contents("../mail/reaffectation.html");
+		$htmlMail=str_replace('{LINK}',$link,$htmlMail);
+		$htmlMail=str_replace('{CONTENT1}',$username,$htmlMail);
+		$htmlMail=str_replace('{CONTENT2}',$oneMsg['deno'],$htmlMail);
+		$subject="PORTAIL BTLec - demande magasin réaffectée au service " . $newServiceInfo['service'];
+		$message = (new Swift_Message($subject))
+		->setBody($htmlMail, 'text/html')
+		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+		->setTo($dest);
+		if (!$mailer->send($message, $failures)){
+			print_r($failures);
+		}else{
+			$success[] ="demande réaffectée au service " . $newServiceInfo['mailing'];
+
+		}
 	}
 }
 
@@ -131,37 +136,37 @@ include '../view/_navbar.php';
 									<input type='checkbox' class='form-check-input' id='<?=$service['id']?>' name='service[]' value= '<?=$service['id']?>' />
 									<label class='form-check-label' for='<?=$service['id']?>'><?=$service['service']?></label>
 								</div>
-								<?php else: ?>
-									<?php $lig=0;?>
-								</div><div class="col-3">
-									<div class="form-group form-check">
-										<input type='checkbox' class='form-check-input' id='<?=$service['id']?>' name='service[]' value= '<?=$service['id']?>' />
-										<label class='form-check-label' for='<?=$service['id']?>'><?=$service['service']?></label>
-									</div>
-								<?php endif ?>
-								<?php $lig++; ?>
-							<?php endforeach ?>
+							<?php else: ?>
+								<?php $lig=0;?>
+							</div><div class="col-3">
+								<div class="form-group form-check">
+									<input type='checkbox' class='form-check-input' id='<?=$service['id']?>' name='service[]' value= '<?=$service['id']?>' />
+									<label class='form-check-label' for='<?=$service['id']?>'><?=$service['service']?></label>
+								</div>
+							<?php endif ?>
+							<?php $lig++; ?>
+						<?php endforeach ?>
 
 
-						</div>
 					</div>
-					<div class="row">
-						<div class="col">
-							<p class="text-right">
-								<button class="btn btn-primary" type="submit" name="affect">Affecter</button>
-							</p>
-						</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<p class="text-right">
+							<button class="btn btn-primary" type="submit" name="affect">Affecter</button>
+						</p>
 					</div>
+				</div>
 
-				</form>
-				<?php include('../view/_errors.php') ?>
+			</form>
+			<?php include('../view/_errors.php') ?>
 
 
-				<p class="back"><a href="dashboard.php"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
+			<p class="back"><a href="dashboard.php"><i class="fa fa-chevron-circle-left fa-2x" aria-hidden="true"></i>&nbsp; &nbsp;Retour</a></p>
 
-			</div>
 		</div>
 	</div>
+</div>
 
 </div>  <!--container
 

@@ -11,7 +11,7 @@ require 'config/db-connect.php';
 //----------------------------------------------------
 // INCLUDES
 //----------------------------------------------------
-// require 'functions/mail.fn.php';
+
 require 'functions/stats.fn.php';
 include 'Class/MagDao.php';
 require 'vendor/autoload.php';
@@ -89,7 +89,7 @@ if(isset($_POST['galec']) && empty($webuser)){
 	$mailer = new Swift_Mailer($transport);
 	$message = (new Swift_Message($subject))
 	->setBody($htmlMail, 'text/html')
-	->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec Est'))
+	->setFrom(EXPEDITEUR_MAIL)
 	->setTo($dest);
 
 	if (!$mailer->send($message, $failures)){
@@ -128,7 +128,7 @@ if(isset($_POST['galec']) && !empty($webuser)){
 		$mailer = new Swift_Mailer($transport);
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
-		->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec Est'))
+		->setFrom(EXPEDITEUR_MAIL)
 		->setTo($ldRbt)
 		->setBcc($hiddenAr);
 
@@ -166,7 +166,7 @@ if(isset($_POST['galec']) && !empty($webuser)){
 		$mailer = new Swift_Mailer($transport);
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
-		->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec Est'))
+		->setFrom(EXPEDITEUR_MAIL)
 		->setTo($mailtoInfo);
 
 		if (!$mailer->send($message, $failures)){

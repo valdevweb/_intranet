@@ -58,3 +58,5 @@ define("JOURDEUX_DATE", '22/09/2021');
 define("JOUR_BOTH", "mardi 21 et mercredi 22 septembre");
 
 define("YEAR_SALON","2021");
+
+define("EXPEDITEUR_MAIL", array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'));

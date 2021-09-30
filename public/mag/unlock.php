@@ -6,8 +6,10 @@ if(!isset($_SESSION['id'])){
 }
 require '../../config/db-connect.php';
 
+require_once  '../../vendor/autoload.php';
+
+
 require '../../functions/upload.fn.php';
-require '../../functions/mail.fn.php';
 // require '../../functions/form.fn.php';
 
 //----------------------------------------------------------------
@@ -135,18 +137,12 @@ if(isset($_POST['submit'])){
 			updateMsg($pdoBt);
 				//créa du lien pour le mail  BT
 			$link="Cliquez <a href='" .SITE_ADDRESS."/index.php?btlec/answer.php?msg=".$_GET['id_msg']."'>ici pour voir la demande</a>";
-				//------------------------------
-				//			ajout enreg dans stat
-				//------------------------------
-			$descr="demande ".$_GET['id_msg'] ;
-			$action="réouverture d'une demande";
-			$code=209;
-			addRecord($pdoStat,$page,$action, $descr,$code);
+
 
 				//-----------------------------------------
 				//				envoi des mails
 				//-----------------------------------------
-			$tplForBtlec="../mail/reopened_by_mag.tpl.html";
+
 			mb_internal_encoding('UTF-8');
 				// $service = mb_encode_mimeheader($infoMsg['full_name']);
 			$objBt="PORTAIL BTLec - Service " .$msg['service'] ." - reouverture de la demande n° " . $_GET['id_msg'] ." par " .$msg['deno'];
@@ -164,32 +160,53 @@ if(isset($_POST['submit'])){
 			$contentFour=$msg['objet'];
 
 			if(VERSION=="_"){
-				$mailingList='valerie.montusclat@btlec.fr';
-				$dest='valerie.montusclat@btlec.fr';
+				$mailingList[]='valerie.montusclat@btlec.fr';
+				$dest[]='valerie.montusclat@btlec.fr';
 
 			}else{
-				$mailingList= $msg['mailing'] ;
-				$dest=$msg['email'];
+				$mailingList[]= $msg['mailing'] ;
+				$dest[]=$msg['email'];
 
 			}
 
 
-			if(sendMailVariablePlaceholder($mailingList,$objBt,$tplForBtlec,$placeholderOne,$contentOne, $placeholderTwo, $contentTwo, $placeholderThree, $contentThree, $placeholderFour, $contentFour)){
-				$success[]="Email envoyé avec succès";
-				$tplForMag="../mail/ar_mag_reopened.tpl.html";
-				mb_internal_encoding('UTF-8');
-				$objMag="PORTAIL BTLec - demande de réouverture de dossier";
-				$objMag = mb_encode_mimeheader($objMag);
-				$phOne="IDMSG";
-				$phTwo="SERVICE";
-				$ctOne=$_GET['id_msg'];
-				$ctTwo=$msg['service'];
+			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$mailer = new Swift_Mailer($transport);
 
-				sendMailVariablePlaceholder($dest,$objMag,$tplForMag,$phOne,$ctOne, $phTwo, $ctTwo);
+			$htmlMail = file_get_contents("../mail/reopened_by_mag.tpl.html");
+			$htmlMail=str_replace('{NOMMAG}',$_SESSION['nom'],$htmlMail);
+			$htmlMail=str_replace('{NUMDDE}',$_GET['id_msg'],$htmlMail);
+			$htmlMail=str_replace('{LINK}',$link,$htmlMail);
+			$htmlMail=str_replace('{OBJETDDE}',$msg['objet'],$htmlMail);
+			$subject=$objBt;
+			$message = (new Swift_Message($subject))
+			->setBody($htmlMail, 'text/html')
+			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+			->setTo($mailingList);
+			if (!$mailer->send($message, $failures)){
+				print_r($failures);
 			}
-			else{
-				$errors[]="Echec d'envoi d'email";
+
+
+			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$mailer = new Swift_Mailer($transport);
+
+			$htmlMail = file_get_contents("../mail/ar_mag_reopened.tpl.html");
+			$htmlMail=str_replace('{IDMSG}',$_GET['id_msg'],$htmlMail);
+			$htmlMail=str_replace('{SERVICE}',$msg['service'],$htmlMail);
+			$subject="PORTAIL BTLec - demande de réouverture de dossier";
+			$message = (new Swift_Message($subject))
+			->setBody($htmlMail, 'text/html')
+			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+			->setTo($dest);
+			if (!$mailer->send($message, $failures)){
+				print_r($failures);
+			}else{
+				$success[] ="message envoyé avec succés";
 			}
+
+
+
 		}else{
 			$errors[]="Echec : votre demande n'a pas pu être enregistrée";
 		}

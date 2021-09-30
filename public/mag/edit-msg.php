@@ -4,11 +4,12 @@ if(!isset($_SESSION['id'])){
 	header('Location:'. ROOT_PATH.'/index.php');
 	exit();
 }
+
+
+require '../../vendor/autoload.php';
+
 require '../../config/db-connect.php';
 
-
-
-require '../../functions/mail.fn.php';
 require '../../Class/BtUserManager.php';
 require "../../Class/MsgManager.php";
 
@@ -113,21 +114,38 @@ if(isset($_POST['post-reply'])){
 			}else{
 				$to=$infoService['mailing'];
 			}
-			$objet="PORTAIL BTLec - ajout d'un commentaire sur la demande du magasin " .$_SESSION['nom'];
-			$tplForBtlec="../mail/new_mag_msg.tpl.html";
 
-			$contentOne=$msg['who'];
-			$contentTwo=$_SESSION['nom'];
+
 			$link="Cliquez <a href='" .SITE_ADDRESS."/index.php?btlec/answer.php?msg=".$_GET['msg']."'>ici pour consulter le message</a>";
-			if(sendMail($to,$objet,$tplForBtlec,$contentOne,$contentTwo,$link)){
+
+
+			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$mailer = new Swift_Mailer($transport);
+
+			$htmlMail = file_get_contents('../mail/new_mag_cmt.tpl.html');
+			$htmlMail=str_replace('{DEMANDEUR}',$msg['who'],$htmlMail);
+			$htmlMail=str_replace('{MAGASIN}',$_SESSION['nom'],$htmlMail);
+			$htmlMail=str_replace('{OBJET}',$msg['objet'],$htmlMail);
+			$htmlMail=str_replace('{ORIGINE}',$msg['msg'],$htmlMail);
+			$htmlMail=str_replace('{MSG}',$_POST['reply'],$htmlMail);
+			$htmlMail=str_replace('{LINK}',$link,$htmlMail);
+
+			$subject="PORTAIL BTLec - ajout d'un commentaire sur la demande du magasin " .$_SESSION['nom'];
+			$message = (new Swift_Message($subject))
+			->setBody($htmlMail, 'text/html')
+			->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec'))
+			->setTo([$to]);
+
+			if (!$mailer->send($message, $failures)){
+				$errors[]='impossible d\'envoyer le mail à BTlec';
+				echo "erreur";
+
+			}else{
 				$successQ='?msg='.$_GET['msg'].'&success';
 				unset($_POST);
 				header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 			}
-			else{
-				$errors[]="Echec d'envoi de l'email";
 
-			}
 
 		}
 	}
@@ -299,19 +317,19 @@ include('../view/_navbar.php');
 
 				}
 			});
-			});
-		</script>
+		});
+	</script>
 
 
 
-		<?php
+	<?php
 
 
-		include('../view/_footer.php');
-		?>
+	include('../view/_footer.php');
+	?>
 
-	</body>
-	</html>
+</body>
+</html>
 
 
 
