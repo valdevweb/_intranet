@@ -6,7 +6,6 @@ if(!isset($_SESSION['id'])){
 }
 require '../../config/db-connect.php';
 
-require '../../functions/mail.fn.php';
 
 //-----------------------------------------------------
 //	css dynamique
