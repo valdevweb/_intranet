@@ -123,7 +123,8 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 						<li><a href="<?=ROOT_PATH?>/public/litiges/intervention-commission-sav.php">Retour Commission SAV</a></li>
 						<li><a href="<?=ROOT_PATH?>/public/litiges/intervention-sav.php">Retour SAV</a></li>
 						<li><a href="<?=ROOT_PATH?>/public/litiges/intervention-achats.php">Retour Service achats</a></li>
-						<li><a href="<?=ROOT_PATH?>/public/casse/bt-casse-dashboard.php" class="lighter-blue">Traitement casse</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/casse/casse-dashboard.php" class="lighter-blue">Traitement casse</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/casse/declare-casse.php" class="lighter-blue">Déclarer une casse</a></li>
 						<li><a href="<?=ROOT_PATH?>/public/casse/histo-casse.php" class="lighter-blue">Historique casse</a></li>
 
 					</ul>
@@ -267,7 +268,7 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 
 			<li><a href="<?=PORTAIL_SAV?>scapsav/home.php" class="tooltipped" data-position="bottom" data-tooltip="site du portail SAV">Portail SAV</a></li>
 			<?php if ($dBtlec): ?>
-				<li><a href="http://172.30.92.53/_pilotage" >Pilotage</a></li>
+				<li><a href="http://172.30.92.53/<?=VERSION?>pilotage" >Pilotage</a></li>
 			<?php endif ?>
 
 			<?php if ($dBtlec): ?>
