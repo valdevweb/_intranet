@@ -32,6 +32,29 @@ class FormHelpers{
         }
         return "";
     }
+
+
+    public static function restoreCheckedPost($value,$postName){
+        if(isset($_POST[$postName])){
+            if($_POST[$postName]==$value){
+                return "checked";
+            }
+        }
+        return "";
+    }
+
+    public static function restoreSelectedPost($value,$postName){
+        if(isset($_POST[$postName])){
+            if($_POST[$postName]==$value){
+                return "selected";
+            }
+        }
+        return "";
+    }
+
+
+
+
     // valeur
     public static function restoreValue($value){
         if(isset($value)){
