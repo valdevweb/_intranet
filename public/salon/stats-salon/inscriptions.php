@@ -25,7 +25,7 @@
           <tr>
             <td class="<?=strtolower($listCentrale[$part['centrale']])?>"><?=$part['deno']?></td>
             <td><?=$part['galec']?></td>
-            <td><?=$part['centrale']?></td>
+            <td><?=isset($listCentrale[$part['centrale_doris']])?$listCentrale[$part['centrale_doris']]:""?></td>
             <td><?=$part['nom']?></td>
             <td><?=$part['prenom']?></td>
             <td><?=$part['fonction']?></td>

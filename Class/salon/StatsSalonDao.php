@@ -24,8 +24,9 @@ class StatsSalonDao{
 	public function getParticipantYear(){
 		$table="salon_".$this->statYear;
 
-		$req=$this->pdo->prepare("SELECT deno, $table.galec, centrale, nom, prenom, fonction, DATE_FORMAT(date_saisie,'%d-%m-%Y') as datesaisie, mardi, mercredi,repas_mardi, repas_mercredi, date_passage, DATE_FORMAT(date_passage,'%H:%i') as heure FROM $table
+		$req=$this->pdo->prepare("SELECT deno, $table.galec, centrale, centrale_doris, nom, prenom, fonction, DATE_FORMAT(date_saisie,'%d-%m-%Y') as datesaisie, mardi, mercredi,repas_mardi, repas_mercredi, date_passage, DATE_FORMAT(date_passage,'%H:%i') as heure FROM $table
 			LEFT JOIN magasin.mag ON $table.galec=magasin.mag.galec
+			LEFT JOIN magasin.sca3 ON $table.galec=magasin.sca3.galec_sca
 			LEFT JOIN salon_fonction ON $table.id_fonction=salon_fonction.id
 			WHERE $table.galec !='' ORDER BY magasin.mag.deno");
 		$req->execute();
@@ -81,8 +82,8 @@ class StatsSalonDao{
 	function nbMagCentrale(){
 		$table="salon_".$this->statYear;
 
-		$req=$this->pdo->prepare("SELECT count(galec) as nb, centrale FROM
-			(SELECT DISTINCT {$table}.galec, centrale FROM {$table} LEFT JOIN magasin.mag ON {$table}.galec=magasin.mag.galec WHERE {$table}.galec !='' AND mask=0) sousreq GROUP BY centrale");
+		$req=$this->pdo->prepare("SELECT count(galec) as nb, centrale_doris as centrale FROM
+			(SELECT DISTINCT {$table}.galec, centrale_doris FROM {$table} LEFT JOIN magasin.sca3 ON {$table}.galec=magasin.sca3.galec_sca WHERE {$table}.galec !='' AND mask=0) sousreq GROUP BY centrale");
 		$req->execute();
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}

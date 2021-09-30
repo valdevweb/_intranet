@@ -6,6 +6,7 @@ if(!isset($_SESSION['id'])){
 }
 // require '../../config/db-connect.php';
 require '../../Class/Db.php';
+require '../../Class/MagHelpers.php';
 
 require_once '../../vendor/autoload.php';
 
@@ -23,13 +24,18 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 $db=new Db();
 $pdoUser=$db->getPdo('web_users');
 $pdoBt=$db->getPdo('btlec');
+$pdoMag=$db->getPdo('magasin');
+$listCentrale=MagHelpers::getListCentrale($pdoMag);
+
 
 function getParticipant($pdoBt)
 {
-	$req=$pdoBt->prepare("SELECT deno, salon_2021.galec, magasin.mag.id as btlec, magasin.centrales.centrale, nom, prenom, fonction, DATE_FORMAT(date_saisie,'%d-%m-%Y') as datesaisie, mardi, mercredi,repas_mardi, repas_mercredi FROM salon_2021
+	$req=$pdoBt->prepare("SELECT deno, salon_2021.galec, magasin.mag.id as btlec, magasin.centrales.centrale, nom, prenom, fonction, DATE_FORMAT(date_saisie,'%d-%m-%Y') as datesaisie, mardi, mercredi,repas_mardi, repas_mercredi, centrale_doris FROM salon_2021
 		LEFT JOIN magasin.mag ON salon_2021.galec=magasin.mag.galec
 		LEFT JOIN salon_fonction ON salon_2021.id_fonction=salon_fonction.id
 		LEFT JOIN magasin.centrales ON magasin.mag.centrale=centrales.id_ctbt
+		LEFT JOIN magasin.sca3 ON salon_2021.galec=magasin.sca3.galec_sca
+
 		WHERE salon_2021.galec !='' ORDER BY magasin.mag.deno");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
@@ -73,7 +79,9 @@ foreach ($participantList as $part)
 	$sheet->setCellValue('A'.$row, $part['deno']);
 	$sheet->setCellValue('B'.$row, $part['btlec']);
 	$sheet->setCellValue('C'.$row, $part['galec']);
-	$sheet->setCellValue('D'.$row, $part['centrale']);
+
+	$centraleDoris=isset($listCentrale[$part['centrale_doris']])?$listCentrale[$part['centrale_doris']]:"";
+	$sheet->setCellValue('D'.$row, $centraleDoris);
 	$sheet->setCellValue('E'.$row, $part['nom']);
 	$sheet->setCellValue('F'.$row, $part['prenom']);
 	$sheet->setCellValue('G'.$row, $part['fonction']);
@@ -96,7 +104,7 @@ for ($i=0; $i < sizeof($cols) ; $i++)
 {
 	$sheet->getColumnDimension($cols[$i])->setAutoSize(true);
 }
-$sheet->setTitle('salon2020');
+$sheet->setTitle('salon2021');
 
 // pour lancer le téléchargement sur le poste client
 $filename="participants salon 2021.xlsx";

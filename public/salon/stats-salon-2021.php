@@ -39,12 +39,14 @@ $success=[];
 $statHeureMercredi=$statDaoThisYear->getByHeure(22);
 $statHeureMardi=$statDaoThisYear->getByHeure(21);
 $perCentrale=$statDaoThisYear->nbMagCentrale();
+
 $perFonction=$statDaoThisYear->nbInscritFonction();
 
 $nbMagInscrit=count($statDaoThisYear->getNbMagInscrit());
 $nbPart=count($statDaoThisYear->getParticipantYear());
 $nb=$statDaoThisYear->getNbPart();
-$nbLastYear=$statDaoThisYear->getNbPart($pdoBt);
+
+
 $magMardi=count($statDaoThisYear->getNbMagInscritMardi());
 $magMercredi =count($statDaoThisYear->getNbMagInscritMercredi());
 $listParticipant=$statDaoThisYear->getParticipantYear();
@@ -64,6 +66,8 @@ $magMercrediLastYear =count($statDaoLastYear->getNbMagInscritMercredi());
 $nbMagInscritPrev=count($statDaoLastYear->getNbMagInscrit());
 $nbMagPresentPrev=count($statDaoLastYear->getNbMagPresent());
 $nbPartPrev=count($statDaoLastYear->getParticipantYear());
+$nbLastYear=$statDaoLastYear->getNbPart($pdoBt);
+
 $magMardiPrev=count($statDaoLastYear->getNbMagInscritMardi());
 $magMercrediPrev=count($statDaoLastYear->getNbMagInscritMercredi());
 
@@ -82,6 +86,7 @@ $nbTwo=$statDaoTwoYear->getNbPart();
 $presence=['non','oui'];
 $repas=['',' + <i class="fas fa-utensils"></i>'];
 $class=['nothing','present', 'repas'];
+
 
 
 
@@ -233,7 +238,7 @@ DEBUT CONTENU CONTAINER
     <div class="col">
       <div class="row justify-content-center">
         <?php foreach ($perCentrale as $centrale): ?>
-         <div class="col-auto text-center border <?=strtolower($listCentrale[$centrale['centrale']])?>"><?=$listCentrale[$centrale['centrale']]?> : <br><?=$centrale['nb']?></div>
+         <div class="col-auto text-center border <?=isset($listCentrale[$centrale['centrale']])?strtolower($listCentrale[$centrale['centrale']]):""?>"><?=isset($listCentrale[$centrale['centrale']])?$listCentrale[$centrale['centrale']]: "Non rattaché à une centrale"?> : <br><?=$centrale['nb']?></div>
        <?php endforeach ?>
 
      </div>
