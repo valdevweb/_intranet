@@ -95,7 +95,7 @@
 
         <?php foreach ($evos as $key => $evo): ?>
             <h4>#<?=$evo['id']. " ".$evo['objet']?></h4>
-            <p><?=$evo['evo']?></p>
+            <p><?=nl2br($evo['evo'])?></p>
             <p><i><?=$evo['cmt_dd']?></i></p>
             <p><i><?=$evo['cmt_dev']?></i></p>
 

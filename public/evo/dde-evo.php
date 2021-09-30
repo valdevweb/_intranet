@@ -164,7 +164,7 @@ if(isset($_POST['submit'])){
 	$mailer = new Swift_Mailer($transport);
 	$message = (new Swift_Message($subject))
 	->setBody($htmlMail, 'text/html')
-	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+	->setFrom(EXPEDITEUR_MAIL)
 	->setTo($dest)
 	->setCc($cc);
 

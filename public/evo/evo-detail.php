@@ -220,7 +220,7 @@ if(isset($_POST['add_planning'])){
 			$subject='Portail BTLec - demande d\'évo - mise au planning';
 			$message = (new Swift_Message($subject))
 			->setBody($htmlMail, 'text/html')
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+			->setFrom(EXPEDITEUR_MAIL)
 			->setTo($dest)
 			->setCc($cc);
 

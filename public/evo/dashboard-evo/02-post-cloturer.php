@@ -58,7 +58,7 @@ $transport = (new Swift_SmtpTransport('217.0.222.26', 25));
 $mailer = new Swift_Mailer($transport);
 $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
-->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+->setFrom(EXPEDITEUR_MAIL)
 ->setTo($destSuperviseur)
 ->setBcc($hidden);
 
@@ -88,7 +88,7 @@ $transport = (new Swift_SmtpTransport('217.0.222.26', 25));
 $mailer = new Swift_Mailer($transport);
 $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
-->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+->setFrom(EXPEDITEUR_MAIL)
 ->setTo($destDemandeurAndAffectation)
 ->setBcc($hidden);
 

@@ -169,7 +169,7 @@ if(isset($_POST['plan'])){
 			$subject='Portail BTLec - demande d\'évo - mise au planning';
 			$message = (new Swift_Message($subject))
 			->setBody($htmlMail, 'text/html')
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+			->setFrom(EXPEDITEUR_MAIL)
 			->setTo($dest)
 			->setCc($cc);
 
@@ -471,6 +471,7 @@ include('../view/_navbar.php');
 			accept: '.draggable',
 			hoverClass: 'hovered',
 			drop: launchModal
+			// drop: console.log("ici")
 		} );
 	}
 	function launchModal(event, ui){
