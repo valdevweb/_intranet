@@ -25,22 +25,32 @@
 				<td><?=$gesap['cata']?></td>
 				<td><?=$gesap['code_op']?></td>
 				<td><?=date('d-m-Y', strtotime($gesap['date_remonte']))?></td>
-				<td><a href="<?=URL_UPLOAD.'gesap/'.$gesap['ga_file']?>"><?=$gesap['ga_num']?></a></td>
+				<td>
+					<?php if (!empty($gesap['ga_file'])): ?>
+						<a href="<?=URL_UPLOAD.'gesap/'.$gesap['ga_file']?>"><?=$gesap['ga_num']?></a></td>
+					<?php else: ?>
+						<div class="info-bulle">
+							<?=$gesap['ga_num']?>
+							<span class="info-bulle-text">Guide d'achat à venir</span>
+						</div>
+					<?php endif ?>
+
+				</td>
 				<td><?=$gesap['cmt']?></td>
 
 				<?php if (!empty($listFiles) && isset($listFiles[$gesap['id']])): ?>
-					<td>
+				<td>
 
-				<?php for($i=0;$i<count($listFiles[$gesap['id']]);$i++): ?>
+					<?php for($i=0;$i<count($listFiles[$gesap['id']]);$i++): ?>
 						<a href="<?=URL_UPLOAD.'gesap/'.$listFiles[$gesap['id']][$i]['file']?>"><?=empty($listFiles[$gesap['id']][$i]['filename'])?'<i class="fas fa-file pb-3"></i>':$listFiles[$gesap['id']][$i]['filename']?></a><br>
 					<?php endfor ?>
 				</td>
-				<?php else: ?>
-					<td></td>
-				<?php endif ?>
-				<td><a href="gesap-modif.php?id=<?=$gesap['id']?>"><i class="fas fa-edit"></i></a></td>
-				<td><a href="gesap-delete.php?id=<?=$gesap['id']?>"><i class="fas fa-trash"></i></a></td>
-			</tr>
-		<?php endforeach ?>
-	</tbody>
+			<?php else: ?>
+				<td></td>
+			<?php endif ?>
+			<td><a href="gesap-modif.php?id=<?=$gesap['id']?>"><i class="fas fa-edit"></i></a></td>
+			<td><a href="gesap-delete.php?id=<?=$gesap['id']?>"><i class="fas fa-trash"></i></a></td>
+		</tr>
+	<?php endforeach ?>
+</tbody>
 </table>

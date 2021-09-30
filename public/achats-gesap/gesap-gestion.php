@@ -29,10 +29,7 @@ $listFiles=$gesapDao->getListFiles();
 
 
 if(isset($_POST['add'])){
-	// echo "<pre>";
-	// print_r($_POST);
-	// echo '</pre>';
-	// exit;
+
 
 	if(empty($_POST['op']) || empty($_POST['salon']) || empty($_POST['cata']) || empty($_POST['code_op']) || empty($_POST['date_remonte'])){
 		$errors[]="Vous devez renseigner les champs nom de l'opération, catalogue, salon, code opération et date limite de remontée";
@@ -40,15 +37,13 @@ if(isset($_POST['add'])){
 	if(isset($_POST['file_ga']) && empty($_POST['ga_name'])){
 		$errors[]="Merci de saisir le numéro du guide d'achat";
 	}
-	if (!empty($_POST['ga_name']) && !isset($_POST['file_ga'])) {
-		$errors[]="Merci de joindre le guide d'achat";
-	}
+
 
 	if(empty($errors)){
 
 
 		if (!empty($_POST['ga_name']) && isset($_POST['file_ga'])) {
-			$idGesap=$gesapDao->insertGesapWithGa($_POST['file_ga'][1]);
+			$idGesap=$gesapDao->insertGesapWithGa($_POST['file_ga'][0]);
 
 		}else{
 			$idGesap=$gesapDao->insertGesapWithoutGa();
