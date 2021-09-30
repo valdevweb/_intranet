@@ -22,7 +22,11 @@ ou à modifier /enrichier une déclaration existante GET[idKc]
 
 
 
-require '../../config/db-connect.php';
+require '../../Class/Db.php';
+require ('../../Class/casse/CasseHelpers.php');
+require ('../../Class/casse/CasseDao.php');
+require ('../../Class/casse/PalettesDao.php');
+
 
 require ('../../Class/Form/Select.php');
 require ('../../Class/Helpers.php');
@@ -33,150 +37,31 @@ require('casse-getters.fn.php');
 //			FONCTION
 //------------------------------------------------------
 
+$db=new Db();
+$pdoUser=$db->getPdo('web_users');
+$pdoQlik=$db->getPdo('qlik');
+$pdoCasse=$db->getPdo('casse');
+
+$paletteDao=new PalettesDao($pdoCasse);
+$casseDao=new CasseDao($pdoCasse);
+
 $operateur=getOperateur($pdoUser);
 
 $categories=getCategorie($pdoCasse);
 $origines=getOrigine($pdoCasse);
 $types=getTypecasse($pdoCasse);
+$listPalette=CasseHelpers::getPaletteActive($pdoCasse);
 
-// $lastInsertId=addCasse($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$dataArticle['panf'],$dataArticle['fournisseur']);
-
-
-
-function addCasse($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette, $pfnp, $deee,$sacem,$deeeCodif){
-	//panf =pu
-	//valo = nbcolis *
-	$uvc=$pcb * $_POST['nb_colis'];
-	$valo=$uvc*$pfnp;
-	$decote=round($valo/2);
-
-	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj, mt_mag, mt_decote,pfnp, deee,sacem, deee_codif) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :mt_mag, :mt_decote, :pfnp, :deee,:sacem, :deee_codif)" );
-
-	$req->execute(array(
-		':date_casse'	=>$_POST['date_casse'],
-		':id_web_user'	=>$_SESSION['id_web_user'],
-		':id_operateur'	=>$_POST['operateur'],
-		':nb_colis'	=>$_POST['nb_colis'],
-		':id_categorie'	=>$_POST['categorie'],
-		':article'	=>$_POST['article'],
-		':dossier'	=>$_POST['dossier'],
-		':gt'	=>$gt,
-		':designation'	=>$libelle,
-		':pcb'	=>$pcb,
-		':uvc'	=>$uvc,
-		':valo'	=>$valo,
-		':pu'	=>$panf,
-		':fournisseur'	=>$fournisseur,
-		':id_origine'	=>$_POST['origine'],
-		':id_type'	=>$_POST['type'],
-		':id_palette'	=>$idPalette,
-		':etat'	=>0,
-		':last_maj' =>date('Y-m-d H:i:s'),
-		':mt_mag'		=> $valo,
-		':mt_decote'	=>$decote,
-		':pfnp'			=>$pfnp,
-		':deee'			=>$deee,
-		':sacem'		=>$sacem,
-		':deee_codif'	=>$deeeCodif
-
-	));
-	if($req->rowCount()==1)
-	{
-		return $pdoCasse->lastInsertId();
-	}
-	else{
-		return false;
-	}
-}
-
-
-function addCasseDestroy($pdoCasse,$gt,$libelle,$pcb,$panf,$fournisseur, $idPalette, $pfnp,$deee,$sacem, $deeeCodif){
-	$uvc=$pcb * $_POST['nb_colis'];
-	$valo=$uvc*$pfnp;
-	$req=$pdoCasse->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj,  detruit, mt_mag, mt_decote, pfnp, deee, sacem, deee_codif) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :detruit,  :mt_mag, :mt_decote, :pfnp, :deee, :sacem, :deee_codif)" );
-
-	$req->execute(array(
-		':date_casse'	=>$_POST['date_casse'],
-		':id_web_user'	=>$_SESSION['id_web_user'],
-		':id_operateur'	=>$_POST['operateur'],
-		':nb_colis'	=>$_POST['nb_colis'],
-		':id_categorie'	=>$_POST['categorie'],
-		':article'	=>$_POST['article'],
-		':dossier'	=>$_POST['dossier'],
-		':gt'	=>$gt,
-		':designation'	=>$libelle,
-		':pcb'	=>$pcb,
-		':uvc'	=>$uvc,
-		':valo'	=>$valo,
-		':pu'	=>$panf,
-		':fournisseur'	=>$fournisseur,
-		':id_origine'	=>$_POST['origine'],
-		':id_type'	=>$_POST['type'],
-		':id_palette'	=>$idPalette,
-		':etat'	=>0,
-		':last_maj' =>date('Y-m-d H:i:s'),
-		':detruit'	=>1,
-		':mt_mag'		=> 0,
-		':mt_decote'	=>0,
-		':pfnp'			=>$pfnp,
-		':deee'			=>$deee,
-		':sacem'		=>$sacem,
-		':deee_codif'	=>$deeeCodif
-
-	));
-	if($req->rowCount()==1)
-	{
-		return $pdoCasse->lastInsertId();
-	}
-	else{
-		return false;
-	}
-// return $req->errorInfo();
-}
-
-
-
-
-function paletteExist($pdoCasse){
-	$palette=strtoupper($_POST['palette']);
-	$req=$pdoCasse->prepare("SELECT id FROM palettes WHERE palette= :palette");
-	$req->execute([
-		':palette'	=>$palette
-	]);
-	if ($req) {
-		return $req->fetch(PDO::FETCH_ASSOC);
-	}
-	else {
-		return false;
-	}
-}
-
-function addPalette($pdoCasse){
-	//palette à détruire ou non, on met en statut 0
-
-	$req=$pdoCasse->prepare("INSERT INTO palettes (palette, date_crea, statut) VALUES (:palette, :date_crea, :statut) ");
-	$req->execute([
-		':palette'	=>strtoupper($_POST['palette']),
-		':date_crea'=>date('Y-m-d H:i:s'),
-		':statut'=>0
-	]);
-	return $pdoCasse->lastInsertId();
-}
-
-function addSerials($pdoCasse,$lastInsertId,$serial)
-{
+function addSerials($pdoCasse,$lastInsertId,$serial){
 	$req=$pdoCasse->prepare("INSERT INTO serials (id_casse,serial_nb) VALUES (:id_casse,:serial_nb)");
 	$req->execute([
 		':id_casse'			=>$lastInsertId,
 		':serial_nb'		=>$serial
 	]);
 	return $req->rowCount();
-// return $req->errorInfo();
-
 }
 
-function checkWebuser($pdoUser)
-{
+function checkWebuser($pdoUser){
 	$req=$pdoUser->prepare("SELECT id FROM intern_users WHERE id_web_user= :id_web_user");
 	$req->execute([
 		'id_web_user'		=>$_SESSION['id_web_user']
@@ -192,97 +77,20 @@ $errors=[];
 $success=[];
 
 // déclaration initiale
-if(isset($_GET['idBa']))
-{
-// utilisé pour info article quand nouvelle déclaration (quand  modif, utilise getCasse)
+if(isset($_GET['idBa'])){
 	$dataArticle=getArticleFromBA($pdoQlik,$_GET['idBa']);
-
-	if(isset($_POST['submit']))
-	{
-//  si GEM - TV, numéro de série obligatoires
-		if($_POST['categorie']==2)
-		{
-//	$_POST['serial'] renvoie un tableau de tableau
-// vide le tableau si il est vide (multidimentional array => jamais vide même si pas de donnée ppuis que contient au moins un tableau vide ou non)
-// nb de numero de series demandés
-			$nbSerialsAsked=count($_POST['serial']);
-			$emptiedSerial = array_filter($_POST['serial']);
-// nb de serie remplis
-			$nbSerialsGiven=count($emptiedSerial);
-			if($nbSerialsAsked != $nbSerialsGiven){
-				$errors[]="Il manque des numeros de séries, merci de compléter";
-			}
-		}
-		if(not_empty(['date_casse','operateur', 'article','dossier','categorie','origine','type','nb_colis','palette'])){
-		}
-		else{
-			$errors[]="Veuillez remplir tous les champs";
-		}
-		if(count($errors)==0)
-		{
-// on vérifie si la palette existe déjà, si oui on récupère son id si non on l'ajoute et récupère son id
-			$idPalette=paletteExist($pdoCasse);
-			if($idPalette==false)
-			{
-				$idPalette=addPalette($pdoCasse);
-			}
-			else
-			{
-				$idPalette=$idPalette['id'];
-			}
-			if(isset($_POST['destroy'])){
-// si à détruire a été selectionné, on peut clore le dossier
-				$lastInsertId=addCasseDestroy($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$dataArticle['panf'],$dataArticle['fournisseur'],$idPalette, $dataArticle['pfnp'],  $dataArticle['deee'],  $dataArticle['sacem'], $dataArticle['deee_codif']);
-			}
-			else{
-				$lastInsertId=addCasse($pdoCasse,$dataArticle['gt'],$dataArticle['libelle'],$dataArticle['pcb'],$dataArticle['panf'],$dataArticle['fournisseur'],$idPalette,  $dataArticle['pfnp'],  $dataArticle['deee'],  $dataArticle['sacem'], $dataArticle['deee_codif']);
-
-			}
-			if($lastInsertId !=false)
-			{
-				echo "lastinsertid n'est pas faux";
-				if(!empty($emptiedSerial))
-				{
-
-					for($i=0;$i<count($_POST['serial']);$i++)
-					{
-						if(!empty($_POST['serial'][$i]))
-						{
-
-							$add=addSerials($pdoCasse,$lastInsertId,$_POST['serial'][$i]);
-							if($add!=1){
-								$errors[]="impossible d'ajouter le numéro de serie";
-							}
-						}
-					}
-				}
-			}
-			else{
-				$errors[]='impossible d\'enregistrer les infos casses';
-
-			}
-		}
-		else
-		{
-			$errors[]='impossible d\'ajouter le dossier';
-		}
-
-
-		if(count($errors)==0)
-		{
-			$loc='Location:bt-casse-dashboard.php?success='.$lastInsertId;
-			header($loc);
-		}
-
-	}
-
 }
+
+if(isset($_POST['submit']))	{
+	include 'bt-declaration-casse/01-save-new-casse.php';
+}
+
+
+
 
 // vérifie si le user connecté à un id_web_user dans la table opérateur => si oui opérateur sélectionné par défaut dans la ld opérateur
 if(checkWebuser($pdoUser)){
 	$idOp=checkWebuser($pdoUser);
-
-
 	$idOp=$idOp['id'];
 }
 else{
@@ -304,7 +112,7 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<?= Helpers::returnBtn('bt-casse-dashboard.php'); ?>
+	<?= Helpers::returnBtn('casse-dashboard.php'); ?>
 
 	<h1 class="text-main-blue pb-3 ">Déclaration de casse</h1>
 	<div class="row">
@@ -369,14 +177,11 @@ DEBUT CONTENU CONTAINER
 							<select name="operateur" id="operateur" class="form-control" required>
 								<option value="">Sélectionnez</option>
 								<?php
-								foreach($operateur as $op)
-								{
+								foreach($operateur as $op){
 // si l'opérateur a un code id_web_user, on met par défaut le select sur ce code
-									if($idOp==$op['id'])
-									{
+									if($idOp==$op['id']){
 										$selected="selected";
-									}
-									else{
+									}else{
 										$selected='';
 									}
 									echo '<option value="'.$op['id'].'" '.$selected.'>'.$op['operateur'].'</option>';
@@ -485,18 +290,57 @@ DEBUT CONTENU CONTAINER
 							<input type="text" name="nb_colis" class="form-control" pattern="[0-9]+" title="Seuls les chiffres sont autorisés" id="nb_colis" required >
 						</div>
 					</div>
-					<div class="col-4">
-						<div class="form-group">
-							<label for="palette">Palette 4919</label>
-							<input type="text" class="form-control" name="palette" id="palette" required>
+					<div class="col-3">
+						<div class="row">
+							<div class="col">
+
+
+								<div class="form-group">
+									<label for="palette_existante">Sélectionner une palette 4919</label>
+									<select class="form-control" name="palette_existante" id="palette_existante" required>
+										<option value="">Sélectionner</option>
+										<option value="new">Nouvelle palette</option>
+										<?php foreach ($listPalette as $idPalette => $palette): ?>
+											<option value="<?=$idPalette?>"><?=$listPalette[$idPalette]?></option>
+										<?php endforeach ?>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col" id="type-palette">
+							</div>
+						</div>
+
+
+					</div>
+					<div class="col-5" id="new_palette">
+						<div class="row">
+							<div class="col">
+								<div class="row">
+									<div class="col">
+										<div class="form-group">
+											<label for="palette">Palette 4919</label>
+											<input type="text" class="form-control" name="palette" id="palette">
+										</div>
+									</div>
+								</div>
+
+							</div>
+							<div class="col-auto">
+								Palette déstinée à la destruction
+								<div class="form-check">
+									<input class="form-check-input" type="radio" value="1" id="destroy_yes" name="destroy">
+									<label class="form-check-label" for="destroy_yes">Oui</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" value="0" id="destroy_no" name="destroy">
+									<label class="form-check-label" for="destroy_no">Non</label>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="col-4 mt-4 pt-3">
-						<div class="form-group form-check">
-							<input type="checkbox" name="destroy" id="destroy" class="form-check-input">
-							<label>A détruire</label>
-						</div>
-					</div>
+
 
 				</div>
 
@@ -536,8 +380,8 @@ DEBUT CONTENU CONTAINER
 
 	<script type="text/javascript">
 		$(document).ready(function(){
+			$('#new_palette').hide();
 			$('#nb_colis').focusout(function(){
-
 				var serialInput='<div class="row"><div class="col-4"><div class="form-group">';
 				serialInput+='<label>N° de série : </label><input type="text" name="serial[]" class="form-control">';
 				serialInput+='</div><div class="col"></div></div></div>';
@@ -550,7 +394,26 @@ DEBUT CONTENU CONTAINER
 				}
 			});
 
+			$('#palette_existante').on("change", function(){
+				var paletteSelected=$('#palette_existante').val();
+				if (paletteSelected=="new") {
+					$('#new_palette').show();
 
+				}else{
+					$('#new_palette').hide();
+					$.ajax({
+						url:'bt-declaration-casse/ajax-get-palette.php',
+						method:"POST",
+						data:{id_palette:paletteSelected},
+						success:function(data){
+							console.log(data);
+							$('#type-palette').empty();
+
+							$('#type-palette').text(data);
+						}
+					});
+				}
+			});
 
 		});
 	</script>

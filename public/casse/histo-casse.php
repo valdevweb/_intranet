@@ -87,7 +87,7 @@ DEBUT CONTENU CONTAINER
 			<h1 class="text-main-blue pt-5 ">Historique des casses enlevées</h1>
 		</div>
 		<div class="col">
-			<?= Helpers::returnBtn('bt-casse-dashboard.php'); ?>
+			<?= Helpers::returnBtn('casse-dashboard.php'); ?>
 		</div>
 	</div>
 	<!-- zone de message -->

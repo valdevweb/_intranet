@@ -114,7 +114,7 @@ if(isset($_POST['submit'])){
 				array_push($cc,'valerie.montusclat@btlec.fr');
 				$dest='btlecest.portailweb.logistique@btlec.fr';
 			}
-			$htmlMail = file_get_contents('mail-certif-upload.php');
+			$htmlMail = file_get_contents('mail/mail-certif-upload.php');
 			$htmlMail=str_replace('{LIV}',$idExp,$htmlMail);
 			$htmlMail=str_replace('{PALETTE}',$contremarque,$htmlMail);
 			$subject='Portail SAV Leclerc - casse - certificat de destruction';

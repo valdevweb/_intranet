@@ -58,21 +58,21 @@ if(isset($_GET['id'])){
 	if($copy==1){
 		$delete=deleteCasse($pdoCasse);
 		if($delete==1){
-			header('Location: bt-casse-dashboard.php?deleteOk='.$_GET['id'].'');
+			header('Location: casse-dashboard.php?deleteOk='.$_GET['id'].'');
 		}
 		else{
-			header('Location: bt-casse-dashboard.php?error=2');
+			header('Location: casse-dashboard.php?error=2');
 		}
 	}
 	else{
-	header('Location: bt-casse-dashboard.php?error=2');
+	header('Location: casse-dashboard.php?error=2');
 
 	}
 
 
 }
 else{
-	header('Location: bt-casse-dashboard.php?error=1');
+	header('Location: casse-dashboard.php?error=1');
 }
 //------------------------------------------------------
 //			VIEW

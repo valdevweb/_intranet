@@ -51,7 +51,7 @@ if(isset($_GET['id']))
 
 }
 else{
-	$loc='Location:bt-casse-dashboard.php?error=1';
+	$loc='Location:casse-dashboard.php?error=1';
 	header($loc);
 }
 
@@ -71,12 +71,9 @@ foreach ($expInfo as $exp) {
 	$table.='<tr><td style="border: 1px solid grey;padding:10px;">'.$exp['palette'].'</td><td style="border: 1px solid grey;padding:10px;">'.$exp['contremarque'].'</td></tr>';
 }
 $table.='</table>';
-	echo "<pre>";
-	print_r($dest);
-	print_r($cc);
-	echo '</pre>';
 
-$htmlMail = file_get_contents('mail-pilote-dd.php');
+
+$htmlMail = file_get_contents('mail/mail-pilote-dd.php');
 $htmlMail=str_replace('{MAG}',$expInfo[0]['btlec'],$htmlMail);
 $htmlMail=str_replace('{NB}',$nb,$htmlMail);
 $htmlMail=str_replace('{LINK}',$link,$htmlMail);
@@ -109,7 +106,7 @@ if($delivered !=0)
 		}
 	}
 	if(!$majko){
-		$loc='Location:bt-casse-dashboard.php?mailPilote';
+		$loc='Location:casse-dashboard.php?mailPilote';
 		header($loc);
 	}
 	else{

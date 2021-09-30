@@ -97,8 +97,6 @@ $mag=MagHelpers::deno($pdoMag,$isFac['galec']);
 
 
 if(isset($_POST['clos'])){
-
-
 	$dirUpload=DIR_UPLOAD.'casse\\';
 	$uploader   =   new Uploader();
 	$uploader->setDir($dirUpload);
@@ -131,7 +129,7 @@ if(isset($_POST['clos'])){
 			$cc=['christelle.trousset@btlec.fr','nathalie.pazik@btlec.fr','luc.muller@btlec.fr'];
 
 		}
-		$htmlMail = file_get_contents('mail-compta.html');
+		$htmlMail = file_get_contents('mail/mail-compta.html');
 		$htmlMail=str_replace('{MAG}',$mag,$htmlMail);
 		$htmlMail=str_replace('{FAC}',$isFac['mt_fac'],$htmlMail);
 		$htmlMail=str_replace('{BLANC}',$isFac['mt_blanc'],$htmlMail);
@@ -213,7 +211,7 @@ DEBUT CONTENU CONTAINER
 		<h1 class="text-main-blue py-5 ">Clôture de l'expédition n°<?=$_GET['id']?></h1>
 	</div>
 
-		<div class="col"><?=Helpers::returnBtn('bt-casse-dashboard.php')?></div>
+		<div class="col"><?=Helpers::returnBtn('casse-dashboard.php')?></div>
 	</div>
 
 	<div class="row">

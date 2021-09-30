@@ -5,31 +5,17 @@ function getOperateur($pdoUser){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getCategorie($pdoCasse){
-	$req=$pdoCasse->query("SELECT * FROM categories WHERE mask=0 ORDER BY categorie");
-	$req->execute();
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
 
-function getOrigine($pdoCasse){
-	$req=$pdoCasse->query("SELECT * FROM origines WHERE mask=0 ORDER BY origine");
-	$req->execute();
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
 
-function getTypecasse($pdoCasse){
-	$req=$pdoCasse->query("SELECT * FROM type_casse WHERE mask=0 ORDER BY type");
-	$req->execute();
-	return $req->fetchAll(PDO::FETCH_ASSOC);
-}
 
-function getArticleFromBA($pdoQlik, $idArticle){
-	$req=$pdoQlik->prepare("SELECT `GESSICA.CodeDossier` as dossier, `GESSICA.CodeArticle` as article, `GESSICA.GT` as gt, `GESSICA.LibelleArticle` as libelle, `GESSICA.PCB` as pcb, `GESSICA.PANF` as panf, `GESSICA.CodeFournisseur` as cnuf, `GESSICA.NomFournisseur` as fournisseur,`GESSICA.PFNP` as pfnp,`GESSICA.D3E` as deee, `GESSICA.SORECOP` as sacem,`GESSICA.CodifD3E` as deee_codif,	id FROM basearticles WHERE id = :id");
-	$req->execute(array(
-		':id'	=>$idArticle
-	));
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
+
+// function getArticleFromBA($pdoQlik, $idArticle){
+// 	$req=$pdoQlik->prepare("SELECT `GESSICA.CodeDossier` as dossier, `GESSICA.CodeArticle` as article, `GESSICA.GT` as gt, `GESSICA.LibelleArticle` as libelle, `GESSICA.PCB` as pcb, `GESSICA.PANF` as panf, `GESSICA.CodeFournisseur` as cnuf, `GESSICA.NomFournisseur` as fournisseur,`GESSICA.PFNP` as pfnp,`GESSICA.D3E` as deee, `GESSICA.SORECOP` as sacem,`GESSICA.CodifD3E` as deee_codif,	id FROM basearticles WHERE id = :id");
+// 	$req->execute(array(
+// 		':id'	=>$idArticle
+// 	));
+// 	return $req->fetch(PDO::FETCH_ASSOC);
+// }
 
 function getCasse($pdoCasse, $idCasse){
 	$req=$pdoCasse->prepare("SELECT *,
@@ -70,15 +56,7 @@ function getCmt($pdoCasse, $id){
 
 
 
-function getStockPalette($pdoCasse){
-	$req=$pdoCasse->query("SELECT *, palettes.id as paletteid FROM palettes INNER JOIN qlik.palettes4919 ON palettes.palette = qlik.palettes4919.NumeroPalette GROUP BY palette ORDER BY palette");
-	if($req){
-		return $req->fetchAll(PDO::FETCH_ASSOC);
-	}
-	else{
-		return false;
-	}
-}
+
 
 
 
@@ -109,16 +87,7 @@ function getSerialsCasse($pdoCasse, $idCasse){
 	]);
 	return $req->fetchAll(PDO::FETCH_GROUP);
 }
-function getActiveExp($pdoCasse){
-	$req=$pdoCasse->query("SELECT * FROM exps WHERE exp=0");
-	if($req){
-		return $req->fetchAll(PDO::FETCH_ASSOC);
-	}
-	else{
-		return false;
-	}
 
-}
 
 function getThisExp($pdoCasse,$idPalette){
 	$req=$pdoCasse->prepare("SELECT * FROM palettes LEFT JOIN exps ON palettes.id_exp=exps.id WHERE palettes.id= :id_palette");
@@ -152,21 +121,7 @@ function getExpAndPalette($pdoCasse,$idExp){
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function magExpAlreadyExist($pdoCasse, $btlec)
-{
 
-	$req=$pdoCasse->prepare("SELECT * FROM exps WHERE exp=0 AND btlec = :btlec");
-	$req->execute([
-		':btlec'		=>$btlec
-	]);
-	$result=$req->fetch(PDO::FETCH_ASSOC);
-	if(isset($result['id'])){
-		return $result;
-	}
-	else{
-		return false;
-	}
-}
 
 function getExpPaletteCasse($pdoCasse,$idExp){
 	//  on ne fait que la somme des quantité puisque dans la facture, on multiplie le prix par la quantité

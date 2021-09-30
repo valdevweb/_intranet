@@ -104,7 +104,7 @@ if(isset($_POST['submit'])){
 		}
 		$table.='</table>';
 		$deno=MagHelpers::deno($pdoMag,$listPalette[0]['galec']);
-		$htmlMail = file_get_contents('mail-pilote-retour.php');
+		$htmlMail = file_get_contents('mail/mail-pilote-retour.php');
 		$htmlMail=str_replace('{MAG}',$listPalette[0]['btlec'],$htmlMail);
 		$htmlMail=str_replace('{DENO}',$deno,$htmlMail);
 		$htmlMail=str_replace('{IDEXP}',$_GET['id'],$htmlMail);
@@ -161,7 +161,7 @@ DEBUT CONTENU CONTAINER
 <div class="container">
 	<div class="row">
 		<div class="col">
-			<?= Helpers::returnBtn('bt-casse-dashboard.php'); ?>
+			<?= Helpers::returnBtn('casse-dashboard.php'); ?>
 		</div>
 	</div>
 	<h1 class="text-main-blue pb-5 ">Retour contrôle palettes de casse</h1>

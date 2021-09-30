@@ -154,7 +154,7 @@ if(isset($_POST['submit'])){
 		$errors[]="une erreur est survenue pendant le traitement";
 	}
 	else{
-		header('Location:bt-casse-dashboard.php?majExp');
+		header('Location:casse-dashboard.php?majExp');
 
 	}
 }
@@ -175,7 +175,7 @@ DEBUT CONTENU CONTAINER
 <div class="container">
 	<div class="row">
 		<div class="col">
-			<?= Helpers::returnBtn('bt-casse-dashboard.php'); ?>
+			<?= Helpers::returnBtn('casse-dashboard.php'); ?>
 		</div>
 	</div>
 	<h1 class="text-main-blue pb-5 ">Livraison expédition n°<?=$listPalette[0]['expid']?> pour le <?=$listPalette[0]['btlec']?></h1>

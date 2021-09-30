@@ -33,8 +33,7 @@ require ('../../Class/Helpers.php');
 //------------------------------------------------------
 //			FONCTION
 //------------------------------------------------------
-function addInfoFi($pdoCasse)
-{
+function addInfoFi($pdoCasse){
 	$fields=['mt_mag','mt_decote','mt_ndd'];
 	for ($i=0; $i < count($fields); $i++)
 	{
@@ -86,8 +85,7 @@ $success=[];
 //			TRAITEMENT
 //------------------------------------------------------
 
-if(isset($_GET['id']))
-{
+if(isset($_GET['id'])){
 	$idCasse=$_GET['id'];
 	$casseInfo=getCasse($pdoCasse, $idCasse);
 	$serials=getSerialsCasse($pdoCasse, $idCasse);
@@ -100,7 +98,7 @@ if(isset($_GET['id']))
 	$cmts=getCmt($pdoCasse, $idCasse);
 }
 else{
-	$loc='Location:bt-casse-dashboard.php?error=1';
+	$loc='Location:casse-dashboard.php?error=1';
 	header($loc);
 }
 
@@ -147,8 +145,6 @@ if(isset($_POST['add-cmt'])){
 			':date_cmt'	=>date('Y-m-d H:i:s')
 		]);
 		$insert=$req->rowCount();
-		// $insert=$req->errorInfo();
-
 
 		if($insert>0){
 			header('Location:detail-casse.php?id='.$idCasse);
@@ -205,7 +201,7 @@ include('../view/_navbar.php');
 DEBUT CONTENU CONTAINER
 *********************************-->
 <div class="container">
-	<?= Helpers::returnBtn('bt-casse-dashboard.php'); ?>
+	<?= Helpers::returnBtn('casse-dashboard.php'); ?>
 
 	<h1 class="text-main-blue ">Déclaration de casse n°<?=$casseInfo['cassesid']?></h1>
 	<div class="row">

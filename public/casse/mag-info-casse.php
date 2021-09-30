@@ -79,14 +79,14 @@ else{
 
 if($mailPole){
 	ob_start();
-	include('pdf-certificat-destruction.php');
+	include('mag-info-casse/pdf-certificat-destruction.php');
 	$html=ob_get_contents();
 	ob_end_clean();
 	$filename='certificat de destruction.pdf';
 }
 else{
 	ob_start();
-	include('pdf-mag.php');
+	include('mag-info-casse/pdf-mag.php');
 	$html=ob_get_contents();
 	ob_end_clean();
 	$filename='detail livraison palettes de casse.pdf';
@@ -132,12 +132,12 @@ else{
 }
 if($mailPole){
 	$link='<a href="'.SITE_ADDRESS.'/index.php?casse/certif-upload.php?id='.$_GET['id'].'"> en cliquant ici</a>';
-	$htmlMail = file_get_contents('mail-pole-exp.php');
+	$htmlMail = file_get_contents('mail/mail-pole-exp.php');
 	$htmlMail=str_replace('{NB}',count($expInfo),$htmlMail);
 	$htmlMail=str_replace('{LINK}',$link,$htmlMail);
 }
 else{
-	$htmlMail = file_get_contents('mail-mag-exp.php');
+	$htmlMail = file_get_contents('mail/mail-mag-exp.php');
 	$htmlMail=str_replace('{NB}',count($expInfo),$htmlMail);
 }
 $subject='Portail BTLec Est - livraison palettes de casse';
@@ -163,7 +163,7 @@ if($delivered !=0)
 	$do=updatePalette($pdoCasse,$idExp);
 
 	if($do>=1){
-		$loc='Location:bt-casse-dashboard.php?mailMag';
+		$loc='Location:casse-dashboard.php?mailMag';
 		header($loc);
 	}
 	else{
