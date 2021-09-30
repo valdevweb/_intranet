@@ -80,11 +80,18 @@ if(isset($_GET['update'])){
 	$infoLiv=$cdesAchatDao->getInfo($_GET['update']);
 }
 if(isset($_POST['update'])){
+	echo "<pre>";
+	print_r($_POST);
+	echo '</pre>';
+
 	$date=(empty($_POST['date_previ_update']))?null:$_POST['date_previ_update'];
 	$qte=(empty($_POST['qte_previ_update']))?null:$_POST['qte_previ_update'];
 	$cmt=(empty($_POST['cmt_update']))?"":$_POST['cmt_update'];
-	$cdesAchatDao->updateInfo($_GET['update'], $date, $qte, $cmt);
+
+	$do=$cdesAchatDao->updateInfo($_GET['update'], $date, $qte, $cmt);
 	$successQ='?success=updated';
+
+
 	unset($_POST);
 	header("Location:".$_SERVER['PHP_SELF'].$successQ,true,303);
 
@@ -265,75 +272,79 @@ include('../view/_navbar.php');
 								</div>
 							<?php endif ?>
 						<?php endif ?>
-						<?php if (isset($infoLiv)): ?>
-							<div class="row border bg-light-grey rounded p-3 mb-5">
-								<div class="col">
-									<div class="row">
-										<div class="col text-main-blue text-center">
-											Modifier l'info livraison :
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-auto">
-											<div class="form-group">
-												<label>Date de livraison prévisionnelle :</label>
-												<input type="date" class="form-control" name="date_previ_update" value="<?=$infoLiv['date_previ']?>">
-											</div>
-										</div>
-										<div class="col-3">
-											<div class="form-group">
-												<label>Quantité prévisionnelle :</label>
-												<input type="text" class="form-control" name="qte_previ_update" placeholder="qte prévi" value="<?=$infoLiv['qte_previ']?>">
-											</div>
-										</div>
-										<div class="col">
-											<div class="form-group">
-												<label>Commentaires :</label>
-												<textarea class="form-control" name="cmt_update"  row="3"><?=$infoLiv['cmt']?></textarea>
-											</div>
-										</div>
-										<div class="col-lg-auto mt-5">
-											<button class="btn btn-primary" name="update">Mettre à jour</button>
-
-										</div>
-									</div>
-								</div>
-							</div>
-						<?php endif ?>
-						<div class="row border rounded p-3 mb-5">
-							<div class="col-auto">
-								<div class="form-group">
-									<label>Date de livraison prévisionnelle :</label>
-									<input type="date" class="form-control date" name="date_previ[<?=$prod['id']?>]" >
-								</div>
-							</div>
-							<div class="col-3">
-								<div class="form-group">
-									<label>Quantité prévisionnelle :</label>
-									<input type="text" class="form-control qte-saisie" name="qte_previ[<?=$prod['id']?>]" placeholder="qte prévi" data-id="<?=$prod['id']?>">
-									<div class="restant" data-restant="<?=$prod['id']?>"></div>
-								</div>
-							</div>
+						<?php if (isset($infoLiv) && isset($_GET['update']) && ($_GET['update']==$listInfos[$prod['id']][$keyInfo]['id'])): ?>
+						<div class="row border bg-light-grey rounded p-3 mb-5">
 							<div class="col">
-								<div class="form-group">
-									<label>Commentaires :</label>
-									<textarea class="form-control cmt" name="cmt[<?=$prod['id']?>]"  row="3"></textarea>
+								<div class="row">
+									<div class="col text-main-blue text-center">
+										Modifier l'info livraison :
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-auto">
+										<div class="form-group">
+											<label>Date de livraison prévisionnelle :</label>
+											<input type="date" class="form-control" name="date_previ_update" value="<?=$infoLiv['date_previ']?>">
+										</div>
+									</div>
+									<div class="col-3">
+										<div class="form-group">
+											<label>Quantité prévisionnelle :</label>
+											<input type="text" class="form-control" name="qte_previ_update" placeholder="qte prévi" value="<?=$infoLiv['qte_previ']?>">
+										</div>
+									</div>
+									<div class="col">
+										<div class="form-group">
+											<label>Commentaires :</label>
+											<textarea class="form-control" name="cmt_update"  row="3"><?=$infoLiv['cmt']?></textarea>
+										</div>
+									</div>
+									<div class="col-lg-auto mt-5">
+										<button class="btn btn-primary" name="update">Mettre à jour</button>
+
+									</div>
 								</div>
 							</div>
 						</div>
+					<?php endif ?>
+					<div class="row border rounded p-3 mb-5">
+						<div class="col-auto">
+							<div class="form-group">
+								<label>Date de livraison prévisionnelle :</label>
+								<input type="date" class="form-control date" name="date_previ[<?=$prod['id']?>]" >
+							</div>
+						</div>
+						<div class="col-3">
+							<div class="form-group">
+								<label>Quantité prévisionnelle :</label>
+								<input type="text" class="form-control qte-saisie" name="qte_previ[<?=$prod['id']?>]" placeholder="qte prévi" data-id="<?=$prod['id']?>">
+								<div class="restant" data-restant="<?=$prod['id']?>"></div>
+							</div>
+						</div>
+						<div class="col">
+							<div class="form-group">
+								<label>Commentaires :</label>
+								<textarea class="form-control cmt" name="cmt[<?=$prod['id']?>]"  row="3"></textarea>
+							</div>
+						</div>
+					</div>
 
-					<?php endforeach ?>
+				<?php endforeach ?>
 
-				<?php endif ?>
-
-				<div class="row mb-5">
+			<?php endif ?>
+			<div class="fixed-zone">
+				<div class="row mt-3 mb-5" >
+					<div class="col-2"></div>
 					<div class="col text-right">
 						<button class="btn btn-primary" name="save">Enregistrer</button>
 					</div>
+					<div class="col-2"></div>
+
 				</div>
-			</form>
-		</div>
+			</div>
+		</form>
 	</div>
+</div>
 
 </div>
 <script>
