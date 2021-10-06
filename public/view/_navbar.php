@@ -31,6 +31,7 @@ $dLcommerce=isUserAllowed($pdoUser, [43,44]);
 $dMission=isUserAllowed($pdoUser,  [78,5]);
 $dOccasionBt=isUserAllowed($pdoUser, [83]);
 $dOccasionMag=isUserAllowed($pdoUser, [84]);
+$dPilotage=isUserAllowed($pdoUser, [98]);
 
 
 
@@ -267,7 +268,7 @@ $dOccasionMag=isUserAllowed($pdoUser, [84]);
 			<?php endif ?>
 
 			<li><a href="<?=PORTAIL_SAV?>scapsav/home.php" class="tooltipped" data-position="bottom" data-tooltip="site du portail SAV">Portail SAV</a></li>
-			<?php if ($dBtlec): ?>
+			<?php if ($dBtlec || $dPilotage): ?>
 				<li><a href="http://172.30.92.53/<?=VERSION?>pilotage" >Pilotage</a></li>
 			<?php endif ?>
 
