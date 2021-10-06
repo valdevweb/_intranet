@@ -109,7 +109,7 @@ elseif($_GET['contrainte']==7){
 	include('contrainte-video-rep.php');
 }
 // demande intervention service achats
-elseif($_GET['contrainte']==8 || $_GET['contrainte']==9 || $_GET['contrainte']==10){
+elseif($_GET['contrainte']==8 || $_GET['contrainte']==9 || $_GET['contrainte']==10 || $_GET['contrainte']==14 || $_GET['contrainte']==15){
 	include('contrainte-achats.php');
 }
 // envoi demande de recherhce video a Benoit

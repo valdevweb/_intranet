@@ -10,6 +10,7 @@
         <p style="color:darkblue;font-style:italic; padding-left:10px">
         {MSG}</p>
         <p>&nbsp;</p>
+
         <p>Restant à votre disposition,<br>
         Cordialement,</p>
         <p style="color:darkblue;">L'équipe litige livraison</p>

@@ -1,10 +1,14 @@
 <?php
+// correspondance num contrainte et num service
 $serviceCorrespondance=[
 	8 	=>1,
 	9	=>2,
-	10  =>3
+	10  =>3,
+	14  =>29,
+	15  =>28
 ];
 $ldAchat=getLdAchat($pdoUser,$serviceCorrespondance[$_GET['contrainte']]);
+
 if(VERSION=='_'){
 	$achatDest=['valerie.montusclat@btlec.fr'];
 	$cc='valerie.montusclat@btlec.fr';
@@ -13,6 +17,7 @@ else{
 
 	foreach ($ldAchat as $ld) {
 		$achatDest[]=$ld['email'];
+
 	}
 	$achatDest[]='stephane.wendling@btlec.fr';
 	$cc='btlecest.portailweb.litiges@btlec.fr';
@@ -50,6 +55,8 @@ $htmlMail=str_replace('{MAG}',$litige[0]['mag'],$htmlMail);
 $htmlMail=str_replace('{DOSSIER}',$litige[0]['dossier'],$htmlMail);
 $htmlMail=str_replace('{MSG}',$msg['libelle'],$htmlMail);
 $htmlMail=str_replace('{LINK}',$link,$htmlMail);
+
+
 $subject='Portail BTLec - Litige livraison '.$litige[0]['dossier'].' - '.$litige[0]['mag'];
 // ---------------------------------------
 // initialisation de swift
