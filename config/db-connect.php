@@ -55,3 +55,6 @@ if(!isset($pdoExploit)){
 if(!isset($pdoFou)){
 	$pdoFou=connectToDb(VERSION.'fournisseurs');
 }
+if(!isset($pdoWork)){
+	$pdoWork=connectToDb(VERSION.'workflow');
+}

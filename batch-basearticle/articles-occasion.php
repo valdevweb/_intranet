@@ -66,6 +66,8 @@ function deleteArticlesQlik($pdoOcc){
 
 deleteArticlesQlik($pdoOcc);
 $articleOcc=getArticlesOcc($pdoQlik);
+
+
 $cdesNonExp=getCommandesNonExpedie($pdoOcc);
 
 
@@ -79,7 +81,15 @@ foreach($articleOcc as $art){
 	}
 	if($stockReel>=0){
 		$added=insertArticlesOcc($pdoOcc, $art['idqlik'], $art['article_qlik'], $art['dossier_qlik'], $art['panf_qlik'], $art['deee_qlik'], $art['sorecop'], $art['design_qlik'], $art['pcb_qlik'], $art['fournisseur_qlik'], $art['ean_qlik'], $stockReel, $art['ppi_qlik'], $art['marque_qlik']);
+
+		echo "article "	.$art['article_qlik']. " ajouté " .$art['idqlik'];
+
+
+	}else{
+		echo "article "	.$art['article_qlik']. " NON ajouté qte : ". $art['qte_qlik'];
+
 	}
+	echo "<br>";
 
 }
 
