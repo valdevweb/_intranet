@@ -22,7 +22,7 @@ require('../../Class/BaDao.php');
 require('../../Class/casse/PalettesDao.php');
 require('../../Class/casse/ExpDao.php');
 require('../../Class/MagHelpers.php');
-require('../../Class/CrudHelpers.php');
+require('../../Class/CrudDao.php');
 require('casse-getters.fn.php');
 
 $db=new Db();
@@ -35,14 +35,10 @@ $baDao=new BaDao($pdoQlik);
 $paletteDao=new PalettesDao($pdoCasse);
 $expDao=new ExpDao($pdoCasse);
 
-$casseCrud=new CrudHelpers($pdoCasse);
+$casseCrud=new CrudDao($pdoCasse);
 
 $array=['id_type' =>1, 'id_web_user'=>1397];
 $casseData=$casseCrud->selectManyParams("casses", $array, "dossier, id_web_user");
-	echo "<pre>";
-	print_r($casseData);
-	echo '</pre>';
-
 
 
 function formatExistingDate($date){
