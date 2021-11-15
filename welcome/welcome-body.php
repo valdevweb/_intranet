@@ -1,11 +1,13 @@
 <?php
-if(str_contains($_SERVER['REQUEST_URI'], "qhse")){
+if(str_contains($_SERVER['HTTP_REFERER'], "qhse")){
 	$siteQhse=true;
 	define("IMG_DIR", "img-qhse/");
 }else{
 	define("IMG_DIR", "img/");
 
 }
+
+
 ?>
 
 
@@ -36,6 +38,7 @@ if(str_contains($_SERVER['REQUEST_URI'], "qhse")){
 	<title>Bienvenue à BTLec</title>
 </head>
 <body>
+
 	<div class="container-fluid">
 		<?php if (isset($siteQhse)): ?>
 			<div class="row">

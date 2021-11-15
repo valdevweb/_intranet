@@ -80,7 +80,7 @@ if(isset($_POST['galec'])){
 // cas 1 : le magasin n'a pas de compte sur le portail : envoi mail à moi même, copie Clément et David
 if(isset($_POST['galec']) && empty($webuser)){
 
-	$dest=['valerie.montusclat@btlec.fr'];
+	$dest=['valerie.montusclat@btlecest.Leclerc'];
 	$htmlMail = file_get_contents('public/mail/create-mag-login.html');
 	$htmlMail=str_replace('{GALEC}',$magInfo['galec'],$htmlMail);
 	$htmlMail=str_replace('{DENO}',$magInfo['deno'],$htmlMail);

@@ -138,6 +138,27 @@ function checkPwd($webUser,$pdoMag,$pdoUser){
 }
 
 
+function getAllInfoWebUserByID($pdoUser,$idwebuser){
+
+	if(strlen($idwebuser) < 3){
+$Where = "WHERE intern_users.id_service = '$idwebuser' ORDER BY intern_users.id ASC";
+	}else{
+$Where = "WHERE users.id = '$idwebuser'";
+	}
+
+$query = $pdoUser->query("SELECT * FROM users 
+	LEFT JOIN intern_users ON intern_users.id_web_user = users.id
+	$Where");
+$result = $query->fetch();
+
+$_POST['login'] = $result['login'];
+$result['id'] = $result['id_web_user'];
+
+
+return $result;
+
+}
+
 
 function initSession($pdoBt, $pdoSav, $pdoMag,$pdoCm, $pdoUser, $webUser){
 		//commun

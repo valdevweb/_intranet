@@ -121,12 +121,12 @@ if(isset($_POST['clos'])){
 
 	if($added>0 && $closeExp >0){
 		if(VERSION=='_'){
-			$to=['valerie.montusclat@btlec.fr']	;
+			$to=['valerie.montusclat@btlecest.leclerc']	;
 			$cc=[];
 			$bcc='';
 		}else{
-		$to=['isabelle.richard@btlec.fr','clement.anciaux@btlec.fr', 'sandie.lejeune@btlec.fr']	;
-			$cc=['christelle.trousset@btlec.fr','nathalie.pazik@btlec.fr','luc.muller@btlec.fr'];
+		$to=['isabelle.richard@btlecest.leclerc','clement.anciaux@btlecest.leclerc', 'sandie.lejeune@btlecest.leclerc']	;
+			$cc=['christelle.trousset@btlecest.leclerc','nathalie.pazik@btlecest.leclerc','luc.muller@btlecest.leclerc'];
 
 		}
 		$htmlMail = file_get_contents('mail/mail-compta.html');
@@ -141,7 +141,7 @@ if(isset($_POST['clos'])){
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
-		// ->setTo(['valerie.montusclat@btlec.fr'])
+		// ->setTo(['valerie.montusclat@btlecest.leclerc'])
 
 		->setTo($to)
 		->setCc($cc)

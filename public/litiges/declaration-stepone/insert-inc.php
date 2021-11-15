@@ -90,9 +90,12 @@ if(count($errors)==0){
 		if(isset($_SESSION['vol-id'])){
 			if($art!=NULL && $dossier !=NULL){
 				$poids=getPoids($pdoQlik,$_POST['hidden_article'][$rowArticle],$_POST['hidden_dossier'][$rowArticle]);
-				if(count($poids==1)){
+				if(!empty($poids)){
 					$puv=$poids['puv'];
 					$pul=$poids['pul'];
+				}else{
+					$puv=0;
+					$pul=0;
 				}
 			}
 		}

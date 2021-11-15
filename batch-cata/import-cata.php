@@ -26,7 +26,7 @@ function connectToDbDev($dbname) {
 	return  $pdo;
 }
 
-$pdoQlik=connectToDbDev('_qlik');
+// $pdoQlik=connectToDbDev('_qlik');
 
 
 
@@ -75,40 +75,40 @@ de la table dossier
 
 
 
-// if (($handle = fopen($op, "r")) !== FALSE) {
-// 	$errArr=[];
-// 	$i=0;
-// 	$req=$pdoQlik->query("DELETE FROM cata_op");
+if (($handle = fopen($op, "r")) !== FALSE) {
+	$errArr=[];
+	$i=0;
+	$req=$pdoQlik->query("DELETE FROM cata_op");
 
-// 	while (($data = fgetcsv($handle, 10000, ",")) !== FALSE) {
-// 		if($row==0){
-// 			$entete=$data;
-// 		}
+	while (($data = fgetcsv($handle, 10000, ",")) !== FALSE) {
+		if($row==0){
+			$entete=$data;
+		}
 
-// 		if($row==0){
-// 			$row++;
-// 		}else{
-// 			if (substr($data[0],0,2)>=$previousYear) {
-// 				$req=$pdoQlik->prepare("INSERT INTO cata_op (code_op, libelle, date_start, date_end, origine) VALUES (:code_op, :libelle, :date_start, :date_end, :origine) ");
-// 				$req->execute([
-// 					':code_op'		=>$data[0],
-// 					':libelle'		=>$data[1],
-// 					':date_start'		=>convertToDate($data[2]),
-// 					':date_end'		=>convertToDate($data[3]),
-// 					':origine'		=>substr($data[0],2,1)
-// 				]);
-// 			}
+		if($row==0){
+			$row++;
+		}else{
+			if (substr($data[0],0,2)>=$previousYear) {
+				$req=$pdoQlik->prepare("INSERT INTO cata_op (code_op, libelle, date_start, date_end, origine) VALUES (:code_op, :libelle, :date_start, :date_end, :origine) ");
+				$req->execute([
+					':code_op'		=>$data[0],
+					':libelle'		=>$data[1],
+					':date_start'		=>convertToDate($data[2]),
+					':date_end'		=>convertToDate($data[3]),
+					':origine'		=>substr($data[0],2,1)
+				]);
+			}
 
-// 		}
-// 		$row++;
-// 	}
-// 	$row=0;
-// 	fclose($handle);
-// }
-// 				echo "<br>";
-// //
-// echo $previousYear;
-// 				echo "<br>";
+		}
+		$row++;
+	}
+	$row=0;
+	fclose($handle);
+}
+				echo "<br>";
+//
+echo $previousYear;
+				echo "<br>";
 
 if (($handle = fopen($dossier, "r")) !== FALSE) {
 	$errArr=[];

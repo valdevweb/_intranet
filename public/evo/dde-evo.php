@@ -140,7 +140,7 @@ if(isset($_POST['submit'])){
 
 	}else{
 		$devMail=$arrDevMail[$idResp];
-		$dest=[$devMail, 'luc.muller@btlec.fr', 'david.syllebranque@btlec.fr'];
+		$dest=[$devMail, 'luc.muller@btlecest.leclerc', 'david.syllebranque@btlecest.leclerc'];
 		$dest=array_unique($dest);
 
 	}

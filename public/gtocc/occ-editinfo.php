@@ -423,6 +423,10 @@ DEBUT CONTENU CONTAINER
 
 <script type="text/javascript">
 
+	richText.document.designMode='on';
+	document.richText.document.body.style.fontFamily = "Arial";
+
+
 	var modif=$('#modif').html();
 	if(modif!=""){
 		var myFrame = $("#richText").contents().find('body');
@@ -439,11 +443,15 @@ DEBUT CONTENU CONTAINER
 	var showingSourceCode=false;
 	var isInEditMode=true;
 	var iframeCopy=document.getElementById('iframe-copy');
-	window.onload = function() {
-		richText.document.designMode='on';
-		document.richText.document.body.style.fontFamily = "Arial";
+	// $("#richText").onload = function() {
+	// 	$("#richText").document.designMode='on';
+	// 	document.richText.document.body.style.fontFamily = "Arial";
 
-	};
+	// };
+
+
+
+
 	function execCmd(command){
 		richText.document.execCommand(command, false, null);
 	}

@@ -36,7 +36,7 @@
 
 						<tr class="borderless">
 
-							<td colspan="6" class="mx-auto text-center">
+							<td colspan="3" class="mx-auto text-center">
 								<?php
 
 								$infoCde=$paletteDao->getCdeByIdCde($palette['id_cde']);
@@ -44,14 +44,14 @@
 								?>
 								<table class="table more w-auto ml-5" data-table-id="<?=$palette['id_cde']?>">
 									<tr>
-										<td colspan="4" class="font-weight-bold">Détail de la commande : </td>
+										<td colspan="5" class="font-weight-bold">Détail de la commande : </td>
 									</tr>
 									<tr>
 										<th>Palette</th>
 										<th>EAN</th>
 										<th>Désignation</th>
 										<th class="text-right">Quantité</th>
-											<th>Supprimer</th>
+										<th>Supprimer</th>
 									</tr>
 									<tbody>
 										<?php foreach ($infoCde as $key => $cde): ?>
@@ -78,9 +78,11 @@
 												<td ><?=$ean?></td>
 												<td ><?=$designation?></td>
 												<td class="text-right"><?=$qte?></td>
-													<td>
+												<td>
+													<?php if(!empty($cde['id_palette'])): ?>
 														<a href="<?=$_SERVER['PHP_SELF'].'?del-palette='.$cde['id_palette']?>" class="btn btn-primary">Supprimer</a>
-													</td>
+													<?php endif ?>
+												</td>
 											</tr>
 										<?php endforeach ?>
 									</tbody>
@@ -97,17 +99,17 @@
 		<div class="col text-right"><a href="#top">Haut</a></div>
 	</div>
 
-	<?php else: ?>
+<?php else: ?>
 
-		<div class="row">
-			<div class="col">
-				<div class="alert alert-primary">
-					Aucune palette en commande
-				</div>
+	<div class="row">
+		<div class="col">
+			<div class="alert alert-primary">
+				Aucune palette en commande
 			</div>
 		</div>
-		<div class="row">
-			<div class="col text-right"><a href="#top">Haut</a></div>
-		</div>
+	</div>
+	<div class="row">
+		<div class="col text-right"><a href="#top">Haut</a></div>
+	</div>
 
-		<?php endif ?>
+	<?php endif ?>

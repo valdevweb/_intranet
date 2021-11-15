@@ -68,6 +68,9 @@ if(isset($_GET['code_op'])){
 
 if(isset($_POST['save'])){
 
+	echo "<pre>";
+	print_r($_POST);
+	echo '</pre>';
 
 	$idArticle= key($_POST['save']);
 	$erratumFilename="";
@@ -117,6 +120,7 @@ if(isset($_POST['save'])){
 
 		if(empty($opExist)){
 			$infoOp=$cataDao->getOpByCode($_POST['code_op']);
+
 			$idOp=$infoLivDao->insertOp($infoOp['code_op'], $infoOp['libelle'], $infoOp['cata'], $infoOp['origine'], $infoOp['date_start'], $infoOp['date_end']);
 		}else{
 			$idOp=$opExist['id'];
@@ -213,6 +217,7 @@ include('../view/_navbar.php');
 				</div>
 			</div>
 		</div>
+
 		<script type="text/javascript">
 			function getReadableFileSizeString(fileSizeInBytes) {
 				var i = -1;

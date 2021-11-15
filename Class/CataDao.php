@@ -40,7 +40,7 @@ class CataDao{
 
 	public function getOpByCode($codeOp){
 
-		$req=$this->pdo->prepare("SELECT * FROM cata_op LEFT JOIN cata_dossiers ON cata_op.code_op=cata_dossiers.code_op WHERE cata_op.code_op= :code_op GROUP BY cata_op.code_op");
+		$req=$this->pdo->prepare("SELECT cata_op.*, cata_dossiers.dossier, cata_dossiers.cata FROM cata_op LEFT JOIN cata_dossiers ON cata_op.code_op=cata_dossiers.code_op WHERE cata_op.code_op= :code_op GROUP BY cata_op.code_op");
 		$req->execute([
 			':code_op'		=>$codeOp
 		]);

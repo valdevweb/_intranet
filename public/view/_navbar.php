@@ -268,6 +268,25 @@ $dPilotage=isUserAllowed($pdoUser, [98]);
 			<?php endif ?>
 
 			<li><a href="<?=PORTAIL_SAV?>scapsav/home.php" class="tooltipped" data-position="bottom" data-tooltip="site du portail SAV">Portail SAV</a></li>
+
+			<?php if($_SESSION['id'] == 702 || $_SESSION['id_web_user'] == 981 || isset($_SESSION['workflow'])){  ?>
+<li class="active has-sub"><a href="http://172.30.92.53/<?=VERSION?>btlecest/public/workflow" >Workflow</a>
+<ul>
+	   <li><a href="index.php?session=18">Alex</a></li>
+ <li><a href="index.php?session=9">Service R.H</a></li>
+ <li><a href="index.php?session=7">Service Informatique</a></li>
+ <li><a href="indexutilisateur.php?session=1053">Benoit Dubots</a></li>
+ <li><a href="indexutilisateur.php?session=687">Benoit Chamarre</a></li>
+ <li><a href="indexutilisateur.php?session=968">Claire Serrano</a></li>
+ <li><a href="indexutilisateur.php?session=974">Cédric Vasseur</a></li>
+
+
+</ul>
+</li>
+
+
+			<?php } ?>
+
 			<?php if ($dBtlec || $dPilotage): ?>
 				<li><a href="http://172.30.92.53/<?=VERSION?>pilotage" >Pilotage</a></li>
 			<?php endif ?>

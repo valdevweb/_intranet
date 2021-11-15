@@ -22,7 +22,7 @@ function getArticlesOcc($pdoQlik){
 	$req=$pdoQlik->query("
 		SELECT basearticles.id as idqlik, `GESSICA.CodeArticle`as article_qlik,`GESSICA.CodeDossier`as dossier_qlik,`GESSICA.PFNP` as panf_qlik,`GESSICA.D3E`as deee_qlik,`GESSICA.SORECOP` as sorecop,`GESSICA.LibelleArticle`as design_qlik, `GESSICA.PCB`as pcb_qlik, `GESSICA.NomFournisseur` as fournisseur_qlik, `GESSICA.Gencod` as ean_qlik, `CTBT.StkEnt` as qte_qlik, `GESSICA.PPI` as ppi_qlik, `GESSICA.Marque` as marque_qlik
 		FROM `basearticles`
-		WHERE `GESSICA.GT` LIKE '13' AND  `GESSICA.LibelleArticle` LIKE 'OKAZ%' ORDER BY article_qlik
+		WHERE `GESSICA.GT` LIKE '13' AND  `GESSICA.LibelleArticle` LIKE 'OKAZ%' AND `CTBT.StkEnt`!=0 ORDER BY article_qlik
 		");
 	return $req->fetchAll();
 }
@@ -67,13 +67,23 @@ function deleteArticlesQlik($pdoOcc){
 deleteArticlesQlik($pdoOcc);
 $articleOcc=getArticlesOcc($pdoQlik);
 
+	// echo "<pre>";
+	// print_r($articleOcc);
+	// echo '</pre>';
+
 
 $cdesNonExp=getCommandesNonExpedie($pdoOcc);
 
 
 foreach($articleOcc as $art){
 	if(isset($cdesNonExp[$art['article_qlik']])){
+		echo "article "	.$art['article_qlik']. "qte qlik" .$art['qte_qlik'] ."nonexp".$cdesNonExp[$art['article_qlik']];
+
 		$stockReel=$art['qte_qlik']-$cdesNonExp[$art['article_qlik']];
+		echo "set";
+		echo "<br>";
+		echo "<br>";
+
 
 	}else{
 		$stockReel=$art['qte_qlik'];
@@ -82,11 +92,11 @@ foreach($articleOcc as $art){
 	if($stockReel>=0){
 		$added=insertArticlesOcc($pdoOcc, $art['idqlik'], $art['article_qlik'], $art['dossier_qlik'], $art['panf_qlik'], $art['deee_qlik'], $art['sorecop'], $art['design_qlik'], $art['pcb_qlik'], $art['fournisseur_qlik'], $art['ean_qlik'], $stockReel, $art['ppi_qlik'], $art['marque_qlik']);
 
-		echo "article "	.$art['article_qlik']. " ajouté " .$art['idqlik'];
+		// echo "article "	.$art['article_qlik']. " ajouté " .$art['idqlik'];
 
 
 	}else{
-		echo "article "	.$art['article_qlik']. " NON ajouté qte : ". $art['qte_qlik'];
+		// echo "article "	.$art['article_qlik']. " NON ajouté qte : ". $art['qte_qlik'];
 
 	}
 	echo "<br>";
