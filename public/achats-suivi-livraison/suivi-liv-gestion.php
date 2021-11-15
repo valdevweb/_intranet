@@ -12,6 +12,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require '../../Class/Db.php';
 require '../../Class/CataDao.php';
+require '../../Class/CrudDao.php';
 require '../../Class/InfoLivDao.php';
 require '../../Class/achats/ArticleAchatsDao.php';
 require '../../Class/FournisseursHelpers.php';
@@ -36,7 +37,7 @@ $inInfoLiv=1;
 $cataDao= new CataDao($pdoQlik);
 $infoLivDao=new infoLivDao($pdoDAchat);
 $articleDao=new ArticleAchatsDao($pdoDAchat);
-
+$crudAchat=new CrudDao($pdoDAchat);
 
 // pour le bouton slect
 $listOpAVenir=$infoLivDao->getOpAVenir();
@@ -68,9 +69,6 @@ if(isset($_GET['code_op'])){
 
 if(isset($_POST['save'])){
 
-	echo "<pre>";
-	print_r($_POST);
-	echo '</pre>';
 
 	$idArticle= key($_POST['save']);
 	$erratumFilename="";
@@ -159,7 +157,17 @@ if(isset($_POST['save'])){
 }
 
 
+if(isset($_GET['del-erratum'])){
+	$done=$crudAchat->updateOneField('infos_livraison', 'erratum', '', $_GET['del-erratum']);
+	$successQ='#id-info-'.$_GET['del-erratum'];
+	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+}
 
+if(isset($_GET['del-info'])){
+	$done=$crudAchat->deleteOne('infos_livraison', $_GET['del-info']);
+	$successQ='#id-info-'.$_GET['del-erratum'];
+	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+}
 
 //------------------------------------------------------
 include('../view/_head-bt.php');

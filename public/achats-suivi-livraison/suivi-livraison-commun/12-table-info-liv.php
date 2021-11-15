@@ -21,8 +21,6 @@
 							<th class="w-120">article</th>
 							<th class="w-120" colspan="2">EAN</th>
 							<th>Désignation</th>
-
-
 							<th class="w-80">Erratum</th>
 						</tr>
 					</thead>
@@ -32,7 +30,6 @@
 
 
 							<?php
-
 							$bgDeux="";
 							$bg="";
 							$bgDeuxRemplace="";
@@ -64,7 +61,6 @@
 
 							if (!empty($info['recu_deux_remplace'])|| $info['recu_deux_remplace']==0 && $info['recu_deux_remplace']!=null) {
 								$pourcentDeuxRemplace=' %';
-
 								if($info['recu_deux_remplace']<50){
 									$bgDeuxRemplace="bg-red";
 								}elseif($info['recu_deux_remplace']>=50 && $info['recu_deux_remplace']<90){
@@ -108,7 +104,11 @@
 								<td><?=$info['article']?></td>
 								<td colspan="2"><?=$info['ean']?></td>
 								<td><?=$info['libelle']?></td>
-								<td></td>
+								<td class="text-right">
+									<?php if (str_contains($_SERVER['PHP_SELF'], 'suivi-liv-gestion.php')): ?>
+										<a href="?del-info=<?=$info['id_liv']?>"><i class="fas fa-trash text-danger"></i></a>
+									<?php endif ?>
+								</td>
 							</tr>
 							<tr class="border-right-blue border-left-blue <?=$lineColor?>">
 
@@ -118,15 +118,18 @@
 								<td class="pl-3"><?=$info['info_livraison_deux']?></td>
 								<td></td>
 							</tr>
-							<tr  class="border-right-blue border-left-blue <?=$lineColor?>">
+							<tr  class="border-right-blue border-left-blue <?=$lineColor?>" id="id-info-<?=$info['id_liv']?>">
 
 								<td colspan="2" class="text-main-blue font-weight-boldless text-right"><?=DateHelpers::concatJourMoisDateTime($lundiUn, "long")?></td>
 								<td class="text-right pr-2">Reçu :</td>
 								<td class="<?=$bg?> text-right"><?=$info['recu']?><?=$pourcent?></td>
 								<td class="pl-3"><?=$info['info_livraison']?></td>
-								<td class="text-center">
+								<td class="text-right">
 									<?php if (!empty($info['erratum'])): ?>
 										<a href="<?=URL_UPLOAD.'erratum/'.$info['erratum']?>" target="_blank"><i class="fas fa-file-alt"></i></a>
+										<?php if (str_contains($_SERVER['PHP_SELF'], 'suivi-liv-gestion.php')): ?>
+											<a href="?del-erratum=<?=$info['id_liv']?>"><i class="fas fa-trash text-danger"></i></a>
+										<?php endif ?>
 									<?php endif ?>
 
 								</td>
