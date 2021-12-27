@@ -8,14 +8,16 @@
 	<link rel="icon" href="http://172.30.92.53/btlecest/favicon.ico" />
 	<link rel="stylesheet" href="<?=ROOT_PATH ."/public/css/main.css"?>">
     <link rel="stylesheet" href="<?= ROOT_PATH ."/public/css/nav.css"?>">
-
-    <?php
-    if(isset($cssFile)){
-    	echo '<link rel="stylesheet" href="' .$cssFile .'">';
-    }
-
+	<?php
+	if(isset($cssFile)){
+		$hexplodedCssfile=explode('/',$cssFile);
+		$hcssFileName=$hexplodedCssfile[count($hexplodedCssfile)-1];
+		$hcssUrl='../css/'.$hcssFileName;
+		if(file_exists($hcssUrl)){
+			echo '<link rel="stylesheet" href="' .$hcssUrl .'?'.filemtime($hcssUrl).'">';
+		}
+	}
 	?>
-
 	<link rel="stylesheet" href="<?= ROOT_PATH ."/vendor/materialize/css/materialize.css"?>">
 	<link rel="stylesheet" href="<?=ROOT_PATH . "/vendor/fontawesome/css/font-awesome.min.css" ?>">
     <link rel="stylesheet" href="<?=ROOT_PATH ."/vendor/w3c/w3c.css"?>">
