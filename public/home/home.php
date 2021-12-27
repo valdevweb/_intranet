@@ -178,18 +178,19 @@ if(!empty($_SESSION['goto'])){
 	if(is_numeric($redir[0])){
 		if($_SESSION['id_type']==1){
 			header('Location:'. ROOT_PATH. '/public/btlec/answer.php?msg='.$_SESSION['goto']);
-		}
-
-		elseif($_SESSION['id_type']==2 || $_SESSION['id_type']==3 || $_SESSION['id_type']==4 || $_SESSION['id_type']==5){
+		}elseif($_SESSION['id_type']==2 || $_SESSION['id_type']==3 || $_SESSION['id_type']==4 || $_SESSION['id_type']==5){
 			header('Location:'. ROOT_PATH. '/public/mag/edit-msg.php?msg='.$_SESSION['goto']);
+		}else{
+			header('Location:' .ROOT_PATH. '/public/' .$goto);
 		}
 	}
-	else if(stripos($redir[0],"workflow") !== false ){
-			$ID_Web_Users=explode("=",$redir[0]);
-		header('Location:' .ROOT_PATH. '/public/workflow/index.php?id='.$ID_Web_Users[1] );
-	}
-		else{
-		header('Location:' .ROOT_PATH. '/public/' .$goto);
+	if(str_contains($_SESSION['goto'], "workflow") == 1 ){
+
+		if($_SESSION['id_service'] == 12 || $_SESSION['id_service'] == 30){
+			header('Location:'. ROOT_PATH. '/public/workflow/indexutilisateur.php?id='.$_SESSION['id_service']);
+		}else{
+			header('Location:'. ROOT_PATH. '/public/workflow/index.php?id='.$_SESSION['id_service']);
+		}
 	}
 }
 
