@@ -57,6 +57,15 @@ class ProspectusDao{
 		]);
 		return $req->fetchAll();
 	}
+	public function getComingProspectusMagDateSaisie($dateSaisie){
+		$req=$this->pdo->prepare("SELECT prospectus.* FROM prospectus LEFT JOIN prospectus_offres ON prospectus.id=id_prosp  WHERE date_format(prospectus_offres.date_insert,'%Y-%m-%d') >= :date_insert GROUP BY prospectus.id");
+		$req->execute([
+			':date_insert'		=>$dateSaisie,
+
+		]);
+		return $req->fetchAll();
+	}
+
 
 	public function getComingProspectusFilesMag(){
 		$dateStart=new DateTime();

@@ -14,36 +14,41 @@ class FlashDao{
 		return $pdo;
 	}
 
-	public function insertFlash(){
+
+	public function insertFlash($title, $content, $portailBt, $portailSav, $portailFou, $dateStart, $dateEnd){
 		$req=$this->pdo->prepare("INSERT INTO flash_info (title, content, portail_bt, portail_sav, portail_fournisseur, date_start, date_end, id_web_user, date_insert) VALUES (:title, :content, :portail_bt, :portail_sav, :portail_fournisseur, :date_start, :date_end, :id_web_user, :date_insert)");
 		$req->execute([
-			':title'	=>$_POST['title'],
-			':content'	=>$_POST['content'],
-			':portail_bt'	=>(isset($_POST['portail_bt']) && ($_POST['portail_bt']==1))?1:0,
-			':portail_sav'	=>(isset($_POST['portail_sav']) && ($_POST['portail_sav']==1))?1:0,
-			':portail_fournisseur'	=>(isset($_POST['portail_fournisseur']) && ($_POST['portail_fournisseur']==1))?1:0,
-			':date_start'	=>$_POST['date_start'],
-			':date_end'	=>$_POST['date_end'],
+			':title'	=>$title,
+			':content'	=>$content,
+			':portail_bt'	=>$portailBt,
+			':portail_sav'	=>$portailSav,
+			':portail_fournisseur'	=>$portailFou,
+			':date_start'	=>$dateStart,
+			':date_end'	=>$dateEnd,
 			':id_web_user'	=>$_SESSION['id_web_user'],
 			':date_insert'	=>date('Y-m-d H:i:s')
 		]);
+		// return $req->errorInfo();
 		return $this->pdo->lastInsertId();
 	}
-	public function updateFlash($id){
-		$req=$this->pdo->prepare("UPDATE flash_info SET title= :title, content= :content, portail_bt= :portail_bt, portail_sav= :portail_sav, portail_fournisseur= :portail_fournisseur, date_start= :date_start, date_end= :date_end, date_insert = :date_insert WHERE id= :id");
+	public function updateFlash($id, $title, $content, $portailBt, $portailSav, $portailFou, $dateStart, $dateEnd){
+		$req=$this->pdo->prepare("UPDATE flash_info SET title= :title, content= :content, portail_bt= :portail_bt, portail_sav= :portail_sav, portail_fournisseur= :portail_fournisseur, date_start= :date_start, date_end= :date_end, id_web_user = :id_web_user, date_insert = :date_insert WHERE id= :id");
 		$req->execute([
-			':title'	=>$_POST['title'],
-			':content'	=>$_POST['content'],
-			':portail_bt'	=>(isset($_POST['portail_bt']) && ($_POST['portail_bt']==1))?1:0,
-			':portail_sav'	=>(isset($_POST['portail_sav']) && ($_POST['portail_sav']==1))?1:0,
-			':portail_fournisseur'	=>(isset($_POST['portail_fournisseur']) && ($_POST['portail_fournisseur']==1))?1:0,
-			':date_start'	=>$_POST['date_start'],
-			':date_end'	=>$_POST['date_end'],
+			':title'	=>$title,
+			':content'	=>$content,
+			':portail_bt'	=>$portailBt,
+			':portail_sav'	=>$portailSav,
+			':portail_fournisseur'	=>$portailFou,
+			':date_start'	=>$dateStart,
+			':date_end'	=>$dateEnd,
 			':id'	=>$id,
+			':id_web_user'	=>$_SESSION['id_web_user'],
 			':date_insert'	=>date('Y-m-d H:i:s')
 
 		]);
-		return $this->pdo->lastInsertId();
+		// return $req->errorInfo();
+
+		return $id;
 	}
 
 
@@ -53,6 +58,11 @@ class FlashDao{
 			':id'		=>$id
 		]);
 		return $req->fetch(PDO::FETCH_ASSOC);
+	}
+	public function getLastFlash(){
+
+		$req=$this->pdo->query("SELECT id FROM flash_info ORDER BY id desc LIMIT 1");
+		return $req->fetch();
 	}
 
 	public function getListFlash($date){

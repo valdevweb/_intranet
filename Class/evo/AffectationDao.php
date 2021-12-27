@@ -16,9 +16,9 @@ class AffectationDao{
 		$req=$this->pdo->prepare("INSERT INTO affectations (id_evo, id_web_user, id_service, email) VALUES (:id_evo, :id_web_user, :id_service, :email)");
 		$req->execute([
 			':id_evo'	=>$idEvo,
-			 ':id_web_user'	=>$idwebuser,
-			 ':id_service'	=>$idService,
-			 ':email'	=>$email,
+			':id_web_user'	=>$idwebuser,
+			':id_service'	=>$idService,
+			':email'	=>$email,
 
 		]);
 		return $req->rowCount();
@@ -40,6 +40,19 @@ class AffectationDao{
 			':id'	=>$id
 		]);
 		return $req->errorInfo();
+	}
+
+	public function getAffectationByEvo($periodeStart, $periodeEnd, $idwebuser){
+
+		$req=$this->pdo->prepare("SELECT evos.id, affectations.* FROM evos
+			LEFT JOIN affectations on evos.id=affectations.id_evo
+			LEFT JOIN planning on evos.id=planning.id_evo
+			WHERE planning.date_start between :periode_start and :periode_end and affectations.id is not null");
+		$req->execute([
+			':periode_start'	=>$periodeStart,
+			':periode_end'		=>$periodeEnd
+		]);
+		return $req->fetchAll(PDO::FETCH_GROUP);
 	}
 }
 

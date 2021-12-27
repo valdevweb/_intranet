@@ -6,16 +6,19 @@
 					<th class="sortable" onclick="sortTable(0);">Exp</th>
 					<th class="sortable" onclick="sortTable(1);">Palette</th>
 					<th class="sortable" onclick="sortTable(2);">Palette<br> contremarque</th>
-					<th class="sortable text-center" onclick="sortTable(3);">Statut</th>
-					<th class="sortable" onclick="sortTable(4);">Date expé</th>
-					<th class="sortable" onclick="sortTable(5);">Magasin</th>
-					<th class="sortable" onclick="sortTable(6);">Valo<br>palette</th>
+					<th >Affectation</th>
+					<th class="sortable text-center" onclick="sortTable(4);">Statut</th>
+					<th class="sortable" onclick="sortTable(5);">Date expé</th>
+					<th class="sortable" onclick="sortTable(6);">Magasin</th>
+					<th class="sortable" onclick="sortTable(7);">Valo<br>palette</th>
+					<th><i class="fas fa-tools"></i></th>
+					<th><i class="fas fa-trash"></i></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php foreach ($palettesToDisplay as $key => $palette): ?>
 					<?php
-					$statutImg="";
+					$statutImg=$classAffectation="";
 					if($palette['statut']==0 && $palette['NumeroPalette']==null){
 						$statutImg='<img src="../img/casse/encours.jpg">';
 					}
@@ -26,17 +29,26 @@
 					}elseif ($palette['exp']==1 && $palette['mt_fac']==null){
 						$statutImg='<img src="../img/casse/livre.png"><img src="../img/casse/logo_deee.jpg">';
 					}
-
+					if($palette['id_affectation']==3){
+						$classAffectation="text-success";
+					}elseif($palette['id_affectation']==2){
+						$classAffectation="text-orange";
+					}elseif($palette['id_affectation']==1){
+						$classAffectation="text-primary";
+					}
 					?>
 
-					<tr>
+					<tr class="<?=$classAffectation?>" id="palette-<?=$palette['id']?>">
 						<td><?=$palette['id_exp']?></td>
-						<td><a href="detail-palette.php?id=<?=$palette['id_palette']?>"><?=$palette['palette']?></a></td>
+						<td><a class="<?=$classAffectation?>" href="detail-palette.php?id=<?=$palette['id']?>"><?=$palette['palette']?></a></td>
 						<td><?=$palette['contremarque']?></td>
+						<td><?=isset($listAffectationIco[$palette['id_affectation']]) ? "<img src='../img/logos/".$listAffectationIco[$palette['id_affectation']]."'>":""?></td>
 						<td class="text-right"><?=$statutImg?></td>
 						<td class="text-center"><?=(!empty($palette['date_delivery']))?date('d-m-Y', strtotime($palette['date_delivery'])):""?></td>
 						<td class="text-center"><?=$palette['btlec']?></td>
 						<td class="text-center"><?=$palette['valopalette']?></td>
+						<td><a href="#" data-toggle="modal" data-target="#edit-palette" data-id-palette="<?=$palette['id']?>" data-palette="<?=$palette['palette']?>" ><i class="fas fa-tools"></i></a></td>
+						<td><a href="?del-palette=<?=$palette['id']?>" onclick="return confirm('Etes vous sûr de vouloir supprimer la palette <?=$palette['palette']?> ?')"><i class="fas fa-trash"></i></a></td>
 					</tr>
 				<?php endforeach ?>
 
@@ -44,3 +56,4 @@
 		</table>
 	</div>
 </div>
+

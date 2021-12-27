@@ -49,6 +49,17 @@ class OffreDao{
 
 		return $req->fetchAll(PDO::FETCH_GROUP);
 	}
+	public function getOffreEncoursByProspDateSaisie($dateSaisie){
+		$req=$this->pdo->prepare("SELECT prospectus_offres.id_prosp, prospectus_offres.id as id_offre, prospectus_offres.* FROM prospectus_offres LEFT JOIN prospectus ON id_prosp= prospectus.id WHERE date_format(prospectus_offres.date_insert,'%Y-%m-%d') >= :date_insert  ORDER BY id_prosp");
+		$req->execute([
+			':date_insert'		=>$dateSaisie,
+
+		]);
+
+		return $req->fetchAll(PDO::FETCH_GROUP);
+	}
+
+
 	public function getOffreEncours(){
 		$today=new DateTime();
 		$today->modify('- 3 day');

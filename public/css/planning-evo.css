@@ -17,3 +17,26 @@
 	color:  white !important;
 	font-size: 1.4rem;
 }
+
+.tooltiplaunch{
+	display: block;
+	padding-right: 0 !important;
+	min-width: 100%;
+}
+
+.bg-gold{
+	background-color: #ffd700;
+	color: #000 !important;
+}
+
+
+.bg-gold>a{
+	color: #000;
+}
+
+.bg-blue >a {
+	color: #fff;
+}
+.bg-yellow-light{
+	background-color: #fff3af !important;
+}

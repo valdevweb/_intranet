@@ -19,26 +19,13 @@ require '../../config/db-connect.php';
 
 require('casse-getters.fn.php');
 require ('../../Class/Helpers.php');
+require('../../Class/casse/TrtDao.php');
+require '../../Class/CrudDao.php';
 
-//------------------------------------------------------
-// 			info
-// 			voir si pb à partir de la 90eme colonne => non acceptée
-
-
-//---------------------------------------
-//	ajout enreg dans stat
-//---------------------------------------
-// require "../../functions/stats.fn.php";
-// $descr="saisie déclaration mag hors qlik" ;
-// $page=basename(__file__);
-// $action="";
-// // addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
-// addRecord($pdoStat,$page,$action, $descr, 208);
+$trtDao=new TrtDao($pdoCasse);
+$casseCrud=new CrudDao($pdoCasse);
 
 
- //------------------------------------------------------
-//			DECLARATIONS
-//------------------------------------------------------
 $errors=[];
 $success=[];
 $idExp=$_GET['id'];
@@ -170,7 +157,12 @@ $writer->setSheetIndex(0);
 // sauvegarde facture en cours
 // pour éviter le 0 si une seule facture
 $nbFac=($nbFac==0)?'':$nbFac+1;
-$writer->save($uploadDir.'\FACTCASSE_'.date('dmy').$nbFac.'.csv');
+$filename='FACTCASSE_'.date('dmy').$nbFac.'.csv';
+
+$writer->save($uploadDir.$filename);
+$casseCrud->updateOneField("exps", "file", $filename, $_GET['id']);
+
+
 
 //----------------------------------------------
 //  		AVOIR
@@ -282,6 +274,15 @@ if(isset($mtFac) && isset($mtBlanc) && isset($mtGris) && isset($mtBrun) && $mtFa
 		$errors[]="impossible de mettre à jour la base de donnée";
 	}
 }
+
+
+if(isset($_GET['next-step'])){
+	$trtDao->insertTrtHisto($_GET['id'], $_GET['id_trt']);
+	header('Location:casse-dashboard.php?#exp-'.$_GET['id']);
+
+}
+
+
 
 //------------------------------------------------------
 //			VIEW
@@ -413,7 +414,7 @@ include('../view/_navbar.php');
 	<div class="row mt-5">
 		<div class="col-lg-1"></div>
 		<div class="col text-center">
-			<a href="casse-clos.php?id=<?=$_GET['id']?>">Clôturer l'expédition</a>
+			<a href="?id=<?=$_GET['id']."&id_trt=".$_GET['id_trt']."&next-step"?>">Valider l'étape</a>
 		</div>
 		<div class="col-lg-1"></div>
 	</div>

@@ -82,8 +82,8 @@ class EvoDao{
 
 	public function insertEvo($resp){
 
-		$req=$this->pdo->prepare("INSERT INTO evos (id_from, id_resp, objet, evo, id_etat, date_dde, id_prio, id_plateforme, id_appli, id_module)
-			VALUES (:id_from, :id_resp, :objet, :evo, :id_etat, :date_dde, :id_prio, :id_plateforme, :id_appli, :id_module)");
+		$req=$this->pdo->prepare("INSERT INTO evos (id_from, id_resp, objet, evo, id_etat, date_dde, id_chrono, id_plateforme, id_appli, id_module)
+			VALUES (:id_from, :id_resp, :objet, :evo, :id_etat, :date_dde, :id_chrono, :id_plateforme, :id_appli, :id_module)");
 		$req->execute([
 			':id_from'		=>$_SESSION['id_web_user'],
 			':id_resp'		=>$resp,
@@ -91,7 +91,7 @@ class EvoDao{
 			':evo'		=>$_POST['evo'],
 			':id_etat'		=>1,
 			':date_dde'		=>date('Y-m-d H:i:s'),
-			':id_prio'		=>$_POST['prio'],
+			':id_chrono'		=>$_POST['chrono'],
 			':id_plateforme'		=>$_POST['pf'],
 			':id_appli'		=>$_POST['appli'],
 			':id_module'		=>empty($_POST['module'])? null: $_POST['module']
@@ -186,25 +186,29 @@ class EvoDao{
 	}
 
 
-
-	public function insertDoc($docName, $docLink, $idAppli, $idModule){
-		$req=$this->pdo->prepare("INSERT INTO doc (doc_name, doc_link, id_appli, id_module) VALUES (:doc_name, :doc_link, :id_appli, :id_module)");
+	public function	insertDocTable($table, $idName, $id, $file, $filename, $cmt, $url, $urlname){
+		$req=$this->pdo->prepare("INSERT INTO {$table} ({$idName}, file, filename, cmt, url, urlname, date_insert, by_insert) VALUES (:id_name, :file, :filename, :cmt, :url, :urlname, :date_insert, :by_insert)");
 		$req->execute([
-			':doc_name'	=>$docName,
-			':doc_link'	=>$docLink,
-			':id_appli'	=>$idAppli,
-			':id_module'	=>$idModule,
+			':id_name'			=>$id,
+			':file'				=>$file,
+			':filename'			=>$filename,
+			':cmt'			=>$cmt,
+			':url'			=>$url,
+			':urlname'			=>$urlname,
+			':date_insert'		=>date('Y-m-d H:i:s'),
+			':by_insert'		=>$_SESSION['id_web_user']	,
 
 		]);
-		return $req->rowCount();
+		return $req->errorInfo();
 	}
 
-	public function updateEvo($idEvo, $evo, $cmtDd){
-		$req=$this->pdo->prepare("UPDATE evos SET evo= :evo, cmt_dd= :cmt_dd WHERE id= :id");
+	public function updateEvo($idEvo, $evo, $cmtDd, $idChono){
+		$req=$this->pdo->prepare("UPDATE evos SET evo= :evo, cmt_dd= :cmt_dd, id_chrono= :id_chrono WHERE id= :id");
 		$req->execute([
 			':id'		=>$idEvo,
 			':evo'		=>$evo,
 			':cmt_dd'		=>$cmtDd,
+			'id_chrono'		=>$idChono
 
 		]);
 		return $req->rowCount();
@@ -226,7 +230,7 @@ class EvoDao{
 
 	public function statuer(){
 
-		$req=$this->pdo->prepare("UPDATE evos SET id_etat= :id_etat,cmt_dd= :cmt_dd,cmt_dev= :cmt_dev,date_validation= :date_validation, deadline= :deadline,id_prio= :id_prio WHERE id= :id");
+		$req=$this->pdo->prepare("UPDATE evos SET id_etat= :id_etat ,cmt_dd= :cmt_dd, cmt_dev= :cmt_dev, date_validation= :date_validation, deadline= :deadline WHERE id= :id");
 		$req->execute([
 			':id'		=>$_POST['id_evo'],
 			':id_etat'		=>$_POST['statut'],
@@ -234,7 +238,7 @@ class EvoDao{
 			":cmt_dev"		=>$_POST['cmt_dev'],
 			':date_validation'	=>date('Y-m-d H:i:s'),
 			':deadline'			=>!empty($_POST['deadline'])? $_POST['deadline'] : NULL,
-			':id_prio'			=>$_POST['prio']
+
 
 		]);
 		return $req->errorInfo();
@@ -264,9 +268,8 @@ class EvoDao{
 			':id'		=>$_POST['id_evo'],
 
 		]);
-
 		return $req->errorInfo();
-		return $req->rowCount();
+		// return $req->rowCount();
 
 	}
 

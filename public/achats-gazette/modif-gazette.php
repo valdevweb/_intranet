@@ -361,7 +361,7 @@ include('../view/_navbar.php');
 				var fileName='';
 				var fileList='';
 				var nbFiles = $(this).get(0).files.length;
-				var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'pdf', 'xls', 'xlsx'];
+				var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'pdf', 'xls', 'xlsx', 'docx','doc'];
 				var warning  ="";
 				var interdit=false;
 				var formGroup="<div class='form-group'>";

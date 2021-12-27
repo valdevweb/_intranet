@@ -18,6 +18,10 @@ require_once '../../vendor/autoload.php';
 require '../../config/db-connect.php';
 
 require 'casse-getters.fn.php';
+require('../../Class/casse/TrtDao.php');
+$trtDao=new TrtDao($pdoCasse);
+
+
 
 function updatePalette($pdoCasse,$idExp){
 
@@ -58,17 +62,17 @@ else{
 
 	switch ($btlec) {
 		case '2051':
-			$address="SCAPSAV 51 - 51420 Witry-les-Reims";
+		$address="SCAPSAV 51 - 51420 Witry-les-Reims";
 		break;
 		case '2054':
-			$address="SCAPSAV 54 - 54670 Custines";
+		$address="SCAPSAV 54 - 54670 Custines";
 		break;
 		case '2069':
-			$address="SCAPSAV 69 - 69150 Décines";
+		$address="SCAPSAV 69 - 69150 Décines";
 		break;
 
 		default:
-			$address="";
+		$address="";
 
 		break;
 	}
@@ -163,8 +167,8 @@ if($delivered !=0)
 	$do=updatePalette($pdoCasse,$idExp);
 
 	if($do>=1){
-		$loc='Location:casse-dashboard.php?mailMag';
-		header($loc);
+		$trtDao->insertTrtHisto($_GET['id'], $_GET['id_trt']);
+		header('Location:casse-dashboard.php?#exp-'.$_GET['id']);
 	}
 	else{
 		$errors[]="impossible mettre à jour la base de donnée";
@@ -193,26 +197,26 @@ include('../view/_head-bt.php');
 include('../view/_navbar.php');
 ?>
 <!--********************************
-DEBUT CONTENU CONTAINER
-*********************************-->
-<div class="container">
-	<h1 class="text-main-blue py-5 ">Erreur</h1>
+	DEBUT CONTENU CONTAINER
+	*********************************-->
+	<div class="container">
+		<h1 class="text-main-blue py-5 ">Erreur</h1>
 
-	<div class="row">
-		<div class="col-lg-1"></div>
-		<div class="col">
-			<?php
-			include('../view/_errors.php');
-			?>
+		<div class="row">
+			<div class="col-lg-1"></div>
+			<div class="col">
+				<?php
+				include('../view/_errors.php');
+				?>
+			</div>
+			<div class="col-lg-1"></div>
 		</div>
-		<div class="col-lg-1"></div>
+
+
+
+		<!-- ./container -->
 	</div>
 
-
-
-	<!-- ./container -->
-</div>
-
-<?php
-require '../view/_footer-bt.php';
+	<?php
+	require '../view/_footer-bt.php';
 ?>

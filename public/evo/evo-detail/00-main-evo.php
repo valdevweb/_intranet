@@ -2,10 +2,13 @@
 	<div class="col border rounded">
 		<div class="row py-2 border-dark bg-light-grey">
 			<div class="col-lg-4">
-				Application : <div class="badge badge-btlec"><?=$evo['appli']?></div>
+				Application : <div class="badge badge-btlec"><a class="text-white"  href="exploit-appli.php?id=<?=$evo['id_appli']?>"><?=$evo['appli']?></a></div>
 			</div>
 			<div class="col-lg-4">
-				Module : <div class="badge badge-btlec"><?=$evo['module']?></div>
+				<?php if ($evo['module']!=""): ?>
+					Module : <div class="badge badge-btlec"><a class="text-white" href="exploit-module.php?id=<?=$evo['id_module']?>"><?=$evo['module']?></a></div>
+				<?php endif ?>
+
 			</div>
 			<div class="col-lg-4 text-right">
 				<i class="fas fa-code text-orange pr-3"></i>Développeur : <?=$evo['fullname_dd']?><br>
@@ -41,7 +44,7 @@
 			</div>
 		<?php endif ?>
 
-		<div class="row py-2  bg-light-grey">
+		<div class="row py-2 bg-light-grey">
 			<div class="col-auto">
 				<i class="fas fa-calendar-check text-orange pr-3"></i>Planification du :<br>
 			</div>
@@ -56,7 +59,9 @@
 			<div class="col text-right">
 				Statut : <div class="badge badge-orange"><?=$listEtat[$evo['id_etat']]?></div>
 			</div>
+			<div class="col-auto">Chrono : <i class="fas fa-tachometer-alt <?= isset($listLevel[$evo['id_chrono']])?'text-'.$listLevel[$evo['id_chrono']]['class']:""?>"></i></div>
 		</div>
+
 
 
 		<div class="row border-top border-dark">
@@ -117,9 +122,9 @@
 	</div>
 </div>
 <?php if (!$droitExploit): ?>
-		<div class="row pb-5">
-			<div class="col">
+	<div class="row pb-5">
+		<div class="col">
 
-			</div>
 		</div>
+	</div>
 <?php endif ?>

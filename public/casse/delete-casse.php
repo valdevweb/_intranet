@@ -30,21 +30,7 @@ $success=[];
 //			FONCTION
 //------------------------------------------------------
 
-function copyCasse($pdoCasse){
-	$req=$pdoCasse->prepare("INSERT INTO casses_deleted (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc, valo, pu, fournisseur, id_origine, id_type, id_palette, mt_mag, mt_decote, mt_ndd, num_ndd, etat, detruit, cmt, date_clos, last_maj) SELECT date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc, valo, pu, fournisseur, id_origine, id_type, id_palette, mt_mag, mt_decote, mt_ndd, num_ndd, etat, detruit, cmt, date_clos, last_maj FROM casses WHERE id= :id");
-	$req->execute([
-		':id'	=>$_GET['id']
-	]);
-	return $req->rowCount();
-	// return $req->errorInfo();
-}
-function deleteCasse($pdoCasse){
-	$req=$pdoCasse->prepare("DELETE FROM casses WHERE id= :id");
-	$req->execute([
-		':id'	=>$_GET['id']
-	]);
-	return $req->rowCount();
-}
+
 
 
 

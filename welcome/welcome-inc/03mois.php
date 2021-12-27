@@ -6,7 +6,7 @@
 			</div>
 			<div class="main-text text-right pr-5">
 				<?=number_format((float)$moisEnCoursCa,0,'',' ')?><span class="third-text">&euro;</span>
-				<br><span class="norm-text-abs"><?=$moisEnCoursPalette?> palettes  pour <?=$moisEnCoursLastYearColis?> colis</span>
+				<br><span class="norm-text-abs"><?=$moisEnCoursPalette?> palettes  pour <?=$moisEnCoursColis?> colis</span>
 
 
 			</div>

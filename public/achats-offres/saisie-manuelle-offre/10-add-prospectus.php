@@ -5,25 +5,25 @@
 						<div class="col-lg-3">
 							<div class="form-group">
 								<label for="code_op">Code op : </label>
-								<input type="text" class="form-control form-primary" name="code_op" id="code_op" placeholder="exemple : 21G304">
+								<input type="text" class="form-control form-primary" name="code_op" id="code_op" placeholder="exemple : 21G304" value="<?=$_POST['code_op']??''?>">
 							</div>
 						</div>
 						<div class="col-lg-3">
 							<div class="form-group">
 								<label for="prospectus">Nom du prospectus : </label>
-								<input type="text" class="form-control form-primary" name="prospectus" id="prospectus" placeholder="Exemple : évenement 4">
+								<input type="text" class="form-control form-primary" name="prospectus" id="prospectus" placeholder="Exemple : évenement 4" value="<?=$_POST['prospectus']??''?>">
 							</div>
 						</div>
 						<div class="col-lg-3">
 							<div class="form-group">
 								<label for="date_start">Date de début : </label>
-								<input type="date" class="form-control form-primary" name="date_start" id="date_start">
+								<input type="date" class="form-control form-primary" name="date_start" id="date_start" value="<?=$_POST['date_start']??''?>">
 							</div>
 						</div>
 						<div class="col-lg-3">
 							<div class="form-group">
 								<label for="date_end">Date de fin : </label>
-								<input type="date" class="form-control form-primary" name="date_end" id="date_end">
+								<input type="date" class="form-control form-primary" name="date_end" id="date_end" value="<?=$_POST['date_end']??''?>">
 							</div>
 						</div>
 					</div>

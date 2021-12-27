@@ -45,17 +45,19 @@
 									<label class="form-check-label" for="btlec">Code BTLec</label>
 								</div>
 							</div>
+							<div class="col-auto text-right">
+								<button class="btn btn-primary"  type="submit" name="search" id="submit_search"><i class="fas fa-search"></i></button>
+								<button class="btn secTwo" name="clear_form"><i class="fas fa-eraser"></i></button>
+
+							</div>
+							<div class="col-uto text-right">
+							</div>
 						</div>
 					</div>
 				</div>
 
 				<div class="row">
-					<div class="col-auto text-right">
-						<button class="btn secTwo" name="clear_form"><i class="fas fa-eraser pr-2"></i>Effacer</button>
-					</div>
-					<div class="col-uto text-right">
-						<button class="btn btn-primary"  type="submit" name="search" id="submit_search">Valider</button>
-					</div>
+
 				</div>
 			</form>
 		</div>

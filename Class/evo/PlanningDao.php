@@ -52,19 +52,25 @@ class PlanningDao{
 		return $req->fetchAll(PDO::FETCH_GROUP);
 	}
 
-	public function getPlanningEvoDev($idwebuser){
+	public function getPlanningEvoDev($idwebuser, $periodeStart, $periodeEnd){
 
-		$req=$this->pdo->prepare("SELECT   evos.*, planning.date_start,planning.date_end, module, appli FROM planning
+		$req=$this->pdo->prepare("SELECT evos.id, evos.id_etat, evos.id_chrono,  evos.objet, planning.date_start,planning.date_end, module, appli FROM planning
 			LEFT JOIN evos ON planning.id_evo = evos.id
 			LEFT JOIN modules ON id_module= modules.id
 			LEFT JOIN appli ON evos.id_appli=appli.id
 			LEFT JOIN responsables ON evos.id_resp= responsables.id
-			LEFT JOIN affectations ON affectations.id_evo= evos.id WHERE idwebuser= :idwebuser  GROUP BY planning.id order by planning.date_start");
+			LEFT JOIN affectations ON affectations.id_evo= evos.id WHERE idwebuser= :idwebuser AND planning.date_start between :periode_start and :periode_end GROUP BY planning.id order by planning.date_start");
 		$req->execute([
-			':idwebuser'		=>$idwebuser
+			':idwebuser'		=>$idwebuser,
+			':periode_start'	=>$periodeStart,
+			':periode_end'		=>$periodeEnd
+
 		]);
 		return $req->fetchAll();
 	}
+
+
+
 	public function getPlanningByEvo($idEtat){
 
 		$req=$this->pdo->prepare("SELECT id_evo, planning.* FROM evos RIGHT JOIN planning ON evos.id= planning.id_evo WHERE id_etat= :id_etat ORDER BY id_evo, date_start");

@@ -26,9 +26,16 @@ $pdoFou=$db->getPdo('fournisseurs');
 
 $infoLivDao=new infoLivDao($pdoDAchat);
 
-$listOpAVenir=$infoLivDao->getOpAVenir();
+if(!isset($_POST['date'])){
+	$listOpAVenir=$infoLivDao->getOpAVenir();
 
-$opToDisplay=$infoLivDao->getOpAVenir();
+	$opToDisplay=$listOpAVenir;
+}else{
+	$listOpAVenir=$infoLivDao->getOpDateSaisie($_POST['date']);
+
+	$opToDisplay=$listOpAVenir;
+}
+
 
 
 $listGt=FournisseursHelpers::getGts($pdoFou, "libelle","id");
@@ -62,69 +69,79 @@ include('../view/_navbar.php');
 
 	<div class="row">
 		<div class="col">
-			<?php if (!empty($listOpAVenir)): ?>
-				<?php include 'suivi-livraison-commun/11-select-info-liv.php' ?>
-				<div class="row mt-5">
-					<div class="col"></div>
-					<div class="col-lg-4">
-						<div class="font-weight-boldless text-main-blue">
-							Recherche un article :
-						</div>
-						<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post" id="search_form">
-							<div class="form-group text-center">
-								<input type="text" class="form-control" name="str" id="str"  type="text" placeholder="Exemple : 'phil', '31510' ">
-							</div>
-						</form>
+			<?php include 'suivi-livraison-commun/11-select-info-liv.php' ?>
+			<div class="row mt-5">
+				<div class="col"></div>
+				<div class="col">
+					<div class="font-weight-boldless text-main-blue">
+						Recherche un article :
 					</div>
-					<div class="col"></div>
-
+					<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post" id="search_form">
+						<div class="form-group text-center">
+							<input type="text" class="form-control" name="str" id="str"  type="text" placeholder="Exemple : 'phil', '31510' ">
+						</div>
+					</form>
 				</div>
-				<?php include 'suivi-livraison-commun/12-table-info-liv.php' ?>
-				<?php else: ?>
-					<div class="alert alert-primary">Aucune information livraison n'a été saisie pour les opérations à venir</div>
-				<?php endif ?>
-			</div>
-		</div>
-		<div class="row  pb-5">
-			<div class="col-auto">
-				<h6 class="text-main-blue ">Exporter les opérations en cours au format excel :</h6>
-			</div>
-			<div class="col pr-2">
-				<a href="xl-info-liv.php" class="btn bg-green">Export Excel</a>
-			</div>
-		</div>
+				<div class="col">
+					<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post" >
 
+						<div class="form-group">
+							<label for="date" class="text-main-blue font-weight-boldless">Info saisie depuis le :</label>
+							<input type="date" class="form-control" name="date" id="date" onchange="this.form.submit()" value="<?=$_POST['date']??""?>">
+						</div>
+					</form>
+				</div>
+				<div class="col"></div>
+
+			</div>
+			<?php if (!empty($listOpAVenir)): ?>
+
+				<?php include 'suivi-livraison-commun/12-table-info-liv.php' ?>
+			<?php else: ?>
+				<div class="alert alert-primary">Aucune information livraison n'a été saisie pour les opérations à venir</div>
+			<?php endif ?>
+		</div>
+	</div>
+	<div class="row  pb-5">
+		<div class="col-auto">
+			<h6 class="text-main-blue ">Exporter les opérations en cours au format excel :</h6>
+		</div>
+		<div class="col pr-2">
+			<a href="xl-info-liv.php" class="btn bg-green">Export Excel</a>
+		</div>
 	</div>
 
+</div>
 
-	<script type="text/javascript">
+
+<script type="text/javascript">
 
 
-		var emplacement = null;
+	var emplacement = null;
 
-		function findString(str) {
-			if (parseInt(navigator.appVersion) < 4) return;
-			var strFound;
-			if (window.find) {
-				strFound = self.find(str);
-				if (strFound && self.getSelection && !self.getSelection().anchorNode) {
-					strFound = self.find(str)
-				}
-				if (!strFound) {
-					strFound = self.find(str, 0, 1)
-					while (self.find(str, 0, 1)) continue
-				}
-		}else if(navigator.appName.indexOf("Microsoft") != -1) {
-			if (emplacement != null) {
-				emplacement.collapse(false)
-				strFound = emplacement.findText(str)
-				if (strFound) emplacement.select()
+	function findString(str) {
+		if (parseInt(navigator.appVersion) < 4) return;
+		var strFound;
+		if (window.find) {
+			strFound = self.find(str);
+			if (strFound && self.getSelection && !self.getSelection().anchorNode) {
+				strFound = self.find(str)
 			}
-		if (emplacement == null || strFound == 0) {
-			emplacement = self.document.body.createTextRange()
+			if (!strFound) {
+				strFound = self.find(str, 0, 1)
+				while (self.find(str, 0, 1)) continue
+			}
+	}else if(navigator.appName.indexOf("Microsoft") != -1) {
+		if (emplacement != null) {
+			emplacement.collapse(false)
 			strFound = emplacement.findText(str)
 			if (strFound) emplacement.select()
 		}
+	if (emplacement == null || strFound == 0) {
+		emplacement = self.document.body.createTextRange()
+		strFound = emplacement.findText(str)
+		if (strFound) emplacement.select()
+	}
 }
 if (!strFound) alert("String '" + str + "' non trouvé!")
 	return;
@@ -134,6 +151,8 @@ document.getElementById('search_form').onsubmit = function() {
 	findString(this.str.value);
 	return false;
 };
+
+
 </script>
 <?php
 require '../view/_footer-bt.php';

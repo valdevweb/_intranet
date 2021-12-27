@@ -70,180 +70,185 @@
 			</div>
 			<div class="col">
 				<?php if (!empty($webuser)): ?>
-						<div class="row">
-							<div class="col">
-								<span class="text-orange pl-3">Login :</span> <?= $webuser['login']?> <br>
-								<span class="text-orange pl-3">Mot de Passe : </span> <?= $webuser['nohash_pwd']?><br>
-							</div>
-							<div class="col-auto">
-								<span class="text-orange pl-3">Ident : </span><?= $webuser['id_web_user']?><br>
-							</div>
-						</div>
-
-					<?php else: ?>
-						Ce magasin n'a pas de compte sur le portail
-					<?php endif ?>
-
-				</div>
-			</div>
-
-			<div class="bg-separation-small"></div>
-			<h5 class="text-center font-weight-bold  mag-title sub-title">Informations Complémentaires</h5>
-
-			<div class="row pb-3">
-				<div class="col py-3 light-shadow-round">
-
-					<div class="row yanone-replace ">
-						<div class="col-3">
-							<span class="text-orange">Acdlec : </span>
-							<?= $mag->getAcdlec();?>
-						</div>
+					<div class="row">
 						<div class="col">
-							<i class="fas fa-arrows-alt-h pr-3 text-orange"></i>
-							<?= $mag->getSurfaceStrg();?>
+							<span class="text-orange pl-3">Login :</span> <?= $webuser['login']?> <br>
+							<span class="text-orange pl-3">Mot de Passe : </span> <?= $webuser['nohash_pwd']?><br>
 						</div>
-						<div class="col-3">
-							<span class="text-orange">SAV Gessica : </span>
-
-							<?= $mag->getPoleSavSca()?>
-							<span class="text-orange pl-3">CTBT : </span>
-							<?= $mag->getPoleSavCtbt()?>
-
-						</div>
-						<div class="col">
-							<span class="text-orange">Antenne : </span>
-
-							<?= $mag->getAntenne();?>
-						</div>
-
-					</div>
-					<div class="row yanone-replace">
-						<div class="col-3">
-							<span class="text-orange">TVA : </span>
-							<?= $mag->getTva();?>
-
-						</div>
-						<div class="col-3">
-							<span class="text-orange">Siret : </span>
-							<?= $mag->getSiret();?>
-
-						</div>
-						<div class="col-3">
-							<span class="text-orange">Code REI : </span>
-							<?= $mag->getRei();?>
-						</div>
-						<div class="col-3">
-							<span class="text-orange">Centre de redevance : </span>
-							<?= $centreRei?>
-
+						<div class="col-auto">
+							<span class="text-orange pl-3">Ident : </span><?= $webuser['id_web_user']?><br>
 						</div>
 					</div>
-					<div class="row yanone-replace">
-						<div class="col-3">
-							<span class="text-orange">Gestion du réservable :</span>
-							<?= $mag->getReservableStr()?>
-						</div>
-						<div class="col-3">
-							<span class="text-orange">Backoffice :</span>
-							<?=isset($listBackOffice[$mag->getBackofficeSca()])? $listBackOffice[$mag->getBackofficeSca()] :""?>
-						</div>
-						<div class="col-3">
-							<span class="text-orange">Chargé de mission :</span>
 
-							<?=($mag->getIdCmWebUser()!==null)? UserHelpers::getFullname($pdoUser, $mag->getIdCmWebUser()):""?>
-						</div>
-					</div>
-				</div>
+				<?php else: ?>
+					Ce magasin n'a pas de compte sur le portail
+				<?php endif ?>
 
 			</div>
+		</div>
 
+		<div class="bg-separation-small"></div>
+		<h5 class="text-center font-weight-bold  mag-title sub-title">Informations Complémentaires</h5>
 
-			<div class="bg-separation-small"></div>
-			<h5 class="text-center font-weight-bold  mag-title sub-title">Chiffre d'affaire</h5>
+		<div class="row pb-3">
+			<div class="col py-3 light-shadow-round">
 
+				<div class="row yanone-replace ">
+					<div class="col-3">
+						<span class="text-orange">Acdlec : </span>
+						<?= $mag->getAcdlec();?>
+					</div>
+					<div class="col">
+						<i class="fas fa-arrows-alt-h pr-3 text-orange"></i>
+						<?= $mag->getSurfaceStrg();?>
+					</div>
+					<div class="col-3">
+						<span class="text-orange">SAV Gessica : </span>
 
-			<div class="row  pb-3 justify-item-center">
-				<div class="col"></div>
-				<div class="col-auto">
-					<table class="table table-sm w-auto table-bordered">
-						<thead class="thead-orange">
-							<tr>
-								<th class="text-center"><?=$yearN?></th>
-								<th class="text-center"><?=$yearNUn?></th>
-								<th class="text-center"><?=$yearNDeux?></th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td class="text-right px-3"><?=isset($financeN['CA_Annuel'])?number_format((float)$financeN['CA_Annuel'],0,'',' '):""?>&euro;</td>
-								<td class="text-right px-3"><?=isset($financeNUn['CA_Annuel'])?number_format((float)$financeNUn['CA_Annuel'],0,'',' '):""?>&euro;</td>
-								<td class="text-right px-3"><?=isset($financeNDeux['CA_Annuel'])?number_format((float)$financeNDeux['CA_Annuel'],0,'',' '):""?>&euro;</td>
-							</tr>
-						</tbody>
-					</table>
+						<?= $mag->getPoleSavSca()?>
+						<span class="text-orange pl-3">CTBT : </span>
+						<?= $mag->getPoleSavCtbt()?>
+
+					</div>
+					<div class="col">
+						<span class="text-orange">Antenne : </span>
+
+						<?= $mag->getAntenne();?>
+					</div>
+
 				</div>
-				<div class="col"></div>
+				<div class="row yanone-replace">
+					<div class="col-3">
+						<span class="text-orange">TVA : </span>
+						<?= $mag->getTva();?>
 
-			</div>
+					</div>
+					<div class="col-3">
+						<span class="text-orange">Siret : </span>
+						<?= $mag->getSiret();?>
 
+					</div>
+					<div class="col-3">
+						<span class="text-orange">Code REI : </span>
+						<?= $mag->getRei();?>
+					</div>
+					<div class="col-3">
+						<span class="text-orange">Centre de redevance : </span>
+						<?= $centreRei?>
 
-
-
-			<div class="bg-separation-small"></div>
-			<!-- <div class="sub-title-ico pt-3"><i class="fas fa-at text-light-grey"></i></div> -->
-			<div class="row">
-				<div class="col"></div>
-				<div class="col">
-					<h5 class="text-center font-weight-bold  sub-title" id="ld">Listes de diffusion</h5>
-				</div>
-				<div class="col">
-					<div class="alert alert-warning">
-						<i class="far fa-lightbulb pr-1"></i>
-						<span class="smaller"> Cliquez sur une adresse/une LD pour envoyer un lotus</span>
 					</div>
 				</div>
-
-			</div>
-			<div class="row py-3">
-				<div class="col light-shadow-round">
-					<div class="row yanone-replace pt-3">
-						<div class="col text-orange"><?=$ldAdhName?></div>
-						<div class="col text-orange"><?=$ldDirName?></div>
-						<div class="col text-orange"><?=$ldRbtName?></div>
-						<div class="col text-orange"><?=$ldOkazName?></div>
+				<div class="row yanone-replace">
+					<div class="col-3">
+						<span class="text-orange">Gestion du réservable :</span>
+						<?= $mag->getReservableStr()?>
 					</div>
-					<div class="row yanone-replace pb-3">
-						<div class="col"><div class="pl-2 border-left"><?=$ldAdhLink?></div></div>
-						<div class="col"><div class="pl-2 border-left"><?=$ldDirLink?></div> </div>
-						<div class="col"><div class="pl-2 border-left"><?=$ldRbtLink?></div></div>
-						<div class="col"><div class="pl-2 border-left"><?=$ldOkazLink?></div></div>
+					<div class="col-3">
+						<span class="text-orange">Backoffice :</span>
+						<?=isset($listBackOffice[$mag->getBackofficeSca()])? $listBackOffice[$mag->getBackofficeSca()] :""?>
+					</div>
+					<div class="col-3">
+						<span class="text-orange">Chargé de mission :</span>
+
+						<?=($mag->getIdCmWebUser()!==null)? UserHelpers::getFullname($pdoUser, $mag->getIdCmWebUser()):""?>
 					</div>
 				</div>
 			</div>
 
-			<div class="bg-separation-small"></div>
+		</div>
 
-			<!-- <div class="sub-title-ico  pt-3"><i class="fas fa-calendar text-light-grey"></i></div> -->
-			<h5 class="text-center font-weight-bold  sub-title" id="syno">Historique magasin</h5>
 
-			<div class="row light-shadow-round py-3 mb-3">
-				<div class="col yanone-replace">
+		<div class="bg-separation-small"></div>
+		<h5 class="text-center font-weight-bold  mag-title sub-title">Chiffre d'affaire</h5>
+
+
+		<div class="row  pb-3 justify-item-center">
+			<div class="col"></div>
+			<div class="col-auto">
+				<table class="table table-sm w-auto table-bordered">
+					<thead class="thead-orange">
+						<tr>
+							<th class="text-center"><?=$yearN?></th>
+							<th class="text-center"><?=$yearNUn?></th>
+							<th class="text-center"><?=$yearNDeux?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="text-right px-3"><?=isset($financeN['CA_Annuel'])?number_format((float)$financeN['CA_Annuel'],0,'',' '):""?>&euro;</td>
+							<td class="text-right px-3"><?=isset($financeNUn['CA_Annuel'])?number_format((float)$financeNUn['CA_Annuel'],0,'',' '):""?>&euro;</td>
+							<td class="text-right px-3"><?=isset($financeNDeux['CA_Annuel'])?number_format((float)$financeNDeux['CA_Annuel'],0,'',' '):""?>&euro;</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col"></div>
+
+		</div>
+
+
+
+
+		<div class="bg-separation-small"></div>
+		<!-- <div class="sub-title-ico pt-3"><i class="fas fa-at text-light-grey"></i></div> -->
+		<div class="row">
+			<div class="col"></div>
+			<div class="col">
+				<h5 class="text-center font-weight-bold  sub-title" id="ld">Listes de diffusion</h5>
+			</div>
+			<div class="col">
+				<div class="alert alert-warning">
+					<i class="far fa-lightbulb pr-1"></i>
+					<span class="smaller"> Cliquez sur une adresse/une LD pour envoyer un lotus</span>
+				</div>
+			</div>
+
+		</div>
+		<div class="row py-3">
+			<div class="col light-shadow-round">
+				<div class="row yanone-replace pt-3">
+					<div class="col text-orange"><?=$ldAdhName?></div>
+					<div class="col text-orange"><?=$ldDirName?></div>
+					<div class="col text-orange"><?=$ldRbtName?></div>
+					<div class="col text-orange"><?=$ldOkazName?></div>
+				</div>
+				<div class="row yanone-replace pb-3">
+					<div class="col"><div class="pl-2 border-left"><?=$ldAdhLink?></div></div>
+					<div class="col"><div class="pl-2 border-left"><?=$ldDirLink?></div> </div>
+					<div class="col"><div class="pl-2 border-left"><?=$ldRbtLink?></div></div>
+					<div class="col"><div class="pl-2 border-left"><?=$ldOkazLink?></div></div>
+				</div>
+			</div>
+		</div>
+
+		<div class="bg-separation-small"></div>
+
+		<!-- <div class="sub-title-ico  pt-3"><i class="fas fa-calendar text-light-grey"></i></div> -->
+		<h5 class="text-center font-weight-bold  sub-title" id="syno">Historique magasin</h5>
+
+		<div class="row light-shadow-round py-3 mb-3">
+			<div class="col yanone-replace cols-two ">
+				<?php if (!empty($histo)): ?>
+
+
+					<?php foreach ($histo as $key => $prevMag): ?>
+
+						<div class="font-weight-bold"><i class="far fa-calendar pr-3 text-orange"></i><?=$prevMag['dateOuv'] .'<i class="fas fa-long-arrow-alt-right px-3"></i> '.$prevMag['dateFerm']?> :</div>
+						<div class="pl-5"><?=$prevMag['btlec_old'] .' - '.$prevMag['deno']?></div>
+					<?php endforeach ?>
 					<div class="font-weight-bold"><i class="far fa-calendar pr-3 text-orange"></i> de <?=$mag->getDateOuvertureFr()?> à aujourd'hui :</div>
 					<div class="pl-5"><?=$mag->getId() .' - '. $mag->getDeno()?></div>
 
-					<?php if (!empty($histo)): ?>
-						<?php foreach ($histo as $key => $prevMag): ?>
+				<?php endif ?>
 
-							<?= ($key+1==ceil((count($histo)+1)/2))? "</div><div class='col yanone-replace'>" :'' ?>
-
-							<div class="font-weight-bold"><i class="far fa-calendar pr-3 text-orange"></i><?=$prevMag['dateOuv'] .'<i class="fas fa-long-arrow-alt-right px-3"></i> '.$prevMag['dateFerm']?> :</div>
-							<div class="pl-5"><?=$prevMag['btlec_old'] .' - '.$prevMag['deno']?></div>
-
-
-						<?php endforeach ?>
-
-					<?php endif ?>
-				</div>
+				<?php if (!empty($histoMagFerme)): ?>
+					<?php foreach ($histoMagFerme as $key => $newMag): ?>
+						<?= ($key+1==ceil((count($histoMagFerme)+1)/2))? "</div><div class='col yanone-replace'>" :'' ?>
+						<div class="font-weight-bold"><i class="far fa-calendar pr-3 text-orange"></i><?=$newMag['dateOuv'] .'<i class="fas fa-long-arrow-alt-right px-3"></i> '.$newMag['dateFerm']?> :</div>
+						<div class="pl-5"><?=$newMag['btlec_new'] .' - '.$newMag['deno']?></div>
+					<?php endforeach ?>
+				<?php endif ?>
 			</div>
-			<div class="bg-separation-small"></div>
+		</div>
+		<div class="bg-separation-small"></div>
 

@@ -69,6 +69,14 @@ class UserDao{
 		return true;
 
 	}
+	public function getUserAttributions(){
+		$req=$this->pdo->prepare("SELECT id_droit FROM attributions WHERE id_user= :id_user order by id_droit");
+		$req->execute(array(
+			':id_user'		=>$_SESSION['id_web_user']
+		));
+		return $req->fetchAll(PDO::FETCH_COLUMN);
+	}
+
 
 	public function getUserAttributionsByService($idService){
 
@@ -140,5 +148,20 @@ class UserDao{
 		]);
 		return $req->fetchAll();
 	}
+	public function searchEmailInternByName($search){
 
+		$req=$this->pdo->prepare("SELECT * FROM intern_users WHERE fullname like :fullname ");
+		$req->execute([
+			':fullname'	=>'%'.$search.'%',
+		]);
+		return $req->fetchAll();
+	}
+	public function searchEmailInternByEmail($search){
+
+		$req=$this->pdo->prepare("SELECT * FROM intern_users WHERE email like :email ORDER BY prenom");
+		$req->execute([
+			':email'	=>'%'.$search.'%',
+		]);
+		return $req->fetchAll();
+	}
 }

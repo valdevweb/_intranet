@@ -22,6 +22,12 @@ require ('../../Class/Helpers.php');
 require ('../../Class/MagHelpers.php');
 
 require 'casse-getters.fn.php';
+
+require('../../Class/casse/TrtDao.php');
+$trtDao=new TrtDao($pdoCasse);
+
+
+
 unset($_SESSION['goto']);
 
 //---------------------------------------
@@ -49,7 +55,6 @@ function updatePalette($pdoCasse,$cmt, $id){
 	]);
 	return $req->rowCount();
 }
-
 
 
  //------------------------------------------------------
@@ -120,19 +125,12 @@ if(isset($_POST['submit'])){
 
 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
 		->setTo($dest)
-// ->setTo(['pilotageprepa@btlec.fr'])
-
 		->setCc($cc);
-// ->addBcc('valerie.montusclat@btlec.fr');
-		// ->attach($attachmentPdf)
-		// ->attach(Swift_Attachment::fromPath('demande-culturel.xlsx'));
-// ou
-// ->setBcc([adress@btl.fr, adresse@bt.fr])
 
-// echec => renvoie 0
 		$delivered=$mailer->send($message);
 		if($delivered !=0){
-			$success[]="Votre retour a été enregistré et un mail a été envoyé pour avertir les personnes concernées";
+			$trtDao->insertTrtHisto($_GET['id'], $_GET['id_trt']);
+			header('Location:casse-dashboard.php?#exp-'.$_GET['id']);
 		}
 
 
@@ -156,70 +154,70 @@ include('../view/_head-bt.php');
 include('../view/_navbar.php');
 ?>
 <!--********************************
-DEBUT CONTENU CONTAINER
-*********************************-->
-<div class="container">
-	<div class="row">
-		<div class="col">
-			<?= Helpers::returnBtn('casse-dashboard.php'); ?>
+	DEBUT CONTENU CONTAINER
+	*********************************-->
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<?= Helpers::returnBtn('casse-dashboard.php'); ?>
+			</div>
 		</div>
-	</div>
-	<h1 class="text-main-blue pb-5 ">Retour contrôle palettes de casse</h1>
+		<h1 class="text-main-blue pb-5 ">Retour contrôle palettes de casse</h1>
 
-	<div class="row">
-		<div class="col-lg-1"></div>
-		<div class="col">
-			<?php
-			include('../view/_errors.php');
-			?>
+		<div class="row">
+			<div class="col-lg-1"></div>
+			<div class="col">
+				<?php
+				include('../view/_errors.php');
+				?>
+			</div>
+			<div class="col-lg-1"></div>
 		</div>
-		<div class="col-lg-1"></div>
-	</div>
-	<div class="row mb-5">
-		<div class="col">
-			<p class="alert alert-primary"><i class="fas fa-info-circle pr-3"></i>Pour chacune des palettes contrôlées ci dessous, veuillez saisir <b>un commentaire si besoin</b> et valider votre saisie en cliquant sur le <b>bouton "envoyer"</b>. Un mail sera envoyé aux personnes concernées pour les avertir que le contrôle et la mise en RAQ a été faite</p>
+		<div class="row mb-5">
+			<div class="col">
+				<p class="alert alert-primary"><i class="fas fa-info-circle pr-3"></i>Pour chacune des palettes contrôlées ci dessous, veuillez saisir <b>un commentaire si besoin</b> et valider votre saisie en cliquant sur le <b>bouton "envoyer"</b>. Un mail sera envoyé aux personnes concernées pour les avertir que le contrôle et la mise en RAQ a été faite</p>
+			</div>
 		</div>
-	</div>
 
-	<div class="row">
-		<div class="col">
-			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id']?>" method="post" class="pb-5">
-				<?php foreach ($listPalette as $palette): ?>
-					<div class="row">
-						<div class="col-3">
-							<div class="form-group">
-								<label for="palette">Palette 4919 :</label>
-								<input type="text" name="palette" id="palette" class="form-control" value="<?=$palette['palette']?>" readonly>
+		<div class="row">
+			<div class="col">
+				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'].'&id_trt='.$_GET['id_trt']?>" method="post" class="pb-5">
+					<?php foreach ($listPalette as $palette): ?>
+						<div class="row">
+							<div class="col-3">
+								<div class="form-group">
+									<label for="palette">Palette 4919 :</label>
+									<input type="text" name="palette" id="palette" class="form-control" value="<?=$palette['palette']?>" readonly>
+								</div>
 							</div>
-						</div>
-						<div class="col-3">
-							<div class="form-group">
-								<label for="contremarque">Palette contremarque : </label>
-								<input type="text" name="contremarque" id="contremarque" class="form-control" value="<?=$palette['palette']?>" readonly>
+							<div class="col-3">
+								<div class="form-group">
+									<label for="contremarque">Palette contremarque : </label>
+									<input type="text" name="contremarque" id="contremarque" class="form-control" value="<?=$palette['palette']?>" readonly>
+								</div>
+
 							</div>
+							<div class="col">
+								<div class="form-group">
+									<label for="cmt">Commentaire : </label>
+									<input type="text" name="cmt[]" id="cmt" class="form-control">
+								</div>
+							</div>
+							<input type="hidden" name="idpalette[]" value="<?=$palette['paletteid']?>">
 
 						</div>
-						<div class="col">
-							<div class="form-group">
-								<label for="cmt">Commentaire : </label>
-								<input type="text" name="cmt[]" id="cmt" class="form-control">
-							</div>
-						</div>
-						<input type="hidden" name="idpalette[]" value="<?=$palette['paletteid']?>">
-
+					<?php endforeach ?>
+					<div class="text-right">
+						<button class="btn btn-black" name="submit"><i class="far fa-envelope pr-3"></i> Envoyer</button>
 					</div>
-				<?php endforeach ?>
-				<div class="text-right">
-					<button class="btn btn-black" name="submit"><i class="far fa-envelope pr-3"></i> Envoyer</button>
-				</div>
-			</form>
+				</form>
 
 
+			</div>
 		</div>
+		<!-- ./container -->
 	</div>
-	<!-- ./container -->
-</div>
 
-<?php
-require '../view/_footer-bt.php';
+	<?php
+	require '../view/_footer-bt.php';
 ?>

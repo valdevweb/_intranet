@@ -74,6 +74,15 @@ class Helpers{
 		return $result;
 	}
 
-
+	public static function strToDate($str){
+		$p = '{.*?(\d\d?)[\\/\.\-]([\d]{2})[\\/\.\-]([\d]{4}).*}';
+		$date = preg_replace($p, '$3-$2-$1', $str);
+		try {
+			$dateTime=new \DateTime($date);
+			return $dateTime;
+		} catch (Exception $e) {
+			return "";
+		}
+	}
 
 }

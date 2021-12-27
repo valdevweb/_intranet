@@ -281,6 +281,14 @@
   width: 500px !important;
 }
 
+.cols-two {
+-webkit-column-count: 2;
+-moz-column-count: 2;
+    column-count: 2;
+
+}
+
+
 .cols-three{
     -webkit-column-count:3;
     -moz-column-count: 3;

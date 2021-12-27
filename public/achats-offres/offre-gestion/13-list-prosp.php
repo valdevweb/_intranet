@@ -25,14 +25,14 @@
 						<td>
 							<?php if (isset($listFiles[$prosp['id']])): ?>
 								<?php foreach ($listFiles[$prosp['id']] as $key => $file): ?>
-									<a href="<?=URL_UPLOAD.'offres/'.$file['file']?>" download><?=!empty($file['filename'])?$file['filename']:'<i class="fas fa-file"></i>'?></a><br>
+									<a href="<?=URL_UPLOAD.'offres/'.$file['file']?>" class="pr-3" download><?=!empty($file['filename'])?$file['filename']:'<i class="fas fa-file"></i>'?></a>
 								<?php endforeach ?>
 							<?php endif ?>
 						</td>
 						<td>
 							<?php if (isset($listLinks[$prosp['id']])): ?>
 								<?php foreach ($listLinks[$prosp['id']] as $key => $link): ?>
-									<a href="<?=URL_UPLOAD.'offres/'.$link['link']?>" target="_blank"><?=($link['linkname'])??'lien'?></a><br>
+									<a href="<?=URL_UPLOAD.'offres/'.$link['link']?>"class="pr-3" target="_blank"><?=($link['linkname'])??'lien'?></a><br>
 								<?php endforeach ?>
 							<?php endif ?>
 						</td>

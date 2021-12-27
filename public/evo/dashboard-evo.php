@@ -495,7 +495,10 @@ include('dashboard-evo\11-modal-cloturer.php');
 				});
 			});
 
-
+			$('#cmt_dd').on("keyup", function(){
+				var cmt=$('#cmt_dd').val();
+				$('#cmt_dev').val(cmt);
+			});
 			$('#modal-cloturer').on('show.bs.modal', function (e) {
 				var idevo = $(e.relatedTarget).data('id');
 				var hiddenidevo=$('#id_evo_cloture');
@@ -512,7 +515,24 @@ include('dashboard-evo\11-modal-cloturer.php');
 			});
 
 
+			$('#deadline').on("change", function(){
+				var today = new Date();
+				var dateSelected=$('#deadline').val();
+				var dateSelected=new Date(dateSelected);
+				if(dateSelected<today){
+					console.log("inf");
+					$('#error-msg').append('<div class="alert alert-danger">La deadline est inférieure à la date du jour</div>');
+					$('button[type=submit]').prop('disabled', true);
 
+				}else{
+					console.log("sup");
+
+					$('#error-msg').empty();
+					$('button[type=submit]').prop('disabled', false);
+
+				}
+
+			})
 			$('tr.cmt').hide();
 			$('.hide-btn').on("click", function(){
 				var id= $(this).data("btn-id");

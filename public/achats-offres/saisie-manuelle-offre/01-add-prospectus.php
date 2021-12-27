@@ -5,7 +5,10 @@ $allreadyExist=$prospDao->getProspectusByProspectus(strtoupper($_POST['code_op']
 if(!empty($allreadyExist)){
 	$errors[]="Ce prospectus existe déjà, vous ne pouvez pas le recréer<br>Pour y ajouter des offres, veuillez le sélectionner dans la liste déroulante de la section saisie des offres";
 }
+if($_POST['date_start']>=$_POST['date_end']){
+	$errors[]="La date de fin de l'opération doit être suppérieure à la date de début";
 
+}
 
 if(empty($errors)){
 	$otherFilename=[];

@@ -58,26 +58,34 @@ class EvoHelpers{
 	}
 
 		public static function arrayAppliNameByResp($pdoEvo, $idResp){
-		$req=$pdoEvo->prepare("SELECT id, appli FROM appli WHERE id_resp=id_resp ORDER BY id");
+		$req=$pdoEvo->prepare("SELECT id, appli FROM appli WHERE id_resp= :id_resp ORDER BY id");
 		$req->execute([
 			':id_resp'	=>$idResp,
 		]);
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
 	public static function arrayPlateformeNameByResp($pdoEvo, $idResp){
-		$req=$pdoEvo->prepare("SELECT id, plateforme FROM plateformes WHERE id_resp=id_resp ORDER BY id");
+		$req=$pdoEvo->prepare("SELECT id, plateforme FROM plateformes WHERE id_resp= :id_resp ORDER BY id");
 		$req->execute([
 			':id_resp'	=>$idResp,
 		]);
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
 	public static function arrayModuleNameByResp($pdoEvo, $idResp){
-		$req=$pdoEvo->prepare("SELECT id, module FROM modules LEFT JOIN appli ON id_appli= appli.id WHERE id_resp=id_resp ORDER BY id");
+		$req=$pdoEvo->prepare("SELECT modules.id, module FROM modules LEFT JOIN appli ON id_appli= appli.id WHERE id_resp= :id_resp ORDER BY id");
 		$req->execute([
 			':id_resp'	=>$idResp,
 		]);
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
+	public static function arrayLevels($pdoEvo){
 
+		$req=$pdoEvo->prepare("SELECT id, levels.* FROM levels order by id ");
+		$req->execute([
+
+		]);
+		return $req->fetchAll(PDO::FETCH_UNIQUE);
+
+	}
 
 }

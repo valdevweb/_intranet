@@ -159,6 +159,20 @@ class MagDao{
 		}
 		return '';
 	}
+	public function getHistoMagFerme($btlec){
+		$req=$this->pdo->prepare("SELECT *, DATE_FORMAT(date_ouv, '%d/%m/%Y') as dateOuv, DATE_FORMAT(date_ferm, '%d/%m/%Y') as dateFerm FROM magsyno  LEFT JOIN mag ON magsyno.btlec_new=mag.id WHERE magsyno.btlec_old= :btlec_old ORDER BY date_ouv DESC ");
+		$req->execute([
+			':btlec_old'		=>$btlec
+		]);
+		$datas=$req->fetchAll(PDO::FETCH_ASSOC);
+		// return $req->errorInfo();
+		if(!empty($datas)){
+			return $datas;
+		}
+		return '';
+	}
+
+
 	public function getMagCaByYear($pdoQlik,$btlec,$year){
 		$req=$pdoQlik->prepare("SELECT CA_Annuel FROM statsventesadh WHERE CodeBtlec= :btlec AND AnneeCA= :year");
 		$req->execute(array(

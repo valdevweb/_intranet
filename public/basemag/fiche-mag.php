@@ -121,7 +121,6 @@ $droitExploit=$userDao->isUserAllowed([5]);
 
 
 
-
 if(isset($_POST['clear_form'])){
 	$_POST=[];
 	header("Location: ".$_SERVER['PHP_SELF']);
@@ -132,7 +131,9 @@ if (isset($_GET['id'])){
 	$mag=$magDbHelper->getMagAndScaTroisInfo($_GET['id']);
 	$occ=$mag->getOccasion();
 
-	$histo= $magDbHelper->getHisto($mag->getGalec());
+	$histo=$magDbHelper->getHisto($mag->getGalec());
+	$histoMagFerme=$magDbHelper->getHistoMagFerme($_GET['id']);
+
 	$listCentralesSca=$magDbHelper->getDistinctCentraleSca();
 	$listMainCentrale=$magDbHelper->getMainCentrale();
 
@@ -602,12 +603,13 @@ DEBUT CONTENU CONTAINER
 			<div class="col">
 				<?php
 				include('../view/_errors.php');
-
-
 				?>
 			</div>
 			<div class="col-lg-1"></div>
 		</div>
+
+
+
 
 		<?php if (!isset($mag)): ?>
 			<div class="row  pb-3 ">

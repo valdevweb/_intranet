@@ -39,17 +39,10 @@ $operateur=CasseHelpers::getOperateur($pdoUser);
 $categories=CasseHelpers::getCategorie($pdoCasse);
 $origines=CasseHelpers::getOrigine($pdoCasse);
 $types=CasseHelpers::getTypecasse($pdoCasse);
-$listPalette=CasseHelpers::getPaletteActive($pdoCasse);
+$listPaletteDestruction=CasseHelpers::getPaletteActiveDestruction($pdoCasse, 1);
+$listPaletteNorm=CasseHelpers::getPaletteActiveDestruction($pdoCasse,0 );
 
 
-function addSerials($pdoCasse,$lastInsertId,$serial){
-	$req=$pdoCasse->prepare("INSERT INTO serials (id_casse,serial_nb) VALUES (:id_casse,:serial_nb)");
-	$req->execute([
-		':id_casse'			=>$lastInsertId,
-		':serial_nb'		=>$serial
-	]);
-	return $req->rowCount();
-}
 
 function checkWebuser($pdoUser){
 	$req=$pdoUser->prepare("SELECT id FROM intern_users WHERE id_web_user= :id_web_user");
@@ -76,7 +69,6 @@ $findOp=checkWebuser($pdoUser);
 if(!empty($findOp)){
 	$idOp=$findOp['id'];
 }
-
 
 if(isset($_POST['insert_casse'])){
 
@@ -116,10 +108,13 @@ if(isset($_POST['insert_casse'])){
 		}else{
 			if($_POST['destroy']==1){
 				$detruit=1;
+				$idAffectation=3;
 			}else{
 				$detruit=0;
+				$idAffectation=null;
+
 			}
-			$idPalette=$paletteDao->insertPalette($_POST['palette'],$detruit);
+			$idPalette=$paletteDao->insertPalette($_POST['palette'],$detruit, $statut=0, $idAffectation);
 		}
 
 
@@ -129,13 +124,13 @@ if(isset($_POST['insert_casse'])){
 		$decote=round($valo/2);
 		$mtMag=$valo;
 
-		$lastInsertId=$casseDao->insertCasse($_POST['date_casse'], $_POST['operateur'], $_POST['nb_colis'],$_POST['categorie'],$_POST['article'], $_POST['dossier'], $dataArticle['gt'],$dataArticle['libelle'], $dataArticle['pcb'],$uvc,$valo, $dataArticle['panf'],$dataArticle['fournisseur'], $_POST['origine'], $_POST['type'], $idPalette, $etat, $detruit, $mtMag, $decote, $dataArticle['pfnp'], $dataArticle['deee'],$dataArticle['sacem'],$dataArticle['deee_codif']);
+		$lastInsertId=$casseDao->insertCasse($_POST['date_casse'], $_POST['operateur'], $_POST['nb_colis'],$_POST['categorie'],$_POST['article'], $_POST['dossier'], $dataArticle['gt'],$dataArticle['libelle'], $dataArticle['pcb'],$uvc,$valo, $dataArticle['panf'],$dataArticle['fournisseur'], $_POST['origine'], $_POST['type'], $idPalette, $etat, $detruit, $mtMag, $decote, $dataArticle['pfnp'], $dataArticle['deee'],$dataArticle['sorecop'],$dataArticle['codif_deee'], $dataArticle['ppi']);
 
 		if($lastInsertId !=false){
 			if(!empty($emptiedSerial)){
 				for($i=0;$i<count($_POST['serial']);$i++){
 					if(!empty($_POST['serial'][$i])){
-						$add=addSerials($pdoCasse,$lastInsertId,$_POST['serial'][$i]);
+						$add=$casseDao->addSerials($lastInsertId,$_POST['serial'][$i]);
 						if($add!=1){
 							$errors[]="impossible d'ajouter le numéro de serie";
 						}
@@ -153,7 +148,7 @@ if(isset($_POST['insert_casse'])){
 
 
 	if(count($errors)==0){
-		$loc='Location:casse-dashboard.php?success='.$lastInsertId;
+		$loc='Location:casse-dashboard.php#palette-'.$idPalette;
 		header($loc);
 	}
 }
@@ -364,11 +359,20 @@ include('../view/_navbar.php');
 									<div class="form-group">
 										<label for="palette_existante">Sélectionner une palette 4919</label>
 										<select class="form-control" name="palette_existante" id="palette_existante" required>
-											<option value="">Sélectionner</option>
-											<option value="new">Nouvelle palette</option>
-											<?php foreach ($listPalette as $idPalette => $palette): ?>
-												<option value="<?=$idPalette?>"><?=$listPalette[$idPalette]?></option>
-											<?php endforeach ?>
+											<option value="">palettes existantes :</option>
+											<optgroup label="palettes destruction :" class="text-success">
+												<?php foreach ($listPaletteDestruction as $idPalette => $palette): ?>
+													<option value="<?=$idPalette?>"><?=$listPaletteDestruction[$idPalette]?></option>
+												<?php endforeach ?>
+											</optgroup>
+											<optgroup label="palettes magasin :" class="text-primary">
+												<?php foreach ($listPaletteNorm as $idPalette => $palette): ?>
+													<option value="<?=$idPalette?>"><?=$listPaletteNorm[$idPalette]?></option>
+												<?php endforeach ?>
+											</optgroup>
+											<optgroup label="nouvelle palette">
+												<option value="new">créer une palette</option>
+											</optgroup>
 										</select>
 									</div>
 								</div>
@@ -394,7 +398,7 @@ include('../view/_navbar.php');
 
 								</div>
 								<div class="col-auto">
-									Palette déstinée à la destruction
+									Palette destinée à la destruction
 									<div class="form-check">
 										<input class="form-check-input" type="radio" value="1" id="destroy_yes" name="destroy">
 										<label class="form-check-label" for="destroy_yes">Oui</label>
@@ -462,7 +466,6 @@ include('../view/_navbar.php');
 				$('#serial').append(serialInput);
 			}
 		});
-
 		$('#palette_existante').on("change", function(){
 			var paletteSelected=$('#palette_existante').val();
 			if (paletteSelected=="new") {
@@ -470,20 +473,9 @@ include('../view/_navbar.php');
 
 			}else{
 				$('#new_palette').hide();
-				$.ajax({
-					url:'bt-declaration-casse/ajax-get-palette.php',
-					method:"POST",
-					data:{id_palette:paletteSelected},
-					success:function(data){
-						console.log(data);
-						$('#type-palette').empty();
 
-						$('#type-palette').text(data);
-					}
-				});
 			}
 		});
-
 	});
 </script>
 

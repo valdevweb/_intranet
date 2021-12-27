@@ -1,9 +1,16 @@
 <?php
-if(str_contains($_SERVER['HTTP_REFERER'], "qhse")){
-	$siteQhse=true;
-	define("IMG_DIR", "img-qhse/");
+if(isset($_SERVER['HTTP_REFERER'])){
+	if(str_contains($_SERVER['HTTP_REFERER'], "qhse")){
+		$siteQhse=true;
+		define("IMG_DIR", "img-qhse/");
+	}else{
+		define("IMG_DIR", "img/");
+
+	}
+
+
 }else{
-	define("IMG_DIR", "img/");
+		define("IMG_DIR", "img/");
 
 }
 

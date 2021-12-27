@@ -10,45 +10,21 @@ $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
-//---------------------------------------
-//	ajout enreg dans stat
-//---------------------------------------
-// require "../../functions/stats.fn.php";
-// $descr="saisie déclaration mag hors qlik" ;
-// $page=basename(__file__);
-// $action="";
-// // addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
-// addRecord($pdoStat,$page,$action, $descr, 208);
+
 require '../../config/db-connect.php';
-
 require_once '../../vendor/autoload.php';
-
 require('casse-getters.fn.php');
 
-//------------------------------------------------------
-//			FONCTION
-//------------------------------------------------------
-function updatePalette($pdoCasse,$id){
-
-	$req=$pdoCasse->prepare("UPDATE palettes SET date_dd_pilote = NOW() WHERE id= :id");
-	$req->execute([
-		':id'	=> $id
-	]);
-	return $req->rowCount();
-
-}
+require('../../Class/casse/TrtDao.php');
+$trtDao=new TrtDao($pdoCasse);
 
 
 
 
-if(isset($_GET['id']))
-{
+
+if(isset($_GET['id'])){
 	$expInfo=getExpAndPalette($pdoCasse,$_GET['id']);
-	// echo "<pre>";
-	// print_r($expInfo);
-	// echo '</pre>';
 	$nb=count($expInfo);
-
 }
 else{
 	$loc='Location:casse-dashboard.php?error=1';
@@ -89,29 +65,12 @@ $message = (new Swift_Message($subject))
 
 ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
 ->setTo($dest)
-
-
 ->setCc($cc);
 
 $delivered=$mailer->send($message);
-if($delivered !=0)
-{
-	$majko=false;
-	$idExp=$_GET['id'];
-	$palettes=getDetailExp($pdoCasse,$idExp);
-	foreach ($palettes as $palette) {
-		$up=updatePalette($pdoCasse,$palette['id']);
-		if($up!=1){
-			$majko=true;
-		}
-	}
-	if(!$majko){
-		$loc='Location:casse-dashboard.php?mailPilote';
-		header($loc);
-	}
-	else{
-		$errors[]="impossible de mettre à jour la base palette";
-	}
+if($delivered !=0){
+	$trtDao->insertTrtHisto($_GET['id'], $_GET['id_trt']);
+	header('Location:casse-dashboard.php?#exp-'.$_GET['id']);
 }
 
 
@@ -129,12 +88,12 @@ include('../view/_head-bt.php');
 include('../view/_navbar.php');
 ?>
 <!--********************************
-DEBUT CONTENU CONTAINER
-*********************************-->
-<div class="container">
+	DEBUT CONTENU CONTAINER
+	*********************************-->
+	<div class="container">
 
-</div>
+	</div>
 
-<?php
-require '../view/_footer-bt.php';
+	<?php
+	require '../view/_footer-bt.php';
 ?>

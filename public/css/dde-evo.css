@@ -13,7 +13,7 @@ img.polaroid {
 
 
 
-  input[type='radio']#urgent:after {
+  input[type='radio']#danger:after {
         width: 17px;
         height: 17px;
         border-radius: 17px;
@@ -27,7 +27,7 @@ img.polaroid {
         border: 2px solid white;
     }
 
-    input[type='radio']#urgent:checked:after  {
+    input[type='radio']#danger:checked:after  {
         width: 17px;
         height: 17px;
         border-radius: 17px;
@@ -41,7 +41,7 @@ img.polaroid {
         border: 2px solid white;
     }
 
-      input[type='radio']#faible:after {
+      input[type='radio']#success:after {
         width: 17px;
         height: 17px;
         border-radius: 17px;
@@ -55,7 +55,7 @@ img.polaroid {
         border: 2px solid white;
     }
 
-    input[type='radio']#faible:checked:after  {
+    input[type='radio']#success:checked:after  {
         width: 17px;
         height: 17px;
         border-radius: 17px;
@@ -70,7 +70,7 @@ img.polaroid {
     }
 
 
-     input[type='radio']#normal:after {
+     input[type='radio']#primary:after {
         width: 17px;
         height: 17px;
         border-radius: 17px;
@@ -84,7 +84,7 @@ img.polaroid {
         border: 2px solid white;
     }
 
-    input[type='radio']#normal:checked:after  {
+    input[type='radio']#primary:checked:after  {
         width: 17px;
         height: 17px;
         border-radius: 17px;

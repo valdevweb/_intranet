@@ -5,7 +5,13 @@
 				<?=$op['code_op']?></p>
 			</div>
 		</div>
-		<?php $infoLiv=$infoLivDao->getInfoLivByOp($op['code_op']) ?>
+		<?php
+		if(!isset($_POST['date'])){
+			$infoLiv=$infoLivDao->getInfoLivByOp($op['code_op']);
+		}else{
+			$infoLiv=$infoLivDao->getInfoLivByOpDateSaisie($op['code_op'], $_POST['date']);
+		}
+		?>
 		<div class="row">
 			<div class="col">
 				<?php
@@ -111,7 +117,6 @@
 								</td>
 							</tr>
 							<tr class="border-right-blue border-left-blue <?=$lineColor?>">
-
 								<td colspan="2" class="text-right">Info livraison au <span class="text-main-blue font-weight-boldless "><?=DateHelpers::concatJourMoisDateTime($lundiDeux, "long")?></span></td>
 								<td class="text-right pr-2">Reçu :</td>
 								<td class="<?=$bgDeux?> text-right w-80"><?=$info['recu_deux']?><?=$pourcentDeux?></td>

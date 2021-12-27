@@ -274,9 +274,9 @@ foreach ($dossiers as $key => $dossier)
 
 // pour lancer le téléchargement sur le poste client
 $writer = new Xlsx($spreadsheet);
-$writer->save('export-litiges.xlsx');
+$writer->save('export-litiges'.date('YmdHis').'.xlsx');
 header('Content-Type: application/vnd.ms-excel');
-header('Content-Disposition: attachment; filename="export-litiges.xlsx"');
+header('Content-Disposition: attachment; filename="export-litiges'.date('YmdHis').'.xlsx"');
 $writer->save("php://output");
 exit;
 

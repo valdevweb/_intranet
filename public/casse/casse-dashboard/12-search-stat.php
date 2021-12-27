@@ -1,10 +1,7 @@
-<div class="result-zone bg-grey px-5 pb-2 pt-2 mb-2">
 	<div class="row">
 		<div class="col">
-			<?php if (isset($_POST['search_strg']) && !empty($_POST['search_strg'])): ?>
-			<h5 class="text-main-blue pb-3 text-center">Résultat de votre recherche pour : <span class="heavy bg-title patrick-hand px-3"><?=$_POST['search_string']?></span></h5>
-		<?php else: ?>
-			<h5 class="text-main-blue pb-3 text-center">Résultat de votre recherche  : </h5>
+			<?php if (isset($_POST['search_string']) && !empty($_POST['search_string'])): ?>
+			<h6 class="text-main-blue pb-3 text-center">Résultat de votre recherche pour : <span class="heavy bg-title patrick-hand px-3"><?=$_POST['search_string']?></span></h6>
 		<?php endif ?>
 	</div>
 </div>
@@ -34,14 +31,10 @@
 						<ul class="leaders">
 							<li>
 								<span class="mag-txt heavy"><?=MagHelpers::deno($pdoMag,$galec)?></span>
-
-
 								<span class="text-right sum-txt font-weight-bold">
 									<?= number_format((float)$mt,2,'.',' ') ?>&euro;
 								</span>
 							</li>
-
-
 						<?php endif ?>
 
 					<?php endforeach ?>
@@ -50,16 +43,24 @@
 		</div>
 		<div class="row">
 			<div class="col">
-				<a href="?field_1=pending"><div class="legend"><img class="pr-3" src="../img/casse/encours.jpg">En cours</div></a>
+				<div class="legend" data-statut="0"><img class="pr-3" src="../img/casse/encours.jpg">En cours</div>
 			</div>
 			<div class="col">
-				<a href="?field_1=todeliver"><div class="legend"><img class="pr-3" src="../img/casse/livrer.png">A livrer</div></a>
+				<div class="legend" data-statut="1"><img class="pr-3" src="../img/casse/livrer.png">A livrer</div>
 			</div>
 			<div class="col">
-				<a href="?field_1=clos"><div class="legend"><img  src="../img/casse/livre.png"><img class="pr-3" src="../img/casse/creditcard.png">Clos - facturé</div></a>
+				<div class="legend" data-statut="2"><img  src="../img/casse/livre.png">Clos</div>
 			</div>
 			<div class="col">
-				<a href="?field_1=destroyed"><div class="legend"><img  src="../img/casse/livre.png"><img class="pr-3" src="../img/casse/logo_deee.jpg">Clos - détruit</div></a>
+				<div class="form-group">
+
+					<select class="form-control" name="affectation" id="affectation">
+						<option value="">Affectation</option>
+						<?php foreach ($listAffectation as $keyAffectation => $value): ?>
+							<option value="<?=$keyAffectation?>" <?=(isset($_GET['field_2']) && $_GET['field_2']==$keyAffectation)?"selected":""?>><?=$listAffectation[$keyAffectation]?></option>
+						<?php endforeach ?>
+					</select>
+				</div>
+
 			</div>
 		</div>
-	</div>

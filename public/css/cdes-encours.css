@@ -1,7 +1,10 @@
 table{
   font-size: 0.9rem !important;
 }
+#col-selector{
+  font-size: 0.9rem !important;
 
+}
 th {
   position: sticky !important;
   top: 0 !important; /* Don't forget this, required for the stickiness */

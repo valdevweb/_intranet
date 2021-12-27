@@ -65,6 +65,8 @@ $arrPf=EvoHelpers::arrayPlateformeName($pdoEvo);
 $arrAppli=EvoHelpers::arrayAppliName($pdoEvo);
 $arrModule=EvoHelpers::arrayModuleName($pdoEvo);
 $arrDevMail=EvoHelpers::arrayAppliRespEmail($pdoEvo);
+$listLevel=EvoHelpers::arrayLevels($pdoEvo);
+
 
 $listUsers=$userDao->getBtlecUserEvo();
 $listServices=$userDao->getServicesMailing();
@@ -127,7 +129,7 @@ if(isset($_POST['submit'])){
 
 	if(!empty($listFilename)){
 		for ($i=0; $i < count($listFilename); $i++) {
-			$docDao->insertDoc($idEvo, $listFilename[$i], $_POST['filename'][$i]);
+			$docDao->insertDoc($idEvo, $listFilename[$i], $_POST['filename'][$i], "");
 		}
 	}
 
@@ -159,7 +161,6 @@ if(isset($_POST['submit'])){
 	$htmlMail=str_replace('{DDEUR}',$demandeur,$htmlMail);
 	$subject="Portail BTLec Est - Demandes d'évo - nouvelle demande" ;
 
-// ---------------------------------------
 	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
 	$mailer = new Swift_Mailer($transport);
 	$message = (new Swift_Message($subject))
@@ -172,7 +173,7 @@ if(isset($_POST['submit'])){
 		print_r($failures);
 		$errors[]="erreur envoi mail";
 	}else{
-		$successQ='?success=cree';
+		$successQ='?success=cree&id='.$idEvo;
 		unset($_POST);
 		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
 	}
@@ -180,7 +181,7 @@ if(isset($_POST['submit'])){
 
 if(isset($_GET['success'])){
 	$arrSuccess=[
-		'cree'=>'Votre demande d\'évo a bien été envoyée',
+		'cree'=>'Votre demande d\'évo a bien été envoyée. Vous pouvez la <a href="evo-detail.php?id='.$_GET['id'].'">consulter ici</a>'
 	];
 	$success[]=$arrSuccess[$_GET['success']];
 }
@@ -194,213 +195,210 @@ include('../view/_head-bt.php');
 include('../view/_navbar.php');
 ?>
 <!--********************************
-DEBUT CONTENU CONTAINER
-*********************************-->
-<div class="container">
-	<h1 class="text-main-blue py-5 ">Demande d'évo</h1>
+	DEBUT CONTENU CONTAINER
+	*********************************-->
+	<div class="container">
+		<h1 class="text-main-blue py-5 ">Demande d'évo</h1>
 
-	<div class="row">
-		<div class="col-lg-1"></div>
-		<div class="col">
-			<?php
-			include('../view/_errors.php');
-			?>
+		<div class="row">
+			<div class="col-lg-1"></div>
+			<div class="col">
+				<?php
+				include('../view/_errors.php');
+				?>
+			</div>
+			<div class="col-lg-1"></div>
 		</div>
-		<div class="col-lg-1"></div>
-	</div>
-	<div class="row">
-		<div class="col">
-			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post"  enctype="multipart/form-data">
+		<div class="row">
+			<div class="col">
+				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post"  enctype="multipart/form-data">
 
-				<div class="row">
-					<div class="col-auto">
-						<img src="../img/evo/code-ico.jpg" alt="code" class="polaroid">
-					</div>
-					<div class="col">
-						<div class="row">
-							<div class="col-4 text-main-blue">
-								Sélectionnez une plateforme :
+					<div class="row">
+						<div class="col-auto">
+							<img src="../img/evo/code-ico.jpg" alt="code" class="polaroid">
+						</div>
+						<div class="col">
+							<div class="row">
+								<div class="col-4 text-main-blue">
+									Sélectionnez une plateforme :
+								</div>
+								<div class="col">
+									<?php foreach ($listPF as $key => $pf): ?>
+
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" required type="radio" value="<?=$pf['id']?>" <?=checkChecked($pf['id'],'pf')?> id="pf" name="pf">
+											<label class="form-check-label pr-5" for="pf"><?=$pf['plateforme']?></label>
+										</div>
+
+									<?php endforeach ?>
+								</div>
 							</div>
-							<div class="col">
-								<?php foreach ($listPF as $key => $pf): ?>
-
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" required type="radio" value="<?=$pf['id']?>" <?=checkChecked($pf['id'],'pf')?> id="pf" name="pf">
-										<label class="form-check-label pr-5" for="pf"><?=$pf['plateforme']?></label>
+							<div class="row ">
+								<div class="col-md-4 mt-3 pt-2 text-main-blue">
+									Sélectionnez une application :
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="appli"></label>
+										<select class="form-control" name="appli" id="appli" required>
+											<option value="">Sélectionner</option>
+											<option value="">commencez par choisir une plateforme</option>
+										</select>
 									</div>
 
-								<?php endforeach ?>
-							</div>
-						</div>
-						<div class="row ">
-							<div class="col-md-4 mt-3 pt-2 text-main-blue">
-								Sélectionnez une application :
-							</div>
-							<div class="col-md-4">
-								<div class="form-group">
-									<label for="appli"></label>
-									<select class="form-control" name="appli" id="appli" required>
-										<option value="">Sélectionner</option>
-										<option value="">commencez par choisir une plateforme</option>
-									</select>
 								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-4 mt-3 pt-2 text-main-blue">
+									Sélectionnez un module :
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<label for="module"></label>
+										<select class="form-control" name="module" id="module">
+											<option value="">Sélectionner</option>
+										</select>
+									</div>
 
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-4 mt-3 pt-2 text-main-blue">
-								Sélectionnez un module :
-							</div>
-							<div class="col-md-4">
-								<div class="form-group">
-									<label for="module"></label>
-									<select class="form-control" name="module" id="module">
-										<option value="">Sélectionner</option>
-									</select>
 								</div>
+							</div>
 
-							</div>
-						</div>
+							<div class="row mb-3">
+								<div class="col-4 text-main-blue">
+									Chronophagie :
+								</div>
+								<div class="col">
+									<?php foreach ($listLevel as $keyLevel => $value): ?>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="radio" value="<?=$keyLevel?>"  <?= ($keyLevel==2)?"checked" :""?> name="chrono" required id="<?=$listLevel[$keyLevel]['class']?>">
+											<label class="form-check-label pr-5 text-<?=$listLevel[$keyLevel]['class']?>" ><b><?=$listLevel[$keyLevel]['chrono']?></b></label>
+										</div>
+									<?php endforeach ?>
 
-						<div class="row mb-3">
-							<div class="col-4 text-main-blue">
-								Définissez une priorité :
-							</div>
-							<div class="col">
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" value="1" id="urgent" name="prio" required>
-									<label class="form-check-label pr-5 text-red" for="urgent"><b>urgent</b></label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" value="2" id="normal" name="prio" checked>
-									<label class="form-check-label pr-5 text-main-blue" for="normal"><b>normal</b></label>
-								</div>
-								<div class="form-check form-check-inline">
-									<input class="form-check-input" type="radio" value="3" id="faible" name="prio">
-									<label class="form-check-label pr-5 text-green" for="faible"><b>faible</b></label>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col">
-						Affecter la demande à des utilisateurs et/ou à des services
-					</div>
-				</div>
-				<div class="row">
-					<div class="col">
-						<div class="form-group">
-							<label for="users">A des personnes :</label>
-							<select class="form-control" name="users[]" id="users" multiple>
-								<option value="">Sélectionner</option>
-								<?php foreach ($listUsers as $key => $user): ?>
-									<option value="<?=$user['id']?>"><?=$user['fullname']?></option>
-								<?php endforeach ?>
-							</select>
-						</div>
-					</div>
-					<div class="col">
-						<div class="form-group">
-							<label for="services">A des services : </label>
-							<select class="form-control" name="services[]" id="services" multiple>
-								<option value="">Sélectionner</option>
-								<?php foreach ($listServices as $key => $service): ?>
-									<option value="<?=$service['id']?>"><?=$service['service']?></option>
-								<?php endforeach ?>
-							</select>
-						</div>
 
-					</div>
-				</div>
 
-				<div class="row">
-					<div class="col">
-						<div class="form-group">
-							<label for="objet" class="text-main-blue">Objet de votre demande</label>
-							<input type="text" class="form-control" name="objet" id="objet" required>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col">
-						<div class="form-group">
-							<label for="evo" class="text-main-blue">Votre demande :</label>
-							<textarea name="evo" id="" cols="30" rows="5" class="form-control" required></textarea>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col">
-						<div class="row">
-							<div class="col mb-3 text-main-blue text-center sub-title font-weight-bold ">
-								Fichiers  :
-							</div>
-						</div>
-						<div class="row">
-							<div class="col  bg-blue-input rounded pt-2">
-								<div class="form-group text-right">
-									<label class="btn btn-upload-primary btn-file text-center">
-										<input type="file" name="files_doc[]" class='form-control-file' multiple id="files-doc">
-										Sélectionner
-									</label>
-								</div>
-								<div class="row mt-3">
-									<div class="col" id="form-zone"></div>
-								</div>
-								<div class="row mt-3">
-									<div class="col" id="warning-zone"></div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="row py-5">
-					<div class="col text-right">
-						<button class="btn btn-black" name="submit">Valider</button>
+					<div class="row">
+						<div class="col">
+							Affecter la demande à des utilisateurs et/ou à des services
+						</div>
 					</div>
-				</div>
-			</form>
+					<div class="row">
+						<div class="col">
+							<div class="form-group">
+								<label for="users">A des personnes :</label>
+								<select class="form-control" name="users[]" id="users" multiple>
+									<option value="">Sélectionner</option>
+									<?php foreach ($listUsers as $key => $user): ?>
+										<option value="<?=$user['id']?>"><?=$user['fullname']?></option>
+									<?php endforeach ?>
+								</select>
+							</div>
+						</div>
+						<div class="col">
+							<div class="form-group">
+								<label for="services">A des services : </label>
+								<select class="form-control" name="services[]" id="services" multiple>
+									<option value="">Sélectionner</option>
+									<?php foreach ($listServices as $key => $service): ?>
+										<option value="<?=$service['id']?>"><?=$service['service']?></option>
+									<?php endforeach ?>
+								</select>
+							</div>
+
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col">
+							<div class="form-group">
+								<label for="objet" class="text-main-blue">Objet de votre demande</label>
+								<input type="text" class="form-control" name="objet" id="objet" required>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<div class="form-group">
+								<label for="evo" class="text-main-blue">Votre demande :</label>
+								<textarea name="evo" id="" cols="30" rows="5" class="form-control" required></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<div class="row">
+								<div class="col mb-3 text-main-blue text-center sub-title font-weight-bold ">
+									Fichiers  :
+								</div>
+							</div>
+							<div class="row">
+								<div class="col  bg-blue-input rounded pt-2">
+									<div class="form-group text-right">
+										<label class="btn btn-upload-primary btn-file text-center">
+											<input type="file" name="files_doc[]" class='form-control-file' multiple id="files-doc">
+											Sélectionner
+										</label>
+									</div>
+									<div class="row mt-3">
+										<div class="col" id="form-zone"></div>
+									</div>
+									<div class="row mt-3">
+										<div class="col" id="warning-zone"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row py-5">
+						<div class="col text-right">
+							<button class="btn btn-black" name="submit">Valider</button>
+						</div>
+					</div>
+				</form>
+			</div>
 		</div>
+
+
+		<!-- ./container -->
 	</div>
+	<script src="../../public/js/upload-helpers.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$("input:radio[name='pf']").click(function () {
+				var plateforme=$('input[name="pf"]:checked').val();
+				$.ajax({
+					type:'POST',
+					url:'dde-evo/ajax-get-appli.php',
+					data:{id_plateforme:plateforme},
+					success: function(html){
+						$("#appli").html(html)
+					}
+				});
+			});
+			$('#appli').on("change",function(){
+				var appli=$('#appli').val();
+				console.log("appli" + appli);
+				$.ajax({
+					type:'POST',
+					url:'dde-evo/ajax-get-appli.php',
+					data:{id_appli:appli},
+					success: function(html){
+						$("#module").html(html)
+					}
+				});
+			});
 
-
-	<!-- ./container -->
-</div>
-<script src="../../public/js/upload-helpers.js"></script>
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("input:radio[name='pf']").click(function () {
-			var plateforme=$('input[name="pf"]:checked').val();
-			$.ajax({
-				type:'POST',
-				url:'dde-evo/ajax-get-appli.php',
-				data:{id_plateforme:plateforme},
-				success: function(html){
-					$("#appli").html(html)
-				}
+			$('#files-doc').change(function(){
+				multipleWithName('files-doc','warning-zone', 'form-zone')
 			});
 		});
-		$('#appli').on("change",function(){
-			var appli=$('#appli').val();
-			console.log("appli" + appli);
-			$.ajax({
-				type:'POST',
-				url:'dde-evo/ajax-get-appli.php',
-				data:{id_appli:appli},
-				success: function(html){
-					$("#module").html(html)
-				}
-			});
-		});
-
-		$('#files-doc').change(function(){
-			multipleWithName('files-doc','warning-zone', 'form-zone')
-		});
-	});
 
 
-</script>
-<?php
-require '../view/_footer-bt.php';
+	</script>
+	<?php
+	require '../view/_footer-bt.php';
 ?>

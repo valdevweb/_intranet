@@ -13,6 +13,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 require '../../Class/Db.php';
 require '../../Class/evo/PlanningDao.php';
 require '../../Class/evo/EvoDao.php';
+require '../../Class/UserDao.php';
 require '../../Class/evo/AffectationDao.php';
 require '../../Class/evo/EvoHelpers.php';
 require '../../Class/DateHelpers.php';
@@ -55,9 +56,15 @@ $planningDao=new PlanningDao($pdoEvo);
 $evoDao=new EvoDao($pdoEvo);
 $affectationDao= new AffectationDao($pdoEvo);
 
+$userDao=new UserDao($pdoUser);
+$droits=$userDao->getUserAttributions();
+
+
+
+
 $listResp=$evoDao->getListResp();
 $arrDevMail=EvoHelpers::arrayAppliRespEmail($pdoEvo);
-
+$listLevel=EvoHelpers::arrayLevels($pdoEvo);
 $countColUn=1;
 $countColDeux=1;
 
@@ -69,22 +76,26 @@ if(isset($_GET['id'])){
 }else{
 	$idwebuser=$_SESSION['id_web_user'];
 	$idResp=EvoHelpers::getIdResp($pdoEvo, $idwebuser);
+	if(empty($idResp)){
+		$errors[]="Vous n'avez pas de planning. Vous pouvez sélectionner un planning existant en cliquant sur le nom de la personne";
+	}
 }
 
-$fullPlanning= $planningDao->getPlanningEvoDev($idwebuser);
-$fullname=UserHelpers::getFullnameIdwebuser($pdoUser,$idwebuser);
 
-$validatedNotPlanned=$evoDao->getEvoNoPlanning($idwebuser,2);
-$notValidatedNotPlanned=$evoDao->getEvoNoPlanning($idwebuser,1);
+
+
 
 $thisMonth= (new DateTime())->format('n');
+$thisWeek=(new DateTime())->format('W');
 if ($thisMonth<=6) {
+	//  du 1er janv au 31 dec
 	$yearOne=(new DateTime())->format('Y');
 	$weekOneStart=1;
 	$weekOneDate=(new DateTime($yearOne. '-01-01'));
 	$weekOneEnd=(new DateTime($yearOne. '-06-30'))->format("W");
 	$yearTwo=$yearOne;
 	$weekTwoStart=$weekOneEnd+1;
+	$weekTwoDate=(new DateTime($yearOne. '-12-31'));
 	$weekTwoEnd=getIsoWeeksInYear($yearOne);
 }else{
 
@@ -100,6 +111,7 @@ if ($thisMonth<=6) {
 
 	$weekTwoStart=($weekTwoStart->setISODate($yearTwo, 1))->format("W");
 	$weekTwoEnd=(new DateTime($yearTwo. '-06-30'))->format("W");
+	$weekTwoDate=(new DateTime($yearTwo. '-06-30'));
 
 }
 for ($i=$weekOneStart; $i <=$weekOneEnd; $i++) {
@@ -109,6 +121,27 @@ for ($i=$weekOneStart; $i <=$weekOneEnd; $i++) {
 	}
 	$javaWeeks[]=$date->format('W');
 }
+
+$periodeStart=$weekOneDate->format('Y-m-d');
+$periodeEnd=$weekTwoDate->format('Y-m-d');
+
+
+$fullPlanning= $planningDao->getPlanningEvoDev($idwebuser, $periodeStart, $periodeEnd);
+$fullname=UserHelpers::getFullnameIdwebuser($pdoUser,$idwebuser);
+$affectations=$affectationDao->getAffectationByEvo($periodeStart, $periodeEnd, $idwebuser);
+
+
+
+foreach ($affectations as $idEvo => $value) {
+	$evoAffectation[$idEvo]=array_column($value, 'id_web_user');
+}
+
+
+
+
+
+$validatedNotPlanned=$evoDao->getEvoNoPlanning($idwebuser,2);
+$notValidatedNotPlanned=$evoDao->getEvoNoPlanning($idwebuser,1);
 
 
 
@@ -135,6 +168,10 @@ foreach ($fullPlanning as $key => $planning) {
 }
 
 if(isset($_POST['plan'])){
+	if(!in_array(87,$droits)){
+		echo "vos droits ne vous permettent pas de placer des demandes d'évo au planning";
+		exit();
+	}
 	if(empty($_POST['date_start']) ||empty($_POST['date_end'])){
 		$errors[]="Merci de saisir une date de fin et de début";
 	}
@@ -186,6 +223,13 @@ if(isset($_POST['plan'])){
 	}
 }
 
+
+
+
+
+	// echo "<pre>";
+	// print_r($byWeek);
+	// echo '</pre>';
 
 // $array1 = array('a' => 1, 'b' => 2, 'c' => 3);
 // $array2 = array('d' => 4, 'e' => 5, 'f' => 6, 'a' => 'new value', '123' => 456);
@@ -254,8 +298,13 @@ include('../view/_navbar.php');
 		<div class="col-lg-1"></div>
 		<div class="col toggle-target hidden">
 			<?php if (!empty($validatedNotPlanned)): ?>
+				<?php
+				$icoClass="";
+				$icoClass=(isset($listLevel[$validatedNotPlanned['id_chrono']]))? 'text-'.$listLevel[$validatedNotPlanned['id_chrono']]['class']:"";
+				?>
+
 				<?php foreach ($validatedNotPlanned as $key => $toPlan): ?>
-					- <a href="evo-detail.php?id=<?=$toPlan['id']?>" class="grey-link draggable" data-num-evo="<?=$toPlan['id']?>"><?=$toPlan['id'].' : ' .$toPlan['objet']?></a><br>
+					- <a href="evo-detail.php?id=<?=$toPlan['id']?>" class="grey-link draggable" data-num-evo="<?=$toPlan['id']?>"><?=$toPlan['id'].' : ' .$toPlan['objet']?></a><i class="fas fa-tachometer-alt pl-2 <?=$icoClass?>"></i><br>
 				<?php endforeach ?>
 			<?php else: ?>
 				toutes les évo validées ont été planifiées
@@ -264,7 +313,11 @@ include('../view/_navbar.php');
 		<div class="col toggle-target hidden">
 			<?php if (!empty($notValidatedNotPlanned)): ?>
 				<?php foreach ($notValidatedNotPlanned as $key => $toValidate): ?>
-					- <a href="evo-detail.php?id=<?=$toValidate['id']?>" class="grey-link draggable" data-num-evo="<?=$toValidate['id']?>"><?=$toValidate['id'].' : ' .$toValidate['objet']?></a><br>
+					<?php
+					$icoClass="";
+					$icoClass=(isset($listLevel[$toValidate['id_chrono']]))? 'text-'.$listLevel[$toValidate['id_chrono']]['class']:"";
+					?>
+					- <a href="evo-detail.php?id=<?=$toValidate['id']?>" class="grey-link draggable" data-num-evo="<?=$toValidate['id']?>"><?=$toValidate['id'].' - ' .$toValidate['objet']?></a><i class="fas fa-tachometer-alt pl-2 <?=$icoClass?>"></i><br>
 				<?php endforeach ?>
 			<?php else: ?>
 				toutes les evos ont été validées
@@ -288,6 +341,13 @@ include('../view/_navbar.php');
 	</div>
 
 	<div class="bg-separation-thin"></div>
+
+	<div class="row">
+		<div class="col border">
+			<div class="bg-blue">test</div>
+		</div>
+	</div>
+
 
 	<div class="row" id="planning">
 		<div class="col">
@@ -319,20 +379,23 @@ include('../view/_navbar.php');
 							<div class="row debut">
 							<?php endif ?>
 							<div class="col <?=$padding?>">
+								<!-- titre mois -->
 								<div class="row">
 									<div class="col text-center text-main-blue pt-3">
 										<h6><?=ucfirst(DateHelpers::frenchMonth($month, "long"))?> <?=$yearEncours?></h6>
-
 									</div>
 								</div>
+								<!-- bloc mois -->
 								<div class="row">
 									<div class="col shadow">
 										<?php foreach ($week as $weekNb => $date): ?>
 											<?php
 											$linkWeekEvo="";
+											$weekClass="bg-blue";
 											$yearEncours=substr($date,-4);
 											?>
-											<?php if (isset($byWeek[$weekNb.$yearEncours])){
+											<?php
+											if (isset($byWeek[$weekNb.$yearEncours])){
 												$linkWeekEvo="week-evo.php?week=".$weekNb."&";
 												$ids=array_column($byWeek[$weekNb.$yearEncours], 'id');
 												for ($i=0; $i <count($byWeek[$weekNb.$yearEncours]) ; $i++) {
@@ -344,10 +407,16 @@ include('../view/_navbar.php');
 												}
 											}
 											$date=getStartAndEndDate($weekNb, $yearEncours);
+											if($weekNb==$thisWeek){
+												$weekClass="bg-gold";
+											}
 											?>
+											<!-- titre : date semaine -->
 											<div class="row">
-												<div class="col bg-blue text-center text-white rounded py-2 my-2" data-monday="<?=$date['monday']?>" data-sunday="<?=$date['sunday']?>" target="_blank" id="<?=$weekNb?>">
-													<a class="text-white" href="<?=$linkWeekEvo?>" >Semaine <?=$weekNb?></a>
+												<div class="col <?=$weekClass?> text-center  rounded py-2 my-2" data-monday="<?=$date['monday']?>" data-sunday="<?=$date['sunday']?>" target="_blank" id="<?=$weekNb?>">
+													<a  href="<?=$linkWeekEvo?>" >Semaine <?=$weekNb?></a><br>
+													du <?=date('d', strtotime($date['monday']))?> <?=(DateHelpers::frenchMonth(date('n', strtotime($date['monday']))))?> au <?=date('d', strtotime($date['sunday']))?> <?=(DateHelpers::frenchMonth(date('n', strtotime($date['sunday']))))?> <?=$yearEncours?>
+
 												</div>
 											</div>
 											<?php if (isset($byWeek[$weekNb.$yearEncours])): ?>
@@ -376,12 +445,23 @@ include('../view/_navbar.php');
 														$class="grey-link";
 														break;
 													}
+													$icoClass=(isset($listLevel[$evo['id_chrono']]))? 'text-'.$listLevel[$evo['id_chrono']]['class']:"";
+													$bgClass="";
+													if(isset($evoAffectation[$evo['id']]) && in_array($_SESSION['id_web_user'], $evoAffectation[$evo['id']])){
+														$bgClass="bg-yellow-light";
+													}
 
 													?>
-													<div class="tooltiplaunch">
-														<?=$icon?><a  href="evo-detail.php?id=<?=$evo['id']?>" class="<?=$class?>">Evo <?=$evo['id']?> - <?=($evo['module']!="")?$evo['module']:$evo['appli']?></a>
-														<span class="tooltiptext"><?=$evo['objet']?></span>
-													</div><br>
+													<!-- ligne evo -->
+													<div class="row">
+														<div class="col tooltiplaunch <?=$bgClass?>">
+															<?=$icon?>
+															<a  href="evo-detail.php?id=<?=$evo['id']?>" class="<?=$class?>">Evo <?=$evo['id']?> - <?=($evo['module']!="")?$evo['module']:$evo['appli']?><i class="fas fa-tachometer-alt pl-2 <?=$icoClass?>"></i></a>
+															<span class="tooltiptext"><?=$evo['objet']?></span>
+														</div>
+													</div>
+													<!-- fin ligne evo -->
+
 												<?php endforeach ?>
 
 											<?php else: ?>

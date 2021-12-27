@@ -23,7 +23,8 @@ class InfoLivDao{
 
 	public function getInfoLivByOp($codeOp){
 
-		$req=$this->pdo->prepare("SELECT articles.*, recu, infos_livraison.id as id_liv, recu, info_livraison, article_remplace, ean_remplace, recu_deux, info_livraison_deux, recu_remplace, info_livraison_remplace, recu_deux_remplace, info_livraison_deux_remplace,operations.code_op, operations.id as id_op, erratum FROM infos_livraison
+		$req=$this->pdo->prepare("SELECT articles.*, recu, infos_livraison.id as id_liv, recu, info_livraison, article_remplace, ean_remplace, recu_deux, info_livraison_deux, recu_remplace, info_livraison_remplace, recu_deux_remplace, info_livraison_deux_remplace,operations.code_op, operations.id as id_op, erratum, date_insert
+			FROM infos_livraison
 			LEFT JOIN articles ON id_article=articles.id
 			LEFT JOIN operations ON articles.id_op=operations.id
 			WHERE operations.code_op LIKE :code_op ORDER BY gt, marque");
@@ -32,6 +33,21 @@ class InfoLivDao{
 		]);
 		return $req->fetchAll();
 	}
+
+	public function getInfoLivByOpDateSaisie($codeOp, $date){
+
+		$req=$this->pdo->prepare("SELECT articles.*, recu, infos_livraison.id as id_liv, recu, info_livraison, article_remplace, ean_remplace, recu_deux, info_livraison_deux, recu_remplace, info_livraison_remplace, recu_deux_remplace, info_livraison_deux_remplace,operations.code_op, operations.id as id_op, erratum, date_insert
+			FROM infos_livraison
+			LEFT JOIN articles ON id_article=articles.id
+			LEFT JOIN operations ON articles.id_op=operations.id
+			WHERE operations.code_op LIKE :code_op AND date_insert>= :date_insert ORDER BY gt, marque");
+		$req->execute([
+			':code_op'		=>$codeOp,
+			':date_insert'=>$date
+		]);
+		return $req->fetchAll();
+	}
+
 
 	public function getInfoLivByOpKeyArticle($codeOp){
 
@@ -149,6 +165,17 @@ class InfoLivDao{
 		$req=$this->pdo->prepare("SELECT * FROM operations WHERE date_end>= :date_end ORDER BY date_start");
 		$req->execute([
 			':date_end'		=>$today->format('Y-m-d')
+		]);
+		return $req->fetchAll();
+	}
+
+	public function getOpDateSaisie($date){
+			$req=$this->pdo->prepare("SELECT operations.* FROM operations
+			LEFT JOIN articles ON operations.id=articles.id_op
+			LEFT JOIN infos_livraison ON id_article=articles.id
+				WHERE date_insert>= :date_insert ORDER BY date_start");
+		$req->execute([
+			':date_insert'		=>$date
 		]);
 		return $req->fetchAll();
 	}

@@ -37,11 +37,12 @@
 				label.innerHTML="Nom du fichier " +fileName+ ' : ';
 
 				var input=document.createElement("input");
+
 				var name="filename[" +i +"]";
 				input.setAttribute('type', 'text');
 				input.setAttribute('name', name);
+				input.setAttribute('value', fileName);
 				input.classList.add('form-control');
-
 
     		// var input="<input type='text' class='form-control form-primary'  name='filename[" +i +"]'>";
     		// formNom.append(titreNommer+fileName+formGroup+input+endDiv);

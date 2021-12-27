@@ -6,17 +6,6 @@ function getOperateur($pdoUser){
 }
 
 
-
-
-
-// function getArticleFromBA($pdoQlik, $idArticle){
-// 	$req=$pdoQlik->prepare("SELECT `GESSICA.CodeDossier` as dossier, `GESSICA.CodeArticle` as article, `GESSICA.GT` as gt, `GESSICA.LibelleArticle` as libelle, `GESSICA.PCB` as pcb, `GESSICA.PANF` as panf, `GESSICA.CodeFournisseur` as cnuf, `GESSICA.NomFournisseur` as fournisseur,`GESSICA.PFNP` as pfnp,`GESSICA.D3E` as deee, `GESSICA.SORECOP` as sacem,`GESSICA.CodifD3E` as deee_codif,	id FROM basearticles WHERE id = :id");
-// 	$req->execute(array(
-// 		':id'	=>$idArticle
-// 	));
-// 	return $req->fetch(PDO::FETCH_ASSOC);
-// }
-
 function getCasse($pdoCasse, $idCasse){
 	$req=$pdoCasse->prepare("SELECT *,
 		casses.id as cassesid,
@@ -57,11 +46,11 @@ function getCmt($pdoCasse, $id){
 
 
 
-
-
-
 function getPaletteInfo($pdoCasse, $id){
-	$req=$pdoCasse->prepare("SELECT *, palettes.id as idpalette, casses.id as idcasse, DATE_FORMAT(date_dd_pilote,'%d-%m-%Y') as dateddpilote, DATE_FORMAT(date_retour_pilote,'%d-%m-%Y') as dateretourpilote,DATE_FORMAT(date_info_mag,'%d-%m-%Y') as dateinfomag,DATE_FORMAT(date_delivery,'%d-%m-%Y') as datedelivery,DATE_FORMAT(palettes.date_clos,'%d-%m-%Y') as dateclos FROM palettes LEFT JOIN casses ON palettes.id=casses.id_palette LEFT join exps ON palettes.id_exp= exps.id WHERE casses.id_palette= :id ORDER BY casses.id");
+	$req=$pdoCasse->prepare("SELECT *, palettes.id as idpalette, casses.id as idcasse, DATE_FORMAT(date_dd_pilote,'%d-%m-%Y') as dateddpilote, DATE_FORMAT(date_retour_pilote,'%d-%m-%Y') as dateretourpilote,palettes.id_affectation, DATE_FORMAT(date_info_mag,'%d-%m-%Y') as dateinfomag,DATE_FORMAT(date_delivery,'%d-%m-%Y') as datedelivery,DATE_FORMAT(palettes.date_clos,'%d-%m-%Y') as dateclos
+		FROM palettes
+		LEFT JOIN casses ON palettes.id=casses.id_palette
+		LEFT join exps ON palettes.id_exp= exps.id WHERE casses.id_palette= :id ORDER BY casses.id");
 	$req->execute([
 		':id'		=>$id
 	]);
@@ -80,7 +69,7 @@ function getSerialsPalette($pdoCasse, $idPalette){
 	return $req->fetchAll(PDO::FETCH_GROUP);
 }
 function getSerialsCasse($pdoCasse, $idCasse){
-	$req=$pdoCasse->prepare("SELECT id_casse, serial_nb FROM serials
+	$req=$pdoCasse->prepare("SELECT id_casse, serial_nb, id FROM serials
 		WHERE id_casse=:id");
 	$req->execute([
 		':id'			=>$idCasse,
@@ -125,7 +114,10 @@ function getExpAndPalette($pdoCasse,$idExp){
 
 function getExpPaletteCasse($pdoCasse,$idExp){
 	//  on ne fait que la somme des quantité puisque dans la facture, on multiplie le prix par la quantité
-	$req=$pdoCasse->prepare("SELECT concat (article,dossier) as artdossier,sum(uvc) as uvc, valo, pfnp, deee, sacem, deee_codif,dossier, article, palettes.id as paletteid,exps.id as expid, btlec, gt FROM exps LEFT JOIN palettes ON exps.id=palettes.id_exp LEFT JOIN casses ON palettes.id= casses.id_palette WHERE exps.id= :id_exp GROUP BY concat (article,dossier) ORDER BY gt, article");
+	$req=$pdoCasse->prepare("SELECT concat (article,dossier) as artdossier,sum(uvc) as uvc, valo, pfnp, deee, sacem, deee_codif,dossier, article, palettes.id as paletteid,exps.id as expid, btlec, gt
+		FROM exps LEFT JOIN palettes ON exps.id=palettes.id_exp
+		LEFT JOIN casses ON palettes.id= casses.id_palette
+		WHERE exps.id= :id_exp GROUP BY concat (article,dossier) ORDER BY gt, article");
 	$req->execute([
 		':id_exp'			=>$idExp
 	]);
@@ -179,23 +171,3 @@ function getNoExpYet($pdoCasse){
 	$req=$pdoCasse->query("SELECT sum(valo) as sumvalo FROM casses LEFT JOIN palettes ON casses.id_palette=palettes.id LEFT JOIN exps ON palettes.id_exp=exps.id WHERE palettes.id_exp IS NULL AND  palette NOT LIKE '%HS%'");
 	return $req->fetch(PDO::FETCH_ASSOC);
 }
-//  utilisé pour la facturation
-// function getArticleByGt($pdoCasse, $idExp, $gt){
-// 	if($gt=='blanc'){
-// 		$gtParam=' (gt=1 OR gt=2) ';
-// 	}elseif($gt=='brun'){
-// 		$gtParam=' (gt=3 OR gt=4 OR gt=5) ';
-
-// 	}
-// 	elseif($gt='gris'){
-// 		$gtParam='(gt=6 OR gt=7 OR gt=8 OR gt=9 OR gt=10) ';
-// 	}
-
-// 	$req=$pdoCasse->prepare("SELECT concat (article,dossier) as artdossier,sum(uvc) as uvc,sum(valo) as valo,sum(pu) as pu ,sum(pfnp) as pfnp,sum(deee) as deee, sum(sacem) as sacem, deee_codif,dossier, article, palettes.id as paletteid,exps.id as expid, btlec
-// 	 FROM exps LEFT JOIN palettes ON exps.id=palettes.id_exp LEFT JOIN casses ON palettes.id= casses.id_palette WHERE exps.id= :id_exp AND $gtParam GROUP BY concat (article,dossier) ORDER BY article");
-// 	$req->execute([
-// 		':id_exp'			=>$idExp,
-
-// 	]);
-// 	return $req->fetchAll(PDO::FETCH_ASSOC);
-// }

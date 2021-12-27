@@ -14,28 +14,29 @@ class ChgLogDao{
 		return $pdo;
 	}
 
-	public function insertChgLog($changelog, $date, $idAppli,$idModule){
-		$req=$this->pdo->prepare("INSERT INTO changelogs (changelog, date_chg, id_appli, id_module, version, date_insert) VALUES (:changelog, :date_chg, :id_appli, :id_module, :version, :date_insert)");
+	public function insertChgLog($changelog, $date, $idAppli,$idModule, $idEvo){
+		$req=$this->pdo->prepare("INSERT INTO changelogs (changelog, date_chg, id_appli, id_module, id_evo, version, date_insert) VALUES (:changelog, :date_chg, :id_appli, :id_module, :id_evo, :version, :date_insert)");
 		$req->execute([
 			':changelog'	=>$changelog,
 			':date_chg'	=>$date,
 			':id_appli'	=>$idAppli,
 			':id_module'	=>$idModule,
-
+			':id_evo'	=>$idEvo,
 			':version'	=>$_POST['version'],
 			':date_insert'	=>date('Y-m-d H:i:s'),
 
 		]);
 		return $this->pdo->lastInsertId();
 	}
-	public function updateChgLog($idChg, $changelog, $date, $idAppli,$idModule){
-		$req=$this->pdo->prepare("UPDATE changelogs SET changelog= :changelog, date_chg= :date_chg, id_appli= :id_appli, id_module= :id_module, version= :version, date_update= :date_update WHERE id= :id");
+	public function updateChgLog($idChg, $changelog, $date, $idAppli,$idModule, $idEvo){
+		$req=$this->pdo->prepare("UPDATE changelogs SET changelog= :changelog, date_chg= :date_chg, id_appli= :id_appli, id_module= :id_module, id_evo= :id_evo, version= :version, date_update= :date_update WHERE id= :id");
 		$req->execute([
 			':id'		=>$idChg,
 			':changelog'	=>$changelog,
 			':date_chg'	=>$date,
 			':id_appli'	=>$idAppli,
 			':id_module'	=>$idModule,
+			':id_evo'	=>$idEvo,
 			':version'	=>$_POST['version'],
 			':date_update'	=>date('Y-m-d H:i:s'),
 
@@ -43,7 +44,6 @@ class ChgLogDao{
 		return $this->pdo->lastInsertId();
 	}
 	public function getChgLogsByAppli($idAppli){
-
 		$req=$this->pdo->prepare("SELECT * FROM changelogs WHERE id_appli =:id_appli");
 		$req->execute([
 			':id_appli'	=>$idAppli,
@@ -54,15 +54,24 @@ class ChgLogDao{
 	}
 
 	public function getChgLogsByModule($idModule){
-
 		$req=$this->pdo->prepare("SELECT * FROM changelogs WHERE id_module =:id_module");
 		$req->execute([
 			':id_module'	=>$idModule,
 
 		]);
 		return $req->fetchAll();
-
 	}
+
+	public function getChgLogsByFields($field, $id){
+		$req=$this->pdo->prepare("SELECT * FROM changelogs WHERE {$field} =:field");
+		$req->execute([
+			':field'	=>$id,
+
+		]);
+		return $req->fetchAll();
+	}
+
+
 
 	public function getChgLogsDocByAppli($idAppli){
 
@@ -72,8 +81,21 @@ class ChgLogDao{
 
 		]);
 		return $req->fetchAll(PDO::FETCH_GROUP);
-
 	}
+
+	public function getChgLogsDocByField($field, $id){
+
+		$req=$this->pdo->prepare("SELECT changelogs.id, changelog_files.* FROM changelogs INNER JOIN changelog_files ON changelogs.id= changelog_files.id_chg WHERE $field =:field");
+		$req->execute([
+			':field'	=>$id,
+
+		]);
+		return $req->fetchAll(PDO::FETCH_GROUP);
+	}
+
+
+
+
 	public function getChgLogsDocByModule($idModule){
 
 		$req=$this->pdo->prepare("SELECT changelogs.id, changelog_files.* FROM changelogs INNER JOIN changelog_files ON changelogs.id= changelog_files.id_chg WHERE id_module =:id_module");
@@ -84,16 +106,19 @@ class ChgLogDao{
 		return $req->fetchAll(PDO::FETCH_GROUP);
 
 	}
-	public function	insertDoc($idChg, $file, $filename){
-		$req=$this->pdo->prepare("INSERT INTO changelog_files (id_chg, file, filename, date_insert, by_insert) VALUES (:id_chg, :file, :filename, :date_insert, :by_insert)");
+	public function	insertDoc($idChg, $file, $filename,$url, $urlname){
+		$req=$this->pdo->prepare("INSERT INTO changelog_files (id_chg, file, filename, url, urlname, date_insert, by_insert) VALUES (:id_chg, :file, :filename, :url, :urlname, :date_insert, :by_insert)");
 		$req->execute([
 			':id_chg'			=>$idChg,
 			':file'				=>$file,
 			':filename'			=>$filename,
+			':url'				=>$url,
+			':urlname'			=>$urlname,
 			':date_insert'		=>date('Y-m-d H:i:s'),
 			':by_insert'		=>$_SESSION['id_web_user']	,
 
 		]);
+		return $req->errorInfo();
 		return $req->rowCount();
 	}
 

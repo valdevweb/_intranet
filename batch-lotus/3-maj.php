@@ -82,7 +82,7 @@ function getMailId($pdoMag,$email){
 }
 
 function updateImport($pdoMag,$id){
-	$req=$pdoMag->prepare("UPDATE lotus_imports SET done=1 WHERE id= :id");
+	$req=$pdoMag->prepare("UPDATE lotus_imports SET done=2 WHERE id= :id");
 	$req->execute([
 		':id' => $id
 	]);

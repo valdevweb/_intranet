@@ -25,6 +25,22 @@
         }
 
 
+        public function getAll($table, $order=null, $ascDesc=null){
+            $orderParam="";
+            if(isset($order)){
+                if(isset($ascDesc) && $ascDesc=="desc"){
+                    $orderParam='ORDER BY '.$order . ' DESC';
+
+                }else{
+                    $orderParam='ORDER BY '.$order;
+                }
+            }
+            $query='SELECT * FROM '.$table . ' '.$orderParam;
+            // echo $query;
+            $req=$this->pdo->query($query);
+            return $req->fetchAll();
+        }
+
 
         public function getOneById($table,$id){
             $req=$this->pdo->prepare("SELECT * FROM {$table} WHERE id= :id");
@@ -34,7 +50,7 @@
             return $req->fetch();
         }
 
-        public function getOneParam($table, $param){
+        public function getOneWhere($table, $param){
             $query='SELECT * FROM '.$table.' '.$param;
             $req=$this->pdo->query($query);
             return $req->fetch();
@@ -50,7 +66,7 @@
         }
 
 
-        public function getAll($table ,$where, $order=null, $ascDesc=null){
+        public function getMany($table ,$where, $order=null, $ascDesc=null){
             $orderParam="";
             if(isset($order)){
                 if(isset($ascDesc) && $ascDesc=="desc"){
@@ -61,29 +77,20 @@
                 }
             }
             $query='SELECT * FROM '.$table .' ' .$where. ' '.$orderParam;
+            // echo $query;
             $req=$this->pdo->query($query);
             return $req->fetchAll();
         }
-
-        public function insert($table,$arrParam){
-            $markers=':'.implode(', :', array_keys($arrParam));
-            $fields=str_replace(":", "",$markers);
-            $query="INSERT INTO $table ($fields) VALUES ($markers)";
-            $req = $this->pdo->prepare($query);
-            $req->execute($arrParam);
-            return $req->rowCount();
-        }
-
 
         public function insertOne($table, $field, $value){
             $req=$this->pdo->prepare("INSERT INTO  $table ({$field}) VALUES (?)");
             $req->execute([
                 $value
             ]);
-            return $req->rowCount();
-        }
+            return $this->pdo->lastInsertId();
 
-        public function insertMany($table,  $datas){
+        }
+        public function insert($table,  $datas){
             $fields=array_keys($datas);
             $strFields=join(', ', $fields);
             $placeholders=":".join(', :', $fields);
@@ -91,7 +98,7 @@
             $query="INSERT INTO  $table ({$strFields}) VALUES ({$placeholders})";
             $req=$this->pdo->prepare($query);
             $req->execute($datas);
-            return $req->rowCount();
+            return $this->pdo->lastInsertId();
         }
 
 
@@ -115,9 +122,31 @@
         // echo $query;
             $req = $this->pdo->prepare($query);
             $req->execute($datas);
+            return $req->errorInfo();
+
             return $req->rowCount();
         }
 
+
+        public function deleteTable($table){
+            $req=$this->pdo->query("DELETE FROM {$table}");
+            return $req->errorInfo();
+        }
+
+        public function copyTable($tableFrom, $tableDest){
+            $req=$this->pdo->query("INSERT INTO $tableDest SELECT * FROM $tableFrom");
+
+            return $req->rowCount();
+        }
+
+
+        public function copyRowById($tableFrom, $tableDest, $id){
+            $req=$this->pdo->prepare("INSERT INTO $tableDest SELECT * FROM $tableFrom WHERE id= :id");
+            $req->execute([
+                ':id'       =>$id
+            ]);
+            return $req->rowCount();
+        }
 
 
 
@@ -150,7 +179,6 @@
             $req->execute($params);
             return $req->errorInfo();
         }
-
 
 
 

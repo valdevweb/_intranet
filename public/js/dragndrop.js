@@ -67,7 +67,7 @@ function addThumbnail(data, id, readablename, order){
 		var src = data[i].src;
 		numThumbnail=num+i;
 		$(id + " .uploadfile").append('<div id="thumbnail'+idName+'_'+numThumbnail+'" class="thumbnail col"></div>');
-		$("#thumbnail"+idName+"_"+numThumbnail).append('<img src="'+src+'" width="80px" height="auto">');
+		$("#thumbnail"+idName+"_"+numThumbnail).append('<img src="'+src+'" width="50px" height="auto">');
 		$("#thumbnail"+idName+"_"+numThumbnail).append('<div class="size">'+name+' ('+size+')</div>');
 
 		$(id+ " .filename").append('<input type="hidden" name="file_'+idName+'['+numThumbnail+']" value="'+uploadFilename+'">');
@@ -85,7 +85,6 @@ function addThumbnail(data, id, readablename, order){
 		}
 		if (!readablename && order) {
 			var order='<div class="row"><div class="col"><div class="form-group"><label>Ordre du fichier '+name+' :</label><input type="text" class="form-control" required name="ordre_'+idName+'['+numThumbnail+']" value="'+numThumbnail+'"></div></div></div>';
-
 			$(id+ " .readablename").append(order);
 			console.log("ordre");
 

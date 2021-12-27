@@ -168,6 +168,7 @@ if(isset($_SESSION['encours_filter'])){
 	$nbArt=count($listCdes);
 	$listInfos=$cdesAchatDao->getInfos($param);
 
+
 }else{
 	$listCdes=$cdesDao->getCdes();
 	$nbArt=count($listCdes);
@@ -184,7 +185,7 @@ if(isset($_POST['save_all'])){
 
 $listGt=FournisseursHelpers::getGts($pdoFou, "GT","id");
 
-$tableCol=["GT", "Date cde", "Fournisseur", "Marque", "Article", "Dossier", "Date début op", "Op", "Ref", "EAN", "Désignation", "Cde", "Qte init colis", "Colis à recevoir", "UV à recevoir", "PCB", "% reçu", "Restant prévi", "date livraison initiale","Date livraison"];
+$tableCol=["", "GT", "Date cde", "Fournisseur", "Marque", "Article", "Dossier", "Date début op", "Op", "Ref", "EAN", "Désignation", "Cde", "Qte init colis", "Colis à recevoir", "UV à recevoir", "PCB", "% reçu", "Restant prévi", "date livraison initiale","Date livraison"];
 
 $tableColTh=["GT", "Date cde", "Fournisseur", "Marque", "Article", "Dossier", "Début op", "Op", "Ref", "EAN", "Désignation", "Cde", "Qte init colis", "Colis à<br> recevoir", "UV<br>à recevoir", "PCB", "% reçu", "Restant prévi", "date livraison initiale","Date livraison"];
 
@@ -232,51 +233,13 @@ include('../view/_navbar.php');
 ?>
 
 <div class="container-fluid bg-white">
-	<div class="row pt-5">
-		<div class="col">
+	<div class="row pt-3">
+		<div class="col text-center">
 			<h1 class="text-main-blue">Commandes en cours</h1>
 		</div>
 	</div>
 
-	<!-- perso affichage -->
-	<div class="row mb-5">
-		<div class="col-lg-2"></div>
 
-		<div class="col border rounded p-3">
-			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
-				<div class="row">
-					<div class="col text-center">
-						<h5 class="text-main-blue mt-3 mb-5">Personnalisation de l'affichage du tableau</h5>
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-auto">
-						Colonnes à afficher :
-					</div>
-					<div class="col cols-five">
-						<?php for ($j=0; $j <count($tableCol) ; $j++) : ?>
-							<?php if (isset($_SESSION['encours_col'])): ?>
-								<?php $checked=(in_array($j,$_SESSION['encours_col']))?"checked":""	 ?>
-							<?php else: ?>
-								<?php $checked="checked"?>
-							<?php endif ?>
-							<div class="form-check">
-								<input class="form-check-input" type="checkbox" value="<?=$j?>"  name="cols[]" <?=$checked?>>
-								<label class="form-check-label" for="model"><?=$tableCol[$j]?></label>
-							</div>
-						<?php endfor ?>
-					</div>
-					<div class="col-auto">
-						<button class="btn btn-primary" name="display">Afficher</button><br><br>
-						<button class="btn btn-secondary" name="kill_session">Afficher tout</button>
-					</div>
-				</div>
-			</form>
-		</div>
-		<div class="col-lg-2"></div>
-
-	</div>
 	<!-- filtres -->
 	<div class="row mb-5">
 		<div class="col-lg-2"></div>
@@ -293,11 +256,11 @@ include('../view/_navbar.php');
 	</div>
 	<div class="row">
 		<div class="col-auto font-italic">
-			<a href="?export-xls" class="btn btn-success">Export Excel</a>
+			<a href="?export-xls" class="btn btn-success" id="export-xls">Export Excel</a>
 		</div>
+
 		<div class="col font-italic">
 			<a href="import-cdesinfos.php" class="btn btn-success">Import Excel</a>
-
 		</div>
 		<div class="col-auto font-weight-boldless text-main-blue">
 			Rechercher sur la page :
@@ -309,6 +272,27 @@ include('../view/_navbar.php');
 					<input type="text" class="form-control " name="str" id="str" style="font-family:'Font Awesome 5 Free',sans-serif !important; font-weight: 900 !important;" type="text" placeholder="&#xf002">
 				</div>
 			</form>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-auto" id="wait">
+
+		</div>
+		<div class="col"></div>
+	</div>
+	<div class="row">
+		<div class="col">
+			Cochez les colonnes que vous souhaitez masquer
+		</div>
+	</div>
+	<div class="row">
+		<div class="col" id="col-selector">
+			<?php for ($j=1; $j <count($tableCol) ; $j++) : ?>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input col-box" type="checkbox" value="<?=$j?>"  data-box-id="<?=$j?>" name="cols[]" >
+					<label class="form-check-label" for="model"><?=$tableCol[$j]?></label>
+				</div>
+			<?php endfor ?>
 		</div>
 	</div>
 	<div class="row">
@@ -329,7 +313,22 @@ include('../view/_navbar.php');
 		findString(this.str.value);
 		return false;
 	};
+
+
+
 	$(document).ready(function(){
+
+		$('#export-xls').click(function(e){
+			if($( $("#reply").val()!="")){
+				$('#wait').append("<div class='alert alert-success'>Merci de patienter pendant la génération du fichier</div>");
+
+				setInterval(function(){
+					$('#wait').empty();
+				}, 10000);
+
+			}
+		});
+
 		$('#checkall').change(function(){
 			if($(this).prop("checked")){
 				$('.select-checkbox').prop('checked',true);
@@ -338,6 +337,66 @@ include('../view/_navbar.php');
 
 			}
 		});
+		console.log(sessionStorage.getItem('hidden_cols'));
+		hiddenCols = sessionStorage.getItem('hidden_cols');
+		if (hiddenCols != null && hiddenCols.length!=0) {
+
+			arrHiddenCols=JSON.parse(hiddenCols);
+			for (var i = 0; i < arrHiddenCols.length; i++) {
+				var id =arrHiddenCols[i];
+
+				var box = $(".col-box").find(`[data-box-id='${id}']`);
+
+				$('input[type="checkbox"][data-box-id="'+id+'"]').prop('checked', true);
+				col="col-"+id;
+				$('.'+col).hide();
+
+			}
+
+		}
+		// sessionStorage.removeItem('hidden_cols');
+		$('.col-box').click(function(){
+			var arrHiddenCols=[];
+			hiddenCols = sessionStorage.getItem('hidden_cols');
+			if($(this).prop("checked")){
+				id=$(this).attr("data-box-id");
+				col="col-"+id;
+				$('.'+col).hide();
+				if (hiddenCols != null && hiddenCols.length!=0) {
+					console.log(sessionStorage);
+					arrHiddenCols=JSON.parse(hiddenCols);
+					var nextElem=arrHiddenCols.length;
+					arrHiddenCols[nextElem]=id;
+					sessionStorage.setItem("hidden_cols", JSON.stringify(arrHiddenCols));
+					console.log(sessionStorage);
+
+				}else{
+					arrHiddenCols[0]=id;
+					sessionStorage.setItem("hidden_cols", JSON.stringify(arrHiddenCols));
+
+				}
+
+				// $('.service').prop('checked',true);
+			}else{
+				console.log($(this).attr("data-box-id"));
+				id=$(this).attr("data-box-id");
+				col="col-"+id;
+				$('.'+col).show();
+				if (hiddenCols != null && hiddenCols.length!=0) {
+					// console.log(sessionStorage);
+
+					arrHiddenCols=JSON.parse(hiddenCols);
+					console.log(arrHiddenCols)
+					var indexToRemove = arrHiddenCols.indexOf(id);
+					arrHiddenCols.splice(indexToRemove, 1)
+					sessionStorage.setItem("hidden_cols", JSON.stringify(arrHiddenCols));
+					console.log(sessionStorage);
+
+				}
+				// $('.service').prop('checked',false);
+
+			}
+		})
 
 	});
 
@@ -347,3 +406,32 @@ include('../view/_navbar.php');
 <?php
 require '../view/_footer-bt.php';
 ?>
+
+<!--
+	$('.show-detail').on("click", function(){
+		var id= $(this).data("camion-id");
+		console.log("click");
+		if($('div[data-detail-id="'+id+'"]').is(":visible")){
+			$('div[data-detail-id="'+id+'"]').hide();
+			inLSCamion = sessionStorage.getItem('unhidden_camion');
+			if (inLSCamion != null && inLSCamion.length!=0) {
+				unhiddenCamion=JSON.parse(inLSCamion);
+				var indexToRemove = unhiddenCamion.indexOf(id);
+				unhiddenCamion.splice(indexToRemove, 1);
+				sessionStorage.setItem("unhidden_camion", JSON.stringify(unhiddenCamion));
+			}
+
+		}else{
+			$('div[data-detail-id="'+id+'"]').show();
+			inLSCamion = sessionStorage.getItem('unhidden_camion');
+			if (inLSCamion != null && inLSCamion.length!=0) {
+				unhiddenCamion=JSON.parse(inLSCamion);
+				var nextElem=unhiddenCamion.length;
+				unhiddenCamion[nextElem]=id;
+				sessionStorage.setItem("unhidden_camion", JSON.stringify(unhiddenCamion));
+			}else{
+				unhiddenCamion[0]=id;
+				sessionStorage.setItem("unhidden_camion", JSON.stringify(unhiddenCamion));
+			}
+		}
+	}); -->

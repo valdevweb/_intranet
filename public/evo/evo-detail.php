@@ -20,8 +20,10 @@ require '../../Class/evo/TempsDao.php';
 require '../../Class/evo/NotifDao.php';
 require '../../Class/evo/PlanningDao.php';
 require '../../Class/evo/ChainageDao.php';
+require '../../Class/evo/NoteDao.php';
 require "../../Class/UserDao.php";
 require "../../Class/Helpers.php";
+require '../../Class/evo/ChgLogDao.php';
 
 require_once '../../vendor/autoload.php';
 
@@ -49,7 +51,9 @@ $planningDao=new planningDao($pdoEvo);
 $notifDao=new notifDao($pdoEvo);
 $chainageDao=new chainageDao($pdoEvo);
 $affectationDao= new AffectationDao($pdoEvo);
+$noteDao=new NoteDao($pdoEvo);
 $userDao=new UserDao($pdoUser);
+$chgDao=new ChgLogDao($pdoEvo);
 
 
 $evo=$evoDao->getThisEvo($_GET['id']);
@@ -62,52 +66,33 @@ $plannings=$planningDao->getPlanningEvo($_GET['id']);
 $notifs=$notifDao->getNotifsByEvo($_GET['id']);
 $parents=$chainageDao->isParent($_GET['id']);
 $enfants=$chainageDao->isEnfant($_GET['id']);
-
+$notes=$noteDao->getNotes($_GET['id']);
 $droitExploit=$userDao->isUserAllowed([87]);
 
 $arrDevMail=EvoHelpers::arrayAppliRespEmail($pdoEvo);
 $listUsers=$userDao->getBtlecUserEvo();
 $listServices=$userDao->getServicesMailing();
 $listEtat=EvoHelpers::arrayEtat($pdoEvo);
+$listLevel=EvoHelpers::arrayLevels($pdoEvo);
+require_once('exploit-commun/00-init-var.php');
+
+$listChg=$chgDao->getChgLogsByFields($idName, $_GET['id']);
+$listDocChg=$chgDao->getChgLogsDocByField($idName, $_GET['id']);
 
 
-if(isset($_POST['add-doc'])){
-	$listFilename=[];
-	if(isset($_FILES['files_doc']['tmp_name'][0]) &&  !empty($_FILES['files_doc']['tmp_name'][0])){
-		for ($i=0; $i <count($_FILES['files_doc']['tmp_name']) ; $i++) {
-			if(empty($_POST['filename'][$i])){
-				$warning=true;
-			}
-			if(!$warning){
-				$orginalFilename=$_FILES['files_doc']['name'][$i];
-				$ext = pathinfo($orginalFilename, PATHINFO_EXTENSION);
-				$filenameNoExt = basename($orginalFilename, '.'.$ext);
-				$filename = str_replace(' ', '_', $filenameNoExt) . '_' . time() . '.' . $ext;
-				$uploaded=move_uploaded_file($_FILES['files_doc']['tmp_name'][$i],UPLOAD_DIR_EVO.$filename );
-				if($uploaded==false){
-					$errors[]="Nous avons rencontré avec votre fichier, votre demande n'a pas pu être enregistrée 2";
-				}else{
-					$listFilename[]=$filename;
-				}
-			}
 
-		}
-	}
-	if($warning){
-		$errors[]="Merci de donner un nom à vos fichiers";
-	}
-	if(!empty($listFilename) && empty($errors)){
-		for ($i=0; $i < count($listFilename); $i++) {
-			echo $listFilename[$i];
-			echo  $_POST['filename'][$i];
-			$docDao->insertDoc($_GET['id'], $listFilename[$i], $_POST['filename'][$i]);
-
-		}
-	}
-	$successQ='?success=doc&id='.$_GET['id'];
-	unset($_POST);
-	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+if(isset($_POST['add_doc'])){
+	include 'exploit-commun/01-add-doc.php';
 }
+
+if(isset($_POST['add_changelog'])){
+	include 'exploit-commun/02-add-chg.php';
+}
+
+if(isset($_POST['update_changelog'])){
+	include 'exploit-commun/03-update-chg.php';
+}
+
 if(isset($_POST['add_temps'])){
 	if(empty($_POST['minutes']) || empty($_POST['date_exec'])){
 		$_errors[]="Merci de remplir tout les champs";
@@ -179,8 +164,31 @@ if(isset($_POST['add_chainage'])){
 	}
 }
 
+if(isset($_POST['add_note'])){
+	if (empty($_POST['note'])) {
+		$errors[]="Vous devez saisir une note";
+	}
+	if(empty($errors)){
+		$noteDao->insertNote($_GET['id'], $_POST['note']);
+		$successQ='?id='.$_GET['id'].'#title-note';
+		unset($_POST);
+		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+	}
+}
+if(isset($_POST['update_note'])){
+	if (empty($_POST['note'])) {
+		$errors[]="Vous devez saisir une note";
+	}
+	if(empty($errors)){
+		$noteDao->updateNote($_GET['id_note_update'], $_POST['note']);
+		$successQ='?id='.$_GET['id'].'#title-note';
+		unset($_POST);
+		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+	}
+}
+
 if(isset($_POST['modif_evo'])){
-	$evoDao->updateEvo($_GET['id'], $_POST['evo'], $_POST['cmt_dd']);
+	$evoDao->updateEvo($_GET['id'], $_POST['evo'], $_POST['cmt_dd'], $_POST['chrono']);
 	$successQ='?id='.$_GET['id'];
 	unset($_POST);
 	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
@@ -268,6 +276,43 @@ if(isset($_GET['del_temps'])){
 }
 
 
+if(isset($_GET['id_note_update'])){
+	$thisNote=$noteDao->getNote($_GET['id_note_update']);
+}
+
+
+if(isset($_POST['update_note'])){
+	$thisNote=$noteDao->getNote($_GET['id_note_update']);
+	$successQ='?id='.$_GET['id'].'#title-note';
+	unset($_POST);
+	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+}
+
+if(isset($_GET['id_note_del'])){
+	$thisNote=$noteDao->maskNote($_GET['id_note_del']);
+	$successQ='?id='.$_GET['id'].'#title-note';
+	unset($_POST);
+	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+}
+if(isset($_GET['update_chg'])){
+	$chgToUpdate=$chgDao->getChg($_GET['update_chg']);
+
+}
+if(isset($_GET['del_chg_doc'])){
+	$chgDao->deleteChgDoc($_GET['del_chg_doc']);
+	$successQ='?id='.$_GET['id'];
+	unset($_POST);
+	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+}
+if(isset($_GET['del_chg'])){
+	$chgDao->deleteChglog($_GET['del_chg']);
+	$successQ='?id='.$_GET['id'];
+	unset($_POST);
+	header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
+}
+
+
+
 if(isset($_POST['statuer'])){
 	include('dashboard-evo\01-post-statuer.php');
 }
@@ -279,11 +324,12 @@ if(isset($_POST['cloturer'])){
 
 if(isset($_GET['success'])){
 	$arrSuccess=[
-				'decision'=>'Envoi de la décision au demandeur et au développeur fait avec succès',
+		'decision'=>'Envoi de la décision au demandeur et au développeur fait avec succès',
 		'over'=>'Demande clôturée',
 		'doc'=>'Document ajouté',
 		'temps'=>'Temps ajouté',
 		'planning'=>'Evo plannifiée',
+		'chg-add'	=>'Changelog ajouté'
 	];
 	$success[]=$arrSuccess[$_GET['success']];
 }
@@ -366,21 +412,79 @@ include('../view/_navbar.php');
 				<h3 class="text-orange">Exploitation</h3>
 			</div>
 		</div>
+
+		<div class="row  mt-3" id="title-note">
+			<div class="col">
+				<h5 class="text-orange">Notes</h5>
+			</div>
+		</div>
+		<div class="row mb-4">
+			<div class="col">
+				<?php if (!empty($notes)): ?>
+					<?php include 'evo-detail/13-table-notes.php' ?>
+				<?php endif ?>
+			</div>
+			<div class="col text-right  align-self-end">
+				<div id="add-note" class="btn btn-dark">Ajouter une note</div>
+			</div>
+		</div>
+		<div class="row mb-4">
+			<div class="col">
+				<div class="hidden  border py-3 px-5"  id="add-note-form">
+					<?php include 'evo-detail/13-form-notes.php' ?>
+				</div>
+			</div>
+		</div>
+		<?php if (isset($_GET['id_note_update'])): ?>
+			<?php include 'evo-detail/13-form-notes-update.php' ?>
+		<?php endif ?>
+
+		<div class="bg-separation-thin"></div>
+
 		<div class="row mt-3 mb-4">
 			<div class="col">
 				<h5 class="text-orange">Documents</h5>
-				<?php include 'evo-detail/01-list-document.php' ?>
+				<?php include 'exploit-commun/10-list-document.php' ?>
 			</div>
+
+		</div>
+		<div class="row mb-3">
 			<div class="col text-right align-self-end">
 				<div id="add-doc" class="btn btn-dark">Ajouter des documents</div>
 			</div>
 		</div>
 		<div class="row" >
-			<div class="col hidden border py-3 px-5" id="add-doc-form">
-				<?php include 'evo-detail/02-form-doc.php' ?>
+			<div class="col hidden" id="add-doc-form">
+				<?php include 'exploit-commun/10-form-doc.php' ?>
 			</div>
 		</div>
 		<div class="bg-separation-thin"></div>
+
+		<div class="row">
+			<div class="col">
+				<h5 class="text-orange">ChangeLog</h5>
+			</div>
+		</div>
+		<?php if (!empty($listChg)): ?>
+			<?php include 'exploit-commun/12-table-chg.php' ?>
+		<?php endif ?>
+		<div class="row mb-3">
+			<div class="col text-right">
+				<div class="btn btn-dark" id="add-chglog">Ajouter un changelog</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<div class="hidden" id="add-chglog-form">
+					<?php include 'exploit-commun/13-form-chg.php' ?>
+				</div>
+			</div>
+		</div>
+		<?php if (isset($_GET['update_chg'])): ?>
+			<?php include 'exploit-commun/14-form-chg-update.php' ?>
+		<?php endif ?>
+		<div class="bg-separation-thin"></div>
+
 
 		<div class="row  mt-3" id="title-planning">
 			<div class="col">
@@ -511,40 +615,68 @@ include('dashboard-evo\11-modal-cloturer.php');
 <script type="text/javascript">
 	$(document).ready(function() {
 
-			$('#modal-statuer').on('show.bs.modal', function (e) {
-				var idevo = $(e.relatedTarget).data('id');
-				var prio = $(e.relatedTarget).data('prio');
-				$("input[name=prio][value=" + prio + "]").attr('checked', 'checked');
-				var hiddenidevo=$('#id_evo');
-				hiddenidevo.val(idevo)
-				$.ajax({
-					type:'POST',
-					url:'ajax-getthis-evo.php',
-					data:{id_evo:idevo},
-					success: function(html){
-						$("#objet").html(html)
-					}
-				});
+		$('#modal-statuer').on('show.bs.modal', function (e) {
+			var idevo = $(e.relatedTarget).data('id');
+			var prio = $(e.relatedTarget).data('prio');
+			$("input[name=prio][value=" + prio + "]").attr('checked', 'checked');
+			var hiddenidevo=$('#id_evo');
+			hiddenidevo.val(idevo)
+			$.ajax({
+				type:'POST',
+				url:'ajax-getthis-evo.php',
+				data:{id_evo:idevo},
+				success: function(html){
+					$("#objet").html(html)
+				}
 			});
+		});
 
 
-			$('#modal-cloturer').on('show.bs.modal', function (e) {
-				var idevo = $(e.relatedTarget).data('id');
-				var hiddenidevo=$('#id_evo_cloture');
+		$('#modal-cloturer').on('show.bs.modal', function (e) {
+			var idevo = $(e.relatedTarget).data('id');
+			var hiddenidevo=$('#id_evo_cloture');
 
-				hiddenidevo.val(idevo)
-				$.ajax({
-					type:'POST',
-					url:'ajax-getthis-evo.php',
-					data:{id_evo:idevo},
-					success: function(html){
-						$("#objet_cloture").html(html)
-					}
-				});
+			hiddenidevo.val(idevo)
+			$.ajax({
+				type:'POST',
+				url:'ajax-getthis-evo.php',
+				data:{id_evo:idevo},
+				success: function(html){
+					$("#objet_cloture").html(html)
+				}
 			});
+		});
 
 		$('#files-doc').change(function(){
-			multipleWithName('files-doc','warning-zone', 'form-zone')
+			multipleWithName('files-doc','warning-zone', 'form-zone');
+		});
+
+		$("#url").on("click", function() {
+			var files=$('#files-doc').get(0).files.length;
+			$('input[name^="filename"]').each(function() {
+				var filename=$(this).val();
+				console.log(filename);
+				$('#urlname').val(filename);
+			});
+		});
+
+		$("#urlchg").on("click", function() {
+			console.log("ddd");
+			var files=$('#files-chglog-new').get(0).files.length;
+			$('input[name^="filename"]').each(function() {
+				var filename=$(this).val();
+				$('#urlnamechg').val(filename);
+
+			});
+		});
+		$("#urlchg-update").on("click", function() {
+			console.log("dzdzd");
+			var files=$('#files-chglog-update').get(0).files.length;
+			$('input[name^="filename"]').each(function() {
+				var filename=$(this).val();
+				$('#urlnamechgupdate').val(filename);
+
+			});
 		});
 
 		$("#add-doc").on("click", function() {
@@ -558,6 +690,28 @@ include('dashboard-evo\11-modal-cloturer.php');
 
 		});
 
+
+		$("#add-chglog").on("click", function() {
+			$("#add-chglog-form").toggleClass("hidden shown");
+
+			if($("#add-chglog-form").is(':visible')){
+				$("#add-chglog").text("Fermer");
+			}else{
+				$("#add-chglog").text("Ajouter un changelog");
+			}
+
+		});
+
+		$('#files-chglog').change(function(){
+			multipleWithName('files-chglog','warning-chg-zone', 'form-chg-zone')
+		});
+		$('#files-chglog-new').change(function(){
+			multipleWithName('files-chglog-new','warning-chg-zone-new', 'form-chg-zone-new')
+		});
+
+		$('#files-chglog-update').change(function(){
+			multipleWithName('files-chglog-update','warning-chg-zone-update', 'form-chg-zone-update')
+		});
 		$("#add-time").on("click", function() {
 			$("#add-time-form").toggleClass("hidden shown");
 			if($("#add-time-form").is(':visible')){
@@ -601,6 +755,15 @@ include('dashboard-evo\11-modal-cloturer.php');
 				$("#add-chainage").text("Créer un chainage");
 			}
 		});
+		$("#add-note").on("click", function() {
+			$("#add-note-form").toggleClass("hidden shown");
+			if($("#add-note-form").is(':visible')){
+				$("#add-note").text("Fermer");
+			}else{
+				$("#add-note").text("Créer une note");
+			}
+		});
+
 		$("#modif-evo").on("click", function() {
 			$("#modif-evo-form").toggleClass("hidden shown");
 			if($("#modif-evo-form").is(':visible')){

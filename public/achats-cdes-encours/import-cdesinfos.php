@@ -24,6 +24,16 @@ require_once '../../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+function getNameFromNumber($num) {
+	$numeric = $num % 26;
+	$letter = chr(65 + $numeric);
+	$num2 = intval($num / 26);
+	if ($num2 > 0) {
+		return getNameFromNumber($num2 - 1) . $letter;
+	} else {
+		return $letter;
+	}
+}
 
 $errors=[];
 $success=[];
@@ -33,8 +43,35 @@ $pdoDAchat=$db->getPdo('doc_achats');
 
 $cdesAchatDao=new CdesAchatDao($pdoDAchat);
 
+// function date_grab($str)
+// {
+//   // regex pattern will match any date formatted dd-mm-yyy or d-mm-yyyy with
+//   // separators: periods, slahes, dashes
+//   $p = '{.*?(\d\d?)[\\/\.\-]([\d]{2})[\\/\.\-]([\d]{4}).*}';
+//   $date = preg_replace($p, '$3-$2-$1', $str);
+//   return new \DateTime($date);
+// }
 
-$excelStart=new DateTime('1899-12-30');
+// // verify that it works correctly for your values:
+// $arr = array(
+//   "03/12/2011 (Sat)",
+//   "3.12.2011 SAT",
+//   "Date: 03/12/2011 ", /* <-- the extra trailing space is intentional */
+//   "date:03/12/2011",
+//   "date: 03/12/2011",
+//   "03/12/2011"
+// );
+
+// foreach ($arr as $str) {
+//   $date = date_grab($str);
+//   echo $date->format('Y-m-d') . "\n";
+// }
+
+
+
+
+
+$excelStart=new DateTimeImmutable('1899-12-30');
 $arrSaisie=[];
 
 if(isset($_POST['import'])){
@@ -65,45 +102,94 @@ if(isset($_POST['import'])){
 			$spreadsheet = $reader->load($fxls);
 			$worksheet = $spreadsheet->getActiveSheet();
 			$highestRow = $worksheet->getHighestRow();
+
+
 			// 1er boucle pour tester la validité des valeurs, on veut qu'aucune ligne ne soit insérée en base de donnée si le fichier contient des erreurs
-			for ($row = 2; $row <= $highestRow; ++$row){
+			for ($row = 2; $row < $highestRow; ++$row){
 
-				$date=$worksheet->getCell('x' . $row)->getValue();
-				$qte=$worksheet->getCell('y' . $row)->getValue();
-				$cmt=$worksheet->getCell('z' . $row)->getValue();
-				$idDetail=$worksheet->getCell('a' . $row)->getValue();
-				// si au moins un champ rempli, on test
-				if(!empty($date) || !empty($qte) || !empty($cmt)){
-					if(!empty($qte) && !is_numeric($qte)){
-						$errors[]="la quantité, " .$qte. ", à la ligne ".$row. " n'est pas dans un format correct. <br>" ;
-					}
-					$excelStart=new DateTime('1899-12-30');
+				// 1er colonne de donnée = v soit 22
+				// col 1 =v cad 22  // ordre : id qte date cmt
+				for ($i=0; $i <6 ; $i++) {
+					$colId=21+($i*4)+0;
+					$colIdStr=getNameFromNumber($colId);
+					$colQte=21+($i*4)+1;
+					$colQteStr=getNameFromNumber($colQte);
+					$colDate=21+($i*4)+2;
+					$colDateStr=getNameFromNumber($colDate);
+					$colCmt=21+($i*4)+3;
+					$colCmtStr=getNameFromNumber($colCmt);
 
-					if(!empty($date)){
-						try{
-							$date=clone $excelStart->modify('+ '.$date. ' day ');
-							$date=$date->format("Y-m-d");
+					$thisId=$worksheet->getCell($colIdStr . $row)->getValue();
+					$thisDate=$worksheet->getCell($colDateStr . $row)->getValue();
+					$thisQte=$worksheet->getCell($colQteStr . $row)->getValue();
+					$thisCmt=$worksheet->getCell($colCmtStr . $row)->getValue();
+					// echo "infos ligne" .$row. " : id ".$thisId." date ".$thisDate. " qte ".$thisQte. " cmt ".$thisCmt;
+					// echo "<br>";
 
-						}catch(Exception $e){
-							$errors[]="la date à la ligne ".$row. " n'est pas dans un format correct. <br>";
+
+					if($thisId=="" && $thisCmt=="" && $thisDate=="" && $thisCmt==""){
+						// echo "vide on fait rien";
+						// echo "<br>";
+						// on fait rien
+					}elseif($thisId!="" && $thisCmt=="" && $thisDate=="" && $thisCmt==""){
+						// echo "vide avec id, on supprime";
+						// echo "<br>";
+
+						// on supprimer la ligne
+						$cdesAchatDao->deleteInfo($thisId);
+					}else{
+						// update ou insert
+						if(!empty($thisQte) && !is_numeric($thisQte)){
+							echo "la quantité, " .$qte. ", à la ligne ".$row. " n'est pas dans un format correct. <br>" ;
+							exit;
 						}
+
+						if($thisDate !=""){
+							try{
+								$thisDate=$excelStart->modify('+ '.$thisDate. ' day ');
+								$thisDate=$thisDate->format("Y-m-d");
+							// echo $thisDate;
+							// echo "<br>";
+							}catch(Exception $e){
+								echo "la date à la ligne ".$row. " n'est pas dans un format correct. <br>";
+								exit;
+							}
+						}else{
+							$thisDate=null;
+						}
+						$thisQte=(empty($thisQte))?null:$thisQte;
+
+						if($thisId==""){
+						// nouvelles données
+							$idDetail=$worksheet->getCell('a' . $row)->getValue();
+
+							if ($idDetail=="") {
+								// echo "iddetail null ligne ".$row;
+							}else{
+
+								$cdesAchatDao->insertInfos($idImport, $idDetail,$thisDate, $thisQte, $thisCmt);
+							}
+
+						}else{
+							// update donnees
+											// echo "maj info row ".$row;
+							// echo "<br>";
+							$cdesAchatDao->updateInfo($thisId, $thisDate, $thisQte,$thisCmt);
+
+						}
+
 					}
-					$arrSaisie[$row]['qte']=(empty($qte))?null:$qte;
-					$arrSaisie[$row]['cmt']=(empty($cmt))?"":$cmt;
-					$arrSaisie[$row]['date']=$date;
-					$arrSaisie[$row]['id_detail']=$idDetail;
+
+
+
+
 
 
 				}
-			}
-			// 2eme boucle, insertion des données on insere en base de donnée
-			if(empty($errors) && !empty($arrSaisie)){
 
-				foreach ($arrSaisie as $key => $saisie) {
-					$cdesAchatDao->insertInfos($idImport, $saisie['id_detail'],$saisie['date'], $saisie['qte'], $saisie['cmt']);
 
-				}
 			}
+
 			$successQ='?id_import='.$idImport;
 			unset($_POST);
 			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
@@ -114,9 +200,6 @@ if(isset($_POST['import'])){
 
 if(isset($_GET['id_import'])){
 	$listInfo=$cdesAchatDao->getInfoByImport($_GET['id_import']);
-
-
-
 }
 
 

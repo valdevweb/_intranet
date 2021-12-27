@@ -21,12 +21,13 @@ class EvoDocDao{
 		return $req->fetchAll();
 	}
 
-	public function	insertDoc($idEvo, $file, $filename){
-		$req=$this->pdo->prepare("INSERT INTO evo_docs (id_evo, file, filename, date_insert, by_insert) VALUES (:id_evo, :file, :filename, :date_insert, :by_insert)");
+	public function	insertDoc($idEvo, $file, $filename, $cmt){
+		$req=$this->pdo->prepare("INSERT INTO evo_docs (id_evo, file, filename, cmt, date_insert, by_insert) VALUES (:id_evo, :file, :filename, :cmt, :date_insert, :by_insert)");
 		$req->execute([
 			':id_evo'			=>$idEvo,
 			':file'				=>$file,
 			':filename'			=>$filename,
+			':cmt'			=>$cmt,
 			':date_insert'		=>date('Y-m-d H:i:s'),
 			':by_insert'		=>$_SESSION['id_web_user']	,
 

@@ -120,6 +120,7 @@
 				<td>Désignation</td>
 				<td>EAN</td>
 				<td>Quantité</td>
+				<td>Prix Unitaire</td>
 				<td>Prix d'achat</td>
 				<td>PPI</td>
 
@@ -135,18 +136,20 @@
 						$ean=$cde['ean'];
 						$qte=$cde['quantite'];
 						$palette=$arrayListPalette[$cde['id_palette']];
-						$tarif=$cde['pa'];
+						$prixAchat=$cde['pa'];
 						$ppi=$cde['pvc'];
 						$marque="";
+						$pu="";
 					}else{
 						$article=$cde['article_occ'];
 						$designation=$cde['design_occ'];
 						$ean=$cde['ean_occ'];
 						$qte=$cde['qte_cde'];
 						$palette="";
-						$tarif=$cde['panf_occ'];
-						$ppi=$cde['ppi_occ']*$cde['qte_cde'];
+						$prixAchat=$cde['panf_occ']*$cde['qte_cde'];
+						$ppi=$cde['ppi_occ'];
 						$marque=$cde['marque_occ'];
+						$pu=$cde['panf_occ'];
 
 					}
 
@@ -159,12 +162,13 @@
 						<td><?=$designation?></td>
 						<td><?=$ean?></td>
 						<td class="text-right"><?=$qte?></td>
-						<td class="text-right"><?=$tarif?></td>
+						<td class="text-right"><?=$pu?></td>
+						<td class="text-right"><?=$prixAchat?></td>
 						<td class="text-right"><?=$ppi?></td>
 					</tr>
 
 					<?php
-					$totalPa+=$tarif;
+					$totalPa+=$prixAchat;
 					$totalQte+=$qte;
 					?>
 
@@ -172,6 +176,7 @@
 				<tr class="table-footer">
 					<td colspan="5">Totaux : </td>
 					<td class="text-right"><?=$totalQte?></td>
+					<td></td>
 					<td class="text-right" ><?=$totalPa?></td>
 					<td></td>
 				</tr>

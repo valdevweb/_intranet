@@ -104,59 +104,70 @@ include('../view/_head-bt.php');
 include('../view/_navbar.php');
 ?>
 
-<div class="container">
-	<h1 class="text-main-blue py-5 ">Gestion des offres - tickets et BRII</h1>
-	<div class="row">
-		<div class="col-lg-1"></div>
-		<div class="col">
-			<?php
-			include('../view/_errors.php');
-			?>
-		</div>
-		<div class="col-lg-1"></div>
-	</div>
+<div class="container-fluid bg-white">
+
 
 	<div class="row">
+		<div class="col-2 bg-light-grey"></div>
 		<div class="col">
-			<h5 class="text-main-blue border-bottom pb-3 my-3"><i class="fas fa-edit pr-3 text-orange"></i>Saisie des offres</h5>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col">
-			<div class="alert alert-primary">Il existe deux modes de saisie pour les offres :<br>
-				<strong>- la saisie guidée : </strong> elle vous permet d'afficher la liste des articles d'une opération et de saisir pour les articles concernés les offres<br>
-				<strong>- la saisie manuelle : </strong>elle vous permet de créer vous même un prospectus et les articles concernés par les offres
+	<h1 class="text-main-blue py-5 text-center">Gestion des offres - tickets et BRII</h1>
+
+			<div class="row">
+				<div class="col-lg-1"></div>
+				<div class="col">
+					<?php
+					include('../view/_errors.php');
+					?>
+				</div>
+				<div class="col-lg-1"></div>
 			</div>
-		</div>
-	</div>
-	<div class="row  pb-5">
-		<div class="col text-center">
-			<a href="saisie-auto-offre.php" class="btn btn-pink">Saisie guidée</a>
-		</div>
-		<div class="col text-center">
-			<a href="saisie-manuelle-offre.php" class="btn btn-cyan">Saisie manuelle</a>
-		</div>
-	</div>
-	<div class="bg-separation"></div>
-	<div class="row">
-		<div class="col">
-			<h5 class="text-main-blue border-bottom pb-3 my-3"><i class="fas fa-edit pr-3 text-orange"></i>Gérer les prospectus</h5>
-		</div>
-	</div>
-	<?php if (!empty($listProsp)): ?>
-		<?php include 'offre-gestion/13-list-prosp.php'; ?>
-		<?php else: ?>
 			<div class="row">
 				<div class="col">
-					<div class="alert alert-primary">Aucun prospectus à afficher</div>
+					<h5 class="text-main-blue border-bottom pb-3 my-3"><i class="fas fa-edit pr-3 text-orange"></i>Saisie des offres</h5>
 				</div>
 			</div>
-		<?php endif ?>
+			<div class="row">
+				<div class="col">
+					<div class="alert alert-primary">Il existe deux modes de saisie pour les offres :<br>
+						<strong>- la saisie guidée : </strong> elle vous permet d'afficher la liste des articles d'une opération et de saisir pour les articles concernés les offres<br>
+						<strong>- la saisie manuelle : </strong>elle vous permet de créer vous même un prospectus et les articles concernés par les offres
+					</div>
+				</div>
+			</div>
+			<div class="row  pb-5">
+				<div class="col text-center">
+					<a href="saisie-auto-offre.php" class="btn btn-pink">Saisie guidée</a>
+				</div>
+				<div class="col text-center">
+					<a href="saisie-manuelle-offre.php" class="btn btn-cyan">Saisie manuelle</a>
+				</div>
+			</div>
+			<div class="bg-separation"></div>
+			<div class="row">
+				<div class="col">
+					<h5 class="text-main-blue border-bottom pb-3 my-3"><i class="fas fa-edit pr-3 text-orange"></i>Gérer les prospectus</h5>
+				</div>
+			</div>
+			<?php if (!empty($listProsp)): ?>
+				<?php include 'offre-gestion/13-list-prosp.php'; ?>
+				<?php else: ?>
+					<div class="row">
+						<div class="col">
+							<div class="alert alert-primary">Aucun prospectus à afficher</div>
+						</div>
+					</div>
+				<?php endif ?>
 
-		<?php if (isset($_GET['prosp-id-mod'])): ?>
-			<?php include 'offre-gestion/11-modify-prospectus.php'; ?>
-		<?php endif ?>
-		<div class="bg-separation"></div>
+				<?php if (isset($_GET['prosp-id-mod'])): ?>
+					<?php include 'offre-gestion/11-modify-prospectus.php'; ?>
+				<?php endif ?>
+				<div class="bg-separation"></div>
+		</div>
+		<div class="col-2 bg-light-grey"></div>
+
+	</div>
+
+
 
 		<!-- Start of floating navigation -->
 		<div class="row py-3">

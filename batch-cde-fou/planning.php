@@ -48,9 +48,6 @@ if (($handle = fopen($planning, "r")) !== FALSE) {
 
 
 				$err=$req->errorInfo();
-				echo "<pre>";
-				print_r($err);
-				echo '</pre>';
 
 			}
 
