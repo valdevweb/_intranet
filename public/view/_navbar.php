@@ -32,6 +32,7 @@ $dMission=isUserAllowed($pdoUser,  [78,5]);
 $dOccasionBt=isUserAllowed($pdoUser, [83]);
 $dOccasionMag=isUserAllowed($pdoUser, [84]);
 $dPilotage=isUserAllowed($pdoUser, [98]);
+$dWorkflow=isUserAllowed($pdoUser, [100]);
 
 
 
@@ -98,6 +99,7 @@ $dPilotage=isUserAllowed($pdoUser, [98]);
 					<ul>
 						<li><a href="<?=ROOT_PATH?>/public/gtocc/offre-produit.php">Offres produits</a></li>
 						<li><a href="<?=ROOT_PATH?>/public/gtocc/occ-exploit.php">Gestion GT Occasion</a></li>
+						<li><a href="<?=ROOT_PATH?>/public/gtocc/palettes-dispo.php">Palettes à traiter</a></li>
 						<li><a href="<?=ROOT_PATH?>/public/gtocc/occ-expedie.php">Palettes expédiées</a></li>
 						<li><a href="<?=ROOT_PATH?>/public/gtocc/occ-editinfo.php">Exploit infos mag GT13</a></li>
 						<li><a href="<?=ROOT_PATH?>/public/gtocc/occ-news.php">Informations Leclerc occasion</a></li>
@@ -215,7 +217,7 @@ $dPilotage=isUserAllowed($pdoUser, [98]);
 			<?php endif ?>
 			<?php if ($dBtlec):?>
 
-				<li class='active has-sub'><a href='".ROOT_PATH. "/public/exploit/connexion.php' ><span>Exploit</span></a>
+				<li class='active has-sub'><a href='#' ><span>Exploit</span></a>
 					<ul>
 						<li class='active has-sub'><a href="#">Statistiques salon</a>
 							<ul>
@@ -227,7 +229,7 @@ $dPilotage=isUserAllowed($pdoUser, [98]);
 
 
 						<li><a href="<?=PORTAIL_SALON?>home/home.php" >Salon fournisseurs</a></li>
-						<li><a href='<?=ROOT_PATH?>/public/exploit/connexion.php'><span>Connexions magasins</span></a></li>
+						<li><a href='<?=ROOT_PATH?>/public/exploit/connexion.php' id="nav-connexion-mag"><span>Connexions magasins</span></a></li>
 						<?php if ($dExploit): ?>
 							<li><a href='<?=ROOT_PATH?>/public/exploit/ld-exploit.php'><span>Listes de diffu BTLec</span></a></li>
 
@@ -269,23 +271,59 @@ $dPilotage=isUserAllowed($pdoUser, [98]);
 
 			<li><a href="<?=PORTAIL_SAV?>scapsav/home.php" class="tooltipped" data-position="bottom" data-tooltip="site du portail SAV">Portail SAV</a></li>
 
-			<?php if($_SESSION['id'] == 702 || $_SESSION['id_web_user'] == 981 || isset($_SESSION['workflow'])){  ?>
-<li class="active has-sub"><a href="http://172.30.92.53/<?=VERSION?>btlecest/public/workflow" >Workflow</a>
-<ul>
-	   <li><a href="index.php?session=18">Alex</a></li>
- <li><a href="index.php?session=9">Service R.H</a></li>
- <li><a href="index.php?session=7">Service Informatique</a></li>
- <li><a href="indexutilisateur.php?session=1053">Benoit Dubots</a></li>
- <li><a href="indexutilisateur.php?session=687">Benoit Chamarre</a></li>
- <li><a href="indexutilisateur.php?session=968">Claire Serrano</a></li>
- <li><a href="indexutilisateur.php?session=974">Cédric Vasseur</a></li>
+			<?php
 
 
-</ul>
-</li>
+
+			if($dWorkflow){
 
 
-			<?php } ?>
+				if($_SESSION['id_service'] == 12 || $_SESSION['id_service'] == 30 ){
+					$hassub = "";
+					$lienindex = "indexutilisateur.php?session=".$_SESSION['id'];
+				}else{
+					$hassub = "";
+					if($_SESSION['id_web_user'] == 1405){
+						$lienindex = "index.php?session=1405";
+					}else{
+						$lienindex = "index.php?session=".$_SESSION['id_service'];
+					}
+
+				}
+				if($_SESSION['id_service'] == 5 || $_SESSION['id_service'] == 18 || $_SESSION['id'] == 702 || $_SESSION['id'] == 959 ){
+					$hassub = "has-sub";
+					$lienindex = "dashboard.php";
+				}
+
+				if(empty($hassub)){
+					?>
+					<li class="active">
+						<a href="<?=ROOT_PATH?>/public/workflow/<?php echo $lienindex; ?>" >Workflow</a>
+					</li>
+				<?php }else{ ?>
+					<li class="active has-sub">
+						<a href="<?=ROOT_PATH?>/public/workflow/<?php echo $lienindex; ?>" >Workflow</a>
+						<ul>
+
+							<li><a href="<?=ROOT_PATH?>/public/workflow/dashboard.php">Tableau de bord</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/workflow/index.php?session=9">Service R.H</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/workflow/index.php?session=7">Service Informatique</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/workflow/index.php?session=31">Service Pilotage</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/workflow/indexutilisateur.php?session=1053">Benoit Dubots</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/workflow/indexutilisateur.php?session=687">Benoit Chamarre</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/workflow/indexutilisateur.php?session=968">Claire Serrano</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/workflow/indexutilisateur.php?session=974">Cédric Vasseur</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/workflow/indexutilisateur.php?session=1895">Arnaud Fleury</a></li>
+							<li><a href="<?=ROOT_PATH?>/public/workflow/index.php?session=1405">Salem MOUSSONI</a></li>
+
+
+						</ul>
+					</li>
+
+					<!-- <li><a href="index.php?session=18">Alex</a></li> -->
+				<?php }
+			}
+			?>
 
 			<?php if ($dBtlec || $dPilotage): ?>
 				<li><a href="http://172.30.92.53/<?=VERSION?>pilotage" >Pilotage</a></li>
@@ -299,20 +337,21 @@ $dPilotage=isUserAllowed($pdoUser, [98]);
 							<li><a href="<?=ROOT_PATH?>/public/evo/dde-evo.php" class="red-nav">Demande d'évo</a></li>
 							<li><a href="<?=ROOT_PATH?>/public/evo/dashboard-evo.php" class="red-nav">Supervision</a></li>
 							<li><a href="<?=ROOT_PATH?>/public/evo/exploit-main.php" class="red-nav">Exploitation</a></li>
-							<li><a href="<?=ROOT_PATH?>/public/evo/planning-evo.php" class="red-nav">Planning</a></li>
 							<?php if ($_SESSION['id_web_user']==981): ?>
 								<li><a href="<?=ROOT_PATH?>/public/batch-exploit/batch-monitoring.php" class="red-nav">Batch monitoring</a></li>
 								<li><a href="<?=ROOT_PATH?>/public/exploit/droit.php" class="red-nav">Droits</a></li>
 							<?php endif ?>
 						<?php endif ?>
-
+						<li><a href="<?=ROOT_PATH?>/public/evo/planning-evo.php" class="red-nav">Planning</a></li>
 						<li><a href="<?=ROOT_PATH?>/public/evo/vosdemandes-evo.php" class="red-nav">Vos demandes</a></li>
 
 
 					</ul>
 				</li>
 			<?php endif ?>
-
+			<?php if ($dBtlec): ?>
+				<li><a href="<?=ROOT_PATH?>/public/mailsend/sendmail.php" ><i class="fas fa-envelope"></i></a></li>
+			<?php endif ?>
 			<?php if ($dMag): ?>
 				<li><a href="<?=ROOT_PATH ?>/public/user/profil.php" class="tooltipped" data-position="bottom" data-tooltip="Votre compte"><span>Votre magasin<i class="fa fa-user pl-3"></i></span></a></li>
 			<?php endif ?>
