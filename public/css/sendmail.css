@@ -1,0 +1,70 @@
+.selected-element{
+  margin-right: 2px;
+  margin-left: 2px;
+  margin-bottom: 5px;
+  padding: 0 4px 0 4px;
+  border:  1px solid #212529;
+  /* color: #212529; */
+  border-radius: 3px;
+  /* line-height: 2.5; */
+  font-size: 0.8rem;
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  background-color: rgba(255, 255 , 255, 0.7);
+  /* white-space: nowrap */
+/* cursor: url("http://172.30.92.53/_btlecest/public/img/icons/delete.png"), auto; */
+}
+
+.bg-very-light-grey{
+  background-color: #f4f5f7;
+  border:  1px #ced4da solid;
+  /* background-color:  #e1e1e1; */
+}
+
+
+/* .selected-element:after{
+  display: inline-block;
+  font-family: "Font Awesome 5 Free";
+  font-size: 0.8rem;
+  font-weight: 900;
+  content: "\f00d";
+
+  position: absolute;
+  top: -5px;
+  right: 1px;
+}
+ */
+
+.bg-darkgrey{
+  background-color: #525252;
+}
+
+.alert-to-link{
+  color: #212529 !important;
+
+  background-color: #f4f5f7;
+  border: 1px solid #b8daff;
+}
+
+
+.alert-cc-link{
+  background-color: #f4f5f7;
+  border:  1px #ced4da solid;
+  color: #8c8e91 !important;
+
+}
+
+
+.alert-to-link a{
+
+  color: #212529 !important;
+
+}
+
+.alert-cc-link a{
+  color: #8c8e91 !important;
+}
+.upload-area{
+  height:  100px !important;
+}
