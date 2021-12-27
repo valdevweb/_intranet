@@ -22,6 +22,12 @@
 	</div>
 </footer>
 <script src="<?=ROOT_PATH?>/public/js/session.js "></script>
-
+<script>
+	$(document).ready(function(){
+		$('#nav-connexion-mag').on("click",function(){
+			alert("merci de patienter pendant le chargement de la page");
+		});
+	});
+</script>
 </body>
 </html>
