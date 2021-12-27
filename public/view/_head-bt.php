@@ -9,10 +9,10 @@
 	<link rel="icon" href="http://172.30.92.53/btlecest/favicon.ico" />
 
 	<!-- nouvelle page pour style commun qui remplacera main  05/02/2019 -->
-	<link rel="stylesheet" href="../css/commun.css?<?= filemtime('../css/commun.css');?>">
-	<link rel="stylesheet" href="../css/_box.css?<?= filemtime('../css/commun.css');?>">
-	<link rel="stylesheet" href="../css/_btn.css?<?= filemtime('../css/commun.css');?>">
-	<link rel="stylesheet" href="../css/_font.css?<?= filemtime('../css/commun.css');?>">
+	<link rel="stylesheet" href="../css/commun.css">
+	<link rel="stylesheet" href="../css/_box.css">
+	<link rel="stylesheet" href="../css/_btn.css">
+	<link rel="stylesheet" href="../css/_font.css">
 	<link rel="stylesheet" href="../css/_txt.css?<?= filemtime('../css/commun.css');?>">
     <link rel="stylesheet" type="text/css" href="../css/datatables.css">
 
