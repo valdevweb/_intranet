@@ -12,6 +12,7 @@ require('functions/login.fn.php');
 
 
 
+
 /*---------------------------------------------------------------------*/
 /* 						détection navigateur     							*/
 /*---------------------------------------------------------------------*/
@@ -47,33 +48,11 @@ if(!empty($_SERVER['QUERY_STRING'])){
 		//on met le goto dans champ cahcé du formulaire et la fonction de login recupère la valeur $_POST['goto'] pour la mettre dans session
 	$gotoMsg=$_SERVER['QUERY_STRING'];
 
-
-// Uniquement pour la démonstration sans login redirect auto si clique dans le lien du mail pour le projet Workflow
-	// Debut
-	if(stripos($gotoMsg,"workflow") !== false ){
-			$ID_Service=explode("=",$gotoMsg);
-
-
-$loginExist = getAllInfoWebUserByID($pdoUser,$ID_Service[1]);
-$id_Service = $loginExist['id_service'];
-
-$_SESSION['workflow'] = 1;
-
-		initSession($pdoBt, $pdoSav, $pdoMag, $pdoCm, $pdoUser, $loginExist);
-
-if($id_Service == 12 || empty($id_Service)){
-		header('Location:'. ROOT_PATH. '/public/workflow/indexutilisateur.php?id='.$id_Service);
-}else{
-			header('Location:'. ROOT_PATH. '/public/workflow/index.php?id='.$id_Service);
 }
 
-	
-	}
 
 
-	// fin
 
-}
 // stats
 if(isset($_POST['connexion'])){
 	$loginExist=loginExist($pdoUser);
@@ -95,8 +74,11 @@ if(isset($_POST['connexion'])){
 			if($dateMajPwd['date_maj_nohash']==null){
 				updateNoHash($pdoUser);
 			}
+
+
 			header('Location:'. ROOT_PATH. '/public/home/home.php');
-		}
+				}
+	
 	}else{
 		$msg[]="erreur de mot de passe";
 	}
