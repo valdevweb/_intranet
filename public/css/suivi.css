@@ -1,0 +1,56 @@
+		<style type="text/css">
+
+
+
+
+
+
+  table {
+  border-collapse: collapse;
+  border-spacing: 0;
+    margin: auto;
+  width: 60%;
+  border: 1px solid #BCBCBC;
+}
+
+th, td {
+  border: 1px solid #BCBCBC;
+  text-align: center;
+  padding: 5px;
+}
+
+    legend{
+    width: auto !important;
+    font-size: 20px !important;
+  }
+
+
+/*tr:nth-child(even){
+  border: 1px solid #ddd;
+	background-color: #17a2b8;
+	}*/
+
+.square {
+  width: 50%;
+}
+
+.square:after {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+
+  .disabled a {
+  pointer-events: none;
+  color: #343A40;
+}
+
+.jc-bs3-container #container{
+  display: block;
+}
+
+h4.Aucun{
+  color: #A0A0A0; 
+}
+
+</style>

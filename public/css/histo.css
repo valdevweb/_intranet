@@ -1,0 +1,69 @@
+.fa.fa-exclamation-triangle
+{
+	padding-right: 5px;
+}
+.warning{
+	color: red;
+}
+
+
+.blue{
+	background-color:#0D47A1;
+	color: #fff;
+}
+
+.blue-grey{
+background-color :#37474f;
+	color: #fff;
+
+}
+
+.brown{
+	background-color: #4e342e;
+	color: #fff;
+}
+.cyan{
+	background-color:#00bcd4;
+}
+
+
+.purple{
+	background-color:#512da8;
+}
+
+.green{
+background-color :#00c853;
+}
+
+.green-dark{
+	background-color: #00695c;
+	color: #fff;
+
+}
+.yellow{
+	background-color: #FFFF00;
+
+}
+.grey{
+	background-color: #00C853;
+}
+
+.grey-dark{
+	background-color: #424242 !important;
+	color: #fff;
+}
+
+.orange{
+	background-color : #ef6c00;
+}
+
+
+.pink{
+background-color :#e91e63;
+	color: #fff;
+}
+
+
+.lime{
+	background-color :#00FF00;
+}
