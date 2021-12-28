@@ -51,9 +51,9 @@ function formatPJ($incFileStrg){
 		$incFileStrg=explode( '; ', $incFileStrg );
 		for ($i=0;$i<count($incFileStrg);$i++){
 			$ico="<i class='fa fa-paperclip fa-lg pl-5 pr-3 hvr-pop' aria-hidden='true'  ></i>";
-			$href.= "<a class='pj' href='".URL_UPLOAD."mag/" . $incFileStrg[$i] . "' target='blank'>" .$ico ."ouvrir</a>";
+			$href.= "<a  href='".URL_UPLOAD."mag/" . $incFileStrg[$i] . "' target='blank'>" .$ico ."ouvrir</a>";
 		}
-		$href="<p>".$href."</p>";
+		$href=$href;
 
 	}
 
@@ -169,7 +169,7 @@ else
 	$btnReopen='<a href="unlock.php?id_msg='.$_GET['msg']. '"><i class="fa fa-unlock-alt prefix fa-lg pr-3" aria-hidden="true"></i> Ré-ouvrir</a>';
 }
 
-include('../view/_head-mig.php');
+include('../view/_head-bt.php');
 include('../view/_navbar.php');
 ?>
 <!-- <div class="container-fluid"> -->
@@ -178,8 +178,6 @@ include('../view/_navbar.php');
 		<a href= "histo-mag.php"><i class="fa fa-chevron-circle-left fa-lg pr-3" aria-hidden="true"></i>Retour</a>
 		<?= $btnAnswer ?>
 		<?= $btnReopen ?>
-
-		<!-- </div> -->
 	</div>
 	<div class="container">
 		<div class="row">
@@ -194,27 +192,23 @@ include('../view/_navbar.php');
 
 		<!-- titre  -->
 		<div class="row">
-			<div class="col-12">
-
-				<h1 class="blue-text text-darken-4 no-margin">Votre demande au service <?= $infoService['service']?> : <br><span class='sub-h1'>n° <?= $_GET['msg']?> - <?=$msg['objet']?> </span></h1>
+			<div class="col">
+				<h1 class="text-main-blue">Votre demande au service <?= $infoService['service']?> : <br><span class='sub-h1'>n° <?= $_GET['msg']?> - <?=$msg['objet']?> </span></h1>
 			</div>
 		</div>
 		<!-- message 1  -->
-		<div class="row">
-			<div class="col-12">
-				<div class="card-panel mag mb-5">
-					<p class="text-right date"><?= date('d-m-Y', strtotime($msg['date_msg']))?></p>
+		<div class="row mb-5">
+			<div class="col">
+				<div class="card-panel mag">
+					<p class="text-right"><?= date('d-m-Y', strtotime($msg['date_msg']))?></p>
 					<p><?=$msg['msg']?></p>
-					<?php
-					if(!empty($msg['inc_file']))
-					{
-						echo "<p><span class='labelFor'>Pièce jointe : </span></p>";
-						echo "<p>".formatPJ($msg['inc_file'])."</p>";
-					}
-					?>
-				</div>
-				<div class="center-text">
-					<hr class="line">
+
+					<?php if ($msg['inc_file']): ?>
+						<span class='labelFor'>Pièce jointe : </span><?=formatPJ($msg['inc_file'])?>
+					<?php endif ?>
+
+
+
 				</div>
 			</div>
 		</div>
@@ -239,13 +233,13 @@ include('../view/_navbar.php');
 			}
 			?>
 			<?= $by ?>
-			<div class="row">
-				<div class="col-12">
+			<div class="row mb-5">
+				<div class="col">
 					<div class="card-panel <?= $side ?>">
 						<img class="w3-circle" src="<?=$logo ?>">
 
 						<p class="text-right date"><?= date('d-m-Y', strtotime($reply['date_reply']))?></p>
-						<p><?= $reply['reply'] ?></p>
+						<p><?= nl2br($reply['reply']) ?></p>
 						<?php
 						if(!empty($reply['inc_file']))
 						{
@@ -268,7 +262,7 @@ include('../view/_navbar.php');
 		<div class="row">
 			<div class="col">
 				<div class="bg-white border px-5 py-3">
-					<h4 class="blue-text text-darken-4"><i class="fa fa-pencil-square-o prefix pl-1 pr-3 fa-lg" aria-hidden="true"></i><strong>Ajouter un message :</strong></h4>
+					<h4 class="text-main-blue"><i class="fas fa-edit pr-3"></i><strong>Ajouter un message :</strong></h4>
 					<form action="<?=htmlspecialchars($_SERVER['PHP_SELF']).'?msg='.$_GET['msg'] ?>"  method="post" enctype="multipart/form-data" id="mag-msg">
 						<div class="form-group">
 							<label for="reply"></label>
@@ -280,7 +274,7 @@ include('../view/_navbar.php');
 							<p class="pr-1 pt-2 blue-text text-darken-4" id="p-add-more"><a id="addmore" href="#file-upload"><i class="fa fa-plus-circle" aria-hidden="true"></i>Ajouter un fichier supplémentaire</a></p>
 						</div>
 						<div class="input-field text-right">
-							<button class="btn" type="submit" name="post-reply">Envoyer</button>
+							<button class="btn btn-primary" type="submit" name="post-reply">Envoyer</button>
 							<div id="wait"></div>
 						</div>
 
@@ -291,8 +285,7 @@ include('../view/_navbar.php');
 		<?php
 	// si le message n'est pas clos, on affiche le formulaire pour ajouter une réponse
 		$newResponseForm=ob_get_clean();
-		if($msg['etat']!='clos')
-		{
+		if($msg['etat']!='clos'){
 			echo $newResponseForm;
 		}
 
@@ -325,7 +318,7 @@ include('../view/_navbar.php');
 	<?php
 
 
-	include('../view/_footer.php');
+	include('../view/_footer-bt.php');
 	?>
 
 </body>

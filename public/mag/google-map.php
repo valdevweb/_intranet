@@ -30,7 +30,7 @@ addRecord($pdoStat,$page,$action, $descr);
 
 
 //header et nav bar
-include ('../view/_head.php');
+include ('../view/_head-bt.php');
 include ('../view/_navbar.php');
 
 ?>
@@ -69,5 +69,5 @@ include ('../view/_navbar.php');
 </div>
 <?php
 // footer avec les scripts et fin de html
-include('../view/_footer.php');
+include('../view/_footer-bt.php');
 ?>

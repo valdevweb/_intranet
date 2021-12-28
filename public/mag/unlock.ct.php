@@ -1,16 +1,15 @@
 <div class="container">
-	<div class="row">
+	<div class="row mb-3">
 		<div class="col">
-			<h1 class="blue-text text-darken-4">Réouverture de la demande<br><span class="sub-h1">N° <?= $_GET['id_msg'] .' - '. $msg['objet'] ?></span></h1>
+			<h1 class="text-main-blue">Réouverture de la demande<br><span class="sub-h1">N° <?= $_GET['id_msg'] .' - '. $msg['objet'] ?></span></h1>
 		</div>
 	</div>
 	<!-- formulaire -->
 	<div class="row ">
-		<div class="col bg-white p-5">
+		<div class="col border p-3">
 			<form action="<?=htmlspecialchars($_SERVER['PHP_SELF']).'?id_msg='.$_GET['id_msg'] ?>"  method="post" enctype="multipart/form-data">
-				<p>Motif de la demande de réouverture</p>
 				<div class="form-group">
-					<label for="reply"></label>
+					<label for="reply">Motif de la demande de réouverture :</label>
 					<textarea class="form-control" id="reply" name="reply" rows="3" placeholder="votre message" required="require"></textarea>
 				</div>
 				<div class="pt-5 pb-2" id="file-upload">
@@ -66,7 +65,7 @@
 		}
 		?>
 		<?= $by ?>
-		<div class="row">
+		<div class="row mb-5">
 			<div class="col-12">
 				<div class="card-panel <?= $side ?>">
 					<img class="w3-circle" src="<?=$logo ?>">

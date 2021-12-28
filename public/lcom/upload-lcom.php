@@ -98,7 +98,7 @@ if(isset($_POST['submit']))
 
 	}
 }
-include ('../view/_head-mig-bis.php');
+include ('../view/_head-bt.php');
 include ('../view/_navbar.php');
 ?>
 
@@ -107,7 +107,7 @@ include ('../view/_navbar.php');
 	<h4 class="blue-text text-darken-4" id="modalite-lk"><i class="fa fa-hand-o-right" aria-hidden="true"></i>Upload de documents</h4>
 
 	<br><br>
-	<div class="row">
+	<div class="row pb-5">
 		<div class="col-1"></div>
 		<div class="col border shadow p-5">
 			<form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>"  enctype="multipart/form-data">
@@ -184,5 +184,5 @@ include ('../view/_navbar.php');
 
 
 // footer avec les scripts et fin de html
-	include('../view/_footer-mig-bis.php');
+	include('../view/_footer-bt.php');
 	?>

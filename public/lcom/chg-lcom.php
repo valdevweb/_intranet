@@ -23,8 +23,7 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 //header et nav bar
-include ('../view/_head-mig-bis.php');
-include ('../view/_navbar.php');
+
 
 //----------------------------------------------------------------
 //			functions
@@ -92,13 +91,14 @@ $row=updateCat($pdoBt);
 	}
 
 }
-
+include ('../view/_head-bt.php');
+include ('../view/_navbar.php');
 ?>
 
 <div class="container white-container shadow">
 	<h1 class="blue-text text-darken-4">Espace Lcommerce</h1>
 	<br><br>
-	<div class="row">
+	<div class="row pb-5">
 		<div class="col-1"></div>
 		<div class="col-10 border p-5">
 			<h3 class="text-center text-orange pb-1">Changer le document de catégorie</h3>
@@ -140,7 +140,8 @@ $row=updateCat($pdoBt);
 		<div class="col-1"></div>
 
 	</div>
-
+	<br>
+	<br>
 
 </div> <!-- ./container -->
 
@@ -152,5 +153,5 @@ $row=updateCat($pdoBt);
 
 
 // footer avec les scripts et fin de html
-include('../view/_footer-mig-bis.php');
+include('../view/_footer-bt.php');
 ?>

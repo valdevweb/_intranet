@@ -365,14 +365,8 @@ if(isset($_GET['success'])){
 //			VIEW
 //------------------------------------------------------
 include('../view/_head-bt.php');
+include('../view/_navbar.php');
 
-if($_SESSION['id']==1531){
-	include('../view/_navbar_restricted.php');
-
-}else{
-	include('../view/_navbar.php');
-
-}
 
 
 $infoMag=UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $_SESSION['id_web_user']);

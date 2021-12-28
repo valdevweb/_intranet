@@ -39,6 +39,8 @@ if(isset($_SESSION['temp'])){
 	unset($_SESSION['temp']);
 }
 if(isset($_POST['reset'])){
+
+	$_SESSION['encours_filter']=[];
 	unset($_SESSION['encours_filter']);
 	header("Location: ".$_SERVER['PHP_SELF'],true,303);
 }
@@ -57,7 +59,6 @@ if (isset($_POST['filter'])) {
 	}
 
 	if(empty($errors)){
-
 		$_SESSION['encours_filter']=$_POST;
 	}
 	// if(!empty($_POST['gt'][0])){
@@ -177,7 +178,6 @@ if(isset($_SESSION['encours_filter'])){
 }
 
 
-
 if(isset($_POST['save_all'])){
 	$_SESSION['temp']=$_POST['id_encours'];
 	header("Location: edit-encours.php");
@@ -211,9 +211,11 @@ sort($listMarque);
 $listFou=array_filter($listFou);
 sort($listFou);
 
-if(isset($_POST['display'])){
-	$_SESSION['encours_col']=$_POST['cols'];
-}
+
+
+
+
+
 if(isset($_POST['kill_session'])){
 	if(isset($_SESSION['encours_col'])){
 		unset($_SESSION['encours_col']);

@@ -116,12 +116,20 @@ function nbRep($pdoBt, $idMsg)
 
 
 
+if(isset($_GET['success'])){
+    $arrSuccess=[
+        '1'=>'reponse envoyée avec succès',
+        '2'=>'demande clôturée avec succèss',
+    ];
+    $success[]=$arrSuccess[$_GET['success']];
+}
+
 
 //----------------------------------------------------
 // VIEW - HEADER
 //----------------------------------------------------
 
-include('../view/_head.php');
+include('../view/_head-bt.php');
 include('../view/_navbar.php');
 
 //----------------------------------------------------
@@ -131,5 +139,5 @@ include ('dashboard.ct.php');
 //----------------------------------------------------
 // VIEW - FOOTER
 //----------------------------------------------------
-include('../view/_footer.php');
+include('../view/_footer-bt.php');
 

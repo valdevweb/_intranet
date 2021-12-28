@@ -80,9 +80,9 @@ if(isset($_POST['post-msg'])){
 	}
 	//formulaire conforme
 	if(empty($errors)){
-		for($i=0;$i<count($_FILES['file']['name']) ;$i++){
-			if($_FILES['file']['name'][$i]!=""){
-				$filename=$_FILES['file']['name'][$i];
+		for($i=0;$i<count($_FILES['files']['name']) ;$i++){
+			if($_FILES['files']['name'][$i]!=""){
+				$filename=$_FILES['files']['name'][$i];
 				$ext = pathinfo($filename, PATHINFO_EXTENSION);
 				$filenameNoExt = basename($filename, '.'.$ext);
 				$filenameNoExt=str_replace(" ","_",$filenameNoExt);
@@ -95,7 +95,7 @@ if(isset($_POST['post-msg'])){
 				}else{
 					$fileList= $fileList.'; '.$filenameNew;
 				}
-				$uploaded=move_uploaded_file($_FILES['file']['tmp_name'][$i],$uploadDir.$filenameNew );
+				$uploaded=move_uploaded_file($_FILES['files']['tmp_name'][$i],$uploadDir.$filenameNew );
 				if($uploaded==false){
 					$errors[]="Impossible d'ajouter la pièce jointe";
 				}
@@ -170,13 +170,174 @@ if(isset($_POST['post-msg'])){
 
 
 //header et nav bar
-include ('../view/_head.php');
+include ('../view/_head-bt.php');
 include ('../view/_navbar.php');
 // echo "session " . $_SESSION['id'];
 //contenu
-include('contact.ct.php');
+
+?>
+
+<div id="container" class="container">
+
+	<div class="row">
+		<div class="col-lg-1"></div>
+		<div class="col">
+			<?php
+			include('../view/_errors.php');
+			?>
+		</div>
+		<div class="col-lg-1"></div>
+	</div>
+	<div class="row my-5 pb-5">
+		<div class="col-5">
+			<div class="card text-white mb-3">
+				<div class="card-header bg-primary">
+					<div class="row">
+						<div class="col-auto">
+							<img src="../img/contact/img_avatar100.png" alt="Avatar" class="w3-circle">
+						</div>
+						<div class="col">
+							<h5><?= $service['service'] ?></h5>
+						</div>
+					</div>
+				</div>
+				<div class="card-body bg-light text-dark">
+					<h5 class="card-title">Description : <?= $service['description'] ?></h5>
+					<p class="card-text">
+						<strong>Vos interlocteurs :</strong><br>
+						<?php
+						$count=0;
+						foreach ($serviceMembers as $key => $n) {
+							$size=count($serviceMembers);
+							if($n['resp']){
+								echo $n['fullname']. ' <br> ';
+							}else{
+								if ($key==$size-1) {
+									echo $n['fullname'];
+
+								}else{
+									echo $n['fullname'].' - ';
+
+								}
+							}
+						}
+						?>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col p-3 border">
+			<h1 class="text-main-blue">Votre demande</h1>
+			<form class='down' id="msg-form" action="<?=htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'] ?>" method="post" enctype="multipart/form-data">
+
+				<div class="row">
+					<div class="col">
+						<div class="form-group">
+							<label for="objet">Objet :</label>
+							<input type="text" class="form-control" name="objet" id="objet" required value="<?=isset($_POST['objet'])? $_POST['objet']: ""?>">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="form-group">
+							<label for="msg">Message :</label>
+							<textarea class="form-control" name="msg" id="msg" row="3" style="height: 250px;" required><?=isset($_POST['msg'])? $_POST['msg']: ""?></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="form-group">
+							<label for="name">Votre nom :</label>
+							<input type="text" class="form-control" name="name" id="name" title="seules les lettres sont autorisées" type="text" required="require" pattern="[a-zA-Z ]+" value="<?=isset($_POST['name'])? $_POST['name']: ""?>">
+						</div>
+					</div>
+					<div class="col">
+						<div class="form-group">
+							<label for="email">Votre email :</label>
+							<input type="text" class="form-control" name="email" id="email" value="<?=isset($_POST['email'])? $_POST['email']: ""?>" required>
+						</div>
+					</div>
+
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="row">
+							<div class="col mb-3 text-main-blue text-center sub-title font-weight-bold ">
+								Fichiers  :
+							</div>
+						</div>
+						<div class="row">
+							<div class="col  bg-blue-input rounded pt-2">
+								<div class="form-group text-right">
+									<label class="btn btn-upload-primary btn-file text-center">
+										<input type="file" name="files[]" class='form-control-file' multiple id="files">
+										Sélectionner
+									</label>
+								</div>
+								<div class="row mt-3">
+									<div class="col" id="form-zone"></div>
+								</div>
+								<div class="row mt-3">
+									<div class="col" id="warning-zone"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row mt-2">
+					<div class="col text-right">
+						<button class="btn btn-primary" type="submit" name="post-msg" id="post-msg">Envoyer</button>
+					</div>
+				</div>
+
+			</form>
+
+		</div>
+	</div>
+	<div class="row pb-5">
+		<div class="col">
+
+		</div>
+	</div>
+
+	<!-- contenu -->
+</div>
+<script src="../../public/js/upload-helpers.js"></script>
+<script type="text/javascript">
+	$(document).ready(function (){
+
+
+		$('#addmore').click(function(){
+			$('#p-add-more').prepend('<p><input type="file" name="file[]"></p>');
+			$('input[type="file"]').val();
+		});
+		$('#files').change(function(){
+			noRename('files','warning-zone', 'form-zone')
+		});
+		$("#msg-form").submit(function(e){
+			if($("#email").val()!="" && $("#objet").val()!="" && $("#msg").val()!="" && $("#nom").val()!=""){
+				if ($("#email").val()) {
+
+					var email = $("#email").val();
+					var filter = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+					if (filter.test(email)) {
+						$('input[name="post-msg"]').hide();
+						$('#wait').text("Merci de patienter...");
+					}
+				}
+			}
+		});
+	});
+</script>
+
+
+
+<?php
+
 
 
 // footer avec les scripts et fin de html
-include('../view/_footer.php');
+include('../view/_footer-bt.php');
 

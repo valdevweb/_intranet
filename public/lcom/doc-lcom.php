@@ -22,13 +22,7 @@ $pageCss=explode(".php",$page);
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
-//header et nav bar
-include ('../view/_head-mig-bis.php');
-include ('../view/_navbar.php');
 
-//----------------------------------------------------------------
-//			functions
-//----------------------------------------------------------------
 function getDoc($pdoBt)
 {
 	$req=$pdoBt->query("SELECT filename,webname,id_cat, doc_lcom_cat.nom FROM doc_lcom LEFT JOIN doc_lcom_cat ON id_cat=doc_lcom_cat.id ORDER BY doc_lcom_cat.nom,date_upload");
@@ -40,10 +34,8 @@ $allDoc=getDoc($pdoBt);
 $errors=[];
 $success=[];
 
-//----------------------------------------------------------------
-//			traitement formmulaire
-//----------------------------------------------------------------
-
+include ('../view/_head-bt.php');
+include ('../view/_navbar.php');
 
 ?>
 
@@ -93,5 +85,5 @@ $success=[];
 
 
 // footer avec les scripts et fin de html
-include('../view/_footer-mig-bis.php');
+include('../view/_footer-bt.php');
 ?>

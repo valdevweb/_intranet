@@ -123,20 +123,26 @@ hr.line{
   text-decoration: none;
   color: #fd7e14;
 }
-
-
-
-.mag{
-  background-color: #0D47A1 !important;
-  color: #fff;
+.card-panel {
+  position: relative !important;
+  border-radius: 20px !important;
+  padding: 1rem !important;
 }
 
 
+.mag{
+  background-color: #cce5ff !important;
+  /* color: #fff; */
+}
+.bt{
+  background-color: #fbe3c0 !important;
+
+}
+
 .nom{
   font-size: 0.95em !important;
-  line-height: 0.5 !important;
   font-style: italic;
-  margin: 0 !important;
+  margin: 0.5rem !important;
   padding-left: 40px;
 }
 

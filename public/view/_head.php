@@ -21,10 +21,14 @@
 	<link rel="stylesheet" href="<?= ROOT_PATH ."/vendor/materialize/css/materialize.css"?>">
 	<link rel="stylesheet" href="<?=ROOT_PATH . "/vendor/fontawesome/css/font-awesome.min.css" ?>">
     <link rel="stylesheet" href="<?=ROOT_PATH ."/vendor/w3c/w3c.css"?>">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../../vendor/bootstrap/css/bootstrap.css">
+
+
 	<!--  Scripts-->
 	<!-- on charge jquery dès le début pour pouvoir ajouter dynamiquement des scripts qui utilisent jquery -->
 	<script src="<?=ROOT_PATH."/vendor/jquery/jquery-3.2.1.js" ?>"></script>
+	<script src="../js/nav.js"></script>
+
 	<title>Portail BTLec</title>
 </head>
 <body>

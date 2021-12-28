@@ -41,7 +41,7 @@ $userServiceList=[];
 $userServiceList=$userManager->getUserServiceContact($pdoBt,$_SESSION['id_web_user']);
 
 
-function checkSelectedHisto($idService){
+function checkSelectedDash($idService){
 	if(isset($_POST['services'])){
 		if($_POST['services']==$idService){
 			return " selected ";
@@ -114,15 +114,15 @@ function nbRep($pdoBt, $idMsg)
 // VIEW - HEADER
 //----------------------------------------------------
 
-include('../view/_head.php');
+include('../view/_head-bt.php');
 include('../view/_navbar.php');
 
 //----------------------------------------------------
 // VIEW - CONTENT
 //----------------------------------------------------
-include ('histo.ct.php');
+include ('dashboard.ct.php');
 //----------------------------------------------------
 // VIEW - FOOTER
 //----------------------------------------------------
-include('../view/_footer.php');
+include('../view/_footer-bt.php');
 

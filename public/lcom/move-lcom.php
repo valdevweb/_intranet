@@ -33,9 +33,8 @@ $pageCss=explode(".php",$page);
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
-//header et nav bar
-include ('../view/_head-mig-bis.php');
-include ('../view/_navbar.php');
+
+
 
 //----------------------------------------------------------------
 //			functions
@@ -82,7 +81,8 @@ if(isset($_GET['delete']))
 
 	}
 }
-
+include ('../view/_head-bt.php');
+include ('../view/_navbar.php');
 ?>
 
 <div class="container white-container shadow">
@@ -143,5 +143,5 @@ if(isset($_GET['delete']))
 
 
 // footer avec les scripts et fin de html
-include('../view/_footer-mig-bis.php');
+include('../view/_footer-bt.php');
 ?>

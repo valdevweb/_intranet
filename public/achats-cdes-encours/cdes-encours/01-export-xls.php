@@ -59,7 +59,7 @@ $highestColumn = $sheet->getHighestColumn();
 $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn);
 
 for ($i=0; $i < 21 ; $i++){
-    $sheet->getColumnDimension(getNameFromNumber($i))->setAutoSize(true);
+	$sheet->getColumnDimension(getNameFromNumber($i))->setAutoSize(true);
 
 }
 
@@ -120,14 +120,12 @@ foreach ($listCdes as $key => $cdes) {
 				$sheet->setCellValue(getNameFromNumber($colId).$row,$listInfos[$cdes['id']][$key]['id']);
 				$sheet->setCellValue(getNameFromNumber($colQte).$row,$listInfos[$cdes['id']][$key]['qte_previ']);
 				$sheet->setCellValue(getNameFromNumber($colDate).$row,$listInfos[$cdes['id']][$key]['date_previ']);
-				$spreadsheet->getActiveSheet()->getStyle(getNameFromNumber($colDate).$row)
-				->getNumberFormat()
-				->setFormatCode('DD/MM/YYYY');
+
 				$sheet->setCellValue(getNameFromNumber($colCmt).$row,$listInfos[$cdes['id']][$key]['cmt']);
 				$spreadsheet->getActiveSheet()->getStyle(getNameFromNumber($colCmt).$row)->getAlignment()->setWrapText(true);
-			$spreadsheet->getActiveSheet()->getColumnDimension(getNameFromNumber($colDate))->setWidth(100, 'pt');
-			$spreadsheet->getActiveSheet()->getColumnDimension(getNameFromNumber($colCmt))->setWidth(100, 'pt');
-			$spreadsheet->getActiveSheet()->getColumnDimension(getNameFromNumber($colQte))->setWidth(100, 'pt');
+				$spreadsheet->getActiveSheet()->getColumnDimension(getNameFromNumber($colDate))->setWidth(100, 'pt');
+				$spreadsheet->getActiveSheet()->getColumnDimension(getNameFromNumber($colCmt))->setWidth(100, 'pt');
+				$spreadsheet->getActiveSheet()->getColumnDimension(getNameFromNumber($colQte))->setWidth(100, 'pt');
 
 			}
 
@@ -166,6 +164,13 @@ for ($i=0; $i <6 ; $i++) {
 	$spreadsheet->getActiveSheet()->getColumnDimension($firstColLetter)->setVisible(false);
 
 }
+
+// $spreadsheet->getActiveSheet()->getProtection()->setSheet(true);
+// $spreadsheet->getDefaultStyle()->getProtection()->setLocked(false);
+// // $spreadsheet->getActiveSheet()->getColumnDimension('v')->setVisible(false);
+// $sheet->getStyle('a:u')->getProtection()->setLocked(\PhpOffice\PhpSpreadsheet\Style\Protection::PROTECTION_PROTECTED);
+
+
 $filename="commandes_en_cours.xlsx";
 
 

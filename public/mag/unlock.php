@@ -30,8 +30,7 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 //header et nav bar
-include ('../view/_head-mig.php');
-include ('../view/_navbar.php');
+
 
 //----------------------------------------------------------------
 //			functions
@@ -218,7 +217,8 @@ if(isset($_POST['submit'])){
 
 
 
-
+include ('../view/_head-bt.php');
+include ('../view/_navbar.php');
 
 
 
@@ -229,4 +229,4 @@ include('unlock.ct.php');
 
 
 // footer avec les scripts et fin de html
-include('../view/_footer.php');
+include('../view/_footer-bt.php');

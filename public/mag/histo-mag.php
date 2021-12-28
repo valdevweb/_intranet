@@ -58,7 +58,7 @@ $allMsg=listAllMsg($pdoBt);
 	//tri le tableau en fonction des id réponse et date msg
 
 //header et nav bar
-include ('../view/_head-mig.php');
+include ('../view/_head-bt.php');
 include ('../view/_navbar.php');
 // echo "session " . $_SESSION['id'];
 //contenu
@@ -66,4 +66,4 @@ include('histo-mag.ct.php');
 
 
 // footer avec les scripts et fin de html
-include('../view/_footer.php');
+include('../view/_footer-bt.php');

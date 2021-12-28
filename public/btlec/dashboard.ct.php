@@ -4,164 +4,156 @@
 // $lastRepDate= $nbRep[$idMsg]['last_reply_date'];
 // $by= $nbRep[$idMsg]['replied_by'];
 ?>
-
-<div class="container">
-	<!-- titre -->
-	<h1 class="blue-text text-darken-2">Demandes magasin</h1>
-
-	<!-- select -->
+<div id="container" class="container">
+	<div class="row py-5">
+		<div class="col">
+			<h1 class="text-main-blue">Demandes magasin</h1>
+		</div>
+	</div>
 	<div class="row">
-		<form class="browser-default" action="<?=htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post" >
-			<div class="col l4"></div>
-			<div class="col l4">
-				<!-- <p class="center">Choisir un service</p> -->
-				<select class="browser-default select-service"  name="services" id="services"  onchange="this.form.submit()">
-					<option name='service' value="" >toutes les demandes</option>
-					<?php foreach ($listServicesContact as $key => $service): ?>
-						<option name='service' value='<?= $service['id']?>' <?= checkSelectedDash($service['id'])?>><?= $service['service']?></option>
-					<?php endforeach ?>
+		<div class="col-lg-1"></div>
+		<div class="col">
+			<?php
+			include('../view/_errors.php');
+			?>
+		</div>
+		<div class="col-lg-1"></div>
+	</div>
+	<div class="row">
+		<div class="col"></div>
+		<div class="col">
+			<div class="form-group">
+				<form class="browser-default" action="<?=htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post" >
+					<select class="form-control select-service"  name="services" id="services"  onchange="this.form.submit()">
+						<option name='service' value="" >toutes les demandes</option>
+						<?php foreach ($listServicesContact as $key => $service): ?>
+							<option name='service' value='<?= $service['id']?>' <?= checkSelectedDash($service['id'])?>><?= $service['service']?></option>
+						<?php endforeach ?>
 
-				</select>
+					</select>
+				</form>
+
 			</div>
-			<div class="col l4"></div>
-		</form>
+		</div>
+		<div class="col"></div>
 	</div>
 
+
+
 	<div class="row">
-		<p class="success-msg">
-			<?php
-			if(isset($_GET['success']))
-			{
-				if($_GET['success']==1)
-				{
-					echo  "reponse envoyée avec succès";
-				}
-				elseif ($_GET['success']==2)
-				{
-					echo "demande clôturée avec succès";
-				}
-			}?>
-		</p>
-
-
-		<!-- debut boucle pour affichage des resultats => messages envoyés au services -->
-		<br><br>
-		<div id="list-msg">
+		<div class="col">
 			<?php foreach ($msg as $key => $value): ?>
-				<?php
-
-
-
-				 ?>
-				<!-- un message  -->
-				<article class="msg"  data-service='<?= $value['id_service']; ?>' >
-					<!-- entete -->
-
-					<div class="row <?= $value['color']?> box-border" >
-						<?php $idMag=$value['id_mag'];
-
-
-						$magInfo=$magManager->getMagByGalec($value['id_galec']);
-
-
-
-						?>
-						<div class="col l3">
-							<p class="boldtxt">N° dossier :
-								<?= $value['idMsg']  ?>
-							</p>
-						</div>
-
-						<div class="col l5">
-							<p class="boldtxt">MAGASIN :
-								<?= $magInfo->getDeno()  ?>
-							</p>
-						</div>
-
-
-						<div class="col l2">
-							<p class="boldtxt">Code BTLec :
-								<?= $magInfo->getId()  ?>
-							</p>
-						</div>
-						<div class="col l2">
-							<p class="boldtxt">Code Galec :
-								<?= $magInfo->getGalec()  ?>
-							</p>
-						</div>
-					</div>
-					<?php
-			//formatage des données pour affichage
-					$date=new DateTime($value['date_msg']);
-					$dateMsg=$date->format('d-m-Y à  H:i');
-
-			//si on a des réponse bt
-					if($nbRep=nbRep($pdoBt, $value['idMsg']))
-					{
-						$nbRepmsg=' - '. $nbRep['nb_rep'] . ' réponse(s)';
-						$lastDateRep=$nbRep['last_reply_date'];
-						$lastDateRep=date('d-m-Y à H:i', strtotime($lastDateRep));
-						$by=$nbRep['replied_by'];
-
-					}
-					else
-					{
-						$nbRepmsg='';
-						$by="";
-				// ajout avertissement si message plus vieux de 5 jours et sans réponse
-						$lastDateRep=warning($date);
-
-					}
-
-
-					// $nbRep
-
-					?>
-
-					<!-- contenu du message -->
-					<div class="row white box-border">
-						<div class="col l12">
-							<p class="center">SERVICE <?=strtoupper($value['service'])?></p>
-							<div class="col l4">
-								<p><span class="labelFor">Demande du : </span><?= $dateMsg ?> </p>
-							</div>
-							<div class="col l5">
-								<p class="boldtxt">Interlocuteur :
-									<?=$value['who'] ?>
-									<?php 	 // $magInfo['city'] . ' - ' .$magInfo['cp']  ?>
+				<?php $idMag=$value['id_mag'];
+				$magInfo=$magManager->getMagByGalec($value['id_galec']);
+				?>
+				<div class="row <?= $value['color']?>"  >
+					<div class="col border font-weight-bold">
+						<div class="row">
+							<div class="col l3">
+								<p class="boldtxt">N° dossier :
+									<?= $value['idMsg']  ?>
 								</p>
 							</div>
-							<div class="col l3">
-								<p><span class="labelForSmaller">Etat : </span> <?= $value['etat'] .' ' .$nbRepmsg ?> </p>
-								<p>
-								</div>
-								<div class="col l9">
-									<p><span class="labelFor">Dernière réponse le : </span><?= $lastDateRep ?> </p>
-								</div>
-								<div class="col l3">
-									<p><span class="labelForSmaller">Par : </span><?= empty(!$by)? repliedByIntoName($pdoUser,$by):'' ?> </p>
-									<p>
-									</div>
 
-									<div class="col l12">
-										<p><span class="labelFor">Objet : </span><?= $objet=$value['objet']; ?></p>
-									</div>
-									<div class="col l12">
-										<p><span class="labelFor">Message : </span><br><?= $msg=$value['msg']; ?></p>
-									</div>
-									<div class="col l6 align-left"><span class="labelFor">Pièce jointe : </span><?=formatPJ($value['inc_file']) ?></div>
-									<div class="col l6 align-right"><a href="answer.php?msg=<?= $value['idMsg']?>" class="waves-effect waves-light btn blue darken-2">Consulter</a></div>
+							<div class="col l5">
+								<p class="boldtxt">MAGASIN :
+									<?= $magInfo->getDeno()  ?>
+								</p>
+							</div>
 
 
+							<div class="col l2">
+								<p class="boldtxt">Code BTLec :
+									<?= $magInfo->getId()  ?>
+								</p>
+							</div>
+							<div class="col l2">
+								<p class="boldtxt">Code Galec :
+									<?= $magInfo->getGalec()  ?>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<?php
+				$date=new DateTime($value['date_msg']);
+				$dateMsg=$date->format('d-m-Y à  H:i');
+			//si on a des réponse bt
+				if($nbRep=nbRep($pdoBt, $value['idMsg'])){
+					$nbRepmsg=' - '. $nbRep['nb_rep'] . ' réponse(s)';
+					$lastDateRep=$nbRep['last_reply_date'];
+					$lastDateRep=date('d-m-Y à H:i', strtotime($lastDateRep));
+					$by=$nbRep['replied_by'];
+				}else{
+					$nbRepmsg='';
+					$by="";
+				// ajout avertissement si message plus vieux de 5 jours et sans réponse
+					$lastDateRep=warning($date);
+				}
+				?>
+				<div class="row mb-3">
+					<div class="col bg-white">
+						<div class="row">
+							<div class="col text-center font-weight-bold">
+								SERVICE <?=strtoupper($value['service'])?>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<span class="font-weight-bold">Demande du : </span><?= $dateMsg ?>
+							</div>
+							<div class="col">
+								<span class="font-weight-bold">Interlocuteur :</span>	<?=$value['who'] ?>
+							</div>
+							<div class="col">
+								<span class="font-weight-bold">Etat : </span> <?= $value['etat'] .' ' .$nbRepmsg ?>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-8">
+								<span class="font-weight-bold">Dernière réponse le : </span><?= $lastDateRep ?>
+							</div>
+							<div class="col">
+								<span class="font-weight-bold">Par : </span><?= empty(!$by)? repliedByIntoName($pdoUser,$by):'' ?>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<span class="font-weight-bold">Objet : </span><?= $objet=$value['objet']; ?>
+							</div>
+						</div>
+							<div class="row">
+								<div class="col font-weight-bold">
+									Message :
 								</div>
 							</div>
-						</article> <!-- fin d'un message -->
-						<div class="down"></div>
+						<div class="row">
+							<div class="col  border m-3">
+								<?= $msg=$value['msg']; ?>
+							</div>
+						</div>
 
-					<?php endforeach ?>
-				</div> <!-- end list-msg-->
-			</div>
-		</div> <!-- end container -->
+						<div class="row">
+							<div class="col">
+								<span class="font-weight-bold">Pièce jointe : </span><?=formatPJ($value['inc_file']) ?>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col text-right">
+								<a href="answer.php?msg=<?= $value['idMsg']?>" class="btn btn-primary">Consulter</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			<?php endforeach ?>
+		</div> <!-- end list-msg-->
+	</div>
+
+
+	<!-- end container -->
+</div>
+
 
 
 

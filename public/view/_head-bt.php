@@ -16,7 +16,7 @@
 	<link rel="stylesheet" href="../css/_txt.css?<?= filemtime('../css/commun.css');?>">
     <link rel="stylesheet" type="text/css" href="../css/datatables.css">
 
-	<link rel="stylesheet" href="../css/nav.css">
+	<link rel="stylesheet" href="../css/nav.css?<?= filemtime('../css/nav.css');?>">
 	<link rel="stylesheet" type="text/css" href="../css/footer.css">
 	<!-- style propre  -->
 	<?php
@@ -43,6 +43,7 @@
 	<script src="../../vendor/jquery/jquery-3.2.1.min_ex.js"></script>
 	<script src="../../vendor/jquery-ui/jquery-ui.js"></script>
 	<script src="../../vendor/bootstrap/js/bootstrap.js"></script>
+	<script src="../js/nav.js"></script>
 	<script src="../../vendor/igorescobar/jquery-mask-plugin/src/jquery.mask.js"></script>
 
 	<title>Portail BTLec</title>

@@ -43,29 +43,11 @@ $pdoDAchat=$db->getPdo('doc_achats');
 
 $cdesAchatDao=new CdesAchatDao($pdoDAchat);
 
-// function date_grab($str)
-// {
-//   // regex pattern will match any date formatted dd-mm-yyy or d-mm-yyyy with
-//   // separators: periods, slahes, dashes
-//   $p = '{.*?(\d\d?)[\\/\.\-]([\d]{2})[\\/\.\-]([\d]{4}).*}';
-//   $date = preg_replace($p, '$3-$2-$1', $str);
-//   return new \DateTime($date);
-// }
-
-// // verify that it works correctly for your values:
-// $arr = array(
-//   "03/12/2011 (Sat)",
-//   "3.12.2011 SAT",
-//   "Date: 03/12/2011 ", /* <-- the extra trailing space is intentional */
-//   "date:03/12/2011",
-//   "date: 03/12/2011",
-//   "03/12/2011"
-// );
-
-// foreach ($arr as $str) {
-//   $date = date_grab($str);
-//   echo $date->format('Y-m-d') . "\n";
-// }
+function dateFormat($str){
+	$p = '{.*?(\d\d?)[\\/\.\-]([\d]{2})[\\/\.\-]([\d]{4}).*}';
+	$date = preg_replace($p, '$3-$2-$1', $str);
+	return new \DateTime($date);
+}
 
 
 
@@ -145,15 +127,18 @@ if(isset($_POST['import'])){
 						}
 
 						if($thisDate !=""){
-							try{
-								$thisDate=$excelStart->modify('+ '.$thisDate. ' day ');
+							if(preg_match("/^[0-9]+$/",$thisDate)){
+								try{
+									$thisDate=$excelStart->modify('+ '.$thisDate. ' day ');
+									$thisDate=$thisDate->format("Y-m-d");
+								}catch(Exception $e){
+									echo "ligne ". $row." la date ".$thisDate. " n'est pas dans un format reconnu";
+								}
+							}else{
+								$thisDate=dateFormat($thisDate);
 								$thisDate=$thisDate->format("Y-m-d");
-							// echo $thisDate;
-							// echo "<br>";
-							}catch(Exception $e){
-								echo "la date à la ligne ".$row. " n'est pas dans un format correct. <br>";
-								exit;
 							}
+
 						}else{
 							$thisDate=null;
 						}
@@ -166,7 +151,6 @@ if(isset($_POST['import'])){
 							if ($idDetail=="") {
 								// echo "iddetail null ligne ".$row;
 							}else{
-
 								$cdesAchatDao->insertInfos($idImport, $idDetail,$thisDate, $thisQte, $thisCmt);
 							}
 
@@ -175,15 +159,9 @@ if(isset($_POST['import'])){
 											// echo "maj info row ".$row;
 							// echo "<br>";
 							$cdesAchatDao->updateInfo($thisId, $thisDate, $thisQte,$thisCmt);
-
 						}
 
 					}
-
-
-
-
-
 
 				}
 
@@ -319,9 +297,9 @@ include('../view/_navbar.php');
 						<thead class="thead-light">
 							<tr>
 								<th>Fournisseur</th>
+								<th>Commande</th>
 								<th>Article</th>
 								<th>Dossier</th>
-
 								<th>Réf</th>
 								<th class="text-right">Qte prévi</th>
 								<th class="text-right">Date prévi</th>
@@ -334,6 +312,7 @@ include('../view/_navbar.php');
 							<?php foreach ($listInfo as $key => $info): ?>
 								<tr>
 									<td><?=$info['fournisseur']?></td>
+									<td><?=$info['id_cde']?></td>
 									<td><?=$info['article']?></td>
 									<td><?=$info['dossier']?></td>
 									<td><?=$info['ref']?></td>

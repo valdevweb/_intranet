@@ -40,7 +40,8 @@ class MsgManager{
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 	public function getListDdeEncoursService($pdoBt,$idservice){
-		$req=$pdoBt->prepare("SELECT  *, msg.id as idMsg FROM msg
+		$req=$pdoBt->prepare("SELECT  *, msg.id as idMsg
+			FROM msg
 			LEFT JOIN web_users.services ON msg.id_service=web_users.services.id  WHERE etat <> :clos AND id_service= :id_service ORDER BY id_service, date_msg DESC");
 		$req->execute(array(
 			':clos' =>'clos',

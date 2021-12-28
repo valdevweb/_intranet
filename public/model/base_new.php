@@ -45,6 +45,8 @@ include('../view/_navbar.php');
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
+
+	
 	<!-- contenu -->
 </div>
 

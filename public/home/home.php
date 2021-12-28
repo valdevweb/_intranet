@@ -91,36 +91,6 @@ if(!empty($listGazette)){
 	$listFiles=$gazetteDao->getFilesEncours();
 	$listLinks=$gazetteDao->getLinkEncours();
 }
-// les 2 dernière gazettes opportunités
-// $gazetteAppros=showLastGazettesAppros($pdoBt);
-// $link=URL_UPLOAD."gazette/";
-// $approHtml="";
-// if($gazetteAppros){
-// 	foreach ($gazetteAppros as $gazette){
-// 		//modif du 20/06
-// 		if(!empty($gazette['title'])){
-// 			$detail=" : <br>";
-// 			$detail.=str_replace("<br />"," - ",$gazette['title']);
-// 		}else{
-// 			$detail="";
-// 		}
-// 		$filename=$gazette['file'];
-// 		$filename=explode(".",$filename);
-// 		$approFilename=$filename[0];
-// 		$approHtml .= "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gazette['file']."'><i class='fa fa-hand-o-right pr-3' aria-hidden='true'></i>".$approFilename."</a>"  . $detail."</li>";
-// 	}
-// }
-// $gazetteSpe=showThisWeekSpe($pdoBt);
-
-
-
-// $speHtml="";
-
-// if($gazetteSpe){
-// 	foreach ($gazetteSpe as $gSpe){
-// 		$speHtml .= "<li><a class='simple-link stat-link' data-user-session='".$_SESSION['user']."' href='".$link.$gSpe['file']."'><i class='fa fa-hand-o-right pr-3' aria-hidden='true'></i>" .$gSpe['title'] ."</a></li>";
-// 	}
-// }
 
 
 
@@ -168,6 +138,8 @@ elseif ($_SESSION['id_type']==3){
 	$action = (empty($action)) ? "connexion non mag - non BT" : $action;
 	addRecord($pdoStat,$page,$action, $descr);
 }
+
+
 // redirection si besoin
 if(!empty($_SESSION['goto'])){
 		//si on a une query string, on la découpe et on vérif si la 1er partie est numerique ou pas
@@ -183,23 +155,20 @@ if(!empty($_SESSION['goto'])){
 		}else{
 			header('Location:' .ROOT_PATH. '/public/' .$goto);
 		}
-	}
-	if(str_contains($_SESSION['goto'], "workflow") == 1 ){
+	}else{
+		if(str_contains($_SESSION['goto'], "workflow") == 1 ){
 
-		if($_SESSION['id_service'] == 12 || $_SESSION['id_service'] == 30){
-			header('Location:'. ROOT_PATH. '/public/workflow/indexutilisateur.php?id='.$_SESSION['id_service']);
+			if($_SESSION['id_service'] == 12 || $_SESSION['id_service'] == 30){
+				header('Location:'. ROOT_PATH. '/public/workflow/indexutilisateur.php?id='.$_SESSION['id_service']);
+			}else{
+				header('Location:'. ROOT_PATH. '/public/workflow/index.php?id='.$_SESSION['id_service']);
+			}
 		}else{
-			header('Location:'. ROOT_PATH. '/public/workflow/index.php?id='.$_SESSION['id_service']);
+			header('Location:' .ROOT_PATH. '/public/' .$goto);
 		}
 	}
+
 }
-
-
-/*--------------------------------------------------*/
-/*        reversements                              */
-/*            => si info moins de 7 jours afficher*/
-/*--------------------------------------------------*/
-
 
 
 
