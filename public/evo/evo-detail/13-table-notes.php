@@ -12,7 +12,7 @@
 		<?php foreach ($notes as $key => $note): ?>
 
 		<tr>
-			<td><?=date('d-m-Y', strtotime($note['insert_on']))?></td>
+			<td class="nowrap"><?=date('d-m-Y', strtotime($note['insert_on']))?></td>
 			<td><?=nl2br($note['note'])?></td>
 			<td><a href="?id=<?=$_GET['id']?>&id_note_update=<?=$note['id']?>#title-note"><i class="fas fa-edit"></i></a></td>
 			<td><a href="?id=<?=$_GET['id']?>&id_note_del=<?=$note['id']?>"><i class="fas fa-trash"></i></a></td>

@@ -424,6 +424,9 @@ include('../view/_navbar.php');
 					<?php include 'evo-detail/13-table-notes.php' ?>
 				<?php endif ?>
 			</div>
+
+		</div>
+		<div class="row">
 			<div class="col text-right  align-self-end">
 				<div id="add-note" class="btn btn-dark">Ajouter une note</div>
 			</div>
