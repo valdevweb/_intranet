@@ -41,6 +41,6 @@ th, td {
 }
 
 legend{
-  width: auto;
-  font-size: 20px;
+  width: auto !important;
+  font-size: 20px !important;
 }
