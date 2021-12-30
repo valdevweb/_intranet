@@ -60,8 +60,6 @@ if(isset($_POST['search_article'])){
 
 if(isset($_GET['id'])){
 	$dataArticle=$baDao->getArtByIdBa($_GET['id']);
-
-
 }
 $idOp='';
 
