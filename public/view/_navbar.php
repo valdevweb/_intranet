@@ -363,9 +363,9 @@ $dWorkflow=isUserAllowed($pdoUser, [100]);
 									<li><a class="dropdown-item bg-red" href="<?=ROOT_PATH?>/public/batch-exploit/batch-monitoring.php">Batch monitoring</a></li>
 									<li><a class="dropdown-item bg-red" href="<?=ROOT_PATH?>/public/exploit/droit.php">Droits</a></li>
 								<?php endif ?>
-								<li><a class="dropdown-item bg-red" href="<?=ROOT_PATH?>/public/evo/planning-evo.php">Planning</a></li>
-								<li><a class="dropdown-item bg-red" href="<?=ROOT_PATH?>/public/evo/vosdemandes-evo.php">Vos demandes</a></li>
 							<?php endif ?>
+							<li><a class="dropdown-item bg-red" href="<?=ROOT_PATH?>/public/evo/planning-evo.php">Planning</a></li>
+							<li><a class="dropdown-item bg-red" href="<?=ROOT_PATH?>/public/evo/vosdemandes-evo.php">Vos demandes</a></li>
 						</ul>
 					</li>
 					<li class="nav-item">
