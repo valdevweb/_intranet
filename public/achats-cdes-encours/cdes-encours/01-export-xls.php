@@ -16,9 +16,11 @@ function getNameFromNumber($num) {
 }
 
 
+$templateTrp = 'xl-file\export-encours.xlsx';
+$spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($templateTrp);
 
 
-$spreadsheet = new Spreadsheet();
+
 $sheet = $spreadsheet->getActiveSheet();
 $sheet->setCellValue('A1', 'id');
 $sheet->setCellValue('b1', 'GT');
@@ -117,11 +119,19 @@ foreach ($listCdes as $key => $cdes) {
 				$colQte=21+($key*4)+1; //w
 				$colDate=21+($key*4)+2; //x
 				$colCmt=21+($key*4)+3;//y
+				$cmt=$listInfos[$cdes['id']][$key]['cmt'];
+
+				if($cmt!="" || $cmt!=" "){
+					$cmt=ltrim($cmt);
+					$cmt=" ".$cmt;
+				}
+
+
 				$sheet->setCellValue(getNameFromNumber($colId).$row,$listInfos[$cdes['id']][$key]['id']);
 				$sheet->setCellValue(getNameFromNumber($colQte).$row,$listInfos[$cdes['id']][$key]['qte_previ']);
 				$sheet->setCellValue(getNameFromNumber($colDate).$row,$listInfos[$cdes['id']][$key]['date_previ']);
 
-				$sheet->setCellValue(getNameFromNumber($colCmt).$row,$listInfos[$cdes['id']][$key]['cmt']);
+				$sheet->setCellValue(getNameFromNumber($colCmt).$row, $cmt);
 				$spreadsheet->getActiveSheet()->getStyle(getNameFromNumber($colCmt).$row)->getAlignment()->setWrapText(true);
 				$spreadsheet->getActiveSheet()->getColumnDimension(getNameFromNumber($colDate))->setWidth(100, 'pt');
 				$spreadsheet->getActiveSheet()->getColumnDimension(getNameFromNumber($colCmt))->setWidth(100, 'pt');
