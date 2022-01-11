@@ -37,9 +37,16 @@ class CdesAchatDao{
 		if($param==null){
 			$param="";
 		}
-		$req=$this->pdo->query("
-			SELECT cdes_infos.id_encours, cdes_infos.* FROM cdes_infos LEFT JOIN qlik.cdes_encours ON id_encours=qlik.cdes_encours.id
-			WHERE date_cde IS NOT NULL AND qte_cde !=0 AND del=0  and (date_previ is null or date_previ >= NOW()) $param ORDER BY date_cde");
+		$query="SELECT cdes_infos.id_encours, cdes_infos.* 
+		FROM cdes_infos 
+		LEFT JOIN qlik.cdes_encours ON id_encours=qlik.cdes_encours.id
+		WHERE (date_cde IS NOT NULL AND qte_cde !=0 AND del=0)  and date_previ >= :date_previ  $param ORDER BY date_cde";
+		// echo $query;
+		$req=$this->pdo->prepare($query);
+		$req->execute([
+			':date_previ'	=>date('Y-m-d')
+		]);
+
 		return $req->fetchAll(PDO::FETCH_GROUP);
 	}
 
@@ -124,7 +131,7 @@ class CdesAchatDao{
 	}
 
 
-	public function deleteInfo($id){
+	public function maskInfo($id){
 		$req=$this->pdo->prepare("UPDATE cdes_infos SET del=1, id_web_user= :id_web_user, date_update= :date_update WHERE id= :id");
 		$req->execute([
 			':id'		=>$id,
