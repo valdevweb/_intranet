@@ -76,6 +76,7 @@ $affectionEmail=[];
 if(isset($_POST['submit'])){
 
 	$arrAppliRespId=EvoHelpers::arrayAppliRespId($pdoEvo);
+
 	$idResp=$arrAppliRespId[$_POST['appli']];
 	$idEvo=$evoDao->insertEvo($idResp);
 	if(!empty($_POST['users'])){
@@ -141,6 +142,7 @@ if(isset($_POST['submit'])){
 		$cc=[];
 
 	}else{
+
 		$devMail=$arrDevMail[$idResp];
 		$dest=[$devMail, 'luc.muller@btlecest.leclerc', 'david.syllebranque@btlecest.leclerc'];
 		$dest=array_unique($dest);
@@ -154,6 +156,8 @@ if(isset($_POST['submit'])){
 	}else{
 		$module="";
 	}
+
+
 	$demandeur=UserHelpers::getFullname($pdoUser, $_SESSION['id_web_user']);
 	$htmlMail=str_replace('{WHAT}',$arrPf[$_POST['pf']]. ' - ' .$arrAppli[$_POST['appli']].$module,$htmlMail);
 	$htmlMail=str_replace('{EVO}',$_POST['evo'],$htmlMail);
