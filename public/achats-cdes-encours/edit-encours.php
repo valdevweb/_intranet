@@ -70,7 +70,7 @@ if(isset($_POST['save'])){
 }
 
 if(isset($_GET['del'])){
-	$cdesAchatDao->deleteInfo($_GET['del']);
+	$cdesAchatDao->maskInfo($_GET['del']);
 	$successQ='?success=deleted';
 	unset($_POST);
 	header("Location:".$_SERVER['PHP_SELF'].$successQ,true,303);
