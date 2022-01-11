@@ -223,18 +223,6 @@ if(isset($_POST['plan'])){
 	}
 }
 
-
-
-
-
-	// echo "<pre>";
-	// print_r($byWeek);
-	// echo '</pre>';
-
-// $array1 = array('a' => 1, 'b' => 2, 'c' => 3);
-// $array2 = array('d' => 4, 'e' => 5, 'f' => 6, 'a' => 'new value', '123' => 456);
-// print_r(array_replace($array1, $array2));
-//------------------------------------------------------
 include('../view/_head-bt.php');
 include('../view/_navbar.php');
 ?>
@@ -341,14 +329,6 @@ include('../view/_navbar.php');
 	</div>
 
 	<div class="bg-separation-thin"></div>
-
-	<div class="row">
-		<div class="col border">
-			<div class="bg-blue">test</div>
-		</div>
-	</div>
-
-
 	<div class="row" id="planning">
 		<div class="col">
 
