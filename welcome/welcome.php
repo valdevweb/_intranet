@@ -77,6 +77,11 @@ $moisEnCoursAll=sommeCaJour($pdoQlik,$premierJourMois,$dateAr['veille']);
 $moisEnCoursLastYearAll=sommeCaJour($pdoQlik,$premierJourMoisLastYear,$dateAr['fin_mois_lastyear']);
 $moisFinAll=caMois($pdoQlik, $dateAr['month'], $dateAr['year']);
 $moisFinLastYearAll=caMois($pdoQlik, $dateAr['month'], $dateAr['lastyear']);
+// Alex condition afin d'éviter message d'erreur bool, déclaration à 0 pour le calcul
+if(empty($moisFinLastYearAll)){
+	$moisFinLastYearAll=['somme'=>"0", 'colis'=>'0', 'palettes'=>'0'];
+}
+//
 $anneeEnCoursAll=caAnnee($pdoQlik,$dateAr['month'], $dateAr['year']);
 $anneeEnCoursLastYearAll=caAnnee($pdoQlik,$dateAr['month'], $dateAr['lastyear']);
 $anneeFinAll=caAnnee($pdoQlik,12, $dateAr['year']);
@@ -113,7 +118,6 @@ $moisEnCoursPourcent=pourcentage($moisEnCoursCa,$moisEnCoursLastYearCa,$moisEnCo
 $moisFinCa=$moisFinAll['somme'];
 $moisFinColis=$moisFinAll['colis'];
 $moisFinPalettes=$moisFinAll['palettes'];
-
 $moisFinLastYearCa=$moisFinLastYearAll['somme'];
 $moisFinLastYearColis=$moisFinLastYearAll['colis'];
 $moisFinLastYearPalettes=$moisFinLastYearAll['palettes'];
