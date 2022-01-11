@@ -59,6 +59,7 @@ $arrSaisie=[];
 if(isset($_POST['import'])){
 	if(isset($_FILES['file_import']['tmp_name']) && !empty($_FILES['file_import']['tmp_name'])){
 		$orginalFilename=$_FILES['file_import']['name'];
+		echo $orginalFilename;
 		$ext = pathinfo($orginalFilename, PATHINFO_EXTENSION);
 
 		if($ext!="xls" && $ext!="xlsx"){
@@ -87,9 +88,9 @@ if(isset($_POST['import'])){
 
 
 			// 1er boucle pour tester la validité des valeurs, on veut qu'aucune ligne ne soit insérée en base de donnée si le fichier contient des erreurs
-			for ($row = 2; $row < $highestRow; ++$row){
+			for ($row = 2; $row <= $highestRow; ++$row){
 
-				// 1er colonne de donnée = v soit 22
+			// 1er colonne de donnée = v soit 22
 				// col 1 =v cad 22  // ordre : id qte date cmt
 				for ($i=0; $i <6 ; $i++) {
 					$colId=21+($i*4)+0;
@@ -103,10 +104,11 @@ if(isset($_POST['import'])){
 
 					$thisId=$worksheet->getCell($colIdStr . $row)->getValue();
 					$thisDate=$worksheet->getCell($colDateStr . $row)->getValue();
-					$thisQte=$worksheet->getCell($colQteStr . $row)->getValue();
+					$thisQte=trim($worksheet->getCell($colQteStr . $row)->getValue());
 					$thisCmt=$worksheet->getCell($colCmtStr . $row)->getValue();
 					// echo "infos ligne" .$row. " : id ".$thisId." date ".$thisDate. " qte ".$thisQte. " cmt ".$thisCmt;
 					// echo "<br>";
+
 
 
 					if($thisId=="" && $thisCmt=="" && $thisDate=="" && $thisCmt==""){
@@ -117,12 +119,13 @@ if(isset($_POST['import'])){
 						// echo "vide avec id, on supprime";
 						// echo "<br>";
 
-						// on supprimer la ligne
-						$cdesAchatDao->deleteInfo($thisId);
+						// on masque la ligne
+						$err=$cdesAchatDao->maskInfo($thisId);
+
 					}else{
 						// update ou insert
 						if(!empty($thisQte) && !is_numeric($thisQte)){
-							echo "la quantité, " .$qte. ", à la ligne ".$row. " n'est pas dans un format correct. <br>" ;
+							echo "la quantité, " .$thisQte. ", à la ligne ".$row. " n'est pas dans un format correct. <br>" ;
 							exit;
 						}
 
