@@ -10,7 +10,10 @@ label{
   content: "";
   padding-top: 10px;
 }
-
+#date_start, #date_end{
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
 
 @media (min-width: 1600px){
   .container {
