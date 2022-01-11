@@ -75,7 +75,7 @@ $newImport=undoneImport($pdoMag);
 if(empty($newImport)){
 
 }
-
+echo $newImport;
 
 $extraction=getExtraction($pdoMag,$newImport['id']);
 

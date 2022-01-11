@@ -13,6 +13,9 @@ foreach ($lotus as $key => $extraction) {
 		$codeErr=2;
 		$email=$extraction['contenu'];
 	}elseif($data['count']==1){
+
+
+
 			// trouvé unique
 		if(!strpos($data[0]['mail'][0],'/')){
 			$email=$data[0]['mail'][0];
