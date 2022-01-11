@@ -41,48 +41,25 @@ $justThese = array( "mail","displayname", "mailaddress");
 // echo "<pre>";
 // print_r($data);
 // echo '</pre>';
-$extractions=getExtraction($pdoMag, 82);
+// $extractions=getExtraction($pdoMag, 82);
 
 	// echo "<pre>";
 	// print_r($extractions);
 	// echo '</pre>';
 
 
-foreach ($extractions as $key => $extraction) {
-
-
-
-	$name=explode('/',$extraction['contenu']);
-	if (count($name)>1) {
 		// echo $name[0];
 			// echo "<pre>";
 			// print_r($name);
 			// echo '</pre>';
 
-		$name=trim($name[0]);
+		$name="ALLEZ";
 
 		$result=ldap_search($lotusCon, $ldaptree, "(CN=*".$name."*)",$justThese);
 		$data = ldap_get_entries($lotusCon, $result);
-		// echo "<pre>";
-		// print_r($data);
-		// echo '</pre>';
-		if(isset($data[0]['mailaddress'])){
+		echo "<pre>";
+		print_r($data);
+		echo '</pre>';
 
-
-
-			if(str_contains($data[0]['mailaddress'][0],'.leclerc')){
-				// $found=strpos($data[0]['mailaddress'][0],".leclerc");
-				echo "OUI pour " .$name ." REDIRECTION " .$data[0]['mailaddress'][0];
-				echo "<br>";
-			}else{
-							// echo $data[0]['mailaddress'][0];
-				// echo "<br>";
-				//
-			}
-		}
-	}
-
-
-}
 
 
