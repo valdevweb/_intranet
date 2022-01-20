@@ -303,7 +303,7 @@ $dWorkflow=isUserAllowed($pdoUser, [100]);
 				</li>
 				<?php if ($dWorkflow): ?>
 					<?php
-					if($_SESSION['id_service'] == 12 || $_SESSION['id_service'] == 30 ){
+					if( $_SESSION['id'] == 1053 || $_SESSION['id'] == 1895 || $_SESSION['id'] == 974 || $_SESSION['id'] == 687 || $_SESSION['id'] == 968 ){
 						$hassub = "";
 						$lienindex = "indexutilisateur.php?session=".$_SESSION['id'];
 					}else{
@@ -314,7 +314,7 @@ $dWorkflow=isUserAllowed($pdoUser, [100]);
 							$lienindex = "index.php?session=".$_SESSION['id_service'];
 						}
 					}
-					if($_SESSION['id_service'] == 5 || $_SESSION['id_service'] == 18 || $_SESSION['id'] == 702 || $_SESSION['id'] == 959 ){
+					if((isset($_SESSION['id_service']) && $_SESSION['id_service'] == 5 || $_SESSION['id_service'] == 18) || $_SESSION['id'] == 702 || $_SESSION['id'] == 959 ){
 						$hassub = "has-sub";
 						$lienindex = "dashboard.php";
 					}
@@ -338,6 +338,7 @@ $dWorkflow=isUserAllowed($pdoUser, [100]);
 								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/indexutilisateur.php?session=1895">Arnaud Fleury</a></li>
 								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/index.php?session=1405">Salem MOUSSOUNI</a></li>
 								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/index.php?session=686">Nathalie Castelletta</a></li>
+								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/index.php?session=982">Valérie</a></li>
 							</ul>
 						</li>
 					<?php endif ?>
