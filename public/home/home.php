@@ -32,6 +32,9 @@ require '../../Class/GazetteDao.php';
 
 $db=new Db();
 $pdoUser=$db->getPdo('web_users');
+
+
+
 $pdoStat=$db->getPdo('stats');
 $pdoBt=$db->getPdo('btlec');
 $pdoLitige=$db->getPdo('litige');
