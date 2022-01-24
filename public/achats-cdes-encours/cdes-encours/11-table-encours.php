@@ -40,6 +40,14 @@
 						}
 						$percentRecu = $percentRecu . "%";
 					}
+
+					if(isset($listInfos[$cdes['id']])){
+						foreach ($listInfos[$cdes['id']] as $key => $value) {
+							$totalPrevi+=$listInfos[$cdes['id']][$key]['qte_previ'];
+						}
+						// on prend la quantité de commande celle qui est mise à jour par les réceptions
+						$restant=$cdes['qte_uv_cde']- $totalPrevi;
+					}
 					?>
 					<tr id="<?= $cdes['id'] ?>" data="nosession">
 						<td class="col-1"><?= $cdes['gt'] ?></td>
@@ -59,10 +67,7 @@
 						<td class="col-15 text-right"><?= $cdes['qte_uv_cde'] ?></td>
 						<td class="col-16 text-right"><?= $cdes['cond_carton'] ?></td>
 						<td class="col-17 text-right <?= $bgColor ?>"><?= $percentRecu ?></td>
-						<?php if (isset($totalPrevi)) {
-							$restant = $cdes['qte_init'] - $totalPrevi;
-						}
-						?>
+					
 						<td class="col-18 text-right"><?= $restant ?></td>
 						<td class="col-19"><?= ($cdes['date_liv_init'] != null) ? date('d/m/y', strtotime($cdes['date_liv_init'])) : "" ?></td>
 						<td class="col-20"><?= ($cdes['date_liv'] != null) ? date('d/m/y', strtotime($cdes['date_liv'])) : "" ?></td>
@@ -77,7 +82,7 @@
 									<table class="table-striped table-primary m-1">
 										<?php foreach ($listInfos[$cdes['id']] as $key => $value) : ?>
 											<!-- on affiche que les lignes où la date prévi est géla ou supérieure à aujourd'hui -->
-											<?php if ($listInfos[$cdes['id']][$key]['date_previ']>=date('Y-m-d') ) : ?>
+
 
 											<tr>
 												<?php
@@ -121,7 +126,7 @@
 												?>
 
 											</tr>
-											<?php endif ?>
+
 										<?php endforeach ?>
 									</table>
 								<?php endif ?>
