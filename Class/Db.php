@@ -16,7 +16,7 @@ class Db{
 		}else{
 			$this->dbName=$dbName;
 		}
-
+	
 		try {
 			$pdo=new PDO("mysql:host=$this->host;port=3306;dbname=$this->dbName", $this->dbUser, $this->pwd);
 			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
