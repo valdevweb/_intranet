@@ -13,6 +13,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 require '../../Class/Db.php';
 require '../../Class/achats/CdesDao.php';
 require '../../Class/achats/CdesAchatDao.php';
+require '../../Class/achats/CdesCmtDao.php';
 require '../../Class/FournisseursHelpers.php';
 require '../../Class/FormHelpers.php';
 require '../../Class/UserDao.php';
@@ -32,7 +33,7 @@ $pdoDAchat=$db->getPdo('doc_achats');
 $cdesDao=new CdesDao($pdoQlik);
 $userDao= new UserDao($pdoUser);
 $cdesAchatDao=new CdesAchatDao($pdoDAchat);
-
+$cdesCmtDao=new  CdesCmtDao($pdoDAchat);
 
 $userGts=$userDao->getUserGts($_SESSION['id_web_user']);
 if(isset($_SESSION['temp'])){
@@ -169,12 +170,10 @@ if(isset($_SESSION['encours_filter'])){
 	$nbArt=count($listCdes);
 	$listInfos=$cdesAchatDao->getInfos($param);
 
-
 }else{
 	$listCdes=$cdesDao->getCdes();
 	$nbArt=count($listCdes);
 	$listInfos=$cdesAchatDao->getInfos();
-
 }
 
 
@@ -224,6 +223,7 @@ if(isset($_POST['kill_session'])){
 	}
 }
 if(isset($_GET['export-xls'])){
+	include 'xl-cols/xl-cols.php';
 	include 'cdes-encours/01-export-xls.php';
 }
 
