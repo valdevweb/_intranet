@@ -31,6 +31,8 @@ $cdesDao=new CdesDao($pdoQlik);
 
 $cdesAchatDao=new CdesAchatDao($pdoDAchat);
 $paramForm="";
+echo "page désactivée";
+exit;
 if(isset($_SESSION['temp'])){
 	$param="WHERE id=".join(' OR id=',$_SESSION['temp']);
 	$paramEncours="AND (id_encours=".join(' OR id_encours=',$_SESSION['temp']).')';
@@ -96,6 +98,8 @@ if(isset($_POST['update'])){
 	header("Location:".$_SERVER['PHP_SELF'].$successQ,true,303);
 
 }
+
+
 //------------------------------------------------------
 include('../view/_head-bt.php');
 include('../view/_navbar.php');
