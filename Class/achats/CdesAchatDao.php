@@ -13,19 +13,18 @@ class CdesAchatDao{
 		$this->pdo=$pdo;
 		return $pdo;
 	}
-	public function insertInfos($idImport,$idEncours, $date, $qte,$cmt){
+	public function insertInfos($idImport,$idEncours, $date, $qte){
 		$week=null;
 		if($date!=null){
 			$week=(new DateTime($date))->format('W');
 		}
-		$req=$this->pdo->prepare("INSERT INTO cdes_infos (id_encours, id_import, date_previ, week_previ, qte_previ, cmt, date_insert, id_web_user) VALUES (:id_encours, :id_import, :date_previ, :week_previ, :qte_previ, :cmt, :date_insert, :id_web_user)");
+		$req=$this->pdo->prepare("INSERT INTO cdes_infos (id_encours, id_import, date_previ, week_previ, qte_previ, date_insert, id_web_user) VALUES (:id_encours, :id_import, :date_previ, :week_previ, :qte_previ, :date_insert, :id_web_user)");
 		$req->execute([
 			':id_encours'	=>$idEncours,
 			':id_import'	=>$idImport,
 			':date_previ'	=>$date,
 			':week_previ'	=>$week,
 			':qte_previ'	=>$qte,
-			':cmt'	=>$cmt,
 			':date_insert'		=>date('Y-m-d H:i:s'),
 			':id_web_user'	=>$_SESSION['id_web_user'],
 
@@ -33,6 +32,7 @@ class CdesAchatDao{
 		return $req->rowCount();
 	}
 
+	
 	public function getInfos($param=null){
 		if($param==null){
 			$param="";
@@ -147,18 +147,17 @@ class CdesAchatDao{
 		]);
 		return $req->fetch();
 	}
-	public function updateInfo($id, $date, $qte,$cmt){
+	public function updateInfo($id, $date, $qte){
 		$week=null;
 		if($date!=null){
 			$week=(new DateTime($date))->format('W');
 		}
-		$req=$this->pdo->prepare("UPDATE cdes_infos SET date_previ= :date_previ, week_previ= :week_previ, qte_previ= :qte_previ, cmt=:cmt, id_web_user= :id_web_user, date_update= :date_update WHERE id= :id");
+		$req=$this->pdo->prepare("UPDATE cdes_infos SET date_previ= :date_previ, week_previ= :week_previ, qte_previ= :qte_previ, id_web_user= :id_web_user, date_update= :date_update WHERE id= :id");
 		$req->execute([
 			':id'		=>$id,
 			':date_previ'	=>$date,
 			':week_previ'	=>$week,
 			':qte_previ'	=>$qte,
-			':cmt'	=>$cmt,
 			':id_web_user'	=>$_SESSION['id_web_user'],
 			':date_update'	=>date('Y-m-d H:i:s')
 		]);
@@ -182,7 +181,7 @@ class CdesAchatDao{
 		return $req->fetchAll();
 	}
 
-
+	
 }
 
 
