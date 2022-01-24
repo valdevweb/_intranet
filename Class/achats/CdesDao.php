@@ -5,9 +5,9 @@ class CdesDao{
 
 	// pdoOcc
 	private $pdo;
-
+	private $version= VERSION;
 	public function __construct($pdo){
-		$this->setPdo($pdo);
+		$this->setPdo($pdo);		
 	}
 	public function setPdo($pdo){
 		$this->pdo=$pdo;
@@ -39,8 +39,9 @@ class CdesDao{
 		if($param==null){
 			$param="";
 		}
+		// echo $param;
 		$req=$this->pdo->query("
-			SELECT * FROM cdes_encours
+			SELECT cdes_encours.*, cmt_btlec, cmt_galec  FROM cdes_encours LEFT JOIN {$this->version}doc_achats.cdes_cmts ON cdes_encours.id=cdes_cmts.id
 			WHERE date_cde IS NOT NULL AND qte_cde !=0  $param ORDER BY date_cde");
 		return $req->fetchAll();
 	}
@@ -48,8 +49,10 @@ class CdesDao{
 			if($param==null){
 			$param="";
 		}
+		// echo $param;
+
 		$req=$this->pdo->prepare("
-			SELECT * FROM cdes_encours
+			SELECT cdes_encours.*, cmt_btlec, cmt_galec FROM cdes_encours LEFT JOIN {$this->version}doc_achats.cdes_cmts ON cdes_encours.id=cdes_cmts.id
 			WHERE date_cde IS NOT NULL AND qte_cde !=0  AND fournisseur= :fournisseur $param GROUP BY id_cde ORDER BY id_cde");
 			$req->execute([
 			':fournisseur'		=>$fou
