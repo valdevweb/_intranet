@@ -1,186 +1,154 @@
 <?php
 require('../../config/autoload.php');
-if(!isset($_SESSION['id'])){
-	header('Location:'. ROOT_PATH.'/index.php');
+if (!isset($_SESSION['id'])) {
+	header('Location:' . ROOT_PATH . '/index.php');
 	exit();
 }
 
-function exceptions_error_handler($severity, $message, $filename, $lineno) {
+function exceptions_error_handler($severity, $message, $filename, $lineno)
+{
 	throw new ErrorException($message, 0, $severity, $filename, $lineno);
 }
 
 set_error_handler('exceptions_error_handler');
 
-$pageCss=explode(".php",basename(__file__));
-$pageCss=$pageCss[0];
-$cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
+$pageCss = explode(".php", basename(__file__));
+$pageCss = $pageCss[0];
+$cssFile = ROOT_PATH . "/public/css/" . $pageCss . ".css";
 
 
 require '../../Class/Db.php';
 require '../../Class/achats/CdesAchatDao.php';
+require '../../Class/achats/CdesCmtDao.php';
 require '../../Class/UserHelpers.php';
 require_once '../../vendor/autoload.php';
 
+include 'xl-cols/xl-cols.php';
+
+use Mpdf\Tag\Tr;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-function getNameFromNumber($num) {
-	$numeric = $num % 26;
-	$letter = chr(65 + $numeric);
-	$num2 = intval($num / 26);
-	if ($num2 > 0) {
-		return getNameFromNumber($num2 - 1) . $letter;
-	} else {
-		return $letter;
-	}
-}
-
-$errors=[];
-$success=[];
-$db=new Db();
-$pdoUser=$db->getPdo('web_users');
-$pdoDAchat=$db->getPdo('doc_achats');
-
-$cdesAchatDao=new CdesAchatDao($pdoDAchat);
-
-function dateFormat($str){
-	$p = '{.*?(\d\d?)[\\/\.\-]([\d]{2})[\\/\.\-]([\d]{4}).*}';
-	$date = preg_replace($p, '$3-$2-$1', $str);
-	return new \DateTime($date);
-}
 
 
 
+		
+
+$errors = [];
+$success = [];
+$db = new Db();
+$pdoUser = $db->getPdo('web_users');
+$pdoDAchat = $db->getPdo('doc_achats');
+
+$cdesAchatDao = new CdesAchatDao($pdoDAchat);
+$cdesCmtDao = new CdesCmtDao($pdoDAchat);
 
 
-$excelStart=new DateTimeImmutable('1899-12-30');
-$arrSaisie=[];
-
-if(isset($_POST['import'])){
-	if(isset($_FILES['file_import']['tmp_name']) && !empty($_FILES['file_import']['tmp_name'])){
-		$orginalFilename=$_FILES['file_import']['name'];
-		echo $orginalFilename;
+if (isset($_POST['import'])) {
+	if (isset($_FILES['file_import']['tmp_name']) && !empty($_FILES['file_import']['tmp_name'])) {
+		$orginalFilename = $_FILES['file_import']['name'];
 		$ext = pathinfo($orginalFilename, PATHINFO_EXTENSION);
 
-		if($ext!="xls" && $ext!="xlsx"){
-			$errors[]="fichier non authorisé";
+		if ($ext != "xls" && $ext != "xlsx") {
+			$errors[] = "fichier non authorisé";
 		}
 
-		if(empty($errors)){
+		if (empty($errors)) {
 			$filename = 'import_infos_cdes' . time() . '.' . $ext;
-			$uploaded=move_uploaded_file($_FILES['file_import']['tmp_name'],DIR_UPLOAD.'cdes-encours\\'.$filename );
-			if($uploaded==false){
-				$errors[]="Nous avons rencontré un problème avec votre fichier, impossible de l'uploader vers le serveur";
+			$uploaded = move_uploaded_file($_FILES['file_import']['tmp_name'], DIR_UPLOAD . 'cdes-encours\\' . $filename);
+			if ($uploaded == false) {
+				$errors[] = "Nous avons rencontré un problème avec votre fichier, impossible de l'uploader vers le serveur";
 			}
 		}
-		if(empty($errors)){
+	} else {
+		$errors[] = "Merci de sélectionner un fichier";
+	}
+	if (empty($errors)) {
 
-			$idImport=$cdesAchatDao->insertImport($filename, $_SESSION['id_web_user']);
-			$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx');
-			$reader->setReadDataOnly(TRUE);
+		$idImport = $cdesAchatDao->insertImport($filename, $_SESSION['id_web_user']);
+		$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx');
+		$reader->setReadDataOnly(TRUE);
 
-
-			$path=DIR_UPLOAD.'cdes-encours\\';
-			$fxls=$path.$filename;
-			$spreadsheet = $reader->load($fxls);
-			$worksheet = $spreadsheet->getActiveSheet();
-			$highestRow = $worksheet->getHighestRow();
-
-
-			// 1er boucle pour tester la validité des valeurs, on veut qu'aucune ligne ne soit insérée en base de donnée si le fichier contient des erreurs
-			for ($row = 2; $row <= $highestRow; ++$row){
-
-			// 1er colonne de donnée = v soit 22
-				// col 1 =v cad 22  // ordre : id qte date cmt
-				for ($i=0; $i <6 ; $i++) {
-					$colId=21+($i*4)+0;
-					$colIdStr=getNameFromNumber($colId);
-					$colQte=21+($i*4)+1;
-					$colQteStr=getNameFromNumber($colQte);
-					$colDate=21+($i*4)+2;
-					$colDateStr=getNameFromNumber($colDate);
-					$colCmt=21+($i*4)+3;
-					$colCmtStr=getNameFromNumber($colCmt);
-
-					$thisId=$worksheet->getCell($colIdStr . $row)->getValue();
-					$thisDate=$worksheet->getCell($colDateStr . $row)->getValue();
-					$thisQte=trim($worksheet->getCell($colQteStr . $row)->getValue());
-					$thisCmt=$worksheet->getCell($colCmtStr . $row)->getValue();
-					// echo "infos ligne" .$row. " : id ".$thisId." date ".$thisDate. " qte ".$thisQte. " cmt ".$thisCmt;
-					// echo "<br>";
+		$path = DIR_UPLOAD . 'cdes-encours\\';
+		$fxls = $path . $filename;
+		$spreadsheet = $reader->load($fxls);
+		$worksheet = $spreadsheet->getActiveSheet();
+		$highestRow = $worksheet->getHighestRow();
 
 
+		for ($row = 2; $row <= $highestRow; ++$row) {
+			$idCdesEncours = $worksheet->getCell('a' . $row)->getValue();
+			$cmtBtlec = $worksheet->getCell('x' . $row)->getValue();
+			$cmtGalec = $worksheet->getCell('y' . $row)->getValue();
+			// on verifie si on a des commentaires galec ou bt
+			// si oui, on vérifie si on a une ligne en db (cdes_cmt) pour savoir si update ou insert
+			if (trim($cmtBtlec) != "" || trim($cmtGalec)) {
+				$cmts = $cdesCmtDao->getCmt($idCdesEncours);
+				if (empty($cmts)) {
+					$cdesCmtDao->insertCmt($idCdesEncours, $idImport, trim($cmtBtlec), trim($cmtGalec));
+				} else {
+					$cdesCmtDao->updateCmt($idCdesEncours, $idImport, trim($cmtBtlec), trim($cmtGalec));
+				}
+			}
+			// on parcourt les colonnes qte_previ, date_previ et id cdes infos
+			// si id cdes info non vide, update  (soit maj date et previ soit, si champs date et previ vide, mask info)
+			// si id cdes info vide et date ou qte non vide, insert
 
-					if($thisId=="" && $thisCmt=="" && $thisDate=="" && $thisCmt==""){
-						// echo "vide on fait rien";
-						// echo "<br>";
-						// on fait rien
-					}elseif($thisId!="" && $thisCmt=="" && $thisDate=="" && $thisCmt==""){
-						// echo "vide avec id, on supprime";
-						// echo "<br>";
+			for ($i = 0; $i < count(COL_QTE); $i++) {
+				$qtePrevi = $worksheet->getCell(COL_QTE_STR[$i] . $row)->getValue();
+				$datePrevi = $worksheet->getCell(COL_DATE_STR[$i] . $row)->getValue();
+				$idInfo = $worksheet->getCell(COL_ID_INFO_STR[$i] . $row)->getValue();
 
-						// on masque la ligne
-						$err=$cdesAchatDao->maskInfo($thisId);
-
-					}else{
-						// update ou insert
-						if(!empty($thisQte) && !is_numeric($thisQte)){
-							echo "la quantité, " .$thisQte. ", à la ligne ".$row. " n'est pas dans un format correct. <br>" ;
+				if (!empty($qtePrevi) && !is_numeric($qtePrevi)) {
+					echo "la quantité, " . $qtePrevi . ", à la ligne " . $row . " n'est pas dans un format correct. <br>";
+					exit;
+				}
+				if ($datePrevi != "") {
+					// si on a que des chiffres sans séparateur, on a une date format excel
+					if (preg_match("/^[0-9]+$/", $datePrevi)) {
+						try {
+							$datePrevi = $excelStart->modify('+ ' . $datePrevi . ' day ');
+							$datePrevi = $datePrevi->format("Y-m-d");
+						} catch (Exception $e) {
+							echo "ligne " . $row . " la date " . $datePrevi . " n'est pas dans un format reconnu";
 							exit;
 						}
-
-						if($thisDate !=""){
-							if(preg_match("/^[0-9]+$/",$thisDate)){
-								try{
-									$thisDate=$excelStart->modify('+ '.$thisDate. ' day ');
-									$thisDate=$thisDate->format("Y-m-d");
-								}catch(Exception $e){
-									echo "ligne ". $row." la date ".$thisDate. " n'est pas dans un format reconnu";
-								}
-							}else{
-								$thisDate=dateFormat($thisDate);
-								$thisDate=$thisDate->format("Y-m-d");
-							}
-
-						}else{
-							$thisDate=null;
+					} else {
+						try {
+							$datePrevi = dateFormat($datePrevi);
+						} catch (Error $e) {
+							echo "ligne " . $row . " la date " . $datePrevi . " n'est pas dans un format reconnu";
+							exit;
 						}
-						$thisQte=(empty($thisQte))?null:$thisQte;
-
-						if($thisId==""){
-						// nouvelles données
-							$idDetail=$worksheet->getCell('a' . $row)->getValue();
-
-							if ($idDetail=="") {
-								// echo "iddetail null ligne ".$row;
-							}else{
-								$cdesAchatDao->insertInfos($idImport, $idDetail,$thisDate, $thisQte, $thisCmt);
-							}
-
-						}else{
-							// update donnees
-											// echo "maj info row ".$row;
-							// echo "<br>";
-							$cdesAchatDao->updateInfo($thisId, $thisDate, $thisQte,$thisCmt);
-						}
-
 					}
-
 				}
 
 
+
+
+				if (!empty($qtePrevi) || !empty($datePrevi)) {
+					$qtePrevi = (empty($qtePrevi)) ? null : $qtePrevi;
+					$datePrevi = (empty($datePrevi))? null: $datePrevi;
+					if (empty($idInfo)) {
+						$cdesAchatDao->insertInfos($idImport, $idCdesEncours, $datePrevi, $qtePrevi);
+					} else {
+						$cdesAchatDao->updateInfo($idInfo, $datePrevi, $qtePrevi);
+					}
+				} elseif ((empty($qtePrevi) || empty($datePrevi)) && !empty($idInfo)) {
+					$cdesAchatDao->maskInfo($idInfo);
+				}
 			}
-
-			$successQ='?id_import='.$idImport;
-			unset($_POST);
-			header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
-
 		}
+
+		$successQ = '?id_import=' . $idImport;
+		unset($_POST);
+		header("Location: " . $_SERVER['PHP_SELF'] . $successQ, true, 303);
 	}
 }
 
-if(isset($_GET['id_import'])){
-	$listInfo=$cdesAchatDao->getInfoByImport($_GET['id_import']);
+
+if (isset($_GET['id_import'])) {
+	$listInfo = $cdesAchatDao->getInfoByImport($_GET['id_import']);
 }
 
 
@@ -188,8 +156,8 @@ if(isset($_GET['id_import'])){
 
 
 
-if(!empty($errors)){
-	$errors[]="<br>Veuillez corriger le ficher et le réimporter";
+if (!empty($errors)) {
+	$errors[] = "<br>Veuillez corriger le ficher et le réimporter";
 }
 
 
@@ -212,7 +180,9 @@ include('../view/_navbar.php');
 		<div class="col">
 			<div class="alert alert-secondary">
 				<p>Cette page vous permet d'intégrer des infos livraison via le fichier d'export des commandes en cours. Après avoir réalisé l'export des lignes de commandes de votre sélection, vous devez saisir vos infos en respectant les régles énoncées ci dessous puis importer le fichier via le formulaire</p>
-				<div class="text-center font-weight-bold"><p>Consignes de saisie :</p></div>
+				<div class="text-center font-weight-bold">
+					<p>Consignes de saisie :</p>
+				</div>
 				<div class="row">
 					<div class="col  text-success">
 						<div class="font-weight-bold">Vous devez :</div>
@@ -256,11 +226,11 @@ include('../view/_navbar.php');
 	</div>
 	<div class="row">
 		<div class="col">
-			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post" enctype="multipart/form-data">
+			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post" enctype="multipart/form-data">
 
 				<div class="row">
 					<div class="col mb-3 text-main-blue text-center sub-title font-weight-bold ">
-						Fichier commande en cours  :
+						Fichier commande en cours :
 					</div>
 				</div>
 				<div class="row">
@@ -274,7 +244,7 @@ include('../view/_navbar.php');
 						</div>
 						<div class="form-group text-right">
 							<label class="btn btn-upload-primary btn-file text-center">
-								<input type="file" name="file_import" class='form-control-file'  id="file_import">
+								<input type="file" name="file_import" class='form-control-file' id="file_import">
 								Sélectionner
 							</label>
 						</div>
@@ -292,9 +262,9 @@ include('../view/_navbar.php');
 	</div>
 	<div class="row pb-5">
 		<div class="col">
-			<?php if (isset($listInfo)): ?>
+			<?php if (isset($listInfo)) : ?>
 				<h5 class="text-main-blue mb-5">Récapitualtif des données importées :</h5>
-				<?php if (!empty($listInfo)): ?>
+				<?php if (!empty($listInfo)) : ?>
 
 					<table class="table table-sm">
 						<thead class="thead-light">
@@ -312,24 +282,24 @@ include('../view/_navbar.php');
 							</tr>
 						</thead>
 						<tbody>
-							<?php foreach ($listInfo as $key => $info): ?>
+							<?php foreach ($listInfo as $key => $info) : ?>
 								<tr>
-									<td><?=$info['fournisseur']?></td>
-									<td><?=$info['id_cde']?></td>
-									<td><?=$info['article']?></td>
-									<td><?=$info['dossier']?></td>
-									<td><?=$info['ref']?></td>
-									<td class="text-right text-main-blue font-weight-bold"><?=$info['qte_previ']?></td>
-									<td class="text-right text-main-blue font-weight-bold"><?=!empty($info['date_previ'])?date('d/m/Y',strtotime($info['date_previ'])):""?></td>
-									<td class="text-right text-main-blue font-weight-bold"><?=$info['week_previ']?></td>
-									<td class="text-main-blue font-weight-bold"><?=nl2br($info['cmt'])?></td>
+									<td><?= $info['fournisseur'] ?></td>
+									<td><?= $info['id_cde'] ?></td>
+									<td><?= $info['article'] ?></td>
+									<td><?= $info['dossier'] ?></td>
+									<td><?= $info['ref'] ?></td>
+									<td class="text-right text-main-blue font-weight-bold"><?= $info['qte_previ'] ?></td>
+									<td class="text-right text-main-blue font-weight-bold"><?= !empty($info['date_previ']) ? date('d/m/Y', strtotime($info['date_previ'])) : "" ?></td>
+									<td class="text-right text-main-blue font-weight-bold"><?= $info['week_previ'] ?></td>
+									<td class="text-main-blue font-weight-bold"><?= nl2br($info['cmt']) ?></td>
 
 								</tr>
 
 							<?php endforeach ?>
 						</tbody>
 					</table>
-				<?php else: ?>
+				<?php else : ?>
 					<div class="alert alert-primary">Aucune information n'a été importée</div>
 				<?php endif ?>
 			<?php endif ?>
@@ -343,14 +313,11 @@ include('../view/_navbar.php');
 </div>
 <script src="../js/upload-helpers.js"></script>
 <script type="text/javascript">
-
 	$(document).ready(function() {
-		$('#file_import').change(function(){
-			noRename('file_import','warning-zone', 'form-zone')
+		$('#file_import').change(function() {
+			noRename('file_import', 'warning-zone', 'form-zone')
 		});
 	});
-
-
 </script>
 
 <?php
