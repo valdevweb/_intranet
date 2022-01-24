@@ -305,16 +305,13 @@ $dWorkflow=isUserAllowed($pdoUser, [100]);
 					<?php
 					if( $_SESSION['id'] == 1053 || $_SESSION['id'] == 1895 || $_SESSION['id'] == 974 || $_SESSION['id'] == 687 || $_SESSION['id'] == 968 ){
 						$hassub = "";
-						$lienindex = "indexutilisateur.php?session=".$_SESSION['id'];
+						$lienindex = "indexutilisateur.php";
 					}else{
 						$hassub = "";
-						if($_SESSION['id_web_user'] == 1405){
-							$lienindex = "index.php?session=1405";
-						}else{
-							$lienindex = "index.php?session=".$_SESSION['id_service'];
-						}
+						$lienindex = "index.php";
+						
 					}
-					if((isset($_SESSION['id_service']) && $_SESSION['id_service'] == 5 || $_SESSION['id_service'] == 18) || $_SESSION['id'] == 702 || $_SESSION['id'] == 959 ){
+					if((isset($_SESSION['id_service']) && ($_SESSION['id_service'] == 5 || $_SESSION['id_service'] == 18)) || $_SESSION['id'] == 702 || $_SESSION['id'] == 959 ){
 						$hassub = "has-sub";
 						$lienindex = "dashboard.php";
 					}
@@ -328,17 +325,7 @@ $dWorkflow=isUserAllowed($pdoUser, [100]);
 							<a class="nav-link dropdown-toggle" href="#" id="nav-workflow" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Workflow</a>
 							<ul class="dropdown-menu" aria-labelledby="nav-workflow">
 								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/dashboard.php">Tableau de bord</a></li>
-								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/index.php?session=9">Service R.H</a></li>
-								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/index.php?session=7">Service Informatique</a></li>
-								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/index.php?session=31">Service Pilotage</a></li>
-								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/indexutilisateur.php?session=1053">Benoit Dubots</a></li>
-								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/indexutilisateur.php?session=687">Benoit Chamarre</a></li>
-								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/indexutilisateur.php?session=968">Claire Serrano</a></li>
-								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/indexutilisateur.php?session=974">Cédric Vasseur</a></li>
-								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/indexutilisateur.php?session=1895">Arnaud Fleury</a></li>
-								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/index.php?session=1405">Salem MOUSSOUNI</a></li>
-								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/index.php?session=686">Nathalie Castelletta</a></li>
-								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/index.php?session=982">Valérie</a></li>
+								<li><a class="dropdown-item" href="<?=ROOT_PATH?>/public/workflow/indexchoixservice.php">Accèdez aux différents services/personnes</a></li>
 							</ul>
 						</li>
 					<?php endif ?>

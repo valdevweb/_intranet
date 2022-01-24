@@ -161,10 +161,14 @@ if(!empty($_SESSION['goto'])){
 	}else{
 		if(str_contains($_SESSION['goto'], "workflow") == 1 ){
 
-			if($_SESSION['id_service'] == 12 || $_SESSION['id_service'] == 30){
-				header('Location:'. ROOT_PATH. '/public/workflow/indexutilisateur.php?id='.$_SESSION['id_service']);
+			if( $_SESSION['id'] == 1053 || $_SESSION['id'] == 1895 || $_SESSION['id'] == 974 || $_SESSION['id'] == 687 || $_SESSION['id'] == 968 ){
+				
+				header('Location:'. ROOT_PATH. '/public/workflow/indexutilisateur.php');
 			}else{
-				header('Location:'. ROOT_PATH. '/public/workflow/index.php?id='.$_SESSION['id_service']);
+			
+					header('Location:'. ROOT_PATH. '/public/workflow/index.php');
+			
+				
 			}
 		}else{
 			header('Location:' .ROOT_PATH. '/public/' .$goto);
