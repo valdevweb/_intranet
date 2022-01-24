@@ -42,6 +42,7 @@ $pdoQlik->query("OPTIMIZE TABLE cdes_encours ");
 $pdoQlik->query("OPTIMIZE TABLE ba ");
 $pdoQlik->query("OPTIMIZE TABLE cdes_fou_qte_init ");
 $pdoQlik->query("OPTIMIZE TABLE cdes_fou ");
+$pdoQlik->query("OPTIMIZE TABLE cdes_fou_details ");
 $pdoQlik->query("OPTIMIZE TABLE cata_dossiers");
 
 insertCdes($pdoQlik);
