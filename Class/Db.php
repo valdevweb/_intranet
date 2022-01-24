@@ -11,7 +11,7 @@ class Db{
 		if($dbName=='_qlik'){
 			$this->dbName=$dbName;
 		}
-		elseif($dbName!='web_users' && $dbName!='qlik' && $dbName!='stats'){
+		elseif($dbName!='web_users' && $dbName!='stats'){
 			$this->dbName=VERSION . $dbName;
 		}else{
 			$this->dbName=$dbName;
