@@ -76,6 +76,9 @@
 								<?php if (isset($listInfos[$cdes['id']])) : ?>
 									<table class="table-striped table-primary m-1">
 										<?php foreach ($listInfos[$cdes['id']] as $key => $value) : ?>
+											<!-- on affiche que les lignes où la date prévi est géla ou supérieure à aujourd'hui -->
+											<?php if ($listInfos[$cdes['id']][$key]['date_previ']>=date('Y-m-d') ) : ?>
+
 											<tr>
 												<?php
 												$nbMaxcolspan = 4;
@@ -118,6 +121,7 @@
 												?>
 
 											</tr>
+											<?php endif ?>
 										<?php endforeach ?>
 									</table>
 								<?php endif ?>
