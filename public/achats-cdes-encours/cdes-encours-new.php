@@ -214,13 +214,7 @@ sort($listFou);
 if(isset($_POST['display'])){
 	$_SESSION['encours_col']=$_POST['cols'];
 }
-if(isset($_POST['kill_session'])){
-	if(isset($_SESSION['encours_col'])){
-		unset($_SESSION['encours_col']);
-		header("Location: cdes-encours.php");
 
-	}
-}
 if(isset($_GET['export-xls'])){
 	include 'cdes-encours/01-export-xls.php';
 }
