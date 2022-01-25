@@ -1,11 +1,13 @@
+.hidden{
+	display: none;
+}
+.show{
+	display: block;
+}
 
 .bg-primary{
   background: #0d47a1 !important;
 }
-
-
-
-/* bg */
 .bg-black{
   background-color: #000;
   color: #fff;
