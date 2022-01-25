@@ -159,11 +159,19 @@ $byWeek=[];
 
 
 foreach ($fullPlanning as $key => $planning) {
-	$wStart=(new DateTime($planning['date_start']))->format('W');
-	$wEnd=(new DateTime($planning['date_end']))->format('W');
+	$wStartZero=(new DateTime($planning['date_start']))->format('W');
+	$wEndZero=(new DateTime($planning['date_end']))->format('W');
+	$wStart=intval($wStartZero);
+	$wEnd=intval($wEndZero);
+
 	for ($w=$wStart; $w <=$wEnd ; $w++) {
 		$year=(new DateTime($planning['date_start']))->format('Y');
-		$byWeek[$w.$year][]=$planning;
+		$date=$w.$year;
+		if($w<10){
+			$date="0".$w.$year;
+		}
+		$byWeek[$date][]=$planning;
+
 	}
 }
 
