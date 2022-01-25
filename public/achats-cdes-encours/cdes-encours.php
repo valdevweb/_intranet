@@ -200,13 +200,16 @@ include('../view/_navbar.php');
 			<?php endfor ?>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col">
-			<?php if (!empty($listCdes)) : ?>
-				<?php include 'cdes-encours/11-table-encours.php' ?>
-			<?php else : ?>
-				<div class="alert alert-info">Aucune commande à afficher</div>
-			<?php endif ?>
+	<div class="horizontal-scroll">
+		<div class="row">
+			<div class="col">
+
+				<?php if (!empty($listCdes)) : ?>
+					<?php include 'cdes-encours/11-table-encours.php' ?>
+				<?php else : ?>
+					<div class="alert alert-info">Aucune commande à afficher</div>
+				<?php endif ?>
+			</div>
 		</div>
 	</div>
 </div>
@@ -222,7 +225,7 @@ include('../view/_navbar.php');
 
 
 	$(document).ready(function() {
-
+	
 		$('#export-xls').click(function(e) {
 			if ($($("#reply").val() != "")) {
 				$('#wait').append("<div class='alert alert-success'>Merci de patienter pendant la génération du fichier</div>");

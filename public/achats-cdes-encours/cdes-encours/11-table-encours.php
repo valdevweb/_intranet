@@ -1,5 +1,4 @@
 	<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
-
 		<table class="table table-sm table-striped" id="table-cde-encours">
 			<thead class="thead-dark">
 				<thead>
@@ -9,7 +8,7 @@
 						<?php endfor ?>
 						<th class="align-top bg-blue text-center"><i class="far fa-square"></i></th>
 						<th class="align-top bg-blue">Prévisions</th>
-						<th class="align-top bg-blue">Cmt BT</th>
+						<th class="align-top bg-blue cmt-btlec" >Cmt BT</th>
 						<th class="align-top bg-blue">Cmt Galec</th>
 
 					</tr>
@@ -133,8 +132,8 @@
 
 							<?php endif ?>
 						</td>
-						<td><?= $cdes['cmt_btlec'] ?></td>
-						<td><?= $cdes['cmt_galec'] ?></td>
+						<td class="cmt-btlec"><?= $cdes['cmt_btlec'] ?></td>
+						<td class="cmt-galec"><?= $cdes['cmt_galec'] ?></td>
 					</tr>
 				<?php endforeach ?>
 			</tbody>

@@ -1,6 +1,17 @@
 table{
   font-size: 0.9rem !important;
 }
+.horizontal-scroll {
+  /* overflow: hidden;
+  white-space: normal; */
+  /* white-space: nowrap; */
+  height: 800px !important;
+  width: 98vw !important;
+    overflow: scroll;
+}
+
+
+
 #col-selector{
   font-size: 0.9rem !important;
 
@@ -8,6 +19,8 @@ table{
 th {
   position: sticky !important;
   top: 0 !important; /* Don't forget this, required for the stickiness */
+  z-index: 1;  /*any positive value, layer order is global*/
+  background: #fff; /* any bg-color to overlap*/
 }
 .form-control{
   font-size: 0.9rem !important;
@@ -18,6 +31,12 @@ input::-webkit-calendar-picker-indicator{
 }
 th{
   font-weight: 400 !important;
+}
+.table .cmt-btlec{
+  min-width:600px !important;
+}
+.table .cmt-galecc{
+  min-width:600px !important;
 }
 
 tr.no-border >td{
