@@ -68,7 +68,10 @@ class CdesDao{
 		return $req->fetch();
 	}
 	public function getEncoursByIds($param){
-		$req=$this->pdo->query("SELECT cnuf, cdes_encours.* FROM cdes_encours  $param ORDER BY fournisseur, ref");
+		$version=VERSION;
+		$req=$this->pdo->query("SELECT cdes_encours.* , {$version}doc_achats.cdes_cmts.cmt_btlec, {$version}doc_achats.cdes_cmts.cmt_galec
+		FROM cdes_encours 
+		left join {$version}doc_achats.cdes_cmts ON cdes_encours.id={$version}doc_achats.cdes_cmts.id $param ORDER BY fournisseur, ref");
 		return $req->fetchAll();
 	}
 	public function getEncoursByIdsGroup($param){
