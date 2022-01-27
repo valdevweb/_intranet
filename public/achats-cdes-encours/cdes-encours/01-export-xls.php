@@ -3,16 +3,22 @@
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+//  page qui permet de générer un fichier excel commandes en cours
+// les données exportées sont celles affiches dans la page cdes-encours
+//  on récupère donc les var $listeCdes et $listInfo de la page commande an cours
 
+
+// utilisation d'un template protégé pour protéger les colonnes ids
 $templateTrp = 'xl-file\export-encours.xlsx';
 $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($templateTrp);
-
 $sheet = $spreadsheet->getActiveSheet();
-//'id', 'GT',fournisseur, Cde,Date cde, 'Article', 'Dossier', 'date debut op', 'Op', 'Réf', 'EAN', 'Désignation', 'Marque','PCB', 'Qte init colis','Engagement initial'
-//'% reçu', 'UV à recevoir', 'Colis à recevoir', 'Date livraison initiale', 'Semaine prévi', 'Qte en rendez-vous', 'Qte reste à recevoir'
 
+
+$nbColInfoAllowed = 6;
 $row = 2;
 
+
+//  insert données commandes en cours
 foreach ($listCdes as $key => $cdes) {
 	$percentRecu = "";
 	$week = "";
@@ -48,44 +54,52 @@ foreach ($listCdes as $key => $cdes) {
 	$sheet->setCellValue('r' . $row, $cdes['qte_uv_cde']);
 	$sheet->setCellValue('s' . $row, $cdes['qte_cde']);
 	$sheet->setCellValue('t' . $row, ($cdes['date_liv_init'] != null) ? date('d/m/y', strtotime($cdes['date_liv_init'])) : "");
-	$sheet->setCellValue('x' . $row, ' '.$cdes['cmt_btlec']);
-	$sheet->setCellValue('y' . $row, ' '.$cdes['cmt_galec']);
+	$sheet->setCellValue('x' . $row, ' ' . $cdes['cmt_btlec']);
+	$sheet->setCellValue('y' . $row, ' ' . $cdes['cmt_galec']);
 
-
+	// si des infos ont été saisie, on les insert en parcourant le tableau d'info cde (listInfo)
+	// on calcule la date max prévi, la semaine max prévi, la qte totale prévi, le restant prévi
+	//  on limite le nb de col info à 6
 	if (isset($listInfos[$cdes['id']])) {
-		$week = $qteReste ="";
-		$qte = 0;
+		$week = $qteReste = "";
+		$qteTotalePrevi = 0;
+
+		// compteur de colonnes info pour limiter le nb de col
+		$nbColInfo = 0;
+
+		//  récup date max et somme qte prévi + insert donnée info cdes
 		foreach ($listInfos[$cdes['id']] as $key => $value) {
-			if ($listInfos[$cdes['id']][$key]['week_previ'] != "" && $listInfos[$cdes['id']][$key]['week_previ'] != " ") {
-				// on écrase pour avoir la dernière semaine saisie
-				$week = $listInfos[$cdes['id']][$key]['week_previ'];
-				$qte = $listInfos[$cdes['id']][$key]['qte_previ'] + $qte;
+			if ($listInfos[$cdes['id']][$key]['qte_previ'] != null) {
+				$qteTotalePrevi = $listInfos[$cdes['id']][$key]['qte_previ'] + $qteTotalePrevi;
 			}
-			if ($qte != 0) {
-				$qteReste = $cdes['qte_uv_cde'] - $qte;
+			if ($listInfos[$cdes['id']][$key]['date_previ'] != null) {
+
+				if ($nbColInfo < $nbColInfoAllowed) {
+					$sheet->setCellValue(getNameFromNumber(COL_QTE[$nbColInfo]) . $row, $listInfos[$cdes['id']][$key]['qte_previ']);
+					if($listInfos[$cdes['id']][$key]['date_previ']!=null){
+						$sheet->setCellValue(getNameFromNumber(COL_DATE[$nbColInfo]) . $row, date('d-m-Y', strtotime($listInfos[$cdes['id']][$key]['date_previ'])));
+
+					}
+					$sheet->setCellValue(getNameFromNumber(COL_ID_INFO[$nbColInfo]) . $row, $listInfos[$cdes['id']][$key]['id']);
+					// recup la date de prévi la plus éloignée (les dates sont triées)
+					$datePreviMax = $listInfos[$cdes['id']][$key]['date_previ'];
+					$week = $listInfos[$cdes['id']][$key]['week_previ'];
+					$nbColInfo++;
+				}
 			}
-		
-			$sheet->setCellValue(getNameFromNumber(COL_QTE[$key]) . $row, $listInfos[$cdes['id']][$key]['qte_previ']);
-
-			$datePrevi=($listInfos[$cdes['id']][$key]['date_previ']!=null && $listInfos[$cdes['id']][$key]['date_previ']!="")?date('d/m/y', strtotime($listInfos[$cdes['id']][$key]['date_previ'])):"";
-			$sheet->setCellValue(getNameFromNumber(COL_DATE[$key]) . $row, $datePrevi);
-
-			$sheet->setCellValue(getNameFromNumber(COL_ID_INFO[$key]) . $row, $listInfos[$cdes['id']][$key]['id']);		
 		}
+		// insert des données calculées via les infos saisies
 		$sheet->setCellValue('u' . $row, $week);
-		if ($qte != 0) {
-			$sheet->setCellValue('v' . $row, $qte);
-		}
-		if ($qteReste != "") {
+		if ($qteTotalePrevi != 0) {
+			$sheet->setCellValue('v' . $row, $qteTotalePrevi);
+			$qteReste = $cdes['qte_uv_cde'] - $qteTotalePrevi;
 			$sheet->setCellValue('w' . $row, $qteReste);
 		}
-		$spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight(15, 'pt');
 	}
 	$row++;
-
 }
 
-// exit;
+
 $filename = "commandes_en_cours.xlsx";
 
 
