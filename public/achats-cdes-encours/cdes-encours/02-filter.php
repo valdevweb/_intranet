@@ -74,7 +74,7 @@ $param="";
 		$paramSearch=$_SESSION['encours_filter']['type_of_strg']. " LIKE '%".htmlspecialchars($_SESSION['encours_filter']['search_strg'], ENT_QUOTES). "%'";
 		$paramList[]=$paramSearch;
 	}
-    if(isset($_SESSION['encours_filter']['ref'])){
+    if(!empty($_SESSION['encours_filter']['ref'])){
         $paramRef="ref LIKE '%".htmlspecialchars($_SESSION['encours_filter']['ref'], ENT_QUOTES). "%'";
 		$paramList[]=$paramRef;
 
@@ -87,6 +87,7 @@ $param="";
     }
 
 	$param='AND ' .join(' AND ',$paramList);
+	// echo $param;
     /** @var CdesDao $cdesDao */
 	$listCdes=$cdesDao->getCdes($param);
 	if(isset($_SESSION['encours_filter']['fou'])){
