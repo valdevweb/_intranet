@@ -36,7 +36,7 @@ df['art_dos']=df['art_dos'].astype(float)
 
 
 
-print(df);
+print(df)
 end = time.time()
 print("Read csv without chunks: ",(end-start),"sec")
 
