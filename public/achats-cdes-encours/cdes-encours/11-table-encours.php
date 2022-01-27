@@ -4,7 +4,7 @@
 				<thead>
 					<tr>
 						<?php for ($i = 1; $i < count($tableCol); $i++) : ?>
-							<th class="align-top bg-blue col-<?= $i ?>"><?= $tableCol[$i] ?></th>
+							<th class="align-top bg-blue table-col-<?= $i ?>"><?= $tableCol[$i] ?></th>
 						<?php endfor ?>
 						<th class="align-top bg-blue text-center"><i class="far fa-square"></i></th>
 						<th class="align-top bg-blue">Prévisions</th>
@@ -49,27 +49,27 @@
 					}
 					?>
 					<tr id="<?= $cdes['id'] ?>" data="nosession">
-						<td class="col-1"><?= $cdes['gt'] ?></td>
-						<td class="col-2" class="text-right"><?= ($cdes['date_cde'] != null) ? date('d/m/y', strtotime($cdes['date_cde'])) : "" ?></td>
-						<td class="col-3"><?= $cdes['fournisseur'] ?></td>
-						<td class="col-4"><?= $cdes['marque'] ?></td>
-						<td class="col-5"><?= $cdes['article'] ?></td>
-						<td class="col-6"><?= $cdes['dossier'] ?></td>
-						<td class="col-7 text-right"><?= ($cdes['date_start'] != null) ? date('d/m/y', strtotime($cdes['date_start'])) : "" ?></td>
-						<td class="col-8"><?= strtolower($cdes['libelle_op']) ?></td>
-						<td class="col-9"><?= $cdes['ref'] ?></td>
-						<td class="col-10"><?= $cdes['ean'] ?></td>
-						<td class="col-11"><?= strtolower($cdes['libelle_art']) ?></td>
-						<td class="col-12"><?= $cdes['id_cde'] ?></td>
-						<td class="col-13 text-right"><?= $cdes['qte_init'] ?></td>
-						<td class="col-14 text-right"><?= $cdes['qte_cde'] ?></td>
-						<td class="col-15 text-right"><?= $cdes['qte_uv_cde'] ?></td>
-						<td class="col-16 text-right"><?= $cdes['cond_carton'] ?></td>
-						<td class="col-17 text-right <?= $bgColor ?>"><?= $percentRecu ?></td>
+						<td class="table-col-1"><?= $cdes['gt'] ?></td>
+						<td class="table-col-2" class="text-right"><?= ($cdes['date_cde'] != null) ? date('d/m/y', strtotime($cdes['date_cde'])) : "" ?></td>
+						<td class="table-col-3"><?= $cdes['fournisseur'] ?></td>
+						<td class="table-col-4"><?= $cdes['marque'] ?></td>
+						<td class="table-col-5"><?= $cdes['article'] ?></td>
+						<td class="table-col-6"><?= $cdes['dossier'] ?></td>
+						<td class="table-col-7 text-right"><?= ($cdes['date_start'] != null) ? date('d/m/y', strtotime($cdes['date_start'])) : "" ?></td>
+						<td class="table-col-8"><?= strtolower($cdes['libelle_op']) ?></td>
+						<td class="table-col-9"><?= $cdes['ref'] ?></td>
+						<td class="table-col-10"><?= $cdes['ean'] ?></td>
+						<td class="table-col-11"><?= strtolower($cdes['libelle_art']) ?></td>
+						<td class="table-col-12"><?= $cdes['id_cde'] ?></td>
+						<td class="table-col-13 text-right"><?= $cdes['qte_init'] ?></td>
+						<td class="table-col-14 text-right"><?= $cdes['qte_cde'] ?></td>
+						<td class="table-col-15 text-right"><?= $cdes['qte_uv_cde'] ?></td>
+						<td class="table-col-16 text-right"><?= $cdes['cond_carton'] ?></td>
+						<td class="table-col-17 text-right <?= $bgColor ?>"><?= $percentRecu ?></td>
 					
-						<td class="col-18 text-right"><?= $restant ?></td>
-						<td class="col-19"><?= ($cdes['date_liv_init'] != null) ? date('d/m/y', strtotime($cdes['date_liv_init'])) : "" ?></td>
-						<td class="col-20"><?= ($cdes['date_liv'] != null) ? date('d/m/y', strtotime($cdes['date_liv'])) : "" ?></td>
+						<td class="table-col-18 text-right"><?= $restant ?></td>
+						<td class="table-col-19"><?= ($cdes['date_liv_init'] != null) ? date('d/m/y', strtotime($cdes['date_liv_init'])) : "" ?></td>
+						<td class="table-col-20"><?= ($cdes['date_liv'] != null) ? date('d/m/y', strtotime($cdes['date_liv'])) : "" ?></td>
 						<td class="text-center">
 							<div class="form-check">
 								<input class="form-check-input select-checkbox" type="checkbox" value="<?= $cdes['id'] ?>" name="id_encours[]">
