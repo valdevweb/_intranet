@@ -39,7 +39,7 @@ $cdesCmtDao = new  CdesCmtDao($pdoDAchat);
 $userGts = $userDao->getUserGts($_SESSION['id_web_user']);
 
 
-
+unset($_SESSION['goto']);
 if (isset($_SESSION['temp'])) {
 	unset($_SESSION['temp']);
 }
@@ -248,7 +248,6 @@ include('../view/_navbar.php');
 		console.log(sessionStorage.getItem('hidden_cols'));
 		hiddenCols = sessionStorage.getItem('hidden_cols');
 		if (hiddenCols != null && hiddenCols.length != 0) {
-
 			arrHiddenCols = JSON.parse(hiddenCols);
 			for (var i = 0; i < arrHiddenCols.length; i++) {
 				var id = arrHiddenCols[i];
@@ -260,6 +259,7 @@ include('../view/_navbar.php');
 				$('.' + col).hide();
 
 			}
+			console.log(sessionStorage.getItem('hidden_cols'));
 
 		}
 		// sessionStorage.removeItem('hidden_cols');
@@ -268,7 +268,7 @@ include('../view/_navbar.php');
 			hiddenCols = sessionStorage.getItem('hidden_cols');
 			if ($(this).prop("checked")) {
 				id = $(this).attr("data-box-id");
-				col = "col-" + id;
+				col = "table-col-" + id;
 				$('.' + col).hide();
 				if (hiddenCols != null && hiddenCols.length != 0) {
 					console.log(sessionStorage);
