@@ -40,7 +40,7 @@ class CdesAchatDao{
 		$query="SELECT cdes_infos.id_encours, cdes_infos.* 
 		FROM cdes_infos 
 		LEFT JOIN qlik.cdes_encours ON id_encours=qlik.cdes_encours.id
-		WHERE (date_cde IS NOT NULL AND qte_cde !=0 AND del=0) and date_previ >= :date_previ $param ORDER BY date_cde";
+		WHERE (date_cde IS NOT NULL AND qte_cde !=0 AND del=0) and date_previ >= :date_previ $param ORDER BY date_cde, date_previ";
 		// echo $query;
 		$req=$this->pdo->prepare($query);
 		$req->execute([
