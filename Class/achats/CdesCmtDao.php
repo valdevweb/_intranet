@@ -38,6 +38,21 @@ class CdesCmtDao
         ]);
         return $this->pdo->lastInsertId();
     }
+    public function insertCmtGalec($id, $cmtGalec)
+    {
+        $req = $this->pdo->prepare("INSERT INTO cdes_cmts (id, cmt_galec, id_web_user, date_insert, date_update) VALUES (:id, :cmt_galec, :id_web_user, :date_insert, :date_update)");
+        $req->execute([
+            ':id'        => $id,
+            ':cmt_galec'       => $cmtGalec,
+            ':id_web_user'     => $_SESSION['id_web_user'],
+            ':date_insert'     => date('Y-m-d H:i:s'),
+            ':date_update'      =>null
+
+        ]);
+        return $this->pdo->lastInsertId();
+    }
+
+
     public function insertCmtMig($id, $idImport, $cmtBtlec, $cmtGalec, $idWebUser, $date)
     {
         $req = $this->pdo->prepare("INSERT INTO cdes_cmts (id, id_import, cmt_btlec, cmt_galec, id_web_user, date_insert, date_update) VALUES (:id, :id_import, :cmt_btlec, :cmt_galec, :id_web_user, :date_insert, :date_update)");
@@ -65,7 +80,18 @@ class CdesCmtDao
         ]);
         return $this->pdo->lastInsertId();
     }
+    public function updateCmtGalec($id, $cmtGalec)
+    {
+        $req = $this->pdo->prepare("UPDATE cdes_cmts SET  cmt_galec= :cmt_galec, id_web_user= :id_web_user, date_update= :date_update WHERE id=:id");
+        $req->execute([
+            ':id'               =>$id,
 
+            ':cmt_galec'       => $cmtGalec,
+            ':id_web_user'     => $_SESSION['id_web_user'],
+            ':date_update'     => date('Y-m-d H:i:s')
+        ]);
+        return $this->pdo->lastInsertId();
+    }
 
     public function updateCmtMig($id, $idImport, $cmtBtlec, $cmtGalec, $idWebUser, $date)
     {
