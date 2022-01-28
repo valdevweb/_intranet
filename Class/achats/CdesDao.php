@@ -167,6 +167,11 @@ class CdesDao{
 		]);
 		return $req->fetchAll();
 	}
+
+	public function getEngagement(){
+		$req=$this->pdo->query("SELECT article_gessica, engagements.* FROM engagements ");
+			return $req->fetchAll(PDO::FETCH_GROUP);
+	}
 }
 
 
