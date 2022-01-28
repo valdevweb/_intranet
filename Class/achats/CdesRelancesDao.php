@@ -31,7 +31,6 @@ class CdesRelancesDao{
 		$req->execute([
 			':id_relance'		=>$idR,
 			':id_encours'		=>$idEncours,
-
 			':qte_restante'		=>$qteRestante,
 
 		]);
