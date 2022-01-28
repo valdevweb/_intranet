@@ -67,7 +67,9 @@ class CdesDao
 	// AND (gt=9) AND id_cde=634703
 	public function getEncours($id)
 	{
-		$req = $this->pdo->prepare("SELECT * FROM cdes_encours  WHERE id= :id");
+		$req = $this->pdo->prepare("SELECT cdes_encours.*, {$this->version}doc_achats.cdes_cmts.cmt_galec FROM cdes_encours 
+			left join {$this->version}doc_achats.cdes_cmts ON cdes_encours.id={$this->version}doc_achats.cdes_cmts.id
+		 WHERE cdes_encours.id= :id");
 		$req->execute([
 			':id'		=> $id
 		]);
@@ -78,12 +80,15 @@ class CdesDao
 
 		$req = $this->pdo->query("SELECT cdes_encours.* , {$this->version}doc_achats.cdes_cmts.cmt_btlec, {$this->version}doc_achats.cdes_cmts.cmt_galec
 		FROM cdes_encours 
-		left join {$this->version}doc_achats.cdes_cmts ON cdes_encours.id={$this->version}doc_achats.cdes_cmts.id $param ORDER BY fournisseur, ref");
+		left join {$this->version}doc_achats.cdes_cmts ON cdes_encours.id={$this->version}doc_achats.cdes_cmts.id
+		 $param ORDER BY fournisseur, ref");
 		return $req->fetchAll();
 	}
 	public function getEncoursByIdsGroup($param)
 	{
-		$req = $this->pdo->query("SELECT cnuf, cdes_encours.* FROM cdes_encours  $param ORDER BY fournisseur, ref");
+		$req = $this->pdo->query("SELECT cnuf, cdes_encours.*, {$this->version}doc_achats.cdes_cmts.cmt_galec
+		FROM cdes_encours  left join {$this->version}doc_achats.cdes_cmts ON cdes_encours.id={$this->version}doc_achats.cdes_cmts.id
+		$param ORDER BY fournisseur, ref");
 		return $req->fetchAll(PDO::FETCH_GROUP);
 	}
 	public function getEncoursCnufByIds($param)
