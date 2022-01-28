@@ -12,10 +12,13 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 $templateTrp = 'xl-file\export-encours.xlsx';
 $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($templateTrp);
 $sheet = $spreadsheet->getActiveSheet();
-
+ini_set('memory_limit', '256M');
 
 $nbColInfoAllowed = 6;
 $row = 2;
+
+// on récup les engagements mag dans un tableau indexé par article_gessica
+$engagements=$cdesDao->getEngagement();
 
 
 //  insert données commandes en cours
@@ -33,7 +36,10 @@ foreach ($listCdes as $key => $cdes) {
 		}
 		$percentRecu = $percentRecu . "%";
 	}
-
+	$engagement="";
+	if(isset($engagements[$cdes['article_gessica']])){
+		$engagement=$engagements[$cdes['article_gessica']][0]['qte_cde'];
+	}
 	$sheet->setCellValue('A' . $row, $cdes['id']);
 	$sheet->setCellValue('B' . $row, $cdes['gt']);
 	$sheet->setCellValue('c' . $row, $cdes['fournisseur']);
@@ -49,7 +55,7 @@ foreach ($listCdes as $key => $cdes) {
 	$sheet->setCellValue('m' . $row, $cdes['marque']);
 	$sheet->setCellValue('n' . $row, $cdes['cond_carton']);
 	$sheet->setCellValue('o' . $row, $cdes['qte_init']);
-	$sheet->setCellValue('p' . $row, 'Engagement initial');
+	$sheet->setCellValue('p' . $row, $engagement);
 	$sheet->setCellValue('q' . $row, $percentRecu);
 	$sheet->setCellValue('r' . $row, $cdes['qte_uv_cde']);
 	$sheet->setCellValue('s' . $row, $cdes['qte_cde']);
