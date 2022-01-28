@@ -12,6 +12,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require '../../Class/Db.php';
 require '../../Class/achats/CdesDao.php';
+require '../../Class/achats/CdesCmtDao.php';
 require '../../Class/achats/CdesAchatDao.php';
 require '../../Class/achats/CdesRelancesDao.php';
 require '../../Class/FournisseursHelpers.php';
@@ -43,6 +44,7 @@ $pdoDAchat=$db->getPdo('doc_achats');
 $cdesDao=new CdesDao($pdoQlik);
 $cdesRelancesDao=new CdesRelancesDao($pdoDAchat);
 $cdesAchatDao=new CdesAchatDao($pdoDAchat);
+$cdesCmtDao=new CdesCmtDao($pdoDAchat);
 $userDao= new UserDao($pdoUser);
 $fouDao=new FouDao($pdoFou);
 
@@ -53,13 +55,12 @@ $fouDao=new FouDao($pdoFou);
 if(isset($_SESSION['temp_relance']) || isset($_SESSION['temp_relance_perm'])){
 	if(isset($_SESSION['temp_relance'])){
 		array_unique($_SESSION['temp_relance']);
-		$param="WHERE id=".join(' OR id=',$_SESSION['temp_relance']);
+		$param="WHERE cdes_encours.id=".join(' OR cdes_encours.id=',$_SESSION['temp_relance']);
 	}
 	if(isset($_SESSION['temp_relance_perm'])){
 		array_unique($_SESSION['temp_relance_perm']);
-		$param="WHERE id=".join(' OR id=',$_SESSION['temp_relance_perm']);
+		$param="WHERE cdes_encours.id=".join(' OR cdes_encours.id=',$_SESSION['temp_relance_perm']);
 	}
-
 	$listProd=$cdesDao->getEncoursByIdsGroup($param);
 	$listFou=$cdesDao->getEncoursCnufByIds($param);
 	$listCnuf=array_column($listFou,'cnuf');
@@ -74,6 +75,8 @@ if(isset($_SESSION['temp_relance']) || isset($_SESSION['temp_relance_perm'])){
 //- on insert les infos de la relance dans la table cdes_relances et ccdes_relances_details et on insère les mails destinataires dans la table cdes_relances_email
 // à la fin du traitement, on redirige l'utilisateur sur la  page de synthèse relances-synthese, c'est cette page qui fera l'envoi du mail
 if(isset($_POST['send_to_me']) || isset($_POST['send_to_fou'])){
+
+
 	foreach ($_POST['id_contact'] as $keyCnufContact => $value) {
 		if(isset($_POST['id_contact_email'][$keyCnufContact])){
 			$newAr=explode("#",$keyCnufContact);
@@ -99,6 +102,15 @@ if(isset($_POST['send_to_me']) || isset($_POST['send_to_fou'])){
 					$errors[]='l\'adresse mail "' .$listEmail[$i]. '" n\'est pas valide, merci de la corriger';
 				}
 			}
+		}
+	}
+	foreach ($_POST['cmt-galec'] as $idEncours => $value) {
+		$cmtExist=$cdesCmtDao->getCmt($idEncours);
+		if(!empty($cmtExist)){
+			$cdesCmtDao->updateCmtGalec($idEncours, $_POST['cmt-galec'][$idEncours]);
+		}else{
+			$cdesCmtDao->insertCmtGalec($idEncours, $_POST['cmt-galec'][$idEncours]); 
+
 		}
 	}
 	// on insere une relance par fournisseur
@@ -220,9 +232,10 @@ include('../view/_navbar.php');
 							<!-- article -->
 							<div class="row font-weight-bold">
 								<div class="col-lg-1">Article</div>
-								<div class="col-lg-3">Référence</div>
+								<div class="col-lg-2">Référence</div>
 								<div class="col-lg-4">Désignation</div>
-								<div class="col">Qte restante</div>
+								<div class="col-lg-1">Restante</div>
+								<div class="col">Commentaire galec</div>
 							</div>
 
 							<?php foreach ($listProd[$fou['cnuf']] as $keyProd => $value): ?>
@@ -230,16 +243,19 @@ include('../view/_navbar.php');
 									<div class="col-lg-1">
 										<?=$listProd[$fou['cnuf']][$keyProd]['article']?>
 									</div>
-									<div class="col-lg-3">
+									<div class="col-lg-2">
 										<?=$listProd[$fou['cnuf']][$keyProd]['ref']?>
 									</div>
 									<div class="col-lg-4">
 										<?=$listProd[$fou['cnuf']][$keyProd]['libelle_art']?>
 									</div>
-									<div class="col">
+									<div class="col-lg-1">
 										<div class="form-group form-inline no-margin mini-input">
 											<input type="text" class="form-control ml-3 w-60 text-right special" name="qte_restante[<?=$fou['cnuf']?>#<?=$listProd[$fou['cnuf']][$keyProd]['id']?>]" value="<?=$listProd[$fou['cnuf']][$keyProd]['qte_cde']?>">
 										</div>
+									</div>
+									<div class="col">
+									<textarea class="form-control" name="cmt-galec[<?=$listProd[$fou['cnuf']][$keyProd]['id']?>]"  row="3" placeholder="Commentaire"><?=$listProd[$fou['cnuf']][$keyProd]['cmt_galec']?></textarea>
 									</div>
 								</div>
 							<?php endforeach ?>
