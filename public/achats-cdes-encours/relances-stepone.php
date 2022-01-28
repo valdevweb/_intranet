@@ -17,8 +17,20 @@ require '../../Class/achats/CdesRelancesDao.php';
 require '../../Class/FournisseursHelpers.php';
 require '../../Class/UserDao.php';
 require '../../Class/FouDao.php';
-// require_once '../../vendor/autoload.php';
 
+
+/*---------------------------------------------------------------------------------------------------------------
+Cette page est appellée par la page encours-relances et préparer l'envoyer des mails de relances (soit au fournissseur, soit à soi-même)
+Attention l'envoi du mail se fait via la page relances-synthese donc on redirige l'utilisateur sur cette page une fois le formlulaire traité
+La page affiche la liste des articles que l'utilisateur a  sélectionnés dans la page encours-relances
+Pour passer ces articles d'une page à l'autre, on utilise des  var de session : temp_relance ou temp_relance_perm 
+Cette var de session contient donc les id_encours
+Pour chaque article, l'utilisateur peut :
+- sélectionner/désélectionner les mails fournisseurs qui recevront le mail
+- modifier la quantité restante de produits à livrer (cette qte n'est pas souvegardée dans la table détail)
+- ajouter un commentaire
+=> dde evo 190 : on pousse le commentaire cmt_galec dans le commentaire (cmt tj modifiable)
+----------------------------------------------------------------------------------------------------------------*/
 
 $errors=[];
 $success=[];
@@ -33,19 +45,11 @@ $cdesRelancesDao=new CdesRelancesDao($pdoDAchat);
 $cdesAchatDao=new CdesAchatDao($pdoDAchat);
 $userDao= new UserDao($pdoUser);
 $fouDao=new FouDao($pdoFou);
-if(isset($_GET['success'])){
-	if(isset($_SESSION['temp_relance'])){
-		unset($_SESSION['temp_relance']);
-	}
-	if(isset($_SESSION['temp_relance_perm'])){
-		unset($_SESSION['temp_relance_perm']);
-	}
-	$success[]="Relances envoyées avec succès";
-}
 
 
 
-
+// 1-on récupère les infos de la table  cdes_encours + table infos_cmt via les id_encours
+//2- on récupère les infos fournisseur et  les contacts  fournisseur
 if(isset($_SESSION['temp_relance']) || isset($_SESSION['temp_relance_perm'])){
 	if(isset($_SESSION['temp_relance'])){
 		array_unique($_SESSION['temp_relance']);
@@ -65,9 +69,11 @@ if(isset($_SESSION['temp_relance']) || isset($_SESSION['temp_relance_perm'])){
 	echo "une erreur est survenue";
 	exit();
 }
-
+// à la validation du formulaire :
+//- on récupère les adresses mails
+//- on insert les infos de la relance dans la table cdes_relances et ccdes_relances_details et on insère les mails destinataires dans la table cdes_relances_email
+// à la fin du traitement, on redirige l'utilisateur sur la  page de synthèse relances-synthese, c'est cette page qui fera l'envoi du mail
 if(isset($_POST['send_to_me']) || isset($_POST['send_to_fou'])){
-
 	foreach ($_POST['id_contact'] as $keyCnufContact => $value) {
 		if(isset($_POST['id_contact_email'][$keyCnufContact])){
 			$newAr=explode("#",$keyCnufContact);
@@ -80,9 +86,6 @@ if(isset($_POST['send_to_me']) || isset($_POST['send_to_fou'])){
 		$cnufIdEncours[$newAr[0]]['id_encours'][]=$newAr[1];
 		$cnufIdEncours[$newAr[0]]['qte_restante'][]=$_POST['qte_restante'][$keyCnufEncours];
 	}
-
-
-
 
 	for ($i=0; $i <count($listCnuf) ; $i++) {
 		// si on n'a pas de case à cocher email sélectionnée et pas d'email libre
@@ -98,7 +101,7 @@ if(isset($_POST['send_to_me']) || isset($_POST['send_to_fou'])){
 			}
 		}
 	}
-// on insere une relance par fournisseur
+	// on insere une relance par fournisseur
 	if(empty($errors)){
 		for ($i=0; $i <count($listCnuf) ; $i++) {
 			$idR=$cdesRelancesDao->insertRelance($listCnuf[$i], $_POST['cmt'][$listCnuf[$i]]);
@@ -120,7 +123,6 @@ if(isset($_POST['send_to_me']) || isset($_POST['send_to_fou'])){
 				}
 
 			}
-
 		}
 	}
 
