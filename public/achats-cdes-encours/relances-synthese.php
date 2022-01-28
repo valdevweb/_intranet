@@ -59,15 +59,16 @@ foreach ($listRelances as $key => $relance) {
 	$detailsRelance=$cdesRelancesDao->getRDetailToSend($relance['id']);
 	foreach ($detailsRelance as $key => $encours) {
 		$prod=$cdesDao->getEncours($encours['id_encours']);
-		$infoEncours=$cdesAchatDao->getInfoIdEncours($encours['id_encours']);
-		$cmts=implode("<br>", array_column($infoEncours,'cmt'));
+		// $infoEncours=$cdesAchatDao->getInfoIdEncours($encours['id_encours']);
+	
 
 		$qteUv=$prod['qte_init']*$prod['cond_carton'];
 		if (isset($_GET['op'])) {
-
-			$ligne.="<tr><td>".$prod['id_cde']."</td><td>" .$prod['libelle_op']."</td><td>" . $prod['date_start'] ."</td><td>" . $prod['ref'] ."</td><td>" . $prod['ean'] ."</td><td>" . $prod['libelle_art'] ."</td><td>" . $prod['cond_carton'] ."</td><td>"  . $qteUv ."</td><td>" . $prod['qte_init']  ."</td><td>" . $encours['qte_restante'] . "</td></tr>";
+			$ligne.="<tr><td>".$prod['id_cde']."</td><td>" .$prod['libelle_op']."</td><td>" . $prod['date_start'] ."</td><td>" . $prod['ref'] ."</td><td>" ;
+			$ligne.= $prod['ean'] ."</td><td>" . $prod['libelle_art'] ."</td><td>" . $prod['cond_carton'] ."</td><td>"  . $qteUv ."</td><td>" . $prod['qte_init']  ."</td><td>" . $encours['qte_restante']."</td><td>" . $prod['cmt_galec'] . "</td></tr>";
 		}elseif(isset($_GET['perm'])){
-			$ligne.="<tr><td>".$prod['id_cde']."</td><td>" . $prod['ref'] ."</td><td>" . $prod['ean'] ."</td><td>" . $prod['libelle_art'] ."</td><td>" . $prod['cond_carton'] ."</td><td>"  . $qteUv ."</td><td>" . $prod['qte_init']  ."</td><td>" . $encours['qte_restante']  . $cmts. "</td></tr>";
+			$ligne.="<tr><td>".$prod['id_cde']."</td><td>" . $prod['ref'] ."</td><td>" . $prod['ean'] ."</td><td>" . $prod['libelle_art'] ."</td><td>" ;
+			$ligne.= $prod['cond_carton'] ."</td><td>"  . $qteUv ."</td><td>" . $prod['qte_init']  ."</td><td>" . $encours['qte_restante']  ."</td><td>" . $prod['cmt_galec']. "</td></tr>";
 		}
 
 	}
