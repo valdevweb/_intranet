@@ -12,18 +12,21 @@ function getNameFromNumber($num)
 }
 function dateFormat($str)
 {
-    if (strlen($str) == 8) {
-        if (str_contains('-', $str)) {
-            return DateTime::createFromFormat('d-m-y', $str)->format('Y-m-d');
-        } else {
-            return DateTime::createFromFormat('d/m/y', $str)->format('Y-m-d');
+    $dateParts = explode('-', $str);
+    if (count($dateParts) != 3) {
+        $dateParts = explode('-', $str);
+    }
+    if (count($dateParts) == 3) {
+        foreach ($dateParts as $date) {
+            $day = $dateParts[0];
+            $month = $dateParts[1];
+            $year = $dateParts[2];
         }
-     
-    } else {
-        if (str_contains('-', $str)) {
-            return DateTime::createFromFormat('d-m-Y', $str)->format('Y-m-d');
+        $dateStr = $day . '-' . $month . '-' . $year;
+        if ($year < 2000) {
+            return DateTime::createFromFormat('d-m-y', $dateStr)->format('Y-m-d');
         } else {
-            return DateTime::createFromFormat('d/m/Y', $str)->format('Y-m-d');
+            return DateTime::createFromFormat('d-m-Y', $dateStr)->format('Y-m-d');
         }
     }
 }
