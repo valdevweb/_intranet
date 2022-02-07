@@ -136,10 +136,10 @@
 						$ean=$cde['ean'];
 						$qte=$cde['quantite'];
 						$palette=$arrayListPalette[$cde['id_palette']];
-						$prixAchat=$cde['pa'];
+						$prixAchat=$cde['pa']*$qte;
 						$ppi=$cde['pvc'];
 						$marque="";
-						$pu="";
+						$pu=$cde['pa'];
 					}else{
 						$article=$cde['article_occ'];
 						$designation=$cde['design_occ'];
