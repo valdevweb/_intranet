@@ -23,7 +23,10 @@ class MsgManager{
 	}
 
 	public function getListReplies($pdoBt,$idMsg){
-		$req=$pdoBt->prepare("SELECT *,CONCAT(web_users.intern_users.prenom,' ' , web_users.intern_users.nom) as fullname FROM replies LEFT JOIN web_users.intern_users ON replies.replied_by=web_users.intern_users.id_web_user WHERE id_msg= :id_msg ORDER BY date_reply ASC");
+		$req=$pdoBt->prepare("SELECT *,CONCAT(web_users.intern_users.prenom,' ' , web_users.intern_users.nom) as fullname 
+		FROM replies 
+		LEFT JOIN web_users.intern_users 
+		ON replies.replied_by=web_users.intern_users.id_web_user WHERE id_msg= :id_msg ORDER BY date_reply ASC");
 		$req->execute(array(
 			':id_msg'	=>$idMsg
 		));
