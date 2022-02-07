@@ -18,16 +18,23 @@
 				<p><i class="fa fa-globe" aria-hidden="true"></i>&nbsp; &nbsp;<a class="link-white" href="../mag/google-map.php">Venir à BTlec</a></p>
 				<p class="logo-footer"> <img src="../img/footer/eleclercblue.jpg"></p>
 			</div>
+			<div class="col pt-3">
+				<p>ADEME :</p>
+				<p>identifiant BTLEC: FR000931_107DHL</p>
+				<p>ECOSYSTEM :</p>
+				<p>identifiant BTLEC: FR000931_05FMPB</p>
+			</div>
 		</div>
 	</div>
 </footer>
-<script src="<?=ROOT_PATH?>/public/js/session.js "></script>
+<script src="<?= ROOT_PATH ?>/public/js/session.js "></script>
 <script>
-	$(document).ready(function(){
-		$('#nav-connexion-mag').on("click",function(){
+	$(document).ready(function() {
+		$('#nav-connexion-mag').on("click", function() {
 			alert("merci de patienter pendant le chargement de la page");
 		});
 	});
 </script>
 </body>
+
 </html>
