@@ -20,8 +20,25 @@ $db=new Db();
 $pdoUser=$db->getPdo('web_users');
 
 
+// // $req=$this->pdo->prepare("SELECT * FROM table WHERE cond");
+// // $req->execute([
+
+// // ]);
+// // return $req->fetchAll();
+// $req=$pdoUser->query("SELECT * FROM intern_users");
+// $data=$req->fetchAll();
 
 
+// foreach ($data as $key => $user) {
+// 	$req=$pdoUser->prepare("update intern_users SET email= :email WHERe id= :id");
+// 	$req->execute([
+// 		':email'		=>trim($user['email']),
+// 		':id'		=>trim($user['id'])
+
+// 	]);
+// 	echo $pdoUser->lastInsertId();
+
+// }
 
 
 //------------------------------------------------------
