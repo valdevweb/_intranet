@@ -15,6 +15,8 @@ require '../../functions/upload.fn.php';
 //----------------------------------------------------------------
 require "../../functions/stats.fn.php";
 require "../../Class/MsgManager.php";
+require '../../Class/BtUserManager.php';
+
 $descr="page pour réouvrir une demande";
 $page=basename(__file__);
 $action="consultation";
@@ -85,7 +87,11 @@ function formatPJ($incFileStrg){
 
 $msgManager=new MsgManager();
 $msg=$msgManager->getDemande($pdoBt,$_GET['id_msg']);
+
 $replies=$msgManager->getListReplies($pdoBt, $_GET['id_msg']);
+$btUserManager=new BtUserManager();
+
+$infoService=$btUserManager->getService($pdoUser,$msg['id_service']);
 
 // include ('../view/_errors.php')
 
@@ -164,10 +170,9 @@ if(isset($_POST['submit'])){
 
 			}else{
 				$mailingList[]= $msg['mailing'] ;
-				$dest[]=$msg['email'];
+				$dest[]=$infoService['mailing'];;
 
 			}
-
 
 			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
 			$mailer = new Swift_Mailer($transport);
