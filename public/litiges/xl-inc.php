@@ -4,6 +4,8 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 \PhpOffice\PhpSpreadsheet\Shared\File::setUseUploadTempDirectory(true);
 
+ini_set('memory_limit', '256M');
+
 // ------------------------------------
 // JULIE
 $spreadsheet = new Spreadsheet();

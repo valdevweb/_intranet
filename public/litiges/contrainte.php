@@ -8,7 +8,7 @@ require '../../config/db-connect.php';
 
 require_once '../../vendor/autoload.php';
 
-require '../../Class/LitigeDao.php';
+require '../../Class/litiges/LitigeDao.php';
 require '../../Class/UserHelpers.php';
 
 require 'info-litige.fn.php';

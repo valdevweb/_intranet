@@ -15,7 +15,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //			FONCTION
 //------------------------------------------------------
 
-require '../../Class/LitigeDao.php';
+require '../../Class/litiges/LitigeDao.php';
 require '../../Class/MagHelpers.php';
 
 $arMagOcc=MagHelpers::getListMagOcc($pdoMag);

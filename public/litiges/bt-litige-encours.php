@@ -16,9 +16,9 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require('../../Class/FormHelpers.php');
 require('../../Class/MagHelpers.php');
-require('../../Class/LitigeDao.php');
-require('../../Class/LitigeHelpers.php');
-require('../../Class/LitigeDialDao.php');
+require('../../Class/litiges/LitigeDao.php');
+require('../../Class/litiges/LitigeHelpers.php');
+require('../../Class/litiges/LitigeDialDao.php');
 
 
 // unset($_SESSION['form-data-deux']);

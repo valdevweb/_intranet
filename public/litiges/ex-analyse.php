@@ -15,7 +15,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //			FONCTION
 //------------------------------------------------------
 
-include '../../Class/LitigeHelpers.php';
+include '../../Class/litiges/LitigeHelpers.php';
 
 
 function getanalyse($pdoLitige){

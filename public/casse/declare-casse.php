@@ -70,6 +70,10 @@ if(!empty($findOp)){
 
 if(isset($_POST['insert_casse'])){
 
+	echo "<pre>";
+	print_r($_POST);
+	echo '</pre>';
+
 	if(!not_empty(['date_casse','operateur', 'article','dossier','categorie','origine','type','nb_colis', 'palette_existante'])){
 		$errors[]="Veuillez remplir tous les champs";
 	}
@@ -122,7 +126,7 @@ if(isset($_POST['insert_casse'])){
 		$decote=round($valo/2);
 		$mtMag=$valo;
 
-		$lastInsertId=$casseDao->insertCasse($_POST['date_casse'], $_POST['operateur'], $_POST['nb_colis'],$_POST['categorie'],$_POST['article'], $_POST['dossier'], $dataArticle['gt'],$dataArticle['libelle'], $dataArticle['pcb'],$uvc,$valo, $dataArticle['panf'],$dataArticle['fournisseur'], $_POST['origine'], $_POST['type'], $idPalette, $etat, $detruit, $mtMag, $decote, $dataArticle['pfnp'], $dataArticle['deee'],$dataArticle['sorecop'],$dataArticle['codif_deee'], $dataArticle['ppi']);
+		$lastInsertId=$casseDao->insertCasse($_POST['date_casse'], $_POST['operateur'], $_POST['nb_colis'],$_POST['categorie'],$_POST['article'], $_POST['dossier'], $dataArticle['ean'], $dataArticle['gt'],$dataArticle['libelle'], $dataArticle['pcb'],$uvc,$valo, $dataArticle['panf'],$dataArticle['fournisseur'], $_POST['origine'], $_POST['type'], $idPalette, $etat, $detruit, $mtMag, $decote, $dataArticle['pfnp'], $dataArticle['deee'],$dataArticle['sorecop'],$dataArticle['codif_deee'], $dataArticle['ppi']);
 
 		if($lastInsertId !=false){
 			if(!empty($emptiedSerial)){
@@ -379,8 +383,6 @@ include('../view/_navbar.php');
 								<div class="col" id="type-palette">
 								</div>
 							</div>
-
-
 						</div>
 						<div class="col-5" id="new_palette">
 							<div class="row">
@@ -425,13 +427,12 @@ include('../view/_navbar.php');
 							?>
 						<?php endfor ?>
 						<div class="row"><div class="col-4"><div class="form-group">
-							<label>N° de série : </label><input type="text" name="serial[]" class="form-control" value="'.$value.'">
+							<label>N° de série : </label><input type="text" name="serial[]" class="form-control" value="<?=$value?>">
 						</div><div class="col"></div></div></div>
 
 					<?php else: ?>
 						<div id="serial"></div>
 					<?php endif ?>
-
 
 					<button class="btn btn-primary" type="submit" name="insert_casse">Enregistrer</button>
 

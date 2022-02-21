@@ -18,7 +18,28 @@ $errors=[];
 $success=[];
 $db=new Db();
 $pdoUser=$db->getPdo('web_users');
+$pdoCasse=$db->getPdo('casse');
+$pdoQlik=$db->getPdo('qlik');
 
+$req=$pdoCasse->query("SELECT * FROM casses WHERE ean is null");
+$casses=$req->fetchAll(PDO::FETCH_ASSOC);
+
+
+foreach($casses as $casse){
+	$req=$pdoQlik->prepare("SELECT ean, dossier, article from ba WHERE article= :article and dossier= :dossier");
+	$req->execute([':article'=>$casse['article'], ':dossier'=>$casse['dossier']]);
+	$found= $req->fetch(PDO::FETCH_ASSOC);
+	echo "recherché : ".$casse['dossier'].' ' .$casse['article']. 'trouvé '.$found['dossier'].' '.$found['article'];
+	$req=$pdoCasse->prepare("UPDATE casses set ean= :ean WHERE id= :id");
+	$req->execute([
+		':ean'			=>$found['ean'],
+		':id'			=>$casse['id']
+
+	]);
+
+echo "<br>";
+
+}
 
 // // $req=$this->pdo->prepare("SELECT * FROM table WHERE cond");
 // // $req->execute([

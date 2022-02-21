@@ -25,7 +25,7 @@ unset($_SESSION['goto']);
 // addRecord($pdoStat,$page,$action, $descr, 208);
 
 
-require "../../Class/LitigeDao.php";
+require "../../Class/litiges/LitigeDao.php";
 
 function createFileLink($filelist){
 	$rValue='';

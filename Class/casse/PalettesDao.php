@@ -72,9 +72,11 @@ class PalettesDao{
 	}
 
 	public function getEnStockDispo(){
+
 		$req=$this->pdo->query("SELECT palette, palettes.*, article, ean, designation, nb_colis, pcb, uvc, valo FROM palettes
 			LEFT JOIN casses ON palettes.id = casses.id_palette
-			WHERE destruction=0 AND ((statut= 0) or (statut=1 and id_affectation=2))");
+			LEFT JOIN qlik.palettes4919 on palettes.palette=qlik.palettes4919.NumeroPalette
+			WHERE destruction=0 AND ((statut= 0) or (statut=1 and id_affectation=2)) and NumeroPalette is not null");
 
 		return $req->fetchAll(PDO::FETCH_GROUP);
 	}

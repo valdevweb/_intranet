@@ -15,7 +15,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 require_once  '../../vendor/autoload.php';
 require_once  '../../Class/UserHelpers.php';
 require_once  '../../Class/MagHelpers.php';
-require('../../Class/LitigeDialDao.php');
+require('../../Class/litiges/LitigeDialDao.php');
 
 
 //------------------------------------------------------

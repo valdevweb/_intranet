@@ -7,8 +7,8 @@ if(!isset($_SESSION['id'])){
 require '../../config/db-connect.php';
 
 require_once '../../vendor/autoload.php';
-require('../../Class/LitigeDao.php');
-require('../../Class/LitigeHelpers.php');
+require('../../Class/litiges/LitigeDao.php');
+require('../../Class/litiges/LitigeHelpers.php');
 require('../../Class/MagHelpers.php');
 
 //			css dynamique

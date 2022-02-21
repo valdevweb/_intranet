@@ -18,8 +18,8 @@ unset($_SESSION['goto']);
 require 'echanges.fn.php';
 require('../../Class/UserHelpers.php');
 require('../../Class/MagHelpers.php');
-require('../../Class/LitigeDao.php');
-require('../../Class/LitigeDialDao.php');
+require('../../Class/litiges/LitigeDao.php');
+require('../../Class/litiges/LitigeDialDao.php');
 require('../../Class/OccHelpers.php');
 
 //------------------------------------------------------

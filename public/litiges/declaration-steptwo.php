@@ -12,8 +12,8 @@ $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
-include '../../Class/LitigeDao.php';
-include '../../Class/LitigeHelpers.php';
+include '../../Class/litiges/LitigeDao.php';
+include '../../Class/litiges/LitigeHelpers.php';
 // id litige passé par get['id']
 //------------------------------------------------------
 //			INFOS

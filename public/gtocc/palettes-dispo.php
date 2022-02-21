@@ -48,7 +48,7 @@ if(isset($_POST['submit'])){
 		$magExp=$expDao->magExpAlreadyExist($btlec);
 		if(empty($magExp)){
 			$lastExp=$expDao->insertExp($btlec, $galec, $idAffectation);
-			$lastExp=$lastExp['id'];
+			$lastExp=$lastExp;
 		}else{
 			$lastExp=$magExp['id'];
 		}

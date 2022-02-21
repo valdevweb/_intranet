@@ -21,7 +21,7 @@ require "../../functions/form.fn.php";
 require "../../functions/gazette.fn.php";
 require "../../functions/stats.fn.php";
 require_once '../../Class/OpportuniteDAO.php';
-require_once '../../Class/LitigeDialDao.php';
+require_once '../../Class/litiges/LitigeDialDao.php';
 require_once '../../Class/UserHelpers.php';
 require_once '../../Class/UserDao.php';
 require_once '../../Class/FlashDao.php';

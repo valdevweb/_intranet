@@ -95,8 +95,8 @@ if (isset($_POST['import'])) {
 			// si id cdes info vide et date ou qte non vide, insert
 
 			for ($i = 0; $i < count(COL_QTE); $i++) {
-				$qtePrevi = $worksheet->getCell(COL_QTE_STR[$i] . $row)->getValue();
-				$datePrevi = $worksheet->getCell(COL_DATE_STR[$i] . $row)->getValue();
+				$qtePrevi = trim($worksheet->getCell(COL_QTE_STR[$i] . $row)->getValue());
+				$datePrevi = trim($worksheet->getCell(COL_DATE_STR[$i] . $row)->getValue());
 				$idInfo = $worksheet->getCell(COL_ID_INFO_STR[$i] . $row)->getValue();
 
 				if (!empty($qtePrevi) && !is_numeric($qtePrevi)) {

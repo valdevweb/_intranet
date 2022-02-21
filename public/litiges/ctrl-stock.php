@@ -23,7 +23,7 @@ $action="";
 addRecord($pdoStat,$page,$action, $descr, 101);
 
 require_once '../../vendor/autoload.php';
-require_once '../../Class/LitigeDao.php';
+require_once '../../Class/litiges/LitigeDao.php';
 require_once '../../Class/MagHelpers.php';
 // require 'info-litige.fn.php';
 

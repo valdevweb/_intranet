@@ -12,9 +12,9 @@ class CasseDao{
 		return $pdo;
 	}
 
-	public function insertCasse($dateCasse, $operateur, $nbColis,$categorie,$article, $dossier, $gt,$libelle, $pcb,$uvc,$valo, $panf,$fournisseur, $origine, $type, $idPalette, $etat, $detruit, $mtMag,$decote, $pfnp, $deee,$sacem,$deeeCodif, $ppi){
+	public function insertCasse($dateCasse, $operateur, $nbColis,$categorie,$article, $dossier, $ean, $gt,$libelle, $pcb,$uvc,$valo, $panf,$fournisseur, $origine, $type, $idPalette, $etat, $detruit, $mtMag,$decote, $pfnp, $deee,$sacem,$deeeCodif, $ppi){
 
-		$req=$this->pdo->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj, detruit, mt_mag, mt_decote,pfnp, deee,sacem, deee_codif, ppi) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :detruit, :mt_mag, :mt_decote, :pfnp, :deee,:sacem, :deee_codif, :ppi)" );
+		$req=$this->pdo->prepare("INSERT INTO casses (date_casse, id_web_user, id_operateur, nb_colis, id_categorie, article, dossier, ean, gt, designation, pcb, uvc,valo,pu, fournisseur, id_origine, id_type, id_palette, etat, last_maj, detruit, mt_mag, mt_decote,pfnp, deee,sacem, deee_codif, ppi) VALUES (:date_casse, :id_web_user, :id_operateur, :nb_colis, :id_categorie, :article, :dossier, :ean, :gt, :designation, :pcb, :uvc, :valo, :pu, :fournisseur, :id_origine, :id_type, :id_palette, :etat, :last_maj, :detruit, :mt_mag, :mt_decote, :pfnp, :deee,:sacem, :deee_codif, :ppi)" );
 
 		$req->execute(array(
 			':date_casse'	=>$dateCasse,
@@ -24,6 +24,7 @@ class CasseDao{
 			':id_categorie'	=>$categorie,
 			':article'	=>$article,
 			':dossier'	=>$dossier,
+			':ean'	=>$ean,
 			':gt'	=>$gt,
 			':designation'	=>$libelle,
 			':pcb'	=>$pcb,
