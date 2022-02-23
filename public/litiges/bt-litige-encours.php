@@ -60,7 +60,7 @@ function makeQuery($pdoLitige, $query, $param, $mod=null){
 
 
 function getListVideo($pdoLitige,$idContrainte){
-	$req=$pdoLitige->prepare("SELECT id_dossier, id_contrainte FROM action WHERE id_contrainte= :id_contrainte");
+	$req=$pdoLitige->prepare("SELECT id_dossier, id_contrainte FROM action_litiges WHERE id_contrainte= :id_contrainte");
 	$req->execute([
 		':id_contrainte' =>$idContrainte
 	]);

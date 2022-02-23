@@ -2,9 +2,7 @@
 
 class LitigeDao{
 
-	// la db est pdoLitige
 	private $pdo;
-
 
 	public function __construct($pdo){
 		$this->setPdo($pdo);
@@ -14,6 +12,15 @@ class LitigeDao{
 		$this->pdo=$pdo;
 		return $pdo;
 	}
+
+	public function findDossier($id){
+		$req=$this->pdo->prepare("SELECT * FROM dossiers WHERE id= :id");
+		$req->execute(array(
+			':id'		=>$id
+		));
+		return $req->fetch(PDO::FETCH_ASSOC);
+	}
+
 
 	public function searchPaletteOrFacture($pdoQlik, $searchStrg, $galec){
 		$req=$pdoQlik->prepare("SELECT * FROM statsventeslitiges  WHERE concat( concat('0',facture),palette) LIKE :search AND galec= :galec ORDER BY article,dossier");
@@ -161,7 +168,8 @@ class LitigeDao{
 	}
 
 	public function getAction($idLitige){
-		$req=$this->pdo->prepare("SELECT action.read_action, action.id as id_action, action.id_contrainte, libelle, action.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y') as dateFr, concat(prenom, ' ', nom) as name, pj, action.sav, achats FROM action LEFT JOIN web_users.intern_users ON action.id_web_user=web_users.intern_users.id_web_user WHERE action.id_dossier= :id ORDER BY date_action");
+		$req=$this->pdo->prepare("SELECT action_litiges.read_action, action_litiges.id as id_action, action_litiges.id_contrainte, libelle, action_litiges.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y') as dateFr, concat(prenom, ' ', nom) as name, pj, action_litiges.sav, achats 
+		FROM action_litiges LEFT JOIN web_users.intern_users ON action_litiges.id_web_user=web_users.intern_users.id_web_user WHERE action_litiges.id_dossier= :id ORDER BY date_action");
 		$req->execute(array(
 			':id'		=>$idLitige
 

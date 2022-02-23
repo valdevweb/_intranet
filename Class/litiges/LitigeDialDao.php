@@ -29,7 +29,7 @@ class LitigeDialDao{
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 	public function getUnreadActionSavColumn(){
-		$req=$this->pdo->query("SELECT action.id_dossier  FROM action LEFT JOIN dossiers ON id_dossier= dossiers.id WHERE id_contrainte=5  AND read_action=0 GROUP BY id_dossier ORDER BY dossiers.id DESC");
+		$req=$this->pdo->query("SELECT action_litiges.id_dossier  FROM action_litiges LEFT JOIN dossiers ON id_dossier= dossiers.id WHERE id_contrainte=5  AND read_action=0 GROUP BY id_dossier ORDER BY dossiers.id DESC");
 		return $req->fetchAll(PDO::FETCH_COLUMN);
 	}
 
@@ -43,7 +43,7 @@ class LitigeDialDao{
 	}
 
 		public function updateReadAction($idAction,$read){
-		$req=$this->pdo->prepare("UPDATE action SET read_action= :read_action WHERE id= :id");
+		$req=$this->pdo->prepare("UPDATE action_litiges SET read_action= :read_action WHERE id= :id");
 		$req->execute([
 			':read_action'	=>$read,
 			':id'			=>$idAction

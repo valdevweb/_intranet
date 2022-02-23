@@ -38,17 +38,17 @@
 					}
 					?>
 
-					<tr class="<?=$classAffectation?>" id="palette-<?=$palette['id']?>">
-						<td><?=$palette['id_exp']?></td>
+					<tr  id="palette-<?=$palette['id']?>">
+						<td class="<?=$classAffectation?>"><a href="#" class="<?=$classAffectation?>"><?=$palette['id_exp']?></a></td>
 						<td><a class="<?=$classAffectation?>" href="detail-palette.php?id=<?=$palette['id']?>"><?=$palette['palette']?></a></td>
-						<td><?=$palette['contremarque']?></td>
-						<td><?=isset($listAffectationIco[$palette['id_affectation']]) ? "<img src='../img/logos/".$listAffectationIco[$palette['id_affectation']]."'>":""?></td>
+						<td><a href="#" class="<?=$classAffectation?>"><?=$palette['contremarque']?></a></td>
+						<td ><?=isset($listAffectationIco[$palette['id_affectation']]) ? "<img src='../img/logos/".$listAffectationIco[$palette['id_affectation']]."'>":""?></td>
 						<td class="text-right"><?=$statutImg?></td>
-						<td class="text-center"><?=(!empty($palette['date_delivery']))?date('d-m-Y', strtotime($palette['date_delivery'])):""?></td>
-						<td class="text-center"><?=$palette['btlec']?></td>
-						<td class="text-center"><?=$palette['valopalette']?></td>
-						<td><a href="#" data-toggle="modal" data-target="#edit-palette" data-id-palette="<?=$palette['id']?>" data-palette="<?=$palette['palette']?>" ><i class="fas fa-tools"></i></a></td>
-						<td><a href="?del-palette=<?=$palette['id']?>" onclick="return confirm('Etes vous sûr de vouloir supprimer la palette <?=$palette['palette']?> ?')"><i class="fas fa-trash"></i></a></td>
+						<td class="text-center"><a  href="#" class="<?=$classAffectation?>"><?=(!empty($palette['date_delivery']))?date('d-m-Y', strtotime($palette['date_delivery'])):""?></a></td>
+						<td class="text-center"><a  href="#" class="<?=$classAffectation?>"><?=$palette['btlec']?></a></td>
+						<td class="text-center"><a  href="#" class="<?=$classAffectation?>"><?=$palette['valopalette']?></a></td>
+						<td><a class="<?=$classAffectation?>" href="#" data-toggle="modal" data-target="#edit-palette" data-id-palette="<?=$palette['id']?>" data-palette="<?=$palette['palette']?>" ><i class="fas fa-tools"></i></a></td>
+						<td><a class="<?=$classAffectation?>" href="?del-palette=<?=$palette['id']?>" onclick="return confirm('Etes vous sûr de vouloir supprimer la palette <?=$palette['palette']?> ?')"><i class="fas fa-trash"></i></a></td>
 					</tr>
 				<?php endforeach ?>
 

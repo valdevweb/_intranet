@@ -14,7 +14,6 @@ if(VERSION=='_'){
 	$cc='valerie.montusclat@btlec.fr';
 }
 else{
-
 	foreach ($ldAchat as $ld) {
 		$achatDest[]=$ld['email'];
 
@@ -27,21 +26,11 @@ else{
 
 
 		// génération du pdf
-$footer='<table class="padding-table">';
-$footer.='<tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>';
-ob_start();
-include('pdf/pdf-achat.php');
 
-
-
-$html=ob_get_contents();
-ob_end_clean();
 $mpdf = new \Mpdf\Mpdf();
-$mpdf->SetHTMLFooter($footer);
-$mpdf->AddPage('', '', '', '', '','', '',  '',  40, 0, 10);
+$mpdf->setFooter(PDF_FOOTER_PAGE);
 $mpdf->WriteHTML($html);
 $pdfContent = $mpdf->Output('', 'S');
-		// $pdfContent = $mpdf->Output();
 $filename='litige '.$litige[0]['dossier'].' - fiche suivi achats.pdf';
 
 		// recup msg action

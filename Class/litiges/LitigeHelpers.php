@@ -74,4 +74,9 @@ class LitigeHelpers{
 		$req=$pdoLitige->query("SELECT id, transporteur FROM transporteur ORDER BY transporteur");
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
+
+	public static function listActions($pdoLitige){
+		$req=$pdoLitige->query("SELECT id, action FROM actions ORDER BY action");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
 }
