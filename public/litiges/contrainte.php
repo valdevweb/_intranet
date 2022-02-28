@@ -5,6 +5,7 @@ require_once '../../Class/litiges/LitigeDao.php';
 require_once '../../Class/litiges/ActionDao.php';
 require_once '../../Class/litiges/DialDao.php';
 require_once '../../Class/UserHelpers.php';
+require_once '../../Class/MagHelpers.php';
 
 
 
@@ -90,6 +91,8 @@ $dials = getDialog($pdoLitige);
 
 $actionLitige = $actionDao->findActionLitige($_GET['action']);
 
+$listCentrales = MagHelpers::getListCentrale($pdoMag);
+
 
 
 
@@ -97,10 +100,12 @@ $actionLitige = $actionDao->findActionLitige($_GET['action']);
 $initialCmt = $dialDao->getInitialCmt($_GET['id']);
 
 $subjet = 'Portail BTLec - Litiges - {SPECIFIQUE_SUJET} : ' . $litige[0]['dossier'] . ' - ' . $litige[0]['mag'];
-$link = '<a href="' . SITE_ADDRESS . '/index.php?litiges/{PAGE_REDIRECT}.php?id=' . $litige[0]['id_main'] . '"> cliquant ici</a>';
+$link = '<a href="' . SITE_ADDRESS . '/index.php?litiges/intervention.php?id=' . $litige[0]['id_main'] . '&id_contrainte={ID_CONTRAINTE}"> cliquant ici</a>';
 
 if ($_GET['contrainte'] == 2) {
 	// demande de vérif de stock
+	// maj etat ctrl => 2 pour controle à faire
+	$litigeDao->updateCtrl($litige[0]['id_main'], 2);
 	$dest = ['pilotageprepa@btlec.fr'];
 	$cc = ['btlecest.portailweb.litiges@btlec.fr'];
 	ob_start();
@@ -111,12 +116,11 @@ if ($_GET['contrainte'] == 2) {
 	ob_end_clean();
 	include 'contrainte/build-pdf.php';
 	$subjet = str_replace('{SPECIFIQUE_SUJET}', 'Contrôle de stock', $subjet);
-	$link = str_replace('{PAGE_REDIRECT}', 'ctrl-stock', $link);
+	$link = '<a href="' . SITE_ADDRESS . '/index.php?litiges/ctrl-stock.php?id=' . $litige[0]['id_main'] . '"> cliquant ici</a>';
 	$mailFile = 'mail/mail-dde-ctrl-stock.php';
 	include 'contrainte/send-mail.php';
 } elseif ($_GET['contrainte'] == 1) {
-	// retour controle de stock
-	// juste maj db
+	// retour controle de stock juste maj db
 	$row = updateCtrl($pdoLitige, 1);
 	header('Location:bt-action-add.php?id=' . $_GET['id'] . '&success=ok');
 
@@ -129,33 +133,28 @@ if ($_GET['contrainte'] == 2) {
 		$dest[] = $ld['email'];
 	}
 	$cc = ['btlecest.portailweb.litiges@btlec.fr'];
-
-
 	ob_start();
 	include('pdf/pdf-contrainte-commun.php');
 	include('pdf/partials/echanges-mag.php');
 	$html = ob_get_contents();
 	ob_end_clean();
 	include 'contrainte/build-pdf.php';
-
 	$subjet = str_replace('{SPECIFIQUE_SUJET}', 'Pôle SAV', $subjet);
-	$link = str_replace('{PAGE_REDIRECT}', 'intervention-sav', $link);
+	$link = str_replace('{ID_CONTRAINTE}', $_GET['contrainte'], $link);
 	$mailFile = 'mail/mail_commun_sav_achats.php';
 	include 'contrainte/send-mail.php';
 } elseif ($_GET['contrainte'] == 7) {
 	// retour verif video
-	// header('Location:bt-action-add.php?id='.$_GET['id'].'&success=ok');
 	$dest = ['btlecest.portailweb.litiges@btlec.fr'];
 	$subjet = str_replace('{SPECIFIQUE_SUJET}', 'VIDEO réponse', $subjet);
-	$link = str_replace('{PAGE_REDIRECT}', 'intervention-sav', $link);
-	$mailFile = 'mail/mail-rep-video.php.php';
+	$link = str_replace('{ID_CONTRAINTE}', $_GET['contrainte'], $link);
+	$link = '<a href="' . SITE_ADDRESS . '/index.php?litiges/bt-action-add.php?id=' . $_GET['id'] . '"> cliquant ici</a>';
+	$mailFile = 'mail/mail-rep-video.php';
 	include 'contrainte/send-mail-nopdf.php';
-	// include('contrainte-video-rep.php');
 } elseif ($_GET['contrainte'] == 5) {
 	// reponse sav, on ne fait rien, on redirige
 	header('Location:bt-action-add.php?id=' . $_GET['id'] . '&success=ok');
 } elseif ($_GET['contrainte'] == 8 || $_GET['contrainte'] == 9 || $_GET['contrainte'] == 10 || $_GET['contrainte'] == 14 || $_GET['contrainte'] == 15) {
-	// demande intervention service achats
 	$serviceCorrespondance = [
 		8 	=> 1,
 		9	=> 2,
@@ -169,33 +168,29 @@ if ($_GET['contrainte'] == 2) {
 	}
 	$dest[] = 'stephane.wendling@btlec.fr';
 	$cc = ['btlecest.portailweb.litiges@btlec.fr'];
-
-
 	ob_start();
 	include('pdf/pdf-contrainte-commun.php');
 	include('pdf/partials/echanges-mag.php');
 	$html = ob_get_contents();
 	ob_end_clean();
 	include 'contrainte/build-pdf.php';
-
 	$subjet = str_replace('{SPECIFIQUE_SUJET}', 'Intervention achats', $subjet);
-	$link = str_replace('{PAGE_REDIRECT}', 'intervention-achats', $link);
+	$link = str_replace('{ID_CONTRAINTE}', $_GET['contrainte'], $link);
 	$mailFile = 'mail/mail_commun_sav_achats.php';
 	include 'contrainte/send-mail.php';
 } elseif ($_GET['contrainte'] == 6) {
 	// envoi demande de recherche video a Benoit
 	$dest = ['benoit.dubots@btlec.fr'];
-
 	ob_start();
 	include('pdf/pdf-contrainte-commun.php');
-	include('pdf/partials/info-logistique.php');
+	include('pdf/partials/detail-more.php');
+	include('pdf/partials/ctrl-stock.php');
 	$html = ob_get_contents();
 	ob_end_clean();
 	include 'contrainte/build-pdf.php';
-
 	$subjet = str_replace('{SPECIFIQUE_SUJET}', 'Recherche video', $subjet);
-	$link = str_replace('{PAGE_REDIRECT}', 'bt-action-add', $link);
-	$mailFile = 'mail/mail-dde-video.php.php';
+	$link = str_replace('{ID_CONTRAINTE}', $_GET['contrainte'], $link);
+	$mailFile = 'mail/mail-dde-video.php';
 	include 'contrainte/send-mail.php';
 }
 elseif ($_GET['contrainte'] == 12) {
@@ -211,7 +206,7 @@ elseif ($_GET['contrainte'] == 12) {
 	include 'contrainte/build-pdf.php';
 
 	$subjet = str_replace('{SPECIFIQUE_SUJET}', 'Commission SAV', $subjet);
-	$link = str_replace('{PAGE_REDIRECT}', 'intervention-commission-sav', $link);
+	$link = str_replace('{ID_CONTRAINTE}', $_GET['contrainte'], $link);
 	$mailFile = 'mail/mail_commun_sav_achats.php';
 	include 'contrainte/send-mail.php';
 }

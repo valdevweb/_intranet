@@ -60,7 +60,8 @@ class LitigeDao{
 	}
 
 	public function getLitigeInfoMagById($idLitige){
-		$req=$this->pdo->prepare("SELECT dossiers.id as id, dossier, magasin.mag.deno, magasin.mag.id as btlec FROM dossiers LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE dossiers.id= :id");
+		$req=$this->pdo->prepare("SELECT dossiers.id as id_dossier,  magasin.mag.id as btlec, dossiers.*, mag.* FROM dossiers 
+		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE dossiers.id= :id");
 		$req->execute(array(
 			':id'		=>$idLitige
 		));
@@ -98,8 +99,8 @@ class LitigeDao{
 	}
 
 	public function getLitigeDossierDetailById($idLitige){
-		$req=$this->pdo->prepare("
-			SELECT *, details.id as id_detail, magasin.mag.id as btlec FROM dossiers	LEFT JOIN details ON dossiers.id=details.id_dossier	LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE dossiers.id= :id ");
+		$req=$this->pdo->prepare("SELECT *, details.id as id_detail, magasin.mag.id as btlec FROM dossiers	
+			LEFT JOIN details ON dossiers.id=details.id_dossier	LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec WHERE dossiers.id= :id ");
 		$req->execute(array(
 			':id'	=>$idLitige
 		));
@@ -169,7 +170,9 @@ class LitigeDao{
 
 	public function getAction($idLitige){
 		$req=$this->pdo->prepare("SELECT action_litiges.read_action, action_litiges.id as id_action, action_litiges.id_contrainte, libelle, action_litiges.id_web_user, DATE_FORMAT(date_action, '%d-%m-%Y') as dateFr, concat(prenom, ' ', nom) as name, pj, action_litiges.sav, achats 
-		FROM action_litiges LEFT JOIN web_users.intern_users ON action_litiges.id_web_user=web_users.intern_users.id_web_user WHERE action_litiges.id_dossier= :id ORDER BY date_action");
+		FROM action_litiges 
+		LEFT JOIN web_users.intern_users ON action_litiges.id_web_user=web_users.intern_users.id_web_user 	
+		WHERE action_litiges.id_dossier= :id ORDER BY date_action");
 		$req->execute(array(
 			':id'		=>$idLitige
 
@@ -366,6 +369,16 @@ class LitigeDao{
 			':id'		=>$id,
 			':gt'		=>$gt
 		]);
+		return $req->rowCount();
+	}
+
+	function updateCtrl($id, $etat)
+	{
+		$req = $this->pdo->prepare("UPDATE dossiers SET ctrl_ok=:ctrl_ok WHERE id=:id");
+		$req->execute(array(
+			':ctrl_ok'	=> $etat,
+			':id'		=> $id
+		));
 		return $req->rowCount();
 	}
 

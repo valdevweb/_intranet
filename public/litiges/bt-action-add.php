@@ -165,7 +165,6 @@ include('../view/_navbar.php');
 								<td><?= $action['fullname'] ?></td>
 								<td><?= $action['libelle'] ?></td>
 								<?php
-								$mapFile = "";
 								$files = ($action['pj'] != "") ? explode(";", $action['pj']) : "";
 								?>
 								<td>

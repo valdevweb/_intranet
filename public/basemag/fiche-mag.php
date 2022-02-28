@@ -18,8 +18,8 @@ include '../../config/db-connect.php';
 
 
 require_once '../../vendor/autoload.php';
-require_once '../../Class/MagDao.php';
-require_once '../../Class/Mag.php';
+require_once '../../Class/mag/MagDao.php';
+require_once '../../Class/mag/MagEntity.php';
 require_once '../../Class/Helpers.php';
 require_once '../../Class/UserHelpers.php';
 require_once '../../Class/UserDao.php';

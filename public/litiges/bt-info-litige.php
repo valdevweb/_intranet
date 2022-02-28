@@ -13,9 +13,10 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 require_once  '../../vendor/autoload.php';
-require_once  '../../Class/litige/LitigeDao.php';
-require_once  '../../Class/MagDao.php';
-require_once  '../../Class/Mag.php';
+require_once '../../Class/litiges/LitigeDao.php';
+
+require_once  '../../Class/mag/MagDao.php';
+require_once  '../../Class/mag/MagEntity.php';
 
 $errors=[];
 $success=[];
@@ -362,8 +363,8 @@ if(isset($_POST['submit_mail']))
 			$message = (new Swift_Message($subject))
 			->setBody($magTemplate, 'text/html')
 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
-			->setTo($mailMag)
-			->setBcc(['btlecest.portailweb.litiges@btlec.fr']);
+			->setTo($mailMag);
+
 			$delivered=$mailer->send($message);
 			if($delivered >0)
 			{

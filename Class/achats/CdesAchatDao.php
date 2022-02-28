@@ -29,7 +29,7 @@ class CdesAchatDao{
 			':id_web_user'	=>$_SESSION['id_web_user'],
 
 		]);
-		return $req->rowCount();
+		return $this->pdo->lastInsertId();
 	}
 
 	
@@ -160,7 +160,7 @@ class CdesAchatDao{
 			':id_web_user'	=>$_SESSION['id_web_user'],
 			':date_update'	=>date('Y-m-d H:i:s')
 		]);
-		return $req->errorInfo();
+		return $req->rowCount();
 	}
 	public function insertImport($file, $idwebuser){
 		$req=$this->pdo->prepare("INSERT INTO cdes_imports (file, date_import, by_import) VALUES (:file, :date_import, :by_import)");
@@ -170,6 +170,14 @@ class CdesAchatDao{
 			':by_import'	=>$idwebuser
 		]);
 		return $this->pdo->lastInsertId();
+	}
+
+	public function getImport($idImport){
+		$req=$this->pdo->prepare("SELECT * FROM cdes_imports WHERE id= :id");
+		$req->execute([
+			':id'		=>$idImport
+		]);
+		return $req->fetch();
 	}
 	public function getInfoByImport($idImport){
 

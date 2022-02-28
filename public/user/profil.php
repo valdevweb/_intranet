@@ -36,8 +36,8 @@ function convertArray($data, $field,$separator){
 
 
 if(isset($_SESSION['code_bt'])){
-	require_once '../../Class/MagDao.php';
-	require_once '../../Class/Mag.php';
+	require_once '../../Class/mag/MagDao.php';
+	require_once '../../Class/mag/MagEntity.php';
 	require_once '../../Class/UserHelpers.php';
 
 	require "../../functions/stats.fn.php";

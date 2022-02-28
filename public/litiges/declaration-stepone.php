@@ -26,8 +26,8 @@ addRecord($pdoStat,$page,$action, $descr, 101);
 
 require '../../Class/litiges/LitigeDao.php';
 require '../../Class/BaDao.php';
-require '../../Class/MagDao.php';
-require '../../Class/Mag.php';
+require '../../Class/mag/MagDao.php';
+require '../../Class/mag/MagEntity.php';
 require '../../Class/OccPaletteMgr.php';
 
 

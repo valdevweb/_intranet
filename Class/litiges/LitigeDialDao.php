@@ -28,8 +28,11 @@ class LitigeDialDao{
 		$req=$this->pdo->query("SELECT action.*,dossiers.dossier, count(action.id) as nb  FROM action LEFT JOIN dossiers ON id_dossier= dossiers.id WHERE id_contrainte=5 AND read_action=0 GROUP BY id_dossier ORDER BY dossiers.id DESC");
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
-	public function getUnreadActionSavColumn(){
-		$req=$this->pdo->query("SELECT action_litiges.id_dossier  FROM action_litiges LEFT JOIN dossiers ON id_dossier= dossiers.id WHERE id_contrainte=5  AND read_action=0 GROUP BY id_dossier ORDER BY dossiers.id DESC");
+	public function getUnreadAction(){
+		$req=$this->pdo->query("SELECT action_litiges.id_dossier  FROM action_litiges 
+		LEFT JOIN action_contraintes ON action_litiges.id_contrainte=action_contraintes.id
+		LEFT JOIN dossiers ON id_dossier= dossiers.id WHERE notif=1 AND read_action=0 
+		GROUP BY id_dossier ORDER BY dossiers.id DESC");
 		return $req->fetchAll(PDO::FETCH_COLUMN);
 	}
 

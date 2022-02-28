@@ -14,7 +14,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 require '../../config/db-connect.php';
 
 require('../../Class/MsgManager.php');
-require('../../Class/MagDao.php');
+require('../../Class/mag/MagDao.php');
 
 $msgManager=new MsgManager();
 $magDao=new MagDao($pdoMag);

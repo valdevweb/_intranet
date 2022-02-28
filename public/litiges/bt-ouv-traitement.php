@@ -27,8 +27,8 @@ unset($_SESSION['goto']);
 require_once  '../../vendor/autoload.php';
 require_once  '../../Class/litiges/LitigeDao.php';
 require_once  '../../Class/UserHelpers.php';
-require '../../Class/MagDao.php';
-require '../../Class/Mag.php';
+require '../../Class/mag/MagDao.php';
+require '../../Class/mag/MagEntity.php';
 
 
 //------------------------------------------------------

@@ -17,6 +17,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 require('../../Class/FormHelpers.php');
 require('../../Class/MagHelpers.php');
 require('../../Class/litiges/LitigeDao.php');
+require('../../Class/litiges/ActionDao.php');
 require('../../Class/litiges/LitigeHelpers.php');
 require('../../Class/litiges/LitigeDialDao.php');
 
@@ -119,10 +120,12 @@ include 'bt-litige-encours\03b-data-build-query.php';
 
 
 $litigeDao=new LitigeDao($pdoLitige);
+$dialDao=new LitigeDialDao($pdoLitige);
+$actionDao=new ActionDao($pdoLitige);
+
 $listLitige=makeQuery($pdoLitige, $litigeQuery, $litigeParam, $litigeMod);
 $valoEtat=makeQuery($pdoLitige, $statutQuery, $statutParam);
 $valoTypo=makeQuery($pdoLitige, $typoQuery, $typoParam);
-$dialDao=new LitigeDialDao($pdoLitige);
 
 
 $errors=[];
@@ -139,11 +142,11 @@ $listReclamations=$litigeDao->getReclamation();
 $listVideoOk=getListVideo($pdoLitige, 7);
 $listVideoKo=getListVideo($pdoLitige, 6);
 
-
 $arTypo=LitigeHelpers::listTypo($pdoLitige);
 $arMagOcc=MagHelpers::getListMagOcc($pdoMag);
 $unread=$dialDao->getUnreadDossierColumn();
-$unreadActionSav=$dialDao->getUnreadActionSavColumn();
+$unreadActionSav=$dialDao->getUnreadAction();
+$listContrainteNotif = LitigeHelpers::listContrainteNotif($pdoLitige);
 
 
 $sumValoMain=0;
@@ -192,15 +195,6 @@ DEBUT CONTENU CONTAINER
 	<?php include ('bt-litige-encours\08-view-filtres.php') ?>
 	<?php include ('bt-litige-encours\09-view-table.php') ?>
 	<?php include ('bt-litige-encours\10-view-statut-modal.php') ?>
-
-
-
-
-	<!-- ./row -->
-	<!-- ./row -->
-
-
-
 </div>
 
 

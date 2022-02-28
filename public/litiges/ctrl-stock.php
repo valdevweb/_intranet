@@ -97,7 +97,7 @@ function updateDetailInv($pdoLitige,$key, $ctrlKo, $ecart,$mvt)
 
 function addAction($pdoLitige,$contrainte,$reportAction)
 {
-	$req=$pdoLitige->prepare("INSERT INTO action (id_dossier, libelle, id_contrainte, id_web_user, date_action) VALUES (:id_dossier, :libelle, :id_contrainte, :id_web_user, :date_action)");
+	$req=$pdoLitige->prepare("INSERT INTO action_litiges (id_dossier, libelle, id_contrainte, id_web_user, date_action) VALUES (:id_dossier, :libelle, :id_contrainte, :id_web_user, :date_action)");
 	$req->execute([
 		':id_dossier'	=>$_GET['id'],
 		':libelle'	=>	$reportAction,

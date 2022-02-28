@@ -19,8 +19,8 @@ require '../../config/db-connect.php';
 
 require 'casse-getters.fn.php';
 require ('../../Class/Helpers.php');
-require ('../../Class/MagDao.php');
-require('../../Class/Mag.php');
+require ('../../Class/mag/MagDao.php');
+require('../../Class/mag/MagEntity.php');
 require('../../Class/casse/TrtDao.php');
 $trtDao=new TrtDao($pdoCasse);
 

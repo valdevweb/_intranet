@@ -13,7 +13,7 @@ require 'config/db-connect.php';
 //----------------------------------------------------
 
 require 'functions/stats.fn.php';
-include 'Class/MagDao.php';
+include 'Class/mag/MagDao.php';
 require 'vendor/autoload.php';
 //----------------------------------------------------
 // STATS

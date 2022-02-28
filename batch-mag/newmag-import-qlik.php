@@ -227,7 +227,6 @@ $errArr=[];
 $rowUp=0;
 $rowIns=0;
 
-
 // insertion ou update de qlik vers magasin mag
 foreach ($listMag as $key => $mag) {
 	if(alreadyInMag($pdoMag, $mag['id'])){

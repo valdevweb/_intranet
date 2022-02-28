@@ -1,5 +1,5 @@
 <?php
-class Mag{
+class MagEntity{
 
     private $id;
     private $deno;

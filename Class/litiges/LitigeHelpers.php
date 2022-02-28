@@ -79,4 +79,18 @@ class LitigeHelpers{
 		$req=$pdoLitige->query("SELECT id, action FROM actions ORDER BY action");
 		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
+
+	public static function listContrainteCorresp($pdoLitige){
+		$req=$pdoLitige->query("SELECT id_contrainte_dde, id_contrainte_rep FROM contrainte_corresp ORDER BY id_contrainte_dde");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+	public static function listContrainteService($pdoLitige){
+		$req=$pdoLitige->query("SELECT id_contrainte_dde, service FROM contrainte_corresp ORDER BY service");
+		return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+	}
+	public static function listContrainteNotif($pdoLitige){
+		$req=$pdoLitige->query("SELECT id service FROM action_contraintes WHERE notif=1 ORDER BY id");
+		return $req->fetchAll(PDO::FETCH_COLUMN);
+	}
+
 }

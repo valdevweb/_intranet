@@ -6,7 +6,7 @@
 	</tr>
 
 	<?php foreach ($actionList as $action) : ?>
-	<tr>
+	<tr  class="border-table-grey">
 		<td><?=date('d-m-Y',strtotime($action['date_action']))?></td>
 		<td><?=$action['libelle']?></td>
 	</tr>

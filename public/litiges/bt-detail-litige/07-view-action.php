@@ -52,7 +52,7 @@
 							$pj='';
 						}
 						$notif="";
-						if ($action['read_action']==0 && $action['id_contrainte']==5){
+						if ($action['read_action']==0 && in_array($action['id_contrainte'],$listContrainteNotif)){
 							$notif="<i class='fas fa-bell pl-2 text-green'></i>";
 						}
 						?>
@@ -60,8 +60,8 @@
 							<td class="nowrap"><?=$action['dateFr'].$notif?></td>
 							<td class="nowrap"><?=UserHelpers::getFullname($pdoUser, $action['id_web_user'])?></td>
 							<td>
-								<?=$action['libelle']?>
-								<?php if ($action['id_contrainte']==5): ?>
+								<?=nl2br($action['libelle'])?>
+							<?php if(in_array($action['id_contrainte'],$listContrainteNotif)):?>								
 									<div class="text-right">Marquer comme :
 									<?php if ($action['read_action']==0): ?>
 										<button class="btn btn-sm btn-kaki" name="read_action[<?=$action['id_action']?>]">Lu</button>

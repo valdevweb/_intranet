@@ -114,8 +114,7 @@ function createFileLink($filelist)
 
 function getDialog($pdoLitige)
 {
-	$req=$pdoLitige->prepare("SELECT id_dossier,DATE_FORMAT(date_saisie, '%d-%m-%Y') as dateFr, DATE_FORMAT(date_saisie, '%H:%i') as heure,msg,id_web_user,filename,mag 
-	FROM dial WHERE id_dossier= :id ORDER BY date_saisie DESC");
+	$req=$pdoLitige->prepare("SELECT id_dossier,DATE_FORMAT(date_saisie, '%d-%m-%Y') as dateFr, DATE_FORMAT(date_saisie, '%H:%i') as heure,msg,id_web_user,filename,mag FROM dial WHERE id_dossier= :id ORDER BY date_saisie DESC");
 	$req->execute(array(
 		':id'		=>$_GET['id']
 	));

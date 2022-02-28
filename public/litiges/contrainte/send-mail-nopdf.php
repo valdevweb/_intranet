@@ -8,7 +8,7 @@ if(VERSION=='_'){
 $htmlMail = file_get_contents($mailFile);
 $htmlMail=str_replace('{MAG}',$litige[0]['mag'],$htmlMail);
 $htmlMail=str_replace('{DOSSIER}',$litige[0]['dossier'],$htmlMail);
-$htmlMail=str_replace('{MSG}',$actionLitige['libelle'],$htmlMail);
+$htmlMail=str_replace('{MSG}',nl2br($actionLitige['libelle']),$htmlMail);
 $htmlMail=str_replace('{LINK}',$link,$htmlMail);
 
 

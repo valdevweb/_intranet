@@ -3,7 +3,7 @@
 if(isset($dials[0]['msg']))	{
 
     echo '<table class="padding-table border-table-sec">';
-    echo '<tr>';
+    echo '<tr class="border-table-sec">';
     echo '<td class="bg-sec text-white">date</td>';
     echo '<td class="bg-sec text-white">Interlocuteur</td>';
     echo '<td class="bg-sec text-white">Message</td>';
@@ -17,7 +17,7 @@ if(isset($dials[0]['msg']))	{
             $personn=$personn['fullname'];
         }
 
-        echo '<tr>';
+        echo '<tr class="border-table-sec">';
         echo '<td>'.$dial['dateFr'].'</td>';
         echo '<td>'.$personn.'</td>';
         echo '<td>'.$dial['msg'].'</td>';

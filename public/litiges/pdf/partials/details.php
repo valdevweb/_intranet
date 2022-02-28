@@ -4,17 +4,19 @@
 
 <div class="spacing-s"></div>
 <table class="padding-table border-table-sec">
-    <tr>
+    <tr class="border-table-sec">
+        <td class="cinq bg-sec text-white">PALETTE</td>
         <td class="cinq bg-sec text-white">CODE ARTICLE</td>
         <td class="cinq bg-sec text-white">DESIGNATION</td>
-        <td class="cinq bg-sec text-white">QUANTITE</td>
-        <td class="cinq bg-sec text-white">VALORISATION</td>
+        <td class="cinq bg-sec text-white text-right">QUANTITE</td>
+        <td class="cinq bg-sec text-white text-right">VALORISATION</td>
         <td class="cinq bg-sec text-white">RECLAMATION</td>
     </tr>
     <?php
    
     foreach ($litige as $prod) {
-        echo '<tr>';
+        echo '<tr class="border-table-sec">';
+        echo '<td>' . $prod['palette'] . '</td>';
         echo '<td>' . $prod['article'] . '</td>';
         echo '<td>' . $prod['descr'] . '</td>';
         echo '<td class="text-right">' . $prod['qte_litige'] . '</td>';
@@ -23,8 +25,9 @@
         echo '</tr>';
         if ($prod['inversion'] != "") {
             $valoInv = round($prod['qte_cde'] * $prod['inv_tarif'], 2);
-            echo '<tr><td colspan="5" class="text-center text-prim heavy">Produit reçu à la place de la référence ci-dessus :</td></tr>';
-            echo '<tr>';
+            echo '<tr class="border-table-sec"><td colspan="5" class="text-center text-prim heavy">Produit reçu à la place de la référence ci-dessus :</td></tr>';
+            echo '<tr class="border-table-sec">';
+            echo '<td>' . $prod['palette'] . '</td>';
             echo '<td class="text-prim heavy">' . $prod['inv_article'] . '</td>';
             echo '<td class="text-prim heavy">' . $prod['inv_descr'] . '</td>';
             echo '<td class="text-right text-prim heavy">' . $prod['qte_litige'] . '</td>';

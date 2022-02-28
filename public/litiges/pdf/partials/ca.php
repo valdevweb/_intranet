@@ -36,11 +36,11 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 
 
 <table class="padding-table border-table-prim">
-		<tr>
+		<tr class="border-table-prim">
 			<td class="deux bg-prim text-white text-center" colspan="3">CHIFFRE D'AFFAIRE</td>
 			<!-- <td class="deux bg-prim text-white bigger" colspan="2"></td> -->
 		</tr>
-		<tr>
+		<tr class="border-table-prim">
 			<td class="trois text-right heavy"><?=$yearN?></td>
 			<td class="trois text-right heavy"><?=$yearNUn?></td>
 			<td class="trois text-right heavy"><?=$yearNDeux?></td>
@@ -56,7 +56,7 @@ $sumValo=number_format((float)$sumValo,2,'.','');
 
 	<table class="padding-table border-table-prim">
 
-		<tr>
+		<tr class="border-table-prim">
 			<td class="full-width">
 				<span class="heavy">Commentaires magasin :</span>
 				<?= $initialCmt['msg']?>

@@ -13,8 +13,8 @@ $pageCss=$pageCss[0];
 $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 
-require '../../Class/MagDao.php';
-require '../../Class/Mag.php';
+require '../../Class/mag/MagDao.php';
+require '../../Class/mag/MagEntity.php';
 
 //---------------------------------------
 //	ajout enreg dans stat

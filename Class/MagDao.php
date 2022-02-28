@@ -36,7 +36,7 @@ class MagDao{
 
 		if(!empty($datas)){
 			foreach ($datas as $data) {
-				$mags[]= new Mag($data);
+				$mags[]= new MagEntity($data);
 
 			}
 			return $mags;
@@ -53,7 +53,7 @@ class MagDao{
 		$data=$req->fetch(PDO::FETCH_ASSOC);
 
 		if(!empty($data)){
-			return new Mag($data);
+			return new MagEntity($data);
 		}
 		return false;
 	}
@@ -66,7 +66,7 @@ class MagDao{
 		$data=$req->fetch(PDO::FETCH_ASSOC);
 
 		if(!empty($data)){
-			return new Mag($data);
+			return new MagEntity($data);
 		}
 		return false;
 	}
@@ -87,7 +87,7 @@ class MagDao{
 		$data=$req->fetch(PDO::FETCH_ASSOC);
 
 		if(!empty($data)){
-			return new Mag($data);
+			return new MagEntity($data);
 		}
 		return false;
 	}

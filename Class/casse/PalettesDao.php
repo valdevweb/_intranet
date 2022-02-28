@@ -21,7 +21,7 @@ class PalettesDao{
 		LEFT JOIN exps ON palettes.id_exp = exps.id
 		left JOIN qlik.palettes4919 ON palettes.palette=NumeroPalette
 		WHERE $param GROUP BY palettes.id ORDER BY palettes.date_crea DESC";
-
+		echo $query;
 
 		$req=$this->pdo->query($query);
 		return $req->fetchAll();

@@ -139,7 +139,6 @@ if (!isset($_SESSION['casse_filter'])) {
 }
 
 
-
 if (isset($palettesToDisplay)) {
 	$nbpalette = count($palettesToDisplay);
 

@@ -1,7 +1,8 @@
 <?php
 require_once '../../config/session.php';
-// require_once '../../vendor/autoload.php';
-// require_once '../../Class/UserDao.php';
+
+/** @var Db $db */
+
 
 
 
@@ -32,7 +33,6 @@ include('../view/_navbar.php');
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
-    <div class="text-test">hzaejjiojjiza</div>
 	
 	<!-- contenu -->
 </div>

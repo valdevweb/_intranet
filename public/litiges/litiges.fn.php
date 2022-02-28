@@ -1,7 +1,7 @@
 <?php
 
-require '../../Class/MagDao.php';
-require '../../Class/Mag.php';
+require '../../Class/mag/MagDao.php';
+require '../../Class/mag/MagEntity.php';
 
 $magDao=new MagDao($pdoMag);
 $infoMag=$magDao->getMagByGalec($fLitige['galec']);

@@ -11,8 +11,8 @@ require '../../config/db-connect.php';
 require('../../functions/form.fn.php');
 require('../../Class/BtUserManager.php');
 require('../../Class/MsgManager.php');
-require('../../Class/MagDao.php');
-require('../../Class/Mag.php');
+require('../../Class/mag/MagDao.php');
+require('../../Class/mag/MagEntity.php');
 
 require "../../functions/stats.fn.php";
 $page=basename(__file__);

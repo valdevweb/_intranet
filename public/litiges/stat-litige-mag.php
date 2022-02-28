@@ -130,6 +130,8 @@ DEBUT CONTENU CONTAINER
 		</div>
 		<div class="col-1"></div>
 	</div>
+	<?php if (isset($listLitige) ): ?>
+	
 	<div class="row">
 		<div class="col">
 			<h3 class="text-center text-main-blue my-3"><?=$listLitige[0]['deno']?></h3>
@@ -206,6 +208,7 @@ DEBUT CONTENU CONTAINER
 				</div>
 			</div>
 
+			<?php endif ?>
 
 
 

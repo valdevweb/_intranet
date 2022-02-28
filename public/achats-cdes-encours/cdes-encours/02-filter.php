@@ -99,4 +99,5 @@ $param="";
 	}
 // echo $_SESSION['encours_filter']['fou'];
 	$nbArt=count($listCdes);
+	// echo $param;
 	$listInfos=$cdesAchatDao->getInfos($param);
