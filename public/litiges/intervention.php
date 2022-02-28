@@ -2,7 +2,7 @@
 require_once '../../config/session.php';
 require_once  '../../vendor/autoload.php';
 require '../../Class/UserDao.php';
-require '../../Class/MagHelpers.php';
+require '../../Class/mag/MagHelpers.php';
 require '../../Class/Litiges/ActionDao.php';
 require '../../Class/Litiges/LitigeDao.php';
 require '../../Class/Litiges/ContrainteDao.php';

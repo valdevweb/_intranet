@@ -19,7 +19,7 @@ unset($_SESSION['goto']);
 //------------------------------------------------------
 require_once '../../vendor/autoload.php';
 require_once '../../Class/UserHelpers.php';
-require_once '../../Class/MagHelpers.php';
+require_once '../../Class/mag/MagHelpers.php';
 require_once '../../Class/mag/MagDao.php';
 require_once '../../Class/CmRdvDao.php';
 require_once '../../Class/Helpers.php';

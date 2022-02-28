@@ -95,9 +95,10 @@ if(!isset($paramList) && !isset($notifQuery)){
 		$litigeQuery="SELECT dossiers.id as id_main, dossiers.dossier, DATE_FORMAT(date_crea, '%d-%m-%Y') as datecrea, dossiers.galec, dossiers.etat_dossier, dossiers.esp, dossiers.vingtquatre, dossiers.valo, dossiers.ctrl_ok, dossiers.commission, dossiers.id_etat, dossiers.occasion, dossiers.id_robbery, dossiers.id_typo, magasin.mag.deno, magasin.mag.centrale,  magasin.mag.id as btlec, etat.etat
 		FROM action_litiges
 		LEFT JOIN dossiers ON action_litiges.id_dossier=dossiers.id
+		LEFT JOIN action_contraintes ON id_contrainte= action_contraintes.id
 		LEFT JOIN etat ON id_etat=etat.id
 		LEFT JOIN magasin.mag ON dossiers.galec=magasin.mag.galec";
-		$litigeParam="WHERE read_action=0 AND id_contrainte=5";
+		$litigeParam="WHERE read_action=0 AND notif=1";
 		$litigeMod=" GROUP BY dossiers.id ORDER BY dossiers.dossier DESC";
 
 

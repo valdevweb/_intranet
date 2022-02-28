@@ -6,7 +6,7 @@ if(!isset($_SESSION['id'])){
 }
 // require '../../config/db-connect.php';
 require '../../Class/Db.php';
-require '../../Class/MagHelpers.php';
+require '../../Class/mag/MagHelpers.php';
 
 require_once '../../vendor/autoload.php';
 

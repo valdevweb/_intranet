@@ -18,7 +18,7 @@ require '../../config/db-connect.php';
 
 require_once '../../vendor/autoload.php';
 require '../../Class/Uploader.php';
-require '../../Class/MagHelpers.php';
+require '../../Class/mag/MagHelpers.php';
 require '../../Class/Helpers.php';
 require '../../Class/CrudDao.php';
 require '../../Class/Db.php';

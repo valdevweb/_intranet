@@ -20,7 +20,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 require '../../Class/litiges/LitigeDao.php';
 require '../../Class/litiges/LitigeHelpers.php';
 require '../../Class/FormHelpers.php';
-require '../../Class/MagHelpers.php';
+require '../../Class/mag/MagHelpers.php';
 
 
 //---------------------------------------

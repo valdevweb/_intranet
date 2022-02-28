@@ -6,7 +6,7 @@ if(!isset($_SESSION['id'])){
 }
 require '../../Class/Db.php';
 require '../../Class/salon/StatsSalonDao.php';
-require '../../Class/MagHelpers.php';
+require '../../Class/mag/MagHelpers.php';
 
 
 //      css dynamique

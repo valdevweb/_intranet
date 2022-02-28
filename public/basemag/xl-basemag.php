@@ -8,7 +8,7 @@ if(!isset($_SESSION['id'])){
 require_once '../../vendor/autoload.php';
 
 include '../../config/db-connect.php';
-require_once '../../Class/MagHelpers.php';
+require_once '../../Class/mag/MagHelpers.php';
 require_once '../../Class/UserHelpers.php';
 
 

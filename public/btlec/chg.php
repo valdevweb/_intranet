@@ -14,7 +14,6 @@ require_once  '../../vendor/autoload.php';
 require "../../functions/stats.fn.php";
 require('../../Class/BtUserManager.php');
 require('../../Class/MsgManager.php');
-require('../../Class/MagHelpers.php');
 require('../../Class/UserHelpers.php');
 
 

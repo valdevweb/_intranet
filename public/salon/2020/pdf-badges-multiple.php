@@ -7,7 +7,7 @@ if(!isset($_SESSION['id'])){
 require '../../config/db-connect.php';
 
 require_once '../../vendor/autoload.php';
-require_once '../../Class/MagHelpers.php';
+require_once '../../Class/mag/MagHelpers.php';
 
 
 function getParticipant($pdoBt)

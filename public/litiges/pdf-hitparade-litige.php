@@ -14,7 +14,7 @@ require '../../config/db-connect.php';
 
 
 require_once  '../../vendor/autoload.php';
-require '../../Class/MagHelpers.php';
+require '../../Class/mag/MagHelpers.php';
 require '../../Class/DateHelpers.php';
 
 

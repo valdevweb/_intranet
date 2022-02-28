@@ -5,7 +5,7 @@ require_once '../../Class/litiges/LitigeDao.php';
 require_once '../../Class/litiges/ActionDao.php';
 require_once '../../Class/litiges/DialDao.php';
 require_once '../../Class/UserHelpers.php';
-require_once '../../Class/MagHelpers.php';
+require_once '../../Class/mag/MagHelpers.php';
 
 
 
