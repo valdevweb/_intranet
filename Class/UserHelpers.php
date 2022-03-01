@@ -113,8 +113,11 @@ class UserHelpers{
 
 	public static function getFullname($pdoUser,$id){
 		$data=self::getInternUser($pdoUser,$id);
-		return $data['fullname'];
-	}
+		if(!empty($data)){
+			return $data['fullname'];
+		}
+		return "";
+	}	
 
 	public static function getPrenom($pdoUser,$id){
 		$data=self::getInternUser($pdoUser,$id);
