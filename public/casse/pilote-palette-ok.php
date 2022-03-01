@@ -19,7 +19,7 @@ require '../../config/db-connect.php';
 require_once '../../vendor/autoload.php';
 
 require ('../../Class/Helpers.php');
-require ('../../Class/MagHelpers.php');
+require ('../../Class/mag/MagHelpers.php');
 
 require 'casse-getters.fn.php';
 

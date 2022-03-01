@@ -114,7 +114,7 @@ function updateDossier($pdoLitige)
 
 // ajout action quand envoi mail cloture au mag
 function addAction($pdoLitige, $action){
-	$req=$pdoLitige->prepare("INSERT INTO action (id_dossier, libelle, id_web_user, date_action) VALUES (:id_dossier, :libelle, :id_web_user, :date_action)");
+	$req=$pdoLitige->prepare("INSERT INTO action_litiges (id_dossier, libelle, id_web_user, date_action) VALUES (:id_dossier, :libelle, :id_web_user, :date_action)");
 	$req->execute([
 		':id_dossier'		=> $_GET['id'],
 		':libelle'			=>$action,

@@ -25,7 +25,7 @@ require('../../Class/casse/CasseHelpers.php');
 require('../../Class/casse/TrtDao.php');
 require('../../Class/casse/CasseDao.php');
 
-require('../../Class/MagHelpers.php');
+require('../../Class/mag/MagHelpers.php');
 require('../../Class/CrudDao.php');
 
 

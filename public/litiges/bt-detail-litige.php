@@ -17,7 +17,7 @@ unset($_SESSION['goto']);
 
 require 'echanges.fn.php';
 require('../../Class/UserHelpers.php');
-require('../../Class/MagHelpers.php');
+require('../../Class/mag/MagHelpers.php');
 require('../../Class/litiges/LitigeDao.php');
 require('../../Class/litiges/LitigeHelpers.php');
 require('../../Class/litiges/ActionDao.php');

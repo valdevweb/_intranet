@@ -10,7 +10,7 @@ require '../../config/db-connect.php';
 require_once '../../vendor/autoload.php';
 require('../../Class/litiges/LitigeDao.php');
 require('../../Class/litiges/LitigeHelpers.php');
-require('../../Class/MagHelpers.php');
+require('../../Class/mag/MagHelpers.php');
 require('../../Class/OccHelpers.php');
 
 //			css dynamique

@@ -15,7 +15,7 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 
 
 require('../../Class/FormHelpers.php');
-require('../../Class/MagHelpers.php');
+require('../../Class/mag/MagHelpers.php');
 require('../../Class/litiges/LitigeDao.php');
 require('../../Class/litiges/ActionDao.php');
 require('../../Class/litiges/LitigeHelpers.php');
