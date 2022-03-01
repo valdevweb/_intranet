@@ -148,7 +148,8 @@ class MagDao{
 
 	}
 	public function getHisto($galec){
-		$req=$this->pdo->prepare("SELECT *, DATE_FORMAT(date_ouv, '%d/%m/%Y') as dateOuv, DATE_FORMAT(date_ferm, '%d/%m/%Y') as dateFerm FROM magsyno  LEFT JOIN mag ON magsyno.btlec_old=mag.id WHERE magsyno.galec= :galec ORDER BY date_ouv DESC ");
+		$req=$this->pdo->prepare("SELECT *, DATE_FORMAT(date_ouv, '%d/%m/%Y') as dateOuv, DATE_FORMAT(date_ferm, '%d/%m/%Y') as dateFerm 
+		FROM magsyno  LEFT JOIN mag ON magsyno.btlec_old=mag.id WHERE magsyno.galec= :galec ORDER BY date_ouv DESC ");
 		$req->execute([
 			':galec'		=>$galec
 		]);
@@ -160,7 +161,8 @@ class MagDao{
 		return '';
 	}
 	public function getHistoMagFerme($btlec){
-		$req=$this->pdo->prepare("SELECT *, DATE_FORMAT(date_ouv, '%d/%m/%Y') as dateOuv, DATE_FORMAT(date_ferm, '%d/%m/%Y') as dateFerm FROM magsyno  LEFT JOIN mag ON magsyno.btlec_new=mag.id WHERE magsyno.btlec_old= :btlec_old ORDER BY date_ouv DESC ");
+		$req=$this->pdo->prepare("SELECT *, DATE_FORMAT(date_ouv, '%d/%m/%Y') as dateOuv, DATE_FORMAT(date_ferm, '%d/%m/%Y') as dateFerm 
+		FROM magsyno  LEFT JOIN mag ON magsyno.btlec_new=mag.id WHERE magsyno.btlec_old= :btlec_old ORDER BY date_ouv DESC ");
 		$req->execute([
 			':btlec_old'		=>$btlec
 		]);
@@ -189,7 +191,9 @@ class MagDao{
 	}
 	public function getDistinctCentraleSca(){
 		// uniquement centrale pour mag de type mag
-		return $req=$this->pdo->query("SELECT DISTINCT centrale_sca, centrale FROM sca3 LEFT JOIN centrales ON  sca3.centrale_sca=centrales.id_ctbt WHERE centrale_sca IS NOT NULL ORDER BY centrale")->fetchAll(PDO::FETCH_ASSOC);
+		return $req=$this->pdo->query("SELECT DISTINCT centrale_sca, centrale 
+		FROM sca3 
+		LEFT JOIN centrales ON  sca3.centrale_sca=centrales.id_ctbt WHERE centrale_sca IS NOT NULL ORDER BY centrale")->fetchAll(PDO::FETCH_ASSOC);
 	}
 	public function getDistinctCentraleDoris(){
 		// uniquement centrale pour mag de type mag

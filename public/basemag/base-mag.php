@@ -43,7 +43,7 @@ $listType=$magDbHelper->getListType();
 $listCm=UserHelpers::getUserByService($pdoUser,17);
 
 
-$listTypePair=$magDbHelper->getListTypePair();
+// $listTypePair=$magDbHelper->getListTypePair();
 $listCodeAcdlec=$magDbHelper->getListCodeAcdlecUtilise();
 $centraleName=Helpers::arrayFlatten($listCentrale,"centrale_doris","centrale");
 $ets=Helpers::arrayFlatten($listCodeAcdlec,"acdlec_code","nom_ets");

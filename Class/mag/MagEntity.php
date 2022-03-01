@@ -682,15 +682,6 @@ public function setMotsCles($mots_cles){
     return $this;
 }
 
-public function getPoleSavSca(){
-    return $this->pole_sav_sca;
-}
-
-public function setPoleSavSca($pole_sav_sca){
-    $this->pole_sav_sca = $pole_sav_sca;
-    return $this;
-}
-
 public function getCentraleSmiley(){
     return $this->centrale_smiley;
 }

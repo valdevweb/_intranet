@@ -214,7 +214,7 @@ include('../view/_navbar.php');
 						<div class="col-3">
 							<span class="text-orange">Pôle SAV Gessica : </span>
 
-							<?= $mag->getPoleSavSca()?>
+							<?= $mag->getPoleSav()?>
 							<span class="text-orange pl-3">CTBT : </span>
 							<?= $mag->getPoleSavCtbt()?>
 

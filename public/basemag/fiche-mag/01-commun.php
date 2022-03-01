@@ -1,3 +1,4 @@
+<?php /** @var  MagEntity $mag */  ?>
 <!-- suite partie fixe -->
 <div class="row yanone-replace pb-3 mb-3 ">
 	<div class="col">
@@ -105,7 +106,7 @@
 					<div class="col-3">
 						<span class="text-orange">SAV Gessica : </span>
 
-						<?= $mag->getPoleSavSca()?>
+						<?= $mag->getPoleSav()?>
 						<span class="text-orange pl-3">CTBT : </span>
 						<?= $mag->getPoleSavCtbt()?>
 

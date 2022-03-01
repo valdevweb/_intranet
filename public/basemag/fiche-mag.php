@@ -59,7 +59,7 @@ function convertArray($data, $field,$separator){
 }
 
 function updateSca($pdoMag){
-	$req=$pdoMag->prepare("UPDATE sca3 SET galec_sca= :galec_sca, deno_sca= :deno_sca, ad1_sca= :ad1_sca, ad2_sca= :ad2_sca, ad3= :ad3_sca, cp_sca= :cp_sca, ville_sca= :ville_sca, tel_sca= :tel_sca, fax_sca= :fax_sca, adherent_sca= :adh_sca, directeur_sca= :dir_sca, centrale_sca= :centrale_sca, centrale_doris= :centrale_doris, centrale_smiley= :centrale_smiley, surface_sca= :surface_sca, sorti= :sorti, date_ouverture= :date_ouverture, date_adhesion= :date_adhesion, date_fermeture= :date_fermeture, date_resiliation= :date_resiliation, date_sortie= :date_sortie, pole_sav_sca= :pole_sav_sca, nom_gesap= :gesap, affilie= :affilie, racine_list= :racine_list, occasion= :occasion, backoffice_sca= :backoffice_sca, date_update= :date_update WHERE btlec_sca= :btlec_sca");
+	$req=$pdoMag->prepare("UPDATE sca3 SET galec_sca= :galec_sca, deno_sca= :deno_sca, ad1_sca= :ad1_sca, ad2_sca= :ad2_sca, ad3= :ad3_sca, cp_sca= :cp_sca, ville_sca= :ville_sca, tel_sca= :tel_sca, fax_sca= :fax_sca, adherent_sca= :adh_sca, directeur_sca= :dir_sca, centrale_sca= :centrale_sca, centrale_doris= :centrale_doris, centrale_smiley= :centrale_smiley, surface_sca= :surface_sca, sorti= :sorti, date_ouverture= :date_ouverture, date_adhesion= :date_adhesion, date_fermeture= :date_fermeture, date_resiliation= :date_resiliation, date_sortie= :date_sortie, pole_sav= :pole_sav, nom_gesap= :gesap, affilie= :affilie, racine_list= :racine_list, occasion= :occasion, backoffice_sca= :backoffice_sca, date_update= :date_update WHERE btlec_sca= :btlec_sca");
 
 	$req->execute([
 		':btlec_sca'		=>$_GET['id'],
@@ -84,7 +84,7 @@ function updateSca($pdoMag){
 		':date_fermeture'		=>(empty($_POST['date_fermeture']))? NULL:(DateTime::createFromFormat('d/m/Y',$_POST['date_fermeture']))->format('Y-m-d'),
 		':date_resiliation'		=>(empty($_POST['date_resiliation']))? NULL:(DateTime::createFromFormat('d/m/Y',$_POST['date_resiliation']))->format('Y-m-d'),
 		':date_sortie'		=>(empty($_POST['date_sortie']))? NULL:( DateTime::createFromFormat('d/m/Y',$_POST['date_sortie']))->format('Y-m-d'),
-		':pole_sav_sca'		=>(empty($_POST['pole_sav_sca']))? NULL:$_POST['pole_sav_sca'],
+		':pole_sav'		=>(empty($_POST['pole_sav']))? NULL:$_POST['pole_sav'],
 		':gesap'		=>$_POST['gesap'],
 		':racine_list'		=>$_POST['racine_list'],
 		':affilie'		=>$_POST['affilie'],
@@ -127,56 +127,56 @@ if(isset($_POST['clear_form'])){
 
 }
 if (isset($_GET['id'])){
-	$magDbHelper=new MagDao($pdoMag);
-	$mag=$magDbHelper->getMagAndScaTroisInfo($_GET['id']);
+	$magDao=new MagDao($pdoMag);
+	$mag=$magDao->getMagAndScaTroisInfo($_GET['id']);
 	$occ=$mag->getOccasion();
 
-	$histo=$magDbHelper->getHisto($mag->getGalec());
-	$histoMagFerme=$magDbHelper->getHistoMagFerme($_GET['id']);
+	$histo=$magDao->getHisto($mag->getGalec());
+	$histoMagFerme=$magDao->getHistoMagFerme($_GET['id']);
 
-	$listCentralesSca=$magDbHelper->getDistinctCentraleSca();
-	$listMainCentrale=$magDbHelper->getMainCentrale();
-
-
-	$webuser=$magDbHelper->getWebUser($mag->getGalec());
+	$listCentralesSca=$magDao->getDistinctCentraleSca();
+	$listMainCentrale=$magDao->getMainCentrale();
 
 
-	$centreRei=$magDbHelper->centreReiToString($mag->getCentreRei());
-	$listTypesMag=$magDbHelper-> getListType();
-	$listBackOffice=$magDbHelper->getListBackOffice();
+	$webuser=$magDao->getWebUser($mag->getGalec());
+
+
+	$centreRei=$magDao->centreReiToString($mag->getCentreRei());
+	// $listTypesMag=$magDao-> getListType();
+	$listBackOffice=$magDao->getListBackOffice();
 
 	$listCm=UserHelpers::getUserByService($pdoUser, 17);
 	$yearN=date('Y');
 	$yearNUn= date("Y",strtotime("-1 year"));
 	$yearNDeux= date("Y",strtotime("-2 year"));
 
-	$financeN=$magDbHelper->getMagCaByYear($pdoQlik,$_GET['id'],$yearN);
-	$financeNUn=$magDbHelper->getMagCaByYear($pdoQlik,$_GET['id'],$yearNUn);
-	$financeNDeux=$magDbHelper->getMagCaByYear($pdoQlik,$_GET['id'],$yearNDeux);
+	$financeN=$magDao->getMagCaByYear($pdoQlik,$_GET['id'],$yearN);
+	$financeNUn=$magDao->getMagCaByYear($pdoQlik,$_GET['id'],$yearNUn);
+	$financeNDeux=$magDao->getMagCaByYear($pdoQlik,$_GET['id'],$yearNDeux);
 
 
 
 	// ld
-	$ldRbt=$magDbHelper-> getMagLd($mag->getId(),'-RBT');
+	$ldRbt=$magDao-> getMagLd($mag->getId(),'-RBT');
 	$ldRbtName=(!empty($ldRbt))? '<a class="text-orange" href="mailto:'.$ldRbt[0]['ld_full'].'">'.$ldRbt[0]['ld_full'].'</a>':  $mag->getRacineList()."-RBT";
 	$ldRbtLink=convertArray($ldRbt,'email','</a><br>');
 	$ldRbtExist=(!empty($ldRbt))? true:  false;
 	$ldRbtLink=(!empty($ldRbtLink))? $ldRbtLink:  "Aucune adresse RBT";
 
-	$ldDir=$magDbHelper-> getMagLd($mag->getId(),'-DIR');
+	$ldDir=$magDao-> getMagLd($mag->getId(),'-DIR');
 
 	$ldDirName=(!empty($ldDir))? '<a class="text-orange" href="mailto:'.$ldDir[0]['ld_full'].'">'.$ldDir[0]['ld_full'].'</a>':  $mag->getRacineList()."-DIR";
 	$ldDirLink=convertArray($ldDir,'email','</a><br>');
 	$ldDirExist=(!empty($ldDir))? true:  false;
 	$ldDirLink=(!empty($ldDirLink))? $ldDirLink : "Aucune adresse directeur";
 
-	$ldAdh=$magDbHelper-> getMagLd($mag->getId(),'-ADH');
+	$ldAdh=$magDao-> getMagLd($mag->getId(),'-ADH');
 	$ldAdhName=(!empty($ldAdh))? '<a class="text-orange" href="mailto:'.$ldAdh[0]['ld_full'].'">'.$ldAdh[0]['ld_full'].'</a>':  $mag->getRacineList()."-ADH :";
 	$ldAdhLink=convertArray($ldAdh,'email','</a><br>');
 	$ldAdhExist=(!empty($ldAdh))? true:  false;
 	$ldAdhLink=(!empty($ldAdhLink))? $ldAdhLink: "Aucune adresse adhérent ";
 
-	$ldOkaz=$magDbHelper->getMagLd($mag->getId(), '-GT13');
+	$ldOkaz=$magDao->getMagLd($mag->getId(), '-GT13');
 	$ldOkazName=(!empty($ldOkaz))? '<a class="text-orange" href="mailto:'.$ldOkaz[0]['ld_full'].'">'.$ldOkaz[0]['ld_full'].'</a>':  $mag->getRacineList()."-GT13";
 	$ldOkazLink=convertArray($ldOkaz,'email','</a><br>');
 	$ldOkazExist=(!empty($ldOkaz))? true:  false;
@@ -188,13 +188,13 @@ if (isset($_GET['id'])){
 
 	if(!empty($mag->getCentrale())){
 		// $centraleGessica=$mag->getCentrale();
-		$centraleGessica=$magDbHelper->centraleToString($mag->getCentrale());
+		$centraleGessica=$magDao->centraleToString($mag->getCentrale());
 	}else{
 		$centraleGessica="Pas de centrale renseignée";
 	}
 	if(!empty($mag->getCentraleSca())){
 		// $centraleGessica=$mag->getCentrale();
-		$centraleSca=$magDbHelper->centraleToString($mag->getCentraleSca());
+		$centraleSca=$magDao->centraleToString($mag->getCentraleSca());
 	}else{
 		$centraleSca="Pas de centrale renseignée";
 	}
@@ -205,9 +205,9 @@ if (isset($_GET['id'])){
 }
 
 if(isset($_GET['id'])){
-	$magDbHelper=new MagDao($pdoMag);
-	$mag=$magDbHelper->getMagAndScaTroisInfo($_GET['id']);
-	$cmtList=$magDbHelper->getCmt($_GET['id']);
+	$magDao=new MagDao($pdoMag);
+	$mag=$magDao->getMagAndScaTroisInfo($_GET['id']);
+	$cmtList=$magDao->getCmt($_GET['id']);
 }
 
 if(isset($_POST['maj'])){
@@ -276,7 +276,7 @@ if(isset($_POST['submit_cm'])){
 
 if(isset($_POST['submit_crea'])){
 
-	$req=$pdoMag->prepare("INSERT INTO sca3 (btlec_sca, galec_sca, deno_sca, ad1_sca, ad2_sca, cp_sca, ville_sca, tel_sca, fax_sca, centrale_sca, surface_sca, date_ouverture, pole_sav_sca, adherent_sca, sorti) VALUES (:btlec_sca, :galec_sca, :deno_sca, :ad1_sca, :ad2_sca, :cp_sca, :ville_sca , :tel_sca, :fax_sca, :centrale_sca, :surface_sca, :date_ouverture, :pole_sav_sca, :adherent_sca, :sorti)");
+	$req=$pdoMag->prepare("INSERT INTO sca3 (btlec_sca, galec_sca, deno_sca, ad1_sca, ad2_sca, cp_sca, ville_sca, tel_sca, fax_sca, centrale_sca, surface_sca, date_ouverture, pole_sav, adherent_sca, sorti) VALUES (:btlec_sca, :galec_sca, :deno_sca, :ad1_sca, :ad2_sca, :cp_sca, :ville_sca , :tel_sca, :fax_sca, :centrale_sca, :surface_sca, :date_ouverture, :pole_sav, :adherent_sca, :sorti)");
 	$req->execute([
 		':btlec_sca'			=>$mag->getId(),
 		':galec_sca'			=>$mag->getGalec(),
@@ -290,7 +290,7 @@ if(isset($_POST['submit_crea'])){
 		':centrale_sca'			=>$mag->getCentrale(),
 		':surface_sca'			=>$mag->getSurface(),
 		':date_ouverture'		=>$mag->getDateOuv(),
-		':pole_sav_sca'			=>$mag->getPoleSavGessica(),
+		':pole_sav'				=>$mag->getPoleSavGessica(),
 		':adherent_sca'			=>$mag->getAdherent(),
 		':sorti'				=>$mag->getGel(),
 	]);
