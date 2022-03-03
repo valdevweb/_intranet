@@ -170,7 +170,7 @@ include('../view/_navbar.php');
 								<td>
 									<?php if (!empty($files)) : ?>
 										<?php for ($i = 0; $i < count($files); $i++) : ?>
-											<a href="<?= URL_UPLOAD ?>/litiges/<?= $file[$i] ?>"><?= substr($files[$i], 0, -15) ?></a><br>
+											<a href="<?= URL_UPLOAD ?>/litiges/<?= $files[$i] ?>"><?= substr($files[$i], 0, -15) ?></a><br>
 										<?php endfor ?>
 									<?php endif ?>
 								</td>

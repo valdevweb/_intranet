@@ -22,36 +22,17 @@ $findme    = 'MSIE';
 $pos1 = stripos($thisAGENT, $findme);
 $pos2 = stripos($thisAGENT, 'Trident');
 
-if ($pos1 !== false)
+if ($pos1 !== false || $pos2 !== false)
 {
-	echo '<h1 style="font-family: arial, sans-serif; text-align: center">Votre navigateur n\'est pas compatible avec les portails BTLec et SAV.<br>veuillez utiliser Google Chrome</h1><br>';
-	echo '<center><img  style="text-align-center" src="public/img/index/chrome.png"></center>';
-	echo '<h1 style="font-family: arial, sans-serif; text-align: center">Ou Mozilla Firefox</h1>';
-	echo '<center><img  style="text-align-center" src="public/img/index/firefox.png"></center>';
-	echo '<h1 style="font-family: arial, sans-serif; text-align: center">Merci de votre compréhension<br><br></h1>';
+	include 'browser-error.html';
 	exit;
 }
-elseif($pos2 !==false)
-{
-	echo '<h1 style="font-family: arial, sans-serif; text-align: center">Votre navigateur n\'est pas compatible avec les portails BTLec et SAV.<br>veuillez utiliser Google Chrome</h1><br>';
-	echo '<center><img  style="text-align-center" src="public/img/index/chrome.png"></center>';
-	echo '<h1 style="font-family: arial, sans-serif; text-align: center">Ou Mozilla Firefox</h1>';
-	echo '<center><img  style="text-align-center" src="public/img/index/firefox.png"></center>';
-	echo '<h1 style="font-family: arial, sans-serif; text-align: center">Merci de votre compréhension<br><br></h1>';
-	exit;
-}
-
-
-
 
 if(!empty($_SERVER['QUERY_STRING'])){
 		//on met le goto dans champ cahcé du formulaire et la fonction de login recupère la valeur $_POST['goto'] pour la mettre dans session
 	$gotoMsg=$_SERVER['QUERY_STRING'];
 
 }
-
-
-
 
 // stats
 if(isset($_POST['connexion'])){

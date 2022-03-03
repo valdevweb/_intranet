@@ -35,8 +35,6 @@ $pdoBt=$db->getPdo('btlec');
 $pdoLitige=$db->getPdo('litige');
 $pdoDAchat=$db->getPdo('doc_achats');
 
-// stats recup mdp
-
 function rev($pdoBt){
 	$today=date('Y-m-d H:i:s');
 	$todayMoinsSept=date_sub(date_create($today), date_interval_create_from_date_string('7 days'));

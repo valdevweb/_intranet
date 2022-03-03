@@ -1,5 +1,4 @@
 <?php
-
 // hash du pwd
 function pwdHash($pwd){
 	$pwdHash=password_hash($pwd, PASSWORD_BCRYPT);
@@ -21,7 +20,10 @@ function btInfo($pdoUser)
 // info mlag table sca3
 function magInfo($pdoMag){
 
-	$req=$pdoMag->prepare("SELECT * FROM mag WHERE galec= :galec");
+	$req=$pdoMag->prepare("SELECT mag.*, pole_sav, sav FROM mag 
+	 LEFT JOIN sca3 ON mag.id=sca3.btlec_sca 
+	 LEFT JOIN corresp_sav on pole_sav=corresp_sav.id
+	 WHERE galec= :galec");
 	$req->execute(array(
 		':galec'		=>$_SESSION['id_galec']
 	));
@@ -29,14 +31,7 @@ function magInfo($pdoMag){
 	// return $req->errorInfo();
 }
 
-function getSav($pdoSav){
-	$req=$pdoSav->prepare("SELECT sav FROM mag WHERE id_web_user= :id_web_user");
-	$req->execute(array(
-		':id_web_user'		=>$_SESSION['id_web_user']
-	));
 
-	return $req->fetch(PDO::FETCH_ASSOC);
-}
 
 function getUserSavInfo($pdoSav){
 	$req=$pdoSav->prepare("SELECT nom,prenom,sav FROM sav_users WHERE id_web_user= :id_web_user");
@@ -72,21 +67,7 @@ function updateNoHash($pdoUser){
 	]);
 	return $req->rowCount();
 }
-function updatePwd($pdoUser){
-	$req=$pdoUser->prepare('UPDATE users SET pwd=:convertedPwd, old_pwd=:old_pwd  WHERE login= :postLogin');
-	$req->execute(array(
-		':convertedPwd'		=> $convertedPwd,
-		':old_pwd'			=>"",
-		':postLogin'		=> $_POST['login']
 
-	));
-	return $req->rowCount();
-
-}
-/*_____________________________________________________________
-*
-* 							login
-_______________________________________________________________*/
 
 
 
@@ -101,7 +82,7 @@ function loginExist($pdoUser){
 	}
 	return false;
 }
-// function login($pdoUser, $pdoBt,$pdoSav)
+
 
 
 
@@ -204,16 +185,16 @@ function initSession($pdoBt, $pdoSav, $pdoMag,$pdoCm, $pdoUser, $webUser){
 	if($_SESSION['id_type']==2 || $_SESSION['id_type']==7 || $_SESSION['id_type']==5 || $_SESSION['id_type']==4){
 		$_SESSION['id_galec']=$webUser['galec'];
 		$scatrois=magInfo($pdoMag);
-		$magSav=getSav($pdoSav);
+		// $magSav=getSav($pdoSav);
 		if(!empty($scatrois)){
 			$_SESSION['nom']=$scatrois['deno'];
 			$_SESSION['centrale']=$scatrois['centrale'];
 			$_SESSION['city']=$scatrois['ville'];
 			$_SESSION['code_bt']=$scatrois['id'];
+			$_SESSION['sav']=$scatrois['sav'];
+
 		}
-		if(!empty($magSav)){
-			$_SESSION['sav']=$magSav['sav'];
-		}
+
 		$rdvDao=new CmRdvDao($pdoCm);
 		$pendingRdv=$rdvDao->getLastPendingRdv();
 
