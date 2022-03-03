@@ -45,7 +45,7 @@ foreach ($demandeCtrlStock as $key => $ctrl) {
         $transport = (new Swift_SmtpTransport('217.0.222.26', 25));
         $mailer = new Swift_Mailer($transport);
 
-        $htmlMail = file_get_contents('mail-relance-stock.html');
+        $htmlMail = file_get_contents(DIR_SITE.'batch-litige/mail-relance-stock.html');
         $htmlMail = str_replace('{LINK}', $link, $htmlMail);
         $htmlMail = str_replace('{MAG}', $infoLitige['btlec'] . ' ' . $infoLitige['deno'], $htmlMail);
         $htmlMail = str_replace('{NUMDOSSIER}', $infoLitige['dossier'], $htmlMail);
