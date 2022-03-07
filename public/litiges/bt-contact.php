@@ -180,7 +180,6 @@ if(isset($_POST['submit']) ||isset($_POST['submit_mail']))
 
 
 		}
-
 	}
 	if(isset($_POST['not_read'])){
 		if (UserHelpers::isUserAllowed($pdoUser,['94']) || $_SESSION['id_web_user']==1402){

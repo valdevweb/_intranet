@@ -64,9 +64,9 @@
 							<?php if(in_array($action['id_contrainte'],$listContrainteNotif)):?>								
 									<div class="text-right">Marquer comme :
 									<?php if ($action['read_action']==0): ?>
-										<button class="btn btn-sm btn-kaki" name="read_action[<?=$action['id_action']?>]">Lu</button>
+										<button class="btn btn-sm btn-kaki" name="read_action" value="<?=$action['id_action']?>">Lu</button>
 										<?php else: ?>
-											<button class="btn btn-sm btn-kaki" name="not_read_action[<?=$action['id_action']?>]">Non lu</button>
+											<button class="btn btn-sm btn-kaki" name="not_read_action" value="<?=$action['id_action']?>">Non lu</button>
 										<?php endif ?>
 										</div>
 										<input type="hidden" class="form-control" name="id_action[<?=$action['id_action']?>]"  value="<?=$action['id_action']?>">
