@@ -33,7 +33,7 @@ foreach ($demandeCtrlStock as $key => $ctrl) {
     if ($infoLitige['ctrl_ok'] == 0) {
         echo "send mail for " . $ctrl['id_dossier'] . '<br>';
         $infoLitige = $litigeDao->getLitigeInfoMagById($ctrl['id_dossier']);
-        $dest = ['pilotageprepa@btlec.fr'];
+        $dest = [EMAIL_PILOTAGE_PREPA];
         if (VERSION == "_") {
             $dest = [MYMAIL];
         }
@@ -42,7 +42,7 @@ foreach ($demandeCtrlStock as $key => $ctrl) {
         $link = '<a href="' . SITE_ADDRESS . '/index.php?litiges/ctrl-stock.php?id=' . $ctrl['id_dossier'] . '"> cliquer</a>';
 
 
-        $transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+        $transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
         $mailer = new Swift_Mailer($transport);
 
         $htmlMail = file_get_contents(DIR_SITE.'batch-litige/mail-relance-stock.html');

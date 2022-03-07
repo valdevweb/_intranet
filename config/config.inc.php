@@ -59,5 +59,20 @@ define("JOUR_BOTH", "mardi 21 et mercredi 22 septembre");
 
 define("YEAR_SALON","2021");
 
-define("EXPEDITEUR_MAIL", array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'));
-define("SMTP_INFORMADIS", "relay-smtp.informadis.com");
+
+define("SMTP_ADDRESS", "relay-smtp.informadis.com");
+
+// remplace btlecest.portailweb.informatique@btlec.fr
+define("EMAIL_INFORMATIQUE", 'ga-btlecest-portailweb-informatique@btlecest.leclerc');
+define("MYMAIL", "valerie.montusclat@btlecest.leclerc");
+define("EMAIL_PILOTAGE_PREPA", 'pilotes.preparations@btlecest.leclerc');
+// btlecest.portailweb.gazettes@btlec.fr
+define("EMAIL_GAZETTE", 'ga-btlecest-portailweb-gazettes@btlecest.leclerc');
+//btlecest.portailweb.litiges@btlec.fr
+define("EMAIL_LITIGES", 'ga-btlecest-portailweb-litiges@btlecest.leclerc');
+//salonbtlecest@btlec.fr
+define("EMAIL_SALON", 'salons@btlecest.leclerc');
+
+define("EMAIL_NEPASREPONDRE", array('ne_pas_repondre@btlecest.leclerc' => 'Portail BTLec EST'));
+define("LD_DIR",['luc.muller@btlecest.leclerc', 'david.syllebranque@btlecest.leclerc']);
+define("LD_OCCASION",['jonathan.domange@btlecest.leclerc', 'stephane.wendling@btlecest.leclerc', 'luc.muller@btlecest.leclerc']);

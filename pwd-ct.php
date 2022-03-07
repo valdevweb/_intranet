@@ -20,7 +20,7 @@ if(isset($_GET['error']))
 	}
 	else
 	{
-		$errors[]="erreur - merci de signaler le problème à btlecest.portailweb.informatique@btlec.fr";
+		$errors[]="erreur - merci de signaler le problème à ".EMAIL_INFORMATIQUE;
 
 	}
 

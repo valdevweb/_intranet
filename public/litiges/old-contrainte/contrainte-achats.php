@@ -10,16 +10,16 @@ $serviceCorrespondance=[
 $ldAchat=getLdAchat($pdoUser,$serviceCorrespondance[$_GET['contrainte']]);
 
 if(VERSION=='_'){
-	$achatDest=['valerie.montusclat@btlec.fr'];
-	$cc='valerie.montusclat@btlec.fr';
+	$achatDest=[MYMAIL];
+	$cc=MYMAIL;
 }
 else{
 	foreach ($ldAchat as $ld) {
 		$achatDest[]=$ld['email'];
 
 	}
-	$achatDest[]='stephane.wendling@btlec.fr';
-	$cc='btlecest.portailweb.litiges@btlec.fr';
+	$achatDest[]='stephane.wendling@btlecest.leclerc';
+	$cc=EMAIL_LITIGES;
 
 }
 
@@ -49,13 +49,13 @@ $htmlMail=str_replace('{LINK}',$link,$htmlMail);
 $subject='Portail BTLec - Litige livraison '.$litige[0]['dossier'].' - '.$litige[0]['mag'];
 // ---------------------------------------
 // initialisation de swift
-$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 $mailer = new Swift_Mailer($transport);
 $attachmentPdf = new Swift_Attachment($pdfContent, $filename, 'application/pdf');
 
 $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
-->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+->setFrom(EMAIL_NEPASREPONDRE)
 ->setTo($achatDest)
 ->addCc($cc)
 ->attach($attachmentPdf);

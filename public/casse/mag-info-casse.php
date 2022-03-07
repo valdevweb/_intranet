@@ -115,8 +115,8 @@ $pdfContent = $mpdf->Output('', 'S');
 
 
 if(VERSION=='_'){
-	$dest='valerie.montusclat@btlec.fr';
-	$cc=['valerie.montusclat@btlec.fr'];
+	$dest=MYMAIL;
+	$cc=[MYMAIL];
 }
 else{
 	if($mailPole){
@@ -128,10 +128,10 @@ else{
 
 	}
 	else{
-		$dest=$btlec.'-rbt@btlec.fr';
+		$dest='ga-btlecest-'.$btlec.'-rbt@btlecest.leclerc';
 
 	}
-	$cc=['valerie.montusclat@btlec.fr', 'christelle.trousset@btlec.fr', 'nathalie.pazik@btlec.fr'];
+	$cc=[MYMAIL, 'christelle.trousset@btlecest.leclerc', 'nathalie.pazik@btlecest.leclerc'];
 
 }
 if($mailPole){
@@ -148,13 +148,13 @@ $subject='Portail BTLec Est - livraison palettes de casse';
 
 // 		// ---------------------------------------
 // 		// initialisation de swift
-$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 $mailer = new Swift_Mailer($transport);
 $attachmentPdf = new Swift_Attachment($pdfContent, $filename, 'application/pdf');
 $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
 ->attach($attachmentPdf)
-->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+->setFrom(EMAIL_NEPASREPONDRE)
 ->setTo($dest)
 
 ->setCc($cc);

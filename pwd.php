@@ -85,11 +85,11 @@ if(isset($_POST['galec']) && empty($webuser)){
 	$htmlMail=str_replace('{GALEC}',$magInfo['galec'],$htmlMail);
 	$htmlMail=str_replace('{DENO}',$magInfo['deno'],$htmlMail);
 	$subject="PORTAIL BTLEC Est - Création de compte magasin";
-	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+	$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 	$mailer = new Swift_Mailer($transport);
 	$message = (new Swift_Message($subject))
 	->setBody($htmlMail, 'text/html')
-	->setFrom(EXPEDITEUR_MAIL)
+	->setFrom(EMAIL_NEPASREPONDRE)
 	->setTo($dest);
 
 	if (!$mailer->send($message, $failures)){
@@ -109,11 +109,11 @@ if(isset($_POST['galec']) && empty($webuser)){
 if(isset($_POST['galec']) && !empty($webuser)){
 
 	if(VERSION=='_'){
-		$ldRbt='valerie.montusclat@btlec.fr';
+		$ldRbt=MYMAIL;
 		$hiddenAr=[];
 	}else{
-		$ldRbt=$magInfo['id']."-RBT@btlec.fr";
-		$hiddenAr=['valerie.montusclat@btlec.fr'];
+		$ldRbt='ga-btlecest-'.$magInfo['id']."-rbt@btlecest.leclerc";
+		$hiddenAr=[MYMAIL];
 
 	}
 	// si le mot de passe en clair existe
@@ -124,11 +124,11 @@ if(isset($_POST['galec']) && !empty($webuser)){
 		$htmlMail=str_replace('{LOGIN}',$webuser['login'],$htmlMail);
 		$htmlMail=str_replace('{PWD}',$webuser['nohash_pwd'],$htmlMail);
 		$subject="PORTAIL BTLEC Est - Vos identifiants de connexion";
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
-		->setFrom(EXPEDITEUR_MAIL)
+		->setFrom(EMAIL_NEPASREPONDRE)
 		->setTo($ldRbt)
 		->setBcc($hiddenAr);
 
@@ -145,10 +145,10 @@ if(isset($_POST['galec']) && !empty($webuser)){
 	}
 	else{
 		if(VERSION=='_'){
-			$mailtoInfo="valerie.montusclat@btlec.fr";
+			$mailtoInfo=MYMAIL;
 
 		}else{
-			$mailtoInfo="btlecest.portailweb.informatique@btlec.fr";
+			$mailtoInfo=EMAIL_INFORMATIQUE;
 
 		}
 		// création d'une demande sur le portail
@@ -162,11 +162,11 @@ if(isset($_POST['galec']) && !empty($webuser)){
 		$subject="PORTAIL BTLEC Est - demande d'identifiants - magasin " . $magInfo['deno'];
 
 
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
-		->setFrom(EXPEDITEUR_MAIL)
+		->setFrom(EMAIL_NEPASREPONDRE)
 		->setTo($mailtoInfo);
 
 		if (!$mailer->send($message, $failures)){

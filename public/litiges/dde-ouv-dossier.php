@@ -109,13 +109,13 @@ if(isset($_POST['submit']))
 		{
 			// ---------------------------------------
 			if(VERSION =='_'){
-				$mailBt=array('valerie.montusclat@btlec.fr');
+				$mailBt=array(MYMAIL);
 			}
 			else{
 				if($_SESSION['code_bt']!='4201'){
-					$mailBt=array('btlecest.portailweb.litiges@btlec.fr');
+					$mailBt=array(EMAIL_LITIGES);
 				}else{
-					$mailBt=array('valerie.montusclat@btlec.fr');
+					$mailBt=array(MYMAIL);
 				}
 			}
 			$msg=strip_tags($_POST['msg']);
@@ -129,12 +129,12 @@ if(isset($_POST['submit']))
 			$btTemplate=str_replace('{LINK}',$link,$btTemplate);
 			$subject='Portail BTLec Est  - demande d\'ouverture de dossier litige - ' . $_SESSION['nom'].'-'. $_SESSION['code_bt'];
 			// ---------------------------------------
-			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 			$mailer = new Swift_Mailer($transport);
 			$message = (new Swift_Message($subject))
 			->setBody($btTemplate, 'text/html')
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
-			// ->setTo(array('valerie.montusclat@btlec.fr'))
+			->setFrom(EMAIL_NEPASREPONDRE)
+			// ->setTo(array(MYMAIL))
 			->setTo($mailBt);
 			$delivered=$mailer->send($message);
 			if($delivered >0)

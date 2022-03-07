@@ -332,7 +332,7 @@ if(isset($_POST['submit_mail']))
 
 			if(VERSION =='_')
 			{
-				$mailMag=array('valerie.montusclat@btlec.fr');
+				$mailMag=array(MYMAIL);
 			}
 			else{
 
@@ -358,11 +358,11 @@ if(isset($_POST['submit_mail']))
 			$magTemplate=str_replace('{MONTANT}',$mt,$magTemplate);
 			$subject='Portail BTLec Est  - information litige ' . $fLitige['dossier'];
 			// ---------------------------------------
-			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 			$mailer = new Swift_Mailer($transport);
 			$message = (new Swift_Message($subject))
 			->setBody($magTemplate, 'text/html')
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+			->setFrom(EMAIL_NEPASREPONDRE)
 			->setTo($mailMag);
 
 			$delivered=$mailer->send($message);

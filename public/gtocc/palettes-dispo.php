@@ -75,7 +75,7 @@ if(isset($_POST['submit'])){
 		}
 
 
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 
 		$htmlMail = file_get_contents('../mail/occasion-casse-newexp.html');

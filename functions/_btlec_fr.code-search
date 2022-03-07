@@ -1,0 +1,799 @@
+# Query: @btlec.fr
+# Flags: CaseSensitive
+# ContextLines: 1
+
+243 results - 64 files
+
+help.php:
+  55  	<h1 class="red" >En cours de construction</h1>
+  56: 	<p class="red">Merci d'envoyer votre demande  à btlecest.portailweb.exploitation@btlec.fr</p>
+  57  	<h1 class="w3-theme-d3">Contacter le service technique</h1>
+
+pwd-ct.php:
+  22  	{
+  23: 		$errors[]="erreur - merci de signaler le problème à btlecest.portailweb.informatique@btlec.fr";
+  24  
+
+pwd.php:
+  111  	if(VERSION=='_'){
+  112: 		$ldRbt='valerie.montusclat@btlec.fr';
+  113  		$hiddenAr=[];
+  114  	}else{
+  115: 		$ldRbt=$magInfo['id']."-RBT@btlec.fr";
+  116: 		$hiddenAr=['valerie.montusclat@btlec.fr'];
+  117  
+
+  147  		if(VERSION=='_'){
+  148: 			$mailtoInfo="valerie.montusclat@btlec.fr";
+  149  
+  150  		}else{
+  151: 			$mailtoInfo="btlecest.portailweb.informatique@btlec.fr";
+  152  
+
+batch-evo\notif-evo.php:
+  29  		if(VERSION=="_"){
+  30: 			$dest=['valerie.montusclat@btlec.fr'];
+  31  
+
+batch-litige\relance-ctrl-stock.php:
+  35          $infoLitige = $litigeDao->getLitigeInfoMagById($ctrl['id_dossier']);
+  36:         $dest = ['pilotageprepa@btlec.fr'];
+  37          if (VERSION == "_") {
+
+batch-litige\relance-video.php:
+  34          $infoLitige=$litigeDao->getLitigeInfoMagById($video['id_dossier']);
+  35:         $dest = ['pilotageprepa@btlec.fr'];
+  36          if(VERSION=="_"){
+
+batch-mail\daily-update.php:
+   68  
+   69: 	$mailingList="valerie.montusclat@btlec.fr";
+   70  }
+
+   72  
+   73: 	$mailingList="btlecest.portailweb.gazettes@btlec.fr";
+   74: 	// $mailingList="valerie.montusclat@btlec.fr";
+   75  
+
+  247  	->setBody($htmlMail, 'text/html')
+  248: 	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  249  	->setTo($mailingList)
+  250: 	->addBcc('valerie.montusclat@btlec.fr');
+  251  
+
+config\config.inc.php:
+  61  
+  62: define("EXPEDITEUR_MAIL", array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'));
+  63  define("SMTP_INFORMADIS", "relay-smtp.informadis.com");
+
+config\config.php:
+  27  
+  28: define("EXPEDITEUR_MAIL", array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'));
+  29  define("MYMAIL", "valerie.montusclat@btlecest.leclerc");
+
+functions\unusedmail.fn.php:
+  25  // Additional headers
+  26: 	$headers .= 'From: ne_pas_repondre@btlec.fr>' . "\r\n";
+  27  	$headers .= 'Cc: ' . "\r\n";
+
+  56  // Additional headers
+  57:     $headers .= 'From: ne_pas_repondre@btlec.fr>' . "\r\n";
+  58      $headers .= 'Cc: ' . "\r\n";
+
+public\achats-cdes-encours\notif-permanent.php:
+  67  		if(VERSION=="_"){
+  68: 			$dest=['valerie.montusclat@btlec.fr'];
+  69  			$strMail=$user['email'];
+
+  83  		->setBody($htmlMail, 'text/html')
+  84: 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  85  		->setTo($dest);
+
+public\achats-cdes-encours\relances-synthese\send-mail-op.php:
+  14  	$destStr=implode(", ", $dest);
+  15: 	$dest=['valerie.montusclat@btlec.fr'];
+  16  }else{
+
+  26  		}
+  27: 		$hiddenAr=['valerie.montusclat@btlec.fr'];
+  28  	}elseif($_GET['dest']=="fou"){
+
+  49  ->setBody($htmlMail, 'text/html')
+  50: ->setFrom(array('ne_pas_repondre@btlec.fr' => 'BTLec Est'))
+  51  ->setTo($dest)
+
+public\achats-cdes-encours\relances-synthese\send-mail-perm.php:
+  11  	$destStr=implode(", ", $dest);
+  12: 	$dest=['valerie.montusclat@btlec.fr'];
+  13  }else{
+
+  22  		}
+  23: 		$hiddenAr=['valerie.montusclat@btlec.fr'];
+  24  	}elseif($_GET['dest']=="fou"){
+
+  44  ->setBody($htmlMail, 'text/html')
+  45: ->setFrom(array('ne_pas_repondre@btlec.fr' => 'BTLec Est'))
+  46  ->setTo($dest)
+
+public\basemag\fiche-mag.php:
+  371  
+  372: 		$cc=['clement.delahoche@bltec.fr', 'david.syllebranque@btlec.fr','valerie.montusclat@btlec.fr'];
+  373  
+  374  		if(VERSION=="_"){
+  375: 			$dest=['valerie.montusclat@btlec.fr'];
+  376  			$cc=[];
+
+  390  		->setBody($htmlMail, 'text/html')
+  391: 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  392  		->setTo($dest)
+
+public\btlec\answer.php:
+  196  				} else {
+  197: 					$dest[] = "valerie.montusclat@btlec.fr";
+  198  				}
+
+public\btlec\chg.php:
+   81  		if (VERSION =="_"){
+   82: 			$dest[]='valerie.montusclat@btlec.fr';
+   83  		}else{
+
+  101  		->setBody($htmlMail, 'text/html')
+  102: 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+  103  		->setTo($dest);
+
+public\casse\certif-upload.php:
+  104  			if(VERSION=='_'){
+  105: 				$dest='valerie.montusclat@btlec.fr';
+  106: 				$cc=['valerie.montusclat@btlec.fr'];
+  107  			}
+
+  113  				}
+  114: 				array_push($cc,'valerie.montusclat@btlec.fr');
+  115: 				$dest='btlecest.portailweb.logistique@btlec.fr';
+  116  			}
+
+  128  
+  129: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail SAV Leclerc'))
+  130  			->setTo($dest)
+
+public\casse\mag-info-casse.php:
+  117  if(VERSION=='_'){
+  118: 	$dest='valerie.montusclat@btlec.fr';
+  119: 	$cc=['valerie.montusclat@btlec.fr'];
+  120  }
+
+  130  	else{
+  131: 		$dest=$btlec.'-rbt@btlec.fr';
+  132  
+  133  	}
+  134: 	$cc=['valerie.montusclat@btlec.fr', 'christelle.trousset@btlec.fr', 'nathalie.pazik@btlec.fr'];
+  135  
+
+  156  ->attach($attachmentPdf)
+  157: ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+  158  ->setTo($dest)
+
+public\casse\pilote-dd.php:
+  34  if(VERSION=='_'){
+  35: 	$dest=['valerie.montusclat@btlec.fr'];
+  36: 	$cc=['valerie.montusclat@btlec.fr'];
+  37  }
+  38  else{
+  39: 	$dest=['pilotageprepa@btlec.fr'];
+  40: 	$cc=['valerie.montusclat@btlec.fr', 'christelle.trousset@btlec.fr'];
+  41  
+
+  65  
+  66: ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  67  ->setTo($dest)
+
+public\casse\pilote-palette-ok.php:
+   97  		if(VERSION=='_'){
+   98: 			$dest='valerie.montusclat@btlec.fr';
+   99: 			$cc=['valerie.montusclat@btlec.fr'];
+  100  		}
+  101  		else{
+  102: 			$dest='btlecest.portailweb.logistique@btlec.fr';
+  103: 			$cc=['valerie.montusclat@btlec.fr'];
+  104  		}
+
+  125  
+  126: 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  127  		->setTo($dest)
+
+public\cm\rdv.php:
+  158  		if(VERSION=='_'){
+  159: 			$dest=['valerie.montusclat@btlec.fr'];
+  160  			$bcc=[];
+
+  163  
+  164: 			$dest=['luc.muller@btlec.fr', 'stephane.wendling@btlec.fr', $cm['email']];
+  165: 			$bcc=['valerie.montusclat@btlec.fr'];
+  166  		}
+
+  183  		->setBody($htmlMail, 'text/html')
+  184: 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLEC'))
+  185  		->setTo($dest)
+
+  196  				if(VERSION =="_"){
+  197: 					$destAdhDir=['valerie.montusclat@btlec.fr'];
+  198  				}
+
+  211  				->setBody($htmlMail, 'text/html')
+  212: 				->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLEC'))
+  213  				->setTo($destAdhDir)
+  214: 				->setBcc(['valerie.montusclat@btlec.fr']);
+  215  
+
+public\doc\flash-add.php:
+  146  		{
+  147: 			$dest=['valerie.montusclat@btlec.fr', 'stephane.wendling@btlec.fr'];
+  148  // ---------------------------------------
+
+  162  
+  163: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BT'))
+  164: // ->setTo(array('valerie.montusclat@btlec.fr', 'valerie.montusclat@btlec.fr' => 'val'))
+  165  			->setTo($dest);
+  166  // ->addCc($copySender['email'])
+  167: 			// ->addBcc('valerie.montusclat@btlec.fr');
+  168  		// ->attach($attachmentPdf)
+
+public\evo\dashboard-post-cloturer.php:
+  29  if(VERSION=="_"){
+  30: 	$destSuperviseur=['valerie.montusclat@btlec.fr'];
+  31: 	$destDd=['valerie.montusclat@btlec.fr'];
+  32  	$cc=[];
+
+  36  	if($thisEvo['id_resp']==2){
+  37: 		$destSuperviseur=['luc.muller@btlec.fr'];
+  38  
+  39  	}else{
+  40: 		$destSuperviseur=['luc.muller@btlec.fr', 'david.syllebranque@btlec.fr'];
+  41  	}
+
+  43  	$cc=[];
+  44: 	$hidden=['valerie.montusclat@btlec.fr'];
+  45  }
+
+  64  ->setBody($htmlMail, 'text/html')
+  65: ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  66  ->setTo($destSuperviseur)
+
+  94  ->setBody($htmlMail, 'text/html')
+  95: ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  96  ->setTo($destDd)
+
+public\evo\dashboard-post-statuer.php:
+   7  if(VERSION=="_"){
+   8: 	$destDev=['valerie.montusclat@btlec.fr'];
+   9: 	$destDd=['valerie.montusclat@btlec.fr'];
+  10  	$cc=[];
+
+  13  	$devMail=$arrDevMail[$thisEvo['id_resp']];
+  14: 	$destDev=[$devMail, 'luc.muller@btlec.fr', 'david.syllebranque@btlec.fr'];
+  15  	$destDev=array_unique($destDev);
+
+  17  	$cc=[];
+  18: 	$hidden=['valerie.montusclat@btlec.fr'];
+  19  }
+
+  42  ->setBody($htmlMail, 'text/html')
+  43: ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  44  ->setTo($destDev)
+
+  71  ->setBody($htmlMail, 'text/html')
+  72: ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  73  ->setTo($destDd)
+
+public\evo\dde-evo.php:
+  140  	if(VERSION=="_"){
+  141: 		$dest=['valerie.montusclat@btlec.fr'];
+  142  		$cc=[];
+
+public\evo\evo-detail.php:
+  215  			if(VERSION=="_"){
+  216: 				$dest=['valerie.montusclat@btlec.fr'];
+  217  				$cc=[];
+
+public\evo\planning-evo.php:
+  201  			if(VERSION=="_"){
+  202: 				$dest=['valerie.montusclat@btlec.fr'];
+  203  				$cc=[];
+
+public\evo\dashboard-evo\01-post-statuer.php:
+   7  if(VERSION=="_"){
+   8: 	$destDev=['valerie.montusclat@btlec.fr'];
+   9: 	$destDd=['valerie.montusclat@btlec.fr'];
+  10  	$cc=[];
+
+  13  	$devMail=$arrDevMail[$thisEvo['id_resp']];
+  14: 	$destDev=[$devMail, 'luc.muller@btlec.fr', 'david.syllebranque@btlec.fr'];
+  15  	$destDev=array_unique($destDev);
+
+  17  	$cc=[];
+  18: 	$hidden=['valerie.montusclat@btlec.fr'];
+  19  }
+
+public\evo\dashboard-evo\02-post-cloturer.php:
+  15  if(VERSION=="_"){
+  16: 	$destSuperviseur=['valerie.montusclat@btlec.fr'];
+  17: 	$destDemandeurAndAffectation=['valerie.montusclat@btlec.fr'];
+  18  	$hidden=[];
+
+  20  	if($thisEvo['id_resp']==2){
+  21: 		$destSuperviseur=['luc.muller@btlec.fr'];
+  22  
+  23  	}else{
+  24: 		$destSuperviseur=['luc.muller@btlec.fr', 'david.syllebranque@btlec.fr'];
+  25  	}
+
+  34  	$destDemandeurAndAffectation=array_unique($destDemandeurAndAffectation);
+  35: 	$hidden=['valerie.montusclat@btlec.fr'];
+  36  
+
+public\gtocc\offreprod\03-checkout.php:
+   44  	if(VERSION=="_"){
+   45: 		$dest=['valerie.montusclat@btlec.fr'];
+   46  		$cc=[];
+
+   58  
+   59: 		$cc=['jonathan.domange@btlec.fr', 'stephane.wendling@btlec.fr', 'luc.muller@btlec.fr'];
+   60: 		$hidden=['valerie.montusclat@btlec.fr'];
+   61  	}
+
+   64  	if(empty($dest)){
+   65: 		$dest=['valerie.montusclat@btlec.fr'];
+   66  		$warning= "<p>Attention, le magasin n'a pas reçu ce mail de confirmation, aucune adresse mail n'a été trouvée dans les listes de diffusion GT Occasion</p>";
+
+  179  	->setBody($htmlMail, 'text/html')
+  180: 	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  181  	->setTo($dest)
+
+public\gtocc\offreprod\03c-checkout-mail-and-excel.php:
+    6  		if(VERSION=="_"){
+    7: 			$dest=['valerie.montusclat@btlec.fr'];
+    8  			$cc=[];
+
+   20  
+   21: 			$cc=['jonathan.domange@btlec.fr', 'stephane.wendling@btlec.fr', 'luc.muller@btlec.fr'];
+   22: 			$hidden=['valerie.montusclat@btlec.fr'];
+   23  		}
+
+   26  		if(empty($dest)){
+   27: 			$dest=['valerie.montusclat@btlec.fr'];
+   28  			$warning= "<p>Attention, le magasin n'a pas reçu ce mail de confirmation, aucune adresse mail n'a été trouvée dans les listes de diffusion GT Occasion</p>";
+
+  141  		->setBody($htmlMail, 'text/html')
+  142: 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  143  		->setTo($dest)
+
+public\gtocc\offreprod2\03-checkout.php:
+   53  		if(VERSION=="_"){
+   54: 			$dest=['valerie.montusclat@btlec.fr'];
+   55  			$cc=[];
+
+   67  
+   68: 			$cc=['jonathan.domange@btlec.fr', 'stephane.wendling@btlec.fr', 'luc.muller@btlec.fr'];
+   69: 			$hidden=['valerie.montusclat@btlec.fr'];
+   70  		}
+
+   73  		if(empty($dest)){
+   74: 			$dest=['valerie.montusclat@btlec.fr'];
+   75  			$warning= "<p>Attention, le magasin n'a pas reçu ce mail de confirmation, aucune adresse mail n'a été trouvée dans les listes de diffusion GT Occasion</p>";
+
+  188  		->setBody($htmlMail, 'text/html')
+  189: 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  190  		->setTo($dest)
+
+public\gtocc\offreprod2\03c-checkout-mail-and-excel.php:
+    6  		if(VERSION=="_"){
+    7: 			$dest=['valerie.montusclat@btlec.fr'];
+    8  			$cc=[];
+
+   20  
+   21: 			$cc=['jonathan.domange@btlec.fr', 'stephane.wendling@btlec.fr', 'luc.muller@btlec.fr'];
+   22: 			$hidden=['valerie.montusclat@btlec.fr'];
+   23  		}
+
+   26  		if(empty($dest)){
+   27: 			$dest=['valerie.montusclat@btlec.fr'];
+   28  			$warning= "<p>Attention, le magasin n'a pas reçu ce mail de confirmation, aucune adresse mail n'a été trouvée dans les listes de diffusion GT Occasion</p>";
+
+  141  		->setBody($htmlMail, 'text/html')
+  142: 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  143  		->setTo($dest)
+
+public\litiges\bt-analyse.php:
+  156  			if(VERSION =='_'){
+  157: 				$mailMag=array('valerie.montusclat@btlec.fr');
+  158  			}
+
+  162  				$codeBt=$infoMag->getId();
+  163: 				$mailMag=array($codeBt.'-rbt@btlec.fr');
+  164  			}
+
+  173  			->setBody($magTemplate, 'text/html')
+  174: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  175  			->setTo($mailMag);
+
+public\litiges\bt-contact.php:
+  147  				if(VERSION =='_'){
+  148: 					$mailMag=array('valerie.montusclat@btlec.fr');
+  149  				}else{
+  150: 					$mailMag=array($btlec.'-rbt@btlec.fr');
+  151  				}
+
+  160  				->setBody($magTemplate, 'text/html')
+  161: 				->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  162  				->setTo($mailMag);
+
+public\litiges\bt-info-litige.php:
+  334  			{
+  335: 				$mailMag=array('valerie.montusclat@btlec.fr');
+  336  			}
+
+  341  				$codeBt=$infoMag->getId();
+  342: 				$mailMag=array($codeBt.'-rbt@btlec.fr');
+  343  			}
+
+  364  			->setBody($magTemplate, 'text/html')
+  365: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  366  			->setTo($mailMag);
+
+public\litiges\bt-ouv-traitement.php:
+  161  			if(VERSION =='_'){
+  162: 				$mailMag=array('valerie.montusclat@btlec.fr');
+  163  			}else{
+
+  166  				$codeBt=$infoMag->getId();
+  167: 				$mailMag=array($codeBt.'-rbt@btlec.fr');
+  168  			}
+
+  180  			->setBody($btTemplate, 'text/html')
+  181: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  182  			->setTo($mailMag)
+  183: 			->setBcc(['btlecest.portailweb.litiges@btlec.fr']);
+  184  			$delivered=$mailer->send($message);
+
+public\litiges\contrainte.php:
+  108  	$litigeDao->updateCtrl($litige[0]['id_main'], 2);
+  109: 	$dest = ['pilotageprepa@btlec.fr'];
+  110: 	$cc = ['btlecest.portailweb.litiges@btlec.fr'];
+  111  	ob_start();
+
+  134  	}
+  135: 	$cc = ['btlecest.portailweb.litiges@btlec.fr'];
+  136  	ob_start();
+
+  147  	// retour verif video
+  148: 	$dest = ['btlecest.portailweb.litiges@btlec.fr'];
+  149  	$subjet = str_replace('{SPECIFIQUE_SUJET}', 'VIDEO réponse', $subjet);
+
+  168  	}
+  169: 	$dest[] = 'stephane.wendling@btlec.fr';
+  170: 	$cc = ['btlecest.portailweb.litiges@btlec.fr'];
+  171  	ob_start();
+
+  182  	// envoi demande de recherche video a Benoit
+  183: 	$dest = ['benoit.dubots@btlec.fr'];
+  184  	ob_start();
+
+  197  	// commmssion sav
+  198: 	$dest = ['robert.dalla-sega@btlec.fr', 'luc.muller@btlec.fr',];
+  199  	ob_start();
+
+public\litiges\ctrl-stock.php:
+  244  		if(VERSION=='_'){
+  245: 			$dest[]='valerie.montusclat@btlec.fr';
+  246  
+
+  248  		else{
+  249: 			$dest=['btlecest.portailweb.litiges@btlec.fr'];
+  250  
+
+  266  
+  267: 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  268  		->setTo($dest);
+
+public\litiges\dde-ouv-dossier.php:
+  111  			if(VERSION =='_'){
+  112: 				$mailBt=array('valerie.montusclat@btlec.fr');
+  113  			}
+
+  115  				if($_SESSION['code_bt']!='4201'){
+  116: 					$mailBt=array('btlecest.portailweb.litiges@btlec.fr');
+  117  				}else{
+  118: 					$mailBt=array('valerie.montusclat@btlec.fr');
+  119  				}
+
+  135  			->setBody($btTemplate, 'text/html')
+  136: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  137: 			// ->setTo(array('valerie.montusclat@btlec.fr'))
+  138  			->setTo($mailBt);
+
+public\litiges\declaration-recap.php:
+  112  //------------------------------------------------------
+  113: // mail mag = 4444-rbt@btlec.fr
+  114  if(VERSION =='_'){
+  115: 	$mailMag=array('valerie.montusclat@btlec.fr');
+  116: 	$mailBt=array('valerie.montusclat@btlec.fr');
+  117  }
+  118  else{
+  119: 	$mailMag=array($fLitige['btlec'].'-rbt@btlec.fr');
+  120: 	$mailBt=array('btlecest.portailweb.litiges@btlec.fr');
+  121  }
+
+  135  	->setBody($magTemplate, 'text/html')
+  136: 	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  137  	->setTo($mailMag);
+
+  157  	->setBody($btTemplate, 'text/html')
+  158: 	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  159  	->setTo($mailBt);
+
+  181  	->setBody($magTemplate, 'text/html')
+  182: 	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  183  	->setTo($mailMag)
+  184: 	// ->setTo('valerie.montusclat@btlec.fr');
+  185: 	->setBcc(['valerie.montusclat@btlec.fr', 'btlecest.portailweb.logistique@btlec.fr']);
+  186  	$delivered=$mailer->send($message);
+
+public\litiges\intervention.php:
+  104  		if (VERSION == '_') {
+  105: 			$dest = 'valerie.montusclat@btlec.fr';
+  106  		} else {
+  107: 			$dest = ['btlecest.portailweb.litiges@btlec.fr'];
+  108  		}
+
+  123  
+  124: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  125  			->setTo($dest);
+
+public\litiges\litiges.fn.php:
+  8  $codeBt=$infoMag->getId();
+  9: $mailMag=array($codeBt.'-rbt@btlec.fr');
+  10  
+
+public\litiges\mag-detail-litige.php:
+  191  		if (VERSION == '_') {
+  192: 			$mailBt = array('valerie.montusclat@btlec.fr');
+  193  		} else {
+  194  			if ($_SESSION['code_bt'] != '4201') {
+  195: 				$mailBt = array('btlecest.portailweb.litiges@btlec.fr');
+  196  			} else {
+  197: 				$mailBt = array('valerie.montusclat@btlec.fr');
+  198  			}
+
+  211  			->setBody($btTemplate, 'text/html')
+  212: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  213  			->setTo($mailBt)
+  214: 			->addBcc('valerie.montusclat@btlec.fr');
+  215  		$delivered = $mailer->send($message);
+
+public\litiges\ouv-mag-horsqlik.php:
+  140  			{
+  141: 				$mailBt=array('valerie.montusclat@btlec.fr');
+  142  			}
+
+  144  			{
+  145: 				$mailBt=array('btlecest.portailweb.litiges@btlec.fr');
+  146  			}
+
+  158  			->setBody($btTemplate, 'text/html')
+  159: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  160  			->setTo($mailBt);
+
+public\litiges\contrainte\send-mail-nopdf.php:
+  1  <?php 
+  2: $cc=['btlecest.portailweb.litiges@btlec.fr'];
+  3  if(VERSION=='_'){
+
+public\litiges\contrainte\send-mail.php:
+  1  <?php 
+  2: $cc=['btlecest.portailweb.litiges@btlec.fr'];
+  3  if(VERSION=='_'){
+
+public\litiges\old-contrainte\contrainte-achats.php:
+  12  if(VERSION=='_'){
+  13: 	$achatDest=['valerie.montusclat@btlec.fr'];
+  14: 	$cc='valerie.montusclat@btlec.fr';
+  15  }
+
+  20  	}
+  21: 	$achatDest[]='stephane.wendling@btlec.fr';
+  22: 	$cc='btlecest.portailweb.litiges@btlec.fr';
+  23  
+
+  57  ->setBody($htmlMail, 'text/html')
+  58: ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  59  ->setTo($achatDest)
+
+public\litiges\old-contrainte\contrainte-commission-sav.php:
+   4  if(VERSION=='_'){
+   5: 	$dest=['valerie.montusclat@btlec.fr'];
+   6  	$cci=[];
+
+   8  else{
+   9: 	$dest=['robert.dalla-sega@btlec.fr','luc.muller@btlec.fr', ];
+  10: 	$cci=[ 'btlecest.portailweb.litiges@btlec.fr'];
+  11  
+
+  55  ->setBody($htmlMail, 'text/html')
+  56: ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  57  ->setTo($dest)
+
+public\litiges\old-contrainte\contrainte-sav.php:
+   4  if(VERSION=='_'){
+   5: 	$savDest='valerie.montusclat@btlec.fr';
+   6  	$copy=[];
+
+  11  		$savDest[]=$ld['email'];
+  12: 		$copy=['btlecest.portailweb.litiges@btlec.fr'];
+  13  	}
+
+  57  		->setBody($htmlMail, 'text/html')
+  58: 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  59  		->setTo($savDest)
+
+public\litiges\old-contrainte\contrainte-stock.php:
+   3  if(VERSION=='_'){
+   4: 	$dest=['valerie.montusclat@btlec.fr'];
+   5  }else{
+   6: 	$dest=['pilotageprepa@btlec.fr'];
+   7  }
+
+  37  ->attach($attachmentPdf)
+  38: ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+  39  ->setTo($dest)
+  40: ->setCc(['btlecest.portailweb.litiges@btlec.fr']);
+  41  
+
+public\litiges\old-contrainte\contrainte-video-rep.php:
+   5  if(VERSION=='_'){
+   6: 	$dest='valerie.montusclat@btlec.fr';
+   7  }
+   8  else{
+   9: 	$dest=['btlecest.portailweb.litiges@btlec.fr'];
+  10  }
+
+  23  
+  24: ->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+  25  ->setTo($dest);
+
+public\litiges\old-contrainte\contrainte-video.php:
+   5  	if(VERSION=='_'){
+   6: 		$dest='valerie.montusclat@btlec.fr';
+   7  		$cc=[];
+
+   9  	else{
+  10: 		$dest='benoit.dubots@btlec.fr';
+  11: 		$cc=['btlecest.portailweb.litiges@btlec.fr'];
+  12  	}
+
+  41  
+  42: 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+  43  		->setTo($dest)
+
+public\litiges\old-contrainte\intervention-achats.php:
+  180  			if(VERSION=='_'){
+  181: 				$dest='valerie.montusclat@btlec.fr';
+  182  
+
+  184  			else{
+  185: 				$dest=['btlecest.portailweb.litiges@btlec.fr'];
+  186  
+
+  201  
+  202: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  203: // ->setTo(array('valerie.montusclat@btlec.fr', 'valerie.montusclat@btlec.fr' => 'val'))
+  204  			->setTo($dest)
+  205  // ->addCc($copySender['email'])
+  206: 			->addBcc('valerie.montusclat@btlec.fr');
+  207  		// ->attach($attachmentPdf)
+
+public\litiges\old-contrainte\intervention-commission-sav.php:
+  193  			if(VERSION=='_'){
+  194: 				$dest=['valerie.montusclat@btlec.fr'];
+  195  			}
+  196  			else{
+  197: 				$dest=['btlecest.portailweb.litiges@btlec.fr'];
+  198  
+
+  212  			->setBody($htmlMail, 'text/html')
+  213: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  214  			->setTo($dest);
+
+public\litiges\old-contrainte\intervention-sav.php:
+   87  			if (VERSION == '_') {
+   88: 				$dest = 'valerie.montusclat@btlec.fr';
+   89  			} else {
+   90: 				$dest = ['btlecest.portailweb.litiges@btlec.fr'];
+   91  			}
+
+  105  
+  106: 				->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  107  				->setTo($dest);
+
+public\mag\contact.php:
+  113  			if(VERSION=="_"){
+  114: 				$dest=["valerie.montusclat@btlec.fr"];
+  115  			}else{
+
+  130  			->setBody($htmlMail, 'text/html')
+  131: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec'))
+  132  			->setTo($dest);
+
+  147  			->setBody($htmlMail, 'text/html')
+  148: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec'))
+  149  			->setTo(array($_POST['email']));
+
+public\mag\edit-msg.php:
+  112  			if(VERSION=="_"){
+  113: 				$to="valerie.montusclat@btlec.fr";
+  114  			}else{
+
+  135  			->setBody($htmlMail, 'text/html')
+  136: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec'))
+  137  			->setTo([$to]);
+
+public\mag\unlock.php:
+  167  			if(VERSION=="_"){
+  168: 				$mailingList[]='valerie.montusclat@btlec.fr';
+  169: 				$dest[]='valerie.montusclat@btlec.fr';
+  170  
+
+  187  			->setBody($htmlMail, 'text/html')
+  188: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+  189  			->setTo($mailingList);
+
+  203  			->setBody($htmlMail, 'text/html')
+  204: 			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+  205  			->setTo($dest);
+
+public\mail\mail.fn.php:
+  17  // Additional headers
+  18: 	$headers .= 'From: ne_pas_repondre@btlec.fr>' . "\r\n";
+  19  	$headers .= 'Cc: ' . "\r\n";
+
+public\mailsend\sendmail.php:
+  48  		if($domain[1]!="btlec.fr"){
+  49: 			$errors[]="Attention, vous avez choisi d'envoyer un mail via le serveur lotus, l'adresse d'expédition doit être sous la forme expediteur<b>@btlec.fr</b>";
+  50  		}
+
+public\mailsend\sendmail\01-send-lotus.php:
+  17  	}else{
+  18: 		$newTo[]=$toArray[$i]."@btlec.fr";
+  19  	}
+
+  30  	}else{
+  31: 		$newCc[]=$ccArray[$i]."@btlec.fr";
+  32  	}
+
+public\salon\inscription-2021.php:
+  124  	if(count($errors)==0){
+  125: 		$dest=["salonbtlecest@btlec.fr"];
+  126  		if(VERSION=="_"){
+  127: 			$dest=["valerie.montusclat@btlec.fr"];
+  128  
+
+  142  		->setBody($htmlMail, 'text/html')
+  143: 		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+  144  		->setTo($dest);
+
+  181  	$message = (new Swift_Message($subject))
+  182: 	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+  183: // // // ->setTo(array('valerie.montusclat@btlec.fr', 'valerie.montusclat@btlec.fr' => 'val'))
+  184  	->setTo(array($_POST['email']))
+
+public\salon\2020\inscription-2020.php:
+  189      	//envoi mail
+  190: 		$to="salonbtlecest@btlec.fr";
+  191  
+  192  		if(VERSION=="_"){
+  193: 			$to="valerie.montusclat@btlec.fr";
+  194  		}
+
+  245  	$message = (new Swift_Message($subject))
+  246: 	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+  247: // // // ->setTo(array('valerie.montusclat@btlec.fr', 'valerie.montusclat@btlec.fr' => 'val'))
+  248  	->setTo(array($_POST['email']))

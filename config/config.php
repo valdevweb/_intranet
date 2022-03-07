@@ -24,13 +24,6 @@ define("SITE_DIR","D:\www\\".VERSION."intranet\\".VERSION."btlecest\\" );
 
 define("URL_UPLOAD","http://".SERVER_NAME."/".VERSION."upload-main/btlecest/" );
 
-
-define("EXPEDITEUR_MAIL", array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'));
-define("MYMAIL", "valerie.montusclat@btlecest.leclerc");
-define("SMTP_INFORMADIS", "relay-smtp.informadis.com");
-
-
-
 define("PDF_FOOTER", '<table class="padding-table"><tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>');
 define("PDF_FOOTER_PAGE", '<table class="padding-table full-width"><tr><td class="footer ">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td><td>{PAGENO}{nbpg}</td></tr></table>');
 
@@ -39,6 +32,31 @@ define("FR_DAYS", ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi'
 define("FR_DAYS_SHORT", ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam']);
 define("FR_MONTHS", ['', 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre']);
 define("FR_MONTHS_SHORT", ['', 'janv', 'fév', 'mars', 'avr', 'mai', 'juin', 'juil', 'août', 'sept', 'oct', 'nov', 'déc']);
+
+
+
+
+
+
+define("SMTP_INFORMADIS", "relay-smtp.informadis.com");
+
+// remplace btlecest.portailweb.informatique@btlec.fr
+define("EMAIL_INFORMATIQUE", 'ga-btlecest-portailweb-informatique@btlecest.leclerc');
+define("MYMAIL", "valerie.montusclat@btlecest.leclerc");
+define("EMAIL_PILOTAGE_PREPA", 'pilotes.preparations@btlecest.leclerc');
+// btlecest.portailweb.gazettes@btlec.fr
+define("EMAIL_GAZETTE", 'ga-btlecest-portailweb-gazettes@btlecest.leclerc');
+//btlecest.portailweb.litiges@btlec.fr
+define("EMAIL_LITIGES", 'ga-btlecest-portailweb-litiges@btlecest.leclerc');
+//salonbtlecest@btlec.fr
+define("EMAIL_SALON", 'salons@btlecest.leclerc');
+
+define("EMAIL_NEPASREPONDRE", array('ne_pas_repondre@btlecest.leclerc' => 'Portail BTLec EST'));
+define("LD_DIR",['luc.muller@btlecest.leclerc', 'david.syllebranque@btlecest.leclerc']);
+define("LD_OCCASION",['jonathan.domange@btlecest.leclerc', 'stephane.wendling@btlecest.leclerc', 'luc.muller@btlecest.leclerc']);
+
+
+
 
 
 

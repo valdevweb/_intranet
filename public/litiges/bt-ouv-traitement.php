@@ -159,12 +159,12 @@ if(isset($_POST['submit']))
 		{
 
 			if(VERSION =='_'){
-				$mailMag=array('valerie.montusclat@btlec.fr');
+				$mailMag=array(MYMAIL);
 			}else{
 				$magDao=new MagDao($pdoMag);
 				$infoMag=$magDao->getMagByBtlec($thisOuv['btlec']);
 				$codeBt=$infoMag->getId();
-				$mailMag=array($codeBt.'-rbt@btlec.fr');
+				$mailMag=array('ga-btlecest-'.$codeBt.'-rbt@btlecest.leclerc');
 			}
 
 
@@ -174,13 +174,13 @@ if(isset($_POST['submit']))
 			$btTemplate=str_replace('{MSG}',$msg,$btTemplate);
 			$subject='Portail BTLec Est  - votre demande d\'ouverture de dossier litige' ;
 			// ---------------------------------------
-			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 			$mailer = new Swift_Mailer($transport);
 			$message = (new Swift_Message($subject))
 			->setBody($btTemplate, 'text/html')
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+			->setFrom(EMAIL_NEPASREPONDRE)
 			->setTo($mailMag)
-			->setBcc(['btlecest.portailweb.litiges@btlec.fr']);
+			->setBcc([EMAIL_LITIGES]);
 			$delivered=$mailer->send($message);
 			if($delivered >0)
 			{

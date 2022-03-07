@@ -1,9 +1,9 @@
 <?php
 
 if(VERSION=='_'){
-	$dest=['valerie.montusclat@btlec.fr'];
+	$dest=[MYMAIL];
 }else{
-	$dest=['pilotageprepa@btlec.fr'];
+	$dest=[EMAIL_PILOTAGE_PREPA];
 }
 // 1 récup info litige pour envoyer demande de contrôle aux pilotes
 ob_start();
@@ -19,7 +19,7 @@ $filename='litige '.$litige[0]['dossier'].'- fiche pilotage.pdf';
 $msg=getActionMsg($pdoLitige);
 
 	// $pdfContent = $mpdf->Output();
-$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 $mailer = new Swift_Mailer($transport);
 $attachmentPdf = new Swift_Attachment($pdfContent, $filename, 'application/pdf');
 // // content
@@ -35,9 +35,9 @@ $subject='Portail BTLec - Litiges - Contrôle de stock ';
 $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
 ->attach($attachmentPdf)
-->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+->setFrom(EMAIL_NEPASREPONDRE)
 ->setTo($dest)
-->setCc(['btlecest.portailweb.litiges@btlec.fr']);
+->setCc([EMAIL_LITIGES]);
 
 $delivered = $mailer->send($message);
 if($delivered !=0)

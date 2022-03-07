@@ -79,7 +79,7 @@ if(isset($_POST['affect']))
 
 
 		if (VERSION =="_"){
-			$dest[]='valerie.montusclat@btlec.fr';
+			$dest[]=MYMAIL;
 		}else{
 			$dest[]=$newServiceInfo['mailing'];
 		}
@@ -89,7 +89,7 @@ if(isset($_POST['affect']))
 
 
 
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 
 		$htmlMail = file_get_contents("../mail/reaffectation.html");
@@ -99,7 +99,7 @@ if(isset($_POST['affect']))
 		$subject="PORTAIL BTLec - demande magasin réaffectée au service " . $newServiceInfo['service'];
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
-		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+		->setFrom(EMAIL_NEPASREPONDRE)
 		->setTo($dest);
 		if (!$mailer->send($message, $failures)){
 			print_r($failures);

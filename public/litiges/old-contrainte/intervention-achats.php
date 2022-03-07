@@ -178,11 +178,11 @@ if(isset($_POST['submit'])){
 		{
 
 			if(VERSION=='_'){
-				$dest='valerie.montusclat@btlec.fr';
+				$dest=MYMAIL;
 
 			}
 			else{
-				$dest=['btlecest.portailweb.litiges@btlec.fr'];
+				$dest=[EMAIL_LITIGES];
 
 			}
 		// envoi mail litigelivraison
@@ -194,16 +194,16 @@ if(isset($_POST['submit'])){
 
 // ---------------------------------------
 // initialisation de swift
-			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 			$mailer = new Swift_Mailer($transport);
 			$message = (new Swift_Message($subject))
 			->setBody($htmlMail, 'text/html')
 
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
-// ->setTo(array('valerie.montusclat@btlec.fr', 'valerie.montusclat@btlec.fr' => 'val'))
+			->setFrom(EMAIL_NEPASREPONDRE)
+// ->setTo(array(MYMAIL, MYMAIL => 'val'))
 			->setTo($dest)
 // ->addCc($copySender['email'])
-			->addBcc('valerie.montusclat@btlec.fr');
+			->addBcc(MYMAIL);
 		// ->attach($attachmentPdf)
 		// ->attach(Swift_Attachment::fromPath('demande-culturel.xlsx'));
 // ou

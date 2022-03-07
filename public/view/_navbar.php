@@ -315,10 +315,6 @@ $dWorkflow = isUserAllowed($pdoUser, [100]);
 						$hassub = "";
 						$lienindex = "index.php";
 					}
-					if ((isset($_SESSION['id_service']) && ($_SESSION['id_service'] == 5 || $_SESSION['id_service'] == 18)) || $_SESSION['id'] == 702 || $_SESSION['id'] == 959) {
-						$hassub = "has-sub";
-						$lienindex = "dashboard.php";
-					}
 					?>
 					<?php if (empty($hassub)) : ?>
 						<li class="nav-item">

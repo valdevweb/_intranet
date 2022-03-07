@@ -27,21 +27,21 @@ $arDevName=EvoHelpers::arrayRespName($pdoEvo);
 
 	//  envoi mail dev et demandeur
 if(VERSION=="_"){
-	$destSuperviseur=['valerie.montusclat@btlec.fr'];
-	$destDd=['valerie.montusclat@btlec.fr'];
+	$destSuperviseur=[MYMAIL];
+	$destDd=[MYMAIL];
 	$cc=[];
 	$hidden=[];
 }else{
 	// 2 =dsy
 	if($thisEvo['id_resp']==2){
-		$destSuperviseur=['luc.muller@btlec.fr'];
+		$destSuperviseur=['luc.muller@btlecest.leclerc'];
 
 	}else{
-		$destSuperviseur=['luc.muller@btlec.fr', 'david.syllebranque@btlec.fr'];
+		$destSuperviseur=LD_DIR;
 	}
 	$destDd[]=$thisEvo['mail_dd'];
 	$cc=[];
-	$hidden=['valerie.montusclat@btlec.fr'];
+	$hidden=[MYMAIL];
 }
 
 
@@ -58,11 +58,11 @@ $htmlMail=str_replace('{EVO}',$thisEvo['evo'],$htmlMail);
 $subject="Portail BTLec Est - Demandes d'évo - clôture" ;
 
 // ---------------------------------------
-$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 $mailer = new Swift_Mailer($transport);
 $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
-->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+->setFrom(EMAIL_NEPASREPONDRE)
 ->setTo($destSuperviseur)
 ->setCc($cc)
 ->setBcc($hidden);
@@ -88,11 +88,11 @@ $htmlMail=str_replace('{EVO}',$thisEvo['evo'],$htmlMail);
 $subject="Portail BTLec Est - Demandes d'évo - clôture" ;
 
 // ---------------------------------------
-$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 $mailer = new Swift_Mailer($transport);
 $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
-->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+->setFrom(EMAIL_NEPASREPONDRE)
 ->setTo($destDd)
 ->setCc($cc)
 ->setBcc($hidden);

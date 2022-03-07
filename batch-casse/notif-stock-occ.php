@@ -36,7 +36,7 @@ if($nbPaletteNow!= $nbPaletteYesterday){
 			$dest=["jonathan.domange@btlecest.leclerc"];
 			$cc=["nathalie.pazik@btlecest.leclerc", "christelle.trousset@btlecest.leclerc"];
 		}
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 
 		$htmlMail = file_get_contents(DIR_SITE.'batch-casse/mail-occ.html');

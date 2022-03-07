@@ -20,9 +20,9 @@ function btInfo($pdoUser)
 // info mlag table sca3
 function magInfo($pdoMag){
 
-	$req=$pdoMag->prepare("SELECT mag.*, pole_sav, sav FROM mag 
+	$req=$pdoMag->prepare("SELECT mag.*, sca3.pole_sav, sav FROM mag 
 	 LEFT JOIN sca3 ON mag.id=sca3.btlec_sca 
-	 LEFT JOIN corresp_sav on pole_sav=corresp_sav.id
+	 LEFT JOIN corresp_sav on sca3.pole_sav=corresp_sav.id
 	 WHERE galec= :galec");
 	$req->execute(array(
 		':galec'		=>$_SESSION['id_galec']

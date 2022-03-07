@@ -187,10 +187,10 @@ if(isset($_POST['more-info']))
 	//si pas d'erreur
 	if(count($errors)==0){
     	//envoi mail
-		$to="salonbtlecest@btlec.fr";
+		$to=EMAIL_SALON;
 
 		if(VERSION=="_"){
-			$to="valerie.montusclat@btlec.fr";
+			$to=MYMAIL;
 		}
 
 
@@ -238,13 +238,13 @@ if( isset($_POST['send']))
 
 		// ---------------------------------------
 		// initialisation de swift
-	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+	$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 	$mailer = new Swift_Mailer($transport);
 	$attachmentPdf = new Swift_Attachment($pdfContent, $pdfname, 'application/pdf');
 
 	$message = (new Swift_Message($subject))
-	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
-// // // ->setTo(array('valerie.montusclat@btlec.fr', 'valerie.montusclat@btlec.fr' => 'val'))
+	->setFrom(EMAIL_NEPASREPONDRE)
+// // // ->setTo(array(MYMAIL, MYMAIL => 'val'))
 	->setTo(array($_POST['email']))
 	->setBody($htmlMail, 'text/html')
 	->attach($attachmentPdf);

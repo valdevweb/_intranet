@@ -189,12 +189,12 @@ if (isset($_POST['submit'])) {
 	if (count($errors) == 0) {
 		// ---------------------------------------
 		if (VERSION == '_') {
-			$mailBt = array('valerie.montusclat@btlec.fr');
+			$mailBt = array(MYMAIL);
 		} else {
 			if ($_SESSION['code_bt'] != '4201') {
-				$mailBt = array('btlecest.portailweb.litiges@btlec.fr');
+				$mailBt = array(EMAIL_LITIGES);
 			} else {
-				$mailBt = array('valerie.montusclat@btlec.fr');
+				$mailBt = array(MYMAIL);
 			}
 		}
 		$link = '<a href="' . SITE_ADDRESS . '/index.php?litiges/bt-detail-litige.php?id=' . $_GET['id'] . '&id_contrainte=' . $idContrainteDde . '"> cliquant ici</a>';
@@ -205,13 +205,13 @@ if (isset($_POST['submit'])) {
 		$btTemplate = str_replace('{LINK}', $link, $btTemplate);
 		$subject = 'Portail BTLec Est  - nouveau message sur le dossier litige ' . $thisLitige[0]['dossier'];
 		// ---------------------------------------
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 		$message = (new Swift_Message($subject))
 			->setBody($btTemplate, 'text/html')
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+			->setFrom(EMAIL_NEPASREPONDRE)
 			->setTo($mailBt)
-			->addBcc('valerie.montusclat@btlec.fr');
+			->addBcc(MYMAIL);
 		$delivered = $mailer->send($message);
 		if ($delivered > 0) {
 			$loc = 'Location:' . htmlspecialchars($_SERVER['PHP_SELF']) . '?id=' . $_GET['id'] . '&success=ok';

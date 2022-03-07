@@ -65,14 +65,14 @@ foreach ($userAchat as $user) {
 
 		$dest=[];
 		if(VERSION=="_"){
-			$dest=['valerie.montusclat@btlec.fr'];
+			$dest=[MYMAIL];
 			$strMail=$user['email'];
 			$hidden=[];
 		}else{
 			$dest[]=$user['email'];
 			$strMail="";
 		}
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 
 		$htmlMail = file_get_contents('../mail/achats-notif-perm.html');
@@ -81,7 +81,7 @@ foreach ($userAchat as $user) {
 		$subject='Portail BTLec - relances commmandes permanent date de livraison prévisionnelle au '.date('d-m-Y');
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
-		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+		->setFrom(EMAIL_NEPASREPONDRE)
 		->setTo($dest);
 
 		if (!$mailer->send($message, $failures)){

@@ -102,8 +102,8 @@ if(isset($_POST['submit'])){
 		$clos=closeCasse($pdoCasse);
 		if($maj>=1 && $clos>=1){
 			if(VERSION=='_'){
-				$dest='valerie.montusclat@btlec.fr';
-				$cc=['valerie.montusclat@btlec.fr'];
+				$dest=MYMAIL;
+				$cc=[MYMAIL];
 			}
 			else{
 				$sav='S'.substr($btlec,2,2);
@@ -111,8 +111,8 @@ if(isset($_POST['submit'])){
 				foreach ($mailSav as $ld) {
 					$cc[]=$ld['email'];
 				}
-				array_push($cc,'valerie.montusclat@btlec.fr');
-				$dest='btlecest.portailweb.logistique@btlec.fr';
+				array_push($cc,MYMAIL);
+				$dest='ga-btlecest-portailweb-logistique@btlecest.leclerc';
 			}
 			$htmlMail = file_get_contents('mail/mail-certif-upload.php');
 			$htmlMail=str_replace('{LIV}',$idExp,$htmlMail);
@@ -121,12 +121,12 @@ if(isset($_POST['submit'])){
 
 			$attachment = Swift_Attachment::fromPath($dirUpload.$filename);
 			// ---------------------------------------
-			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 			$mailer = new Swift_Mailer($transport);
 			$message = (new Swift_Message($subject))
 			->setBody($htmlMail, 'text/html')
 
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail SAV Leclerc'))
+			->setFromEMAIL_NEPASREPONDRE)
 			->setTo($dest)
 			->setCc($cc)
 			->attach($attachment);

@@ -194,7 +194,7 @@ if (isset($_POST['post-reply'])) {
 				if (VERSION != "_") {
 					$dest[] = $oneMsg['email'];
 				} else {
-					$dest[] = "valerie.montusclat@btlec.fr";
+					$dest[] = MYMAIL;
 				}
 				$etat = "";
 				$vide = "";
@@ -202,7 +202,7 @@ if (isset($_POST['post-reply'])) {
 
 				if (!empty($_POST['mdp'])) {
 
-					$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+					$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 					$mailer = new Swift_Mailer($transport);
 					// $mail=sendMail($to,$objet,$tplpwd,$oneMsg['deno'],$mdp,$link);
 
@@ -221,7 +221,7 @@ if (isset($_POST['post-reply'])) {
 						header('Location:' . ROOT_PATH . '/public/btlec/dashboard.php?success=1');
 					}
 				} else {
-					$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+					$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 					$mailer = new Swift_Mailer($transport);
 					$htmlMail = file_get_contents("../mail/new_reply_from_bt.tpl.html");
 					$htmlMail = str_replace('{LINK}', $link, $htmlMail);

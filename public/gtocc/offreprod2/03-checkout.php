@@ -51,7 +51,7 @@ if(isset($_POST['checkout'])){
 		$infoMag=UserHelpers::getMagInfoByIdWebUser($pdoUser, $pdoMag, $_SESSION['id_web_user']);
 
 		if(VERSION=="_"){
-			$dest=['valerie.montusclat@btlec.fr'];
+			$dest=[MYMAIL];
 			$cc=[];
 			$hidden=[];
 		}else{
@@ -65,13 +65,13 @@ if(isset($_POST['checkout'])){
 				}
 			}
 
-			$cc=['jonathan.domange@btlec.fr', 'stephane.wendling@btlec.fr', 'luc.muller@btlec.fr'];
-			$hidden=['valerie.montusclat@btlec.fr'];
+			$cc=LD_OCCASION;
+			$hidden=[MYMAIL];
 		}
 		// on ajoutera un message dans le mail si aucune adresse mail GT13 n'est trouvée
 		$warning="";
 		if(empty($dest)){
-			$dest=['valerie.montusclat@btlec.fr'];
+			$dest=[MYMAIL];
 			$warning= "<p>Attention, le magasin n'a pas reçu ce mail de confirmation, aucune adresse mail n'a été trouvée dans les listes de diffusion GT Occasion</p>";
 		}
 
@@ -180,13 +180,13 @@ if(isset($_POST['checkout'])){
 		$subject='Portail BTLec - Leclerc Occasion - commande du magasin '. $infoMag['deno'];
 
 // ---------------------------------------
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 		$attachmentPdf = new Swift_Attachment($pdfContent, $pdfName, 'application/pdf');
 
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
-		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+		->setFrom(EMAIL_NEPASREPONDRE)
 		->setTo($dest)
 		->setCc($cc)
 		->setBcc($hidden)

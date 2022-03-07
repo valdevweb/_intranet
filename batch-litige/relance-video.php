@@ -32,7 +32,7 @@ foreach ($demandeVideo as $key => $video) {
         // envoi mail
         echo "send mail for ". $video['id_dossier']. '<br>';
         $infoLitige=$litigeDao->getLitigeInfoMagById($video['id_dossier']);
-        $dest = ['pilotageprepa@btlec.fr'];
+        $dest = [EMAIL_PILOTAGE_PREPA];
         if(VERSION=="_"){
             $dest=[MYMAIL];
         }
@@ -41,7 +41,7 @@ foreach ($demandeVideo as $key => $video) {
         $link = '<a href="' . SITE_ADDRESS . '/index.php?litiges/intervention.php?id=' . $video['id_dossier'] . '&id_contrainte='.$idContrainteDde.'"> cliquant ici</a>';
 
 
-        $transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+        $transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
         $mailer = new Swift_Mailer($transport);
         
         $htmlMail = file_get_contents(DIR_SITE.'batch-litige/mail-relance-video.html');

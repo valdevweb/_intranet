@@ -138,11 +138,11 @@ if(isset($_POST['submit']))
 
 			if(VERSION =='_')
 			{
-				$mailBt=array('valerie.montusclat@btlec.fr');
+				$mailBt=array(MYMAIL);
 			}
 			else
 			{
-				$mailBt=array('btlecest.portailweb.litiges@btlec.fr');
+				$mailBt=array(EMAIL_LITIGES);
 			}
 			$msg=strip_tags($_POST['msg']);
 			$msg=nl2br($msg);
@@ -152,11 +152,11 @@ if(isset($_POST['submit']))
 			$btTemplate=str_replace('{LINK}',$link,$btTemplate);
 			$subject='Portail BTLec Est  - saisie libre - réponse du magasin ' .$_SESSION['nom'] ;
 			// ---------------------------------------
-			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 			$mailer = new Swift_Mailer($transport);
 			$message = (new Swift_Message($subject))
 			->setBody($btTemplate, 'text/html')
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+			->setFrom(EMAIL_NEPASREPONDRE)
 			->setTo($mailBt);
 
 			$delivered=$mailer->send($message);

@@ -138,7 +138,7 @@ if(isset($_POST['submit'])){
 
 
 	if(VERSION=="_"){
-		$dest=['valerie.montusclat@btlec.fr'];
+		$dest=[MYMAIL];
 		$cc=[];
 
 	}else{
@@ -165,7 +165,7 @@ if(isset($_POST['submit'])){
 	$htmlMail=str_replace('{DDEUR}',$demandeur,$htmlMail);
 	$subject="Portail BTLec Est - Demandes d'évo - nouvelle demande" ;
 
-	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+	$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 	$mailer = new Swift_Mailer($transport);
 	$message = (new Swift_Message($subject))
 	->setBody($htmlMail, 'text/html')

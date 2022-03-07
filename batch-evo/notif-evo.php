@@ -27,14 +27,14 @@ if(!empty($notifs)){
 	foreach ($notifs as $key => $notif) {
 
 		if(VERSION=="_"){
-			$dest=['valerie.montusclat@btlec.fr'];
+			$dest=[MYMAIL];
 
 		}else{
 			$dest=[$notif['email']];
 		}
 
 
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 
 

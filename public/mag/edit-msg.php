@@ -110,7 +110,7 @@ if(isset($_POST['post-reply'])){
 			$errors[]= "votre réponse n'a pas pu être enregistrée";
 		}else{
 			if(VERSION=="_"){
-				$to="valerie.montusclat@btlec.fr";
+				$to=MYMAIL;
 			}else{
 				$to=$infoService['mailing'];
 			}
@@ -119,7 +119,7 @@ if(isset($_POST['post-reply'])){
 			$link="Cliquez <a href='" .SITE_ADDRESS."/index.php?btlec/answer.php?msg=".$_GET['msg']."'>ici pour consulter le message</a>";
 
 
-			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 			$mailer = new Swift_Mailer($transport);
 
 			$htmlMail = file_get_contents('../mail/new_mag_cmt.tpl.html');
@@ -133,7 +133,7 @@ if(isset($_POST['post-reply'])){
 			$subject="PORTAIL BTLec - ajout d'un commentaire sur la demande du magasin " .$_SESSION['nom'];
 			$message = (new Swift_Message($subject))
 			->setBody($htmlMail, 'text/html')
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec'))
+			->setFrom(EMAIL_NEPASREPONDRE)
 			->setTo([$to]);
 
 			if (!$mailer->send($message, $failures)){

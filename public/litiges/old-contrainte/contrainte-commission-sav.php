@@ -2,12 +2,12 @@
 
 
 if(VERSION=='_'){
-	$dest=['valerie.montusclat@btlec.fr'];
+	$dest=[MYMAIL];
 	$cci=[];
 }
 else{
-	$dest=['robert.dalla-sega@btlec.fr','luc.muller@btlec.fr', ];
-	$cci=[ 'btlecest.portailweb.litiges@btlec.fr'];
+	$dest=['robert.dallasega@btlecest.leclerc','luc.muller@btlecest.leclerc', ];
+	$cci=[ EMAIL_LITIGES];
 
 
 }
@@ -47,13 +47,13 @@ $htmlMail=str_replace('{LINK}',$link,$htmlMail);
 $subject='Portail BTLec Litige livraison => commission SAV - dossier '.$litige[0]['dossier'].' - '.$litige[0]['mag'] ;
 // ---------------------------------------
 // initialisation de swift
-$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 $mailer = new Swift_Mailer($transport);
 $attachmentPdf = new Swift_Attachment($pdfContent, $filename, 'application/pdf');
 
 $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
-->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+->setFrom(EMAIL_NEPASREPONDRE)
 ->setTo($dest)
 ->setBcc($cci)
 ->attach($attachmentPdf);

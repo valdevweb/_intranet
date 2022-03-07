@@ -122,16 +122,16 @@ if(isset($_POST['more-info'])){
 
 	//si pas d'erreur
 	if(count($errors)==0){
-		$dest=["salonbtlecest@btlec.fr"];
+		$dest=[EMAIL_SALON];
 		if(VERSION=="_"){
-			$dest=["valerie.montusclat@btlec.fr"];
+			$dest=[MYMAIL];
 
 		}
 
 
 		$infosMag="<p><strong>Demande du magasin : " . $_SESSION['nom'] ." - " .$_SESSION['id_galec'] .' email :'.$_POST['email'].  "</strong></p>";
 
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 
 		$htmlMail = file_get_contents('inscription/mail-demande-renseignement.html');
@@ -140,7 +140,7 @@ if(isset($_POST['more-info'])){
 		$subject="Portail BTLec - Salon ".YEAR_SALON. " - demande de renseignements - " .$_SESSION['nom'];
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
-		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+		->setFrom(EMAIL_NEPASREPONDRE)
 		->setTo($dest);
 
 		if (!$mailer->send($message, $failures)){
@@ -174,13 +174,13 @@ if( isset($_POST['send'])){
 	$htmlMail=str_replace('{YEAR}',YEAR_SALON,$htmlMail);
 	$subject='Portail BTLec EST - Salon '.YEAR_SALON.' - Vos badges';
 
-	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+	$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 	$mailer = new Swift_Mailer($transport);
 	$attachmentPdf = new Swift_Attachment($pdfContent, $pdfname, 'application/pdf');
 
 	$message = (new Swift_Message($subject))
-	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
-// // // ->setTo(array('valerie.montusclat@btlec.fr', 'valerie.montusclat@btlec.fr' => 'val'))
+	->setFrom(EMAIL_NEPASREPONDRE)
+// // // ->setTo(array(MYMAIL, MYMAIL => 'val'))
 	->setTo(array($_POST['email']))
 	->setBody($htmlMail, 'text/html')
 	->attach($attachmentPdf);

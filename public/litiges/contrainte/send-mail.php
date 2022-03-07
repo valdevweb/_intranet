@@ -1,5 +1,5 @@
 <?php 
-$cc=['btlecest.portailweb.litiges@btlec.fr'];
+$cc=[EMAIL_LITIGES];
 if(VERSION=='_'){
 	$dest=[MYMAIL];
 	$cc=[];
@@ -12,7 +12,7 @@ $htmlMail=str_replace('{MSG}',nl2br($actionLitige['libelle']),$htmlMail);
 $htmlMail=str_replace('{LINK}',$link,$htmlMail);
 
 
-$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 $mailer = new Swift_Mailer($transport);
 $attachmentPdf = new Swift_Attachment($pdfContent, $pdfFilename, 'application/pdf');
 

@@ -66,12 +66,12 @@ function getTodayOpp($pdoBt){
 
 if (VERSION=="_"){
 
-	$mailingList="valerie.montusclat@btlec.fr";
+	$mailingList=MYMAIL;
 }
 else{
 
-	$mailingList="btlecest.portailweb.gazettes@btlec.fr";
-	// $mailingList="valerie.montusclat@btlec.fr";
+	$mailingList=EMAIL_GAZETTE;
+	// $mailingList=MYMAIL;
 
 }
 
@@ -241,13 +241,13 @@ if(count($fileList)!=0){
 
 // ---------------------------------------
 // initialisation de swift
-	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+	$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 	$mailer = new Swift_Mailer($transport);
 	$message = (new Swift_Message($subject))
 	->setBody($htmlMail, 'text/html')
-	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+	->setFrom(EMAIL_NEPASREPONDRE)
 	->setTo($mailingList)
-	->addBcc('valerie.montusclat@btlec.fr');
+	->addBcc(MYMAIL);
 
 	echo $htmlfileList;
 

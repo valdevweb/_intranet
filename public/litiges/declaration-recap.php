@@ -110,14 +110,13 @@ un pour mag qd bt déclare un litige  à  sa place)
 //------------------------------------------------------
 //			ENVOI MAIL
 //------------------------------------------------------
-// mail mag = 4444-rbt@btlec.fr
 if(VERSION =='_'){
-	$mailMag=array('valerie.montusclat@btlec.fr');
-	$mailBt=array('valerie.montusclat@btlec.fr');
+	$mailMag=array(MYMAIL);
+	$mailBt=array(MYMAIL);
 }
 else{
-	$mailMag=array($fLitige['btlec'].'-rbt@btlec.fr');
-	$mailBt=array('btlecest.portailweb.litiges@btlec.fr');
+	$mailMag=array('ga-btlecest-'.$fLitige['btlec'].'-rbt@btlecest.leclerc');
+	$mailBt=array(EMAIL_LITIGES);
 }
 
 
@@ -129,11 +128,11 @@ if($_SESSION['type']=='mag'){
 	$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
 	$subject='Portail BTLec Est  - ouverture du dossier litige ' . $fLitige['dossier'];
 // ---------------------------------------
-	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+	$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 	$mailer = new Swift_Mailer($transport);
 	$message = (new Swift_Message($subject))
 	->setBody($magTemplate, 'text/html')
-	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+	->setFrom(EMAIL_NEPASREPONDRE)
 	->setTo($mailMag);
 	$delivered=$mailer->send($message);
 	if($delivered >0){
@@ -151,11 +150,11 @@ if($_SESSION['type']=='mag'){
 	$btTemplate=str_replace('{BTLEC}',$fLitige['btlec'],$btTemplate);
 	$subject='Portail BTLec Est  - nouveau dossier litige ' . $fLitige['dossier'];
 // ---------------------------------------
-	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+	$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 	$mailer = new Swift_Mailer($transport);
 	$message = (new Swift_Message($subject))
 	->setBody($btTemplate, 'text/html')
-	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+	->setFrom(EMAIL_NEPASREPONDRE)
 	->setTo($mailBt);
 
 	$delivered=$mailer->send($message);
@@ -175,14 +174,14 @@ if(isset($_POST['submit'])){
 	$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
 	$subject='Portail BTLec Est  - ouverture du dossier litige ' . $fLitige['dossier'] . ' - ' .$fLitige['deno'];
 	// ---------------------------------------
-	$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+	$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 	$mailer = new Swift_Mailer($transport);
 	$message = (new Swift_Message($subject))
 	->setBody($magTemplate, 'text/html')
-	->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+	->setFrom(EMAIL_NEPASREPONDRE)
 	->setTo($mailMag)
-	// ->setTo('valerie.montusclat@btlec.fr');
-	->setBcc(['valerie.montusclat@btlec.fr', 'btlecest.portailweb.logistique@btlec.fr']);
+	// ->setTo(MYMAIL);
+	->setBcc([MYMAIL, 'ga-btlecest-portailweb-logistique@btlecest.leclerc']);
 	$delivered=$mailer->send($message);
 	if($delivered >0){
 		$success[]='mail envoyé avec succès à '.$mailMag[0];

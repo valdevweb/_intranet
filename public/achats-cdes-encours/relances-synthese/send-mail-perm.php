@@ -9,7 +9,7 @@ foreach ($emails as $mail) {
 }
 if(VERSION=="_"){
 	$destStr=implode(", ", $dest);
-	$dest=['valerie.montusclat@btlec.fr'];
+	$dest=[MYMAIL];
 }else{
 	if ($_GET['dest']=="me" ) {
 		$destStr=implode(", ", $dest);
@@ -20,7 +20,7 @@ if(VERSION=="_"){
 			echo "votre compte n'est associé à aucune adresse mail. L'envoi des relances est impossible";
 			exit;
 		}
-		$hiddenAr=['valerie.montusclat@btlec.fr'];
+		$hiddenAr=[MYMAIL];
 	}elseif($_GET['dest']=="fou"){
 		$destStr="";
 		$hiddenAr=$replyTo;
@@ -29,7 +29,7 @@ if(VERSION=="_"){
 }
 
 
-$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 $mailer = new Swift_Mailer($transport);
 
 $htmlMail = file_get_contents('..\mail\achats-relances-cdes-perm.html');
@@ -42,7 +42,7 @@ $htmlMail=str_replace('{DEST}',$destStr,$htmlMail);
 $subject='BTLec EST - '.$prod['fournisseur'].' relance livraison permanent sans rendez-vous';
 $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
-->setFrom(array('ne_pas_repondre@btlec.fr' => 'BTLec Est'))
+->setFrom(EMAIL_NEPASREPONDRE)
 ->setTo($dest)
 ->setBcc($hiddenAr);
 

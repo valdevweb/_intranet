@@ -242,11 +242,11 @@ if(isset($_POST['submit'])){
 			$operateur['fullname']='operateur inconnu';
 		}
 		if(VERSION=='_'){
-			$dest[]='valerie.montusclat@btlec.fr';
+			$dest[]=MYMAIL;
 
 		}
 		else{
-			$dest=['btlecest.portailweb.litiges@btlec.fr'];
+			$dest=[EMAIL_LITIGES];
 
 		}
 		$htmlMail = file_get_contents('mail/mail-bt-ctrl-stock-ok.php');
@@ -259,12 +259,12 @@ if(isset($_POST['submit'])){
 
 // ---------------------------------------
 // initialisation de swift
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
 
-		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+		->setFrom(EMAIL_NEPASREPONDRE)
 		->setTo($dest);
 
 		$delivered=$mailer->send($message);

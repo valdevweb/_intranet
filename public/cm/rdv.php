@@ -156,13 +156,13 @@ if(isset($_POST['accept']) || isset($_POST['deny'])){
 		}
 
 		if(VERSION=='_'){
-			$dest=['valerie.montusclat@btlec.fr'];
+			$dest=[MYMAIL];
 			$bcc=[];
 		}else{
 
 
-			$dest=['luc.muller@btlec.fr', 'stephane.wendling@btlec.fr', $cm['email']];
-			$bcc=['valerie.montusclat@btlec.fr'];
+			$dest=['luc.muller@btlecest.leclerc', 'stephane.wendling@btlecest.leclerc', $cm['email']];
+			$bcc=[MYMAIL];
 		}
 
 
@@ -177,11 +177,11 @@ if(isset($_POST['accept']) || isset($_POST['deny'])){
 
 // ---------------------------------------
 // initialisation de swift
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
-		->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLEC'))
+		->setFrom(EMAIL_NEPASREPONDRE)
 		->setTo($dest)
 		->setBcc($bcc);
 
@@ -194,9 +194,9 @@ if(isset($_POST['accept']) || isset($_POST['deny'])){
 		if(empty($errors)){
 			if(isset($_POST['accept'])){
 				if(VERSION =="_"){
-					$destAdhDir=['valerie.montusclat@btlec.fr'];
+					$destAdhDir=[MYMAIL];
 				}
-				$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+				$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 				$mailer = new Swift_Mailer($transport);
 
 				$htmlMail = file_get_contents('mail-confirm-rdv-adhdir.html');
@@ -209,9 +209,9 @@ if(isset($_POST['accept']) || isset($_POST['deny'])){
 
 				$message = (new Swift_Message($subject))
 				->setBody($htmlMail, 'text/html')
-				->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLEC'))
+				->setFrom(EMAIL_NEPASREPONDRE)
 				->setTo($destAdhDir)
-				->setBcc(['valerie.montusclat@btlec.fr']);
+				->setBcc([MYMAIL]);
 
 			}
 			if (!$mailer->send($message, $failures)){

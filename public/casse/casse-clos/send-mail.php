@@ -23,7 +23,7 @@ $htmlMail=str_replace('{BLANC}',$infoExp['mt_blanc'],$htmlMail);
 $htmlMail=str_replace('{BRUN}',$infoExp['mt_brun'],$htmlMail);
 $htmlMail=str_replace('{GRIS}',$infoExp['mt_gris'],$htmlMail);
 $subject='Portail BTLEC - facturation casse';
-$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 $mailer = new Swift_Mailer($transport);
 
 if ($infoExp['id_affectation']==1) {

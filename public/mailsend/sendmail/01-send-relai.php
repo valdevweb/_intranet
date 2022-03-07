@@ -94,7 +94,7 @@ if(VERSION=="_"){
 }
 
 
-$transport = (new Swift_SmtpTransport(SMTP_INFORMADIS, 25));
+$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 $mailer = new Swift_Mailer($transport);
 
 $htmlMail=$_POST['mail'].$prodDest.$prodCc;

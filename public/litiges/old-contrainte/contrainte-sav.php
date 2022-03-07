@@ -2,14 +2,14 @@
 $galec=$litige[0]['galec'];
 $sav=getMagSav($pdoSav,$galec);
 if(VERSION=='_'){
-	$savDest='valerie.montusclat@btlec.fr';
+	$savDest=MYMAIL;
 	$copy=[];
 }
 else{
 	$ldSav=getLdSav($pdoSav, $sav['sav'], 'litige');
 	foreach ($ldSav as $ld) {
 		$savDest[]=$ld['email'];
-		$copy=['btlecest.portailweb.litiges@btlec.fr'];
+		$copy=[EMAIL_LITIGES];
 	}
 }
 
@@ -49,13 +49,13 @@ if(!empty($savDest)){
 		$subject='Portail BTLec - Litige livraison '.$litige[0]['dossier'].' - '.$litige[0]['mag'];
 // ---------------------------------------
 // initialisation de swift
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 		$attachmentPdf = new Swift_Attachment($pdfContent, $filename, 'application/pdf');
 
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
-		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+		->setFrom(EMAIL_NEPASREPONDRE)
 		->setTo($savDest)
 		->setCc($copy)
 		->attach($attachmentPdf);

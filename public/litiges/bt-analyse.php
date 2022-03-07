@@ -154,24 +154,24 @@ if(isset($_POST['submit_mail']))
 		if(!empty($_POST['date_cloture']))
 		{
 			if(VERSION =='_'){
-				$mailMag=array('valerie.montusclat@btlec.fr');
+				$mailMag=array(MYMAIL);
 			}
 			else{
 				$magDao=new MagDao($pdoMag);
 				$infoMag=$magDao->getMagByGalec($fLitige['galec']);
 				$codeBt=$infoMag->getId();
-				$mailMag=array($codeBt.'-rbt@btlec.fr');
+				$mailMag=array('ga-btlecest-'.$codeBt.'-rbt@btlecest.leclerc');
 			}
 
 			$magTemplate = file_get_contents('mail/mail-mag-cloture.php');
 			$magTemplate=str_replace('{DOSSIER}',$fLitige['dossier'],$magTemplate);
 			$subject='Portail BTLec Est  - clôture du dossier litige ' . $fLitige['dossier'];
 			// ---------------------------------------
-			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 			$mailer = new Swift_Mailer($transport);
 			$message = (new Swift_Message($subject))
 			->setBody($magTemplate, 'text/html')
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+			->setFrom(EMAIL_NEPASREPONDRE)
 			->setTo($mailMag);
 		
 			$delivered=$mailer->send($message);

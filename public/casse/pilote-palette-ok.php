@@ -95,12 +95,12 @@ if(isset($_POST['submit'])){
 	if(!$majko){
 		// pas d'erreur on envoi le mail
 		if(VERSION=='_'){
-			$dest='valerie.montusclat@btlec.fr';
-			$cc=['valerie.montusclat@btlec.fr'];
+			$dest=MYMAIL;
+			$cc=[MYMAIL];
 		}
 		else{
-			$dest='btlecest.portailweb.logistique@btlec.fr';
-			$cc=['valerie.montusclat@btlec.fr'];
+			$dest='ga-btlecest-portailweb-logistique@btlecest.leclerc';
+			$cc=[MYMAIL];
 		}
 		$table='';
 		$table.='<table style="border-collapse: collapse; border: 1px solid grey;padding:10px;"><tr style="background-color:firebrick;color:white;"><th style="border: 1px solid grey;padding:10px;">Palette 4919</th><th style="border: 1px solid grey;padding:10px;">Palette contremarque</th><th style="border: 1px solid grey;padding:10px;">Commentaires</th></tr>';
@@ -118,12 +118,12 @@ if(isset($_POST['submit'])){
 
 // ---------------------------------------
 // initialisation de swift
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
 
-		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+		->setFrom(EMAIL_NEPASREPONDRE)
 		->setTo($dest)
 		->setCc($cc);
 

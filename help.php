@@ -53,7 +53,7 @@
 <body>
 	<div id="containervm">
 	<h1 class="red" >En cours de construction</h1>
-	<p class="red">Merci d'envoyer votre demande  à btlecest.portailweb.exploitation@btlec.fr</p>
+	<p class="red">Merci d'envoyer votre demande  à ga-btlecest-portailweb-exploitation@btlecest.leclerc</p>
 	<h1 class="w3-theme-d3">Contacter le service technique</h1>
 <br><br>
 <form class="w3-container" action="help.php" method="post">

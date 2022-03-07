@@ -3,12 +3,12 @@
 	$msg=getActionMsg($pdoLitige);
 
 	if(VERSION=='_'){
-		$dest='valerie.montusclat@btlec.fr';
+		$dest=MYMAIL;
 		$cc=[];
 	}
 	else{
-		$dest='benoit.dubots@btlec.fr';
-		$cc=['btlecest.portailweb.litiges@btlec.fr'];
+		$dest='benoit.dubots@btlecest.leclerc';
+		$cc=[EMAIL_LITIGES];
 	}
 	$footer='<table class="padding-table">';
 	$footer.='<tr><td class="footer full-width">BTLEC EST - 2 rue des Moissons - Parc d\'activité Witry Caurel - 51420 Witry les Reims</td></tr></table>';
@@ -32,14 +32,14 @@
 		$htmlMail=str_replace('{MSG}',$msg['libelle'],$htmlMail);
 		$htmlMail=str_replace('{LINK}',$link,$htmlMail);
 		$subject='Portail BTLec EST - Litige livraison '.$litige[0]['dossier'].' - '.$litige[0]['mag'] .' - VIDEO demande de recherche';
-		$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+		$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 		$mailer = new Swift_Mailer($transport);
 		$attachmentPdf = new Swift_Attachment($pdfContent, $filename, 'application/pdf');
 
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
 
-		->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+		->setFrom(EMAIL_NEPASREPONDRE)
 		->setTo($dest)
 		->setCc($cc)
 		->attach($attachmentPdf);

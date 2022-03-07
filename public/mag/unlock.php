@@ -165,8 +165,8 @@ if(isset($_POST['submit'])){
 			$contentFour=$msg['objet'];
 
 			if(VERSION=="_"){
-				$mailingList[]='valerie.montusclat@btlec.fr';
-				$dest[]='valerie.montusclat@btlec.fr';
+				$mailingList[]=MYMAIL;
+				$dest[]=MYMAIL;
 
 			}else{
 				$mailingList[]= $msg['mailing'] ;
@@ -174,7 +174,7 @@ if(isset($_POST['submit'])){
 
 			}
 
-			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 			$mailer = new Swift_Mailer($transport);
 
 			$htmlMail = file_get_contents("../mail/reopened_by_mag.tpl.html");
@@ -185,14 +185,14 @@ if(isset($_POST['submit'])){
 			$subject=$objBt;
 			$message = (new Swift_Message($subject))
 			->setBody($htmlMail, 'text/html')
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+			->setFrom(EMAIL_NEPASREPONDRE)
 			->setTo($mailingList);
 			if (!$mailer->send($message, $failures)){
 				print_r($failures);
 			}
 
 
-			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 			$mailer = new Swift_Mailer($transport);
 
 			$htmlMail = file_get_contents("../mail/ar_mag_reopened.tpl.html");
@@ -201,7 +201,7 @@ if(isset($_POST['submit'])){
 			$subject="PORTAIL BTLec - demande de réouverture de dossier";
 			$message = (new Swift_Message($subject))
 			->setBody($htmlMail, 'text/html')
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'))
+			->setFrom(EMAIL_NEPASREPONDRE)
 			->setTo($dest);
 			if (!$mailer->send($message, $failures)){
 				print_r($failures);

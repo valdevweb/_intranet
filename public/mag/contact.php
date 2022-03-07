@@ -111,12 +111,12 @@ if(isset($_POST['post-msg'])){
 			$link="Cliquez <a href='" .SITE_ADDRESS."/index.php?btlec/answer.php?msg=".$lastId."'>ici pour consulter le message</a>";
 			$linkMag="Cliquez <a href='".SITE_ADDRESS."/index.php?mag/edit-msg.php?msg=".$lastId."'>ici pour revoir votre demande</a>";
 			if(VERSION=="_"){
-				$dest=["valerie.montusclat@btlec.fr"];
+				$dest=[MYMAIL];
 			}else{
 				$dest=[$service['mailing']];
 			}
 
-			$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+			$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 			$mailer = new Swift_Mailer($transport);
 
 			$htmlMail = file_get_contents('../mail/new_mag_msg.tpl.html');
@@ -128,7 +128,7 @@ if(isset($_POST['post-msg'])){
 			$subject="PORTAIL BTLec - nouvelle demande : " .$_SESSION['nom'] ." pour le service " . $service['service'];
 			$message = (new Swift_Message($subject))
 			->setBody($htmlMail, 'text/html')
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec'))
+			->setFrom(EMAIL_NEPASREPONDRE)
 			->setTo($dest);
 
 			if (!$mailer->send($message, $failures)){
@@ -145,7 +145,7 @@ if(isset($_POST['post-msg'])){
 			$subject="PORTAIL BTLec - demande envoyée";
 			$message = (new Swift_Message($subject))
 			->setBody($htmlMail, 'text/html')
-			->setFrom(array('ne_pas_repondre@btlec.fr' => 'PORTAIL BTLec'))
+			->setFrom(EMAIL_NEPASREPONDRE)
 			->setTo(array($_POST['email']));
 
 			if (!$mailer->send($message, $failures)){

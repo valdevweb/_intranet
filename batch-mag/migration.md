@@ -36,3 +36,4 @@ base sav :
 base user :
 - suppression mag
 - suppression mag_centrales
+@btlecest.leclerc

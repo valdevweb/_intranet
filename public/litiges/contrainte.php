@@ -106,8 +106,8 @@ if ($_GET['contrainte'] == 2) {
 	// demande de vérif de stock
 	// maj etat ctrl => 2 pour controle à faire
 	$litigeDao->updateCtrl($litige[0]['id_main'], 2);
-	$dest = ['pilotageprepa@btlec.fr'];
-	$cc = ['btlecest.portailweb.litiges@btlec.fr'];
+	$dest = [EMAIL_PILOTAGE_PREPA];
+	$cc = [EMAIL_LITIGES];
 	ob_start();
 	include('pdf/pdf-contrainte-commun.php');
 	include('pdf/partials/detail-more.php');
@@ -132,7 +132,7 @@ if ($_GET['contrainte'] == 2) {
 	foreach ($ldSav as $ld) {
 		$dest[] = $ld['email'];
 	}
-	$cc = ['btlecest.portailweb.litiges@btlec.fr'];
+	$cc = [EMAIL_LITIGES];
 	ob_start();
 	include('pdf/pdf-contrainte-commun.php');
 	include('pdf/partials/echanges-mag.php');
@@ -145,7 +145,7 @@ if ($_GET['contrainte'] == 2) {
 	include 'contrainte/send-mail.php';
 } elseif ($_GET['contrainte'] == 7) {
 	// retour verif video
-	$dest = ['btlecest.portailweb.litiges@btlec.fr'];
+	$dest = [EMAIL_LITIGES];
 	$subjet = str_replace('{SPECIFIQUE_SUJET}', 'VIDEO réponse', $subjet);
 	$link = str_replace('{ID_CONTRAINTE}', $_GET['contrainte'], $link);
 	$link = '<a href="' . SITE_ADDRESS . '/index.php?litiges/bt-action-add.php?id=' . $_GET['id'] . '"> cliquant ici</a>';
@@ -166,8 +166,8 @@ if ($_GET['contrainte'] == 2) {
 	foreach ($ldAchat as $ld) {
 		$dest[] = $ld['email'];
 	}
-	$dest[] = 'stephane.wendling@btlec.fr';
-	$cc = ['btlecest.portailweb.litiges@btlec.fr'];
+	$dest[] = 'stephane.wendling@btlecest.leclerc';
+	$cc = [EMAIL_LITIGES];
 	ob_start();
 	include('pdf/pdf-contrainte-commun.php');
 	include('pdf/partials/echanges-mag.php');
@@ -180,7 +180,7 @@ if ($_GET['contrainte'] == 2) {
 	include 'contrainte/send-mail.php';
 } elseif ($_GET['contrainte'] == 6) {
 	// envoi demande de recherche video a Benoit
-	$dest = ['benoit.dubots@btlec.fr'];
+	$dest = ['benoit.dubots@btlecest.leclerc'];
 	ob_start();
 	include('pdf/pdf-contrainte-commun.php');
 	include('pdf/partials/detail-more.php');
@@ -195,7 +195,7 @@ if ($_GET['contrainte'] == 2) {
 }
 elseif ($_GET['contrainte'] == 12) {
 	// commmssion sav
-	$dest = ['robert.dalla-sega@btlec.fr', 'luc.muller@btlec.fr',];
+	$dest = ['robert.dallasega@btlecest.leclerc', 'luc.muller@btlecest.leclerc',];
 	ob_start();
 	include('pdf/pdf-contrainte-commun.php');
 	include('pdf/partials/ca.php');

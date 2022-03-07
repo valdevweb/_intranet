@@ -145,20 +145,20 @@ if(isset($_POST['submit']) ||isset($_POST['submit_mail']))
 			if(isset($_POST['submit_mail']))
 			{
 				if(VERSION =='_'){
-					$mailMag=array('valerie.montusclat@btlec.fr');
+					$mailMag=array(MYMAIL);
 				}else{
-					$mailMag=array($btlec.'-rbt@btlec.fr');
+					$mailMag=array('ga-btlecest-'.$btlec.'-rbt@btlecest.leclerc');
 				}
 
 				$magTemplate = file_get_contents('mail/mail-mag-msgbt.php');
 				$magTemplate=str_replace('{DOSSIER}',$infoLitige['dossier'],$magTemplate);
 				$subject='Portail BTLec Est  - nouveau message sur le dossier litige ' . $infoLitige['dossier'];
 			// ---------------------------------------
-				$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+				$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 				$mailer = new Swift_Mailer($transport);
 				$message = (new Swift_Message($subject))
 				->setBody($magTemplate, 'text/html')
-				->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec'))
+				->setFrom(EMAIL_NEPASREPONDRE)
 				->setTo($mailMag);
 
 				$delivered=$mailer->send($message);

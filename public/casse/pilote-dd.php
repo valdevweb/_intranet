@@ -32,12 +32,12 @@ else{
 }
 
 if(VERSION=='_'){
-	$dest=['valerie.montusclat@btlec.fr'];
-	$cc=['valerie.montusclat@btlec.fr'];
+	$dest=[MYMAIL];
+	$cc=[MYMAIL];
 }
 else{
-	$dest=['pilotageprepa@btlec.fr'];
-	$cc=['valerie.montusclat@btlec.fr', 'christelle.trousset@btlec.fr'];
+	$dest=[EMAIL_PILOTAGE_PREPA];
+	$cc=[MYMAIL, 'christelle.trousset@btlecest.leclerc'];
 
 }
 $link='<a href="'.SITE_ADDRESS.'/index.php?casse/pilote-palette-ok.php?id='.$_GET['id'].'"> en cliquant ici</a>';
@@ -58,12 +58,12 @@ $subject='Portail BTLec Est - Casses : demande de contrôle et mise en RAQ';
 
 // ---------------------------------------
 // initialisation de swift
-$transport = (new Swift_SmtpTransport('217.0.222.26', 25));
+$transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 $mailer = new Swift_Mailer($transport);
 $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
 
-->setFrom(array('ne_pas_repondre@btlec.fr' => 'Portail BTLec Est'))
+->setFrom(EMAIL_NEPASREPONDRE)
 ->setTo($dest)
 ->setCc($cc);
 
