@@ -63,12 +63,12 @@ batch-mail\daily-update.php:
 
 config\config.inc.php:
   61  
-  62: define("EXPEDITEUR_MAIL", array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'));
+  62: define("EMAIL_NEPASREPONDRE", array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'));
   63  define("SMTP_INFORMADIS", "relay-smtp.informadis.com");
 
 config\config.php:
   27  
-  28: define("EXPEDITEUR_MAIL", array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'));
+  28: define("EMAIL_NEPASREPONDRE", array('ne_pas_repondre@btlec.fr' => 'Portail BTLec EST'));
   29  define("MYMAIL", "valerie.montusclat@btlecest.leclerc");
 
 functions\unusedmail.fn.php:

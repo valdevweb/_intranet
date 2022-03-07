@@ -169,7 +169,7 @@ if(isset($_POST['submit'])){
 	$mailer = new Swift_Mailer($transport);
 	$message = (new Swift_Message($subject))
 	->setBody($htmlMail, 'text/html')
-	->setFrom(EXPEDITEUR_MAIL)
+	->setFrom(EMAIL_NEPASREPONDRE)
 	->setTo($dest)
 	->setCc($cc);
 

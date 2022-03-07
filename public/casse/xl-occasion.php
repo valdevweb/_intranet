@@ -90,7 +90,7 @@ $htmlMail=str_replace('{PROD}',$prod,$htmlMail);
 $subject='Portail BTLec Est - fichier excel casse/occasion';
 $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
-->setFrom(EXPEDITEUR_MAIL)
+->setFrom(EMAIL_NEPASREPONDRE)
 ->setTo($dest)
 ->setCc($cc)
 ->attach(Swift_Attachment::fromPath($xlPath));

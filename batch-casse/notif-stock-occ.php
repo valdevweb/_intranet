@@ -45,7 +45,7 @@ if($nbPaletteNow!= $nbPaletteYesterday){
 		$subject='Portail BTLec Est - information palettes en stock 4919';
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
-		->setFrom(EXPEDITEUR_MAIL)
+		->setFrom(EMAIL_NEPASREPONDRE)
 		->setTo($dest)
 		->setCc($cc);
 

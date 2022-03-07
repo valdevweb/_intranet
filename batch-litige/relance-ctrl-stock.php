@@ -53,7 +53,7 @@ foreach ($demandeCtrlStock as $key => $ctrl) {
 
         $message = (new Swift_Message($subject))
             ->setBody($htmlMail, 'text/html')
-            ->setFrom(EXPEDITEUR_MAIL)
+            ->setFrom(EMAIL_NEPASREPONDRE)
             ->setTo($dest);
 
 

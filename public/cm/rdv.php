@@ -30,32 +30,16 @@ $magDao=new MagDao($pdoMag);
 $pendingRdv=$rdvDao->getLastPendingRdv($pdoCm);
 
 $magInfo=MagHelpers::magInfo($pdoMag, $_SESSION['id_galec']);
-// $magInfo=MagHelpers::magInfo($pdoMag, '0751');
 
 
-$magLdAdh=$magDao->getMagLdEmails($magInfo['id'],'-ADH');
+$destAdhDir=[MagHelpers::makeLdMag($magInfo['id'], 'adh'), MagHelpers::makeLdMag($magInfo['id'], 'dir')];
 
-$magLdDir=$magDao->getMagLdEmails($magInfo['id'],'-DIR');
-
-$destAdhDir="";
-if(!empty($magLdDir) && !empty($magLdAdh)){
-	$destAdhDir=array_merge($magLdAdh,$magLdDir);
-}elseif(!empty($magLdDir) || !empty($magLdAdh)){
-
-	if(!empty($magLdDir)){
-		$destAdhDir=$magLdDir;
-
-	}elseif(!empty($magLdAdh)){
-		$destAdhDir=$magLdAdh;
-
-	}
-}
 
 
 $deno=MagHelpers::deno($pdoMag, $_SESSION['id_galec']);
 $city=MagHelpers::ville($pdoMag, $_SESSION['id_galec']);
 
-$cm=UserHelpers::getInternUser($pdoUser, $magInfo['id_cm_web_user']);
+$cm=UserHelpers::getInternUser($pdoUser, $magInfo['id_cm']);
 
 
 

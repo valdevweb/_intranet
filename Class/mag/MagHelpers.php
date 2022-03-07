@@ -6,7 +6,11 @@ class MagHelpers{
 	/*	WARNING UTILISER PDOMAG */
 
 	public static function magInfo($pdo, $galec){
-		$req=$pdo->prepare("SELECT mag.*,users.id as idwebuser FROM mag LEFT JOIN web_users.users ON mag.galec=web_users.users.galec  WHERE mag.galec= :galec");
+		$req=$pdo->prepare("SELECT mag.*,users.id as idwebuser, sca3.id_cm 
+		FROM mag 
+		LEFT JOIN web_users.users ON mag.galec=web_users.users.galec
+		LEFT JOIN sca3 ON mag.id=sca3.btlec_sca
+		  WHERE mag.galec= :galec");
 		$req->execute([
 			':galec'		=>$galec
 		]);
@@ -91,5 +95,7 @@ class MagHelpers{
 		return $req=$pdoMag->query("SELECT id,backoffice  FROM backoffice ")->fetchAll(PDO::FETCH_KEY_PAIR);
 	}
 
-
+	public static function makeLdMag($btlec,$suffixe){
+		return 'ga-btlecest-'.$btlec.'-'.$suffixe.'@btlecest.leclerc';
+	}
 }

@@ -18,7 +18,7 @@ $attachmentPdf = new Swift_Attachment($pdfContent, $pdfFilename, 'application/pd
 
 $message = (new Swift_Message($subjet))
 ->setBody($htmlMail, 'text/html')
-->setFrom(EXPEDITEUR_MAIL)
+->setFrom(EMAIL_NEPASREPONDRE)
 ->setTo($dest)
 ->setCc($cc);
 

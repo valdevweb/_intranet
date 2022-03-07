@@ -30,7 +30,7 @@ if ($infoExp['id_affectation']==1) {
 
 	$message = (new Swift_Message($subject))
 	->setBody($htmlMail, 'text/html')
-	->setFrom(EXPEDITEUR_MAIL)
+	->setFrom(EMAIL_NEPASREPONDRE)
 	->setTo($to)
 	->setCc($cc)
 	->attach(Swift_Attachment::fromPath($dirUpload.$file));
@@ -38,7 +38,7 @@ if ($infoExp['id_affectation']==1) {
 
 	$message = (new Swift_Message($subject))
 	->setBody($htmlMail, 'text/html')
-	->setFrom(EXPEDITEUR_MAIL)
+	->setFrom(EMAIL_NEPASREPONDRE)
 	->setTo($to)
 	->setCc($cc);
 }

@@ -58,7 +58,7 @@ $transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 $mailer = new Swift_Mailer($transport);
 $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
-->setFrom(EXPEDITEUR_MAIL)
+->setFrom(EMAIL_NEPASREPONDRE)
 ->setTo($destSuperviseur)
 ->setBcc($hidden);
 
@@ -88,7 +88,7 @@ $transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 $mailer = new Swift_Mailer($transport);
 $message = (new Swift_Message($subject))
 ->setBody($htmlMail, 'text/html')
-->setFrom(EXPEDITEUR_MAIL)
+->setFrom(EMAIL_NEPASREPONDRE)
 ->setTo($destDemandeurAndAffectation)
 ->setBcc($hidden);
 

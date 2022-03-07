@@ -19,8 +19,7 @@ class MagEntity{
     private $antenne;
     private $closed;
     private $absent;
-    private $id_cm_intern;
-    private $id_cm_web_user;
+    private $id_cm;
     private $btlec_sca;
     private $galec_sca;
     private $deno_sca;
@@ -53,7 +52,7 @@ class MagEntity{
     private $docubase_pwd;
     private $apple_id;
     private $mots_cles;
-    private $pole_sav_sca;
+
     private $centrale_smiley;
     private $racine_list;
     private $centreRei;
@@ -69,7 +68,7 @@ class MagEntity{
     private $acdlec_activite;
     private $acdlec_code;
     private $acdlec_numord;
-    private $acdlec;
+  
     private $pole_sav_ctbt;
     private $reservable;
     private $backoffice;
@@ -196,7 +195,7 @@ public function getAcdlec(){
 
 
 public function setAcdlec($acdlec_activite, $acdlec_code,$acdlec_numord){
-    $this->acdlec=$acdlec_pano.'-'.$acdlec_activite.'-'.$acdlec_code.'-'.$acdlec_numord;
+    $this->acdlec=$this->acdlec_pano.'-'.$acdlec_activite.'-'.$acdlec_code.'-'.$acdlec_numord;
 }
 
 public function getReservableStr(){
@@ -383,21 +382,13 @@ public function setAbsent($absent){
     return $this;
 }
 
-public function getIdCmIntern(){
-    return $this->id_cm_intern;
-}
 
-public function setIdCmIntern($id_cm_intern){
-    $this->id_cm_intern = $id_cm_intern;
-    return $this;
-}
 
-public function getIdCmWebUser(){
-    return $this->id_cm_web_user;
+public function getIdCm(){
+    return $this->id_cm;
 }
-
-public function setIdCmWebUser($id_cm_web_user){
-    $this->id_cm_web_user = $id_cm_web_user;
+public function setIdCm($id_cm){
+    $this->id_cm = $id_cm;
     return $this;
 }
 

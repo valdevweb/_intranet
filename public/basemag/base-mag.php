@@ -177,9 +177,9 @@ if(isset($_POST['filter'])){
 		$_SESSION['mag_filters']['cmSelected']=$_POST['cmSelected'];
 		$paramCm=join(' OR ', array_map(function($value){
 			if($value=='NULL'){
-				return 'id_cm_web_user IS '.$value;
+				return 'id_cm IS '.$value;
 			}
-			return 'id_cm_web_user='.$value;
+			return 'id_cm='.$value;
 		},$_POST['cmSelected']));
 
 	}else{
@@ -269,7 +269,11 @@ if(!isset($_POST['filter']) || isset($_POST['clear_filter'])){
 	$_SESSION['mag_filters']['sorti'][]=0;
 
 
-	$query="SELECT mag.*,sca3.*,web_users.users.login, web_users.users.nohash_pwd, qlik.statsventesadh.CA_Annuel  FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca LEFT JOIN web_users.users ON mag.galec=web_users.users.galec LEFT JOIN qlik.statsventesadh ON mag.id=qlik.statsventesadh.CodeBtlec WHERE (sorti=0) AND ({$sessionAcdlec}) AND ({$sessionCentrale})  AND qlik.statsventesadh.AnneeCA={$nMoinsUn} AND qlik.statsventesadh.CA_Annuel>100 GROUP BY mag.id";
+	$query="SELECT mag.*,sca3.*,web_users.users.login, web_users.users.nohash_pwd, qlik.statsventesadh.CA_Annuel  
+	FROM mag LEFT JOIN sca3 ON mag.id=sca3.btlec_sca 
+	LEFT JOIN web_users.users ON mag.galec=web_users.users.galec 
+	LEFT JOIN qlik.statsventesadh ON mag.id=qlik.statsventesadh.CodeBtlec 
+	WHERE (sorti=0) AND ({$sessionAcdlec}) AND ({$sessionCentrale})  AND qlik.statsventesadh.AnneeCA={$nMoinsUn} AND qlik.statsventesadh.CA_Annuel>100 GROUP BY mag.id";
 	$_SESSION['mag_filters']['query']=$query;
 	// echo $query;
 	$req=$pdoMag->query($query);

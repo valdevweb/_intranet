@@ -19,6 +19,7 @@ include '../../config/db-connect.php';
 
 require_once '../../vendor/autoload.php';
 require_once '../../Class/mag/MagDao.php';
+require_once '../../Class/mag/MagHelpers.php';
 require_once '../../Class/mag/MagEntity.php';
 require_once '../../Class/Helpers.php';
 require_once '../../Class/UserHelpers.php';
@@ -156,31 +157,13 @@ if (isset($_GET['id'])){
 
 
 
-	// ld
-	$ldRbt=$magDao-> getMagLd($mag->getId(),'-RBT');
-	$ldRbtName=(!empty($ldRbt))? '<a class="text-orange" href="mailto:'.$ldRbt[0]['ld_full'].'">'.$ldRbt[0]['ld_full'].'</a>':  $mag->getRacineList()."-RBT";
-	$ldRbtLink=convertArray($ldRbt,'email','</a><br>');
-	$ldRbtExist=(!empty($ldRbt))? true:  false;
-	$ldRbtLink=(!empty($ldRbtLink))? $ldRbtLink:  "Aucune adresse RBT";
 
-	$ldDir=$magDao-> getMagLd($mag->getId(),'-DIR');
+	 $ldRbtLink='<a class="text-secondary" href="https://mail.google.com/mail/?view=cm&source=mailto&to='.MagHelpers::makeLdMag($mag->getId(),'rbt').'">'.MagHelpers::makeLdMag($mag->getId(),'rbt').'</a>';
+	 $ldAdhLink='<a class="text-secondary" href="https://mail.google.com/mail/?view=cm&source=mailto&to='.MagHelpers::makeLdMag($mag->getId(),'adh').'">'.MagHelpers::makeLdMag($mag->getId(),'adh').'</a>';
+	 $ldDirLink='<a class="text-secondary" href="https://mail.google.com/mail/?view=cm&source=mailto&to='.MagHelpers::makeLdMag($mag->getId(),'dir').'">'.MagHelpers::makeLdMag($mag->getId(),'dir').'</a>';
+	 $ldOkazLink='<a class="text-secondary" href="https://mail.google.com/mail/?view=cm&source=mailto&to='.MagHelpers::makeLdMag($mag->getId(),'gt13').'">'.MagHelpers::makeLdMag($mag->getId(),'gt13').'</a>';
+	
 
-	$ldDirName=(!empty($ldDir))? '<a class="text-orange" href="mailto:'.$ldDir[0]['ld_full'].'">'.$ldDir[0]['ld_full'].'</a>':  $mag->getRacineList()."-DIR";
-	$ldDirLink=convertArray($ldDir,'email','</a><br>');
-	$ldDirExist=(!empty($ldDir))? true:  false;
-	$ldDirLink=(!empty($ldDirLink))? $ldDirLink : "Aucune adresse directeur";
-
-	$ldAdh=$magDao-> getMagLd($mag->getId(),'-ADH');
-	$ldAdhName=(!empty($ldAdh))? '<a class="text-orange" href="mailto:'.$ldAdh[0]['ld_full'].'">'.$ldAdh[0]['ld_full'].'</a>':  $mag->getRacineList()."-ADH :";
-	$ldAdhLink=convertArray($ldAdh,'email','</a><br>');
-	$ldAdhExist=(!empty($ldAdh))? true:  false;
-	$ldAdhLink=(!empty($ldAdhLink))? $ldAdhLink: "Aucune adresse adhérent ";
-
-	$ldOkaz=$magDao->getMagLd($mag->getId(), '-GT13');
-	$ldOkazName=(!empty($ldOkaz))? '<a class="text-orange" href="mailto:'.$ldOkaz[0]['ld_full'].'">'.$ldOkaz[0]['ld_full'].'</a>':  $mag->getRacineList()."-GT13";
-	$ldOkazLink=convertArray($ldOkaz,'email','</a><br>');
-	$ldOkazExist=(!empty($ldOkaz))? true:  false;
-	$ldOkazLink=(!empty($ldOkazLink))? $ldOkazLink:  "Pas d'adresse GT occasion";
 
 
 	$docubaseLink="http://172.30.101.66/rheaweb/controler?cmd=home&baseid=1&view=1&j_username=".$mag->getDocubaseLogin() ."&j_password=".$mag->getDocubasePwd();
@@ -252,11 +235,10 @@ if(isset($_POST['submit_acdlec'])){
 
 if(isset($_POST['submit_cm'])){
 	if(!empty($_POST['cmSelected'])){
-		//  vérifier si adéja attribution
-		$req=$pdoMag->prepare("UPDATE mag SET id_cm_web_user= :id_cm_web_user, date_update= :date_update WHERE id= :id");
+		$req=$pdoMag->prepare("UPDATE sca3 SET id_cm= :id_cm, date_update= :date_update WHERE id= :id");
 		$req->execute([
 			':id'		=>$_GET['id'],
-			':id_cm_web_user'	=>$_POST['cmSelected'],
+			':id_cm'	=>$_POST['cmSelected'],
 			':date_update'	=>date('Y-m-d H:i:s')
 		]);
 		$updated=$req->rowCount();
@@ -344,19 +326,13 @@ if(isset($_POST['submitdocubase'])){
 	$dest=[];
 	if($upDocubase==1){
 		if(isset($_POST['ldadh'])){
-			foreach ($ldAdh as $key => $mail) {
-				$dest[]=$mail['email'];
-			}
+				$dest[]=$_POST['ldadh'];
 		}
 		if(isset($_POST['lddir'])){
-			foreach ($ldDir as $key => $mail) {
-				$dest[]=$mail['email'];
-			}
+				$dest[]=$_POST['lddir'];
 		}
 		if(isset($_POST['ldrbt'])){
-			foreach ($ldRbt as $key => $mail) {
-				$dest[]=$mail['email'];
-			}
+				$dest[]=$_POST['ldrbt'];
 		}
 		if(isset($_POST['emails']) && !empty($_POST['emails'])){
 			$arrEmail=explode(',', $_POST['emails']);
@@ -576,14 +552,6 @@ if(isset($_GET['success'])){
 	$success[]=$arrSuccess[$_GET['success']];
 }
 
-//------------------------------------------------------
-//			FONCTION
-//------------------------------------------------------
-
-
-//------------------------------------------------------
-//			VIEW
-//------------------------------------------------------
 
 
 

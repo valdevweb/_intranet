@@ -213,7 +213,7 @@ if (isset($_POST['post-reply'])) {
 					$subject = "PORTAIL BTLec - réponse à votre demande";
 					$message = (new Swift_Message($subject))
 						->setBody($htmlMail, 'text/html')
-						->setFrom(EXPEDITEUR_MAIL)
+						->setFrom(EMAIL_NEPASREPONDRE)
 						->setTo($dest);
 					if (!$mailer->send($message, $failures)) {
 						print_r($failures);
@@ -230,7 +230,7 @@ if (isset($_POST['post-reply'])) {
 					$subject = "PORTAIL BTLec - réponse à votre demande " . $oneMsg['objet'];
 					$message = (new Swift_Message($subject))
 						->setBody($htmlMail, 'text/html')
-						->setFrom(EXPEDITEUR_MAIL)
+						->setFrom(EMAIL_NEPASREPONDRE)
 						->setTo($dest);
 					if (!$mailer->send($message, $failures)) {
 						print_r($failures);

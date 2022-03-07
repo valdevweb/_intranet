@@ -151,7 +151,7 @@
 					<div class="col-3">
 						<span class="text-orange">Chargé de mission :</span>
 
-						<?=($mag->getIdCmWebUser()!==null)? UserHelpers::getFullname($pdoUser, $mag->getIdCmWebUser()):""?>
+						<?=($mag->getIdCm()!==null)? UserHelpers::getFullname($pdoUser, $mag->getIdCm()):""?>
 					</div>
 				</div>
 			</div>
@@ -208,16 +208,16 @@
 		<div class="row py-3">
 			<div class="col light-shadow-round">
 				<div class="row yanone-replace pt-3">
-					<div class="col text-orange"><?=$ldAdhName?></div>
-					<div class="col text-orange"><?=$ldDirName?></div>
-					<div class="col text-orange"><?=$ldRbtName?></div>
-					<div class="col text-orange"><?=$ldOkazName?></div>
+					<div class="col text-orange">LD Adhérent</div>
+					<div class="col text-orange">LD Directeur</div>
+					<div class="col text-orange">LD RBT</div>
+					<div class="col text-orange">LD Occasion</div>
 				</div>
 				<div class="row yanone-replace pb-3">
 					<div class="col"><div class="pl-2 border-left"><?=$ldAdhLink?></div></div>
 					<div class="col"><div class="pl-2 border-left"><?=$ldDirLink?></div> </div>
 					<div class="col"><div class="pl-2 border-left"><?=$ldRbtLink?></div></div>
-					<div class="col"><div class="pl-2 border-left"><?=$ldOkazLink?></div></div>
+					<div class="col"><div class="pl-2 border-left"><?=($mag->getOccasion()==1)?$ldOkazLink:''?></div></div>
 				</div>
 			</div>
 		</div>

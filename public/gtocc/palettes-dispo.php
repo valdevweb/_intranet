@@ -84,7 +84,7 @@ if(isset($_POST['submit'])){
 		$subject='Portail BTLec Est - regroupement palettes GT Occasion';
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
-		->setFrom(EXPEDITEUR_MAIL)
+		->setFrom(EMAIL_NEPASREPONDRE)
 		->setTo($dest)
 		->setCc($cc);
 

@@ -38,7 +38,7 @@ define("FR_MONTHS_SHORT", ['', 'janv', 'fév', 'mars', 'avr', 'mai', 'juin', 'ju
 
 
 
-define("SMTP_INFORMADIS", "relay-smtp.informadis.com");
+define("SMTP_ADDRESS", "relay-smtp.informadis.com");
 
 // remplace btlecest.portailweb.informatique@btlec.fr
 define("EMAIL_INFORMATIQUE", 'ga-btlecest-portailweb-informatique@btlecest.leclerc');

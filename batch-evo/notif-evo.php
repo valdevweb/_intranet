@@ -48,7 +48,7 @@ if(!empty($notifs)){
 		$subject='[Demande d\'evo] - '.$notif['title'];
 		$message = (new Swift_Message($subject))
 		->setBody($htmlMail, 'text/html')
-		->setFrom(EXPEDITEUR_MAIL)
+		->setFrom(EMAIL_NEPASREPONDRE)
 		->setTo($dest);
 
 		if (!$mailer->send($message, $failures)){
