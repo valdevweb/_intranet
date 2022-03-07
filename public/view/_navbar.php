@@ -259,7 +259,6 @@ $dWorkflow = isUserAllowed($pdoUser, [100]);
 							<li><a class="dropdown-item" href="<?= PORTAIL_SALON ?>home/home.php">Salon fournisseurs</a></li>
 							<li><a class="dropdown-item" href="<?= ROOT_PATH ?>/public/exploit/connexion.php">Connexions magasins</a></li>
 							<?php if ($dExploit) : ?>
-								<li><a class="dropdown-item" href='<?= ROOT_PATH ?>/public/exploit/ld-exploit.php'>Listes de diffu BTLec</a></li>
 								<li><a class="dropdown-item" href='<?= ROOT_PATH ?>/public/exploit/add-flash.php'>Saisie d'info urgente</a></li>
 								<li><a class="dropdown-item" href='<?= ROOT_PATH ?>/public/exploit/upload-adh.php'>Upload documents Adhérents</a></li>
 							<?php endif ?>
