@@ -23,8 +23,12 @@ $pdoCm=$db->getPdo('cm');
 
 $rapportDao=new RapportDao($pdoCm);
 
+$listRapport=[];
+if(isset($_SESSION['id_galec'])){
+	$listRapport=$rapportDao->magRapportSent($_SESSION['id_galec']);
 
-$listRapport=$rapportDao->magRapportSent($_SESSION['id_galec']);
+}
+
 
 
 
