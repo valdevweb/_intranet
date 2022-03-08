@@ -30,9 +30,9 @@ $pdoQlik = $db->getPdo('qlik');
 $pdoSav = $db->getPdo('sav');
 $pdoMag = $db->getPdo('magasin');
 
-function getMagSav($pdoSav, $galec)
+function getMagSav($pdoMag, $galec)
 {
-	$req = $pdoSav->prepare("SELECT sav FROM mag WHERE galec = :galec");
+	$req = $pdoMag->prepare("SELECT pole_sav FROM sca3 WHERE galec_sca = :galec");
 	$req->execute([
 		':galec'		=> $galec
 	]);
@@ -92,7 +92,10 @@ $dials = getDialog($pdoLitige);
 $actionLitige = $actionDao->findActionLitige($_GET['action']);
 
 $listCentrales = MagHelpers::getListCentrale($pdoMag);
-
+$listPole=MagHelpers::listPole($pdoMag);
+echo "<pre>";
+print_r($listPole);
+echo '</pre>';
 
 
 
@@ -127,8 +130,14 @@ if ($_GET['contrainte'] == 2) {
 } elseif ($_GET['contrainte'] == 4) {
 	// demande d'intervention du pole sav
 	$galec = $litige[0]['galec'];
-	$sav = getMagSav($pdoSav, $galec);
-	$ldSav = getLdSav($pdoSav, $sav['sav'], 'litige');
+	$sav = getMagSav($pdoMag, $galec);
+
+	$savString=isset($listPole[$sav['pole_sav']])?$listPole[$sav['pole_sav']]:"";
+	if(empty($savString)){
+		echo "le magasin n'a pas de pole sav attributé, vous ne pouvez pas continuer";
+		die();
+	}
+	$ldSav = getLdSav($pdoSav, $savString, 'litige');
 	foreach ($ldSav as $ld) {
 		$dest[] = $ld['email'];
 	}

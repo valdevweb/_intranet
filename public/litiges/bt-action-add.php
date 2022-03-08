@@ -10,7 +10,7 @@ require_once '../../Class/litiges/LitigeHelpers.php';
 
 $pdoSav=$db->getPdo('sav');
 $pdoLitige = $db->getPdo('litige');
-
+$pdoMag=$db->getPdo('magasin');
 $litigeDao = new LitigeDao($pdoLitige);
 $actionDao = new ActionDao($pdoLitige);
 
@@ -39,9 +39,9 @@ function getHelpInfo($pdoLitige)
 }
 
 // recupère le pale sav du mag pour action 4 : demande intervention sav
-function getMagSav($pdoSav, $galec)
+function getMagSav($pdoMag, $galec)
 {
-	$req = $pdoSav->prepare("SELECT sav FROM mag WHERE galec = :galec");
+	$req = $pdoMag->prepare("SELECT pole_sav FROM sca3 WHERE galec_sca = :galec");
 	$req->execute([
 		':galec'		=> $galec
 	]);
@@ -94,7 +94,7 @@ if (isset($_POST['submit'])) {
 		// si pas de bloquage, on ajoute l'action avec son numéro de contrainte et on redirige vers la page contrainte qui fait le traitement approprié
 		if ($idContrainte == 4) {
 			$galec = $litiges['galec'];
-			$sav = getMagSav($pdoSav, $galec);
+			$sav = getMagSav($pdoMag, $galec);
 			if (empty($sav)) {
 				$errors[] = "Vous ne pouvez pas ajouter cette action, aucun pôle SAV n'a été renseigné pour ce magasin";
 			}

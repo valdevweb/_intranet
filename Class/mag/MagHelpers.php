@@ -17,9 +17,6 @@ class MagHelpers{
 		return $req->fetch(PDO::FETCH_ASSOC);
 	}
 
-
-
-
 	public static function deno($pdo,$galec){
 		if($galec!=''){
 			$data=self::magInfo($pdo, $galec);
@@ -98,4 +95,23 @@ class MagHelpers{
 	public static function makeLdMag($btlec,$suffixe){
 		return 'ga-btlecest-'.$btlec.'-'.$suffixe.'@btlecest.leclerc';
 	}
+
+
+    public static function listPole($pdoMag){
+        $req=$pdoMag->query("SELECT id, sav FROM corresp_sav WHERE antenne=0");
+        return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+    }
+    public static function listIdPole($pdoMag){
+        $req=$pdoMag->query("SELECT sav, id FROM corresp_sav WHERE antenne=0");
+        return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+    }
+    public static function listAntenne($pdoMag){
+        $req=$pdoMag->query("SELECT id, sav FROM corresp_sav");
+        return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+    }
+    public static function listIdAntenne($pdoMag){
+        $req=$pdoMag->query("SELECT sav, id FROM corresp_sav");
+        return $req->fetchAll(PDO::FETCH_KEY_PAIR);
+    }
+
 }
