@@ -307,7 +307,7 @@ $dWorkflow = isUserAllowed($pdoUser, [100]);
 				</li>
 				<?php if ($dWorkflow) : ?>
 					<?php
-					if ($_SESSION['id'] == 1053 || $_SESSION['id'] == 1895 || $_SESSION['id'] == 974 || $_SESSION['id'] == 687 || $_SESSION['id'] == 968) {
+					if ($_SESSION['id'] == 1053 || $_SESSION['id'] == 1895 || $_SESSION['id'] == 974 || $_SESSION['id'] == 687 || $_SESSION['id'] == 968 || $_SESSION['id'] == 1040) {
 						$hassub = "";
 						$lienindex = "indexutilisateur.php";
 					} else {
