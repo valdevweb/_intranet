@@ -104,6 +104,8 @@ if(isset($_POST['submit'])){
 		}
 		$table='';
 		$table.='<table style="border-collapse: collapse; border: 1px solid grey;padding:10px;"><tr style="background-color:firebrick;color:white;"><th style="border: 1px solid grey;padding:10px;">Palette 4919</th><th style="border: 1px solid grey;padding:10px;">Palette contremarque</th><th style="border: 1px solid grey;padding:10px;">Commentaires</th></tr>';
+		// on récupère la liste des palettes avec les cmts saisis par les pilotes
+		$listPalette=getExpAndPalette($pdoCasse,$numExp);
 		foreach ($listPalette as $exp) {
 			$table.='<tr><td style="border: 1px solid grey;padding:10px;">'.$exp['palette'].'</td><td style="border: 1px solid grey;padding:10px;">'.$exp['contremarque'].'</td><td style="border: 1px solid grey;padding:10px;">'.$exp['cmt_pilote'].'</td></tr>';
 		}
@@ -144,12 +146,6 @@ if(isset($_POST['submit'])){
 
 
 
-
-
-
-//------------------------------------------------------
-//			VIEW
-//------------------------------------------------------
 include('../view/_head-bt.php');
 include('../view/_navbar.php');
 ?>
@@ -193,7 +189,7 @@ include('../view/_navbar.php');
 							<div class="col-3">
 								<div class="form-group">
 									<label for="contremarque">Palette contremarque : </label>
-									<input type="text" name="contremarque" id="contremarque" class="form-control" value="<?=$palette['palette']?>" readonly>
+									<input type="text" name="contremarque" id="contremarque" class="form-control" value="<?=$palette['contremarque']?>" readonly>
 								</div>
 
 							</div>
