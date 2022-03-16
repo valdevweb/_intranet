@@ -1,65 +1,44 @@
 <?php
-require('../../config/autoload.php');
-if(!isset($_SESSION['id'])){
-	header('Location:'. ROOT_PATH.'/index.php');
-	exit();
-}
+require_once '../../config/session.php';
 
-$pageCss=explode(".php",basename(__file__));
-$pageCss=$pageCss[0];
-$cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
+/** @var Db $db */
+require_once '../../Class/mag/MagHelpers.php';
 
+// ga-btlecest-'.$btlec.'-'.$suffixe.'@btlecest.leclerc
 
-require '../../Class/Db.php';
-// require_once '../../vendor/autoload.php';
+// $pdoSav=$db->getPdo('sav');
+// $req=$pdoSav->query("SELECT *FROM mail_mag LEFT JOIN magasin.sca3 ON galec=galec_sca WHERE email like  '%@btlec.fr%'");
+// $mails=$req->fetchAll(PDO::FETCH_ASSOC);
+// // echo "<pre>";
+// // print_r($mails);
+// // echo '</pre>';
+// foreach($mails as $mail){
+// 	if($mail['galec']!=0100){
+// 		echo $mail['email'] . ' ' .$mail['btlec_sca'] ;
+// 		if($mail['btlec_sca']!=''){
+// 			$newMail=MagHelpers::makeLdMag($mail['btlec_sca'], 'rbt');
+// 			$req=$pdoSav->prepare("UPDATE mail_mag SET email = :email WHERE id=:id");
+// 			$req->execute([
+// 				':email'		=>$newMail,
+// 				':id'		=>$mail['id']
+// 			]);
+// 			echo $newMail;
+// 			echo "<br>";
 
+// 		}else{
+// 			echo "NO BTLEC";
+// 			echo "<br>";
 
-$errors=[];
-$success=[];
-$db=new Db();
-$pdoUser=$db->getPdo('web_users');
-$pdoCasse=$db->getPdo('casse');
-$pdoQlik=$db->getPdo('qlik');
+// 		}
 
-$req=$pdoCasse->query("SELECT * FROM casses WHERE ean is null");
-$casses=$req->fetchAll(PDO::FETCH_ASSOC);
-
-
-foreach($casses as $casse){
-	$req=$pdoQlik->prepare("SELECT ean, dossier, article from ba WHERE article= :article and dossier= :dossier");
-	$req->execute([':article'=>$casse['article'], ':dossier'=>$casse['dossier']]);
-	$found= $req->fetch(PDO::FETCH_ASSOC);
-	echo "recherché : ".$casse['dossier'].' ' .$casse['article']. 'trouvé '.$found['dossier'].' '.$found['article'];
-	$req=$pdoCasse->prepare("UPDATE casses set ean= :ean WHERE id= :id");
-	$req->execute([
-		':ean'			=>$found['ean'],
-		':id'			=>$casse['id']
-
-	]);
-
-echo "<br>";
-
-}
-
-// // $req=$this->pdo->prepare("SELECT * FROM table WHERE cond");
-// // $req->execute([
-
-// // ]);
-// // return $req->fetchAll();
-// $req=$pdoUser->query("SELECT * FROM intern_users");
-// $data=$req->fetchAll();
-
-
-// foreach ($data as $key => $user) {
-// 	$req=$pdoUser->prepare("update intern_users SET email= :email WHERe id= :id");
-// 	$req->execute([
-// 		':email'		=>trim($user['email']),
-// 		':id'		=>trim($user['id'])
-
-// 	]);
-// 	echo $pdoUser->lastInsertId();
+// 	}
 
 // }
+
+
+
+
+
 
 
 //------------------------------------------------------
@@ -67,7 +46,7 @@ include('../view/_head-bt.php');
 include('../view/_navbar.php');
 ?>
 
-<div class="container">
+<div id="container" class="container">
 	<div class="row py-5">
 		<div class="col">
 			<h1 class="text-main-blue">Main title</h1>
@@ -82,45 +61,8 @@ include('../view/_navbar.php');
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
-
-	<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
-		<?php for ($i=0; $i < 2 ; $i++):?>
-			<div class="form-group">
-				<label for="model"></label>
-				<input type="text" class="form-control" name="model[<?=$i?>]" id="model">
-			</div>
-
-		<?php endfor?>
-		<div class="row">
-			<div class="col text-right">
-				<button class="btn btn-primary" name="submit">Valider</button>
-			</div>
-		</div>
-	</form>
-
-	<?php
-
-	if (isset($_POST['submit'])) {
-		echo "<pre>";
-		print_r($_POST);
-		echo '</pre>';
-
-		for ($i=0; $i < count($_POST['model']); $i++) {
-
-			if(!empty($_POST['model'][$i]) || $_POST['model'][$i]==0){
-				echo $_POST['model'][$i] ." est non vide";
-			echo "<br>";
-
-			}else{
-			echo $_POST['model'][$i] ." est vide";
-			echo "<br>";
-			}
-
-		}
-
-	}
-	?>
-
+	
+	<!-- contenu -->
 </div>
 
 <?php
