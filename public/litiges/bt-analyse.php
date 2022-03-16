@@ -155,12 +155,16 @@ if(isset($_POST['submit_mail']))
 		{
 			if(VERSION =='_'){
 				$mailMag=array(MYMAIL);
+				$hiddenAr=[MYMAIL];
+
 			}
 			else{
 				$magDao=new MagDao($pdoMag);
 				$infoMag=$magDao->getMagByGalec($fLitige['galec']);
 				$codeBt=$infoMag->getId();
 				$mailMag=array('ga-btlecest-'.$codeBt.'-rbt@btlecest.leclerc');
+				$hiddenAr=['nathalie.pazik@btlecest.leclerc'];
+
 			}
 
 			$magTemplate = file_get_contents('mail/mail-mag-cloture.php');
@@ -172,6 +176,8 @@ if(isset($_POST['submit_mail']))
 			$message = (new Swift_Message($subject))
 			->setBody($magTemplate, 'text/html')
 			->setFrom(EMAIL_NEPASREPONDRE)
+			->setBcc($hiddenAr)
+
 			->setTo($mailMag);
 		
 			$delivered=$mailer->send($message);
