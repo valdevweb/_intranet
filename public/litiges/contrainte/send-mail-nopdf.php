@@ -14,7 +14,6 @@ $htmlMail=str_replace('{LINK}',$link,$htmlMail);
 
 $transport = (new Swift_SmtpTransport(SMTP_ADDRESS, 25));
 $mailer = new Swift_Mailer($transport);
-$attachmentPdf = new Swift_Attachment($pdfContent, $pdfFilename, 'application/pdf');
 
 $message = (new Swift_Message($subjet))
 ->setBody($htmlMail, 'text/html')
