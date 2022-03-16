@@ -18,7 +18,10 @@ function getQlik($pdoQlik){
 	$req=$pdoQlik->query("SELECT mag_gessica.id as id, mag_ctbt_param.id  as ctbtparam_id, mag_ctbt.id as ctbt_id, ADH_RS, ADH_PANBT, ADH_VALCOD, ADH_ADR1, ADH_ADR2, ADH_CP,ADH_ADR3, ADH_TEL, ADH_TLC,ADH_SURF,ADH_NOMADH, ADH_NOMCHEF,		DIC_GEL, ADH_DATOUV, ADH_DATFER, ADH_NUMACT, AAC_COD, ADH_NUMORD, ADH_EAN, ADH_CSIRET, ADH_IBAN, ADH_BIC, ADH_RUM, ADH_ADHPYR, BCG_ADH,
 		PID_CRE, PID_RAD, PID_GESRES, MAG_MAI, MAG_TYPINF, ADH_NUMACDL
 
-		FROM mag_gessica LEFT JOIN mag_ctbt ON mag_gessica.id= mag_ctbt.id LEFT JOIN mag_ctbt_param ON mag_gessica.id= mag_ctbt_param.id  WHERE (mag_gessica.id >2 AND mag_gessica.id <1000) OR (mag_gessica.id >3000 AND mag_gessica.id <7999) ");
+		FROM mag_gessica 
+		LEFT JOIN mag_ctbt ON mag_gessica.id= mag_ctbt.id 
+		LEFT JOIN mag_ctbt_param ON mag_gessica.id= mag_ctbt_param.id  
+		WHERE (mag_gessica.id >2 AND mag_gessica.id <1000) OR (mag_gessica.id >3000 AND mag_gessica.id <7999) ");
 
 	// return $req->errorInfo();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
@@ -184,19 +187,12 @@ function updateMag($pdoMag,$dateOuv, $dateFerm, $mag){
 
 	$err=$req->errorInfo();
 	if(!empty($err[2])){
-			echo "<pre>";
-			print_r($sql);
-			echo '</pre>';
-
 		return $err[2];
 	}
 	return $req->rowCount();
 
 
 }
-
-
-
 
 function alreadyInMag($pdoMag,$id){
 	$req=$pdoMag->query("SELECT id FROM mag WHERE id={$id}");

@@ -19,10 +19,9 @@ function getMagAttribution($pdoUser){
 }
 
 function updateAttr($pdoMag,$key,$data){
-	$req=$pdoMag->prepare("UPDATE mag SET id_cm_intern= :id_cm_intern, id_cm_web_user= :id_cm_web_user, date_update= :date_update WHERE galec= :galec");
+	$req=$pdoMag->prepare("UPDATE sca3 SET id_cm= :id_cm, date_update= :date_update WHERE galec= :galec");
 	$req->execute([
-		':id_cm_intern'		=>$data['id_intern'],
-		':id_cm_web_user'	=>$data['id_web_user'],
+		':id_cm'	=>$data['id_web_user'],
 		':date_update'		=>date('Y-m-d H:i:s'),
 		':galec'			=>$key
 	]);
@@ -107,19 +106,17 @@ $errorsCm=[];
 $errorsNew=[];
 
 
-foreach ($cmAttr as $key => $cm) {
-	$updated=updateAttr($pdoMag, $key, $cm[0]);
-	if($updated==1){
-		$updated++;
-	}else{
+// foreach ($cmAttr as $key => $cm) {
+// 	$updated=updateAttr($pdoMag, $key, $cm[0]);
+// 	if($updated==1){
+// 		$updated++;
+// 	}else{
 
 
 
-		echo "erreur cm";
-echo "<br>";
 
-	}
-}
+// 	}
+// }
 foreach ($mags as $key => $mag) {
 	$poleSav=getSavCorrespondance($pdoMag,trim($mag['sav']));
 	$antenne=getSavCorrespondance($pdoMag,trim($mag['pole']));
@@ -147,39 +144,5 @@ foreach ($absents as $key => $abs) {
 	}else{
 
 
-		echo "erreur mag sca3 to mag";
-echo "<br>";
-
 	}
 }
-
-
-
-echo "mise à jour cm : " .$updated;
-echo "<br>";
-echo "mise à jour sav : " .$updatedSav;
-echo "<br>";
-echo "ajout mag sca3 : " .$insertedMag;
-	echo "<pre>";
-	print_r($errorsSav);
-	echo '</pre>';
-// Array
-// (
-//     [0] => 1668
-//     [1] => 6771
-//     [2] => 0968B
-//     [3] => BBJRA
-//     [4] => 0367B
-//     [5] => BBJBA
-//     [6] => 0215
-// )
-// comparer mag et sca3
-//
-//    [0] => 6772
-    // [1] => 6771
-    // [2] => 1654		idem
-    // [3] => 1754
-    // [4] => 9843		pas noram
-    // [5] => 1113
-    // [6] => 7301
-    // [7] => 1734	idme
