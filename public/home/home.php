@@ -138,35 +138,26 @@ elseif ($_SESSION['id_type']==3){
 
 // redirection si besoin
 if(!empty($_SESSION['goto'])){
-		//si on a une query string, on la découpe et on vérif si la 1er partie est numerique ou pas
-		//si 1ere partie numérique, c'est un vieux lien donc on redirige sur page edit-msg(mag) ou page answer(btlec)
-		//sinon on recupère toute la query string
-	$goto=$_SESSION['goto'];
-	$redir=explode("&",$goto);
-	if(is_numeric($redir[0])){
-		if($_SESSION['id_type']==1){
-			header('Location:'. ROOT_PATH. '/public/btlec/answer.php?msg='.$_SESSION['goto']);
-		}elseif($_SESSION['id_type']==2 || $_SESSION['id_type']==3 || $_SESSION['id_type']==4 || $_SESSION['id_type']==5){
-			header('Location:'. ROOT_PATH. '/public/mag/edit-msg.php?msg='.$_SESSION['goto']);
-		}else{
-			header('Location:' .ROOT_PATH. '/public/' .$goto);
-		}
-	}else{
+
 		if(str_contains($_SESSION['goto'], "workflow") == 1 ){
 
-			if( $_SESSION['id'] == 1053 || $_SESSION['id'] == 1895 || $_SESSION['id'] == 974 || $_SESSION['id'] == 687 || $_SESSION['id'] == 968 ){
+			if( $_SESSION['id'] == 1053 || $_SESSION['id'] == 1895 || $_SESSION['id'] == 974 || $_SESSION['id'] == 687 || $_SESSION['id'] == 968 || $_SESSION['id'] == 1040 ){
 				
 				header('Location:'. ROOT_PATH. '/public/workflow/indexutilisateur.php');
-			}else{
-			
-					header('Location:'. ROOT_PATH. '/public/workflow/index.php');
-			
-				
+			}else{	
+					header('Location:'. ROOT_PATH. '/public/workflow/index.php');						
 			}
 		}else{
-			header('Location:' .ROOT_PATH. '/public/' .$goto);
+			if(str_contains($_SESSION['goto'], '_SAV_')){
+				
+				header('Location:http://' .SERVER_NAME.'/'.VERSION .'sav/' .str_replace('_SAV_','', $_SESSION['goto']));
+
+			}else{
+				header('Location:' .ROOT_PATH. '/public/'.$_SESSION['goto']);
+
+			}
 		}
-	}
+	// }
 
 }
 
