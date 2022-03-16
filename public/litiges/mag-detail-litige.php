@@ -19,7 +19,6 @@ require "../../functions/stats.fn.php";
 $descr = "detail litige côté magasin";
 $page = basename(__file__);
 $action = "consultation";
-// addRecord($pdoStat,$page,$action, $descr,$code=null,$detail=null)
 addRecord($pdoStat, $page, $action, $descr, 101, $_GET['id']);
 
 require_once  '../../vendor/autoload.php';
@@ -197,7 +196,7 @@ if (isset($_POST['submit'])) {
 				$mailBt = array(MYMAIL);
 			}
 		}
-		$link = '<a href="' . SITE_ADDRESS . '/index.php?litiges/bt-detail-litige.php?id=' . $_GET['id'] . '&id_contrainte=' . $idContrainteDde . '"> cliquant ici</a>';
+		$link = '<a href="' . SITE_ADDRESS . '/index.php?litiges/bt-detail-litige.php?id=' . $_GET['id'] .'"> cliquant ici</a>';
 
 		$btTemplate = file_get_contents('mail/mail-bt-msgmag.php');
 		$btTemplate = str_replace('{DOSSIER}', $thisLitige[0]['dossier'], $btTemplate);
