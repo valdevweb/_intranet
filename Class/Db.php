@@ -1,4 +1,5 @@
 <?php
+
 class Db{
 	private $dbName="";
 	private $dbUser="sql";
