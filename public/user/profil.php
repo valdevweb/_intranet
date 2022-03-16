@@ -259,7 +259,7 @@ include('../view/_navbar.php');
 						<div class="col-3">
 							<span class="text-orange">Chargé de mission :</span>
 
-							<?= UserHelpers::getFullname($pdoUser, $mag->getIdCmWebUser())?>
+							<?= UserHelpers::getFullname($pdoUser, $mag->getIdCm())?>
 						</div>
 					</div>
 				</div>
