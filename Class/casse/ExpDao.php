@@ -49,7 +49,7 @@ class ExpDao{
 	}
 
 	public function getExpPaletteCasse($idExp){
-		$req=$this->pdo->prepare("SELECT casses.*, palettes.palette
+		$req=$this->pdo->prepare("SELECT casses.*, palettes.palette, palettes.contremarque
 			FROM exps LEFT JOIN palettes ON exps.id=palettes.id_exp
 			LEFT JOIN casses ON palettes.id= casses.id_palette
 			WHERE exps.id= :id_exp ORDER BY palettes.id, article");
