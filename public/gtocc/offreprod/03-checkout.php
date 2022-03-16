@@ -109,7 +109,7 @@ if(empty($errors)){
 
 
 		}
-
+	
 		$sheet->setCellValue('A'.$row, $infoMag['btlec_sca']);
 		$sheet->setCellValue('B'.$row, $infoMag['deno']);
 		$sheet->setCellValue('C'.$row, $palette );
