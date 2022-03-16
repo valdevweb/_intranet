@@ -81,5 +81,6 @@ define("COL_ID_INFO", $colIdInfoArray);
 define("COL_QTE_STR", $colQteStrArray);
 define("COL_DATE_STR", $colDateStrArray);
 define("COL_ID_INFO_STR", $colIdInfoStrArray);
+
 $colIdCmt = 38;
 $colIdCmtStr = getNameFromNumber($colIdCmt);
