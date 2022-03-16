@@ -17,28 +17,11 @@ require_once '../../Class/litiges/LitigeDao.php';
 
 require_once  '../../Class/mag/MagDao.php';
 require_once  '../../Class/mag/MagEntity.php';
+require_once  '../../Class/mag/MagHelpers.php';
 
 $errors=[];
 $success=[];
-//------------------------------------------------------
-//		MENU
-//------------------------------------------------------
 
-/*
-
-Getter 												#1
-Variables 											#2
-Setter 												#3
-traitment transp 									#4
-traitement entrepot 								#5
-traitement facturation 								#6
-
- */
-
-
-// ----------------------------------------
-//  GETTER 					#1
-// ----------------------------------------
 function getLitige($pdoLitige){
 	$req=$pdoLitige->prepare("
 		SELECT *
@@ -255,7 +238,7 @@ function updateVingtQuatreEsp($pdoLitige){
 
 // ajout action quand envoi mail cloture au mag
 function addAction($pdoLitige, $action){
-	$req=$pdoLitige->prepare("INSERT INTO action (id_dossier, libelle, id_web_user, date_action) VALUES (:id_dossier, :libelle, :id_web_user, :date_action)");
+	$req=$pdoLitige->prepare("INSERT INTO action_litiges (id_dossier, libelle, id_web_user, date_action) VALUES (:id_dossier, :libelle, :id_web_user, :date_action)");
 	$req->execute([
 		':id_dossier'		=> $_GET['id'],
 		 ':libelle'			=>$action,
@@ -333,13 +316,16 @@ if(isset($_POST['submit_mail']))
 			if(VERSION =='_')
 			{
 				$mailMag=array(MYMAIL);
+				$hiddenAr=[MYMAIL];
 			}
 			else{
 
 				$magDao=new MagDao($pdoMag);
 				$infoMag=$magDao->getMagByGalec($fLitige['galec']);
 				$codeBt=$infoMag->getId();
-				$mailMag=array($codeBt.'-rbt@btlec.fr');
+				$mailMag=array( MagHelpers::makeLdMag($codeBt, 'rbt'));
+				$hiddenAr=['nathalie.pazik@btlecest.leclerc'];
+
 			}
 			if($_POST['mt_mag']<0){
 				$type='un avoir ';
@@ -363,6 +349,7 @@ if(isset($_POST['submit_mail']))
 			$message = (new Swift_Message($subject))
 			->setBody($magTemplate, 'text/html')
 			->setFrom(EMAIL_NEPASREPONDRE)
+			->setBcc($hiddenAr)
 			->setTo($mailMag);
 
 			$delivered=$mailer->send($message);
@@ -370,6 +357,7 @@ if(isset($_POST['submit_mail']))
 			{
 				$action='envoi du mail avec le numéro de facture/avoir';
 				$add=addAction($pdoLitige, $action);
+		
 				if($add==1)
 				{
 					$loc='Location:'.htmlspecialchars($_SERVER['PHP_SELF']).'?id='.$_GET['id'].'&etatfac=ok';
@@ -378,8 +366,6 @@ if(isset($_POST['submit_mail']))
 				else{
 					$errors[]='l\'action n\'a pas pu être enregistrée';
 				}
-
-
 			}
 			else
 			{
