@@ -20,7 +20,7 @@ function btInfo($pdoUser)
 // info mlag table sca3
 function magInfo($pdoMag){
 
-	$req=$pdoMag->prepare("SELECT mag.*, sca3.pole_sav, sav FROM mag 
+	$req=$pdoMag->prepare("SELECT mag.*, sca3.pole_sav, corresp_sav.sav FROM mag 
 	 LEFT JOIN sca3 ON mag.id=sca3.btlec_sca 
 	 LEFT JOIN corresp_sav on sca3.pole_sav=corresp_sav.id
 	 WHERE galec= :galec");
@@ -148,7 +148,6 @@ function initSession($pdoBt, $pdoSav, $pdoMag,$pdoCm, $pdoUser, $webUser){
 	$_SESSION['user']=$_POST['login'];
 	$_SESSION['type']=$webUser['type'];
 	$_SESSION['id_type']=$webUser['id_type'];
-
 	if(isset($_POST['goto'])){
 		$_SESSION['goto']=$_POST['goto'];
 	}
@@ -187,6 +186,7 @@ function initSession($pdoBt, $pdoSav, $pdoMag,$pdoCm, $pdoUser, $webUser){
 		$scatrois=magInfo($pdoMag);
 		// $magSav=getSav($pdoSav);
 		if(!empty($scatrois)){
+
 			$_SESSION['nom']=$scatrois['deno'];
 			$_SESSION['centrale']=$scatrois['centrale'];
 			$_SESSION['city']=$scatrois['ville'];
