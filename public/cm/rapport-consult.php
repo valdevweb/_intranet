@@ -17,8 +17,7 @@ require '../../Class/cm/ThemeHelpers.php';
 require '../../Class/cm/RapportHelpers.php';
 // require_once '../../vendor/autoload.php';
 
-define("CM_UPLOAD_URL","http://".SERVER_NAME."/".VERSION."upload-main/cm/" );
-define("ANDROID_UPLOAD","http://".SERVER_NAME."/".VERSION."android/upload/" );
+
 
 
 $pageCss=explode(".php",basename(__file__));
