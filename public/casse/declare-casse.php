@@ -70,9 +70,6 @@ if(!empty($findOp)){
 
 if(isset($_POST['insert_casse'])){
 
-	echo "<pre>";
-	print_r($_POST);
-	echo '</pre>';
 
 	if(!not_empty(['date_casse','operateur', 'article','dossier','categorie','origine','type','nb_colis', 'palette_existante'])){
 		$errors[]="Veuillez remplir tous les champs";
