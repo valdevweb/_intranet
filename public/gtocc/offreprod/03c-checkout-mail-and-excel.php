@@ -8,15 +8,16 @@
 			$cc=[];
 			$hidden=[];
 		}else{
-			$req=$pdoMag->prepare("SELECT * from lotus_ld WHERE galec= :galec AND ld_suffixe='-GT13'");
-			$req->execute([
-				':galec'	=>$infoMag['galec']
-			]);
-			while ($emailMag = $req->fetch()){
-				if(isset($emailMag['email']) && filter_var($emailMag['email'], FILTER_VALIDATE_EMAIL)){
-					$dest[]=$emailMag['email'];
-				}
-			}
+			$dest[]=MagHelpers::makeLdMag($infoMag['btlec_sca'], 'gt13');
+			// $req=$pdoMag->prepare("SELECT * from lotus_ld WHERE galec= :galec AND ld_suffixe='-GT13'");
+			// $req->execute([
+			// 	':galec'	=>$infoMag['galec']
+			// ]);
+			// while ($emailMag = $req->fetch()){
+			// 	if(isset($emailMag['email']) && filter_var($emailMag['email'], FILTER_VALIDATE_EMAIL)){
+			// 		$dest[]=$emailMag['email'];
+			// 	}
+			// }
 
 			$cc=LD_OCCASION;
 			$hidden=[MYMAIL];
