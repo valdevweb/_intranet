@@ -21,6 +21,7 @@ require_once '../../Class/OccPaletteMgr.php';
 require '../../Class/UserHelpers.php';
 require '../../Class/OccHelpers.php';
 require '../../Class/OccCdesDao.php';
+require '../../Class/mag/MagHelpers.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
