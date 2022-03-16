@@ -40,7 +40,8 @@ else{
 	$cc=[MYMAIL, 'christelle.trousset@btlecest.leclerc'];
 
 }
-$link='<a href="'.SITE_ADDRESS.'/index.php?casse/pilote-palette-ok.php?id='.$_GET['id'].'"> en cliquant ici</a>';
+$idTrt=$_GET['id_trt']+1;
+$link='<a href="'.SITE_ADDRESS.'/index.php?casse/pilote-palette-ok.php?id='.$_GET['id'].'&id_trt='.$idTrt.'"> en cliquant ici</a>';
 $table='';
 $table.='<table style="border-collapse: collapse; border: 1px solid grey;padding:10px;"><tr style="background-color:firebrick;color:white;"><th style="border: 1px solid grey;padding:10px;">Palette 4919</th><th style="border: 1px solid grey;padding:10px;">Palette contremarque</th></tr>';
 foreach ($expInfo as $exp) {
@@ -52,9 +53,10 @@ $table.='</table>';
 $htmlMail = file_get_contents('mail/mail-pilote-dd.php');
 $htmlMail=str_replace('{MAG}',$expInfo[0]['btlec'],$htmlMail);
 $htmlMail=str_replace('{NB}',$nb,$htmlMail);
+$htmlMail=str_replace('{NUMEXP}',$_GET['id'],$htmlMail);
 $htmlMail=str_replace('{LINK}',$link,$htmlMail);
 $htmlMail=str_replace('{TABLE}',$table,$htmlMail);
-$subject='Portail BTLec Est - Casses : demande de contrôle et mise en RAQ';
+$subject='Portail BTLec Est - Casses : demande de contrôle et mise en RAQ sur l\'expédition '.$_GET['id'];
 
 // ---------------------------------------
 // initialisation de swift
