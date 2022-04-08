@@ -72,6 +72,10 @@ if(isset($_GET['id'])){
 // normal : somme,
 // inversion de palette = somme palette cammandé - sommme palette reçue
 // inversion de palette =7
+	if($_GET['id']==527){
+		echo "vous êtes sur un vieux dossier";
+		exit;
+	}
 	$sumLitige=getSumLitige($pdoLitige);
 
 	if($sumLitige['id_reclamation']==7)
