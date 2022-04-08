@@ -189,6 +189,13 @@ class CdesAchatDao{
 		return $req->fetchAll();
 	}
 
+	public function getLastServiceImport($param){
+		$req=$this->pdo->query("SELECT * FROM cdes_imports 
+		LEFT JOIN web_users.intern_users on by_import=intern_users.id_web_user
+		WHERE $param 		
+		order by cdes_imports.id desc limit 1");
+		return $req->fetch();
+	}
 	
 }
 

@@ -37,7 +37,14 @@ $cdesAchatDao = new CdesAchatDao($pdoDAchat);
 $cdesCmtDao = new  CdesCmtDao($pdoDAchat);
 
 $userGts = $userDao->getUserGts($_SESSION['id_web_user']);
+$usersInService=$userDao->getUsersByServiceById($_SESSION['id_service']);
 
+
+$paramIdUsers=join(' or ', array_map(function($user){
+	return 'by_import= '.$user['id_web_user'];
+}, $usersInService));
+
+$lastImport=$cdesAchatDao->getLastServiceImport($paramIdUsers);
 
 unset($_SESSION['goto']);
 if (isset($_SESSION['temp'])) {
@@ -163,12 +170,17 @@ include('../view/_navbar.php');
 			<a href="?export-xls" class="btn btn-success" id="export-xls">Export Excel</a>
 		</div>
 
-		<div class="col font-italic">
+		<div class="col-auto font-italic">
 			<a href="import-cdesinfos.php" class="btn btn-success">Import Excel</a>
 		</div>
+		<div class="col-auto">
+			<div class="alert alert-success">Dernier import le  <?=date('d/m/Y', strtotime($lastImport['date_import']))?> à <?=date('H:i', strtotime($lastImport['date_import']))?> par <?=$lastImport['prenom']. ' ' . $lastImport['nom']?></div>
+		</div>
+		<div class="col"></div>
 		<div class="col-auto font-weight-boldless text-main-blue">
 			Rechercher sur la page :
 		</div>
+
 		<div class="col-lg-3">
 
 			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post" id="search_form">
