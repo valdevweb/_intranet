@@ -1,8 +1,8 @@
 <?php
-require_once '../../config/session.php';
+// require_once '../../config/session.php';
 
 /** @var Db $db */
-require_once '../../Class/mag/MagHelpers.php';
+// require_once '../../Class/mag/MagHelpers.php';
 
 // ga-btlecest-'.$btlec.'-'.$suffixe.'@btlecest.leclerc
 
@@ -61,10 +61,21 @@ include('../view/_navbar.php');
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
-	
+
 	<!-- contenu -->
 </div>
+<script>
+	if ('serviceWorker' in navigator) {
+		// navigator.serviceWorker.register('./sw.js').then((resp) => {
+		// 	console.warn("resp", resp);
+		// }).cache((e) => {
+		// 	console.error(e);
+		// })
 
+	} else {
+		// console.error("sw not working");
+	}
+</script>
 <?php
 require '../view/_footer-bt.php';
 ?>
