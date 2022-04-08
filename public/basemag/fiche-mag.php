@@ -235,9 +235,9 @@ if(isset($_POST['submit_acdlec'])){
 
 if(isset($_POST['submit_cm'])){
 	if(!empty($_POST['cmSelected'])){
-		$req=$pdoMag->prepare("UPDATE sca3 SET id_cm= :id_cm, date_update= :date_update WHERE id= :id");
+		$req=$pdoMag->prepare("UPDATE sca3 SET id_cm= :id_cm, date_update= :date_update WHERE btlec_sca= :btlec_sca");
 		$req->execute([
-			':id'		=>$_GET['id'],
+			':btlec_sca'		=>$_GET['id'],
 			':id_cm'	=>$_POST['cmSelected'],
 			':date_update'	=>date('Y-m-d H:i:s')
 		]);
