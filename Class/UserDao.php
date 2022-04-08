@@ -137,7 +137,7 @@ class UserDao{
 		]);
 		return $req->fetch();
 	}
-	public function getUserByServiceById($idService, $withMail){
+	public function getUsersByServiceById($idService, $withMail=null){
 		$param="";
 		if($withMail){
 			$param= " AND email IS NOT NULL";

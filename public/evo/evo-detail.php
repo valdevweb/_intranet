@@ -117,7 +117,7 @@ if(isset($_POST['add_affectation'])){
 	if(!empty($_POST['services'])){
 		$affectationSize=count($affectionEmail);
 		for ($i=0; $i < count($_POST['services']); $i++) {
-			$users=$userDao->getUserByServiceById($_POST['services'][$i], true);
+			$users=$userDao->getUsersByServiceById($_POST['services'][$i], true);
 			foreach ($users as $key => $user) {
 				$affectionEmail[$affectationSize]['email']=$user['email'];
 				$affectionEmail[$affectationSize]['id_service']=$user['id_web_user'];
