@@ -46,7 +46,7 @@ class CdesDao
 		// echo $param;
 		$req = $this->pdo->query("
 			SELECT cdes_encours.*, cmt_btlec, cmt_galec  FROM cdes_encours LEFT JOIN {$this->version}doc_achats.cdes_cmts ON cdes_encours.id=cdes_cmts.id
-			WHERE date_cde IS NOT NULL AND qte_cde !=0  $param ORDER BY date_cde");
+			WHERE date_cde IS NOT NULL AND qte_cde !=0  $param ORDER BY id_cde");
 		return $req->fetchAll();
 	}
 	public function getCdesByFou($fou, $param = null)
