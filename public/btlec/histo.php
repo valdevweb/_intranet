@@ -37,8 +37,7 @@ $magManager=new MagDao($pdoMag);
 
 $listServicesContact=$userManager->listServicesContact($pdoUser);
 $selected="";
-$userServiceList=[];
-$userServiceList=$userManager->getUserServiceContact($pdoBt,$_SESSION['id_web_user']);
+
 
 
 function checkSelectedDash($idService){
