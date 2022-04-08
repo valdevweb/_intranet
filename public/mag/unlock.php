@@ -93,7 +93,6 @@ $btUserManager=new BtUserManager();
 
 $infoService=$btUserManager->getService($pdoUser,$msg['id_service']);
 
-// include ('../view/_errors.php')
 
 
 $errors=[];
@@ -170,7 +169,7 @@ if(isset($_POST['submit'])){
 
 			}else{
 				$mailingList[]= $msg['mailing'] ;
-				$dest[]=$infoService['mailing'];;
+				$dest[]=$infoService['mailing'];
 
 			}
 
