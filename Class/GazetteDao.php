@@ -28,16 +28,16 @@ class GazetteDao{
 	}
 	public function getGazetteThisWeek(){
 		$monday=new DateTime();
-		$sunday=new DateTime();
+		$today=new DateTime();
+		$today->setTime(23, 59);
 		$monday->modify("monday this week");
 		$monday->modify("- 7 day");
 
-		$sunday->modify("sunday this week");
 
-		$req=$this->pdo->prepare("SELECT * FROM gazette WHERE DATE_FORMAT(date_start, '%Y-%m-%d')>= :monday AND DATE_FORMAT(date_start, '%Y-%m-%d')<= :sunday ORDER BY date_start DESC");
+		$req=$this->pdo->prepare("SELECT * FROM gazette WHERE DATE_FORMAT(date_start, '%Y-%m-%d')>= :monday AND DATE_FORMAT(date_start, '%Y-%m-%d')<= :today ORDER BY date_start DESC");
 		$req->execute([
 			':monday'		=>$monday->format('Y-m-d'),
-			':sunday'		=>$sunday->format('Y-m-d')
+			':today'		=>$today->format('Y-m-d')
 		]);
 		return $req->fetchAll();
 
