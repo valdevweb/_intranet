@@ -39,10 +39,11 @@ define("FR_MONTHS_SHORT", ['', 'janv', 'fév', 'mars', 'avr', 'mai', 'juin', 'ju
 
 
 define("SMTP_ADDRESS", "relay-smtp.informadis.com");
+define("MYMAIL", "valerie.montusclat@btlecest.leclerc");
+define("EMAIL_NEPASREPONDRE", array('ne_pas_repondre@btlecest.leclerc' => 'Portail BTLec EST'));
 
 // remplace btlecest.portailweb.informatique@btlec.fr
 define("EMAIL_INFORMATIQUE", 'ga-btlecest-portailweb-informatique@btlecest.leclerc');
-define("MYMAIL", "valerie.montusclat@btlecest.leclerc");
 define("EMAIL_PILOTAGE_PREPA", 'pilotes.preparations@btlecest.leclerc');
 // btlecest.portailweb.gazettes@btlec.fr
 define("EMAIL_GAZETTE", 'ga-btlecest-portailweb-gazettes@btlecest.leclerc');
@@ -51,7 +52,6 @@ define("EMAIL_LITIGES", 'ga-btlecest-portailweb-litiges@btlecest.leclerc');
 //salonbtlecest@btlec.fr
 define("EMAIL_SALON", 'salons@btlecest.leclerc');
 
-define("EMAIL_NEPASREPONDRE", array('ne_pas_repondre@btlecest.leclerc' => 'Portail BTLec EST'));
 define("LD_DIR",['luc.muller@btlecest.leclerc', 'david.syllebranque@btlecest.leclerc']);
 define("LD_OCCASION",['jonathan.domange@btlecest.leclerc', 'stephane.wendling@btlecest.leclerc', 'luc.muller@btlecest.leclerc']);
 
