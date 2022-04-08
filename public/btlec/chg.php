@@ -85,7 +85,7 @@ if(isset($_POST['affect']))
 		}
 
 
-		$link="Cliquez <a href='".SITE_ADDRESS."/index.php?".$idMsg."'>ici pour consulter la demande magasin</a>";
+		$link="Cliquez <a href='".SITE_ADDRESS."/index.php?btlec/answer.php?msg=".$idMsg."'>ici pour consulter la demande magasin</a>";
 
 
 
