@@ -39,14 +39,15 @@ function addHContact($pdoLitige)
 }
 
 function getActionHelper($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT action_help.id as id,pretxt,id_contrainte,nom, contrainte_libelle FROM action_help LEFT JOIN action_contrainte ON action_help.id_contrainte= action_contrainte.id ORDER BY pretxt");
+	$req=$pdoLitige->prepare("SELECT actions.id as id, default_text, id_contrainte, action, contrainte_libelle FROM actions 
+	LEFT JOIN action_contraintes ON actions.id_contrainte= action_contraintes.id ORDER BY default_text");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
 $actionHelper=getActionHelper($pdoLitige);
 
 function getContrainte($pdoLitige){
-	$req=$pdoLitige->prepare("SELECT * FROM action_contrainte ORDER BY contrainte_libelle");
+	$req=$pdoLitige->prepare("SELECT * FROM action_contraintes ORDER BY contrainte_libelle");
 	$req->execute();
 	return $req->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -69,10 +70,10 @@ function addHAction($pdoLitige,$idcontrainte=NULL)
 		$contrainte=0;
 		$idcontrainte=NULL;
 	}
-	$req=$pdoLitige->prepare("INSERT INTO action_help (nom,pretxt,contrainte,id_contrainte) VALUES(:nom,:pretxt,:contrainte,:id_contrainte)");
+	$req=$pdoLitige->prepare("INSERT INTO actions (action, default_text, contrainte, id_contrainte) VALUES(:action, :default_text, :contrainte, :id_contrainte)");
 	$req->execute(array(
-		':pretxt'			=>$_POST['h-action-form'],
-		':nom'			=>$_POST['name-action'],
+		':default_text'			=>$_POST['h-action-form'],
+		':action'			=>$_POST['name-action'],
 		':contrainte'			=>$contrainte,
 		':id_contrainte'			=>$idcontrainte,
 	));
@@ -283,10 +284,10 @@ DEBUT CONTENU CONTAINER
 					foreach ($actionHelper as $action)
 					{
 						echo '<tr>';
-						echo'<td>'.$action['nom'].'</td>';
-						echo'<td>'.$action['pretxt'].'</td>';
+						echo'<td>'.$action['action'].'</td>';
+						echo'<td>'.$action['default_text'].'</td>';
 						echo'<td>'.$action['contrainte_libelle'].'</td>';
-						echo'<td class="text-center"><a href="ex-delete.php?table=action_help&id='.$action['id'].'"><i class="fas fa-trash-alt"></i></a></td>';
+						echo'<td class="text-center"><a href="ex-delete.php?table=actions&id='.$action['id'].'"><i class="fas fa-trash-alt"></i></a></td>';
 						echo '</tr>';
 					}
 					?>
