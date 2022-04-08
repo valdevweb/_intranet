@@ -60,7 +60,7 @@ if(!isset($_GET['id'])){
 $userManager=new BtUserManager();
 $service=$userManager->getService($pdoUser,$_GET['id']);
 
-$serviceMembers=$userManager->getListUserService($pdoBt,$_GET['id']);
+$serviceMembers=$userManager->getListUserService($pdoUser,$_GET['id']);
 
 
 
