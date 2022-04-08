@@ -11,8 +11,9 @@ class BtUserManager{
 	}
 
 
-	public function getListUserService($pdoBt,$idservice){
-		$req=$pdoBt->prepare('SELECT *, CONCAT(web_users.intern_users.prenom," " , web_users.intern_users.nom) as fullname FROM contact_services LEFT JOIN web_users.intern_users ON  contact_services.id_web_user=web_users.intern_users.id_web_user WHERE contact_services.id_service= :id_service ORDER BY contact_services.resp DESC');
+	public function getListUserService($pdoUser,$idservice){
+		$req=$pdoUser->prepare('SELECT *, CONCAT(prenom," " , nom) as fullname FROM intern_users 
+		 WHERE id_service= :id_service ORDER BY resp DESC');
 		$req ->execute(array(
 			':id_service' =>$idservice
 		));
@@ -41,19 +42,6 @@ class BtUserManager{
 		}
 		return $data;
 	}
-	public function getUserServiceContact($pdoBt,$idwebuser){
-		$req=$pdoBt->prepare("SELECT id_service FROM contact_services WHERE id_web_user= :id_web_user ");
-		$req->execute([
-			':id_web_user' =>$idwebuser
-		]);
-		$datas=$req->fetchAll(PDO::FETCH_COLUMN);
-		if(empty($datas)){
-			return "";
-		}
-		return $datas;
-
-	}
-
 	public function getServiceById($pdoUser,$idService){
 		$req=$pdoUser->prepare("SELECT * FROM services WHERE id = :id");
 		$req->execute(array(
