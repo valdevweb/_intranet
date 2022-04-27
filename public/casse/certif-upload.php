@@ -126,7 +126,7 @@ if(isset($_POST['submit'])){
 			$message = (new Swift_Message($subject))
 			->setBody($htmlMail, 'text/html')
 
-			->setFromEMAIL_NEPASREPONDRE)
+			->setFrom(EMAIL_NEPASREPONDRE)
 			->setTo($dest)
 			->setCc($cc)
 			->attach($attachment);
