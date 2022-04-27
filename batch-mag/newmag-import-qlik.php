@@ -16,7 +16,7 @@ include 'functions/tasklog.fn.php';
 
 function getQlik($pdoQlik){
 	$req=$pdoQlik->query("SELECT mag_gessica.id as id, mag_ctbt_param.id  as ctbtparam_id, mag_ctbt.id as ctbt_id, ADH_RS, ADH_PANBT, ADH_VALCOD, ADH_ADR1, ADH_ADR2, ADH_CP,ADH_ADR3, ADH_TEL, ADH_TLC,ADH_SURF,ADH_NOMADH, ADH_NOMCHEF,		DIC_GEL, ADH_DATOUV, ADH_DATFER, ADH_NUMACT, AAC_COD, ADH_NUMORD, ADH_EAN, ADH_CSIRET, ADH_IBAN, ADH_BIC, ADH_RUM, ADH_ADHPYR, BCG_ADH,
-		PID_CRE, PID_RAD, PID_GESRES, MAG_MAI, MAG_TYPINF, ADH_NUMACDL
+		PID_CRE, PID_RAD, PID_GESRES, MAG_MAI, MAG_TYPINF, ADH_NUMACDL, mag_gessica.MAJ_COD as maj_cod
 
 		FROM mag_gessica 
 		LEFT JOIN mag_ctbt ON mag_gessica.id= mag_ctbt.id 
@@ -203,7 +203,16 @@ function alreadyInMag($pdoMag,$id){
 	return false;
 
 }
-
+function deleteMag($pdoMag, $id){
+	$req=$pdoMag->prepare("DELETE FROM mag WHERE id= :id");
+	$req->execute([
+		':id'		=>$id
+	]);
+	$req=$pdoMag->prepare("DELETE FROM sca3 WHERE btlec_sca= :btlec_sca");
+	$req->execute([
+		':btlec_sca'		=>$id
+	]);
+}
 
 function convertToDate($data){
 	$date=NULL;
@@ -222,24 +231,40 @@ $magUpdated=0;
 $errArr=[];
 $rowUp=0;
 $rowIns=0;
+// echo "<pre>";
+// print_r($listMag);
+// echo '</pre>';
+
+
+
 
 // insertion ou update de qlik vers magasin mag
-foreach ($listMag as $key => $mag) {
+foreach ($listMag as $key => $mag) {	
 	if(alreadyInMag($pdoMag, $mag['id'])){
-		$dateOuv=convertToDate($mag['ADH_DATOUV']);
-		$dateFerm=convertToDate($mag['ADH_DATFER']);
-		$updated=updateMag($pdoMag,$dateOuv, $dateFerm, $mag);
-		if($updated!=1){
-			echo 'impossible de mettre à jour le magasin '.$mag['id'].'<br>';
-			$errArr[$rowUp]['btlec']=$mag['id'];
-			$errArr[$rowUp]['deno']=$mag['ADH_RS'];
-			$errArr[$rowUp]['msg']="updateMag " .$updated;
-			$errArr[$rowUp]['db']="mag";
-			$rowUp++;
-
+	// Si maj_cod=3 => mag supprimé donc on le retire de la base mag et du sca3 
+		if($mag['maj_cod']==3){
+			echo $mag['id'] . ' mag supprimé';
+			echo "<br>";
+			deleteMag($pdoMag, $mag['id']);
+	
 		}else{
-			$magUpdated++;
+			$dateOuv=convertToDate($mag['ADH_DATOUV']);
+			$dateFerm=convertToDate($mag['ADH_DATFER']);
+			$updated=updateMag($pdoMag,$dateOuv, $dateFerm, $mag);
+			if($updated!=1){
+				echo 'impossible de mettre à jour le magasin '.$mag['id'].'<br>';
+				$errArr[$rowUp]['btlec']=$mag['id'];
+				$errArr[$rowUp]['deno']=$mag['ADH_RS'];
+				$errArr[$rowUp]['msg']="updateMag " .$updated;
+				$errArr[$rowUp]['db']="mag";
+				$rowUp++;
+	
+			}else{
+				$magUpdated++;
+			}
 		}
+
+
 	}else{
 		// echo 'inser'. $mag['id'];
 		// echo "<br>";
