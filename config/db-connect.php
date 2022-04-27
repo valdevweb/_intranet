@@ -47,7 +47,7 @@ if(!isset($pdoStat)){
 	$pdoStat= connectToDb('stats');
 }
 if(!isset($pdoQlik)){
-	$pdoQlik= connectToDb('qlik');
+	$pdoQlik= connectToDb(VERSION.'qlik');
 }
 if(!isset($pdoExploit)){
 	$pdoExploit= connectToDb('exploit');
