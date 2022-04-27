@@ -205,7 +205,7 @@ include('../view/_navbar.php');
 				</div>
 				<div class="col-lg-1"></div>
 			</div>
-			<?php if ($infoExp['id_affectation']==3): ?>
+			<?php if ($infoExp['id_affectation']==3 || $infoExp['id_affectation']==1): ?>
 				<div class="row pb-5">
 					<div class="col-lg-1"></div>
 					<div class="col">
