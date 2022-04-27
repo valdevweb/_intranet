@@ -41,12 +41,12 @@ class LitigeDao{
 	}
 
 	public function getBoxHead($pdoQlik, $dossier,$article){
-		$req=$pdoQlik->prepare("SELECT * FROM assortiments WHERE `SCEBFAST.AST-ART`= :article AND `SCEBFAST.DOS-COD`= :dossier ");
+		$req=$pdoQlik->prepare("SELECT `SCEBFAST.AST-ART` as tete, assortiments.* FROM assortiments WHERE `SCEBFAST.AST-ART`= :article AND `SCEBFAST.DOS-COD`= :dossier ");
 		$req->execute(array(
 			':dossier' =>$dossier,
 			':article'	=>$article
 		));
-		return $req->fetch(PDO::FETCH_ASSOC);
+		return $req->fetchAll(PDO::FETCH_GROUP);
 	}
 
 
