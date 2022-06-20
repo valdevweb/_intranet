@@ -187,7 +187,7 @@
             return $pdo;
         }
 
-        public function setPdo(){
+        public function setPdo($pdo){
             $this->pdo = $pdo;
         }
 
@@ -196,7 +196,7 @@
             return $table;
         }
 
-        public function setTable(){
+        public function setTable($table){
             $this->table = $table;
         }
 

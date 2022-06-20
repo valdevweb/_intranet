@@ -248,14 +248,8 @@ $dWorkflow = isUserAllowed($pdoUser, [100]);
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" href="#" id="nav-exploit-bt" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Exploit</a>
 						<ul class="dropdown-menu" aria-labelledby="nav-exploit-bt">
-							<li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Statistiques salons</a>
-								<ul class="dropdown-menu">
-									<li><a class="dropdown-item" href='<?= ROOT_PATH ?>/public/salon/stats-salon-2021.php'>Salon 2021</a></li>
-									<li><a class="dropdown-item" href='<?= ROOT_PATH ?>/public/salon/stats-salon-2020.php'>Salon 2020</a></li>
-									<li><a class="dropdown-item" href='<?= ROOT_PATH ?>/public/salon/stats-salon-2019.php'>Salon 2019</a></li>
+							<li><a class="dropdown-item" href="<?= ROOT_PATH ?>/public/salon/stats-salon.php">Stats salon</a></li>
 
-								</ul>
-							</li>
 							<li><a class="dropdown-item" href="<?= PORTAIL_SALON ?>home/home.php">Salon fournisseurs</a></li>
 							<li><a class="dropdown-item" href="<?= ROOT_PATH ?>/public/exploit/connexion.php">Connexions magasins</a></li>
 							<?php if ($dExploit) : ?>

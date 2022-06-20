@@ -145,7 +145,7 @@
 							</td>
 
 							<td class="text-right col-qr">
-								<img class="qrcode" src="../img/qrcode/<?=$invit['qrcode']?>.jpg">
+								<img class="qrcode" src="<?=DIR_UPLOAD.'qrcodes\\'.$invit['qrcode']?>">
 							</td>
 						</tr>
 					</table>

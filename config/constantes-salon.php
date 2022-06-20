@@ -1,16 +1,19 @@
 <?php 
+define("YEAR_SALON","2022");
+define("MONTH_SALON", "septembre");
 
-define("JOURUN_FULL", "mardi 21 septembre 2021");
-define("JOURDEUX_FULL", "mercredi 22 septembre 2021");
+define("JOURUN", "mardi 20");
+define("JOURDEUX", "mercredi 21");
 
-define("JOURUN_LONG", "mardi 21 septembre");
-define("JOURDEUX_LONG", "mercredi 22 septembre");
+define("JOURUN_LONG", JOURUN . ' ' .MONTH_SALON);
+define("JOURDEUX_LONG", JOURDEUX . ' ' .MONTH_SALON);
 
-define("JOURUN", "mardi 21");
-define("JOURDEUX", "mercredi 22");
-define("JOURUN_DATE", '21/09/2021');
-define("JOURDEUX_DATE", '22/09/2021');
+define("JOURUN_FULL", JOURUN_LONG. ' '.YEAR_SALON);
+define("JOURDEUX_FULL", JOURDEUX_LONG. ' '.YEAR_SALON);
 
-define("JOUR_BOTH", "mardi 21 et mercredi 22 septembre");
 
-define("YEAR_SALON","2021");
+
+define("JOURUN_DATE", '20/09/2022');
+define("JOURDEUX_DATE", '21/09/2022');
+
+define("JOUR_BOTH", "mardi 20 et mercredi 21 septembre");

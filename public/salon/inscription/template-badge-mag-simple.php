@@ -124,13 +124,13 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan="2" class="full-size text-center text-primary" ><h3><?= MagHelpers::deno($pdoMag,$invit['galec'])?></h3><br></td>
+							<td colspan="2" class="full-size text-center text-primary" ><h3><?= MagHelpers::deno($pdoMag,$thisInvit['galec'])?></h3><br></td>
 						</tr>
 						<tr>
 							<td  colspan="2">&nbsp;</td>
 						</tr>
 						<tr>
-							<td colspan="2"  class="full-size text-center text-secondary"><h3><?=$invit['nom'] .' '.$invit['prenom']?></h3></td>
+							<td colspan="2"  class="full-size text-center text-secondary"><h3><?=$thisInvit['nom'] .' '.$thisInvit['prenom']?></h3></td>
 						</tr>
 						<tr>
 							<td  colspan="2">&nbsp;</td>
@@ -140,12 +140,12 @@
 						</tr> -->
 						<tr>
 							<td class="text-center col-text vbottom">
-								<h3><?=MagHelpers::centraleName($pdoMag, $invit['galec'])?></h3><br>
+								<h3><?=MagHelpers::centraleName($pdoMag, $thisInvit['galec'])?></h3><br>
 								<p class="text-center">Salon BTlec Est <?=YEAR_SALON?></p>
 							</td>
 
 							<td class="text-right col-qr">
-								<img class="qrcode" src="../img/qrcode/<?=$invit['qrcode']?>.jpg">
+								<img class="qrcode" src="<?=DIR_UPLOAD.'qrcodes\\'.$thisInvit['qrcode']?>">
 							</td>
 						</tr>
 					</table>

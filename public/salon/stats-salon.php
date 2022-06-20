@@ -4,6 +4,7 @@ if(!isset($_SESSION['id'])){
   header('Location:'. ROOT_PATH.'/index.php');
   exit();
 }
+require '../../config/constantes-salon.php';
 require '../../Class/Db.php';
 require '../../Class/salon/StatsSalonDao.php';
 require '../../Class/mag/MagHelpers.php';
@@ -13,7 +14,7 @@ require '../../Class/mag/MagHelpers.php';
 //----------------------------------------------------------------
 $pageCss=explode(".php",basename(__file__));
 $pageCss=$pageCss[0];
-$cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
+$cssFile=ROOT_PATH ."/public/css/stats-salon.css";
 
 $db=new Db();
 $pdoUser=$db->getPdo('web_users');

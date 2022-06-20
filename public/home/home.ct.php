@@ -22,6 +22,12 @@
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
+		<div class="row">
+			<div class="col">
+				<?php include 'salon-home.php' ?>
+			</div>
+		</div>
+
 	<?php if (isset($listFlashBt) && !empty($listFlashBt)): ?>
 	<div class="row my-3">
 		<div class="col-xl-2"></div>
@@ -46,7 +52,6 @@
 		</div>
 		<div class="col-xl-2"></div>
 	</div>
-
 <?php endif ?>
 <?php if (UserHelpers::isUserAllowed($pdoUser,['94'])): ?>
 	<div class="row">

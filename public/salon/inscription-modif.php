@@ -15,11 +15,13 @@ $cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
 //---------------------------------------
 //	ajout enreg dans stat
 //---------------------------------------
+require_once '../../config/constantes-salon.php';
 
 
 function deleteInvit($pdoBt)
 {
-	$req=$pdoBt->prepare("DELETE FROM salon_2021 WHERE  id= :id");
+	$table='salon_'.YEAR_SALON;
+	$req=$pdoBt->prepare("DELETE FROM $table WHERE  id= :id");
 	$req->execute(array(
 		':id' =>$_GET['id']
 	));
@@ -28,7 +30,7 @@ function deleteInvit($pdoBt)
 
 $row=deleteInvit($pdoBt);
 if($row==1){
-	header('Location:'. ROOT_PATH.'/public/salon/inscription-2021.php#inscription-lk');
+	header('Location:'. ROOT_PATH.'/public/salon/inscription-'.YEAR_SALON.'.php#inscription-lk');
 
 }
 else{
