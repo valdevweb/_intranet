@@ -249,7 +249,7 @@ include('../view/_navbar.php');
 					$('#marque').val(json.marque);
 					$('#ean').val(json.ean);
 					$('#produit').val(json.libelle);
-					$('#reference').val(json.libelle);
+					$('#reference').val(json.ref);
 					$('#gt').val(json.gt);
 					$('#pvc').val(json.ppi);
 					$('#result').empty();

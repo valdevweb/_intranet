@@ -23,10 +23,13 @@ $crudPilotage = new CrudDao($pdoPilotage);
 
 
 $today = new DateTime();
+$today->modify('- 1 day');
 $todayStr = $today->format('Y-m-d');
 
-$newMags = $crudDao->selectManyParams('mag', ['date_ouv' => $todayStr]);
 
+
+
+$newMags = $crudDao->selectManyParams('mag', ['date_ouv' => $todayStr]);
 foreach ($newMags as $newMag) {
     $oldMag = $crudDao->getOneByField('mag', 'adh_payeur', $newMag['id']);
     // normalement le nouveau mag a maintenant son code galec et l'ancien mag un code fictif

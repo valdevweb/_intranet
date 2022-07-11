@@ -17,7 +17,7 @@ $userDao = new UserDao($pdoUser);
 $actionDao = new ActionDao($pdoLitige);
 $litigeDao = new LitigeDao($pdoLitige);
 $contrainteDao = new ContrainteDao($pdoLitige);
-$droitAccess = $userDao->isUserAllowed([5, 29]);
+$droitAccess = $userDao->isUserAllowed([5, 80, 69]);
 
 if (!$droitAccess) {
 	header('Location:../home/home.php?access-denied');

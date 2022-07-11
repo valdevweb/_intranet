@@ -270,11 +270,9 @@ require '../view/_navbar.php';
 		<div class="col-lg-1"></div>
 	</div>
 	<?php include 'inscription/01-bandeau.php' ?>
-
 	<div class="bg-separation"></div>
 	<?php include 'inscription/02-salon.php' ?>
 	<div class="bg-separation"></div>
-
 	<?php include 'inscription/02-salon-presentation.php' ?>
 	<div class="bg-separation"></div>
 	<?php include 'inscription/03-badges.php' ?>

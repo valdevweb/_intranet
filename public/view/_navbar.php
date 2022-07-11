@@ -197,8 +197,8 @@ $dWorkflow = isUserAllowed($pdoUser, [100]);
 					<ul class="dropdown-menu" aria-labelledby="nav-document">
 						<li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Communication</a>
 							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="<?= ROOT_PATH . '/public/doc/plancom2023.php' ?>">Plan de Comm OP BTLec 2023</a></li>
 								<li><a class="dropdown-item" href="<?= ROOT_PATH . '/public/doc/plancom2022.php' ?>">Plan de Comm OP BTLec 2022</a></li>
-								<li><a class="dropdown-item" href="<?= ROOT_PATH . '/public/doc/plancom2021.php' ?>">Plan de Comm OP BTLec 2021</a></li>
 								<li><a class="dropdown-item" href="<?= ROOT_PATH . '/public/doc/kitaffiche.php' ?>">Kit affiches OP BTLec</a></li>
 								<?php if (!isset($_SESSION['centrale'])) : ?>
 									<li><a class="dropdown-item" href="<?= ROOT_PATH . '/public/infos/twentyfour.php#plv' ?>">PLV 48h</a></li>

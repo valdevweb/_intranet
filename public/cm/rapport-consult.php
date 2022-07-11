@@ -11,7 +11,6 @@ require '../../Class/Db.php';
 
 require '../../Class/cm/Helpers.php';
 require '../../Class/cm/RapportDao.php';
-require '../../Class/cm/MagDao.php';
 require '../../Class/cm/ProdHelpers.php';
 require '../../Class/cm/ThemeHelpers.php';
 require '../../Class/cm/RapportHelpers.php';
@@ -51,7 +50,6 @@ $listDoc=RapportHelpers::getFormDocnames($pdoCm);
 
 
 $rapportDao=new RapportDao($pdoCm);
-$magDao=new MagDao($pdoMag);
 $rapport=$rapportDao->getOneRapportByIdRdv($_GET['id']);
 $galec=$rapport['galec'];
 

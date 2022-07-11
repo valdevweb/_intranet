@@ -185,6 +185,7 @@ if (isset($_POST['plan'])) {
 
 	if (empty($errors)) {
 		$planningDao->insertPlanning($_POST['id_evo'], $idResp, $_POST['date_start'], $_POST['date_end']);
+		$evo=$evoDao->getThisEvo($_POST['id_evo']);
 		if (isset($_POST['envoi']) && $_POST['envoi'] == 1) {
 			$affectation = $affectationDao->getAffectation($_POST['id_evo']);
 

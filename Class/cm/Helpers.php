@@ -94,11 +94,11 @@ class Helpers{
 	}
 
 	public static function cmName($id){
-		$cm=[1273=>'Sébastien',1274=>'Julien', 1275=>'Cyrille'];
+		$cm=[1273=>'Eric',1274=>'Julien', 1275=>'Cyrille'];
 		return $cm[$id];
 	}
 	public static function cmFullName($id){
-		$cm=[1273=>'Sébastien Fournier',1274=>'Julien Guegan', 1275=>'Cyrille Canavatte'];
+		$cm=[1273=>'Eric Boos',1274=>'Julien Guegan', 1275=>'Cyrille Canavatte'];
 		return $cm[$id];
 	}
 }
