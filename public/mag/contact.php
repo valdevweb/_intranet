@@ -62,6 +62,15 @@ $service=$userManager->getService($pdoUser,$_GET['id']);
 
 $serviceMembers=$userManager->getListUserService($pdoUser,$_GET['id']);
 
+$listPeople=join(' - ', array_map(function($member){
+	if($member['id_web_user']==1055){
+		return "Florence Nazé Durigneux";
+	}else{
+		return $member['fullname'];
+
+	}
+
+},$serviceMembers) );
 
 
 $uploadDir= DIR_UPLOAD. 'mag\\';
@@ -205,23 +214,8 @@ include ('../view/_navbar.php');
 					<h5 class="card-title">Description : <?= $service['description'] ?></h5>
 					<p class="card-text">
 						<strong>Vos interlocteurs :</strong><br>
-						<?php
-						$count=0;
-						foreach ($serviceMembers as $key => $n) {
-							$size=count($serviceMembers);
-							if($n['resp']){
-								echo $n['fullname']. ' <br> ';
-							}else{
-								if ($key==$size-1) {
-									echo $n['fullname'];
-
-								}else{
-									echo $n['fullname'].' - ';
-
-								}
-							}
-						}
-						?>
+						<?=$listPeople?>
+				
 					</p>
 				</div>
 			</div>
