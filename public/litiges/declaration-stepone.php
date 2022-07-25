@@ -345,7 +345,7 @@ DEBUT CONTENU CONTAINER
 								<?php endforeach ?>
 								<!-- affichages boxes -->
 								<?php if (isset($dataBoxes) && !empty($dataBoxes)) : ?>
-						
+
 									<?php foreach ($dataBoxes as $key => $boxHead) : ?>
 										<tr class="heavy">
 											<td><?= $boxHead['date_mvt'] ?></td>
