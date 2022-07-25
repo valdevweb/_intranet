@@ -25,6 +25,8 @@ require('../../Class/casse/PalettesDao.php');
 require('../../Class/casse/CasseDao.php');
 require('../../Class/casse/CasseHelpers.php');
 require('../../Class/UserDao.php');
+require('../../Class/CrudDao.php');
+
 
 $db = new Db();
 $pdoUser = $db->getPdo('web_users');
@@ -40,6 +42,9 @@ $expDao = new ExpDao($pdoCasse);
 $paletteDao = new PalettesDao($pdoCasse);
 $casseDao = new CasseDao($pdoCasse);
 $userDao = new UserDao($pdoUser);
+$crudCasse = new CrudDao($pdoCasse);
+
+
 $listAffectation = CasseHelpers::getAffectation($pdoCasse);
 
 $listPalette = CasseHelpers::getPaletteActive($pdoCasse);
@@ -47,15 +52,14 @@ $listPalette = CasseHelpers::getPaletteActive($pdoCasse);
 
 
 
-if (isset($_GET['id'])) {
-	// info de la palette
-	$paletteInfo = getPaletteInfo($pdoCasse, $_GET['id']);
-	$serials = getSerialsPalette($pdoCasse, $_GET['id']);
-} else {
+if (!isset($_GET['id'])) {
 	$loc = 'Location:casse-dashboard.php?error=1';
 	header($loc);
 	exit;
 }
+$paletteInfo = getPaletteInfo($pdoCasse, $_GET['id']);
+$serials = getSerialsPalette($pdoCasse, $_GET['id']);
+
 
 if (isset($_GET['del'])) {
 	$casseDao->copyCasse($_GET['del']);
@@ -77,7 +81,7 @@ if (isset($_POST['insert_traitement'])) {
 		if (empty($magInfo)) {
 			$errors[] = "Vous avez saisi le code BT : " . $_POST['mag'] . ". Il semblerait que ce code n'existe pas";
 		} else {
-			// pour toute les affectation sauf pour le gt13, on céé une expédition
+			// pour toute les affectation sauf pour le gt13 et, on créé une expédition
 			if ($_POST['affectation'] != 2) {
 				//on vérifie si le mag n'a pas une expédtion en cours
 				$magExp = $expDao->magExpAlreadyExist($_POST['mag']);
@@ -108,7 +112,27 @@ if (isset($_POST['insert_traitement'])) {
 		}
 	}
 }
+if (isset($_POST['block'])) {
+	if (empty($_POST['cmt'])) {
+		$errors[] = "Commentaire requis, merci d'en saisir un";
+	}
+	if (empty($errors)) {
+		$crudCasse->update('palettes', 'id=' . $_GET['id'], ['cmt_blocked' => $_POST['cmt'], 'blocked_by' => $_SESSION['id_web_user'], 'date_blocked' => date('Y-m-d H:i:s'), 'statut' => 4]);
+		$loc = 'Location:detail-palette.php?id=' . $_GET['id'] . '&success';
+		header($loc);
+	}
+}
 
+if (isset($_POST['unblock'])) {
+	if (empty($_POST['cmt'])) {
+		$errors[] = "Commentaire requis, merci d'en saisir un";
+	}
+	if (empty($errors)) {
+		$crudCasse->update('palettes', 'id=' . $_GET['id'], ['cmt_blocked' => $_POST['cmt'], 'unblocked_by' => $_SESSION['id_web_user'], 'date_unblocked' => date('Y-m-d H:i:s'), 'statut' => 0]);
+		$loc = 'Location:detail-palette.php?id=' . $_GET['id'] . '&success';
+		header($loc);
+	}
+}
 
 
 if (isset($_GET['mag'])) {
@@ -220,12 +244,9 @@ include('../view/_navbar.php');
 	</div>
 
 	<?php if (isset($paletteInfo[0]['statut'])) : ?>
-
-
 		<?php if ($paletteInfo[0]['statut'] == 0) : ?>
 			<!-- exploit only -->
 			<?php if ($userDao->userHasThisRight($_SESSION['id_web_user'], 105)) : ?>
-
 				<div class="bg-separation mt-3"></div>
 				<div class="row">
 					<div class="col">
@@ -269,6 +290,64 @@ include('../view/_navbar.php');
 								</div>
 								<div class="col-auto">
 									<button class="btn btn-red" name="insert_traitement">Ajouter</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			<?php endif ?>
+		<?php endif ?>
+		<?php if ($userDao->userHasThisRight($_SESSION['id_web_user'], 105)) : ?>
+
+			<!-- sans statut ou statut palette bloquée -->
+			<?php if ($paletteInfo[0]['statut'] ==  null || $paletteInfo[0]['statut'] == 0 || $paletteInfo[0]['statut'] == 1 || $paletteInfo[0]['statut'] == 2) : ?>
+				<div class="row">
+					<div class="col">
+						<div class="row">
+							<div class="col">
+								<h5 class="text-main-blue py-3">Bloquer la palette : </h5>
+							</div>
+						</div>
+						<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) . '?id=' . $_GET['id'] ?>" method="post">
+							<div class="row">
+								<div class="col">
+									<div class="form-group">
+										<label for="cmt">Commentaire :</label>
+										<textarea class="form-control" name="cmt" id="cmt" row="3"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col text-right">
+									<button class="btn btn-red" name="block">Bloquer la palette</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			<?php endif ?>
+			<?php if ($paletteInfo[0]['statut'] == 4) : ?>
+				<div class="row">
+					<div class="col">
+						<div class="row">
+							<div class="col">
+								<h5 class="text-main-blue py-3">Débloquer la palette : </h5>
+							</div>
+						</div>
+
+
+						<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) . '?id=' . $_GET['id'] ?>" method="post">
+							<div class="row">
+								<div class="col">
+									<div class="form-group">
+										<label for="cmt">Commentaire :</label>
+										<textarea class="form-control" name="cmt" id="cmt" row="3"><?= $paletteInfo[0]['cmt_blocked'] ?></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col text-right">
+									<button class="btn btn-success" name="unblock">Débloquer la palette</button>
 								</div>
 							</div>
 						</form>
