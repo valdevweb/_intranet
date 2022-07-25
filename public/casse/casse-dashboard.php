@@ -27,7 +27,7 @@ require('../../Class/casse/CasseDao.php');
 
 require('../../Class/mag/MagHelpers.php');
 require('../../Class/CrudDao.php');
-
+require('../../Class/UserDao.php');
 
 require('casse-getters.fn.php');
 
@@ -42,7 +42,7 @@ $paletteDao = new PalettesDao($pdoCasse);
 $expDao = new ExpDao($pdoCasse);
 $trtDao = new TrtDao($pdoCasse);
 $casseDao = new CasseDao($pdoCasse);
-
+$userDao = new UserDao($pdoUser);
 $casseCrud = new CrudDao($pdoCasse);
 
 $listAffectation = CasseHelpers::getAffectation($pdoCasse);
@@ -67,6 +67,7 @@ $today = date('Y-m-d');
 $start = date('Y-m-d', strtotime("2019-01-01"));
 $yesterday = date('Y-m-d', strtotime("-1 days"));
 $nbPalette = 0;
+// palettes à expéditer
 $expeds = $expDao->getExpDetails();
 
 
@@ -120,7 +121,7 @@ if (!isset($_SESSION['casse_filter'])) {
 			$arrParam[] = " casses.id=" . $_SESSION['casse_filter']['search_value'];
 		} elseif ($_SESSION['casse_filter']['search_field'] == "btlec") {
 			$arrParam[] = " exps.btlec=" . $_SESSION['casse_filter']['search_value'];
-		}elseif ($_SESSION['casse_filter']['search_field'] == "article") {
+		} elseif ($_SESSION['casse_filter']['search_field'] == "article") {
 			$arrParam[] = " casses.article=" . $_SESSION['casse_filter']['search_value'];
 		}
 	}
@@ -130,7 +131,7 @@ if (!isset($_SESSION['casse_filter'])) {
 	if (isset($_SESSION['casse_filter']['field_2'])) {
 		$arrParam[] = " palettes.id_affectation=" . $_SESSION['casse_filter']['field_2'];
 	}
-	if (!empty($arrParam)) {		
+	if (!empty($arrParam)) {
 		$params = join(' and ', array_map(function ($value) {
 			return $value;
 		}, $arrParam));
@@ -268,6 +269,7 @@ include('../view/_navbar.php');
 		</div>
 		<div class="col-lg-1"></div>
 	</div>
+	<!-- mini nav -->
 	<div class="row">
 		<div class="col"></div>
 		<div class="col-auto">
@@ -280,19 +282,21 @@ include('../view/_navbar.php');
 		</div>
 		<div class="col"></div>
 	</div>
-
 	<?php if (isset($palettesToDisplay)) : ?>
 		<div class="result-zone px-5 pb-2 pt-2 mb-2">
-
+			<!-- récap casses affichées -->
 			<?php include('casse-dashboard/12-search-stat.php');	?>
+			<!-- formlaire por filtrer les casses -->
 			<?php include('casse-dashboard/11-form-search.php');	?>
 		</div>
+		<!-- tableau résultat casses trouvées par palette -->
 		<?php include('casse-dashboard/13-search-table-result.php') ?>
 	<?php endif ?>
 	<div class="row">
 		<div class="col text-right"><a href="#mini-menu" class="uplink">retour</a></div>
 	</div>
 	<div class="bg-separation"></div>
+	<!-- palettes de la table qlik.palettes4919   -->
 	<div class="row py-3">
 		<div class="col">
 			<h5 class="text-main-blue" id="stock">Palettes en stock :</h5>
@@ -303,7 +307,7 @@ include('../view/_navbar.php');
 			<p>
 				<?php foreach ($arStatutPalette as $key => $statut) : ?>
 					<?php if ($statut['id'] != 0) : ?>
-						<?= $statut['ico'] . " : " . $statut['statut'] . $statut['id'] ?>
+						<?= $statut['ico'] . " : " . $statut['statut'] ?>
 					<?php endif ?>
 				<?php endforeach ?>
 			</p>
@@ -315,7 +319,7 @@ include('../view/_navbar.php');
 				<ul id="list-palette">
 					<?php foreach ($paletteEnStock as $palette) : ?>
 						<?php
-						$classAffectation='';
+						$classAffectation = '';
 						if ($palette['id_affectation'] == 3) {
 							$classAffectation = "text-success";
 						} elseif ($palette['id_affectation'] == 2) {
@@ -347,57 +351,28 @@ include('../view/_navbar.php');
 		<div class="col text-right"><a href="#mini-menu" class="uplink">retour</a></div>
 	</div>
 	<div class="bg-separation"></div>
-	<div class="row py-3">
-		<div class="col">
-			<h5 class="text-main-blue" id="traitement">Palettes à livrer :</h5>
+	<!-- palettes présentes sur une expéd -->
+
+	<?php if ($userDao->userHasThisRight($_SESSION['id_web_user'], 105)) : ?>
+
+		<div class="row py-3">
+			<div class="col">
+				<h5 class="text-main-blue" id="traitement">Palettes à livrer :</h5>
+			</div>
 		</div>
-	</div>
+		<?php if (!empty($expeds)) : ?>
+			<?php include "casse-dashboard/14-table-en-stock.php" ?>
+		<?php else : ?>
+			aucune palette n'a été sélectionnée pour une livraison magasin
+		<?php endif ?>
 
-
-	<?php if (!empty($expeds)) : ?>
-		<?php include "casse-dashboard/14-table-en-stock.php" ?>
-	<?php else : ?>
-		aucune palette n'a été sélectionnée pour une livraison magasin
+		<div class="row">
+			<div class="col text-right"><a href="#mini-menu" class="uplink">retour</a></div>
+		</div>
 	<?php endif ?>
 
-	<div class="row">
-		<div class="col text-right"><a href="#mini-menu" class="uplink">retour</a></div>
-	</div>
 </div>
-
-
-<div class="modal fade" id="edit-palette" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
-	<div class="modal-dialog modal-sm">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h6 class="modal-title" id="modal-label">Modifier la palette</h6>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
-					<div class="row">
-						<div class="col">
-							<div class="form-group">
-								<label for="palette-modal">Numéro de palette :</label>
-								<input type="text" class="form-control" name="palette_modal" id="palette-modal">
-								<input type="hidden" class="form-control" name="id_palette" id="id-palette-modal">
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col text-right">
-							<button class="btn btn-primary" name="update_palette"><i class="fas fa-save pr-3"></i>Enregistrer</button>
-						</div>
-					</div>
-				</form>
-
-			</div>
-
-		</div>
-	</div>
-</div>
+<?php include 'casse-dashboard/15-modal-update-palette-nb.php' ?>
 
 
 
