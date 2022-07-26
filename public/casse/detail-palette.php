@@ -92,7 +92,7 @@ if (isset($_POST['insert_traitement'])) {
 					$lastExp = $magExp['id'];
 				}
 				if ($lastExp > 0) {
-					$added = $paletteDao->updatePalette($_GET['id'], $lastExp, $_POST['contremarque'], $statut = 1, $_POST['affectation']);
+					$added = $paletteDao->updatePalette($_GET['id'], $lastExp, $_POST['contremarque'],  $_POST['affectation']);
 					if ($added == 1) {
 						$loc = 'Location:detail-palette.php?id=' . $_GET['id'] . '&success';
 						header($loc);
@@ -101,7 +101,7 @@ if (isset($_POST['insert_traitement'])) {
 					}
 				}
 			} else {
-				$added = $paletteDao->updatePalette($_GET['id'], 0, $_POST['contremarque'], $statut = 1, $_POST['affectation']);
+				$added = $paletteDao->updatePalette($_GET['id'], 0, $_POST['contremarque'], $_POST['affectation']);
 				if ($added == 1) {
 					$loc = 'Location:detail-palette.php?id=' . $_GET['id'] . '&success';
 					header($loc);
@@ -244,7 +244,7 @@ include('../view/_navbar.php');
 	</div>
 
 	<?php if (isset($paletteInfo[0]['statut'])) : ?>
-		<?php if ($paletteInfo[0]['statut'] == 0) : ?>
+		<?php if ($paletteInfo[0]['statut'] == 0 || $paletteInfo[0]['statut'] == 1) : ?>
 			<!-- exploit only -->
 			<?php if ($userDao->userHasThisRight($_SESSION['id_web_user'], 105)) : ?>
 				<div class="bg-separation mt-3"></div>
