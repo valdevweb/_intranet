@@ -75,6 +75,42 @@ $expeds = $expDao->getExpDetails();
 $paletteEnStock = $paletteDao->getStockPalette();
 
 
+
+function logoStatut($palette)
+{
+	// statut en cours et en stock
+	if ($palette['statut'] == 0 && $palette['NumeroPalette'] == null) {
+		$statutImg = '<img src="../img/casse/encours.jpg">';
+		return $statutImg;
+	}
+
+	if ($palette['statut'] == 1 || ($palette['NumeroPalette'] != null && $palette['statut'] <= 2)) {
+		$statutImg = '<img src="../img/casse/alivrer.png">';
+		return $statutImg;
+	}
+	if ($palette['statut'] == 4) {
+		$statutImg = '<img src="../img/casse/block.jpg">';
+		return $statutImg;
+	}
+
+
+	// statut expédié
+	if ($palette['exp'] == 1) {
+		$statutImg = '<img src="../img/casse/done.png">';
+		if ($palette['mt_fac'] != '') {
+			$statutImg .= '<img src="../img/casse/creditcard.png">';
+		}
+		if ($palette['id_affectation'] == 3) {
+			$statutImg .= '<img src="../img/casse/logo_deee.jpg">';
+		}
+		return $statutImg;
+	}
+}
+
+
+
+
+
 if (!empty($paletteEnStock)) {
 	$nbPalette = count($paletteEnStock);
 }
@@ -85,6 +121,7 @@ $sumTot = 0;
 $arMagSum = [];
 
 $arrParam = [];
+$classesAffectation = ['text-primary', 'text-primary', 'text-orange', 'text-success', 'text-danger'];
 
 
 if (isset($_POST['clear_form'])) {
@@ -211,6 +248,8 @@ if (isset($_GET['id_trt'])) {
 }
 
 
+
+
 // cas ou va sur detail-palette sans id en paramètre => redirige ici
 if (isset($_GET['error'])) {
 	if ($_GET['error'] == 1) {
@@ -318,23 +357,18 @@ include('../view/_navbar.php');
 			<?php if (!empty($paletteEnStock)) : ?>
 				<ul id="list-palette">
 					<?php foreach ($paletteEnStock as $palette) : ?>
-						<?php
-						$classAffectation = '';
-						if ($palette['id_affectation'] == 3) {
-							$classAffectation = "text-success";
-						} elseif ($palette['id_affectation'] == 2) {
-							$classAffectation = "text-orange";
-						} elseif ($palette['id_affectation'] == 1) {
-							$classAffectation = "text-primary";
-						}
-						?>
-
 						<li>
-							<a href="detail-palette.php?id=<?= $palette['paletteid'] ?>" class="<?= $classAffectation ?>"><?= $palette['palette'] ?></a> :
+							<a href="detail-palette.php?id=<?= $palette['paletteid'] ?>" class="<?= $classesAffectation[$palette['statut']] ?? '' ?>">
+								<?= $palette['palette'] ?>
+							</a> :
 							<?php if (isset($listStatutPalette[$palette['statut']])) : ?>
-								<?= $listStatutPaletteIco[$palette['statut']] . '<span class="pl-3 ' . $classAffectation . '">' . $listStatutPalette[$palette['statut']] ?></span>
+								<?= $listStatutPaletteIco[$palette['statut']] ?>
+								<span class="pl-3 <?= $classesAffectation[$palette['statut']] ?? ''  ?>">
+									<?= $listStatutPalette[$palette['statut']] ?>
+								</span>
 							<?php else : ?>
-								<i class="fas fa-hourglass-start text-danger"></i><span class="pl-3 <?= $classAffectation ?>">en stock</span>
+								<i class="fas fa-hourglass-start text-primary"></i>
+								<span class="pl-3 <?= $classesAffectation[$palette['statut']] ?? ''  ?>">en stock</span>
 
 							<?php endif ?>
 
