@@ -43,6 +43,7 @@ $paletteDao = new PalettesDao($pdoCasse);
 $casseDao = new CasseDao($pdoCasse);
 $userDao = new UserDao($pdoUser);
 $crudCasse = new CrudDao($pdoCasse);
+$crudQlik = new CrudDao($pdoQlik);
 
 
 $listAffectation = CasseHelpers::getAffectation($pdoCasse);
@@ -128,7 +129,12 @@ if (isset($_POST['unblock'])) {
 		$errors[] = "Commentaire requis, merci d'en saisir un";
 	}
 	if (empty($errors)) {
-		$crudCasse->update('palettes', 'id=' . $_GET['id'], ['cmt_blocked' => $_POST['cmt'], 'unblocked_by' => $_SESSION['id_web_user'], 'date_unblocked' => date('Y-m-d H:i:s'), 'statut' => 0]);
+		// on vérifie si la palette est dans la table palettes4919 pour lui mettre soit statut 0 soit statut 1
+		$paletteEnStock = $crudQlik->getOneByField('palettes4919', 'NumeroPalette', $paletteInfo[0]['palette']);
+		$statut = (empty($paletteEnStock) ? 0 : 1);
+
+
+		$crudCasse->update('palettes', 'id=' . $_GET['id'], ['cmt_blocked' => $_POST['cmt'], 'unblocked_by' => $_SESSION['id_web_user'], 'date_unblocked' => date('Y-m-d H:i:s'), 'statut' => $statut]);
 		$loc = 'Location:detail-palette.php?id=' . $_GET['id'] . '&success';
 		header($loc);
 	}
@@ -300,7 +306,7 @@ include('../view/_navbar.php');
 		<?php if ($userDao->userHasThisRight($_SESSION['id_web_user'], 105)) : ?>
 
 			<!-- sans statut ou statut palette bloquée -->
-			<?php if ($paletteInfo[0]['statut'] ==  null || $paletteInfo[0]['statut'] == 0 || $paletteInfo[0]['statut'] == 1 || $paletteInfo[0]['statut'] == 2) : ?>
+			<?php if ($paletteInfo[0]['id_exp'] ==  null && $paletteInfo[0]['statut'] != 4) : ?>
 				<div class="row">
 					<div class="col">
 						<div class="row">
@@ -340,7 +346,7 @@ include('../view/_navbar.php');
 							<div class="row">
 								<div class="col">
 									<div class="form-group">
-										<label for="cmt">Commentaire :</label>
+										<label for="cmt">Mettre à jour le commentaire :</label>
 										<textarea class="form-control" name="cmt" id="cmt" row="3"><?= $paletteInfo[0]['cmt_blocked'] ?></textarea>
 									</div>
 								</div>
