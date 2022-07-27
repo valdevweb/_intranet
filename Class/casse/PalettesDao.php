@@ -58,17 +58,16 @@ class PalettesDao
 		return $req->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public function getNewStockPalette()
-	{
-		$req = $this->pdo->query("SELECT *, palettes.id as paletteid FROM palettes INNER JOIN qlik.palettes4919 ON palettes.palette = qlik.palettes4919.NumeroPalette WHERE palettes.statut<=1 ");
-		return $req->fetchAll(PDO::FETCH_ASSOC);
-	}
+	// public function getNewStockPalette()
+	// {
+	// 	$req = $this->pdo->query("SELECT *, palettes.id as paletteid FROM palettes INNER JOIN qlik.palettes4919 ON palettes.palette = qlik.palettes4919.NumeroPalette WHERE palettes.statut<=1 ");
+	// 	return $req->fetchAll(PDO::FETCH_ASSOC);
+	// }
 
-	public function updatePalette($id, $lastExp, $contremarque, $statut, $idAffectation)
+	public function updatePalette($id, $lastExp, $contremarque,  $idAffectation)
 	{
-		$req = $this->pdo->prepare("UPDATE palettes SET statut= :statut, id_exp= :id_exp, contremarque= :contremarque, id_affectation= :id_affectation WHERE id= :id");
+		$req = $this->pdo->prepare("UPDATE palettes SET id_exp= :id_exp, contremarque= :contremarque, id_affectation= :id_affectation WHERE id= :id");
 		$req->execute([
-			':statut'		=> $statut,
 			':id_exp'		=> $lastExp,
 			':id'			=> $id,
 			':contremarque'	=> $contremarque == '' ? null : $contremarque,
@@ -80,23 +79,24 @@ class PalettesDao
 
 	public function getEnStockDispo()
 	{
-
+		$base = VERSION . 'qlik';
 		$req = $this->pdo->query("SELECT palette, palettes.*, article, ean, designation, nb_colis, pcb, uvc, valo FROM palettes
 			LEFT JOIN casses ON palettes.id = casses.id_palette
-			LEFT JOIN qlik.palettes4919 on palettes.palette=qlik.palettes4919.NumeroPalette
-			WHERE destruction=0 AND ((statut= 0) or (statut=1 and id_affectation=2)) and NumeroPalette is not null");
+			LEFT JOIN {$base}.palettes4919 on palettes.palette=palettes4919.NumeroPalette
+			WHERE destruction=0 AND statut= 1 and (id_affectation is null or id_affectation =2 or id_affectation =0) and NumeroPalette is not null");
 
 		return $req->fetchAll(PDO::FETCH_GROUP);
 	}
 
 
 
-	public function updatePaletteExp($id, $lastExp, $idStatut)
+	public function updatePaletteExp($id, $lastExp, $idStatut, $idAffectation)
 	{
-		$req = $this->pdo->prepare("UPDATE palettes SET id_exp= :id_exp, statut= :id_statut WHERE id= :id");
+		$req = $this->pdo->prepare("UPDATE palettes SET id_exp= :id_exp, statut= :id_statut, id_affectation = :id_affectation WHERE id= :id");
 		$req->execute([
 			':id'			=> $id,
 			':id_exp'		=> $lastExp,
+			':id_affectation'		=> $idAffectation,
 			':id_statut'	=> $idStatut,
 
 		]);
