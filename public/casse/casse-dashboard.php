@@ -79,12 +79,12 @@ $paletteEnStock = $paletteDao->getStockPalette();
 function logoStatut($palette)
 {
 	// statut en cours et en stock
-	if ($palette['statut'] == 0 && $palette['NumeroPalette'] == null) {
+	if ($palette['statut'] == 0) {
 		$statutImg = '<img src="../img/casse/encours.jpg">';
 		return $statutImg;
 	}
 
-	if ($palette['statut'] == 1 || ($palette['NumeroPalette'] != null && $palette['statut'] <= 2)) {
+	if ($palette['statut'] == 1) {
 		$statutImg = '<img src="../img/casse/alivrer.png">';
 		return $statutImg;
 	}
@@ -121,7 +121,13 @@ $sumTot = 0;
 $arMagSum = [];
 
 $arrParam = [];
-$classesAffectation = ['text-primary', 'text-primary', 'text-orange', 'text-success', 'text-danger'];
+// mag et gt13 = blue, sav= vert
+$classesAffectation = [
+	'' => 'text-dark',
+	1 => 'text-primary',
+	2 => 'text-primary',
+	3 => 'text-success'
+];
 
 
 if (isset($_POST['clear_form'])) {
@@ -146,7 +152,7 @@ if (isset($_POST['search'])) {
 
 if (!isset($_SESSION['casse_filter'])) {
 	// par défaut, on affiche les palettes non cloturées
-	$params = "palettes.statut !=2";
+	$params = "palettes.statut !=3";
 	$palettesToDisplay = $paletteDao->getPaletteByFilter($params);
 } else {
 	if (isset($_SESSION['casse_filter']['search_field'])) {
@@ -176,7 +182,7 @@ if (!isset($_SESSION['casse_filter'])) {
 	$palettesToDisplay = $paletteDao->getPaletteByFilter($params);
 }
 
-
+// calcul et créa tableau pour le bandeau de récap (nb palettes + montant + repart)
 if (isset($palettesToDisplay)) {
 	$nbpalette = count($palettesToDisplay);
 
@@ -193,7 +199,7 @@ if (isset($palettesToDisplay)) {
 }
 
 
-
+// ajout num palette contremarque => traitement gt13
 if (isset($_POST['save_contremarque'])) {
 	$updateTrt = true;
 
@@ -213,13 +219,7 @@ if (isset($_POST['save_contremarque'])) {
 	header("Location: " . $_SERVER['PHP_SELF'] . $successQ, true, 303);
 }
 
-
-if (isset($_POST['update_palette'])) {
-	$casseCrud->updateOneField("palettes", "palette", $_POST['palette_modal'], $_POST['id_palette']);
-	$successQ = '#palette-' . $_POST['id_palette'];
-	header("Location: " . $_SERVER['PHP_SELF'] . $successQ, true, 303);
-}
-
+// suppression de palette
 if (isset($_GET['del-palette'])) {
 	$casses = $casseDao->getCasseByPalette($_GET['del-palette']);
 	if (empty($casses)) {
@@ -233,7 +233,7 @@ if (isset($_GET['del-palette'])) {
 	}
 }
 
-
+// recup url de redirection dans table traitements en fonction de l'id_trt passé ds url
 if (isset($_GET['id_trt'])) {
 	$url = ($listTrtUrl[$_GET['id_trt']]) ?? "";
 	if (empty($url)) {
@@ -246,8 +246,6 @@ if (isset($_GET['id_trt'])) {
 		header("Location: " . $url . "?id=" . $_GET['id_exp'] . "&id_trt=" . $_GET['id_trt']);
 	}
 }
-
-
 
 
 // cas ou va sur detail-palette sans id en paramètre => redirige ici

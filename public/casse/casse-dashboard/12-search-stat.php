@@ -48,7 +48,7 @@
 			<div class="legend" data-statut="1"><img class="pr-3" src="../img/casse/alivrer.png">A livrer</div>
 		</div>
 		<div class="col">
-			<div class="legend" data-statut="2"><img src="../img/casse/done.png">Clos</div>
+			<div class="legend" data-statut="3"><img src="../img/casse/done.png">Clos</div>
 		</div>
 		<div class="col">
 			<div class="form-group">
