@@ -1,13 +1,13 @@
 <?php
 require('../../config/autoload.php');
-if(!isset($_SESSION['id'])){
-	header('Location:'. ROOT_PATH.'/index.php');
+if (!isset($_SESSION['id'])) {
+	header('Location:' . ROOT_PATH . '/index.php');
 	exit();
 }
 
-$pageCss=explode(".php",basename(__file__));
-$pageCss=$pageCss[0];
-$cssFile=ROOT_PATH ."/public/css/".$pageCss.".css";
+$pageCss = explode(".php", basename(__file__));
+$pageCss = $pageCss[0];
+$cssFile = ROOT_PATH . "/public/css/" . $pageCss . ".css";
 
 
 require '../../Class/Db.php';
@@ -18,60 +18,59 @@ require('../../Class/casse/PalettesDao.php');
 require_once '../../vendor/autoload.php';
 
 
-$errors=[];
-$success=[];
-$db=new Db();
-$pdoUser=$db->getPdo('web_users');
-$pdoCasse=$db->getPdo('casse');
+$errors = [];
+$success = [];
+$db = new Db();
+$pdoUser = $db->getPdo('web_users');
+$pdoCasse = $db->getPdo('casse');
 
 
 
-$expDao=new ExpDao($pdoCasse);
+$expDao = new ExpDao($pdoCasse);
 
-$paletteDao=new PalettesDao($pdoCasse);
-$casseCrud=new CrudDao($pdoCasse);
-
-
-$idAffectation=2;
-$btlec=4920;
-$galec=9966;
+$paletteDao = new PalettesDao($pdoCasse);
+$casseCrud = new CrudDao($pdoCasse);
 
 
-$palettesDispo=$paletteDao->getEnStockDispo();
+$idAffectation = 2;
+$btlec = 4920;
+$galec = 9966;
+
+
+$palettesDispo = $paletteDao->getEnStockDispo();
 
 
 
-if(isset($_POST['submit'])){
+if (isset($_POST['submit'])) {
 
 
-	if(!empty($_POST['id_palette'])){
-		$magExp=$expDao->magExpAlreadyExist($btlec);
-		if(empty($magExp)){
-			$lastExp=$expDao->insertExp($btlec, $galec, $idAffectation);
-			$lastExp=$lastExp;
-		}else{
-			$lastExp=$magExp['id'];
+	if (!empty($_POST['id_palette'])) {
+		$magExp = $expDao->magExpAlreadyExist($btlec);
+		if (empty($magExp)) {
+			$lastExp = $expDao->insertExp($btlec, $galec, $idAffectation);
+			$lastExp = $lastExp;
+		} else {
+			$lastExp = $magExp['id'];
 		}
-
-	}else{
-		$errors[]="Merci de sélectionner au moins une palette";
+	} else {
+		$errors[] = "Merci de sélectionner au moins une palette";
 	}
-	if(empty($errors)){
-		$nbPalette=0;
-		$strListPalette="";
-		for ($i=0; $i <count($_POST['id_palette']) ; $i++) {
-			$added=$paletteDao->updatePaletteExp($_POST['id_palette'][$i], $lastExp, 2);
-			$strListPalette.="- ".$_POST['palette_nb'][$_POST['id_palette'][$i]].'<br>';
+	if (empty($errors)) {
+		$nbPalette = 0;
+		$strListPalette = "";
+		for ($i = 0; $i < count($_POST['id_palette']); $i++) {
+			$added = $paletteDao->updatePaletteExp($_POST['id_palette'][$i], $lastExp, 2, 2);
+			$strListPalette .= "- " . $_POST['palette_nb'][$_POST['id_palette'][$i]] . '<br>';
 			$nbPalette++;
 		}
-// envoi mail avertissement
+		// envoi mail avertissement
 
-		if(VERSION=="_"){
-			$dest=['valerie.montusclat@btlecest.leclerc'];
-			$cc=[];
-		}else{
-			$dest=['nathalie.pazik@btlecest.leclerc', 'christelle.trousset@btlecest.leclerc'];
-			$cc=['valerie.montusclat@btlecest.leclerc', 'jonathan.domange@btlecest.leclerc'];
+		if (VERSION == "_") {
+			$dest = ['valerie.montusclat@btlecest.leclerc'];
+			$cc = [];
+		} else {
+			$dest = ['nathalie.pazik@btlecest.leclerc', 'christelle.trousset@btlecest.leclerc'];
+			$cc = ['valerie.montusclat@btlecest.leclerc', 'jonathan.domange@btlecest.leclerc'];
 		}
 
 
@@ -79,33 +78,30 @@ if(isset($_POST['submit'])){
 		$mailer = new Swift_Mailer($transport);
 
 		$htmlMail = file_get_contents('../mail/occasion-casse-newexp.html');
-		$htmlMail=str_replace('{NB}',$nbPalette,$htmlMail);
-		$htmlMail=str_replace('{LISTPALETTE}',$strListPalette,$htmlMail);
-		$subject='Portail BTLec Est - regroupement palettes GT Occasion';
+		$htmlMail = str_replace('{NB}', $nbPalette, $htmlMail);
+		$htmlMail = str_replace('{LISTPALETTE}', $strListPalette, $htmlMail);
+		$subject = 'Portail BTLec Est - regroupement palettes GT Occasion';
 		$message = (new Swift_Message($subject))
-		->setBody($htmlMail, 'text/html')
-		->setFrom(EMAIL_NEPASREPONDRE)
-		->setTo($dest)
-		->setCc($cc);
+			->setBody($htmlMail, 'text/html')
+			->setFrom(EMAIL_NEPASREPONDRE)
+			->setTo($dest)
+			->setCc($cc);
 
-		if (!$mailer->send($message, $failures)){
+		if (!$mailer->send($message, $failures)) {
 			print_r($failures);
-		}else{
-			$success[]="mail envoyé avec succés";
+		} else {
+			$success[] = "mail envoyé avec succés";
 		}
-		$successQ='?success=sent';
+		$successQ = '?success=sent';
 		unset($_POST);
-		header("Location: ".$_SERVER['PHP_SELF'].$successQ,true,303);
-
-
-
+		header("Location: " . $_SERVER['PHP_SELF'] . $successQ, true, 303);
 	}
 }
-if(isset($_GET['success'])){
-    $arrSuccess=[
-        'sent'=>'Un mail a été envoyé pour prévenir l\'entrepôt, vous êtes en copie',
-    ];
-    $success[]=$arrSuccess[$_GET['success']];
+if (isset($_GET['success'])) {
+	$arrSuccess = [
+		'sent' => 'Un mail a été envoyé pour prévenir l\'entrepôt, vous êtes en copie',
+	];
+	$success[] = $arrSuccess[$_GET['success']];
 }
 
 //------------------------------------------------------
@@ -143,21 +139,21 @@ include('../view/_navbar.php');
 
 	<div class="row">
 		<div class="col">
-			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF'])?>" method="post">
+			<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
 
 
-				<?php if ($palettesDispo): ?>
-					<?php foreach ($palettesDispo as $paletteNb => $details): ?>
+				<?php if ($palettesDispo) : ?>
+					<?php foreach ($palettesDispo as $paletteNb => $details) : ?>
 						<div class="row">
 							<div class="col">
 								<div class="row bg-blue p-2 border border-white">
 									<div class="col ">
-										<div class="">Palette <?=$paletteNb?></div>
+										<div class="">Palette <?= $paletteNb ?></div>
 									</div>
 									<div class="col-1">
 										<div class="form-check">
-											<input class="form-check-input checkbox-palette" type="checkbox" value="<?=$details[0]['id']?>" name="id_palette[]">
-											<input  type="hidden" value="<?=$paletteNb?>" name="palette_nb[<?=$details[0]['id']?>]">
+											<input class="form-check-input checkbox-palette" type="checkbox" value="<?= $details[0]['id'] ?>" name="id_palette[]">
+											<input type="hidden" value="<?= $paletteNb ?>" name="palette_nb[<?= $details[0]['id'] ?>]">
 
 
 										</div>
@@ -181,29 +177,29 @@ include('../view/_navbar.php');
 											</thead>
 											<tbody>
 												<?php
-												$sumValo=0;
-												$sumQte=0;
+												$sumValo = 0;
+												$sumQte = 0;
 												?>
 
-												<?php foreach ($details as $key => $detail): ?>
+												<?php foreach ($details as $key => $detail) : ?>
 
 													<tr>
-														<td><?=$detail['article']?></td>
-														<td><?=$detail['ean']?></td>
-														<td><?=$detail['designation']?></td>
-														<td class="text-right"><?=$detail['pcb']?></td>
-														<td class="text-right"><?=$detail['nb_colis']?></td>
-														<td class="text-right"><?=$detail['valo']?></td>
+														<td><?= $detail['article'] ?></td>
+														<td><?= $detail['ean'] ?></td>
+														<td><?= $detail['designation'] ?></td>
+														<td class="text-right"><?= $detail['pcb'] ?></td>
+														<td class="text-right"><?= $detail['nb_colis'] ?></td>
+														<td class="text-right"><?= $detail['valo'] ?></td>
 													</tr>
 													<?php
-													$sumQte+=$detail['nb_colis'];
-													$sumValo+=$detail['valo'];
+													$sumQte += $detail['nb_colis'];
+													$sumValo += $detail['valo'];
 													?>
 												<?php endforeach ?>
 												<tr class="bg-light-blue font-weight-bold">
 													<td colspan="4">TOTAUX</td>
-													<td class="text-right"><?=$sumQte?></td>
-													<td class="text-right"><?=$sumValo?></td>
+													<td class="text-right"><?= $sumQte ?></td>
+													<td class="text-right"><?= $sumValo ?></td>
 												</tr>
 											</tbody>
 										</table>
@@ -230,25 +226,25 @@ include('../view/_navbar.php');
 							<button class="btn btn-primary" name="submit">Traiter</button>
 						</div>
 					</div>
-				</form>
+			</form>
 
-			<?php else: ?>
-				<div class="alert alert-secondary">Aucune palette à traiter</div>
-			<?php endif ?>
+		<?php else : ?>
+			<div class="alert alert-secondary">Aucune palette à traiter</div>
+		<?php endif ?>
 		</div>
 	</div>
 
 
 </div>
 <script type="text/javascript">
-	$(document).ready(function(){
+	$(document).ready(function() {
 		$('.detail').hide();
-		$('.switch-input-detail').on("click", function(){
-			if ( $('.switch-input-detail').prop("checked") ){
+		$('.switch-input-detail').on("click", function() {
+			if ($('.switch-input-detail').prop("checked")) {
 				$('.detail').show();
 				$('#switch-descr-detail').text("Masquer les détails");
 				sessionStorage.setItem("show-all", "true");
-			}else{
+			} else {
 				$('.detail').hide();
 				$('#switch-descr-detail').text("Afficher les détails");
 				sessionStorage.setItem("show-all", "false");
@@ -257,18 +253,17 @@ include('../view/_navbar.php');
 
 
 
-		$('#check-all').change(function(){
-			if($(this).prop("checked")){
-				$('.checkbox-palette').prop('checked',true);
-			}else{
-				$('.checkbox-palette').prop('checked',false);
+		$('#check-all').change(function() {
+			if ($(this).prop("checked")) {
+				$('.checkbox-palette').prop('checked', true);
+			} else {
+				$('.checkbox-palette').prop('checked', false);
 
 			}
 		})
 
 
 	});
-
 </script>
 <?php
 require '../view/_footer-bt.php';
