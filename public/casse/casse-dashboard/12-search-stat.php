@@ -45,10 +45,10 @@
 			<div class="legend" data-statut="0"><img class="pr-3" src="../img/casse/encours.jpg">En cours</div>
 		</div>
 		<div class="col">
-			<div class="legend" data-statut="1"><img class="pr-3" src="../img/casse/livrer.png">A livrer</div>
+			<div class="legend" data-statut="1"><img class="pr-3" src="../img/casse/alivrer.png">A livrer</div>
 		</div>
 		<div class="col">
-			<div class="legend" data-statut="2"><img src="../img/casse/livre.png">Clos</div>
+			<div class="legend" data-statut="2"><img src="../img/casse/done.png">Clos</div>
 		</div>
 		<div class="col">
 			<div class="form-group">
